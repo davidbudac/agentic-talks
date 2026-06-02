@@ -652,10 +652,27 @@ messages = [
   </div>
 </section>
 
+<!-- APPLICATIONS — where you actually run them -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">18</span><div class="crumb"><b>Landscape</b> · the apps</div></div>
+    <h2 class="reveal">Where you actually <span class="o">run them</span></h2>
+    <div class="cards c3 reveal">
+      <div class="tile fill"><span class="k">Claude Code</span><p>CLI · desktop app · web · IDE extensions (VS Code, JetBrains).</p></div>
+      <div class="tile"><span class="k">Codex</span><p>OpenAI — CLI · desktop app · IDE · cloud.</p></div>
+      <div class="tile"><span class="k">Gemini CLI</span><p>Google's open-source terminal agent.</p></div>
+      <div class="tile"><span class="k">Antigravity</span><p>Google's agentic IDE.</p></div>
+      <div class="tile"><span class="k">Cursor · Windsurf</span><p>IDEs built around an agent.</p></div>
+      <div class="tile"><span class="k">Copilot · Aider</span><p>In-editor agent · open-source CLI.</p></div>
+    </div>
+    <p class="note reveal">Same idea, different shells: a <b>terminal CLI</b>, a <b>desktop app</b>, or <b>inside your IDE</b>. Many ship as <b>several of these at once</b> — pick whichever fits how you work.</p>
+  </div>
+</section>
+
 <!-- 17 — PRICING SUBSCRIPTIONS -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">18</span><div class="crumb"><b>Landscape</b> · plans</div></div>
+    <div class="slide-head reveal"><span class="snum">19</span><div class="crumb"><b>Landscape</b> · plans</div></div>
     <h2 class="reveal">Subscriptions <span class="o">(consumer)</span></h2>
     <table class="tbl reveal">
       <thead><tr><th>Tier</th><th>Claude (Anthropic)</th><th>ChatGPT (OpenAI)</th></tr></thead>
@@ -672,7 +689,7 @@ messages = [
 <!-- 18 — SUBSCRIPTION VS API -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">19</span><div class="crumb"><b>Landscape</b> · plan vs API</div></div>
+    <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>Landscape</b> · plan vs API</div></div>
     <h2 class="reveal">Subscription <span class="o">vs API</span></h2>
     <div class="split">
       <div class="tile reveal"><span class="k">Subscription</span><p>A <b>flat monthly fee</b> for a person using the app or CLI. Simple, capped by usage limits. Best for everyday work.</p></div>
@@ -685,7 +702,7 @@ messages = [
 <!-- 19 — CONTEXT: WHAT IT IS + DIAGRAM D -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>Context</b> · what it is</div></div>
+    <div class="slide-head reveal"><span class="snum">21</span><div class="crumb"><b>Context</b> · what it is</div></div>
     <h2 class="reveal">Context = the model's <span class="o">short-term memory</span></h2>
     <div class="split">
       <ul class="bul reveal">
@@ -712,7 +729,7 @@ messages = [
 <!-- 20 — CONTEXT ROT + DIAGRAM -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">21</span><div class="crumb"><b>Context</b> · the "stupidity threshold"</div></div>
+    <div class="slide-head reveal"><span class="snum">22</span><div class="crumb"><b>Context</b> · the "stupidity threshold"</div></div>
     <h2 class="reveal">Fuller context = <span class="o">dumber model</span></h2>
     <div class="split">
       <div class="diagram reveal">
@@ -745,7 +762,7 @@ messages = [
 <!-- 21 — MEASURING -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">22</span><div class="crumb"><b>Context</b> · keeping it lean</div></div>
+    <div class="slide-head reveal"><span class="snum">23</span><div class="crumb"><b>Context</b> · keeping it lean</div></div>
     <h2 class="reveal">Watch it, <span class="o">keep it lean</span></h2>
     <span class="extag reveal">EXAMPLE — a harness status line</span>
     <div class="code reveal"><span class="d">claude-opus-4-8</span>   <span class="o">context: 38%</span>  (76k / 200k)   <span class="g">$0.42</span></div>
@@ -761,7 +778,7 @@ messages = [
 <!-- 22 — UNDER THE HOOD: CACHING + COMPACTION -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">23</span><div class="crumb"><b>Context</b> · under the hood</div></div>
+    <div class="slide-head reveal"><span class="snum">24</span><div class="crumb"><b>Context</b> · under the hood</div></div>
     <h2 class="reveal">How harnesses <span class="o">cope</span></h2>
     <div class="cards c2 reveal">
       <div class="tile"><span class="k">Caching</span><p>Stable parts (system prompt, CLAUDE.md, files) are <b>remembered between calls</b>, so reusing them is much <b>cheaper and faster</b> than re-reading every time.</p></div>
@@ -774,7 +791,7 @@ messages = [
 <!-- 23 — SUBAGENTS + DIAGRAM E -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">24</span><div class="crumb"><b>Context</b> · sub-agents</div></div>
+    <div class="slide-head reveal"><span class="snum">25</span><div class="crumb"><b>Context</b> · sub-agents</div></div>
     <h2 class="reveal">Sub-agents <span class="o">keep the main context clean</span></h2>
     <div class="split">
       <div class="diagram reveal">
@@ -807,7 +824,7 @@ messages = [
 <!-- 24 — PERMISSIONS -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">25</span><div class="crumb"><b>Safety</b> · permissions</div></div>
+    <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>Safety</b> · permissions</div></div>
     <h2 class="reveal">Safety through <span class="o">permissions</span></h2>
     <div class="cards c3 reveal">
       <div class="tile"><span class="k">Default · ask</span><p>The agent <b>asks first</b> before any risky action (write a file, run a command). Safest.</p></div>
@@ -821,7 +838,7 @@ messages = [
 <!-- 25 — BYPASS MODE -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>Safety</b> · bypass mode</div></div>
+    <div class="slide-head reveal"><span class="snum">27</span><div class="crumb"><b>Safety</b> · bypass mode</div></div>
     <h2 class="reveal">When is "YOLO" <span class="o">OK?</span></h2>
     <div class="split">
       <ul class="bul reveal">
@@ -840,7 +857,7 @@ messages = [
 <!-- 26 — RECAP: MEMENTO CALLBACK -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">27</span><div class="crumb"><b>Memory</b> · the problem</div></div>
+    <div class="slide-head reveal"><span class="snum">28</span><div class="crumb"><b>Memory</b> · the problem</div></div>
     <h2 class="reveal">Back to the model with <span class="o">no memory</span></h2>
     <div class="split">
       <div class="kcard reveal">
@@ -859,7 +876,7 @@ messages = [
 <!-- 27 — CLAUDE.md + MEMORY -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">28</span><div class="crumb"><b>Memory</b> · CLAUDE.md</div></div>
+    <div class="slide-head reveal"><span class="snum">29</span><div class="crumb"><b>Memory</b> · CLAUDE.md</div></div>
     <h2 class="reveal">Memory that <span class="o">survives sessions</span></h2>
     <span class="extag reveal">EXAMPLE — CLAUDE.md in your repo root</span>
     <div class="code reveal"><span class="c"># CLAUDE.md — auto-injected into every prompt</span>
@@ -877,7 +894,7 @@ messages = [
 <!-- 28 — SKILLS & PLUGINS -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">29</span><div class="crumb"><b>Memory</b> · skills &amp; plugins</div></div>
+    <div class="slide-head reveal"><span class="snum">30</span><div class="crumb"><b>Memory</b> · skills &amp; plugins</div></div>
     <h2 class="reveal">Skills &amp; <span class="o">plugins</span></h2>
     <div class="split">
       <ul class="bul reveal">
@@ -896,7 +913,7 @@ messages = [
 <!-- 29 — REACHING OUT -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">30</span><div class="crumb"><b>Reaching out</b> · other systems</div></div>
+    <div class="slide-head reveal"><span class="snum">31</span><div class="crumb"><b>Reaching out</b> · other systems</div></div>
     <h2 class="reveal">Touching <span class="o">other systems</span></h2>
     <div class="cards c3 reveal">
       <div class="tile"><span class="k">API</span><p>Services called <b>programmatically</b> over HTTP. The agent sends a request, gets structured data back.</p></div>
@@ -910,7 +927,7 @@ messages = [
 <!-- 30 — MCP + DIAGRAM F -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">31</span><div class="crumb"><b>Reaching out</b> · MCP</div></div>
+    <div class="slide-head reveal"><span class="snum">32</span><div class="crumb"><b>Reaching out</b> · MCP</div></div>
     <h2 class="reveal">MCP = <span class="o">"USB-C for agents"</span></h2>
     <div class="split">
       <div class="diagram reveal">
@@ -951,7 +968,7 @@ messages = [
 <!-- HOW TO WORK WITH IT WELL -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">32</span><div class="crumb"><b>In practice</b> · how to work with it</div></div>
+    <div class="slide-head reveal"><span class="snum">33</span><div class="crumb"><b>In practice</b> · how to work with it</div></div>
     <h2 class="reveal">If you remember <span class="o">three things</span></h2>
     <div class="cards c3 reveal">
       <div class="tile"><span class="k">1 · Just talk to it</span><p>Treat it like a <b>colleague</b>, in plain language. Give the goal &amp; context, then iterate. Natural beats over-engineered prompts.</p></div>
@@ -965,7 +982,7 @@ messages = [
 <!-- 31 — SUMMARY -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">33</span><div class="crumb"><b>Summary</b></div></div>
+    <div class="slide-head reveal"><span class="snum">34</span><div class="crumb"><b>Summary</b></div></div>
     <h2 class="reveal">What to <span class="o">take away</span></h2>
     <ul class="bul reveal">
       <li><b>Model</b> = a stateless brain · <b>harness</b> = the body &amp; memory · <b>agent</b> = the loop that does things.</li>
@@ -981,7 +998,7 @@ messages = [
 <!-- 32 — SOURCES 1 -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">34</span><div class="crumb"><b>Sources</b> · further reading</div></div>
+    <div class="slide-head reveal"><span class="snum">35</span><div class="crumb"><b>Sources</b> · further reading</div></div>
     <h2 class="reveal">Sources &amp; <span class="o">links</span> (1/2)</h2>
     <div class="links reveal">
       <div class="linkcol">
@@ -1006,7 +1023,7 @@ messages = [
 <!-- 33 — SOURCES 2 -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">35</span><div class="crumb"><b>Sources</b> · context, memory &amp; MCP</div></div>
+    <div class="slide-head reveal"><span class="snum">36</span><div class="crumb"><b>Sources</b> · context, memory &amp; MCP</div></div>
     <h2 class="reveal">Sources &amp; <span class="o">links</span> (2/2)</h2>
     <div class="links reveal">
       <div class="linkcol">
