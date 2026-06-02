@@ -211,6 +211,27 @@ body.editing .edit-bar{display:flex}
 </head>
 <body>
 
+<!--
+  ============================================================
+  LIVE DEMO — presenter quick reference (not shown to the audience)
+  ------------------------------------------------------------
+  BEFORE the talk: start Claude Code on a real task in AUTO / accept-edits
+  mode, so it won't block on a permission prompt mid-talk (and that itself
+  demos the permissions slides). Good tasks (~3–8 min, several tool calls):
+    • "add a /health endpoint WITH a test, then run the tests"
+    • "find & fix why test X fails"
+  Avoid anything that finishes in ~20s or needs a login/network.
+
+  KICK IT OFF at the "🔴 LIVE" anchor slide (right after the hook), then
+  CHECK BACK at the slides marked with a 🔴 LIVE pill:
+    • Agent loop          → the scrolling tool calls
+    • Thinking            → a thinking block before an action
+    • Context · keep lean → the live context %
+    • Permissions         → the mode you chose
+  Fallback if it stalls: keep talking; revisit at the next checkpoint.
+  ============================================================
+-->
+
 <div class="progress-bar" id="progressBar"></div>
 <nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
 <div class="keyboard-hint decorative">Navigate: <kbd>↑</kbd> <kbd>↓</kbd> / <kbd>␣</kbd> · edit: <kbd>E</kbd></div>
@@ -242,7 +263,7 @@ body.editing .edit-bar{display:flex}
 <!-- 02 — HOOK -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">02</span><div class="crumb"><b>The hook</b></div></div>
+    <div class="slide-head reveal"><span class="snum">2</span><div class="crumb"><b>The hook</b></div></div>
     <h2 class="reveal">You type <span class="o">one line.</span> It does the rest.</h2>
     <div class="code reveal"><span class="o">you ›</span> <span class="b">"the invoice test is failing — fix it"</span>
 
@@ -255,10 +276,19 @@ body.editing .edit-bar{display:flex}
   </div>
 </section>
 
+<!-- LIVE DEMO ANCHOR (interlude, no number) -->
+<section class="slide divider">
+  <div class="slide-content">
+    <div class="dnum reveal" style="color:var(--card)">🔴 LIVE</div>
+    <h2 class="reveal">Meanwhile — a real agent is <span class="o">working</span></h2>
+    <p class="dsub reveal">I just set <b>Claude Code</b> loose on a real task. It runs while we talk — we'll <b>check back</b> when we hit <b>the loop</b>, <b>thinking</b>, and <b>context</b>.</p>
+  </div>
+</section>
+
 <!-- 03 — AGENDA -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">03</span><div class="crumb"><b>Agenda</b></div></div>
+    <div class="slide-head reveal"><span class="snum">3</span><div class="crumb"><b>Agenda</b></div></div>
     <h2 class="reveal">What we'll <span class="o">cover</span></h2>
     <div class="cards c3 reveal">
       <div class="tile"><span class="k">The core idea</span><p>Model, harness, agent — and the loop that ties them together.</p></div>
@@ -274,7 +304,7 @@ body.editing .edit-bar{display:flex}
 <!-- 04 — THREE BUILDING BLOCKS + DIAGRAM A -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">04</span><div class="crumb"><b>Core</b> · the basics</div></div>
+    <div class="slide-head reveal"><span class="snum">4</span><div class="crumb"><b>Core</b> · the basics</div></div>
     <h2 class="reveal">Three building <span class="o">blocks</span></h2>
     <div class="diagram reveal">
       <svg viewBox="0 0 800 270" role="img" aria-label="Agent contains a harness, which runs the model and tools in a loop">
@@ -308,7 +338,7 @@ body.editing .edit-bar{display:flex}
 <!-- 05 — GLOSSARY -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">05</span><div class="crumb"><b>Core</b> · cheat sheet</div></div>
+    <div class="slide-head reveal"><span class="snum">5</span><div class="crumb"><b>Core</b> · cheat sheet</div></div>
     <h2 class="reveal">Words you'll <span class="o">keep hearing</span></h2>
     <div class="gloss reveal">
       <div class="row"><span class="term">Token</span><span class="def">A chunk of text ≈ ¾ of a word. The unit models read and bill in.</span></div>
@@ -328,7 +358,7 @@ body.editing .edit-bar{display:flex}
 <!-- 06 — MODEL STATELESS + MEMENTO + DIAGRAM B -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">06</span><div class="crumb"><b>Model</b> · the brain</div></div>
+    <div class="slide-head reveal"><span class="snum">6</span><div class="crumb"><b>Model</b> · the brain</div></div>
     <h2 class="reveal">The model has <span class="o">no memory</span></h2>
     <div class="split">
       <div class="diagram reveal">
@@ -360,7 +390,7 @@ body.editing .edit-bar{display:flex}
 <!-- 07 — MODEL EXAMPLE -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">07</span><div class="crumb"><b>Model</b> · example</div></div>
+    <div class="slide-head reveal"><span class="snum">7</span><div class="crumb"><b>Model</b> · example</div></div>
     <h2 class="reveal">"No memory" in <span class="o">practice</span></h2>
     <p class="lead reveal" style="margin-bottom:var(--content-gap)">There's no "conversation" on the model's side. Each call hands it the <b>whole history</b> as one flat list:</p>
     <div class="code reveal"><span class="c"># Turn 3 — the model is handed ALL prior turns again</span>
@@ -373,27 +403,62 @@ messages = [
   </div>
 </section>
 
-<!-- 08 — HARNESS -->
+<!-- 08 — HARNESS (what runs where) -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">08</span><div class="crumb"><b>Harness</b> · the body</div></div>
-    <h2 class="reveal">The harness does the <span class="o">work around</span></h2>
-    <ul class="bul reveal">
-      <li><b>Holds the conversation</b> and assembles the context it sends the model on every turn.</li>
-      <li><b>Runs the tool calls</b> — reads/writes files, runs commands, calls APIs, searches the web.</li>
-      <li><b>Drives the loop</b>, asks for permissions, and handles caching &amp; compaction behind the scenes.</li>
-    </ul>
-    <div class="kcard reveal" style="margin-top:var(--content-gap)">
-      <div class="big">Claude Code &amp; Codex are harnesses</div>
-      <p>Model alone = a <b>chat box.</b> Model + harness + tools = an <b>agent.</b> Same model, different harness → very different powers.</p>
+    <div class="slide-head reveal"><span class="snum">8</span><div class="crumb"><b>Harness</b> · what runs where</div></div>
+    <h2 class="reveal">Model in the cloud, harness on your <span class="o">machine</span></h2>
+    <div class="diagram reveal">
+      <svg viewBox="0 0 820 320" role="img" aria-label="You talk to the agent. The agent is Claude Code (the harness, running locally with your files and terminal) looping with the stateless model in the cloud.">
+        <defs>
+          <marker id="ahH" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#FF5722"/></marker>
+          <marker id="ahHd" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="rgba(255,255,255,.4)"/></marker>
+        </defs>
+        <!-- USER (outside the agent) -->
+        <rect class="dg-box" x="12" y="116" width="100" height="84" rx="12"/>
+        <text class="dg-t" x="62" y="152" font-size="15" text-anchor="middle">YOU</text>
+        <text class="dg-t mut" x="62" y="174" font-size="12" text-anchor="middle">you talk →</text>
+        <path class="dg-line" d="M114 156 C 145 150, 165 144, 188 140" marker-end="url(#ahH)"/>
+        <text class="dg-t mut" x="150" y="126" font-size="11.5" text-anchor="middle">chat</text>
+        <!-- AGENT (the whole running system) -->
+        <rect class="dg-box outer" x="150" y="16" width="658" height="290" rx="18"/>
+        <text class="dg-t acc" x="170" y="44" font-size="18">AGENT</text>
+        <text class="dg-t mut" x="246" y="44" font-size="12.5">= harness + model, in a loop</text>
+        <!-- YOUR MACHINE zone -->
+        <rect class="dg-box mid" x="168" y="62" width="336" height="230" rx="12"/>
+        <text class="dg-t" x="186" y="86" font-size="13.5">💻 YOUR MACHINE (local)</text>
+        <rect class="dg-box hot" x="192" y="102" width="288" height="64" rx="10"/>
+        <text class="dg-t on" x="336" y="128" font-size="16" text-anchor="middle">CLAUDE CODE</text>
+        <text class="dg-t on" x="336" y="148" font-size="12" text-anchor="middle">the harness</text>
+        <rect class="dg-box" x="192" y="212" width="138" height="46" rx="8"/>
+        <text class="dg-t" x="261" y="240" font-size="13" text-anchor="middle">📄 your files</text>
+        <rect class="dg-box" x="342" y="212" width="138" height="46" rx="8"/>
+        <text class="dg-t" x="411" y="240" font-size="13" text-anchor="middle">▸ terminal</text>
+        <path class="dg-line" d="M262 166 L 260 210" marker-end="url(#ahH)"/>
+        <path class="dg-line" d="M410 166 L 412 210" marker-end="url(#ahH)"/>
+        <text class="dg-t mut" x="336" y="190" font-size="11" text-anchor="middle">runs actions</text>
+        <!-- CLOUD zone -->
+        <rect class="dg-box mid" x="528" y="102" width="262" height="150" rx="12"/>
+        <text class="dg-t" x="546" y="126" font-size="13.5">☁ CLOUD</text>
+        <rect class="dg-box" x="552" y="140" width="214" height="96" rx="10"/>
+        <text class="dg-t" x="659" y="170" font-size="16" text-anchor="middle">MODEL</text>
+        <text class="dg-t mut" x="659" y="190" font-size="12" text-anchor="middle">Claude Opus 4.8</text>
+        <text class="dg-t mut" x="659" y="208" font-size="11" text-anchor="middle">stateless — no memory</text>
+        <!-- loop arrows harness <-> model -->
+        <path class="dg-line" d="M482 120 C 515 124, 530 138, 550 156" marker-end="url(#ahH)"/>
+        <text class="dg-t acc" x="512" y="110" font-size="11.5" text-anchor="middle">sends context →</text>
+        <path class="dg-line dim" d="M550 198 C 528 196, 512 168, 484 150" marker-end="url(#ahHd)"/>
+        <text class="dg-t mut" x="512" y="232" font-size="11.5" text-anchor="middle">← next action</text>
+      </svg>
     </div>
+    <p class="note reveal">You talk to the <b>agent.</b> <b>Claude Code is the harness</b> — it runs locally with your files &amp; terminal, and loops with the <b>model in the cloud</b> (which stays stateless). The agent isn't a separate thing — <b>it's that loop.</b></p>
   </div>
 </section>
 
 <!-- 09 — HARNESS EXAMPLE -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">09</span><div class="crumb"><b>Harness</b> · example</div></div>
+    <div class="slide-head reveal"><span class="snum">9</span><div class="crumb"><b>Harness</b> · example</div></div>
     <h2 class="reveal">What one turn <span class="o">really</span> sends</h2>
     <span class="extag reveal">EXAMPLE — a single Claude Code prompt</span>
     <div class="code reveal"><span class="c"># You type one line. The harness builds all of this for the model:</span>
@@ -443,6 +508,7 @@ messages = [
         <li>This loop is the whole "magic" of agentic AI — no magic, just <b>disciplined repetition.</b></li>
       </ul>
     </div>
+    <p class="note reveal"><span class="pill">🔴 LIVE</span> Glance at our running agent — those scrolling <b>tool calls</b> are this loop, for real.</p>
   </div>
 </section>
 
@@ -460,10 +526,63 @@ messages = [
   </div>
 </section>
 
-<!-- 12 — WHAT YOU CAN DO -->
+<!-- 12 — THINKING: HOW IT WORKS -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">12</span><div class="crumb"><b>Core</b> · so what?</div></div>
+    <div class="slide-head reveal"><span class="snum">12</span><div class="crumb"><b>Thinking</b> · how it works</div></div>
+    <h2 class="reveal">The model <span class="o">thinks</span> before it answers</h2>
+    <div class="split">
+      <div class="diagram reveal">
+        <svg viewBox="0 0 400 300" role="img" aria-label="The model first produces a hidden thinking scratchpad of reasoning, then the final answer">
+          <defs><marker id="ahT" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#FF5722"/></marker></defs>
+          <rect class="dg-box" x="116" y="12" width="168" height="42" rx="9"/>
+          <text class="dg-t" x="200" y="39" font-size="14" text-anchor="middle">PROMPT</text>
+          <path class="dg-line" d="M200 54 L200 76" marker-end="url(#ahT)"/>
+          <rect class="dg-box outer" x="50" y="80" width="300" height="152" rx="12"/>
+          <text class="dg-t acc" x="68" y="104" font-size="13" text-anchor="start">🧠 THINKING — hidden scratchpad</text>
+          <text class="dg-t mut" x="72" y="130" font-size="12.5">• recall the VAT rule (21%)</text>
+          <text class="dg-t mut" x="72" y="152" font-size="12.5">• 100 × 1.21 = 121</text>
+          <text class="dg-t mut" x="72" y="174" font-size="12.5">• so the test expects the tax added</text>
+          <text class="dg-t mut" x="72" y="206" font-size="11.5">(these reasoning tokens cost money too)</text>
+          <path class="dg-line" d="M200 232 L200 254" marker-end="url(#ahT)"/>
+          <rect class="dg-box hot" x="116" y="258" width="168" height="40" rx="9"/>
+          <text class="dg-t on" x="200" y="284" font-size="14" text-anchor="middle">ANSWER</text>
+        </svg>
+      </div>
+      <ul class="bul reveal">
+        <li><b>Reasoning</b> (or "thinking") models work the problem out <b>step by step first</b> — a private scratchpad — then give the answer.</li>
+        <li>It's still next-token prediction, just allowed to <b>"think out loud."</b> Empirically far better at maths, coding &amp; planning.</li>
+        <li><b>More thinking → better</b> on hard problems ("test-time compute") — but past a point it <b>overthinks</b> and gets worse.</li>
+        <li>Usually a dial: <b>low / medium / high effort.</b> Newer Claude models decide <b>adaptively</b> how hard to think.</li>
+      </ul>
+    </div>
+    <p class="note reveal"><span class="pill">🔴 LIVE</span> Watch for a <b>thinking block</b> in our running agent before it takes its next action.</p>
+  </div>
+</section>
+
+<!-- 13 — THINKING: IN AGENTS + THE CATCH -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">13</span><div class="crumb"><b>Thinking</b> · in agents &amp; the catch</div></div>
+    <h2 class="reveal">Thinking inside the <span class="o">loop</span></h2>
+    <div class="split">
+      <ul class="bul reveal">
+        <li>In the loop, the model <b>thinks before each action</b>: which tool, why, did the last result work? ("interleaved thinking") → better plans, fewer wrong turns.</li>
+        <li>It isn't free: thinking tokens are <b>billed as output</b> and <b>fill the context window</b> — so don't crank the effort for simple jobs.</li>
+        <li>Rule of thumb: <b>hard, multi-step task → think more; quick edit → think less.</b></li>
+      </ul>
+      <div class="kcard reveal">
+        <div class="big">Don't fully trust it</div>
+        <p>Anthropic's own research: when a hidden hint changed the model's answer, its reasoning <b>mentioned that hint only ~25% of the time.</b> The visible "thinking" is a <b>helpful narration — not proof</b> of what really happened.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 14 — WHAT YOU CAN DO -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">14</span><div class="crumb"><b>Core</b> · so what?</div></div>
     <h2 class="reveal">What it's actually <span class="o">good for</span></h2>
     <div class="uses reveal">
       <div class="tile"><span class="k">Write &amp; fix code</span><p>Features, refactors, bug fixes, writing tests.</p></div>
@@ -488,7 +607,7 @@ messages = [
 <!-- 14 — SOTA MODELS -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">14</span><div class="crumb"><b>Landscape</b> · models</div></div>
+    <div class="slide-head reveal"><span class="snum">15</span><div class="crumb"><b>Landscape</b> · models</div></div>
     <h2 class="reveal">Today's best <span class="o">models</span></h2>
     <table class="tbl reveal">
       <thead><tr><th>Maker</th><th>Flagship lineup (June 2026)</th><th>Known for</th></tr></thead>
@@ -505,7 +624,7 @@ messages = [
 <!-- 15 — PICKING A TIER -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">15</span><div class="crumb"><b>Landscape</b> · picking a tier</div></div>
+    <div class="slide-head reveal"><span class="snum">16</span><div class="crumb"><b>Landscape</b> · picking a tier</div></div>
     <h2 class="reveal">Which tier <span class="o">when?</span></h2>
     <div class="cards c3 reveal">
       <div class="tile fill"><span class="k">Large · Opus</span><p>Hard reasoning, tricky multi-file refactors, architecture. Slow &amp; pricey — reach for it when it matters.</p></div>
@@ -519,7 +638,7 @@ messages = [
 <!-- 16 — SOTA HARNESSES -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">16</span><div class="crumb"><b>Landscape</b> · harnesses</div></div>
+    <div class="slide-head reveal"><span class="snum">17</span><div class="crumb"><b>Landscape</b> · harnesses</div></div>
     <h2 class="reveal">Today's best <span class="o">harnesses</span></h2>
     <div class="cards c3 reveal">
       <div class="tile fill"><span class="k">Claude Code</span><p>Anthropic. CLI + IDE + web. Agentic coding over your whole repo.</p></div>
@@ -536,7 +655,7 @@ messages = [
 <!-- 17 — PRICING SUBSCRIPTIONS -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">17</span><div class="crumb"><b>Landscape</b> · plans</div></div>
+    <div class="slide-head reveal"><span class="snum">18</span><div class="crumb"><b>Landscape</b> · plans</div></div>
     <h2 class="reveal">Subscriptions <span class="o">(consumer)</span></h2>
     <table class="tbl reveal">
       <thead><tr><th>Tier</th><th>Claude (Anthropic)</th><th>ChatGPT (OpenAI)</th></tr></thead>
@@ -553,7 +672,7 @@ messages = [
 <!-- 18 — SUBSCRIPTION VS API -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">18</span><div class="crumb"><b>Landscape</b> · plan vs API</div></div>
+    <div class="slide-head reveal"><span class="snum">19</span><div class="crumb"><b>Landscape</b> · plan vs API</div></div>
     <h2 class="reveal">Subscription <span class="o">vs API</span></h2>
     <div class="split">
       <div class="tile reveal"><span class="k">Subscription</span><p>A <b>flat monthly fee</b> for a person using the app or CLI. Simple, capped by usage limits. Best for everyday work.</p></div>
@@ -566,7 +685,7 @@ messages = [
 <!-- 19 — CONTEXT: WHAT IT IS + DIAGRAM D -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">19</span><div class="crumb"><b>Context</b> · what it is</div></div>
+    <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>Context</b> · what it is</div></div>
     <h2 class="reveal">Context = the model's <span class="o">short-term memory</span></h2>
     <div class="split">
       <ul class="bul reveal">
@@ -593,7 +712,7 @@ messages = [
 <!-- 20 — CONTEXT ROT + DIAGRAM -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>Context</b> · the "stupidity threshold"</div></div>
+    <div class="slide-head reveal"><span class="snum">21</span><div class="crumb"><b>Context</b> · the "stupidity threshold"</div></div>
     <h2 class="reveal">Fuller context = <span class="o">dumber model</span></h2>
     <div class="split">
       <div class="diagram reveal">
@@ -626,7 +745,7 @@ messages = [
 <!-- 21 — MEASURING -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">21</span><div class="crumb"><b>Context</b> · keeping it lean</div></div>
+    <div class="slide-head reveal"><span class="snum">22</span><div class="crumb"><b>Context</b> · keeping it lean</div></div>
     <h2 class="reveal">Watch it, <span class="o">keep it lean</span></h2>
     <span class="extag reveal">EXAMPLE — a harness status line</span>
     <div class="code reveal"><span class="d">claude-opus-4-8</span>   <span class="o">context: 38%</span>  (76k / 200k)   <span class="g">$0.42</span></div>
@@ -635,13 +754,14 @@ messages = [
       <li>Climbing past ~40–50%? Quality starts to slip — time to <b>trim or restart.</b></li>
       <li><b>Habit:</b> finish a task, then start a <b>fresh chat</b> rather than dragging a bloated one onward.</li>
     </ul>
+    <p class="note reveal"><span class="pill">🔴 LIVE</span> Check the <b>context %</b> on our running agent right now — see how far it's climbed.</p>
   </div>
 </section>
 
 <!-- 22 — UNDER THE HOOD: CACHING + COMPACTION -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">22</span><div class="crumb"><b>Context</b> · under the hood</div></div>
+    <div class="slide-head reveal"><span class="snum">23</span><div class="crumb"><b>Context</b> · under the hood</div></div>
     <h2 class="reveal">How harnesses <span class="o">cope</span></h2>
     <div class="cards c2 reveal">
       <div class="tile"><span class="k">Caching</span><p>Stable parts (system prompt, CLAUDE.md, files) are <b>remembered between calls</b>, so reusing them is much <b>cheaper and faster</b> than re-reading every time.</p></div>
@@ -654,7 +774,7 @@ messages = [
 <!-- 23 — SUBAGENTS + DIAGRAM E -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">23</span><div class="crumb"><b>Context</b> · sub-agents</div></div>
+    <div class="slide-head reveal"><span class="snum">24</span><div class="crumb"><b>Context</b> · sub-agents</div></div>
     <h2 class="reveal">Sub-agents <span class="o">keep the main context clean</span></h2>
     <div class="split">
       <div class="diagram reveal">
@@ -687,7 +807,7 @@ messages = [
 <!-- 24 — PERMISSIONS -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">24</span><div class="crumb"><b>Safety</b> · permissions</div></div>
+    <div class="slide-head reveal"><span class="snum">25</span><div class="crumb"><b>Safety</b> · permissions</div></div>
     <h2 class="reveal">Safety through <span class="o">permissions</span></h2>
     <div class="cards c3 reveal">
       <div class="tile"><span class="k">Default · ask</span><p>The agent <b>asks first</b> before any risky action (write a file, run a command). Safest.</p></div>
@@ -701,7 +821,7 @@ messages = [
 <!-- 25 — BYPASS MODE -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">25</span><div class="crumb"><b>Safety</b> · bypass mode</div></div>
+    <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>Safety</b> · bypass mode</div></div>
     <h2 class="reveal">When is "YOLO" <span class="o">OK?</span></h2>
     <div class="split">
       <ul class="bul reveal">
@@ -720,7 +840,7 @@ messages = [
 <!-- 26 — RECAP: MEMENTO CALLBACK -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>Memory</b> · the problem</div></div>
+    <div class="slide-head reveal"><span class="snum">27</span><div class="crumb"><b>Memory</b> · the problem</div></div>
     <h2 class="reveal">Back to the model with <span class="o">no memory</span></h2>
     <div class="split">
       <div class="kcard reveal">
@@ -739,7 +859,7 @@ messages = [
 <!-- 27 — CLAUDE.md + MEMORY -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">27</span><div class="crumb"><b>Memory</b> · CLAUDE.md</div></div>
+    <div class="slide-head reveal"><span class="snum">28</span><div class="crumb"><b>Memory</b> · CLAUDE.md</div></div>
     <h2 class="reveal">Memory that <span class="o">survives sessions</span></h2>
     <span class="extag reveal">EXAMPLE — CLAUDE.md in your repo root</span>
     <div class="code reveal"><span class="c"># CLAUDE.md — auto-injected into every prompt</span>
@@ -757,7 +877,7 @@ messages = [
 <!-- 28 — SKILLS & PLUGINS -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">28</span><div class="crumb"><b>Memory</b> · skills &amp; plugins</div></div>
+    <div class="slide-head reveal"><span class="snum">29</span><div class="crumb"><b>Memory</b> · skills &amp; plugins</div></div>
     <h2 class="reveal">Skills &amp; <span class="o">plugins</span></h2>
     <div class="split">
       <ul class="bul reveal">
@@ -776,7 +896,7 @@ messages = [
 <!-- 29 — REACHING OUT -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">29</span><div class="crumb"><b>Reaching out</b> · other systems</div></div>
+    <div class="slide-head reveal"><span class="snum">30</span><div class="crumb"><b>Reaching out</b> · other systems</div></div>
     <h2 class="reveal">Touching <span class="o">other systems</span></h2>
     <div class="cards c3 reveal">
       <div class="tile"><span class="k">API</span><p>Services called <b>programmatically</b> over HTTP. The agent sends a request, gets structured data back.</p></div>
@@ -790,7 +910,7 @@ messages = [
 <!-- 30 — MCP + DIAGRAM F -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">30</span><div class="crumb"><b>Reaching out</b> · MCP</div></div>
+    <div class="slide-head reveal"><span class="snum">31</span><div class="crumb"><b>Reaching out</b> · MCP</div></div>
     <h2 class="reveal">MCP = <span class="o">"USB-C for agents"</span></h2>
     <div class="split">
       <div class="diagram reveal">
@@ -828,10 +948,24 @@ messages = [
   </div>
 </section>
 
+<!-- HOW TO WORK WITH IT WELL -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">32</span><div class="crumb"><b>In practice</b> · how to work with it</div></div>
+    <h2 class="reveal">If you remember <span class="o">three things</span></h2>
+    <div class="cards c3 reveal">
+      <div class="tile"><span class="k">1 · Just talk to it</span><p>Treat it like a <b>colleague</b>, in plain language. Give the goal &amp; context, then iterate. Natural beats over-engineered prompts.</p></div>
+      <div class="tile"><span class="k">2 · Remember Memento</span><p>No context = <b>no idea what you mean.</b> The agent only knows what's in front of it — and quality <b>rots</b> as that fills with junk.</p></div>
+      <div class="tile fill"><span class="k">3 · Feed &amp; hand off</span><p>It orients <b>fast</b> from what you give it. Keep a <b>CLAUDE.md</b>; when passing work on, ask it to <b>write a summary for the next agent.</b></p></div>
+    </div>
+    <p class="note reveal">Good context in → good work out. Most of "prompting skill" is really just <b>managing what the agent can see.</b></p>
+  </div>
+</section>
+
 <!-- 31 — SUMMARY -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">31</span><div class="crumb"><b>Summary</b></div></div>
+    <div class="slide-head reveal"><span class="snum">33</span><div class="crumb"><b>Summary</b></div></div>
     <h2 class="reveal">What to <span class="o">take away</span></h2>
     <ul class="bul reveal">
       <li><b>Model</b> = a stateless brain · <b>harness</b> = the body &amp; memory · <b>agent</b> = the loop that does things.</li>
@@ -847,7 +981,7 @@ messages = [
 <!-- 32 — SOURCES 1 -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">32</span><div class="crumb"><b>Sources</b> · further reading</div></div>
+    <div class="slide-head reveal"><span class="snum">34</span><div class="crumb"><b>Sources</b> · further reading</div></div>
     <h2 class="reveal">Sources &amp; <span class="o">links</span> (1/2)</h2>
     <div class="links reveal">
       <div class="linkcol">
@@ -872,16 +1006,17 @@ messages = [
 <!-- 33 — SOURCES 2 -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">33</span><div class="crumb"><b>Sources</b> · context, memory &amp; MCP</div></div>
+    <div class="slide-head reveal"><span class="snum">35</span><div class="crumb"><b>Sources</b> · context, memory &amp; MCP</div></div>
     <h2 class="reveal">Sources &amp; <span class="o">links</span> (2/2)</h2>
     <div class="links reveal">
       <div class="linkcol">
-        <h3>Context &amp; caching</h3>
+        <h3>Context, caching &amp; reasoning</h3>
         <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">Anthropic — Effective context engineering<span class="u">anthropic.com/engineering</span></a>
         <a href="https://www.trychroma.com/research/context-rot" target="_blank" rel="noopener">Chroma — Context Rot (18-model study)<span class="u">trychroma.com/research/context-rot</span></a>
         <a href="https://arxiv.org/abs/2307.03172" target="_blank" rel="noopener">Liu et al. — Lost in the Middle<span class="u">arxiv.org/abs/2307.03172</span></a>
         <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noopener">Anthropic — Prompt caching<span class="u">platform.claude.com/docs · prompt-caching</span></a>
-        <a href="https://platform.claude.com/docs/en/build-with-claude/context-windows" target="_blank" rel="noopener">Anthropic — Context windows<span class="u">platform.claude.com/docs · context-windows</span></a>
+        <a href="https://platform.claude.com/docs/en/build-with-claude/extended-thinking" target="_blank" rel="noopener">Anthropic — Extended / adaptive thinking<span class="u">platform.claude.com/docs · extended-thinking</span></a>
+        <a href="https://www.anthropic.com/research/reasoning-models-dont-say-think" target="_blank" rel="noopener">Anthropic — Reasoning models don't always say what they think<span class="u">anthropic.com/research · cot-faithfulness</span></a>
       </div>
       <div class="linkcol">
         <h3>Skills, plugins &amp; MCP</h3>

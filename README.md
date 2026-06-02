@@ -28,9 +28,24 @@ The deck has a built-in editor (no build step):
 
 ## What's covered
 
-Model / harness / agent · the agent loop · current SOTA models & harnesses ·
-pricing (subscriptions vs API) · context (context rot, caching, compaction, sub-agents) ·
-permissions & safety · memory (CLAUDE.md, skills, plugins) · APIs, CLIs & MCP.
+Model / harness / agent · the agent loop · reasoning / "thinking" ·
+current SOTA models & harnesses · pricing (subscriptions vs API) ·
+context (context rot, caching, compaction, sub-agents) · permissions & safety ·
+memory (CLAUDE.md, skills, plugins) · APIs, CLIs & MCP · how to work with it well.
+
+## Live demo (optional, recommended)
+
+The deck is built to run alongside a live agent. There's a **🔴 LIVE** anchor
+slide right after the hook, and **🔴 LIVE** callback markers on the loop,
+thinking, and context slides. A presenter quick-reference is in an HTML comment
+at the top of `agentic-ai.html`.
+
+- Before the talk, start Claude Code on a real task in **auto / accept-edits**
+  mode (so it won't block on a prompt mid-talk — which also demos the
+  permissions slides).
+- Good tasks (~3–8 min, several tool calls): *"add a `/health` endpoint with a
+  test, then run the tests"* or *"find & fix why test X fails."* Avoid anything
+  that finishes in ~20s or needs a login.
 
 ## Customize
 
