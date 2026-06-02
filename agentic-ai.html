@@ -12,268 +12,200 @@
 
 <style>
 /* ===========================================
-   CSS CUSTOM PROPERTIES (THEME) — Bold Signal
-   Edit these to restyle the whole deck.
+   THEME — Bold Signal. Edit these to restyle.
    =========================================== */
 :root{
-  --bg1:#161616;
-  --bg2:#262626;
+  --bg1:#161616; --bg2:#262626;
   --bg-gradient:linear-gradient(135deg,#161616 0%,#262626 50%,#161616 100%);
-  --card:#FF5722;        /* signature orange focal color */
-  --ink:#ffffff;
-  --oncard:#161616;
-  --muted:#9a9a9a;
+  --card:#FF5722; --ink:#ffffff; --oncard:#161616; --muted:#9a9a9a;
   --line:rgba(255,255,255,.12);
-
-  --font-d:'Archivo Black',sans-serif;
-  --font-b:'Space Grotesk',sans-serif;
-  --font-m:'JetBrains Mono',monospace;
-
-  /* Typography — all clamp() for viewport fitting */
-  --h2-size:clamp(1.35rem,3.8vw,2.9rem);
-  --h3-size:clamp(1rem,2.2vw,1.5rem);
-  --body-size:clamp(.78rem,1.4vw,1.12rem);
-  --small-size:clamp(.64rem,1vw,.88rem);
-
-  --slide-padding:clamp(1.1rem,3.6vw,3.6rem);
-  --content-gap:clamp(.55rem,1.8vw,1.4rem);
-
-  --ease:cubic-bezier(.16,1,.3,1);
-  --dur:.6s;
+  --font-d:'Archivo Black',sans-serif; --font-b:'Space Grotesk',sans-serif; --font-m:'JetBrains Mono',monospace;
+  --h2-size:clamp(1.3rem,3.7vw,2.8rem); --h3-size:clamp(1rem,2.2vw,1.5rem);
+  --body-size:clamp(.76rem,1.38vw,1.1rem); --small-size:clamp(.63rem,1vw,.86rem);
+  --slide-padding:clamp(1.05rem,3.5vw,3.4rem); --content-gap:clamp(.5rem,1.7vw,1.3rem);
+  --ease:cubic-bezier(.16,1,.3,1); --dur:.6s;
 }
-
 *{margin:0;padding:0;box-sizing:border-box}
 
-/* ===========================================
-   VIEWPORT FITTING: MANDATORY BASE STYLES
-   =========================================== */
+/* ===== VIEWPORT FITTING (mandatory base) ===== */
 html, body{height:100%;overflow-x:hidden}
 html{scroll-snap-type:y mandatory;scroll-behavior:smooth}
-.slide{
-  width:100vw;height:100vh;height:100dvh;overflow:hidden;
-  scroll-snap-align:start;display:flex;flex-direction:column;position:relative;
-}
-.slide-content{
-  flex:1;display:flex;flex-direction:column;justify-content:center;
-  max-height:100%;overflow:hidden;padding:var(--slide-padding);
-}
+.slide{width:100vw;height:100vh;height:100dvh;overflow:hidden;scroll-snap-align:start;
+  display:flex;flex-direction:column;position:relative}
+.slide-content{flex:1;display:flex;flex-direction:column;justify-content:center;max-height:100%;
+  overflow:hidden;padding:var(--slide-padding)}
 img{max-width:100%;max-height:min(50vh,400px);object-fit:contain}
+@media (max-height:760px){:root{--slide-padding:clamp(.8rem,3vw,2.1rem);--content-gap:clamp(.38rem,1.3vw,.95rem);
+  --h2-size:clamp(1.15rem,3.3vw,2.2rem);--body-size:clamp(.72rem,1.28vw,1rem)}}
+@media (max-height:620px){:root{--slide-padding:clamp(.5rem,2.3vw,1.3rem);--content-gap:clamp(.28rem,1vw,.65rem);
+  --h2-size:clamp(1rem,2.9vw,1.65rem);--body-size:clamp(.66rem,1.1vw,.88rem)}
+  .nav-dots,.keyboard-hint,.decorative{display:none}}
+@media (max-height:500px){:root{--slide-padding:clamp(.4rem,2vw,1rem);--h2-size:clamp(.92rem,2.5vw,1.35rem);
+  --body-size:clamp(.6rem,1vw,.8rem)}}
+@media (max-width:640px){.cards.c3,.cards.c2,.cards.c4{grid-template-columns:1fr !important}
+  .split{grid-template-columns:1fr !important}.gloss{grid-template-columns:1fr !important}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms !important;transition-duration:.2s !important}
+  html{scroll-behavior:auto}}
 
-@media (max-height:760px){
-  :root{--slide-padding:clamp(.8rem,3vw,2.2rem);--content-gap:clamp(.4rem,1.4vw,1rem);
-    --h2-size:clamp(1.2rem,3.4vw,2.3rem);--body-size:clamp(.74rem,1.3vw,1rem)}
-}
-@media (max-height:620px){
-  :root{--slide-padding:clamp(.55rem,2.4vw,1.4rem);--content-gap:clamp(.3rem,1vw,.7rem);
-    --h2-size:clamp(1.05rem,3vw,1.7rem);--body-size:clamp(.68rem,1.1vw,.9rem)}
-  .nav-dots,.keyboard-hint,.decorative{display:none}
-}
-@media (max-height:500px){
-  :root{--slide-padding:clamp(.4rem,2vw,1rem);--h2-size:clamp(.95rem,2.6vw,1.4rem);
-    --body-size:clamp(.62rem,1vw,.82rem)}
-}
-@media (max-width:600px){
-  .cards.c3,.cards.c2,.cards.c4{grid-template-columns:1fr !important}
-  .split{grid-template-columns:1fr !important}
-}
-@media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.2s !important}
-  html{scroll-behavior:auto}
-}
-
-/* ===========================================
-   GLOBAL LOOK
-   =========================================== */
+/* ===== GLOBAL LOOK ===== */
 body{background:var(--bg-gradient);background-attachment:fixed;color:var(--ink);font-family:var(--font-b)}
-.slide::before{
-  content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
-  background-image:
-    linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);
-  background-size:54px 54px;
-  mask-image:radial-gradient(ellipse at 70% 30%,#000 20%,transparent 85%);
-}
+.slide::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);
+  background-size:54px 54px;mask-image:radial-gradient(ellipse at 70% 30%,#000 20%,transparent 85%)}
 .slide-content{position:relative;z-index:1}
 
-/* Header (number + breadcrumb) */
+/* Header */
 .slide-head{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;
-  margin-bottom:clamp(.6rem,2vh,1.4rem);border-bottom:1px solid var(--line);
-  padding-bottom:clamp(.4rem,1.2vh,.85rem)}
-.snum{font-family:var(--font-d);color:var(--card);font-size:clamp(1.2rem,3vw,2.4rem);line-height:1}
-.crumb{font-size:var(--small-size);letter-spacing:.2em;text-transform:uppercase;color:var(--muted);
-  font-weight:700;text-align:right}
+  margin-bottom:clamp(.5rem,1.8vh,1.2rem);border-bottom:1px solid var(--line);padding-bottom:clamp(.35rem,1.1vh,.8rem)}
+.snum{font-family:var(--font-d);color:var(--card);font-size:clamp(1.1rem,2.8vw,2.2rem);line-height:1}
+.crumb{font-size:var(--small-size);letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:700;text-align:right}
 .crumb b{color:var(--ink)}
 
-h2{font-family:var(--font-d);font-size:var(--h2-size);line-height:1.02;letter-spacing:-.01em;
-  margin-bottom:clamp(.4rem,1.5vh,1rem)}
+h2{font-family:var(--font-d);font-size:var(--h2-size);line-height:1.02;letter-spacing:-.01em;margin-bottom:clamp(.35rem,1.4vh,.9rem)}
 h2 .o{color:var(--card)}
 h3{font-family:var(--font-d);font-size:var(--h3-size);line-height:1.05}
-
-.lead{font-size:clamp(.95rem,2vw,1.5rem);line-height:1.38;max-width:46ch}
+.lead{font-size:clamp(.92rem,1.95vw,1.45rem);line-height:1.36;max-width:48ch}
 .lead b{color:var(--card)}
 .muted{color:var(--muted)}
 
-/* Bullet list */
-ul.bul{list-style:none;display:flex;flex-direction:column;gap:clamp(.4rem,1.3vh,.9rem);max-width:66ch}
-ul.bul li{font-size:var(--body-size);line-height:1.4;padding-left:1.6em;position:relative}
-ul.bul li::before{content:"";position:absolute;left:0;top:.42em;width:.66em;height:.66em;
-  background:var(--card);clip-path:polygon(0 0,100% 50%,0 100%)}
+ul.bul{list-style:none;display:flex;flex-direction:column;gap:clamp(.35rem,1.2vh,.85rem);max-width:68ch}
+ul.bul li{font-size:var(--body-size);line-height:1.38;padding-left:1.55em;position:relative}
+ul.bul li::before{content:"";position:absolute;left:0;top:.42em;width:.64em;height:.64em;background:var(--card);clip-path:polygon(0 0,100% 50%,0 100%)}
 ul.bul li b{color:var(--ink)}
 
-/* Card grid */
-.cards{display:grid;gap:clamp(.5rem,1.4vw,1.1rem)}
+.cards{display:grid;gap:clamp(.45rem,1.3vw,1rem)}
 .cards.c3{grid-template-columns:repeat(3,1fr)}
 .cards.c2{grid-template-columns:repeat(2,1fr)}
 .cards.c4{grid-template-columns:repeat(2,1fr)}
-.tile{border:1px solid var(--line);border-radius:13px;padding:clamp(.7rem,1.6vw,1.3rem);
-  background:rgba(255,255,255,.025);display:flex;flex-direction:column;gap:.35rem}
-.tile .k{font-family:var(--font-d);color:var(--card);font-size:clamp(.85rem,1.8vw,1.3rem)}
-.tile p{font-size:var(--body-size);line-height:1.32}
+.tile{border:1px solid var(--line);border-radius:13px;padding:clamp(.65rem,1.5vw,1.25rem);background:rgba(255,255,255,.025);display:flex;flex-direction:column;gap:.32rem}
+.tile .k{font-family:var(--font-d);color:var(--card);font-size:clamp(.82rem,1.75vw,1.25rem)}
+.tile p{font-size:var(--body-size);line-height:1.3}
 .tile.fill{background:var(--card);border-color:var(--card)}
 .tile.fill .k{color:var(--oncard)}
 .tile.fill p{color:var(--oncard)}
 
-/* Focal key-term card */
-.kcard{background:var(--card);color:var(--oncard);border-radius:16px;
-  padding:clamp(.9rem,2.6vw,2rem);position:relative;overflow:hidden}
-.kcard::after{content:"";position:absolute;inset:0;
-  background-image:linear-gradient(rgba(0,0,0,.05) 2px,transparent 2px),linear-gradient(90deg,rgba(0,0,0,.05) 2px,transparent 2px);
-  background-size:32px 32px;pointer-events:none}
-.kcard .big{font-family:var(--font-d);font-size:clamp(1.4rem,4vw,2.9rem);line-height:1;position:relative}
-.kcard p{font-size:var(--body-size);line-height:1.38;margin-top:.5rem;position:relative;max-width:50ch}
+.kcard{background:var(--card);color:var(--oncard);border-radius:16px;padding:clamp(.85rem,2.5vw,1.9rem);position:relative;overflow:hidden}
+.kcard::after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(0,0,0,.05) 2px,transparent 2px),linear-gradient(90deg,rgba(0,0,0,.05) 2px,transparent 2px);background-size:32px 32px;pointer-events:none}
+.kcard .big{font-family:var(--font-d);font-size:clamp(1.3rem,3.8vw,2.7rem);line-height:1;position:relative}
+.kcard p{font-size:var(--body-size);line-height:1.36;margin-top:.45rem;position:relative;max-width:50ch}
 
-/* Two-column split */
-.split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(.9rem,2.6vw,2.2rem);align-items:center}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(.85rem,2.5vw,2.1rem);align-items:center}
 
-/* Table */
 table.tbl{width:100%;border-collapse:collapse;font-size:var(--body-size)}
-table.tbl th,table.tbl td{text-align:left;padding:clamp(.35rem,1vh,.75rem) clamp(.45rem,1.1vw,.9rem);
-  border-bottom:1px solid var(--line)}
-table.tbl th{font-family:var(--font-d);color:var(--card);font-weight:400;font-size:var(--small-size);
-  letter-spacing:.04em;text-transform:uppercase}
+table.tbl th,table.tbl td{text-align:left;padding:clamp(.32rem,1vh,.72rem) clamp(.42rem,1.1vw,.88rem);border-bottom:1px solid var(--line)}
+table.tbl th{font-family:var(--font-d);color:var(--card);font-weight:400;font-size:var(--small-size);letter-spacing:.04em;text-transform:uppercase}
 table.tbl td b{color:var(--ink)}
 table.tbl tr:last-child td{border-bottom:none}
-.note{font-size:var(--small-size);color:var(--muted);margin-top:clamp(.5rem,1.4vh,.9rem);line-height:1.4}
+.note{font-size:var(--small-size);color:var(--muted);margin-top:clamp(.45rem,1.3vh,.85rem);line-height:1.4}
 .note b{color:var(--ink)}
 
-/* Example tag */
-.extag{display:inline-block;font-family:var(--font-d);font-size:var(--small-size);color:var(--oncard);
-  background:var(--card);padding:.12rem .6rem;border-radius:6px;margin-bottom:.5rem;letter-spacing:.03em}
+.extag{display:inline-block;font-family:var(--font-d);font-size:var(--small-size);color:var(--oncard);background:var(--card);padding:.12rem .6rem;border-radius:6px;margin-bottom:.45rem;letter-spacing:.03em}
 
-/* Code / terminal block */
 .code{background:#0d0d0d;border:1px solid var(--line);border-left:3px solid var(--card);border-radius:10px;
-  padding:clamp(.6rem,1.5vw,1.05rem) clamp(.75rem,1.7vw,1.25rem);font-family:var(--font-m);
-  font-size:clamp(.6rem,1.12vw,.9rem);line-height:1.55;overflow:hidden;color:#d8d8d8;white-space:pre-wrap}
-.code .c{color:#7d7d7d}     /* comment */
-.code .o{color:var(--card)} /* keyword / prompt */
-.code .g{color:#7fd18b}     /* string */
-.code .b{color:#6fb0ff}     /* value */
-.code .d{color:#cda9ff}     /* dim accent */
+  padding:clamp(.55rem,1.4vw,1rem) clamp(.7rem,1.6vw,1.2rem);font-family:var(--font-m);
+  font-size:clamp(.58rem,1.1vw,.88rem);line-height:1.55;overflow:hidden;color:#d8d8d8;white-space:pre-wrap}
+.code .c{color:#7d7d7d} .code .o{color:var(--card)} .code .g{color:#7fd18b} .code .b{color:#6fb0ff} .code .d{color:#cda9ff}
 
-/* Agent loop diagram */
-.loop{display:flex;align-items:center;gap:clamp(.3rem,1.1vw,.85rem);flex-wrap:wrap;margin-top:.3rem}
-.loop .step{border:1px solid var(--line);border-radius:11px;padding:clamp(.5rem,1.2vw,.9rem) clamp(.6rem,1.4vw,1.05rem);
-  background:rgba(255,255,255,.03);font-size:var(--body-size);line-height:1.2}
-.loop .step .n{font-family:var(--font-d);color:var(--card);display:block;font-size:.8em;margin-bottom:.12em}
-.loop .step.hot{background:var(--card);border-color:var(--card);color:var(--oncard)}
-.loop .step.hot .n{color:var(--oncard)}
-.loop .arr{color:var(--card);font-family:var(--font-d);font-size:clamp(.95rem,2vw,1.5rem)}
-
-/* Pills */
 .pills{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.3rem}
-.pill{border:1px solid var(--card);color:var(--card);border-radius:100px;padding:.22rem .7rem;
-  font-size:var(--small-size);font-weight:700}
+.pill{border:1px solid var(--card);color:var(--card);border-radius:100px;padding:.22rem .7rem;font-size:var(--small-size);font-weight:700}
 
-/* Links grid */
-.links{display:grid;grid-template-columns:1fr 1fr;gap:clamp(.6rem,2vw,1.8rem)}
-.linkcol h3{color:var(--card);margin-bottom:.5rem;font-size:clamp(.85rem,1.7vw,1.15rem)}
-.linkcol a{display:block;color:var(--ink);text-decoration:none;font-size:clamp(.66rem,1.15vw,.92rem);
-  line-height:1.3;padding:.28rem 0;border-bottom:1px solid rgba(255,255,255,.06)}
-.linkcol a:hover{color:var(--card)}
-.linkcol a .u{display:block;color:var(--muted);font-family:var(--font-m);font-size:.82em;margin-top:.05em}
+/* Section divider */
+.divider .slide-content{align-items:center;justify-content:center;text-align:center}
+.divider .dnum{font-family:var(--font-d);color:var(--card);font-size:clamp(2.2rem,7vw,5rem);line-height:1;margin-bottom:.4rem}
+.divider h2{font-size:clamp(1.7rem,5.5vw,3.6rem)}
+.divider .dsub{color:var(--muted);font-size:clamp(.85rem,1.8vw,1.2rem);max-width:42ch;margin:.4rem auto 0}
+.divider .dsub b{color:var(--ink)}
 
-/* ===========================================
-   TITLE SLIDE
-   =========================================== */
+/* Glossary */
+.gloss{display:grid;grid-template-columns:1fr 1fr;gap:.15rem 1.6rem}
+.gloss .row{display:flex;gap:.7rem;align-items:baseline;padding:clamp(.2rem,.7vh,.42rem) 0;border-bottom:1px solid var(--line)}
+.gloss .term{font-family:var(--font-d);color:var(--card);font-size:var(--body-size);min-width:6.2em;flex-shrink:0}
+.gloss .def{font-size:var(--body-size);color:var(--ink);line-height:1.28}
+
+/* Use-case list */
+.uses{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.45rem,1.3vw,1rem)}
+@media (max-width:640px){.uses{grid-template-columns:1fr}}
+
+/* ===== DIAGRAMS (inline SVG) ===== */
+.diagram{width:100%;display:flex;justify-content:center;margin-top:.25rem}
+.diagram svg{width:100%;max-width:min(94vw,900px);height:auto;max-height:min(50vh,440px)}
+.dg-box{fill:rgba(255,255,255,.045);stroke:rgba(255,255,255,.22);stroke-width:1.5}
+.dg-box.hot{fill:var(--card);stroke:var(--card)}
+.dg-box.outer{fill:rgba(255,87,34,.06);stroke:rgba(255,87,34,.55);stroke-dasharray:6 5}
+.dg-box.mid{fill:rgba(255,255,255,.028);stroke:rgba(255,255,255,.16)}
+.dg-t{fill:var(--ink);font-family:var(--font-b);font-weight:700}
+.dg-t.on{fill:var(--oncard)}
+.dg-t.mut{fill:var(--muted);font-weight:500}
+.dg-t.acc{fill:var(--card);font-family:var(--font-d);font-weight:400}
+.dg-line{stroke:var(--card);stroke-width:2.5;fill:none}
+.dg-line.dim{stroke:rgba(255,255,255,.25);stroke-width:1.5}
+.dg-fill-g{fill:#7fd18b}.dg-fill-a{fill:#e3b341}.dg-fill-r{fill:var(--card)}
+.dg-cap{text-align:center;font-size:var(--small-size);color:var(--muted);margin-top:.4rem}
+.dg-cap b{color:var(--ink)}
+
+/* ===== TITLE SLIDE ===== */
 .title-slide{display:grid;grid-template-columns:1.1fr .9fr}
 .title-slide::before{display:none}
 .ts-left{padding:var(--slide-padding);display:flex;flex-direction:column;justify-content:space-between}
-.ts-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);
-  font-size:var(--small-size);letter-spacing:.18em;text-transform:uppercase}
+.ts-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:var(--small-size);letter-spacing:.18em;text-transform:uppercase}
 .ts-top .num{font-family:var(--font-d);color:var(--card);font-size:clamp(1.3rem,2.8vw,2.2rem)}
-.ts-kick{font-size:clamp(.68rem,1.4vw,1rem);letter-spacing:.3em;text-transform:uppercase;
-  color:var(--card);font-weight:700;margin-bottom:clamp(.7rem,1.8vh,1.1rem)}
-.ts-title{font-family:var(--font-d);line-height:.9;font-size:clamp(2.4rem,8.5vw,6.5rem);letter-spacing:-.01em}
-.ts-sub{font-size:clamp(.9rem,2vw,1.5rem);color:var(--muted);margin-top:clamp(.8rem,2.2vh,1.5rem);
-  font-weight:500;max-width:24ch}
+.ts-kick{font-size:clamp(.66rem,1.4vw,1rem);letter-spacing:.3em;text-transform:uppercase;color:var(--card);font-weight:700;margin-bottom:clamp(.6rem,1.7vh,1.1rem)}
+.ts-title{font-family:var(--font-d);line-height:.9;font-size:clamp(2.3rem,8.5vw,6.5rem);letter-spacing:-.01em}
+.ts-sub{font-size:clamp(.88rem,2vw,1.5rem);color:var(--muted);margin-top:clamp(.7rem,2.1vh,1.4rem);font-weight:500;max-width:24ch}
 .ts-sub b{color:var(--ink)}
-.ts-author{font-size:clamp(.78rem,1.5vw,1.08rem);color:var(--muted)}
+.ts-author{font-size:clamp(.76rem,1.5vw,1.06rem);color:var(--muted)}
 .ts-author b{color:var(--ink)}
 .ts-right{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--card)}
-.ts-right::before{content:"";position:absolute;inset:0;
-  background-image:linear-gradient(rgba(0,0,0,.06) 2px,transparent 2px),linear-gradient(90deg,rgba(0,0,0,.06) 2px,transparent 2px);
-  background-size:40px 40px}
+.ts-right::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(0,0,0,.06) 2px,transparent 2px),linear-gradient(90deg,rgba(0,0,0,.06) 2px,transparent 2px);background-size:40px 40px}
 .ts-badge{font-family:var(--font-d);color:var(--oncard);text-align:center;position:relative;z-index:2;transform:rotate(-4deg)}
-.ts-badge .b1{font-size:clamp(3.2rem,10vw,7.5rem);line-height:.82}
-.ts-badge .b2{font-family:var(--font-b);font-weight:700;letter-spacing:.16em;text-transform:uppercase;
-  font-size:clamp(.58rem,1.25vw,.92rem);margin-top:.6rem}
+.ts-badge .b1{font-size:clamp(3rem,10vw,7.5rem);line-height:.82}
+.ts-badge .b2{font-family:var(--font-b);font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:clamp(.56rem,1.25vw,.9rem);margin-top:.55rem}
 @media (max-width:700px){.title-slide{grid-template-columns:1fr}.ts-right{display:none}}
 
-.thanks{font-family:var(--font-d);font-size:clamp(2rem,7vw,5rem);line-height:.95}
+.thanks{font-family:var(--font-d);font-size:clamp(1.9rem,7vw,5rem);line-height:.95}
 .thanks .o{color:var(--card)}
 
-/* ===========================================
-   ENTRANCE ANIMATIONS
-   =========================================== */
-.reveal{opacity:0;transform:translateY(28px);
-  transition:opacity var(--dur) var(--ease),transform var(--dur) var(--ease)}
+/* Links grid */
+.links{display:grid;grid-template-columns:1fr 1fr;gap:clamp(.5rem,2vw,1.7rem)}
+.linkcol h3{color:var(--card);margin-bottom:.45rem;font-size:clamp(.82rem,1.7vw,1.12rem)}
+.linkcol a{display:block;color:var(--ink);text-decoration:none;font-size:clamp(.64rem,1.12vw,.9rem);line-height:1.28;padding:.25rem 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.linkcol a:hover{color:var(--card)}
+.linkcol a .u{display:block;color:var(--muted);font-family:var(--font-m);font-size:.82em;margin-top:.05em}
+
+/* ===== ANIMATIONS ===== */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity var(--dur) var(--ease),transform var(--dur) var(--ease)}
 .slide.visible .reveal{opacity:1;transform:translateY(0)}
-.slide.visible .reveal:nth-child(1){transition-delay:.06s}
-.slide.visible .reveal:nth-child(2){transition-delay:.15s}
-.slide.visible .reveal:nth-child(3){transition-delay:.24s}
-.slide.visible .reveal:nth-child(4){transition-delay:.33s}
-.slide.visible .reveal:nth-child(5){transition-delay:.42s}
+.slide.visible .reveal:nth-child(1){transition-delay:.05s}
+.slide.visible .reveal:nth-child(2){transition-delay:.14s}
+.slide.visible .reveal:nth-child(3){transition-delay:.23s}
+.slide.visible .reveal:nth-child(4){transition-delay:.32s}
+.slide.visible .reveal:nth-child(5){transition-delay:.41s}
 .ts-left>*{opacity:0;animation:rise .9s var(--ease) both}
-.ts-left .ts-top{animation-delay:.1s}
-.ts-left .ts-mid{animation-delay:.3s}
-.ts-left .ts-author{animation-delay:.5s}
+.ts-left .ts-top{animation-delay:.1s}.ts-left .ts-mid{animation-delay:.3s}.ts-left .ts-author{animation-delay:.5s}
 .ts-right{opacity:0;animation:slideIn 1s var(--ease) both .2s}
-@keyframes rise{from{opacity:0;transform:translateY(34px)}to{opacity:1;transform:translateY(0)}}
+@keyframes rise{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
 @keyframes slideIn{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:translateX(0)}}
 
-/* ===========================================
-   CHROME
-   =========================================== */
+/* ===== CHROME ===== */
 .progress-bar{position:fixed;top:0;left:0;height:3px;width:0;background:var(--card);z-index:9999;box-shadow:0 0 12px var(--card)}
-.nav-dots{position:fixed;right:clamp(.5rem,1.3vw,1.2rem);top:50%;transform:translateY(-50%);
-  display:flex;flex-direction:column;gap:.4rem;z-index:9998}
-.nav-dots button{width:8px;height:8px;border-radius:50%;border:none;cursor:pointer;padding:0;
-  background:rgba(255,255,255,.25);transition:all .3s var(--ease)}
+.nav-dots{position:fixed;right:clamp(.45rem,1.2vw,1.1rem);top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:.35rem;z-index:9998}
+.nav-dots button{width:8px;height:8px;border-radius:50%;border:none;cursor:pointer;padding:0;background:rgba(255,255,255,.25);transition:all .3s var(--ease)}
 .nav-dots button.active{background:var(--card);transform:scale(1.5);box-shadow:0 0 10px var(--card)}
-.keyboard-hint{position:fixed;bottom:clamp(.5rem,1.3vh,1rem);left:50%;transform:translateX(-50%);
-  font-size:var(--small-size);color:var(--muted);z-index:9998;opacity:.7;letter-spacing:.05em}
-.keyboard-hint kbd{font-family:var(--font-b);background:rgba(255,255,255,.08);border:1px solid var(--line);
-  border-radius:5px;padding:.1em .45em;font-size:.85em;color:var(--ink)}
+.keyboard-hint{position:fixed;bottom:clamp(.45rem,1.2vh,.95rem);left:50%;transform:translateX(-50%);font-size:var(--small-size);color:var(--muted);z-index:9998;opacity:.7;letter-spacing:.05em}
+.keyboard-hint kbd{font-family:var(--font-b);background:rgba(255,255,255,.08);border:1px solid var(--line);border-radius:5px;padding:.1em .45em;font-size:.85em;color:var(--ink)}
 
-/* ===========================================
-   INLINE EDITING (opt-in)
-   =========================================== */
+/* ===== INLINE EDITING ===== */
 .edit-hotzone{position:fixed;top:0;left:0;width:80px;height:80px;z-index:10000;cursor:pointer}
-.edit-toggle{position:fixed;top:clamp(.5rem,1.3vh,1rem);left:clamp(.5rem,1.3vw,1rem);width:42px;height:42px;
-  border-radius:11px;border:1px solid var(--line);background:rgba(20,20,20,.9);color:var(--ink);font-size:1.1rem;
-  cursor:pointer;opacity:0;pointer-events:none;transition:opacity .3s ease;z-index:10001;display:flex;align-items:center;justify-content:center}
+.edit-toggle{position:fixed;top:clamp(.45rem,1.2vh,.95rem);left:clamp(.45rem,1.2vw,.95rem);width:42px;height:42px;border-radius:11px;border:1px solid var(--line);background:rgba(20,20,20,.9);color:var(--ink);font-size:1.1rem;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .3s ease;z-index:10001;display:flex;align-items:center;justify-content:center}
 .edit-toggle.show,.edit-toggle.active{opacity:1;pointer-events:auto}
 .edit-toggle.active{background:var(--card);color:var(--oncard);border-color:var(--card)}
 body.editing [contenteditable="true"]{outline:1px dashed rgba(255,87,34,.7);outline-offset:3px;border-radius:3px;cursor:text}
 body.editing [contenteditable="true"]:focus{outline:2px solid var(--card);background:rgba(255,87,34,.07)}
-.edit-bar{position:fixed;bottom:clamp(.5rem,1.3vh,1rem);right:clamp(.5rem,1.3vw,1rem);z-index:10001;display:none;gap:.5rem}
+.edit-bar{position:fixed;bottom:clamp(.45rem,1.2vh,.95rem);right:clamp(.45rem,1.2vw,.95rem);z-index:10001;display:none;gap:.5rem}
 body.editing .edit-bar{display:flex}
-.edit-bar button{font-family:var(--font-b);font-weight:700;border:1px solid var(--line);background:rgba(20,20,20,.92);
-  color:var(--ink);border-radius:9px;padding:.5rem .9rem;cursor:pointer;font-size:var(--small-size)}
+.edit-bar button{font-family:var(--font-b);font-weight:700;border:1px solid var(--line);background:rgba(20,20,20,.92);color:var(--ink);border-radius:9px;padding:.5rem .9rem;cursor:pointer;font-size:var(--small-size)}
 .edit-bar button.primary{background:var(--card);color:var(--oncard);border-color:var(--card)}
-.edit-toast{position:fixed;bottom:clamp(3.2rem,8vh,4.3rem);right:clamp(.5rem,1.3vw,1rem);z-index:10002;
-  background:var(--card);color:var(--oncard);font-weight:700;padding:.5rem .9rem;border-radius:9px;
-  font-size:var(--small-size);opacity:0;transform:translateY(8px);transition:all .3s var(--ease);pointer-events:none}
+.edit-toast{position:fixed;bottom:clamp(3rem,8vh,4.2rem);right:clamp(.45rem,1.2vw,.95rem);z-index:10002;background:var(--card);color:var(--oncard);font-weight:700;padding:.5rem .9rem;border-radius:9px;font-size:var(--small-size);opacity:0;transform:translateY(8px);transition:all .3s var(--ease);pointer-events:none}
 .edit-toast.show{opacity:1;transform:translateY(0)}
 </style>
 </head>
@@ -296,7 +228,7 @@ body.editing .edit-bar{display:flex}
   <div class="ts-left">
     <div class="ts-top"><span class="num">01</span><span>Internal talk · June 2026</span></div>
     <div class="ts-mid">
-      <div class="ts-kick">Introduction to agentic AI</div>
+      <div class="ts-kick">A beginner's introduction to agentic AI</div>
       <h1 class="ts-title">Agentic<br>AI</h1>
       <p class="ts-sub">How <b>Claude&nbsp;Code</b>, <b>Codex</b> &amp; co. actually work</p>
     </div>
@@ -307,142 +239,257 @@ body.editing .edit-bar{display:flex}
   </div>
 </section>
 
-<!-- 02 — AGENDA -->
+<!-- 02 — HOOK -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">02</span><div class="crumb"><b>Agenda</b></div></div>
+    <div class="slide-head reveal"><span class="snum">02</span><div class="crumb"><b>The hook</b></div></div>
+    <h2 class="reveal">You type <span class="o">one line.</span> It does the rest.</h2>
+    <div class="code reveal"><span class="o">you ›</span> <span class="b">"the invoice test is failing — fix it"</span>
+
+<span class="c">…then, with no further input, the AI on its own:</span>
+  ✔ ran the tests           <span class="c">saw it expected 121, got 100</span>
+  ✔ opened invoice.py       <span class="c">spotted VAT was never applied</span>
+  ✔ edited the code         <span class="c">added the 21% VAT line</span>
+  ✔ ran the tests again     <span class="g">PASS ✓</span></div>
+    <p class="note reveal">That autonomy — deciding <b>and acting</b>, step after step — is what makes it an <b>agent</b>. The rest of this talk is simply <b>how it works.</b></p>
+  </div>
+</section>
+
+<!-- 03 — AGENDA -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">03</span><div class="crumb"><b>Agenda</b></div></div>
     <h2 class="reveal">What we'll <span class="o">cover</span></h2>
     <div class="cards c3 reveal">
-      <div class="tile"><span class="k">The terms</span><p>Model, harness, agent — and the loop that ties them together.</p></div>
-      <div class="tile"><span class="k">State of the art</span><p>Current models &amp; harnesses, prices and subscriptions.</p></div>
-      <div class="tile"><span class="k">Context</span><p>What it is, why it rots, and how to keep it clean.</p></div>
+      <div class="tile"><span class="k">The core idea</span><p>Model, harness, agent — and the loop that ties them together.</p></div>
+      <div class="tile"><span class="k">The landscape</span><p>Today's models &amp; tools, prices and plans.</p></div>
+      <div class="tile"><span class="k">Context</span><p>The model's short-term memory — and how to keep it sharp.</p></div>
       <div class="tile"><span class="k">Safety</span><p>Permissions: ask, auto, and bypass ("YOLO") mode.</p></div>
       <div class="tile"><span class="k">Memory</span><p>CLAUDE.md, memory, skills &amp; plugins.</p></div>
-      <div class="tile fill"><span class="k">Reaching out</span><p>APIs, CLIs and MCP — how agents touch other systems.</p></div>
+      <div class="tile fill"><span class="k">Reaching out</span><p>APIs, CLIs and MCP — touching other systems.</p></div>
     </div>
   </div>
 </section>
 
-<!-- 03 — THREE BUILDING BLOCKS -->
+<!-- 04 — THREE BUILDING BLOCKS + DIAGRAM A -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">03</span><div class="crumb"><b>Terms</b> · the basics</div></div>
+    <div class="slide-head reveal"><span class="snum">04</span><div class="crumb"><b>Core</b> · the basics</div></div>
     <h2 class="reveal">Three building <span class="o">blocks</span></h2>
-    <div class="cards c3 reveal">
-      <div class="tile"><span class="k">Model</span><p>The <b>brain</b>. A stateless function: text&nbsp;in&nbsp;→&nbsp;text&nbsp;out. All the intelligence, none of the action.</p></div>
-      <div class="tile"><span class="k">Harness</span><p>The <b>body &amp; environment</b>. The program around the model that holds context and runs tools.</p></div>
-      <div class="tile fill"><span class="k">Agent</span><p><b>Model + harness</b> that actually <b>does things</b> — calling tools in a loop until the job is done.</p></div>
+    <div class="diagram reveal">
+      <svg viewBox="0 0 800 270" role="img" aria-label="Agent contains a harness, which runs the model and tools in a loop">
+        <defs><marker id="ahA" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#FF5722"/></marker></defs>
+        <!-- Agent (outer) -->
+        <rect class="dg-box outer" x="12" y="14" width="776" height="242" rx="20"/>
+        <text class="dg-t acc" x="34" y="44" font-size="19">AGENT</text>
+        <text class="dg-t mut" x="118" y="44" font-size="14">= the whole thing, doing work in a loop</text>
+        <!-- Harness (mid) -->
+        <rect class="dg-box mid" x="44" y="64" width="712" height="170" rx="15"/>
+        <text class="dg-t" x="66" y="90" font-size="16">HARNESS</text>
+        <!-- Model -->
+        <circle class="dg-box hot" cx="190" cy="158" r="62"/>
+        <text class="dg-t on" x="190" y="153" font-size="18" text-anchor="middle">MODEL</text>
+        <text class="dg-t on" x="190" y="174" font-size="12.5" text-anchor="middle">the brain</text>
+        <!-- Tools -->
+        <rect class="dg-box" x="540" y="104" width="190" height="34" rx="8"/><text class="dg-t" x="635" y="126" font-size="14" text-anchor="middle">📄 read / write files</text>
+        <rect class="dg-box" x="540" y="146" width="190" height="34" rx="8"/><text class="dg-t" x="635" y="168" font-size="14" text-anchor="middle">▸ run commands</text>
+        <rect class="dg-box" x="540" y="188" width="190" height="34" rx="8"/><text class="dg-t" x="635" y="210" font-size="14" text-anchor="middle">🌐 call APIs / web</text>
+        <!-- arrows model <-> tools -->
+        <path class="dg-line" d="M255 150 C 380 120, 430 120, 535 121" marker-end="url(#ahA)"/>
+        <path class="dg-line dim" d="M535 205 C 410 205, 360 188, 256 168" marker-end="url(#ahA)"/>
+        <text class="dg-t mut" x="395" y="112" font-size="12.5" text-anchor="middle">asks for an action</text>
+        <text class="dg-t mut" x="392" y="223" font-size="12.5" text-anchor="middle">gets the result back</text>
+      </svg>
     </div>
-    <p class="note reveal">The one line to remember: <b>"agent" means it does something.</b> The model alone only predicts text.</p>
+    <p class="note reveal">The one line to remember: <b>"agent" means it does something.</b> The model alone only predicts text — the harness gives it hands.</p>
   </div>
 </section>
 
-<!-- 04 — MODEL: STATELESS -->
+<!-- 05 — GLOSSARY -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">04</span><div class="crumb"><b>Model</b> · the brain</div></div>
-    <h2 class="reveal">The model is <span class="o">stateless</span></h2>
+    <div class="slide-head reveal"><span class="snum">05</span><div class="crumb"><b>Core</b> · cheat sheet</div></div>
+    <h2 class="reveal">Words you'll <span class="o">keep hearing</span></h2>
+    <div class="gloss reveal">
+      <div class="row"><span class="term">Token</span><span class="def">A chunk of text ≈ ¾ of a word. The unit models read and bill in.</span></div>
+      <div class="row"><span class="term">Prompt</span><span class="def">The text you send the model.</span></div>
+      <div class="row"><span class="term">Context</span><span class="def">Everything the model sees in one call.</span></div>
+      <div class="row"><span class="term">Context window</span><span class="def">The max size of that context (e.g. 200K tokens).</span></div>
+      <div class="row"><span class="term">Tool call</span><span class="def">An action the model asks the harness to run.</span></div>
+      <div class="row"><span class="term">Harness</span><span class="def">The program running the model + its tools.</span></div>
+      <div class="row"><span class="term">Agent</span><span class="def">Model + harness, doing things in a loop.</span></div>
+      <div class="row"><span class="term">SOTA</span><span class="def">"State of the art" — today's best.</span></div>
+      <div class="row"><span class="term">MCP</span><span class="def">Model Context Protocol — a standard plug for tools/data.</span></div>
+    </div>
+    <p class="note reveal">Don't worry about memorising these — every one gets a slide of its own. This is just your map.</p>
+  </div>
+</section>
+
+<!-- 06 — MODEL STATELESS + MEMENTO + DIAGRAM B -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">06</span><div class="crumb"><b>Model</b> · the brain</div></div>
+    <h2 class="reveal">The model has <span class="o">no memory</span></h2>
     <div class="split">
-      <div class="kcard reveal">
-        <div class="big">text → text</div>
-        <p>Give it input, get output. Between calls it remembers <b>absolutely nothing.</b></p>
+      <div class="diagram reveal">
+        <svg viewBox="0 0 400 300" role="img" aria-label="Each call re-sends the entire history; the model remembers nothing between calls">
+          <defs><marker id="ahB" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#FF5722"/></marker></defs>
+          <!-- model -->
+          <circle class="dg-box hot" cx="312" cy="150" r="64"/>
+          <text class="dg-t on" x="312" y="144" font-size="17" text-anchor="middle">MODEL</text>
+          <text class="dg-t on" x="312" y="166" font-size="12" text-anchor="middle">forgets all</text>
+          <!-- three growing requests -->
+          <rect class="dg-box mid" x="20" y="36" width="120" height="30" rx="6"/><text class="dg-t mut" x="30" y="56" font-size="12.5">call 1: [m1]</text>
+          <rect class="dg-box mid" x="20" y="118" width="180" height="30" rx="6"/><text class="dg-t mut" x="30" y="138" font-size="12.5">call 2: [m1,m2]</text>
+          <rect class="dg-box mid" x="20" y="200" width="232" height="30" rx="6"/><text class="dg-t mut" x="30" y="220" font-size="12.5">call 3: [m1,m2,m3]</text>
+          <path class="dg-line" d="M144 51 C 220 60, 250 110, 258 128" marker-end="url(#ahB)"/>
+          <path class="dg-line" d="M204 133 C 235 140, 245 145, 250 148" marker-end="url(#ahB)"/>
+          <path class="dg-line" d="M256 215 C 270 200, 280 195, 270 188" marker-end="url(#ahB)"/>
+          <text class="dg-t acc" x="150" y="284" font-size="13">every call re-sends the whole history</text>
+        </svg>
       </div>
       <ul class="bul reveal">
-        <li>Under the hood it just <b>predicts the next token</b> — no database, no memory of "you".</li>
-        <li>It holds all the intelligence but <b>can't do anything by itself</b> — it can't run a command or read a file.</li>
-        <li>Every call starts <b>from zero.</b> Anything it should know must be sent in again.</li>
+        <li>Think of the guy in <b>Memento</b>: each interaction, the model has <b>no idea</b> what we said before.</li>
+        <li>It just <b>predicts the next token</b> — text in, text out. No database, no "you".</li>
+        <li>So the harness must <b>re-send everything</b> it should know, every single call.</li>
       </ul>
     </div>
   </div>
 </section>
 
-<!-- 05 — MODEL: WHAT STATELESS LOOKS LIKE (EXAMPLE) -->
+<!-- 07 — MODEL EXAMPLE -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">05</span><div class="crumb"><b>Model</b> · example</div></div>
-    <h2 class="reveal">"Stateless" in <span class="o">practice</span></h2>
-    <p class="lead reveal" style="margin-bottom:var(--content-gap)">There is no "conversation" on the model's side. Each API call re-sends the <b>whole history</b> as one flat list of messages:</p>
-    <div class="code reveal"><span class="c"># Turn 3 of a chat — the model is handed ALL prior turns again</span>
+    <div class="slide-head reveal"><span class="snum">07</span><div class="crumb"><b>Model</b> · example</div></div>
+    <h2 class="reveal">"No memory" in <span class="o">practice</span></h2>
+    <p class="lead reveal" style="margin-bottom:var(--content-gap)">There's no "conversation" on the model's side. Each call hands it the <b>whole history</b> as one flat list:</p>
+    <div class="code reveal"><span class="c"># Turn 3 — the model is handed ALL prior turns again</span>
 messages = [
   {role:<span class="g">"user"</span>,      content:<span class="g">"My name is David."</span>},
   {role:<span class="g">"assistant"</span>, content:<span class="g">"Nice to meet you, David."</span>},
   {role:<span class="g">"user"</span>,      content:<span class="g">"What's my name?"</span>}   <span class="c">← needs turn 1 re-sent</span>
 ]</div>
-    <p class="note reveal">Remove the first message and the model has <b>no idea</b> who you are. The "memory" lives in the request, not the model.</p>
+    <p class="note reveal">Delete the first line and the model <b>can't answer.</b> The "memory" lives in the request — not the model.</p>
   </div>
 </section>
 
-<!-- 06 — HARNESS: WHAT IT DOES -->
+<!-- 08 — HARNESS -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">06</span><div class="crumb"><b>Harness</b> · the body</div></div>
+    <div class="slide-head reveal"><span class="snum">08</span><div class="crumb"><b>Harness</b> · the body</div></div>
     <h2 class="reveal">The harness does the <span class="o">work around</span></h2>
     <ul class="bul reveal">
-      <li><b>Holds the conversation</b> and assembles the context it sends to the model on every turn.</li>
-      <li><b>Executes tool calls</b> — reads/writes files, runs shell commands, calls APIs, searches the web.</li>
-      <li><b>Runs the loop</b>, asks for permissions, and manages caching &amp; compaction behind the scenes.</li>
+      <li><b>Holds the conversation</b> and assembles the context it sends the model on every turn.</li>
+      <li><b>Runs the tool calls</b> — reads/writes files, runs commands, calls APIs, searches the web.</li>
+      <li><b>Drives the loop</b>, asks for permissions, and handles caching &amp; compaction behind the scenes.</li>
     </ul>
     <div class="kcard reveal" style="margin-top:var(--content-gap)">
       <div class="big">Claude Code &amp; Codex are harnesses</div>
-      <p>Model alone = a <b>chat box</b>. Model + harness + tools = an <b>agent.</b> Same model, different harness → very different capabilities.</p>
+      <p>Model alone = a <b>chat box.</b> Model + harness + tools = an <b>agent.</b> Same model, different harness → very different powers.</p>
     </div>
   </div>
 </section>
 
-<!-- 07 — HARNESS: ONE TURN, CONCRETE -->
+<!-- 09 — HARNESS EXAMPLE -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">07</span><div class="crumb"><b>Harness</b> · example</div></div>
+    <div class="slide-head reveal"><span class="snum">09</span><div class="crumb"><b>Harness</b> · example</div></div>
     <h2 class="reveal">What one turn <span class="o">really</span> sends</h2>
     <span class="extag reveal">EXAMPLE — a single Claude Code prompt</span>
-    <div class="code reveal"><span class="c"># The harness builds this context for the model, every turn:</span>
-<span class="o">1.</span> system prompt        <span class="c"># who you are, available tools</span>
+    <div class="code reveal"><span class="c"># You type one line. The harness builds all of this for the model:</span>
+<span class="o">1.</span> system prompt        <span class="c"># who it is, what tools exist</span>
 <span class="o">2.</span> CLAUDE.md            <span class="c"># project rules &amp; conventions</span>
 <span class="o">3.</span> conversation so far  <span class="c"># every previous message</span>
 <span class="o">4.</span> tool results         <span class="c"># files read, command output</span>
 <span class="o">5.</span> your new message      <span class="b">"fix the failing test"</span></div>
-    <p class="note reveal">You typed one line. The harness turned it into <b>thousands of tokens</b> of context — and will do so again on the next turn.</p>
+    <p class="note reveal">One line in → <b>thousands of tokens</b> of context out. And it does this again on every turn.</p>
   </div>
 </section>
 
-<!-- 08 — AGENT LOOP -->
+<!-- 10 — AGENT LOOP + DIAGRAM C -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">08</span><div class="crumb"><b>Agent</b> · the loop</div></div>
+    <div class="slide-head reveal"><span class="snum">10</span><div class="crumb"><b>Agent</b> · the loop</div></div>
     <h2 class="reveal">An agent is a <span class="o">loop</span></h2>
-    <p class="lead reveal" style="margin-bottom:var(--content-gap)">The model proposes an action, the harness runs it, the result goes back to the model. Repeat until done.</p>
-    <div class="loop reveal">
-      <div class="step"><span class="n">1</span>Model proposes<br>an action (tool call)</div>
-      <span class="arr">→</span>
-      <div class="step hot"><span class="n">2</span>Harness runs it</div>
-      <span class="arr">→</span>
-      <div class="step"><span class="n">3</span>Result fed<br>back to model</div>
-      <span class="arr">↻</span>
-      <div class="step"><span class="n">4</span>Repeat until<br>the task is done</div>
+    <div class="split">
+      <div class="diagram reveal">
+        <svg viewBox="0 0 480 380" role="img" aria-label="The agent loop: model proposes an action, harness runs it, result returns to the model, repeat until done">
+          <defs><marker id="ahC" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#FF5722"/></marker></defs>
+          <!-- nodes -->
+          <rect class="dg-box" x="140" y="14" width="200" height="60" rx="12"/>
+          <text class="dg-t" x="240" y="40" font-size="15" text-anchor="middle">① Model proposes</text>
+          <text class="dg-t" x="240" y="59" font-size="15" text-anchor="middle">an action</text>
+          <rect class="dg-box hot" x="332" y="160" width="138" height="60" rx="12"/>
+          <text class="dg-t on" x="401" y="186" font-size="15" text-anchor="middle">② Harness</text>
+          <text class="dg-t on" x="401" y="205" font-size="15" text-anchor="middle">runs it</text>
+          <rect class="dg-box" x="140" y="306" width="200" height="60" rx="12"/>
+          <text class="dg-t" x="240" y="332" font-size="15" text-anchor="middle">③ Result back</text>
+          <text class="dg-t" x="240" y="351" font-size="15" text-anchor="middle">to the model</text>
+          <rect class="dg-box" x="10" y="160" width="138" height="60" rx="12"/>
+          <text class="dg-t" x="79" y="186" font-size="15" text-anchor="middle">④ Repeat</text>
+          <text class="dg-t" x="79" y="205" font-size="15" text-anchor="middle">until done</text>
+          <!-- clockwise arcs -->
+          <path class="dg-line" d="M344 64 A 160 160 0 0 1 452 156" marker-end="url(#ahC)"/>
+          <path class="dg-line" d="M452 224 A 160 160 0 0 1 344 316" marker-end="url(#ahC)"/>
+          <path class="dg-line" d="M136 316 A 160 160 0 0 1 28 224" marker-end="url(#ahC)"/>
+          <path class="dg-line" d="M28 156 A 160 160 0 0 1 136 64" marker-end="url(#ahC)"/>
+          <text class="dg-t acc" x="240" y="185" font-size="16" text-anchor="middle">THE</text>
+          <text class="dg-t acc" x="240" y="206" font-size="16" text-anchor="middle">LOOP</text>
+        </svg>
+      </div>
+      <ul class="bul reveal">
+        <li>The model proposes, the harness acts, the result comes back. <b>Repeat until the task is done.</b></li>
+        <li>Like a <b>cook</b>: read the recipe → do a step → taste → adjust → repeat.</li>
+        <li>This loop is the whole "magic" of agentic AI — no magic, just <b>disciplined repetition.</b></li>
+      </ul>
     </div>
-    <p class="note reveal">This loop is the whole "magic" of agentic AI — no magic, just disciplined repetition over many small tool calls.</p>
   </div>
 </section>
 
-<!-- 09 — AGENT LOOP: WORKED EXAMPLE -->
+<!-- 11 — AGENT WORKED EXAMPLE -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">09</span><div class="crumb"><b>Agent</b> · worked example</div></div>
-    <h2 class="reveal">"Fix the failing test" <span class="o">→ the loop</span></h2>
-    <div class="code reveal"><span class="o">▸</span> run_tests()           <span class="c">→ FAIL: test_invoice expected 121, got 100</span>
-<span class="o">▸</span> read_file(invoice.py)  <span class="c">→ sees VAT is never applied</span>
-<span class="o">▸</span> edit_file(invoice.py)  <span class="c">→ adds  total *= 1.21</span>
-<span class="o">▸</span> run_tests()           <span class="g">→ PASS ✓</span>
-<span class="d">▸ done — 4 tool calls, no human in between</span></div>
-    <p class="note reveal">Each step is one trip through the loop. The model never "ran" anything itself — the <b>harness</b> did, and reported back.</p>
+    <div class="slide-head reveal"><span class="snum">11</span><div class="crumb"><b>Agent</b> · worked example</div></div>
+    <h2 class="reveal">Our hook, <span class="o">as the loop</span></h2>
+    <div class="code reveal"><span class="o">▸ ①②③</span> run_tests()           <span class="c">→ FAIL: expected 121, got 100</span>
+<span class="o">▸ ①②③</span> read_file(invoice.py)  <span class="c">→ sees VAT is never applied</span>
+<span class="o">▸ ①②③</span> edit_file(invoice.py)  <span class="c">→ adds  total *= 1.21</span>
+<span class="o">▸ ①②③</span> run_tests()           <span class="g">→ PASS ✓</span>
+<span class="d">▸ ④ done — 4 trips through the loop, no human in between</span></div>
+    <p class="note reveal">Each line is one lap of the loop. The model never "ran" anything itself — the <b>harness</b> did, and reported back each time.</p>
   </div>
 </section>
 
-<!-- 10 — SOTA MODELS -->
+<!-- 12 — WHAT YOU CAN DO -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">10</span><div class="crumb"><b>Models</b> · state of the art</div></div>
-    <h2 class="reveal">Current <span class="o">SOTA models</span></h2>
+    <div class="slide-head reveal"><span class="snum">12</span><div class="crumb"><b>Core</b> · so what?</div></div>
+    <h2 class="reveal">What it's actually <span class="o">good for</span></h2>
+    <div class="uses reveal">
+      <div class="tile"><span class="k">Write &amp; fix code</span><p>Features, refactors, bug fixes, writing tests.</p></div>
+      <div class="tile"><span class="k">Understand a codebase</span><p>"Where is X handled?" — answers grounded in your repo.</p></div>
+      <div class="tile"><span class="k">Automate chores</span><p>Triage issues, bump dependencies, wire up CI.</p></div>
+      <div class="tile"><span class="k">Work over your data</span><p>Query docs, tickets, databases (via MCP).</p></div>
+      <div class="tile"><span class="k">Draft &amp; research</span><p>Summaries, emails, first drafts, comparisons.</p></div>
+      <div class="tile fill"><span class="k">…with a human in the loop</span><p>You review &amp; approve. It's a power tool, not a replacement.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 13 — DIVIDER: THE LANDSCAPE -->
+<section class="slide divider">
+  <div class="slide-content">
+    <div class="dnum reveal">▸</div>
+    <h2 class="reveal">The <span class="o">landscape</span></h2>
+    <p class="dsub reveal">A quick detour through today's <b>models, tools and prices</b> — then we're straight back to how it all works.</p>
+  </div>
+</section>
+
+<!-- 14 — SOTA MODELS -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">14</span><div class="crumb"><b>Landscape</b> · models</div></div>
+    <h2 class="reveal">Today's best <span class="o">models</span></h2>
     <table class="tbl reveal">
       <thead><tr><th>Maker</th><th>Flagship lineup (June 2026)</th><th>Known for</th></tr></thead>
       <tbody>
@@ -451,29 +498,29 @@ messages = [
         <tr><td><b>Google</b></td><td>Gemini 3.5 Flash · 3.5 Pro</td><td>multimodal, large context</td></tr>
       </tbody>
     </table>
-    <p class="note reveal">The same three tiers repeat everywhere: <b>large</b> (smartest, priciest) · <b>medium</b> (the sweet spot) · <b>small</b> (fast &amp; cheap). The ranking reshuffles every few months — treat any list as a snapshot.</p>
+    <p class="note reveal">The same three tiers repeat everywhere: <b>large</b> (smartest, priciest) · <b>medium</b> (the sweet spot) · <b>small</b> (fast &amp; cheap). "SOTA" = state of the art — and it reshuffles every few months, so treat any list as a snapshot.</p>
   </div>
 </section>
 
-<!-- 11 — PICKING A TIER -->
+<!-- 15 — PICKING A TIER -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">11</span><div class="crumb"><b>Models</b> · picking a tier</div></div>
+    <div class="slide-head reveal"><span class="snum">15</span><div class="crumb"><b>Landscape</b> · picking a tier</div></div>
     <h2 class="reveal">Which tier <span class="o">when?</span></h2>
     <div class="cards c3 reveal">
-      <div class="tile fill"><span class="k">Large · Opus</span><p>Hard reasoning, tricky multi-file refactors, architecture. <b>Slow &amp; expensive</b> — reach for it when it matters.</p></div>
-      <div class="tile"><span class="k">Medium · Sonnet</span><p>The daily driver. Most coding &amp; agent work. Often <b>beats last gen's flagship</b> at a fraction of the cost.</p></div>
-      <div class="tile"><span class="k">Small · Haiku</span><p>High-volume, simple, latency-sensitive: classification, quick edits, sub-agent grunt work.</p></div>
+      <div class="tile fill"><span class="k">Large · Opus</span><p>Hard reasoning, tricky multi-file refactors, architecture. Slow &amp; pricey — reach for it when it matters.</p></div>
+      <div class="tile"><span class="k">Medium · Sonnet</span><p>The daily driver. Most coding &amp; agent work. Often beats last gen's flagship at a fraction of the cost.</p></div>
+      <div class="tile"><span class="k">Small · Haiku</span><p>High-volume, simple, fast: classification, quick edits, sub-agent grunt work.</p></div>
     </div>
-    <p class="note reveal"><b>Example:</b> let a Haiku sub-agent grep 200 files and summarize, then hand the summary to Opus for the actual design decision — cheap legwork, expensive thinking only where needed.</p>
+    <p class="note reveal"><b>Example:</b> a cheap Haiku sub-agent skims 200 files and summarises; the pricey Opus only does the actual design call. Cheap legwork, expensive thinking only where needed.</p>
   </div>
 </section>
 
-<!-- 12 — SOTA HARNESSES -->
+<!-- 16 — SOTA HARNESSES -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">12</span><div class="crumb"><b>Harnesses</b> · state of the art</div></div>
-    <h2 class="reveal">Current <span class="o">SOTA harnesses</span></h2>
+    <div class="slide-head reveal"><span class="snum">16</span><div class="crumb"><b>Landscape</b> · harnesses</div></div>
+    <h2 class="reveal">Today's best <span class="o">harnesses</span></h2>
     <div class="cards c3 reveal">
       <div class="tile fill"><span class="k">Claude Code</span><p>Anthropic. CLI + IDE + web. Agentic coding over your whole repo.</p></div>
       <div class="tile"><span class="k">Codex</span><p>OpenAI. Terminal-first agent on GPT‑5.5, with cloud &amp; worktrees.</p></div>
@@ -482,14 +529,14 @@ messages = [
       <div class="tile"><span class="k">Windsurf</span><p>Another agentic IDE.</p></div>
       <div class="tile"><span class="k">Aider</span><p>Open-source terminal coding agent.</p></div>
     </div>
-    <p class="note reveal">The harness decides what the model can <b>actually do</b> — tools, sandboxing, memory, parallelism. It's at least as important as the model.</p>
+    <p class="note reveal">The harness decides what the model can <b>actually do</b> — tools, sandboxing, memory, parallelism. At least as important as the model.</p>
   </div>
 </section>
 
-<!-- 13 — PRICING: SUBSCRIPTIONS -->
+<!-- 17 — PRICING SUBSCRIPTIONS -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">13</span><div class="crumb"><b>Pricing</b> · consumer plans</div></div>
+    <div class="slide-head reveal"><span class="snum">17</span><div class="crumb"><b>Landscape</b> · plans</div></div>
     <h2 class="reveal">Subscriptions <span class="o">(consumer)</span></h2>
     <table class="tbl reveal">
       <thead><tr><th>Tier</th><th>Claude (Anthropic)</th><th>ChatGPT (OpenAI)</th></tr></thead>
@@ -503,149 +550,164 @@ messages = [
   </div>
 </section>
 
-<!-- 14 — PRICING: SUBSCRIPTION vs API -->
+<!-- 18 — SUBSCRIPTION VS API -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">14</span><div class="crumb"><b>Pricing</b> · plan vs API</div></div>
+    <div class="slide-head reveal"><span class="snum">18</span><div class="crumb"><b>Landscape</b> · plan vs API</div></div>
     <h2 class="reveal">Subscription <span class="o">vs API</span></h2>
     <div class="split">
-      <div class="tile reveal"><span class="k">Subscription</span><p>A <b>flat monthly fee</b> for a person using the app/CLI. Simple, capped by usage limits. Best for everyday work.</p></div>
+      <div class="tile reveal"><span class="k">Subscription</span><p>A <b>flat monthly fee</b> for a person using the app or CLI. Simple, capped by usage limits. Best for everyday work.</p></div>
       <div class="tile fill reveal"><span class="k">API</span><p>Pay <b>per token</b> (input + output). No cap, scales to production. Best for building integrations.</p></div>
     </div>
-    <p class="note reveal"><b>Why tokens matter:</b> a token ≈ ¾ of a word. A long agent session can read your files dozens of times — and on the API <b>you pay for every re-read</b>. That's exactly why caching (slide 18) exists.</p>
+    <p class="note reveal"><b>Why tokens matter:</b> a long agent session can read your files dozens of times — and on the API <b>you pay for every re-read.</b> That's exactly why caching (coming up) exists.</p>
   </div>
 </section>
 
-<!-- 15 — CONTEXT: WHAT IT IS -->
+<!-- 19 — CONTEXT: WHAT IT IS + DIAGRAM D -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">15</span><div class="crumb"><b>Context</b> · what it is</div></div>
-    <h2 class="reveal">What is <span class="o">context?</span></h2>
+    <div class="slide-head reveal"><span class="snum">19</span><div class="crumb"><b>Context</b> · what it is</div></div>
+    <h2 class="reveal">Context = the model's <span class="o">short-term memory</span></h2>
     <div class="split">
       <ul class="bul reveal">
-        <li>Everything the model "sees" in <b>one call</b>: system prompt, CLAUDE.md, chat history, files, tool output.</li>
-        <li>Measured in <b>tokens</b> (≈ chunks of words).</li>
-        <li>The <b>context window</b> is the max size — typically <b>200K tokens</b> (≈ 500 pages), up to <b>1M</b> on top models.</li>
+        <li>Everything the model sees in <b>one call</b>: system prompt, CLAUDE.md, chat history, files, tool output.</li>
+        <li>Measured in <b>tokens.</b> The <b>context window</b> is the max — typically <b>200K</b> (≈ 500 pages), up to <b>1M</b> on top models.</li>
+        <li>If it isn't in the context, it <b>doesn't exist</b> for the model.</li>
       </ul>
-      <div class="kcard reveal">
-        <div class="big">The only memory</div>
-        <p>Context is the model's <b>entire</b> working memory. If it isn't in the context, it <b>does not exist</b> for the model.</p>
+      <div class="diagram reveal">
+        <svg viewBox="0 0 400 250" role="img" aria-label="The context window is a fixed-size box filled by system prompt, rules, history, files and tool output">
+          <rect class="dg-box mid" x="20" y="20" width="360" height="210" rx="12"/>
+          <text class="dg-t acc" x="200" y="44" font-size="14" text-anchor="middle">CONTEXT WINDOW · 200K tokens</text>
+          <rect class="dg-fill-r" x="34" y="58" width="332" height="26" rx="5" opacity="0.9"/><text class="dg-t on" x="44" y="76" font-size="12.5">system prompt</text>
+          <rect class="dg-box hot" x="34" y="90" width="332" height="26" rx="5"/><text class="dg-t on" x="44" y="108" font-size="12.5">CLAUDE.md · rules</text>
+          <rect class="dg-box" x="34" y="122" width="332" height="26" rx="5"/><text class="dg-t" x="44" y="140" font-size="12.5">conversation history</text>
+          <rect class="dg-box" x="34" y="154" width="332" height="26" rx="5"/><text class="dg-t" x="44" y="172" font-size="12.5">files you opened</text>
+          <rect class="dg-box" x="34" y="186" width="220" height="26" rx="5"/><text class="dg-t" x="44" y="204" font-size="12.5">tool output</text>
+          <rect x="258" y="186" width="108" height="26" rx="5" fill="none" stroke="rgba(255,255,255,.18)" stroke-dasharray="4 4"/><text class="dg-t mut" x="312" y="204" font-size="12" text-anchor="middle">free space</text>
+        </svg>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 16 — CONTEXT ROT -->
+<!-- 20 — CONTEXT ROT + DIAGRAM -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">16</span><div class="crumb"><b>Context</b> · the "stupidity threshold"</div></div>
+    <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>Context</b> · the "stupidity threshold"</div></div>
     <h2 class="reveal">Fuller context = <span class="o">dumber model</span></h2>
     <div class="split">
-      <div class="kcard reveal">
-        <div class="big">"Context rot"</div>
-        <p>Chroma tested <b>18 frontier models</b>: every one gets <b>worse</b> as input grows — even when the answer is right there.</p>
+      <div class="diagram reveal">
+        <svg viewBox="0 0 400 250" role="img" aria-label="Answer quality falls as the context fills, and facts buried in the middle get missed">
+          <!-- quality curve -->
+          <line class="dg-line dim" x1="40" y1="20" x2="40" y2="150"/>
+          <line class="dg-line dim" x1="40" y1="150" x2="380" y2="150"/>
+          <text class="dg-t mut" x="14" y="90" font-size="12" transform="rotate(-90 14 90)">quality</text>
+          <text class="dg-t mut" x="210" y="170" font-size="12" text-anchor="middle">context filled →</text>
+          <path class="dg-line" d="M40 44 C 150 50, 210 70, 260 100 C 300 124, 340 140, 380 146"/>
+          <rect class="dg-fill-g" x="40" y="150" width="96" height="7"/><text class="dg-fill-g" x="50" y="146" font-size="11">sharp</text>
+          <rect class="dg-fill-a" x="136" y="150" width="92" height="7"/><text class="dg-fill-a" x="150" y="146" font-size="11">slipping</text>
+          <rect class="dg-fill-r" x="228" y="150" width="152" height="7"/><text class="dg-fill-r" x="240" y="146" font-size="11">rot</text>
+          <!-- lost in the middle -->
+          <text class="dg-t mut" x="40" y="200" font-size="12">"lost in the middle":</text>
+          <rect class="dg-box hot" x="40" y="210" width="60" height="24" rx="4"/><text class="dg-t on" x="70" y="227" font-size="11" text-anchor="middle">start ✓</text>
+          <rect class="dg-box" x="104" y="210" width="216" height="24" rx="4" opacity="0.4"/><text class="dg-t mut" x="212" y="227" font-size="11" text-anchor="middle">middle — often missed</text>
+          <rect class="dg-box hot" x="324" y="210" width="56" height="24" rx="4"/><text class="dg-t on" x="352" y="227" font-size="11" text-anchor="middle">end ✓</text>
+        </svg>
       </div>
       <ul class="bul reveal">
-        <li><b>Lost in the middle</b> (Stanford): models recall the start &amp; end well, but miss facts <b>buried in the middle.</b></li>
-        <li>Rule of thumb: keep the window <b>well under half full.</b> The "40% threshold of stupidity" is folklore, not an exact law — but it points the right way.</li>
-        <li>A bigger window is <b>not</b> a fix. Curation beats capacity.</li>
+        <li><b>"Context rot"</b> (Chroma): 18 frontier models all got <b>worse</b> as input grew — even when the answer was right there.</li>
+        <li><b>"Lost in the middle"</b> (Stanford): models recall the start &amp; end, but miss facts buried in the middle.</li>
+        <li>The "40% threshold of stupidity" is folklore, not a law — but the lesson holds: <b>keep the window well under full.</b> Curation beats capacity.</li>
       </ul>
     </div>
   </div>
 </section>
 
-<!-- 17 — MEASURING CONTEXT -->
+<!-- 21 — MEASURING -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">17</span><div class="crumb"><b>Context</b> · measuring it</div></div>
-    <h2 class="reveal">Watch your <span class="o">context usage</span></h2>
-    <span class="extag reveal">EXAMPLE — Claude Code status line</span>
+    <div class="slide-head reveal"><span class="snum">21</span><div class="crumb"><b>Context</b> · keeping it lean</div></div>
+    <h2 class="reveal">Watch it, <span class="o">keep it lean</span></h2>
+    <span class="extag reveal">EXAMPLE — a harness status line</span>
     <div class="code reveal"><span class="d">claude-opus-4-8</span>   <span class="o">context: 38%</span>  (76k / 200k)   <span class="g">$0.42</span></div>
     <ul class="bul reveal" style="margin-top:var(--content-gap)">
-      <li>Most harnesses show <b>live % used</b> — keep an eye on it.</li>
-      <li>Climbing past ~40–50%? Quality starts to slip. Time to <b>trim or restart.</b></li>
+      <li>Most harnesses show <b>live % used</b> — glance at it.</li>
+      <li>Climbing past ~40–50%? Quality starts to slip — time to <b>trim or restart.</b></li>
       <li><b>Habit:</b> finish a task, then start a <b>fresh chat</b> rather than dragging a bloated one onward.</li>
     </ul>
   </div>
 </section>
 
-<!-- 18 — CACHING -->
+<!-- 22 — UNDER THE HOOD: CACHING + COMPACTION -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">18</span><div class="crumb"><b>Context</b> · caching</div></div>
-    <h2 class="reveal">Caching: <span class="o">don't re-read for free</span></h2>
-    <p class="lead reveal" style="margin-bottom:var(--content-gap)">Stable parts of the context (system prompt, CLAUDE.md, files) can be <b>cached</b>, so repeat calls are far cheaper and faster.</p>
-    <div class="cards c3 reveal">
-      <div class="tile"><span class="k">Cache write</span><p><b>1.25×</b> normal input price — a small one-time premium to store it.</p></div>
-      <div class="tile fill"><span class="k">Cache read</span><p><b>0.10×</b> input price — a <b>90% discount</b> on everything reused.</p></div>
-      <div class="tile"><span class="k">Lifetime</span><p><b>~5 min</b> by default (1 hr extended). Each hit resets the timer.</p></div>
+    <div class="slide-head reveal"><span class="snum">22</span><div class="crumb"><b>Context</b> · under the hood</div></div>
+    <h2 class="reveal">How harnesses <span class="o">cope</span></h2>
+    <div class="cards c2 reveal">
+      <div class="tile"><span class="k">Caching</span><p>Stable parts (system prompt, CLAUDE.md, files) are <b>remembered between calls</b>, so reusing them is much <b>cheaper and faster</b> than re-reading every time.</p></div>
+      <div class="tile fill"><span class="k">Compaction</span><p>When the window fills, the harness <b>summarises older turns</b> into a short recap and drops the raw text — freeing space to keep going.</p></div>
     </div>
-    <p class="note reveal">Without caching, the model <b>re-reads the entire context</b> every step — that's the cost (and latency) caching removes.</p>
+    <p class="note reveal">Both are automatic. The catch with compaction: anything <b>not</b> kept in the summary is forgotten — so the summary has to keep what matters.</p>
   </div>
 </section>
 
-<!-- 19 — COMPACTION -->
+<!-- 23 — SUBAGENTS + DIAGRAM E -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">19</span><div class="crumb"><b>Context</b> · compaction</div></div>
-    <h2 class="reveal">Compaction: <span class="o">summarise &amp; reclaim</span></h2>
-    <div class="split">
-      <ul class="bul reveal">
-        <li>When the window fills, the harness <b>summarises older turns</b> into a short recap and drops the raw text.</li>
-        <li>You free up space to <b>keep working</b> without starting over.</li>
-        <li>Trade-off: detail is lost. <b>Anything not in the summary is forgotten</b> — so the summary must keep what matters.</li>
-      </ul>
-      <div class="kcard reveal">
-        <div class="big">~120k → ~15k</div>
-        <p>A long session gets compacted into a tight summary, and the loop continues with room to breathe.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 20 — SUBAGENTS -->
-<section class="slide">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>Context</b> · sub-agents</div></div>
+    <div class="slide-head reveal"><span class="snum">23</span><div class="crumb"><b>Context</b> · sub-agents</div></div>
     <h2 class="reveal">Sub-agents <span class="o">keep the main context clean</span></h2>
     <div class="split">
+      <div class="diagram reveal">
+        <svg viewBox="0 0 420 270" role="img" aria-label="A main agent delegates messy work to sub-agents that have their own context and return only a short summary">
+          <defs><marker id="ahE" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#FF5722"/></marker>
+          <marker id="ahEd" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="rgba(255,255,255,.4)"/></marker></defs>
+          <rect class="dg-box hot" x="135" y="14" width="150" height="48" rx="10"/>
+          <text class="dg-t on" x="210" y="43" font-size="15" text-anchor="middle">MAIN AGENT</text>
+          <!-- subagents -->
+          <rect class="dg-box mid" x="20" y="170" width="110" height="70" rx="10"/><text class="dg-t" x="75" y="198" font-size="13" text-anchor="middle">sub-agent</text><text class="dg-t mut" x="75" y="218" font-size="11" text-anchor="middle">own context</text>
+          <rect class="dg-box mid" x="155" y="170" width="110" height="70" rx="10"/><text class="dg-t" x="210" y="198" font-size="13" text-anchor="middle">sub-agent</text><text class="dg-t mut" x="210" y="218" font-size="11" text-anchor="middle">own context</text>
+          <rect class="dg-box mid" x="290" y="170" width="110" height="70" rx="10"/><text class="dg-t" x="345" y="198" font-size="13" text-anchor="middle">sub-agent</text><text class="dg-t mut" x="345" y="218" font-size="11" text-anchor="middle">own context</text>
+          <!-- delegate arrows -->
+          <path class="dg-line" d="M170 64 C 120 100, 90 130, 78 166" marker-end="url(#ahE)"/>
+          <path class="dg-line" d="M210 64 L 210 166" marker-end="url(#ahE)"/>
+          <path class="dg-line" d="M250 64 C 300 100, 330 130, 342 166" marker-end="url(#ahE)"/>
+          <text class="dg-t acc" x="96" y="108" font-size="12">delegate ↓</text>
+          <text class="dg-t mut" x="300" y="150" font-size="11" text-anchor="middle">↑ tiny summary back</text>
+        </svg>
+      </div>
       <ul class="bul reveal">
         <li>A <b>sub-agent</b> is a separate agent with its <b>own fresh context</b> for one sub-task.</li>
-        <li>The main agent <b>delegates</b> → the sub-agent does the messy work → returns <b>only the conclusion.</b></li>
-        <li>The main conversation stays clean, and several sub-agents can run <b>in parallel.</b></li>
+        <li>It does the messy work and returns <b>only the conclusion.</b></li>
+        <li><b>Example:</b> "search these 200 files" burns 80k tokens <b>inside</b> the sub-agent — the main chat gets a 200-token answer. They can also run <b>in parallel.</b></li>
       </ul>
-      <div class="kcard reveal">
-        <div class="big">Delegate &amp; collect</div>
-        <p><b>Example:</b> "search these 200 files" reads 80k tokens inside the sub-agent — the main chat receives a 200-token answer.</p>
-      </div>
     </div>
   </div>
 </section>
 
-<!-- 21 — PERMISSIONS -->
+<!-- 24 — PERMISSIONS -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">21</span><div class="crumb"><b>Safety</b> · permissions</div></div>
+    <div class="slide-head reveal"><span class="snum">24</span><div class="crumb"><b>Safety</b> · permissions</div></div>
     <h2 class="reveal">Safety through <span class="o">permissions</span></h2>
     <div class="cards c3 reveal">
-      <div class="tile"><span class="k">Default · ask</span><p>The agent <b>asks first</b> before any sensitive action (write a file, run a command). Safest.</p></div>
+      <div class="tile"><span class="k">Default · ask</span><p>The agent <b>asks first</b> before any risky action (write a file, run a command). Safest.</p></div>
       <div class="tile"><span class="k">Auto · accept edits</span><p>Pre-approve a class of actions (e.g. file edits) so it won't interrupt on routine steps.</p></div>
-      <div class="tile fill"><span class="k">Bypass · "YOLO"</span><p>Asks for <b>nothing</b>. Fast, but it can run <b>any</b> command — only in a sandbox.</p></div>
+      <div class="tile fill"><span class="k">Bypass · "YOLO"</span><p>Asks for <b>nothing.</b> Fast, but it can run <b>any</b> command — only in a sandbox.</p></div>
     </div>
     <p class="note reveal">Both Claude Code and Codex ship these modes (Codex calls them <i>suggest / auto-edit / full-auto</i>). More freedom demands more isolation.</p>
   </div>
 </section>
 
-<!-- 22 — BYPASS MODE -->
+<!-- 25 — BYPASS MODE -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">22</span><div class="crumb"><b>Safety</b> · bypass mode</div></div>
+    <div class="slide-head reveal"><span class="snum">25</span><div class="crumb"><b>Safety</b> · bypass mode</div></div>
     <h2 class="reveal">When is "YOLO" <span class="o">OK?</span></h2>
     <div class="split">
       <ul class="bul reveal">
-        <li>Only where a mistake <b>can't hurt</b>: a container, a throwaway VM, an isolated git worktree, or CI.</li>
-        <li><b>Never</b> bypass on your main machine with prod credentials and no backup.</li>
-        <li>Remember: an agent reads files and the web — a <b>malicious instruction</b> in either can hijack a no-questions-asked agent.</li>
+        <li>Only where a mistake <b>can't hurt:</b> a throwaway container or VM, an isolated copy of the project, or a CI job.</li>
+        <li><b>Never</b> on your main machine with real passwords and no backup.</li>
+        <li>Remember: an agent reads files and the web — a <b>hidden malicious instruction</b> in either can hijack a no-questions-asked agent.</li>
       </ul>
       <div class="kcard reveal">
         <div class="big">Freedom ∝ isolation</div>
@@ -655,53 +717,53 @@ messages = [
   </div>
 </section>
 
-<!-- 23 — BACK TO STATELESS / MEMENTO -->
+<!-- 26 — RECAP: MEMENTO CALLBACK -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">23</span><div class="crumb"><b>Recap</b> · stateless again</div></div>
-    <h2 class="reveal">The model is the guy from <span class="o">Memento</span></h2>
+    <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>Memory</b> · the problem</div></div>
+    <h2 class="reveal">Back to the model with <span class="o">no memory</span></h2>
     <div class="split">
       <div class="kcard reveal">
-        <div class="big">Remembers nothing</div>
-        <p>Every interaction, the model has <b>no idea</b> what we discussed. No "yesterday", no "a minute ago".</p>
+        <div class="big">It forgets every time</div>
+        <p>Remember Memento (slide 6)? Every call re-reads the whole context — and <b>keeps nothing</b> afterwards.</p>
       </div>
       <ul class="bul reveal">
-        <li>Every call <b>re-reads the whole context</b> (unless it's cached).</li>
-        <li>All "memory" is an <b>illusion the harness maintains</b> — not the model.</li>
-        <li>So: how do we give it durable memory <b>without</b> stuffing the window?</li>
+        <li>So how do we give it knowledge that <b>survives</b> across sessions…</li>
+        <li>…<b>without</b> stuffing the context window full (and rotting it)?</li>
+        <li>Four tools: <b>CLAUDE.md</b>, <b>memory</b>, <b>skills</b> and <b>plugins.</b></li>
       </ul>
     </div>
   </div>
 </section>
 
-<!-- 24 — MEMORY: CLAUDE.md + MEMORY -->
+<!-- 27 — CLAUDE.md + MEMORY -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">24</span><div class="crumb"><b>Memory</b> · CLAUDE.md</div></div>
+    <div class="slide-head reveal"><span class="snum">27</span><div class="crumb"><b>Memory</b> · CLAUDE.md</div></div>
     <h2 class="reveal">Memory that <span class="o">survives sessions</span></h2>
     <span class="extag reveal">EXAMPLE — CLAUDE.md in your repo root</span>
-    <div class="code reveal"><span class="c"># CLAUDE.md — injected into every prompt automatically</span>
+    <div class="code reveal"><span class="c"># CLAUDE.md — auto-injected into every prompt</span>
 - Package manager: <span class="b">pnpm</span> (never npm)
 - Run tests with: <span class="b">make test</span>
 - API code lives in <span class="b">/services</span>; never edit <span class="b">/generated</span>
-- House style: small functions, no comments unless asked</div>
+- Style: small functions, no comments unless asked</div>
     <ul class="bul reveal" style="margin-top:var(--content-gap)">
-      <li><b>CLAUDE.md</b> — read at the <b>start of every session</b>; your standing instructions &amp; conventions.</li>
+      <li><b>CLAUDE.md</b> — read at the <b>start of every session;</b> your standing rules &amp; conventions.</li>
       <li><b>Memory files</b> — durable notes the agent saves and reloads later (some harnesses do this <b>automatically</b>).</li>
     </ul>
   </div>
 </section>
 
-<!-- 25 — SKILLS & PLUGINS -->
+<!-- 28 — SKILLS & PLUGINS -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">25</span><div class="crumb"><b>Memory</b> · skills &amp; plugins</div></div>
+    <div class="slide-head reveal"><span class="snum">28</span><div class="crumb"><b>Memory</b> · skills &amp; plugins</div></div>
     <h2 class="reveal">Skills &amp; <span class="o">plugins</span></h2>
     <div class="split">
       <ul class="bul reveal">
         <li><b>Skill</b> = a folder with a <b>SKILL.md</b> (a name + description, plus instructions, scripts, resources).</li>
-        <li><b>Progressive disclosure:</b> the agent only reads a skill's full instructions <b>when a task matches</b> — so you can keep dozens on hand for almost no context cost.</li>
-        <li><b>Plugins</b> bundle and <b>distribute</b> skills, commands &amp; MCP servers across a team.</li>
+        <li><b>Loaded only when needed:</b> the agent reads a skill's full instructions <b>only when a task matches</b> — so you can keep dozens around for almost no context cost.</li>
+        <li><b>Plugins</b> bundle &amp; <b>distribute</b> skills, commands and MCP servers across a team.</li>
       </ul>
       <div class="kcard reveal">
         <div class="big">Just-in-time know-how</div>
@@ -711,44 +773,65 @@ messages = [
   </div>
 </section>
 
-<!-- 26 — REACHING OUT: API / CLI / MCP -->
+<!-- 29 — REACHING OUT -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>Reaching out</b> · other systems</div></div>
+    <div class="slide-head reveal"><span class="snum">29</span><div class="crumb"><b>Reaching out</b> · other systems</div></div>
     <h2 class="reveal">Touching <span class="o">other systems</span></h2>
     <div class="cards c3 reveal">
       <div class="tile"><span class="k">API</span><p>Services called <b>programmatically</b> over HTTP. The agent sends a request, gets structured data back.</p></div>
-      <div class="tile"><span class="k">CLI</span><p><b>Command-line tools</b> the agent runs just like a human in a terminal (<span style="font-family:var(--font-m)">git</span>, <span style="font-family:var(--font-m)">gh</span>, <span style="font-family:var(--font-m)">kubectl</span>…).</p></div>
+      <div class="tile"><span class="k">CLI</span><p><b>Command-line tools</b> the agent runs like a human in a terminal (<span style="font-family:var(--font-m)">git</span>, <span style="font-family:var(--font-m)">gh</span>, <span style="font-family:var(--font-m)">kubectl</span>…).</p></div>
       <div class="tile fill"><span class="k">MCP</span><p><b>Model Context Protocol</b> — an open standard to plug tools &amp; data into any agent.</p></div>
     </div>
     <p class="note reveal">CLIs &amp; APIs already exist everywhere — the agent just <b>uses</b> them. MCP is the newer, agent-native way to connect.</p>
   </div>
 </section>
 
-<!-- 27 — MCP DEEPER -->
+<!-- 30 — MCP + DIAGRAM F -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">27</span><div class="crumb"><b>Reaching out</b> · MCP</div></div>
+    <div class="slide-head reveal"><span class="snum">30</span><div class="crumb"><b>Reaching out</b> · MCP</div></div>
     <h2 class="reveal">MCP = <span class="o">"USB-C for agents"</span></h2>
     <div class="split">
-      <ul class="bul reveal">
-        <li>Anthropic's open standard (Nov 2024). Solves the <b>N×M problem</b>: stop writing a custom connector for every tool × every app.</li>
-        <li>You run an <b>MCP server</b> once; <b>any</b> MCP-aware agent can use it. Thousands now exist.</li>
-        <li>It exposes <b>tools</b> (actions), <b>resources</b> (data) and <b>prompts</b> over a simple protocol.</li>
-      </ul>
-      <div class="reveal">
-        <div class="extag">EXAMPLE — connected MCP servers</div>
-        <div class="pills"><span class="pill">Gmail</span><span class="pill">Google Calendar</span><span class="pill">Drive</span><span class="pill">GitHub</span><span class="pill">Postgres</span><span class="pill">Slack</span></div>
-        <p class="note">"Find my next meeting with the audit team and draft a follow-up" — Calendar + Gmail, one agent, no custom glue code.</p>
+      <div class="diagram reveal">
+        <svg viewBox="0 0 440 250" role="img" aria-label="Without MCP every app needs a custom connector to every tool; with MCP each connects once through a shared hub">
+          <text class="dg-t mut" x="105" y="20" font-size="13" text-anchor="middle">without MCP — N×M glue</text>
+          <text class="dg-t acc" x="335" y="20" font-size="13" text-anchor="middle">with MCP — connect once</text>
+          <!-- left tangle -->
+          <g>
+            <rect class="dg-box" x="20" y="40" width="54" height="26" rx="5"/><rect class="dg-box" x="20" y="100" width="54" height="26" rx="5"/><rect class="dg-box" x="20" y="160" width="54" height="26" rx="5"/>
+            <rect class="dg-box" x="150" y="40" width="46" height="26" rx="5"/><rect class="dg-box" x="150" y="100" width="46" height="26" rx="5"/><rect class="dg-box" x="150" y="160" width="46" height="26" rx="5"/>
+            <g stroke="rgba(255,255,255,.22)" stroke-width="1" fill="none">
+              <path d="M74 53 L150 53"/><path d="M74 53 L150 113"/><path d="M74 53 L150 173"/>
+              <path d="M74 113 L150 53"/><path d="M74 113 L150 113"/><path d="M74 113 L150 173"/>
+              <path d="M74 173 L150 53"/><path d="M74 173 L150 113"/><path d="M74 173 L150 173"/>
+            </g>
+          </g>
+          <!-- right hub -->
+          <g>
+            <rect class="dg-box" x="244" y="40" width="54" height="26" rx="5"/><rect class="dg-box" x="244" y="100" width="54" height="26" rx="5"/><rect class="dg-box" x="244" y="160" width="54" height="26" rx="5"/>
+            <rect class="dg-box hot" x="330" y="92" width="44" height="44" rx="10"/><text class="dg-t on" x="352" y="118" font-size="12" text-anchor="middle">MCP</text>
+            <rect class="dg-box" x="392" y="40" width="40" height="26" rx="5"/><rect class="dg-box" x="392" y="100" width="40" height="26" rx="5"/><rect class="dg-box" x="392" y="160" width="40" height="26" rx="5"/>
+            <g stroke="#FF5722" stroke-width="1.6" fill="none">
+              <path d="M298 53 L330 110"/><path d="M298 113 L330 114"/><path d="M298 173 L330 118"/>
+              <path d="M374 114 L392 53"/><path d="M374 114 L392 113"/><path d="M374 114 L392 173"/>
+            </g>
+          </g>
+        </svg>
       </div>
+      <ul class="bul reveal">
+        <li>Anthropic's open standard (Nov 2024). Stop writing a <b>custom connector for every tool × every app.</b></li>
+        <li>Run an <b>MCP server</b> once; <b>any</b> MCP-aware agent can use it. Thousands now exist.</li>
+        <li><b>Example:</b> "find my next meeting with the audit team and draft a follow-up" — Calendar + Gmail, one agent, no glue code.</li>
+      </ul>
     </div>
   </div>
 </section>
 
-<!-- 28 — SUMMARY -->
+<!-- 31 — SUMMARY -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">28</span><div class="crumb"><b>Summary</b></div></div>
+    <div class="slide-head reveal"><span class="snum">31</span><div class="crumb"><b>Summary</b></div></div>
     <h2 class="reveal">What to <span class="o">take away</span></h2>
     <ul class="bul reveal">
       <li><b>Model</b> = a stateless brain · <b>harness</b> = the body &amp; memory · <b>agent</b> = the loop that does things.</li>
@@ -761,11 +844,11 @@ messages = [
   </div>
 </section>
 
-<!-- 29 — SOURCES -->
+<!-- 32 — SOURCES 1 -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">29</span><div class="crumb"><b>Sources</b> · further reading</div></div>
-    <h2 class="reveal">Sources &amp; <span class="o">links</span></h2>
+    <div class="slide-head reveal"><span class="snum">32</span><div class="crumb"><b>Sources</b> · further reading</div></div>
+    <h2 class="reveal">Sources &amp; <span class="o">links</span> (1/2)</h2>
     <div class="links reveal">
       <div class="linkcol">
         <h3>Models &amp; pricing</h3>
@@ -786,10 +869,10 @@ messages = [
   </div>
 </section>
 
-<!-- 30 — SOURCES 2 -->
+<!-- 33 — SOURCES 2 -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">30</span><div class="crumb"><b>Sources</b> · context, memory &amp; MCP</div></div>
+    <div class="slide-head reveal"><span class="snum">33</span><div class="crumb"><b>Sources</b> · context, memory &amp; MCP</div></div>
     <h2 class="reveal">Sources &amp; <span class="o">links</span> (2/2)</h2>
     <div class="links reveal">
       <div class="linkcol">
@@ -813,33 +896,21 @@ messages = [
 </section>
 
 <script>
-/* ===========================================
-   SLIDE PRESENTATION CONTROLLER
-   =========================================== */
+/* ===== SLIDE CONTROLLER ===== */
 class SlidePresentation{
   constructor(){
-    this.slides=[...document.querySelectorAll('.slide')];
-    this.current=0;
+    this.slides=[...document.querySelectorAll('.slide')];this.current=0;
     this.setupObserver();this.setupNavDots();this.setupKeyboard();this.setupTouch();this.setupProgress();
   }
   setupObserver(){
-    this.io=new IntersectionObserver((entries)=>{
-      entries.forEach(e=>{if(e.isIntersecting){
-        e.target.classList.add('visible');
-        this.current=this.slides.indexOf(e.target);this.syncDots();
-      }});
-    },{threshold:0.55});
-    this.slides.forEach(s=>this.io.observe(s));
-    this.slides[0]?.classList.add('visible');
+    this.io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){
+      e.target.classList.add('visible');this.current=this.slides.indexOf(e.target);this.syncDots();}});},{threshold:0.55});
+    this.slides.forEach(s=>this.io.observe(s));this.slides[0]?.classList.add('visible');
   }
   setupNavDots(){
     const nav=document.getElementById('navDots');
-    this.slides.forEach((s,i)=>{
-      const b=document.createElement('button');
-      b.setAttribute('aria-label','Slide '+(i+1));
-      b.addEventListener('click',()=>this.go(i));
-      nav.appendChild(b);
-    });
+    this.slides.forEach((s,i)=>{const b=document.createElement('button');b.setAttribute('aria-label','Slide '+(i+1));
+      b.addEventListener('click',()=>this.go(i));nav.appendChild(b);});
     this.dots=[...nav.children];this.syncDots();
   }
   syncDots(){this.dots?.forEach((d,i)=>d.classList.toggle('active',i===this.current))}
@@ -860,12 +931,8 @@ class SlidePresentation{
   setupTouch(){
     let y0=null;
     document.addEventListener('touchstart',e=>{y0=e.touches[0].clientY},{passive:true});
-    document.addEventListener('touchend',e=>{
-      if(y0===null)return;
-      const dy=y0-e.changedTouches[0].clientY;
-      if(Math.abs(dy)>55){dy>0?this.next():this.prev()}
-      y0=null;
-    },{passive:true});
+    document.addEventListener('touchend',e=>{if(y0===null)return;const dy=y0-e.changedTouches[0].clientY;
+      if(Math.abs(dy)>55){dy>0?this.next():this.prev()}y0=null;},{passive:true});
   }
   setupProgress(){
     const bar=document.getElementById('progressBar');
@@ -875,35 +942,25 @@ class SlidePresentation{
   }
 }
 
-/* ===========================================
-   INLINE EDITOR — toggle with E or top-left hotzone.
-   Autosaves edits to localStorage; export bakes them
-   into a downloadable copy.
-   =========================================== */
+/* ===== INLINE EDITOR ===== */
 class InlineEditor{
   constructor(){
-    this.isActive=false;
-    this.KEY='agentic-ai-edits-v2';
-    this.sel='h1,h2,h3,p,li,td,th,.tile .k,.kcard .big,.code,.ts-title,.ts-sub,.ts-kick,.ts-author,.crumb,.thanks,.ts-badge .b1,.ts-badge .b2,.linkcol h3';
+    this.isActive=false;this.KEY='agentic-ai-edits-v3';
+    this.sel='h1,h2,h3,p,li,td,th,.tile .k,.kcard .big,.code,.gloss .term,.gloss .def,.ts-title,.ts-sub,.ts-kick,.ts-author,.crumb,.thanks,.ts-badge .b1,.ts-badge .b2,.linkcol h3,.divider .dsub';
     this.nodes=[...document.querySelectorAll(this.sel)];
-    this.nodes.forEach((n,i)=>n.dataset.ek='n'+i);
-    this.restore();this.wire();
+    this.nodes.forEach((n,i)=>n.dataset.ek='n'+i);this.restore();this.wire();
   }
   restore(){let d={};try{d=JSON.parse(localStorage.getItem(this.KEY)||'{}')}catch(e){}
     this.nodes.forEach(n=>{if(d[n.dataset.ek]!=null)n.innerHTML=d[n.dataset.ek]})}
   save(){const d={};this.nodes.forEach(n=>d[n.dataset.ek]=n.innerHTML);
     localStorage.setItem(this.KEY,JSON.stringify(d));this.toast('Saved')}
-  toast(msg){const t=document.getElementById('editToast');t.textContent=msg;t.classList.add('show');
+  toast(m){const t=document.getElementById('editToast');t.textContent=m;t.classList.add('show');
     clearTimeout(this._tt);this._tt=setTimeout(()=>t.classList.remove('show'),1100)}
   toggleEditMode(){
-    this.isActive=!this.isActive;
-    document.body.classList.toggle('editing',this.isActive);
+    this.isActive=!this.isActive;document.body.classList.toggle('editing',this.isActive);
     document.getElementById('editToggle').classList.toggle('active',this.isActive);
-    this.nodes.forEach(n=>{
-      if(this.isActive){n.setAttribute('contenteditable','true');
-        n.addEventListener('input',this._oi=this._oi||(()=>this._dsave()))}
-      else{n.removeAttribute('contenteditable')}
-    });
+    this.nodes.forEach(n=>{if(this.isActive){n.setAttribute('contenteditable','true');
+      n.addEventListener('input',this._oi=this._oi||(()=>this._dsave()))}else{n.removeAttribute('contenteditable')}});
     if(this.isActive)this.toast('Edit mode — click any text');
   }
   _dsave(){clearTimeout(this._st);this._st=setTimeout(()=>this.save(),500)}
@@ -919,23 +976,17 @@ class InlineEditor{
     URL.revokeObjectURL(a.href);this.toast('Exported');
   }
   wire(){
-    const toggle=document.getElementById('editToggle');
-    const hotzone=document.querySelector('.edit-hotzone');
-    let hideTimeout=null;
+    const toggle=document.getElementById('editToggle');const hotzone=document.querySelector('.edit-hotzone');let h=null;
     toggle.addEventListener('click',()=>this.toggleEditMode());
     hotzone.addEventListener('click',()=>this.toggleEditMode());
-    hotzone.addEventListener('mouseenter',()=>{clearTimeout(hideTimeout);toggle.classList.add('show')});
-    hotzone.addEventListener('mouseleave',()=>{hideTimeout=setTimeout(()=>{if(!this.isActive)toggle.classList.remove('show')},400)});
-    toggle.addEventListener('mouseenter',()=>clearTimeout(hideTimeout));
-    toggle.addEventListener('mouseleave',()=>{hideTimeout=setTimeout(()=>{if(!this.isActive)toggle.classList.remove('show')},400)});
-    document.addEventListener('keydown',(e)=>{
-      if((e.key==='e'||e.key==='E')&&!(e.target.getAttribute&&e.target.getAttribute('contenteditable')==='true'))this.toggleEditMode();
-    });
+    hotzone.addEventListener('mouseenter',()=>{clearTimeout(h);toggle.classList.add('show')});
+    hotzone.addEventListener('mouseleave',()=>{h=setTimeout(()=>{if(!this.isActive)toggle.classList.remove('show')},400)});
+    toggle.addEventListener('mouseenter',()=>clearTimeout(h));
+    toggle.addEventListener('mouseleave',()=>{h=setTimeout(()=>{if(!this.isActive)toggle.classList.remove('show')},400)});
+    document.addEventListener('keydown',(e)=>{if((e.key==='e'||e.key==='E')&&!(e.target.getAttribute&&e.target.getAttribute('contenteditable')==='true'))this.toggleEditMode();});
     document.getElementById('resetBtn').addEventListener('click',()=>this.reset());
     document.getElementById('exportBtn').addEventListener('click',()=>this.export());
-    document.addEventListener('keydown',(e)=>{
-      if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'&&this.isActive){e.preventDefault();this.save()}
-    });
+    document.addEventListener('keydown',(e)=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'&&this.isActive){e.preventDefault();this.save()}});
   }
 }
 
