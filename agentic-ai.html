@@ -217,10 +217,11 @@ body.editing .edit-bar{display:flex}
   ------------------------------------------------------------
   BEFORE the talk: start Claude Code on a real task in AUTO / accept-edits
   mode, so it won't block on a permission prompt mid-talk (and that itself
-  demos the permissions slides). Good tasks (~3–8 min, several tool calls):
-    • "add a /health endpoint WITH a test, then run the tests"
-    • "find & fix why test X fails"
-  Avoid anything that finishes in ~20s or needs a login/network.
+  demos the permissions slides). Default demo task (see ../agentic-demo/):
+    • paste agentic-demo/PROMPT.txt → builds a Pomodoro timer + tests, runs
+      them, fixes a failure, re-runs. Fallback: agentic-demo/fallback/.
+  Other good tasks (~3–8 min, several tool calls): "add a /health endpoint
+  WITH a test, then run the tests". Avoid <20s tasks or anything needing login.
 
   KICK IT OFF at the "🔴 LIVE" anchor slide (right after the hook), then
   CHECK BACK at the slides marked with a 🔴 LIVE pill:
@@ -244,7 +245,7 @@ body.editing .edit-bar{display:flex}
 </div>
 <div class="edit-toast" id="editToast">Saved</div>
 
-<!-- 01 — TITLE -->
+<!-- TITLE -->
 <section class="slide title-slide">
   <div class="ts-left">
     <div class="ts-top"><span class="num">01</span><span>Internal talk · June 2026</span></div>
@@ -260,7 +261,7 @@ body.editing .edit-bar{display:flex}
   </div>
 </section>
 
-<!-- 02 — HOOK -->
+<!-- HOOK -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">2</span><div class="crumb"><b>The hook</b></div></div>
@@ -285,13 +286,13 @@ body.editing .edit-bar{display:flex}
   </div>
 </section>
 
-<!-- 03 — AGENDA -->
+<!-- AGENDA -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">3</span><div class="crumb"><b>Agenda</b></div></div>
     <h2 class="reveal">What we'll <span class="o">cover</span></h2>
     <div class="cards c3 reveal">
-      <div class="tile"><span class="k">The core idea</span><p>Model, harness, agent — and the loop that ties them together.</p></div>
+      <div class="tile"><span class="k">The core idea</span><p>Model, harness, agent — the loop that ties them together, and how it "thinks".</p></div>
       <div class="tile"><span class="k">The landscape</span><p>Today's models &amp; tools, prices and plans.</p></div>
       <div class="tile"><span class="k">Context</span><p>The model's short-term memory — and how to keep it sharp.</p></div>
       <div class="tile"><span class="k">Safety</span><p>Permissions: ask, auto, and bypass ("YOLO") mode.</p></div>
@@ -301,7 +302,7 @@ body.editing .edit-bar{display:flex}
   </div>
 </section>
 
-<!-- 04 — THREE BUILDING BLOCKS + DIAGRAM A -->
+<!-- THREE BUILDING BLOCKS + DIAGRAM A -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">4</span><div class="crumb"><b>Core</b> · the basics</div></div>
@@ -335,7 +336,7 @@ body.editing .edit-bar{display:flex}
   </div>
 </section>
 
-<!-- 05 — GLOSSARY -->
+<!-- GLOSSARY -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">5</span><div class="crumb"><b>Core</b> · cheat sheet</div></div>
@@ -355,7 +356,7 @@ body.editing .edit-bar{display:flex}
   </div>
 </section>
 
-<!-- 06 — MODEL STATELESS + MEMENTO + DIAGRAM B -->
+<!-- MODEL STATELESS + MEMENTO + DIAGRAM B -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">6</span><div class="crumb"><b>Model</b> · the brain</div></div>
@@ -387,7 +388,7 @@ body.editing .edit-bar{display:flex}
   </div>
 </section>
 
-<!-- 07 — MODEL EXAMPLE -->
+<!-- MODEL EXAMPLE -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">7</span><div class="crumb"><b>Model</b> · example</div></div>
@@ -403,7 +404,7 @@ messages = [
   </div>
 </section>
 
-<!-- 08 — HARNESS (what runs where) -->
+<!-- HARNESS (what runs where) -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">8</span><div class="crumb"><b>Harness</b> · what runs where</div></div>
@@ -455,7 +456,7 @@ messages = [
   </div>
 </section>
 
-<!-- 09 — HARNESS EXAMPLE -->
+<!-- HARNESS EXAMPLE -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">9</span><div class="crumb"><b>Harness</b> · example</div></div>
@@ -471,7 +472,7 @@ messages = [
   </div>
 </section>
 
-<!-- 10 — AGENT LOOP + DIAGRAM C -->
+<!-- AGENT LOOP + DIAGRAM C -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">10</span><div class="crumb"><b>Agent</b> · the loop</div></div>
@@ -512,7 +513,7 @@ messages = [
   </div>
 </section>
 
-<!-- 11 — AGENT WORKED EXAMPLE -->
+<!-- AGENT WORKED EXAMPLE -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">11</span><div class="crumb"><b>Agent</b> · worked example</div></div>
@@ -526,7 +527,7 @@ messages = [
   </div>
 </section>
 
-<!-- 12 — THINKING: HOW IT WORKS -->
+<!-- THINKING: HOW IT WORKS -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">12</span><div class="crumb"><b>Thinking</b> · how it works</div></div>
@@ -560,7 +561,7 @@ messages = [
   </div>
 </section>
 
-<!-- 13 — THINKING: IN AGENTS + THE CATCH -->
+<!-- THINKING: IN AGENTS + THE CATCH -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">13</span><div class="crumb"><b>Thinking</b> · in agents &amp; the catch</div></div>
@@ -579,7 +580,7 @@ messages = [
   </div>
 </section>
 
-<!-- 14 — WHAT YOU CAN DO -->
+<!-- WHAT YOU CAN DO -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">14</span><div class="crumb"><b>Core</b> · so what?</div></div>
@@ -595,7 +596,7 @@ messages = [
   </div>
 </section>
 
-<!-- 13 — DIVIDER: THE LANDSCAPE -->
+<!-- DIVIDER: THE LANDSCAPE -->
 <section class="slide divider">
   <div class="slide-content">
     <div class="dnum reveal">▸</div>
@@ -604,7 +605,7 @@ messages = [
   </div>
 </section>
 
-<!-- 14 — SOTA MODELS -->
+<!-- SOTA MODELS -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">15</span><div class="crumb"><b>Landscape</b> · models</div></div>
@@ -621,7 +622,7 @@ messages = [
   </div>
 </section>
 
-<!-- 15 — PICKING A TIER -->
+<!-- PICKING A TIER -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">16</span><div class="crumb"><b>Landscape</b> · picking a tier</div></div>
@@ -635,7 +636,7 @@ messages = [
   </div>
 </section>
 
-<!-- 16 — SOTA HARNESSES -->
+<!-- SOTA HARNESSES -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">17</span><div class="crumb"><b>Landscape</b> · harnesses</div></div>
@@ -652,24 +653,21 @@ messages = [
   </div>
 </section>
 
-<!-- APPLICATIONS — where you actually run them -->
+<!-- APPLICATIONS — what form factor you run them in -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">18</span><div class="crumb"><b>Landscape</b> · the apps</div></div>
-    <h2 class="reveal">Where you actually <span class="o">run them</span></h2>
+    <h2 class="reveal">Same agent, different <span class="o">front door</span></h2>
     <div class="cards c3 reveal">
-      <div class="tile fill"><span class="k">Claude Code</span><p>CLI · desktop app · web · IDE extensions (VS Code, JetBrains).</p></div>
-      <div class="tile"><span class="k">Codex</span><p>OpenAI — CLI · desktop app · IDE · cloud.</p></div>
-      <div class="tile"><span class="k">Gemini CLI</span><p>Google's open-source terminal agent.</p></div>
-      <div class="tile"><span class="k">Antigravity</span><p>Google's agentic IDE.</p></div>
-      <div class="tile"><span class="k">Cursor · Windsurf</span><p>IDEs built around an agent.</p></div>
-      <div class="tile"><span class="k">Copilot · Aider</span><p>In-editor agent · open-source CLI.</p></div>
+      <div class="tile fill"><span class="k">▸ Terminal (CLI)</span><p>Lives in your shell, scriptable. <b>Claude Code</b> · <b>Codex</b> · <b>Gemini CLI</b> · Aider.</p></div>
+      <div class="tile"><span class="k">🖥 Desktop app</span><p>A standalone window, less terminal-y. <b>Claude Code</b> app · <b>Codex</b> in the ChatGPT app.</p></div>
+      <div class="tile"><span class="k">⌨ In your IDE</span><p>Inline with your editor. Claude Code &amp; Codex extensions · Cursor · Windsurf · <b>Antigravity</b> · Copilot.</p></div>
     </div>
-    <p class="note reveal">Same idea, different shells: a <b>terminal CLI</b>, a <b>desktop app</b>, or <b>inside your IDE</b>. Many ship as <b>several of these at once</b> — pick whichever fits how you work.</p>
+    <p class="note reveal">It's the <b>same loop underneath</b> — just a different front door. Most of the big ones ship in <b>several of these at once;</b> pick whichever fits how you work.</p>
   </div>
 </section>
 
-<!-- 17 — PRICING SUBSCRIPTIONS -->
+<!-- PRICING SUBSCRIPTIONS -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">19</span><div class="crumb"><b>Landscape</b> · plans</div></div>
@@ -686,7 +684,7 @@ messages = [
   </div>
 </section>
 
-<!-- 18 — SUBSCRIPTION VS API -->
+<!-- SUBSCRIPTION VS API -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>Landscape</b> · plan vs API</div></div>
@@ -699,7 +697,7 @@ messages = [
   </div>
 </section>
 
-<!-- 19 — CONTEXT: WHAT IT IS + DIAGRAM D -->
+<!-- CONTEXT: WHAT IT IS + DIAGRAM D -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">21</span><div class="crumb"><b>Context</b> · what it is</div></div>
@@ -726,7 +724,7 @@ messages = [
   </div>
 </section>
 
-<!-- 20 — CONTEXT ROT + DIAGRAM -->
+<!-- CONTEXT ROT + DIAGRAM -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">22</span><div class="crumb"><b>Context</b> · the "stupidity threshold"</div></div>
@@ -759,7 +757,7 @@ messages = [
   </div>
 </section>
 
-<!-- 21 — MEASURING -->
+<!-- MEASURING -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">23</span><div class="crumb"><b>Context</b> · keeping it lean</div></div>
@@ -775,7 +773,7 @@ messages = [
   </div>
 </section>
 
-<!-- 22 — UNDER THE HOOD: CACHING + COMPACTION -->
+<!-- UNDER THE HOOD: CACHING + COMPACTION -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">24</span><div class="crumb"><b>Context</b> · under the hood</div></div>
@@ -788,7 +786,7 @@ messages = [
   </div>
 </section>
 
-<!-- 23 — SUBAGENTS + DIAGRAM E -->
+<!-- SUBAGENTS + DIAGRAM E -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">25</span><div class="crumb"><b>Context</b> · sub-agents</div></div>
@@ -821,7 +819,7 @@ messages = [
   </div>
 </section>
 
-<!-- 24 — PERMISSIONS -->
+<!-- PERMISSIONS -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>Safety</b> · permissions</div></div>
@@ -831,11 +829,11 @@ messages = [
       <div class="tile"><span class="k">Auto · accept edits</span><p>Pre-approve a class of actions (e.g. file edits) so it won't interrupt on routine steps.</p></div>
       <div class="tile fill"><span class="k">Bypass · "YOLO"</span><p>Asks for <b>nothing.</b> Fast, but it can run <b>any</b> command — only in a sandbox.</p></div>
     </div>
-    <p class="note reveal">Both Claude Code and Codex ship these modes (Codex calls them <i>suggest / auto-edit / full-auto</i>). More freedom demands more isolation.</p>
+    <p class="note reveal"><span class="pill">🔴 LIVE</span> Our running agent is in <b>auto mode</b> — that's why it hasn't stopped to ask. Both Claude Code and Codex ship these modes (Codex calls them <i>suggest / auto-edit / full-auto</i>). More freedom demands more isolation.</p>
   </div>
 </section>
 
-<!-- 25 — BYPASS MODE -->
+<!-- BYPASS MODE -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">27</span><div class="crumb"><b>Safety</b> · bypass mode</div></div>
@@ -854,7 +852,7 @@ messages = [
   </div>
 </section>
 
-<!-- 26 — RECAP: MEMENTO CALLBACK -->
+<!-- RECAP: MEMENTO CALLBACK -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">28</span><div class="crumb"><b>Memory</b> · the problem</div></div>
@@ -873,7 +871,7 @@ messages = [
   </div>
 </section>
 
-<!-- 27 — CLAUDE.md + MEMORY -->
+<!-- CLAUDE.md + MEMORY -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">29</span><div class="crumb"><b>Memory</b> · CLAUDE.md</div></div>
@@ -891,7 +889,7 @@ messages = [
   </div>
 </section>
 
-<!-- 28 — SKILLS & PLUGINS -->
+<!-- SKILLS & PLUGINS -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">30</span><div class="crumb"><b>Memory</b> · skills &amp; plugins</div></div>
@@ -910,7 +908,7 @@ messages = [
   </div>
 </section>
 
-<!-- 29 — REACHING OUT -->
+<!-- REACHING OUT -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">31</span><div class="crumb"><b>Reaching out</b> · other systems</div></div>
@@ -924,7 +922,7 @@ messages = [
   </div>
 </section>
 
-<!-- 30 — MCP + DIAGRAM F -->
+<!-- MCP + DIAGRAM F -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">32</span><div class="crumb"><b>Reaching out</b> · MCP</div></div>
@@ -979,7 +977,7 @@ messages = [
   </div>
 </section>
 
-<!-- 31 — SUMMARY -->
+<!-- SUMMARY -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">34</span><div class="crumb"><b>Summary</b></div></div>
@@ -995,7 +993,7 @@ messages = [
   </div>
 </section>
 
-<!-- 32 — SOURCES 1 -->
+<!-- SOURCES 1 -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">35</span><div class="crumb"><b>Sources</b> · further reading</div></div>
@@ -1020,7 +1018,7 @@ messages = [
   </div>
 </section>
 
-<!-- 33 — SOURCES 2 -->
+<!-- SOURCES 2 -->
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">36</span><div class="crumb"><b>Sources</b> · context, memory &amp; MCP</div></div>
