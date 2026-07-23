@@ -166,6 +166,7 @@ table.tbl tr:last-child td{border-bottom:none}
 /* ===== DIAGRAMS (inline SVG) ===== */
 .diagram{width:100%;display:flex;justify-content:center;margin-top:.25rem}
 .diagram svg{width:100%;max-width:min(94vw,900px);height:auto;max-height:min(50vh,440px)}
+.diagram video{width:100%;max-width:min(94vw,900px);height:auto;max-height:min(50vh,440px);display:block;background:var(--s-bg)}
 .dg-box{fill:var(--s-card-bg);stroke:var(--s-card-border);stroke-width:1.5}
 .dg-box.hot{fill:var(--coral);stroke:var(--coral)}
 .dg-box.outer{fill:var(--s-outer-fill);stroke:var(--coral);stroke-dasharray:6 5}
@@ -402,21 +403,8 @@ body.editing .edit-bar{display:flex}
     <h2 class="reveal">The model has <span class="o">no memory</span></h2>
     <div class="split">
       <div class="diagram reveal">
-        <svg viewBox="0 0 400 300" role="img" aria-label="Each call re-sends the entire history; the model remembers nothing between calls">
-          <defs><marker id="ahB" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#ff5c35"/></marker></defs>
-          <!-- model -->
-          <circle class="dg-box hot" cx="312" cy="150" r="64"/>
-          <text class="dg-t on" x="312" y="144" font-size="17" text-anchor="middle">MODEL</text>
-          <text class="dg-t on" x="312" y="166" font-size="12" text-anchor="middle">forgets all</text>
-          <!-- three growing requests -->
-          <rect class="dg-box mid" x="20" y="36" width="120" height="30" rx="6"/><text class="dg-t mut" x="30" y="56" font-size="12.5">call 1: [m1]</text>
-          <rect class="dg-box mid" x="20" y="118" width="180" height="30" rx="6"/><text class="dg-t mut" x="30" y="138" font-size="12.5">call 2: [m1,m2]</text>
-          <rect class="dg-box mid" x="20" y="200" width="232" height="30" rx="6"/><text class="dg-t mut" x="30" y="220" font-size="12.5">call 3: [m1,m2,m3]</text>
-          <path class="dg-line" d="M144 51 C 220 60, 250 110, 258 128" marker-end="url(#ahB)"/>
-          <path class="dg-line" d="M204 133 C 235 140, 245 145, 250 148" marker-end="url(#ahB)"/>
-          <path class="dg-line" d="M256 215 C 270 200, 280 195, 270 188" marker-end="url(#ahB)"/>
-          <text class="dg-t acc" x="150" y="284" font-size="13">every call re-sends the whole history</text>
-        </svg>
+        <!-- Remotion animation (remotion/src/Stateless.tsx) -->
+        <video src="assets/anim/stateless-dark.mp4" width="1200" height="900" autoplay muted loop playsinline aria-label="Each call re-sends the entire history; the model remembers nothing between calls"></video>
       </div>
       <ul class="bul reveal">
         <li>Think of the guy in <b>Memento</b>: each interaction, the model has <b>no idea</b> what we said before.</li>
@@ -518,29 +506,8 @@ messages = [
     <h2 class="reveal">An agent is a <span class="o">loop</span></h2>
     <div class="split">
       <div class="diagram reveal">
-        <svg viewBox="0 0 480 380" role="img" aria-label="The agent loop: model proposes an action, harness runs it, result returns to the model, repeat until done">
-          <defs><marker id="ahC" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#ff5c35"/></marker></defs>
-          <!-- nodes -->
-          <rect class="dg-box" x="140" y="14" width="200" height="60" rx="12"/>
-          <text class="dg-t" x="240" y="40" font-size="15" text-anchor="middle">① Model proposes</text>
-          <text class="dg-t" x="240" y="59" font-size="15" text-anchor="middle">an action</text>
-          <rect class="dg-box hot" x="332" y="160" width="138" height="60" rx="12"/>
-          <text class="dg-t on" x="401" y="186" font-size="15" text-anchor="middle">② Harness</text>
-          <text class="dg-t on" x="401" y="205" font-size="15" text-anchor="middle">runs it</text>
-          <rect class="dg-box" x="140" y="306" width="200" height="60" rx="12"/>
-          <text class="dg-t" x="240" y="332" font-size="15" text-anchor="middle">③ Result back</text>
-          <text class="dg-t" x="240" y="351" font-size="15" text-anchor="middle">to the model</text>
-          <rect class="dg-box" x="10" y="160" width="138" height="60" rx="12"/>
-          <text class="dg-t" x="79" y="186" font-size="15" text-anchor="middle">④ Repeat</text>
-          <text class="dg-t" x="79" y="205" font-size="15" text-anchor="middle">until done</text>
-          <!-- clockwise arcs -->
-          <path class="dg-line" d="M344 64 A 160 160 0 0 1 452 156" marker-end="url(#ahC)"/>
-          <path class="dg-line" d="M452 224 A 160 160 0 0 1 344 316" marker-end="url(#ahC)"/>
-          <path class="dg-line" d="M136 316 A 160 160 0 0 1 28 224" marker-end="url(#ahC)"/>
-          <path class="dg-line" d="M28 156 A 160 160 0 0 1 136 64" marker-end="url(#ahC)"/>
-          <text class="dg-t acc" x="240" y="185" font-size="16" text-anchor="middle">THE</text>
-          <text class="dg-t acc" x="240" y="206" font-size="16" text-anchor="middle">LOOP</text>
-        </svg>
+        <!-- Remotion animation (remotion/src/AgentLoop.tsx) -->
+        <video src="assets/anim/agent-loop-dark.mp4" width="1152" height="912" autoplay muted loop playsinline aria-label="The agent loop: model proposes an action, harness runs it, result returns to the model, repeat until done"></video>
       </div>
       <ul class="bul reveal">
         <li>The model proposes, the harness acts, the result comes back. <b>Repeat until the task is done.</b></li>
@@ -770,22 +737,8 @@ messages = [
     <h2 class="reveal">Fuller context = <span class="o">dumber model</span></h2>
     <div class="split">
       <div class="diagram reveal">
-        <svg viewBox="0 0 400 250" role="img" aria-label="Answer quality falls as the context fills, and facts buried in the middle get missed">
-          <!-- quality curve -->
-          <line class="dg-line dim" x1="40" y1="20" x2="40" y2="150"/>
-          <line class="dg-line dim" x1="40" y1="150" x2="380" y2="150"/>
-          <text class="dg-t mut" x="14" y="90" font-size="12" transform="rotate(-90 14 90)">quality</text>
-          <text class="dg-t mut" x="210" y="170" font-size="12" text-anchor="middle">context filled →</text>
-          <path class="dg-line" d="M40 44 C 150 50, 210 70, 260 100 C 300 124, 340 140, 380 146"/>
-          <rect class="dg-fill-g" x="40" y="150" width="96" height="7"/><text class="dg-fill-g" x="50" y="146" font-size="11">sharp</text>
-          <rect class="dg-fill-a" x="136" y="150" width="92" height="7"/><text class="dg-fill-a" x="150" y="146" font-size="11">slipping</text>
-          <rect class="dg-fill-r" x="228" y="150" width="152" height="7"/><text class="dg-fill-r" x="240" y="146" font-size="11">rot</text>
-          <!-- lost in the middle -->
-          <text class="dg-t mut" x="40" y="200" font-size="12">"lost in the middle":</text>
-          <rect class="dg-box hot" x="40" y="210" width="60" height="24" rx="4"/><text class="dg-t on" x="70" y="227" font-size="11" text-anchor="middle">start ✓</text>
-          <rect class="dg-box" x="104" y="210" width="216" height="24" rx="4" opacity="0.4"/><text class="dg-t mut" x="212" y="227" font-size="11" text-anchor="middle">middle — often missed</text>
-          <rect class="dg-box hot" x="324" y="210" width="56" height="24" rx="4"/><text class="dg-t on" x="352" y="227" font-size="11" text-anchor="middle">end ✓</text>
-        </svg>
+        <!-- Remotion animation (remotion/src/QualityCurve.tsx) -->
+        <video src="assets/anim/quality-dark.mp4" width="1056" height="624" autoplay muted loop playsinline aria-label="Answer quality falls as the context fills; the last stretch of the window is where the model forgets, redoes and ignores"></video>
       </div>
       <ul class="bul reveal">
         <li><b>"Context rot"</b> (Chroma): 18 frontier models all got <b>worse</b> as input grew — even when the answer was right there.</li>
@@ -832,22 +785,8 @@ messages = [
     <h2 class="reveal">Sub-agents <span class="o">keep the main context clean</span></h2>
     <div class="split">
       <div class="diagram reveal">
-        <svg viewBox="0 0 420 270" role="img" aria-label="A main agent delegates messy work to sub-agents that have their own context and return only a short summary">
-          <defs><marker id="ahE" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#ff5c35"/></marker>
-          <marker id="ahEd" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" class="dg-arrow-dim"/></marker></defs>
-          <rect class="dg-box hot" x="135" y="14" width="150" height="48" rx="10"/>
-          <text class="dg-t on" x="210" y="43" font-size="15" text-anchor="middle">MAIN AGENT</text>
-          <!-- subagents -->
-          <rect class="dg-box mid" x="20" y="170" width="110" height="70" rx="10"/><text class="dg-t" x="75" y="198" font-size="13" text-anchor="middle">sub-agent</text><text class="dg-t mut" x="75" y="218" font-size="11" text-anchor="middle">own context</text>
-          <rect class="dg-box mid" x="155" y="170" width="110" height="70" rx="10"/><text class="dg-t" x="210" y="198" font-size="13" text-anchor="middle">sub-agent</text><text class="dg-t mut" x="210" y="218" font-size="11" text-anchor="middle">own context</text>
-          <rect class="dg-box mid" x="290" y="170" width="110" height="70" rx="10"/><text class="dg-t" x="345" y="198" font-size="13" text-anchor="middle">sub-agent</text><text class="dg-t mut" x="345" y="218" font-size="11" text-anchor="middle">own context</text>
-          <!-- delegate arrows -->
-          <path class="dg-line" d="M170 64 C 120 100, 90 130, 78 166" marker-end="url(#ahE)"/>
-          <path class="dg-line" d="M210 64 L 210 166" marker-end="url(#ahE)"/>
-          <path class="dg-line" d="M250 64 C 300 100, 330 130, 342 166" marker-end="url(#ahE)"/>
-          <text class="dg-t acc" x="96" y="108" font-size="12">delegate ↓</text>
-          <text class="dg-t mut" x="300" y="150" font-size="11" text-anchor="middle">↑ tiny summary back</text>
-        </svg>
+        <!-- Remotion animation (remotion/src/Subagents.tsx) -->
+        <video src="assets/anim/subagents-light.mp4" width="1176" height="756" autoplay muted loop playsinline aria-label="A main agent delegates messy work to sub-agents that have their own context and return only a short summary"></video>
       </div>
       <ul class="bul reveal">
         <li>A <b>sub-agent</b> is a separate agent with its <b>own fresh context</b> for one sub-task.</li>
@@ -1092,8 +1031,12 @@ class SlidePresentation{
     this.setupObserver();this.setupNavDots();this.setupKeyboard();this.setupTouch();this.setupProgress();
   }
   setupObserver(){
-    this.io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){
-      e.target.classList.add('visible');this.current=this.slides.indexOf(e.target);this.syncDots();}});},{threshold:0.55});
+    this.io=new IntersectionObserver((es)=>{es.forEach(e=>{
+      const vids=e.target.querySelectorAll('video');
+      if(e.isIntersecting){
+        e.target.classList.add('visible');this.current=this.slides.indexOf(e.target);this.syncDots();
+        vids.forEach(v=>{v.currentTime=0;v.play().catch(()=>{});});
+      }else{vids.forEach(v=>v.pause());}});},{threshold:0.55});
     this.slides.forEach(s=>this.io.observe(s));this.slides[0]?.classList.add('visible');
   }
   setupNavDots(){
