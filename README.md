@@ -1,7 +1,10 @@
 # Agentic talks
 
-Two self-contained, zero-dependency HTML slide decks on how coding agents actually
-work — a beginner intro and a developer follow-up. Same template, same aesthetic.
+Two zero-build HTML slide decks on how coding agents actually work — a beginner
+intro and a developer follow-up. Same template, same aesthetic. The key concepts
+are illustrated by short looping animations rendered with
+[Remotion](https://www.remotion.dev/) (in `assets/anim/`, sources in `remotion/`),
+so keep those folders next to the `.html` files.
 
 Author: **David Budáč / ČSOB** · English
 
@@ -62,10 +65,30 @@ at the top of `agentic-ai.html`.
   test, then run the tests"* or *"find & fix why test X fails."* Avoid anything
   that finishes in ~20s or needs a login.
 
+## Concept animations (Remotion)
+
+The most important concepts are animated with Remotion; the decks embed the
+rendered MP4s as muted loops that restart whenever you land on their slide:
+
+| Animation | Concept | Used on |
+|-----------|---------|---------|
+| `agent-loop` | the agent loop (propose → run → result → repeat) | intro s10 |
+| `stateless` | no memory: every call re-sends the whole history | intro s6 · eng s12 |
+| `next-token` | next-token prediction with sampled probabilities | eng s6 |
+| `quality` | quality vs. context fill — context rot / the dumb zone | intro s22 · eng s17 |
+| `kv-cache` | KV caching: cached prefix + fresh tail, append-only | eng s15 |
+| `subagents` | delegation: messy work inside, tiny summary back | intro s25 |
+
+To tweak or re-render: `cd remotion && npm i`, then `npx remotion studio` to
+preview or `npx remotion render <composition-id> ../assets/anim/<id>.mp4` to
+re-export (composition ids are listed in `remotion/src/Root.tsx`; each exists
+in the deck's light/dark theme variant as needed).
+
 ## Customize
 
 All styling is driven by CSS variables in the `:root` block of `agentic-ai.html`
-(`--card` is the accent color; `--font-*` set the typography).
+(`--card` is the accent color; `--font-*` set the typography). The Remotion
+animations read the same palette from `remotion/src/theme.ts`.
 
 ## Notes
 
@@ -77,8 +100,8 @@ All styling is driven by CSS variables in the `:root` block of `agentic-ai.html`
 
 | File | Purpose |
 |------|---------|
-| `agentic-ai.html` | *Intro to Agentic AI* deck — beginners (self-contained). |
-| `agentic-engineering.html` | *Agentic Engineering* deck — developers (self-contained; no live demo). |
+| `agentic-ai.html` | *Intro to Agentic AI* deck — beginners. |
+| `agentic-engineering.html` | *Agentic Engineering* deck — developers (no live demo). |
 | `index.html` | Chooser page linking both decks (GitHub Pages root). |
-| `prez_prompt.txt` | Original brief / topic outline. |
-| `my_slides.md` | Earlier scratch notes (unused). |
+| `assets/anim/` | Rendered concept animations (MP4 loops) embedded by both decks. |
+| `remotion/` | Remotion project — sources for the animations. |

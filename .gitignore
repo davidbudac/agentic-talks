@@ -3,3 +3,6 @@
 
 # Editor/scratch
 .claude-design/
+
+# Dependencies
+remotion/node_modules/
