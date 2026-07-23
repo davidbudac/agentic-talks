@@ -1,0 +1,39 @@
+/* Ember — spacing, frame, radii, borders. Slide-native (1920×1080). */
+
+:root {
+  /* Spacing scale */
+  --space-1: 6px;
+  --space-2: 9px;
+  --space-3: 14px;
+  --space-4: 18px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 40px;
+  --space-8: 48px;
+  --space-9: 56px;
+  --space-10: 84px;
+
+  /* Slide frame */
+  --slide-w: 1920px;
+  --slide-h: 1080px;
+  --slide-pad-x: 110px;
+  --slide-pad-top: 96px;
+  --slide-pad-bottom: 84px;
+  --slide-pad-top-dense: 88px;
+  --slide-pad-bottom-dense: 80px;
+
+  /* Corner radii */
+  --radius-sm: 7px;    /* chips, code lines */
+  --radius-md: 12px;   /* cards, callouts */
+  --radius-lg: 14px;   /* code block, terminal */
+  --radius-xl: 18px;   /* large panels */
+  --radius-pill: 20px; /* pills / tags */
+  --radius-bar: 3px;   /* diagram bars */
+
+  /* Border widths */
+  --bw-hair: 1px;
+  --bw: 1.5px;
+  --bw-2: 2px;
+  --bw-accent: 4px;   /* the 120×4 section accent rule */
+  --bw-callout: 6px;  /* callout left border */
+}

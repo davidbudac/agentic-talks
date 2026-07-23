@@ -1,0 +1,24 @@
+<!-- @dsCard group="Brand" viewport="700x215" name="Terminal window" subtitle="Claude Code chrome — what the user sees" -->
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>body{margin:0;padding:18px 22px;background:var(--paper);} .term{background:var(--term-bg);border:1px solid var(--line-dark-2);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-terminal);} .bar{display:flex;align-items:center;gap:7px;padding:11px 15px;background:var(--term-bar);border-bottom:1px solid var(--line-dark-2);} .dot{width:11px;height:11px;border-radius:50%;} .body{padding:16px 20px;font:500 14px/1.6 var(--font-mono);color:var(--code-text);} .r{display:flex;justify-content:space-between;max-width:300px;}</style>
+</head>
+<body>
+  <div class="term">
+    <div class="bar">
+      <span class="dot" style="background:var(--term-dot-red);"></span>
+      <span class="dot" style="background:var(--term-dot-yellow);"></span>
+      <span class="dot" style="background:var(--term-dot-green);"></span>
+      <span style="margin-left:10px;font:500 12.5px var(--font-mono);color:var(--on-dark-faint);">claude — ~/acme-api</span>
+    </div>
+    <div class="body">
+      <div style="color:var(--paper);"><span style="color:var(--coral);">&gt;</span> /cost</div>
+      <div class="r" style="margin-top:8px;"><span style="color:var(--on-dark-faint);">cache write</span><span style="color:var(--on-dark-muted);">22,180</span></div>
+      <div class="r"><span style="color:var(--coral);">cache read</span><span style="color:var(--coral);font-weight:700;">486,500</span></div>
+    </div>
+  </div>
+</body>
+</html>

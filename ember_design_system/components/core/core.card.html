@@ -1,0 +1,63 @@
+<!-- @dsCard group="Components" viewport="700x440" name="Core" subtitle="Eyebrow · Chip · AccentBar · Callout" -->
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<style>
+  /* Down-scale the slide-native type tokens to card size — components inherit these. */
+  body{margin:0;padding:26px;background:var(--paper);
+    --fs-h2:30px; --fs-title:22px; --fs-body:15px; --fs-body-sm:14px;
+    --fs-eyebrow:14px; --fs-mono:14px; --accent-bar-w:90px;}
+  #r{display:flex;flex-direction:column;gap:20px;}
+  .note{font:400 13px/1.6 var(--font-mono);color:var(--text-faint);}
+  .note b{color:var(--text-muted);}
+  code{font-family:var(--font-mono);color:var(--coral-ink);}
+</style>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="../../_ds_bundle.js"></script>
+</head>
+<body>
+<div id="r">
+  <div style="font:600 14px var(--font-mono);color:var(--coral);letter-spacing:0.1em;text-transform:uppercase;">Core components</div>
+  <div style="margin-top:6px;font:700 20px var(--font-display);color:var(--text-strong);letter-spacing:-0.02em;">Eyebrow · Chip · AccentBar · Callout</div>
+  <div class="note" style="margin-top:10px;">Live preview renders once this project is set to <b>Design System</b> in the Share menu (that compiles the <code>_ds_bundle.js</code> these cards mount). Until then, see each component's <code>.prompt.md</code> for usage.</div>
+</div>
+<script type="text/babel" data-presets="react">
+  function findDS(names){
+    for (const k of Object.keys(window)){
+      try { const v = window[k];
+        if (v && typeof v==='object' && names.every(n=>typeof v[n]==='function')) return v;
+      } catch(e){}
+    }
+    return null;
+  }
+  try {
+    const DS = (window.React && window.ReactDOM) ? findDS(['Eyebrow','Chip','AccentBar','Callout']) : null;
+    if (DS){
+      const { Eyebrow, Chip, AccentBar, Callout } = DS;
+      ReactDOM.createRoot(document.getElementById('r')).render(
+        <React.Fragment>
+          <div>
+            <Eyebrow>Where it actually happens</Eyebrow>
+            <div style={{font:"700 var(--fs-h2) var(--font-display)", letterSpacing:"-0.025em", margin:"8px 0 0", color:"var(--text-strong)"}}>Caching lives in the cloud</div>
+            <AccentBar style={{marginTop:14}} />
+          </div>
+          <div style={{display:"flex", gap:10, flexWrap:"wrap", alignItems:"center"}}>
+            <Chip>● HAPPENS HERE</Chip>
+            <Chip variant="neutral">reads all</Chip>
+            <Chip variant="outline">200 tok</Chip>
+            <Chip variant="ghost">Q1</Chip>
+          </div>
+          <Callout title="Most common failure mode" style={{padding:"16px 20px"}}>
+            The subagent can't see prior turns — unless the parent bakes it into the task string.
+          </Callout>
+        </React.Fragment>
+      );
+    }
+  } catch(e){ console.warn('Ember card:', e); }
+</script>
+</body>
+</html>

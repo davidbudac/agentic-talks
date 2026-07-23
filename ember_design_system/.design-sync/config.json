@@ -1,0 +1,6 @@
+{
+  "projectId": "8a927d0a-7bbd-422e-8664-faa878215640",
+  "projectName": "Ember Design System (copy)",
+  "shape": "hand-authored",
+  "notes": "Off-script repo: no build/package.json/storybook. The repo is already in Claude Design upload shape; files are uploaded as-is (the app compiles _ds_bundle.js at runtime). No converter, no _ds_sync.json anchor."
+}

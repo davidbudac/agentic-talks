@@ -1,0 +1,26 @@
+<!-- @dsCard group="Slides" viewport="1280x720" name="Code" subtitle="Dark code slide with coral key line" -->
+<!-- @startingPoint section="Slides" subtitle="Code walkthrough slide" viewport="1280x720" -->
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>body{margin:0;display:flex;align-items:center;justify-content:center;background:#cdc3b0;font-family:var(--font-body);}</style>
+</head>
+<body>
+<div style="width:1280px;height:720px;overflow:hidden;background:var(--ink);color:var(--on-dark);box-sizing:border-box;padding:58px 73px 52px;display:flex;flex-direction:column;">
+  <div style="font:600 16px var(--font-mono);color:var(--coral);letter-spacing:0.1em;text-transform:uppercase;">In code</div>
+  <h2 style="margin:9px 0 8px;font:700 37px var(--font-display);letter-spacing:-0.025em;">A subagent is just another call</h2>
+  <p style="margin:0 0 22px;font:400 18px var(--font-body);color:var(--on-dark-muted);">No special primitive — a fresh <span style="font-family:var(--font-mono);color:var(--on-dark);">messages.create</span> with its own message list.</p>
+  <div style="flex:1;background:var(--code-bg);border:1.5px solid var(--line-dark-2);border-radius:14px;padding:24px 0;font:500 17px/1.7 var(--font-mono);color:var(--code-text);overflow:hidden;">
+    <div style="padding:0 30px;"><span style="color:var(--code-keyword);">def</span> run_subagent(task):</div>
+    <div style="padding:0 30px;">&nbsp;&nbsp;resp = client.messages.create(</div>
+    <div style="padding:0 30px;">&nbsp;&nbsp;&nbsp;&nbsp;model=MODEL, max_tokens=<span style="color:var(--code-number);">400</span>,</div>
+    <div style="padding:0 30px;">&nbsp;&nbsp;&nbsp;&nbsp;system=SUBAGENT_SYSTEM,<span style="color:var(--code-comment);"> # shared, cached prefix</span></div>
+    <div style="padding:0 30px;">&nbsp;&nbsp;&nbsp;&nbsp;messages=[{<span style="color:var(--code-string);">"role"</span>: <span style="color:var(--code-string);">"user"</span>, <span style="color:var(--code-string);">"content"</span>: task}],<span style="color:var(--code-comment);"> # all it knows</span></div>
+    <div style="padding:0 30px;">&nbsp;&nbsp;)</div>
+    <div style="background:rgba(255,92,53,.12);border-left:3px solid var(--coral);padding:4px 27px;">&nbsp;&nbsp;<span style="color:var(--code-keyword);">return</span> resp.content[<span style="color:var(--code-number);">0</span>].text<span style="color:var(--code-comment);"> # ← the single block that crosses back</span></div>
+  </div>
+</div>
+</body>
+</html>

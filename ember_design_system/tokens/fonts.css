@@ -1,0 +1,6 @@
+/* Ember webfonts.
+   Loaded from Google Fonts CDN. Space Grotesk (display), IBM Plex Sans (body),
+   IBM Plex Mono (labels/code). If you need self-hosted binaries, drop the
+   woff2 files in assets/fonts/ and replace this @import with @font-face rules. */
+
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap");
