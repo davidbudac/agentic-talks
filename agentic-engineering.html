@@ -742,7 +742,9 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
     <h2 class="reveal">The <span class="o">dumb zone</span></h2>
     <div class="split">
       <ul class="bul reveal">
-        <li>Attention <b>dilutes</b> over long contexts — degradation starts <b>well before</b> the window limit.</li>
+        <li>Recall <b>attention</b>: every new token is a <b>weighted look-back over all earlier tokens</b> — and the weights <b>sum to 1.</b></li>
+        <li>So context is <b>zero-sum</b>: each irrelevant token you load <b>competes for the same attention budget</b> as the needle — and near-miss <b>distractors</b> pull hardest.</li>
+        <li>That's why "just throw everything in" <b>backfires</b>: more haystack = a thinner slice of attention per needle. Degradation starts <b>well before</b> the window limit.</li>
         <li>Symptoms: <b>forgets instructions</b>, redoes finished work, ignores a fact that's right there.</li>
         <li>Hygiene: <b>/clear</b>, <b>/compact</b>, a <b>fresh session per task</b>, and <b>subagents</b> that summarise back.</li>
       </ul>
@@ -1041,13 +1043,18 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- FABLE — WHERE TO SPEND IT -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">29</span><div class="crumb"><b>Levers</b> · Fable · where to spend</div></div>
-    <h2 class="reveal">Where to <span class="o">spend</span> it</h2>
-    <div class="cards c2 reveal">
-      <div class="tile"><span class="k">Do</span><p>Plan reviews · code-review passes · final polish of user-facing work · the hard architectural call · the verify stage in a workflow.</p></div>
-      <div class="tile fill"><span class="k">Don't</span><p>Bulk implementation · mechanical edits · running tests · first drafts · anything a smaller model already nails.</p></div>
-    </div>
-    <p class="note reveal">Same split every time: Fable <b>decides and checks</b>; cheaper models <b>produce the volume.</b></p>
+    <div class="slide-head reveal"><span class="snum">29</span><div class="crumb"><b>Levers</b> · where to spend</div></div>
+    <h2 class="reveal">Where to <span class="o">spend</span> what</h2>
+    <table class="tbl reveal">
+      <thead><tr><th>Tier · the lineup from before</th><th>Suggested usage</th></tr></thead>
+      <tbody>
+        <tr><td><b>Small</b> — <span style="font-family:var(--font-m)">Haiku · Luna · Flash-Lite</span></td><td>classification, log triage, autocomplete, high-volume pipelines — anything you'd regret paying Opus prices for.</td></tr>
+        <tr><td><b>Medium</b> — <span style="font-family:var(--font-m)">Sonnet · Terra · Flash</span></td><td>the workhorse: implementation from a clear spec, tests, refactors, bulk subagents, data wrangling.</td></tr>
+        <tr><td><b>Large</b> — <span style="font-family:var(--font-m)">Opus · Sol · Pro</span></td><td>the agentic default: long-horizon coding, debugging, multi-step tool work, user-facing writing &amp; design.</td></tr>
+        <tr><td><b>Frontier</b> — <span style="font-family:var(--font-m)">Fable · Deep Think</span></td><td>plan reviews, the hard architectural call, verify stages, final polish — <b>never</b> bulk implementation, mechanical edits, or first drafts.</td></tr>
+      </tbody>
+    </table>
+    <p class="note reveal">Same split every time: the top tier <b>decides and checks</b>; cheaper models <b>produce the volume.</b> Escalate on failure, not vibes — and remember a cheaper model at <b>higher effort</b> often beats a pricier one at low.</p>
   </div>
 </section>
 
@@ -1198,8 +1205,10 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">36</span><div class="crumb"><b>Ladder</b> · workflows in code</div></div>
     <h2 class="reveal">What a workflow <span class="o">looks like</span></h2>
-    <span class="extag reveal">SKETCH — you rarely hand-write this; you ask for it</span>
-    <div class="code reveal"><span class="o">phase</span>(<span class="g">'Explore'</span>);
+    <div class="split" style="align-items:start">
+      <div>
+        <span class="extag reveal">SKETCH — the script the model writes</span>
+        <div class="code reveal"><span class="o">phase</span>(<span class="g">'Explore'</span>);
 <span class="o">parallel</span>(
   <span class="o">agent</span>(<span class="g">'map the data layer'</span>, {model:<span class="b">'haiku'</span>}),
   <span class="o">agent</span>(<span class="g">'map the API routes'</span>, {model:<span class="b">'haiku'</span>}),
@@ -1207,7 +1216,22 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <span class="o">phase</span>(<span class="g">'Plan'</span>);    <span class="o">agent</span>(<span class="g">'write the plan'</span>, {model:<span class="b">'fable'</span>});
 <span class="o">phase</span>(<span class="g">'Build'</span>);   <span class="o">agent</span>(<span class="g">'implement it'</span>,  {model:<span class="b">'opus'</span>});
 <span class="o">phase</span>(<span class="g">'Verify'</span>);  <span class="o">run</span>(<span class="g">'pytest -q'</span>);   <span class="c">// gate: must pass</span></div>
-    <p class="note reveal">Knowing the shape tells you <b>what to ask for</b> — stages, a model per stage, a verify gate.</p>
+      </div>
+      <div>
+        <span class="extag reveal">REAL — how you ask for it in Claude Code</span>
+        <div class="code reveal"><span class="c"># plain words opt it in — just say "workflow":</span>
+<span class="b">&gt; Use a workflow: review this branch.</span>
+<span class="b">  Fan out one reviewer per dimension —</span>
+<span class="b">  logic, security, tests — and verify</span>
+<span class="b">  every finding before reporting.</span>
+
+<span class="c"># power-ups</span>
+<span class="o">ultracode</span> &lt;task&gt;  <span class="c">standing opt-in (xhigh + workflows)</span>
+<span class="o">+500k</span>             <span class="c">token budget it paces itself to</span>
+<span class="o">/workflows</span>        <span class="c">watch the phases run live</span></div>
+      </div>
+    </div>
+    <p class="note reveal">You never hand-write the script — you state the <b>shape</b> (stages, fan-out, the verify bar) and the model writes &amp; runs the orchestration. Knowing the shape tells you <b>what to ask for.</b></p>
   </div>
 </section>
 
@@ -1233,14 +1257,43 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
   <div class="slide-content">
     <div class="dnum reveal">05</div>
     <h2 class="reveal">Make it <span class="o">yours</span></h2>
-    <p class="dsub reveal"><b>Skills</b> teach the agent how <i>you</i> work. <b>Plugins</b> ship that to your team.</p>
+    <p class="dsub reveal"><b>CLAUDE.md</b> sets the standing rules. <b>Skills</b> teach the agent how <i>you</i> work. <b>Plugins</b> ship it to your team.</p>
+  </div>
+</section>
+
+<!-- CLAUDE.md / AGENTS.md -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">38</span><div class="crumb"><b>Extensibility</b> · CLAUDE.md</div></div>
+    <h2 class="reveal">The standing orders: <span class="o">CLAUDE.md</span></h2>
+    <div class="split">
+      <ul class="bul reveal">
+        <li>A markdown file the harness <b>injects at session start</b> — conventions, commands, boundaries. The model reads it <b>before your first word.</b></li>
+        <li>Three scopes: <b>repo CLAUDE.md</b> (checked in — the team's), <b>~/.claude/CLAUDE.md</b> (personal — every project), and <b>per-directory</b> (monorepo sub-projects).</li>
+        <li><b>AGENTS.md</b> is the cross-vendor twin (Codex, Cursor, Copilot read it natively). Claude Code doesn't — bridge with a one-line <b>@AGENTS.md</b> import, or a symlink.</li>
+        <li>It rides in <b>every turn's context</b> → keep it to short, <b>always-true</b> rules. Recipes belong in <b>skills</b> — next slide says why.</li>
+      </ul>
+      <div class="code reveal"><span class="c"># CLAUDE.md</span>
+<span class="o">@AGENTS.md</span>              <span class="c">← imports the shared file</span>
+
+<span class="d">## Commands</span>
+- build: npm run build · test: npm test
+
+<span class="d">## Style</span>
+- TypeScript strict; no default exports
+
+<span class="d">## Boundaries</span>
+- never edit migrations/ by hand
+- ask before adding a dependency</div>
+    </div>
+    <p class="note reveal"><span class="pill">● CONTEXT</span> CLAUDE.md is context you <b>pay for every turn</b> — the whole reason skills exist is to keep it thin.</p>
   </div>
 </section>
 
 <!-- WHY SKILLS AT ALL -->
-<section class="slide">
+<section class="slide dark">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">38</span><div class="crumb"><b>Extensibility</b> · why skills</div></div>
+    <div class="slide-head reveal"><span class="snum">39</span><div class="crumb"><b>Extensibility</b> · why skills</div></div>
     <h2 class="reveal">Why skills? Every session starts <span class="o">blank</span></h2>
     <div class="cards c3 reveal">
       <div class="tile"><span class="k">Groundhog Day</span><p>The model knows the world, <b>not your workflow.</b> Release-notes format, review checklist, deploy steps — re-explained <b>every single session.</b></p></div>
@@ -1254,7 +1307,7 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- SKILLS: ANATOMY -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">39</span><div class="crumb"><b>Extensibility</b> · skill anatomy</div></div>
+    <div class="slide-head reveal"><span class="snum">40</span><div class="crumb"><b>Extensibility</b> · skill anatomy</div></div>
     <h2 class="reveal">A skill is a <span class="o">folder + SKILL.md</span></h2>
     <div class="split">
       <ul class="bul reveal">
@@ -1276,7 +1329,7 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- WALKTHROUGH: BUILD A SKILL -->
 <section class="slide dark">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">40</span><div class="crumb"><b>Extensibility</b> · build a skill</div></div>
+    <div class="slide-head reveal"><span class="snum">41</span><div class="crumb"><b>Extensibility</b> · build a skill</div></div>
     <h2 class="reveal">Build one in <span class="o">three steps</span></h2>
     <span class="extag reveal">WALKTHROUGH — a release-notes skill</span>
     <div class="code reveal"><span class="o">1.</span> <span class="g">mkdir -p .claude/skills/release-notes</span>
@@ -1294,7 +1347,7 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- SKILL SYSTEMS AT SCALE -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">41</span><div class="crumb"><b>Extensibility</b> · skills at scale</div></div>
+    <div class="slide-head reveal"><span class="snum">42</span><div class="crumb"><b>Extensibility</b> · skills at scale</div></div>
     <h2 class="reveal">From one skill to a <span class="o">system</span></h2>
     <div class="cards c2 reveal">
       <div class="tile"><span class="k">Composable sets</span><p>Matt Pocock's approach: <b>dozens of tiny skills</b> — conventions, testing style, PR etiquette — each triggering on its own cue.</p></div>
@@ -1307,7 +1360,7 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- WORKED EXAMPLE: MATT POCOCK'S SKILLS -->
 <section class="slide dark">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">42</span><div class="crumb"><b>Extensibility</b> · example · pocock</div></div>
+    <div class="slide-head reveal"><span class="snum">43</span><div class="crumb"><b>Extensibility</b> · example · pocock</div></div>
     <h2 class="reveal">Worked example: <span class="o">mattpocock/skills</span></h2>
     <div class="split">
       <ul class="bul reveal">
@@ -1333,7 +1386,7 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- WORKED EXAMPLE: COMPOUND ENGINEERING -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">43</span><div class="crumb"><b>Extensibility</b> · example · compound</div></div>
+    <div class="slide-head reveal"><span class="snum">44</span><div class="crumb"><b>Extensibility</b> · example · compound</div></div>
     <h2 class="reveal">Worked example: <span class="o">Compound Engineering</span></h2>
     <div class="split">
       <div class="code reveal"><span class="c"># one loop, five skills (Every's CE plugin):</span>
@@ -1356,7 +1409,7 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- PLUGINS: ANATOMY + DIAGRAM -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">44</span><div class="crumb"><b>Extensibility</b> · plugin anatomy</div></div>
+    <div class="slide-head reveal"><span class="snum">45</span><div class="crumb"><b>Extensibility</b> · plugin anatomy</div></div>
     <h2 class="reveal">Plugins <span class="o">distribute</span> all of it</h2>
     <div class="split">
       <ul class="bul reveal">
@@ -1387,7 +1440,7 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- WALKTHROUGH: PUBLISH A PLUGIN -->
 <section class="slide dark">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">45</span><div class="crumb"><b>Extensibility</b> · publish a plugin</div></div>
+    <div class="slide-head reveal"><span class="snum">46</span><div class="crumb"><b>Extensibility</b> · publish a plugin</div></div>
     <h2 class="reveal">Ship it to the <span class="o">whole team</span></h2>
     <span class="extag reveal">WALKTHROUGH — from your skill to their /install</span>
     <div class="code reveal"><span class="o">1.</span> <span class="c"># wrap it up (skills/ sits at the plugin root):</span>
@@ -1410,7 +1463,7 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- RECAP -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">46</span><div class="crumb"><b>Close</b> · recap</div></div>
+    <div class="slide-head reveal"><span class="snum">47</span><div class="crumb"><b>Close</b> · recap</div></div>
     <h2 class="reveal">It's all <span class="o">context engineering</span></h2>
     <div class="split">
       <div class="kcard reveal">
@@ -1430,7 +1483,7 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- THANKS + SOURCES -->
 <section class="slide dark">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">47</span><div class="crumb"><b>Close</b> · thanks &amp; sources</div></div>
+    <div class="slide-head reveal"><span class="snum">48</span><div class="crumb"><b>Close</b> · thanks &amp; sources</div></div>
     <p class="thanks reveal">Thanks! <span class="o">Questions?</span></p>
     <div class="links reveal" style="margin-top:var(--content-gap)">
       <div class="linkcol">
