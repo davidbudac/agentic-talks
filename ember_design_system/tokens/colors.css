@@ -1,0 +1,69 @@
+/* Ember — color tokens.
+   The system runs on a warm tri-tone: near-black "ink", cream "paper",
+   and a single vivid "coral" accent. Everything else is a ramp between them. */
+
+:root {
+  /* ── Core surfaces ─────────────────────────────────────── */
+  --ink: #16130e;        /* primary dark surface; primary text on light */
+  --ink-2: #1c1812;      /* raised card on dark */
+  --ink-3: #0e0c08;      /* deepest — code-block background */
+  --paper: #f4efe6;      /* primary light surface; primary text on dark */
+  --paper-2: #efe7d8;    /* sunk card / well on light */
+  --paper-3: #e3d9c6;    /* deeper cream fill */
+
+  /* ── Accent ────────────────────────────────────────────── */
+  --coral: #ff5c35;      /* the signature — accent, highlight, emphasis */
+  --coral-ink: #b9361a;  /* coral as text on light (darkened for legibility) */
+  --coral-soft: #ffe9e2; /* coral wash — callout background */
+  --coral-tint: #ffe0d6; /* warm coral tint surface */
+
+  /* ── Text ramps ────────────────────────────────────────── */
+  --text-strong: #16130e;   /* headings/body on light */
+  --text-muted: #5c5446;    /* secondary on light */
+  --text-faint: #a39684;    /* tertiary / captions on light */
+  --on-dark: #f4efe6;       /* primary text on dark */
+  --on-dark-muted: #cabfac; /* secondary text on dark */
+  --on-dark-faint: #8a7f6d; /* tertiary text on dark */
+
+  /* ── Lines & diagram bars ──────────────────────────────── */
+  --line-light: #cbbfa9;    /* borders on light */
+  --line-light-2: #ddd2bf;  /* hairline rules on light */
+  --line-card: #d8ccb6;     /* card border on light */
+  --line-dark: #3a342a;     /* borders on dark */
+  --line-dark-2: #2c281f;   /* hairline rules on dark */
+  --bar: #ddd0ba;           /* neutral diagram bar on light */
+  --bar-dark: #46402f;      /* neutral diagram bar on dark */
+
+  /* ── Semantic ──────────────────────────────────────────── */
+  --positive: #3fb950;
+  --positive-on-dark: #7fdc8a;
+  --positive-ink: #1f7a32;
+  --warning: #d9a441;
+  --danger: #b9361a;
+  --danger-on-dark: #e0795f;
+
+  /* ── Code syntax (on --code-bg) ────────────────────────── */
+  --code-bg: #0e0c08;
+  --code-text: #e8dfcf;
+  --code-keyword: #e0795f;
+  --code-string: #7fb98a;
+  --code-number: #d9a441;
+  --code-comment: #8a7f6d;
+
+  /* ── Terminal chrome ───────────────────────────────────── */
+  --term-bg: #14110c;
+  --term-bar: #1d1810;
+  --term-dot-red: #ff5f57;
+  --term-dot-yellow: #febc2e;
+  --term-dot-green: #28c840;
+
+  /* ── Semantic aliases ──────────────────────────────────── */
+  --surface: var(--paper);
+  --surface-sunk: var(--paper-2);
+  --surface-dark: var(--ink);
+  --surface-card-dark: var(--ink-2);
+  --accent: var(--coral);
+  --accent-on-light: var(--coral-ink);
+  --border: var(--line-light);
+  --border-dark: var(--line-dark);
+}

@@ -1,0 +1,42 @@
+/* Ember — type tokens.
+   Three families: Space Grotesk (display/numerals), IBM Plex Sans (prose),
+   IBM Plex Mono (eyebrows, labels, code). Sizes are slide-native (1920×1080);
+   scale proportionally for smaller canvases. */
+
+:root {
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+
+  /* Weights */
+  --w-regular: 400;
+  --w-medium: 500;
+  --w-semibold: 600;
+  --w-bold: 700;
+
+  /* Display scale — for 1920×1080 slides */
+  --fs-mega: 200px;     /* section divider numerals */
+  --fs-display: 132px;  /* title-slide hero */
+  --fs-h1: 88px;        /* section header */
+  --fs-h2: 64px;        /* slide title */
+  --fs-h2-sm: 56px;     /* slide title, dense */
+  --fs-title: 40px;     /* lead / card title */
+  --fs-subtitle: 36px;  /* deck subtitle */
+  --fs-body-lg: 32px;   /* primary body */
+  --fs-body: 30px;      /* body */
+  --fs-body-sm: 28px;   /* small body */
+  --fs-eyebrow: 24px;   /* eyebrow / mono label / caption */
+  --fs-mono: 24px;      /* code & mono data */
+
+  /* Tracking */
+  --track-tight: -0.03em;  /* mega + display */
+  --track-snug: -0.025em;  /* headings */
+  --track-eyebrow: 0.1em;  /* uppercase eyebrows */
+  --track-label: 0.04em;   /* mono sub-labels */
+
+  /* Leading */
+  --lh-tight: 0.9;
+  --lh-snug: 1.05;
+  --lh-body: 1.5;
+  --lh-mono: 1.6;
+}

@@ -1,0 +1,22 @@
+<!-- @dsCard group="Colors" viewport="700x172" name="Code syntax" subtitle="Warm syntax palette on ink-3" -->
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>body{margin:0;padding:0;background:var(--paper);} .code{background:var(--code-bg);padding:18px 22px;font:500 15px/1.7 var(--font-mono);color:var(--code-text);} .sw{display:flex;gap:10px;padding:12px 22px;background:var(--paper);flex-wrap:wrap;} .chip{display:flex;align-items:center;gap:6px;font:400 11.5px var(--font-mono);color:var(--text-muted);} .dot{width:13px;height:13px;border-radius:3px;}</style>
+</head>
+<body>
+  <div class="code">
+    <div><span style="color:var(--code-keyword);">def</span> run_subagent(task):<span style="color:var(--code-comment);">  # delegate</span></div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--code-keyword);">return</span> resp.content[<span style="color:var(--code-number);">0</span>].text&nbsp;&nbsp;<span style="color:var(--code-comment);"># the </span><span style="color:var(--code-string);">"one block"</span></div>
+  </div>
+  <div class="sw">
+    <span class="chip"><span class="dot" style="background:var(--code-keyword);"></span>keyword</span>
+    <span class="chip"><span class="dot" style="background:var(--code-string);"></span>string</span>
+    <span class="chip"><span class="dot" style="background:var(--code-number);"></span>number</span>
+    <span class="chip"><span class="dot" style="background:var(--code-comment);"></span>comment</span>
+    <span class="chip"><span class="dot" style="background:var(--code-text);"></span>text</span>
+  </div>
+</body>
+</html>

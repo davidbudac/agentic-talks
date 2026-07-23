@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #16130e; }
+</style>
+</helmet>
+
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<!-- ===================== 01 · TITLE ===================== -->
+<section data-label="Title" data-speaker-notes="Welcome. Today: two primitives that quietly govern how agentic systems perform and what they cost — subagents and prompt caching. Both are really about one thing: protecting the lead agent's context. 30 minutes, built for devs and IT admins." style="background:#16130e; color:#f4efe6; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; justify-content:center; font-family:'IBM Plex Sans',sans-serif; position:relative; overflow:hidden;">
+  <div style="position:absolute; top:0; right:0; width:280px; height:280px; background:#ff5c35; border-bottom-left-radius:280px;"></div>
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:34px;">Engineering Deep Dive</div>
+  <h1 style="margin:0; font:700 132px 'Space Grotesk',sans-serif; letter-spacing:-0.03em; line-height:0.95;">Subagents &amp;<br>Prompt Caching</h1>
+  <p style="margin:42px 0 0; font:400 40px 'IBM Plex Sans',sans-serif; color:#cabfac; max-width:1100px;">How context travels — and what it costs.</p>
+  <div style="position:absolute; left:110px; bottom:64px; font:500 24px 'IBM Plex Mono',monospace; color:#8a7f6d;">For developers &amp; IT admins · 30 min</div>
+</section>
+
+<!-- ===================== 02 · AGENDA ===================== -->
+<section data-label="Agenda" data-speaker-notes="Four parts. We spend most of the time on subagents and caching — the mechanics and the economics. Then how they reinforce each other, and a short, practical section on what's allowed when you run this under a subscription versus an API key." style="background:#f4efe6; color:#16130e; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">Agenda</div>
+  <h2 style="margin:14px 0 56px; font:700 72px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">What we'll cover</h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:40px 80px; max-width:1500px;">
+    <div style="display:flex; gap:28px; align-items:baseline; border-top:2px solid #ddd2bf; padding-top:24px;">
+      <span style="font:700 56px 'Space Grotesk',sans-serif; color:#ff5c35; line-height:1;">01</span>
+      <div><div style="font:600 38px 'Space Grotesk',sans-serif;">Subagents</div><div style="font:400 26px 'IBM Plex Sans',sans-serif; color:#5c5446; margin-top:6px;">Architecture &amp; how context moves</div></div>
+    </div>
+    <div style="display:flex; gap:28px; align-items:baseline; border-top:2px solid #ddd2bf; padding-top:24px;">
+      <span style="font:700 56px 'Space Grotesk',sans-serif; color:#ff5c35; line-height:1;">02</span>
+      <div><div style="font:600 38px 'Space Grotesk',sans-serif;">Prompt caching</div><div style="font:400 26px 'IBM Plex Sans',sans-serif; color:#5c5446; margin-top:6px;">The mechanism &amp; the economics</div></div>
+    </div>
+    <div style="display:flex; gap:28px; align-items:baseline; border-top:2px solid #ddd2bf; padding-top:24px;">
+      <span style="font:700 56px 'Space Grotesk',sans-serif; color:#ff5c35; line-height:1;">03</span>
+      <div><div style="font:600 38px 'Space Grotesk',sans-serif;">Where they reinforce</div><div style="font:400 26px 'IBM Plex Sans',sans-serif; color:#5c5446; margin-top:6px;">The shared-prefix payoff</div></div>
+    </div>
+    <div style="display:flex; gap:28px; align-items:baseline; border-top:2px solid #ddd2bf; padding-top:24px;">
+      <span style="font:700 56px 'Space Grotesk',sans-serif; color:#ff5c35; line-height:1;">04</span>
+      <div><div style="font:600 38px 'Space Grotesk',sans-serif;">Under a subscription</div><div style="font:400 26px 'IBM Plex Sans',sans-serif; color:#5c5446; margin-top:6px;">What's allowed, what isn't</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 03 · SECTION: SUBAGENTS ===================== -->
+<section data-label="01 Subagents" data-speaker-notes="Part one. A subagent is a way to run isolated, parallel work — each with its own context window — then funnel results back to a coordinating lead." style="background:#16130e; color:#f4efe6; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; justify-content:center; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.14em; text-transform:uppercase;">Part One</div>
+  <div style="font:700 200px 'Space Grotesk',sans-serif; color:#ff5c35; line-height:0.85; letter-spacing:-0.03em; margin:18px 0 4px;">01</div>
+  <h2 style="margin:0; font:700 88px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">Subagents</h2>
+  <div style="width:120px; height:4px; background:#ff5c35; margin:38px 0 26px;"></div>
+  <p style="margin:0; font:400 36px 'IBM Plex Sans',sans-serif; color:#cabfac; max-width:1150px;">Isolated, parallel work with their own context windows — funnelling results back to a coordinating lead.</p>
+</section>
+
+<!-- ===================== 03b · INTUITION 1: SUBAGENTS ===================== -->
+<section data-label="Like a helper" data-speaker-notes="Before any mechanics, the plain-language version. A subagent is just a helper you hand a job to. You stay on the main task; the helper goes off and does all the messy digging in its own space; it comes back with only the answer. You never wade through everything it looked at. Hold that picture — the next slides add the precise machinery." style="background:#f4efe6; color:#16130e; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">The big idea</div>
+  <h2 style="margin:14px 0 14px; font:700 64px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">It's like handing a job to a helper</h2>
+  <p style="margin:0 0 54px; font:400 32px 'IBM Plex Sans',sans-serif; color:#5c5446; max-width:1420px; text-wrap:pretty;">You stay on the main task. A helper goes off, does the messy digging on its own, and brings back just the answer.</p>
+  <div style="flex:1; display:flex; align-items:stretch; gap:28px;">
+    <div style="flex:1; background:#efe7d8; border:1.5px solid #cbbfa9; border-radius:16px; padding:32px 30px; display:flex; flex-direction:column;">
+      <div style="font:600 24px 'IBM Plex Mono',monospace; color:#a39684;">① THE SETUP</div>
+      <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px;">
+        <div style="background:#ff5c35; color:#16130e; border-radius:10px; padding:16px 46px; font:700 30px 'Space Grotesk',sans-serif;">YOU</div>
+        <div style="width:78%; height:10px; background:#ddd0ba; border-radius:3px;"></div>
+      </div>
+      <div style="font:400 28px 'IBM Plex Sans',sans-serif; color:#5c5446; text-wrap:pretty;">You're focused on the main job.</div>
+    </div>
+    <span style="align-self:center; font:700 44px 'Space Grotesk',sans-serif; color:#ff5c35;">→</span>
+    <div style="flex:1; background:#efe7d8; border:1.5px solid #cbbfa9; border-radius:16px; padding:32px 30px; display:flex; flex-direction:column;">
+      <div style="font:600 24px 'IBM Plex Mono',monospace; color:#a39684;">② THE HAND-OFF</div>
+      <div style="flex:1; display:flex; align-items:center; justify-content:center;">
+        <div style="width:100%; border:2px dashed #cbbfa9; border-radius:12px; padding:22px; display:flex; flex-direction:column; gap:10px;">
+          <div style="height:10px; background:#ddd0ba; border-radius:3px; width:94%;"></div>
+          <div style="height:10px; background:#ddd0ba; border-radius:3px; width:70%;"></div>
+          <div style="height:10px; background:#ddd0ba; border-radius:3px; width:88%;"></div>
+          <div style="height:10px; background:#ddd0ba; border-radius:3px; width:60%;"></div>
+        </div>
+      </div>
+      <div style="font:400 28px 'IBM Plex Sans',sans-serif; color:#5c5446; text-wrap:pretty;">A helper does the messy digging — in its own space.</div>
+    </div>
+    <span style="align-self:center; font:700 44px 'Space Grotesk',sans-serif; color:#ff5c35;">→</span>
+    <div style="flex:1; background:#16130e; border-radius:16px; padding:32px 30px; display:flex; flex-direction:column;">
+      <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35;">③ THE PAYOFF</div>
+      <div style="flex:1; display:flex; align-items:center; justify-content:center;">
+        <div style="background:#f4efe6; color:#16130e; border-radius:10px; padding:18px 32px; font:700 26px 'Space Grotesk',sans-serif; display:flex; align-items:center; gap:12px;"><span style="color:#1f9d4e;">✓</span> The answer</div>
+      </div>
+      <div style="font:400 28px 'IBM Plex Sans',sans-serif; color:#cabfac; text-wrap:pretty;">It hands back just the answer — you never see the mess.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 03c · INTUITION 2: SUBAGENTS ===================== -->
+<section data-label="Stays clear" data-speaker-notes="And why that's worth doing. Picture your own desk. Do all the digging yourself and everything you looked at piles up in front of you — it gets hard to think. Let a helper do it and only the answer lands on your desk; you keep room to think. Same work gets done, the clutter just stays off your desk. The next slides put real numbers on that clutter." style="background:#16130e; color:#f4efe6; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">Why it helps</div>
+  <h2 style="margin:14px 0 14px; font:700 64px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">Your desk stays clear</h2>
+  <p style="margin:0 0 50px; font:400 32px 'IBM Plex Sans',sans-serif; color:#cabfac; max-width:1420px; text-wrap:pretty;">Same work gets done either way — the only question is whether the clutter ends up in front of you.</p>
+  <div style="flex:1; display:grid; grid-template-columns:1fr 1fr; gap:48px;">
+    <div style="border:1.5px solid #3a342a; background:#1c1812; border-radius:16px; padding:34px 38px; display:flex; flex-direction:column;">
+      <div style="font:600 24px 'IBM Plex Mono',monospace; color:#e0795f; letter-spacing:0.04em; margin-bottom:22px;">DO IT ALL YOURSELF</div>
+      <div style="flex:1; display:flex; flex-direction:column; justify-content:center; gap:9px;">
+        <div style="height:13px; background:#46402f; border-radius:3px; width:96%;"></div>
+        <div style="height:13px; background:#46402f; border-radius:3px; width:84%;"></div>
+        <div style="height:13px; background:#46402f; border-radius:3px; width:90%;"></div>
+        <div style="height:13px; background:#46402f; border-radius:3px; width:78%;"></div>
+        <div style="height:13px; background:#46402f; border-radius:3px; width:92%;"></div>
+        <div style="height:13px; background:#46402f; border-radius:3px; width:82%;"></div>
+        <div style="height:13px; background:#46402f; border-radius:3px; width:88%;"></div>
+        <div style="height:13px; background:#46402f; border-radius:3px; width:74%;"></div>
+      </div>
+      <div style="margin-top:22px; font:400 28px 'IBM Plex Sans',sans-serif; color:#cabfac; text-wrap:pretty;">Everything you looked at piles up. Hard to think straight.</div>
+    </div>
+    <div style="border:1.5px solid #3a342a; background:#1c1812; border-radius:16px; padding:34px 38px; display:flex; flex-direction:column;">
+      <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.04em; margin-bottom:22px;">LET A HELPER DO IT</div>
+      <div style="flex:1; display:flex; flex-direction:column; justify-content:center; gap:14px;">
+        <div style="height:13px; background:#ff5c35; border-radius:3px; width:44%;"></div>
+        <div style="font:500 24px 'IBM Plex Mono',monospace; color:#7fdc8a;">just the answer ✓</div>
+      </div>
+      <div style="margin-top:22px; font:400 28px 'IBM Plex Sans',sans-serif; color:#cabfac; text-wrap:pretty;">Only the answer comes back. Plenty of room to think.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 03d · WHERE IT HAPPENS: SUBAGENTS ===================== -->
+<section data-label="Where (harness)" data-speaker-notes="Step back to the whole system. Your computer runs a harness — the program that makes the API calls — and inside it the agent loop, its context, and the local tools. Across the network sits the cloud: the API, the model that does inference, and the prompt cache. Subagents happen right here, in the harness. A subagent is just the harness running another agent loop with its own context and feeding the result back. The model never sees a 'subagent' — to the cloud it's a few ordinary, unrelated requests." style="background:#f4efe6; color:#16130e; padding:88px 110px 80px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">Where it actually happens</div>
+  <h2 style="margin:14px 0 12px; font:700 60px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">Subagents live in the harness</h2>
+  <p style="margin:0 0 34px; font:400 30px 'IBM Plex Sans',sans-serif; color:#5c5446; max-width:1480px; text-wrap:pretty;">One map of the whole system — the only question is which box it happens in.</p>
+  <div style="flex:1; display:flex; align-items:stretch; gap:30px;">
+    <!-- YOUR COMPUTER -->
+    <div style="flex:1; display:flex; flex-direction:column; background:#efe7d8; border:2px solid #cbbfa9; border-radius:18px; padding:26px 30px;">
+      <div style="display:flex; align-items:baseline; gap:14px; margin-bottom:18px;"><span style="font:600 24px 'IBM Plex Mono',monospace; color:#16130e; letter-spacing:0.04em;">YOUR COMPUTER</span><span style="font:400 22px 'IBM Plex Sans',sans-serif; color:#a39684;">— the harness runs here</span></div>
+      <div style="flex:1; display:flex; flex-direction:column; gap:16px;">
+        <div style="background:#f4efe6; border:2px solid #ff5c35; border-radius:12px; padding:20px 24px; box-shadow:0 0 0 6px rgba(255,92,53,.14);">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:14px;"><div style="font:700 28px 'Space Grotesk',sans-serif; color:#16130e;">Harness</div><span style="background:#ff5c35; color:#16130e; border-radius:20px; padding:6px 16px; font:700 21px 'IBM Plex Mono',monospace; white-space:nowrap;">● HAPPENS HERE</span></div>
+          <div style="font:400 24px 'IBM Plex Sans',sans-serif; color:#5c5446; margin-top:6px;">Runs the agent loop · makes every API call</div>
+        </div>
+        <div style="background:#f4efe6; border:2px solid #d8ccb6; border-radius:12px; padding:20px 24px; box-shadow:4px 4px 0 0 #e2d8c4, 8px 8px 0 0 #dccfb9;">
+          <div style="font:700 28px 'Space Grotesk',sans-serif; color:#16130e;">Agent loop(s) + context</div>
+          <div style="font:400 24px 'IBM Plex Sans',sans-serif; color:#5c5446; margin-top:6px;">Messages, reasoning, tool calls — one window each</div>
+        </div>
+        <div style="background:#f4efe6; border:2px solid #d8ccb6; border-radius:12px; padding:20px 24px;">
+          <div style="font:700 28px 'Space Grotesk',sans-serif; color:#16130e;">Tools</div>
+          <div style="font:400 24px 'IBM Plex Sans',sans-serif; color:#5c5446; margin-top:6px;">Run on your machine, results fed back in</div>
+        </div>
+      </div>
+    </div>
+    <!-- NETWORK -->
+    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:30px; min-width:200px; padding:0 6px;">
+      <div style="width:100%; display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <span style="font:600 24px 'IBM Plex Mono',monospace; color:#5c5446;">request</span>
+        <div style="width:100%; height:3px; background:#16130e; position:relative;"><div style="position:absolute; right:-2px; top:-7px; border-left:14px solid #16130e; border-top:8px solid transparent; border-bottom:8px solid transparent;"></div></div>
+      </div>
+      <div style="width:100%; display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <div style="width:100%; height:3px; background:#cbbfa9; position:relative;"><div style="position:absolute; left:-2px; top:-7px; border-right:14px solid #cbbfa9; border-top:8px solid transparent; border-bottom:8px solid transparent;"></div></div>
+        <span style="font:600 24px 'IBM Plex Mono',monospace; color:#a39684;">response</span>
+      </div>
+      <span style="font:400 22px 'IBM Plex Sans',sans-serif; color:#a39684; text-align:center;">over the network</span>
+    </div>
+    <!-- ANTHROPIC CLOUD -->
+    <div style="flex:1; display:flex; flex-direction:column; background:#16130e; border:2px solid #16130e; border-radius:18px; padding:26px 30px;">
+      <div style="display:flex; align-items:baseline; gap:14px; margin-bottom:18px;"><span style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.04em;">ANTHROPIC CLOUD</span><span style="font:400 22px 'IBM Plex Sans',sans-serif; color:#8a7f6d;">— the models live here</span></div>
+      <div style="flex:1; display:flex; flex-direction:column; gap:16px;">
+        <div style="background:#1c1812; border:2px solid #3a342a; border-radius:12px; padding:20px 24px;">
+          <div style="font:700 28px 'Space Grotesk',sans-serif; color:#f4efe6;">API endpoint</div>
+          <div style="font:400 24px 'IBM Plex Sans',sans-serif; color:#8a7f6d; margin-top:6px;">Receives each request as it arrives</div>
+        </div>
+        <div style="background:#1c1812; border:2px solid #3a342a; border-radius:12px; padding:20px 24px;">
+          <div style="font:700 28px 'Space Grotesk',sans-serif; color:#f4efe6;">Model · inference</div>
+          <div style="font:400 24px 'IBM Plex Sans',sans-serif; color:#8a7f6d; margin-top:6px;">The forward pass that generates the reply</div>
+        </div>
+        <div style="background:#1c1812; border:2px solid #3a342a; border-radius:12px; padding:20px 24px;">
+          <div style="font:700 28px 'Space Grotesk',sans-serif; color:#f4efe6;">Prompt cache</div>
+          <div style="font:400 24px 'IBM Plex Sans',sans-serif; color:#8a7f6d; margin-top:6px;">Stores computed prefixes, server-side</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:26px; background:#16130e; border-radius:12px; padding:22px 32px; font:500 28px 'IBM Plex Sans',sans-serif; color:#f4efe6; text-wrap:pretty;">Subagents are a <span style="color:#ff5c35;">harness-level</span> pattern — your machine runs each agent loop and coordinates them. To the cloud, they're just ordinary, unrelated API calls.</div>
+</section>
+
+<!-- ===================== 04 · CORE MENTAL MODEL ===================== -->
+<section data-label="Mental model" data-speaker-notes="The key property: a subagent has its own context window, separate from the parent's. The parent delegates a task, the subagent works through it — potentially many turns and tool calls — and returns a compressed result, not its full transcript." style="background:#f4efe6; color:#16130e; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">The core mental model</div>
+  <h2 style="margin:14px 0 14px; font:700 64px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">A fresh instance with its own window</h2>
+  <p style="margin:0 0 52px; font:400 32px 'IBM Plex Sans',sans-serif; color:#5c5446; max-width:1400px; text-wrap:pretty;">The parent delegates a task. The subagent works it — many turns, many tool calls — and returns a compressed result, <strong style="color:#16130e;">not</strong> its full transcript.</p>
+  <div style="flex:1; display:flex; align-items:center; gap:36px;">
+    <div style="flex:1; display:flex; flex-direction:column; gap:12px; align-items:center;">
+      <div style="width:100%; background:#ff5c35; color:#16130e; border-radius:10px; padding:30px 0; text-align:center; font:700 30px 'Space Grotesk',sans-serif;">LEAD</div>
+      <div style="font:500 24px 'IBM Plex Mono',monospace; color:#a39684;">stays clean</div>
+    </div>
+    <div style="display:flex; flex-direction:column; align-items:center; gap:8px; min-width:170px;">
+      <span style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35;">spawn(task) ▶</span>
+      <div style="width:100%; height:2px; background:#cbbfa9;"></div>
+      <span style="font:600 24px 'IBM Plex Mono',monospace; color:#5c5446;">◀ result · 200 tok</span>
+    </div>
+    <div style="flex:1.3; border:2px dashed #cbbfa9; border-radius:12px; padding:30px 34px; background:#efe7d8;">
+      <div style="font:700 28px 'Space Grotesk',sans-serif; margin-bottom:18px;">SUBAGENT</div>
+      <div style="display:flex; flex-direction:column; gap:9px;">
+        <div style="height:10px; background:#ddd0ba; border-radius:3px; width:92%;"></div>
+        <div style="height:10px; background:#ddd0ba; border-radius:3px; width:74%;"></div>
+        <div style="height:10px; background:#ddd0ba; border-radius:3px; width:86%;"></div>
+        <div style="height:10px; background:#ddd0ba; border-radius:3px; width:64%;"></div>
+      </div>
+      <div style="font:400 24px 'IBM Plex Sans',sans-serif; color:#a39684; margin-top:18px;">20 turns of tool calls — private &amp; disposable</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 05 · CONTEXT ISOLATION (dark hero) ===================== -->
+<section data-label="Why isolation matters" data-speaker-notes="Why the separation matters. Picture a task that needs reading 15 files to find one answer. Done inline, all 15 file dumps permanently occupy the lead's window — 45k tokens of clutter crowding out its reasoning. In a subagent, those reads happen in a throwaway context; only the 200-token finding returns." style="background:#16130e; color:#f4efe6; padding:88px 110px 80px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">Context isolation</div>
+  <h2 style="margin:14px 0 12px; font:700 64px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">The point is to keep the lead clean</h2>
+  <p style="margin:0 0 40px; font:400 30px 'IBM Plex Sans',sans-serif; color:#cabfac; max-width:1450px;">A task needs 15 file reads to find one answer. Where do those 15 dumps end up?</p>
+  <div style="flex:1; display:grid; grid-template-columns:1fr 1fr; gap:48px;">
+    <!-- WITHOUT -->
+    <div style="border:1.5px solid #3a342a; border-radius:14px; padding:32px 34px; display:flex; flex-direction:column; background:#1c1812;">
+      <div style="font:600 24px 'IBM Plex Mono',monospace; color:#e0795f; letter-spacing:0.06em; margin-bottom:18px;">WITHOUT SUBAGENT</div>
+      <div style="display:flex; flex-direction:column; gap:9px; flex:1;">
+        <div style="display:flex; justify-content:space-between; font:500 24px 'IBM Plex Mono',monospace;"><span style="color:#cabfac;">task</span><span style="color:#8a7f6d;">200 tok</span></div>
+        <div style="display:flex; justify-content:space-between; font:500 24px 'IBM Plex Mono',monospace; background:rgba(224,121,95,.14); border-radius:5px; padding:7px 12px;"><span style="color:#f4efe6;">file 1 dump</span><span style="color:#e0795f;">3k</span></div>
+        <div style="display:flex; justify-content:space-between; font:500 24px 'IBM Plex Mono',monospace; background:rgba(224,121,95,.14); border-radius:5px; padding:7px 12px;"><span style="color:#f4efe6;">file 2 dump</span><span style="color:#e0795f;">3k</span></div>
+        <div style="font:500 24px 'IBM Plex Mono',monospace; color:#8a7f6d; padding:2px 12px;">· · ·</div>
+        <div style="display:flex; justify-content:space-between; font:500 24px 'IBM Plex Mono',monospace; background:rgba(224,121,95,.14); border-radius:5px; padding:7px 12px;"><span style="color:#f4efe6;">file 15 dump</span><span style="color:#e0795f;">3k</span></div>
+        <div style="display:flex; justify-content:space-between; font:500 24px 'IBM Plex Mono',monospace;"><span style="color:#cabfac;">answer</span><span style="color:#8a7f6d;">200 tok</span></div>
+      </div>
+      <div style="margin-top:18px; font:600 24px 'Space Grotesk',sans-serif; color:#e0795f;">45k tokens of clutter — permanent</div>
+    </div>
+    <!-- WITH -->
+    <div style="border:1.5px solid #3a342a; border-radius:14px; padding:32px 34px; display:flex; flex-direction:column; background:#1c1812;">
+      <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.06em; margin-bottom:18px;">WITH SUBAGENT</div>
+      <div style="display:flex; flex-direction:column; gap:9px;">
+        <div style="display:flex; justify-content:space-between; font:500 24px 'IBM Plex Mono',monospace;"><span style="color:#cabfac;">task</span><span style="color:#8a7f6d;">200 tok</span></div>
+        <div style="font:500 24px 'IBM Plex Mono',monospace; color:#cabfac;">spawn researcher ▶</div>
+        <div style="display:flex; justify-content:space-between; font:500 24px 'IBM Plex Mono',monospace; background:rgba(63,185,80,.16); border-radius:5px; padding:7px 12px;"><span style="color:#f4efe6;">subagent result</span><span style="color:#7fdc8a;">200 tok</span></div>
+      </div>
+      <div style="margin-top:16px; font:600 24px 'Space Grotesk',sans-serif; color:#7fdc8a;">Lead stays clean ✓</div>
+      <div style="margin-top:auto; border:1.5px dashed #3a342a; border-radius:10px; padding:16px 18px; background:rgba(244,239,230,.03);">
+        <div style="font:500 24px 'IBM Plex Mono',monospace; color:#8a7f6d;">Subagent context — discarded</div>
+        <div style="font:500 24px 'IBM Plex Mono',monospace; color:#cabfac; margin-top:4px;">file 1–15 dumps · 45k tok</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 06 · FOUR CROSSINGS ===================== -->
+<section data-label="Four crossings" data-speaker-notes="Context crosses the boundary four times. Down: the parent builds a task string — the only thing the subagent starts with. Inside: a normal agentic loop in a private window. Up: the final message collapses into a single result block. Continue: the lead reasons over that result like any tool output." style="background:#f4efe6; color:#16130e; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">How context travels</div>
+  <h2 style="margin:14px 0 50px; font:700 64px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">Four crossings</h2>
+  <div style="flex:1; display:grid; grid-template-columns:1fr 1fr; gap:32px 60px;">
+    <div style="display:flex; gap:26px; border-left:4px solid #ff5c35; padding-left:28px;">
+      <span style="font:700 40px 'Space Grotesk',sans-serif; color:#ff5c35;">↓</span>
+      <div><div style="font:600 34px 'Space Grotesk',sans-serif;">Down · spawn</div><div style="font:400 27px 'IBM Plex Sans',sans-serif; color:#5c5446; margin-top:8px; text-wrap:pretty;">A task string — the only thing the subagent starts with. It inherits none of the parent's history.</div></div>
+    </div>
+    <div style="display:flex; gap:26px; border-left:4px solid #ddd2bf; padding-left:28px;">
+      <span style="font:700 40px 'Space Grotesk',sans-serif; color:#a39684;">↻</span>
+      <div><div style="font:600 34px 'Space Grotesk',sans-serif;">Inside · the loop</div><div style="font:400 27px 'IBM Plex Sans',sans-serif; color:#5c5446; margin-top:8px; text-wrap:pretty;">Its own turns and tool calls accumulate in a private window. Long and messy — and disposable.</div></div>
+    </div>
+    <div style="display:flex; gap:26px; border-left:4px solid #ff5c35; padding-left:28px;">
+      <span style="font:700 40px 'Space Grotesk',sans-serif; color:#ff5c35;">↑</span>
+      <div><div style="font:600 34px 'Space Grotesk',sans-serif;">Up · return</div><div style="font:400 27px 'IBM Plex Sans',sans-serif; color:#5c5446; margin-top:8px; text-wrap:pretty;">The final message is serialized into the parent as one result block. Intermediate turns are gone.</div></div>
+    </div>
+    <div style="display:flex; gap:26px; border-left:4px solid #ddd2bf; padding-left:28px;">
+      <span style="font:700 40px 'Space Grotesk',sans-serif; color:#a39684;">→</span>
+      <div><div style="font:600 34px 'Space Grotesk',sans-serif;">Continue</div><div style="font:400 27px 'IBM Plex Sans',sans-serif; color:#5c5446; margin-top:8px; text-wrap:pretty;">The lead now has the result like any tool output, and reasons over it.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 07 · THE SPAWN ===================== -->
+<section data-label="The spawn" data-speaker-notes="The most common failure mode: under-specified task descriptions. Because the subagent is blind to the parent's context, the parent has to front-load everything it needs into a self-contained string." style="background:#f4efe6; color:#16130e; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">Down · the spawn</div>
+  <h2 style="margin:14px 0 50px; font:700 64px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">The task string is all it gets</h2>
+  <div style="display:flex; align-items:center; gap:32px; margin-bottom:54px;">
+    <div style="background:#16130e; color:#f4efe6; border-radius:10px; padding:26px 38px; font:700 30px 'Space Grotesk',sans-serif;">Parent</div>
+    <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:6px;">
+      <span style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35;">task_prompt : string</span>
+      <div style="width:100%; height:3px; background:#16130e; position:relative;"><div style="position:absolute; right:-2px; top:-7px; border-left:14px solid #16130e; border-top:8px solid transparent; border-bottom:8px solid transparent;"></div></div>
+      <span style="font:400 24px 'IBM Plex Sans',sans-serif; color:#a39684;">must be self-contained</span>
+    </div>
+    <div style="border:2px dashed #cbbfa9; color:#16130e; border-radius:10px; padding:26px 38px; font:700 30px 'Space Grotesk',sans-serif;">Subagent</div>
+  </div>
+  <div style="background:#ffe9e2; border-left:6px solid #ff5c35; border-radius:0 12px 12px 0; padding:32px 40px; max-width:1500px;">
+    <div style="font:600 26px 'Space Grotesk',sans-serif; color:#b9361a; margin-bottom:10px;">Most common failure mode</div>
+    <div style="font:400 30px 'IBM Plex Sans',sans-serif; color:#5c5446; text-wrap:pretty;">The subagent can't see the original user request, prior turns, or sibling subagents — unless the parent bakes it into the task string. Under-specify, and it works blind.</div>
+  </div>
+</section>
+
+<!-- ===================== 08 · THE RETURN ===================== -->
+<section data-label="The return" data-speaker-notes="When the subagent finishes, its final message is serialized into the parent's context as a single tool-result block. The intermediate turns are gone. So shape the return explicitly — that compressed output is all the lead gets." style="background:#f4efe6; color:#16130e; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">Up · the return</div>
+  <h2 style="margin:14px 0 56px; font:700 64px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">Many turns collapse to one block</h2>
+  <div style="flex:1; display:flex; align-items:center; gap:44px;">
+    <div style="flex:1.2; border:2px dashed #cbbfa9; border-radius:12px; padding:30px; background:#efe7d8;">
+      <div style="font:600 24px 'IBM Plex Mono',monospace; color:#a39684; margin-bottom:16px;">SUBAGENT TRANSCRIPT · N turns</div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div style="height:14px; background:#ddd0ba; border-radius:3px; width:96%;"></div>
+        <div style="height:14px; background:#ddd0ba; border-radius:3px; width:80%;"></div>
+        <div style="height:14px; background:#ddd0ba; border-radius:3px; width:90%;"></div>
+        <div style="height:14px; background:#ddd0ba; border-radius:3px; width:70%;"></div>
+        <div style="height:14px; background:#ddd0ba; border-radius:3px; width:88%;"></div>
+      </div>
+    </div>
+    <div style="display:flex; flex-direction:column; align-items:center; gap:8px; min-width:150px;">
+      <span style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35;">collapse</span>
+      <span style="font:700 48px 'Space Grotesk',sans-serif; color:#16130e;">→</span>
+    </div>
+    <div style="flex:0.9; display:flex; flex-direction:column; align-items:center; gap:14px;">
+      <div style="width:100%; background:#ff5c35; color:#16130e; border-radius:10px; padding:34px 0; text-align:center; font:700 28px 'Space Grotesk',sans-serif;">ONE result block</div>
+      <div style="font:400 24px 'IBM Plex Sans',sans-serif; color:#5c5446; text-align:center;">All the lead ever sees</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 09 · PARALLEL FAN-OUT (dark hero) ===================== -->
+<section data-label="Parallel fan-out" data-speaker-notes="The pattern scales horizontally. A lead can spawn several subagents at once, each with an isolated window, running concurrently — then synthesize their results. This is where wall-clock time is won." style="background:#16130e; color:#f4efe6; padding:88px 110px 80px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">Scaling out</div>
+  <h2 style="margin:14px 0 44px; font:700 64px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">Parallel fan-out</h2>
+  <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0;">
+    <div style="background:#ff5c35; color:#16130e; border-radius:10px; padding:24px 70px; font:700 30px 'Space Grotesk',sans-serif;">LEAD</div>
+    <div style="font:500 24px 'IBM Plex Mono',monospace; color:#8a7f6d; margin:14px 0;">spawn ×3 ↓&nbsp;&nbsp;&nbsp;&nbsp;↑ results</div>
+    <div style="display:flex; gap:60px;">
+      <div style="border:1.5px solid #3a342a; background:#1c1812; border-radius:12px; padding:26px 40px; text-align:center;">
+        <div style="font:700 26px 'Space Grotesk',sans-serif;">Sub A</div>
+        <div style="font:500 24px 'IBM Plex Mono',monospace; color:#8a7f6d; margin-top:6px;">topic 1</div>
+      </div>
+      <div style="border:1.5px solid #3a342a; background:#1c1812; border-radius:12px; padding:26px 40px; text-align:center;">
+        <div style="font:700 26px 'Space Grotesk',sans-serif;">Sub B</div>
+        <div style="font:500 24px 'IBM Plex Mono',monospace; color:#8a7f6d; margin-top:6px;">topic 2</div>
+      </div>
+      <div style="border:1.5px solid #3a342a; background:#1c1812; border-radius:12px; padding:26px 40px; text-align:center;">
+        <div style="font:700 26px 'Space Grotesk',sans-serif;">Sub C</div>
+        <div style="font:500 24px 'IBM Plex Mono',monospace; color:#8a7f6d; margin-top:6px;">topic 3</div>
+      </div>
+    </div>
+    <div style="font:500 24px 'IBM Plex Mono',monospace; color:#8a7f6d; margin:14px 0;">res A + res B + res C ↓</div>
+    <div style="border:1.5px dashed #ff5c35; color:#f4efe6; border-radius:10px; padding:18px 56px; font:600 26px 'Space Grotesk',sans-serif;">LEAD synthesizes</div>
+  </div>
+  <p style="margin:30px 0 0; font:400 28px 'IBM Plex Sans',sans-serif; color:#cabfac; text-align:center;">Each runs in its own isolated window, concurrently.</p>
+</section>
+
+<!-- ===================== 10 · INTEGRATION CONSTRAINT ===================== -->
+<section data-label="Integration constraint" data-speaker-notes="The subagents are mutually invisible — Sub A has no idea Sub B exists. All cross-talk must route through the lead. It's a deliberate constraint: it keeps each context clean, but the lead is the sole integration point, and shared state has to be re-passed on every spawn." style="background:#f4efe6; color:#16130e; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">The trade in the design</div>
+  <h2 style="margin:14px 0 16px; font:700 64px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">Subagents are mutually invisible</h2>
+  <p style="margin:0 0 auto; font:400 32px 'IBM Plex Sans',sans-serif; color:#5c5446; max-width:1450px; text-wrap:pretty;">Sub A has no idea Sub B exists. All cross-talk routes through the lead — the sole integration point. Any shared state must be re-passed explicitly on each spawn.</p>
+  <div style="display:flex; align-items:center; justify-content:center; gap:54px; margin-top:40px;">
+    <div style="border:2px solid #16130e; border-radius:12px; padding:26px 40px; font:700 26px 'Space Grotesk',sans-serif;">Sub A</div>
+    <div style="display:flex; flex-direction:column; align-items:center; gap:4px;"><span style="font:700 40px 'Space Grotesk',sans-serif; color:#c9bca6;">✕</span><span style="font:500 24px 'IBM Plex Mono',monospace; color:#a39684;">no link</span></div>
+    <div style="border:2px solid #16130e; border-radius:12px; padding:26px 40px; font:700 26px 'Space Grotesk',sans-serif;">Sub B</div>
+    <div style="display:flex; flex-direction:column; align-items:center; gap:4px;"><span style="font:700 40px 'Space Grotesk',sans-serif; color:#c9bca6;">✕</span><span style="font:500 24px 'IBM Plex Mono',monospace; color:#a39684;">no link</span></div>
+    <div style="border:2px solid #16130e; border-radius:12px; padding:26px 40px; font:700 26px 'Space Grotesk',sans-serif;">Sub C</div>
+  </div>
+  <div style="display:flex; justify-content:center; margin-top:26px;">
+    <div style="background:#ff5c35; color:#16130e; border-radius:10px; padding:18px 70px; font:700 28px 'Space Grotesk',sans-serif;">LEAD · the only bridge</div>
+  </div>
+</section>
+
+<!-- ===================== 11 · TOKEN ECONOMICS ===================== -->
+<section data-label="Token economics" data-speaker-notes="There's a real tradeoff. Subagents multiply token usage — each re-pays the fixed cost of a system prompt and setup, and orchestration burns tokens too. The win comes when isolated work would otherwise pollute the main context enough to degrade reasoning, or when parallelism saves wall-clock time. For a trivial lookup, a subagent is pure overhead." style="background:#f4efe6; color:#16130e; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">The economics</div>
+  <h2 style="margin:14px 0 50px; font:700 64px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">Tokens for clean context — a real trade</h2>
+  <div style="flex:1; display:grid; grid-template-columns:1fr 1fr; gap:48px;">
+    <div style="background:#efe7d8; border-radius:14px; padding:38px 42px;">
+      <div style="font:600 24px 'IBM Plex Mono',monospace; color:#b9361a; letter-spacing:0.04em; margin-bottom:22px;">YOU PAY</div>
+      <div style="font:400 30px 'IBM Plex Sans',sans-serif; color:#5c5446; line-height:1.5; text-wrap:pretty;">Every subagent re-pays a fixed cost — its own system prompt and task setup — and the orchestration itself burns tokens.</div>
+    </div>
+    <div style="background:#16130e; color:#f4efe6; border-radius:14px; padding:38px 42px;">
+      <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.04em; margin-bottom:22px;">YOU WIN WHEN</div>
+      <div style="font:400 30px 'IBM Plex Sans',sans-serif; color:#cabfac; line-height:1.5; text-wrap:pretty;">Isolated work would otherwise pollute the lead enough to degrade reasoning — <span style="color:#f4efe6;">or</span> parallelism saves wall-clock time.</div>
+    </div>
+  </div>
+  <p style="margin:34px 0 0; font:500 28px 'IBM Plex Sans',sans-serif; color:#16130e;">For a trivial lookup, a subagent is pure overhead. For deep multi-file research, it pays for itself.</p>
+</section>
+
+<!-- ===================== 12 · WHEN TO USE ===================== -->
+<section data-label="When to use" data-speaker-notes="So: reach for a subagent for read-heavy exploration where you want findings without the raw material, and for independent parallel streams. Avoid it for trivial lookups, for tasks that need shared state, and for multiple agents writing to the same files — they can't coordinate." style="background:#f4efe6; color:#16130e; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">In practice</div>
+  <h2 style="margin:14px 0 50px; font:700 64px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">When to reach for a subagent</h2>
+  <div style="flex:1; display:grid; grid-template-columns:1fr 1fr; gap:48px;">
+    <div style="border:2px solid #16130e; border-radius:14px; padding:36px 40px; display:flex; flex-direction:column;">
+      <div style="font:700 30px 'Space Grotesk',sans-serif; color:#16130e; margin-bottom:24px;">Use it for</div>
+      <div style="display:flex; flex-direction:column; gap:20px;">
+        <div style="display:flex; gap:18px;"><span style="color:#ff5c35; font:700 28px 'Space Grotesk',sans-serif;">+</span><span style="font:400 29px 'IBM Plex Sans',sans-serif; color:#5c5446;">Read-heavy exploration — findings without the raw material</span></div>
+        <div style="display:flex; gap:18px;"><span style="color:#ff5c35; font:700 28px 'Space Grotesk',sans-serif;">+</span><span style="font:400 29px 'IBM Plex Sans',sans-serif; color:#5c5446;">Independent, parallel streams of work</span></div>
+        <div style="display:flex; gap:18px;"><span style="color:#ff5c35; font:700 28px 'Space Grotesk',sans-serif;">+</span><span style="font:400 29px 'IBM Plex Sans',sans-serif; color:#5c5446;">Work that would otherwise pollute the lead's window</span></div>
+      </div>
+    </div>
+    <div style="border:2px solid #cbbfa9; border-radius:14px; padding:36px 40px; display:flex; flex-direction:column; background:#efe7d8;">
+      <div style="font:700 30px 'Space Grotesk',sans-serif; color:#8a7f6d; margin-bottom:24px;">Skip it for</div>
+      <div style="display:flex; flex-direction:column; gap:20px;">
+        <div style="display:flex; gap:18px;"><span style="color:#a39684; font:700 28px 'Space Grotesk',sans-serif;">−</span><span style="font:400 29px 'IBM Plex Sans',sans-serif; color:#5c5446;">Trivial lookups — pure overhead</span></div>
+        <div style="display:flex; gap:18px;"><span style="color:#a39684; font:700 28px 'Space Grotesk',sans-serif;">−</span><span style="font:400 29px 'IBM Plex Sans',sans-serif; color:#5c5446;">Tasks that need tightly shared state</span></div>
+        <div style="display:flex; gap:18px;"><span style="color:#a39684; font:700 28px 'Space Grotesk',sans-serif;">−</span><span style="font:400 29px 'IBM Plex Sans',sans-serif; color:#5c5446;">Many agents writing the same files — they can't coordinate</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 13 · IN CODE: SUBAGENT (dark) ===================== -->
+<section data-label="Code: subagent" data-speaker-notes="There's no built-in subagent primitive — a subagent is just a separate messages.create call with its own fresh message list, whose distilled output you feed back to the lead. Note two things: the task is the only thing it knows, and only the final text block crosses back up." style="background:#16130e; color:#f4efe6; padding:88px 110px 80px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">In code</div>
+  <h2 style="margin:14px 0 12px; font:700 56px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">A subagent is just another call</h2>
+  <p style="margin:0 0 32px; font:400 27px 'IBM Plex Sans',sans-serif; color:#cabfac;">No special primitive — a fresh <span style="font-family:'IBM Plex Mono',monospace; color:#f4efe6;">messages.create</span> with its own message list.</p>
+  <div style="flex:1; background:#0e0c08; border:1.5px solid #2c281f; border-radius:14px; padding:30px 36px; font:500 25px 'IBM Plex Mono',monospace; line-height:1.65; color:#e8dfcf; overflow:hidden;">
+    <div><span style="color:#e0795f;">def</span> run_subagent(task):</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;resp = client.messages.create(</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;model=MODEL, max_tokens=<span style="color:#d9a441;">400</span>,</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;system=SUBAGENT_SYSTEM,<span style="color:#8a7f6d;">&nbsp;&nbsp;# shared, cached prefix</span></div>
+    <div style="background:rgba(255,92,53,.12); border-left:3px solid #ff5c35; margin:4px -36px; padding:4px 33px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;messages=[{<span style="color:#7fb98a;">"role"</span>: <span style="color:#7fb98a;">"user"</span>,</div>
+    <div style="background:rgba(255,92,53,.12); border-left:3px solid #ff5c35; margin:4px -36px; padding:4px 33px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#7fb98a;">"content"</span>: task}],<span style="color:#8a7f6d;">&nbsp;&nbsp;# the ONLY thing it knows</span></div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;)</div>
+    <div style="background:rgba(255,92,53,.12); border-left:3px solid #ff5c35; margin:4px -36px; padding:4px 33px;">&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#e0795f;">return</span> resp.content[<span style="color:#d9a441;">0</span>].text<span style="color:#8a7f6d;">&nbsp;&nbsp;# ← the single block that crosses back</span></div>
+  </div>
+</section>
+
+<!-- ===================== 13b · IN CLAUDE CODE: SUBAGENTS ===================== -->
+<section data-label="In Claude Code" data-speaker-notes="What this looks like to a regular Claude Code user. You ask for something big — here, auditing the repo. Claude fans the work out and you literally watch the Task lines appear: each one is a subagent with its own context. When each finishes you get a single line — tool uses, tokens, time — then Claude synthesizes. You never see the tens of thousands of tokens each subagent actually read; that stayed in its own window. This is the harness side of the map, made visible." style="background:#f4efe6; color:#16130e; padding:88px 110px 80px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">In Claude Code</div>
+  <h2 style="margin:14px 0 12px; font:700 60px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">Subagents you can watch happen</h2>
+  <p style="margin:0 0 32px; font:400 30px 'IBM Plex Sans',sans-serif; color:#5c5446; max-width:1480px; text-wrap:pretty;">Every <span style="font-family:'IBM Plex Mono',monospace;">Task</span> line in the transcript is a subagent the harness spawned — all you get back is its result.</p>
+  <div style="flex:1; display:flex; gap:40px; align-items:stretch;">
+    <div style="flex:1.65; background:#14110c; border:1px solid #2c281f; border-radius:14px; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 18px 50px rgba(0,0,0,.26);">
+      <div style="display:flex; align-items:center; gap:9px; padding:15px 20px; background:#1d1810; border-bottom:1px solid #2c281f;">
+        <span style="width:14px; height:14px; border-radius:50%; background:#ff5f57;"></span>
+        <span style="width:14px; height:14px; border-radius:50%; background:#febc2e;"></span>
+        <span style="width:14px; height:14px; border-radius:50%; background:#28c840;"></span>
+        <span style="margin-left:14px; font:500 22px 'IBM Plex Mono',monospace; color:#8a7f6d;">claude — ~/acme-api</span>
+      </div>
+      <div style="flex:1; padding:28px 34px; font:500 24px/1.6 'IBM Plex Mono', ui-monospace, Menlo, monospace; color:#e8dfcf;">
+        <div style="color:#f4efe6;"><span style="color:#ff5c35;">&gt;</span> audit the repo for unused deps and dead code</div>
+        <div style="height:16px;"></div>
+        <div><span style="color:#ff5c35;">⏺</span> I'll fan this out across the codebase.</div>
+        <div style="height:16px;"></div>
+        <div><span style="color:#ff5c35;">⏺</span> Task(<span style="color:#cabfac;">Scan packages for unused deps</span>)</div>
+        <div style="padding-left:30px; color:#8a7f6d;">⎿&nbsp;&nbsp;Done (9 tool uses · <span style="color:#7fdc8a;">32.1k tokens</span> · 48s)</div>
+        <div style="height:12px;"></div>
+        <div><span style="color:#ff5c35;">⏺</span> Task(<span style="color:#cabfac;">Find dead code in src/</span>)</div>
+        <div style="padding-left:30px; color:#8a7f6d;">⎿&nbsp;&nbsp;Done (14 tool uses · <span style="color:#7fdc8a;">41.7k tokens</span> · 1m 03s)</div>
+        <div style="height:12px;"></div>
+        <div><span style="color:#ff5c35;">⏺</span> Task(<span style="color:#cabfac;">Check for unreferenced assets</span>)</div>
+        <div style="padding-left:30px; color:#8a7f6d;">⎿&nbsp;&nbsp;Done (7 tool uses · <span style="color:#7fdc8a;">18.9k tokens</span> · 31s)</div>
+        <div style="height:18px;"></div>
+        <div><span style="color:#ff5c35;">⏺</span> All three finished — here's the summary:</div>
+        <div style="padding-left:30px; color:#cabfac;">• 4 unused dependencies</div>
+        <div style="padding-left:30px; color:#cabfac;">• 2 dead modules under src/legacy</div>
+        <div style="padding-left:30px; color:#cabfac;">• 11 orphaned asset files</div>
+      </div>
+    </div>
+    <div style="flex:1; display:flex; flex-direction:column; gap:22px;">
+      <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.04em;">HOW TO READ IT</div>
+      <div style="background:#efe7d8; border:2px solid #cbbfa9; border-radius:14px; padding:26px 30px;">
+        <div style="font:700 28px 'Space Grotesk',sans-serif; color:#16130e;">Task( … )</div>
+        <div style="font:400 25px 'IBM Plex Sans',sans-serif; color:#5c5446; margin-top:8px; text-wrap:pretty;">Each one is a subagent — its own context window, spawned and run by the harness.</div>
+      </div>
+      <div style="background:#efe7d8; border:2px solid #cbbfa9; border-radius:14px; padding:26px 30px;">
+        <div style="font:700 28px 'Space Grotesk',sans-serif; color:#16130e;">Done ( … tokens )</div>
+        <div style="font:400 25px 'IBM Plex Sans',sans-serif; color:#5c5446; margin-top:8px; text-wrap:pretty;">All you see is the result and its cost — never the tens of thousands of tokens it read.</div>
+      </div>
+      <div style="margin-top:auto; font:400 24px 'IBM Plex Sans',sans-serif; color:#a39684; text-wrap:pretty;">Visible, by design — the work happens on your machine.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 14 · SECTION: PROMPT CACHING ===================== -->
+<section data-label="02 Prompt Caching" data-speaker-notes="Part two. Prompt caching lets you store a prefix of your context on Anthropic's servers, so repeated requests reusing that prefix skip re-processing it — cheaper and faster." style="background:#16130e; color:#f4efe6; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; justify-content:center; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.14em; text-transform:uppercase;">Part Two</div>
+  <div style="font:700 200px 'Space Grotesk',sans-serif; color:#ff5c35; line-height:0.85; letter-spacing:-0.03em; margin:18px 0 4px;">02</div>
+  <h2 style="margin:0; font:700 88px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">Prompt Caching</h2>
+  <div style="width:120px; height:4px; background:#ff5c35; margin:38px 0 26px;"></div>
+  <p style="margin:0; font:400 36px 'IBM Plex Sans',sans-serif; color:#cabfac; max-width:1150px;">Store a prefix of context so repeat requests skip re-processing it — cheaper and faster.</p>
+</section>
+
+<!-- ===================== 14b · INTUITION 1: CACHING ===================== -->
+<section data-label="Read once" data-speaker-notes="The plain-language version of caching. Imagine someone asks you several questions about the same long document. Without caching you'd re-read the whole thing before every answer — slow and wasteful. With caching you read it once, keep it in mind, and just answer. That's the whole idea: reuse the work you already did on the part that doesn't change." style="background:#f4efe6; color:#16130e; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">The big idea</div>
+  <h2 style="margin:14px 0 14px; font:700 64px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">Read it once — not every time</h2>
+  <p style="margin:0 0 48px; font:400 32px 'IBM Plex Sans',sans-serif; color:#5c5446; max-width:1420px; text-wrap:pretty;">Picture answering several questions about the same long document. Re-read it every time — or read it once and remember?</p>
+  <div style="flex:1; display:flex; flex-direction:column; gap:24px; justify-content:center;">
+    <div style="background:#efe7d8; border:1.5px solid #cbbfa9; border-radius:14px; padding:28px 34px;">
+      <div style="font:600 24px 'IBM Plex Mono',monospace; color:#b9361a; margin-bottom:20px;">WITHOUT CACHING · re-read every time</div>
+      <div style="display:flex; align-items:center; gap:24px; flex-wrap:wrap;">
+        <div style="display:flex; align-items:center; gap:12px;"><div style="background:#16130e; color:#f4efe6; border-radius:7px; padding:14px 22px; font:500 24px 'IBM Plex Mono',monospace;">reads all</div><span style="font:700 24px 'Space Grotesk',sans-serif; color:#a39684;">→</span><div style="background:#ff5c35; color:#16130e; border-radius:7px; padding:14px 18px; font:600 24px 'IBM Plex Mono',monospace;">Q1</div></div>
+        <div style="display:flex; align-items:center; gap:12px;"><div style="background:#16130e; color:#f4efe6; border-radius:7px; padding:14px 22px; font:500 24px 'IBM Plex Mono',monospace;">reads all</div><span style="font:700 24px 'Space Grotesk',sans-serif; color:#a39684;">→</span><div style="background:#ff5c35; color:#16130e; border-radius:7px; padding:14px 18px; font:600 24px 'IBM Plex Mono',monospace;">Q2</div></div>
+        <div style="display:flex; align-items:center; gap:12px;"><div style="background:#16130e; color:#f4efe6; border-radius:7px; padding:14px 22px; font:500 24px 'IBM Plex Mono',monospace;">reads all</div><span style="font:700 24px 'Space Grotesk',sans-serif; color:#a39684;">→</span><div style="background:#ff5c35; color:#16130e; border-radius:7px; padding:14px 18px; font:600 24px 'IBM Plex Mono',monospace;">Q3</div></div>
+      </div>
+      <div style="margin-top:18px; font:400 26px 'IBM Plex Sans',sans-serif; color:#b9361a;">A fresh read for every question.</div>
+    </div>
+    <div style="background:#16130e; border-radius:14px; padding:28px 34px;">
+      <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; margin-bottom:20px;">WITH CACHING · read once, then reuse</div>
+      <div style="display:flex; align-items:center; gap:18px; flex-wrap:wrap;">
+        <div style="background:#f4efe6; color:#16130e; border-radius:7px; padding:14px 24px; font:600 24px 'IBM Plex Mono',monospace;">reads all · once</div>
+        <span style="font:700 24px 'Space Grotesk',sans-serif; color:#8a7f6d;">→</span>
+        <div style="background:#2b2620; color:#cabfac; border:1.5px solid #3a342a; border-radius:7px; padding:14px 18px; font:600 24px 'IBM Plex Mono',monospace;">Q1</div>
+        <div style="background:#2b2620; color:#cabfac; border:1.5px solid #3a342a; border-radius:7px; padding:14px 18px; font:600 24px 'IBM Plex Mono',monospace;">Q2</div>
+        <div style="background:#2b2620; color:#cabfac; border:1.5px solid #3a342a; border-radius:7px; padding:14px 18px; font:600 24px 'IBM Plex Mono',monospace;">Q3</div>
+      </div>
+      <div style="margin-top:18px; font:400 26px 'IBM Plex Sans',sans-serif; color:#7fdc8a;">One read covers them all.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 14c · INTUITION 2: CACHING ===================== -->
+<section data-label="The one catch" data-speaker-notes="One catch, worth feeling before the mechanics. The shortcut only works while the remembered part stays exactly the same. Change even a little near the beginning and it counts as a brand-new document — back to reading it fresh from the change onward. That single rule explains almost every caching decision in the slides that follow." style="background:#16130e; color:#f4efe6; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">The one catch</div>
+  <h2 style="margin:14px 0 14px; font:700 64px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">Only if nothing changed</h2>
+  <p style="margin:0 0 50px; font:400 32px 'IBM Plex Sans',sans-serif; color:#cabfac; max-width:1420px; text-wrap:pretty;">The shortcut holds only while the remembered part stays exactly the same. Change something early, and it's a brand-new read.</p>
+  <div style="flex:1; display:grid; grid-template-columns:1fr 1fr; gap:48px;">
+    <div style="border:1.5px solid #3a342a; background:#1c1812; border-radius:16px; padding:34px 38px; display:flex; flex-direction:column;">
+      <div style="font:600 24px 'IBM Plex Mono',monospace; color:#7fdc8a; letter-spacing:0.04em; margin-bottom:24px;">SAME AS LAST TIME</div>
+      <div style="flex:1; display:flex; align-items:center; gap:26px;">
+        <div style="flex:1; display:flex; flex-direction:column; gap:11px;">
+          <div style="height:13px; background:#6a6253; border-radius:3px; width:92%;"></div>
+          <div style="height:13px; background:#6a6253; border-radius:3px; width:76%;"></div>
+          <div style="height:13px; background:#6a6253; border-radius:3px; width:86%;"></div>
+          <div style="height:13px; background:#6a6253; border-radius:3px; width:68%;"></div>
+        </div>
+        <div style="background:rgba(63,185,80,.16); border:2px solid #3fb950; color:#7fdc8a; border-radius:10px; padding:16px 22px; font:600 24px 'IBM Plex Mono',monospace; white-space:nowrap;">✓ reused</div>
+      </div>
+      <div style="margin-top:24px; font:400 28px 'IBM Plex Sans',sans-serif; color:#cabfac; text-wrap:pretty;">Reuses what it already read — no re-reading.</div>
+    </div>
+    <div style="border:1.5px solid #3a342a; background:#1c1812; border-radius:16px; padding:34px 38px; display:flex; flex-direction:column;">
+      <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.04em; margin-bottom:24px;">ONE EARLY CHANGE</div>
+      <div style="flex:1; display:flex; align-items:center; gap:26px;">
+        <div style="flex:1; display:flex; flex-direction:column; gap:11px;">
+          <div style="height:13px; background:#ff5c35; border-radius:3px; width:90%;"></div>
+          <div style="height:13px; border:1.5px dashed #5c5446; border-radius:3px; width:78%;"></div>
+          <div style="height:13px; border:1.5px dashed #5c5446; border-radius:3px; width:86%;"></div>
+          <div style="height:13px; border:1.5px dashed #5c5446; border-radius:3px; width:70%;"></div>
+        </div>
+        <div style="background:rgba(255,92,53,.16); border:2px solid #ff5c35; color:#ff5c35; border-radius:10px; padding:16px 22px; font:600 24px 'IBM Plex Mono',monospace; white-space:nowrap;">re-read</div>
+      </div>
+      <div style="margin-top:24px; font:400 28px 'IBM Plex Sans',sans-serif; color:#cabfac; text-wrap:pretty;">Counts as new — read again from the change down.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 14d · WHERE IT HAPPENS: CACHING ===================== -->
+<section data-label="Where (cloud)" data-speaker-notes="Same map. Caching happens in the opposite corner — in the cloud, server-side, right next to the model. Your harness does almost nothing: it just marks a breakpoint flag on a request. The actual computed prefix state is stored on Anthropic's servers and reused there on the next matching request. Nothing is cached on your machine — the savings happen where the inference happens." style="background:#f4efe6; color:#16130e; padding:88px 110px 80px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">Where it actually happens</div>
+  <h2 style="margin:14px 0 12px; font:700 60px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">Caching lives in the cloud</h2>
+  <p style="margin:0 0 34px; font:400 30px 'IBM Plex Sans',sans-serif; color:#5c5446; max-width:1480px; text-wrap:pretty;">The same map — the spotlight just moves to the other side of the network.</p>
+  <div style="flex:1; display:flex; align-items:stretch; gap:30px;">
+    <!-- YOUR COMPUTER -->
+    <div style="flex:1; display:flex; flex-direction:column; background:#efe7d8; border:2px solid #cbbfa9; border-radius:18px; padding:26px 30px;">
+      <div style="display:flex; align-items:baseline; gap:14px; margin-bottom:18px;"><span style="font:600 24px 'IBM Plex Mono',monospace; color:#16130e; letter-spacing:0.04em;">YOUR COMPUTER</span><span style="font:400 22px 'IBM Plex Sans',sans-serif; color:#a39684;">— the harness runs here</span></div>
+      <div style="flex:1; display:flex; flex-direction:column; gap:16px;">
+        <div style="background:#f4efe6; border:2px solid #d8ccb6; border-radius:12px; padding:20px 24px;">
+          <div style="font:700 28px 'Space Grotesk',sans-serif; color:#16130e;">Harness</div>
+          <div style="font:400 24px 'IBM Plex Sans',sans-serif; color:#5c5446; margin-top:6px;">Runs the agent loop · makes every API call</div>
+        </div>
+        <div style="background:#f4efe6; border:2px solid #d8ccb6; border-radius:12px; padding:20px 24px; box-shadow:4px 4px 0 0 #e2d8c4, 8px 8px 0 0 #dccfb9;">
+          <div style="font:700 28px 'Space Grotesk',sans-serif; color:#16130e;">Agent loop(s) + context</div>
+          <div style="font:400 24px 'IBM Plex Sans',sans-serif; color:#5c5446; margin-top:6px;">Messages, reasoning, tool calls — one window each</div>
+        </div>
+        <div style="background:#f4efe6; border:2px solid #d8ccb6; border-radius:12px; padding:20px 24px;">
+          <div style="font:700 28px 'Space Grotesk',sans-serif; color:#16130e;">Tools</div>
+          <div style="font:400 24px 'IBM Plex Sans',sans-serif; color:#5c5446; margin-top:6px;">Run on your machine, results fed back in</div>
+        </div>
+      </div>
+    </div>
+    <!-- NETWORK -->
+    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:30px; min-width:200px; padding:0 6px;">
+      <div style="width:100%; display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <span style="font:600 24px 'IBM Plex Mono',monospace; color:#5c5446;">request</span>
+        <div style="width:100%; height:3px; background:#16130e; position:relative;"><div style="position:absolute; right:-2px; top:-7px; border-left:14px solid #16130e; border-top:8px solid transparent; border-bottom:8px solid transparent;"></div></div>
+        <span style="font:400 20px 'IBM Plex Sans',sans-serif; color:#a39684; text-align:center;">carries a cache flag</span>
+      </div>
+      <div style="width:100%; display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <div style="width:100%; height:3px; background:#cbbfa9; position:relative;"><div style="position:absolute; left:-2px; top:-7px; border-right:14px solid #cbbfa9; border-top:8px solid transparent; border-bottom:8px solid transparent;"></div></div>
+        <span style="font:600 24px 'IBM Plex Mono',monospace; color:#a39684;">response</span>
+      </div>
+    </div>
+    <!-- ANTHROPIC CLOUD -->
+    <div style="flex:1; display:flex; flex-direction:column; background:#16130e; border:2px solid #16130e; border-radius:18px; padding:26px 30px;">
+      <div style="display:flex; align-items:baseline; gap:14px; margin-bottom:18px;"><span style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.04em;">ANTHROPIC CLOUD</span><span style="font:400 22px 'IBM Plex Sans',sans-serif; color:#8a7f6d;">— the models live here</span></div>
+      <div style="flex:1; display:flex; flex-direction:column; gap:16px;">
+        <div style="background:#1c1812; border:2px solid #3a342a; border-radius:12px; padding:20px 24px;">
+          <div style="font:700 28px 'Space Grotesk',sans-serif; color:#f4efe6;">API endpoint</div>
+          <div style="font:400 24px 'IBM Plex Sans',sans-serif; color:#8a7f6d; margin-top:6px;">Receives each request as it arrives</div>
+        </div>
+        <div style="background:#1c1812; border:2px solid #3a342a; border-radius:12px; padding:20px 24px;">
+          <div style="font:700 28px 'Space Grotesk',sans-serif; color:#f4efe6;">Model · inference</div>
+          <div style="font:400 24px 'IBM Plex Sans',sans-serif; color:#8a7f6d; margin-top:6px;">The forward pass that generates the reply</div>
+        </div>
+        <div style="background:#1c1812; border:2px solid #ff5c35; border-radius:12px; padding:20px 24px; box-shadow:0 0 0 6px rgba(255,92,53,.22);">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:14px;"><div style="font:700 28px 'Space Grotesk',sans-serif; color:#f4efe6;">Prompt cache</div><span style="background:#ff5c35; color:#16130e; border-radius:20px; padding:6px 16px; font:700 21px 'IBM Plex Mono',monospace; white-space:nowrap;">● HAPPENS HERE</span></div>
+          <div style="font:400 24px 'IBM Plex Sans',sans-serif; color:#cabfac; margin-top:6px;">Stores computed prefixes, server-side</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:26px; background:#16130e; border-radius:12px; padding:22px 32px; font:500 28px 'IBM Plex Sans',sans-serif; color:#f4efe6; text-wrap:pretty;">Caching is <span style="color:#ff5c35;">server-side</span> — the computed prefix lives in the cloud beside the model. Your harness only flags <em style="color:#f4efe6; font-style:italic;">where</em> to cache; nothing is stored on your machine.</div>
+</section>
+
+<!-- ===================== 15 · CORE IDEA ===================== -->
+<section data-label="Core idea" data-speaker-notes="Every request runs through the model's forward pass — expensive for long contexts. But across requests, the beginning is often identical: same system prompt, same tools, same documents. Caching stores the computed internal state for that prefix so later requests load it instead of recomputing." style="background:#f4efe6; color:#16130e; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">The core idea</div>
+  <h2 style="margin:14px 0 14px; font:700 64px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">Reuse the prefix, recompute the rest</h2>
+  <p style="margin:0 0 48px; font:400 31px 'IBM Plex Sans',sans-serif; color:#5c5446; max-width:1450px; text-wrap:pretty;">The start of your context is often identical across requests. Cache its computed state once; later requests load it instead of recomputing.</p>
+  <div style="flex:1; display:flex; flex-direction:column; gap:26px; justify-content:center;">
+    <div style="display:flex; align-items:center; gap:24px;">
+      <div style="width:230px; font:600 24px 'IBM Plex Mono',monospace; color:#a39684;">Request 1 · cold</div>
+      <div style="flex:1; display:flex; gap:6px;">
+        <div style="flex:3; background:#16130e; color:#f4efe6; border-radius:7px; padding:20px 0; text-align:center; font:500 24px 'IBM Plex Mono',monospace;">full compute · system · tools · doc</div>
+        <div style="flex:1; background:#cbbfa9; color:#16130e; border-radius:7px; padding:20px 0; text-align:center; font:500 24px 'IBM Plex Mono',monospace;">user msg</div>
+      </div>
+    </div>
+    <div style="display:flex; align-items:center; gap:24px;">
+      <div style="width:230px; font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35;">Request 2 · warm</div>
+      <div style="flex:1; display:flex; gap:6px;">
+        <div style="flex:3; background:#ffe0d6; color:#b9361a; border:2px solid #ff5c35; border-radius:7px; padding:18px 0; text-align:center; font:600 24px 'IBM Plex Mono',monospace;">cache READ — cheap, fast</div>
+        <div style="flex:1; background:#cbbfa9; color:#16130e; border-radius:7px; padding:20px 0; text-align:center; font:500 24px 'IBM Plex Mono',monospace;">new msg</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 16 · WHAT GETS CACHED ===================== -->
+<section data-label="What gets cached" data-speaker-notes="Crucially, it's not text that gets cached — it's the prefix of computed state. You mark a point with cache_control, and everything up to and including that block becomes a cacheable prefix. On the next request, the system checks whether that exact prefix already exists." style="background:#f4efe6; color:#16130e; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">What actually gets cached</div>
+  <h2 style="margin:14px 0 16px; font:700 64px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">Not text — computed state</h2>
+  <p style="margin:0 0 auto; font:400 32px 'IBM Plex Sans',sans-serif; color:#5c5446; max-width:1450px; text-wrap:pretty;">You mark a breakpoint with <span style="font-family:'IBM Plex Mono',monospace; color:#16130e;">cache_control</span>. Everything from the start of the request up to and including that block becomes the cache key.</p>
+  <div style="background:#0e0c08; border-radius:14px; padding:30px 38px; margin-top:40px; font:500 26px 'IBM Plex Mono',monospace; line-height:1.6; color:#e8dfcf;">
+    <div>{</div>
+    <div>&nbsp;&nbsp;<span style="color:#7fb98a;">"type"</span>: <span style="color:#7fb98a;">"text"</span>,</div>
+    <div>&nbsp;&nbsp;<span style="color:#7fb98a;">"text"</span>: <span style="color:#7fb98a;">"...big stable content..."</span>,</div>
+    <div style="background:rgba(255,92,53,.14); border-left:3px solid #ff5c35; margin:4px -38px; padding:4px 35px;">&nbsp;&nbsp;<span style="color:#7fb98a;">"cache_control"</span>: {<span style="color:#7fb98a;">"type"</span>: <span style="color:#7fb98a;">"ephemeral"</span>}<span style="color:#8a7f6d;">&nbsp;&nbsp;# ← the breakpoint</span></div>
+    <div>}</div>
+  </div>
+</section>
+
+<!-- ===================== 17 · EXACT MATCH (dark hero) ===================== -->
+<section data-label="Exact-match" data-speaker-notes="This is the crucial constraint. Caching works on a longest-matching-prefix basis, and the match must be byte-identical. The moment anything differs, the cache breaks from that point onward. Here A and B still hit; C and D get recomputed because X diverged." style="background:#16130e; color:#f4efe6; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">The exact-match requirement</div>
+  <h2 style="margin:14px 0 16px; font:700 64px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">The prefix must be byte-identical</h2>
+  <p style="margin:0 0 60px; font:400 30px 'IBM Plex Sans',sans-serif; color:#cabfac; max-width:1450px;">The moment anything differs, the cache breaks from that point onward.</p>
+  <div style="flex:1; display:flex; flex-direction:column; justify-content:center; gap:40px;">
+    <div style="display:flex; align-items:center; gap:30px;">
+      <div style="width:200px; font:600 24px 'IBM Plex Mono',monospace; color:#8a7f6d;">Cached</div>
+      <div style="display:flex; gap:16px;">
+        <div style="width:120px; background:rgba(63,185,80,.16); border:2px solid #3fb950; color:#7fdc8a; border-radius:10px; padding:26px 0; text-align:center; font:700 34px 'Space Grotesk',sans-serif;">A</div>
+        <div style="width:120px; background:rgba(63,185,80,.16); border:2px solid #3fb950; color:#7fdc8a; border-radius:10px; padding:26px 0; text-align:center; font:700 34px 'Space Grotesk',sans-serif;">B</div>
+        <div style="width:120px; background:rgba(63,185,80,.16); border:2px solid #3fb950; color:#7fdc8a; border-radius:10px; padding:26px 0; text-align:center; font:700 34px 'Space Grotesk',sans-serif;">C</div>
+        <div style="width:120px; background:rgba(63,185,80,.16); border:2px solid #3fb950; color:#7fdc8a; border-radius:10px; padding:26px 0; text-align:center; font:700 34px 'Space Grotesk',sans-serif;">D</div>
+      </div>
+    </div>
+    <div style="display:flex; align-items:center; gap:30px;">
+      <div style="width:200px; font:600 24px 'IBM Plex Mono',monospace; color:#8a7f6d;">Request</div>
+      <div style="display:flex; gap:16px;">
+        <div style="width:120px; background:rgba(63,185,80,.16); border:2px solid #3fb950; color:#7fdc8a; border-radius:10px; padding:26px 0; text-align:center; font:700 34px 'Space Grotesk',sans-serif;">A</div>
+        <div style="width:120px; background:rgba(63,185,80,.16); border:2px solid #3fb950; color:#7fdc8a; border-radius:10px; padding:26px 0; text-align:center; font:700 34px 'Space Grotesk',sans-serif;">B</div>
+        <div style="width:120px; background:rgba(255,92,53,.18); border:2px solid #ff5c35; color:#ff5c35; border-radius:10px; padding:26px 0; text-align:center; font:700 34px 'Space Grotesk',sans-serif;">X</div>
+        <div style="width:120px; background:#1c1812; border:2px dashed #5c5446; color:#8a7f6d; border-radius:10px; padding:26px 0; text-align:center; font:700 34px 'Space Grotesk',sans-serif;">D</div>
+      </div>
+      <div style="display:flex; flex-direction:column; padding-left:14px; border-left:2px dashed #3a342a;">
+        <span style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35;">↑ diverges here</span>
+        <span style="font:400 24px 'IBM Plex Sans',sans-serif; color:#cabfac;">A, B hit · X, D recomputed</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 18 · ORDERING ===================== -->
+<section data-label="Ordering" data-speaker-notes="This dictates context ordering. Stable content goes at the front, volatile content at the back. Tool defs, system prompt, big static documents — cache those. Retrieved chunks and the user's new turn go after the breakpoint. Put a timestamp or per-request ID near the top, and you poison everything after it." style="background:#f4efe6; color:#16130e; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">Context ordering</div>
+  <h2 style="margin:14px 0 50px; font:700 64px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">Stable at the front, volatile at the back</h2>
+  <div style="flex:1; display:flex; gap:30px; align-items:stretch;">
+    <div style="flex:1; background:#16130e; color:#f4efe6; border-radius:14px; padding:36px 40px; display:flex; flex-direction:column;">
+      <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.04em; margin-bottom:8px;">FRONT · cache here</div>
+      <div style="font:400 24px 'IBM Plex Sans',sans-serif; color:#8a7f6d; margin-bottom:24px;">changes rarely</div>
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <div style="background:#1c1812; border-radius:8px; padding:18px 22px; font:500 26px 'IBM Plex Sans',sans-serif;">Tool definitions</div>
+        <div style="background:#1c1812; border-radius:8px; padding:18px 22px; font:500 26px 'IBM Plex Sans',sans-serif;">System prompt</div>
+        <div style="background:#1c1812; border-radius:8px; padding:18px 22px; font:500 26px 'IBM Plex Sans',sans-serif;">Large static documents</div>
+      </div>
+    </div>
+    <div style="display:flex; align-items:center; font:700 44px 'Space Grotesk',sans-serif; color:#ff5c35;">▸</div>
+    <div style="flex:1; background:#efe7d8; border-radius:14px; padding:36px 40px; display:flex; flex-direction:column;">
+      <div style="font:600 24px 'IBM Plex Mono',monospace; color:#b9361a; letter-spacing:0.04em; margin-bottom:8px;">BACK · recomputed</div>
+      <div style="font:400 24px 'IBM Plex Sans',sans-serif; color:#a39684; margin-bottom:24px;">changes every turn</div>
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <div style="background:#e3d9c6; border-radius:8px; padding:18px 22px; font:500 26px 'IBM Plex Sans',sans-serif; color:#5c5446;">Retrieved chunks</div>
+        <div style="background:#e3d9c6; border-radius:8px; padding:18px 22px; font:500 26px 'IBM Plex Sans',sans-serif; color:#5c5446;">The user's new turn</div>
+      </div>
+      <div style="margin-top:auto; padding-top:22px; font:500 24px 'IBM Plex Sans',sans-serif; color:#b9361a;">A timestamp up top poisons everything after it.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 19 · CACHE LOOKUP PATH ===================== -->
+<section data-label="Lookup path" data-speaker-notes="How context flows through the cache. The incoming request's prefix blocks are hashed. Is that prefix in cache? On a hit, load the stored state at the cache-read price. On a miss, run the full forward pass and write the prefix, paying the write premium. Either way, only the uncached suffix is computed before generating." style="background:#f4efe6; color:#16130e; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">The lookup path</div>
+  <h2 style="margin:14px 0 46px; font:700 64px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">Hit reads · miss writes</h2>
+  <div style="flex:1; display:flex; align-items:center; justify-content:center; gap:0;">
+    <div style="display:flex; flex-direction:column; align-items:center; gap:16px; width:260px;">
+      <div style="background:#16130e; color:#f4efe6; border-radius:10px; padding:22px 30px; text-align:center; font:600 25px 'Space Grotesk',sans-serif;">Hash the<br>prefix blocks</div>
+      <div style="font:700 32px 'Space Grotesk',sans-serif; color:#cbbfa9;">↓</div>
+      <div style="border:2px solid #16130e; border-radius:10px; padding:18px 30px; text-align:center; font:600 24px 'Space Grotesk',sans-serif;">Prefix in cache?</div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:40px; padding:0 50px;">
+      <div style="display:flex; align-items:center; gap:20px;">
+        <span style="font:700 24px 'IBM Plex Mono',monospace; color:#3fb950;">HIT →</span>
+        <div style="background:#e3f5e6; border:2px solid #3fb950; border-radius:10px; padding:18px 26px; font:600 24px 'Space Grotesk',sans-serif; color:#1f7a32;">Load stored state<br><span style="font:500 24px 'IBM Plex Mono',monospace; color:#3fb950;">cache-read price</span></div>
+      </div>
+      <div style="display:flex; align-items:center; gap:20px;">
+        <span style="font:700 24px 'IBM Plex Mono',monospace; color:#ff5c35;">MISS →</span>
+        <div style="background:#ffe9e2; border:2px solid #ff5c35; border-radius:10px; padding:18px 26px; font:600 24px 'Space Grotesk',sans-serif; color:#b9361a;">Full forward pass + write<br><span style="font:500 24px 'IBM Plex Mono',monospace; color:#b9361a;">cache-write price</span></div>
+      </div>
+    </div>
+    <div style="display:flex; flex-direction:column; align-items:center; gap:16px; width:240px;">
+      <div style="border:2px dashed #cbbfa9; border-radius:10px; padding:20px 26px; text-align:center; font:600 24px 'Space Grotesk',sans-serif; color:#5c5446;">Compute the uncached suffix</div>
+      <div style="font:700 32px 'Space Grotesk',sans-serif; color:#cbbfa9;">↓</div>
+      <div style="background:#ff5c35; color:#16130e; border-radius:10px; padding:20px 34px; font:700 25px 'Space Grotesk',sans-serif;">Generate</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 20 · PRICING MODEL ===================== -->
+<section data-label="Pricing model" data-speaker-notes="Three distinct rates. Cache write costs more than a normal input token — you pay a premium to store. Cache read costs much less — that's the savings. Uncached input is the normal rate. So the first request is slightly more expensive; caching pays off on the second hit onward." style="background:#f4efe6; color:#16130e; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">The pricing model</div>
+  <h2 style="margin:14px 0 50px; font:700 64px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">Three rates, one tradeoff</h2>
+  <div style="flex:1; display:flex; align-items:flex-end; gap:50px; padding-bottom:20px;">
+    <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:20px;">
+      <div style="font:700 40px 'Space Grotesk',sans-serif; color:#b9361a;">premium</div>
+      <div style="width:100%; height:300px; background:#16130e; border-radius:12px 12px 0 0; display:flex; align-items:flex-start; justify-content:center; padding-top:24px;"><span style="font:600 26px 'IBM Plex Mono',monospace; color:#ff5c35;">cache write</span></div>
+      <div style="font:400 25px 'IBM Plex Sans',sans-serif; color:#5c5446; text-align:center;">pay to store</div>
+    </div>
+    <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:20px;">
+      <div style="font:700 40px 'Space Grotesk',sans-serif; color:#5c5446;">normal</div>
+      <div style="width:100%; height:200px; background:#cbbfa9; border-radius:12px 12px 0 0; display:flex; align-items:flex-start; justify-content:center; padding-top:24px;"><span style="font:600 26px 'IBM Plex Mono',monospace; color:#16130e;">uncached input</span></div>
+      <div style="font:400 25px 'IBM Plex Sans',sans-serif; color:#5c5446; text-align:center;">the baseline</div>
+    </div>
+    <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:20px;">
+      <div style="font:700 40px 'Space Grotesk',sans-serif; color:#1f7a32;">cheap</div>
+      <div style="width:100%; height:70px; background:#ff5c35; border-radius:12px 12px 0 0; display:flex; align-items:center; justify-content:center;"><span style="font:600 26px 'IBM Plex Mono',monospace; color:#16130e;">cache read</span></div>
+      <div style="font:400 25px 'IBM Plex Sans',sans-serif; color:#5c5446; text-align:center;">the savings</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 21 · BREAK-EVEN (dark) ===================== -->
+<section data-label="Break-even" data-speaker-notes="If a prefix is read enough times, the cumulative read savings dwarf the one-time write cost. Break-even is around two hits. The corollary: a prefix used once and never reused is a net loss — you paid the write premium for nothing." style="background:#16130e; color:#f4efe6; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">Where it pays off</div>
+  <h2 style="margin:14px 0 44px; font:700 64px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">Break-even is about two hits</h2>
+  <div style="flex:1; display:flex; gap:60px; align-items:stretch;">
+    <div style="flex:1.4; position:relative; border-left:2px solid #3a342a; border-bottom:2px solid #3a342a; padding:20px 0 0 0;">
+      <span style="position:absolute; top:-6px; left:-66px; font:500 24px 'IBM Plex Mono',monospace; color:#8a7f6d; transform:rotate(-90deg); transform-origin:left;">cost</span>
+      <span style="position:absolute; bottom:-40px; right:0; font:500 24px 'IBM Plex Mono',monospace; color:#8a7f6d;">requests →</span>
+      <!-- no-cache line -->
+      <div style="position:absolute; left:0; right:0; top:130px; height:3px; background:#cabfac;"></div>
+      <span style="position:absolute; top:96px; right:10px; font:600 24px 'IBM Plex Mono',monospace; color:#cabfac;">no cache — flat</span>
+      <!-- with-cache: write spike then low -->
+      <div style="position:absolute; left:0; top:40px; width:90px; height:3px; background:#ff5c35;"></div>
+      <div style="position:absolute; left:88px; top:40px; width:3px; height:180px; background:#ff5c35;"></div>
+      <div style="position:absolute; left:88px; right:0; top:218px; height:3px; background:#ff5c35;"></div>
+      <span style="position:absolute; top:30px; left:0; font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35;">write</span>
+      <span style="position:absolute; top:228px; right:120px; font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35;">with cache — cheap reads</span>
+      <!-- break-even marker -->
+      <div style="position:absolute; left:88px; top:20px; bottom:0; width:2px; border-left:2px dashed #8a7f6d;"></div>
+    </div>
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; gap:30px;">
+      <div style="border-left:4px solid #ff5c35; padding-left:24px;">
+        <div style="font:600 30px 'Space Grotesk',sans-serif; color:#f4efe6;">Reads compound</div>
+        <div style="font:400 27px 'IBM Plex Sans',sans-serif; color:#cabfac; margin-top:8px; text-wrap:pretty;">Read a prefix enough times and the savings dwarf the one-time write.</div>
+      </div>
+      <div style="border-left:4px solid #3a342a; padding-left:24px;">
+        <div style="font:600 30px 'Space Grotesk',sans-serif; color:#f4efe6;">Used once = net loss</div>
+        <div style="font:400 27px 'IBM Plex Sans',sans-serif; color:#cabfac; margin-top:8px; text-wrap:pretty;">A prefix written and never reused just costs you the write premium.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 22 · TTL & EVICTION ===================== -->
+<section data-label="TTL & eviction" data-speaker-notes="Cache entries are ephemeral with a limited, sliding lifetime — refreshed on each hit. The default is five minutes, and every read resets the clock. There's also a longer one-hour option at a different price point. If nothing reads the prefix within the window, it's evicted, and the next request pays the write cost again." style="background:#f4efe6; color:#16130e; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">TTL &amp; eviction</div>
+  <h2 style="margin:14px 0 50px; font:700 64px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">Ephemeral, with a sliding clock</h2>
+  <div style="flex:1; display:flex; gap:48px;">
+    <div style="flex:1; display:flex; flex-direction:column; gap:24px; justify-content:center;">
+      <div style="display:flex; align-items:center; gap:22px;"><div style="background:#ff5c35; color:#16130e; border-radius:8px; padding:14px 22px; font:600 24px 'IBM Plex Mono',monospace; min-width:90px; text-align:center;">write</div><div style="font:400 28px 'IBM Plex Sans',sans-serif; color:#5c5446;">starts the timer</div></div>
+      <div style="display:flex; align-items:center; gap:22px;"><div style="background:#16130e; color:#f4efe6; border-radius:8px; padding:14px 22px; font:600 24px 'IBM Plex Mono',monospace; min-width:90px; text-align:center;">hit</div><div style="font:400 28px 'IBM Plex Sans',sans-serif; color:#5c5446;">resets the timer ↺</div></div>
+      <div style="display:flex; align-items:center; gap:22px;"><div style="border:2px solid #cbbfa9; color:#a39684; border-radius:8px; padding:14px 22px; font:600 24px 'IBM Plex Mono',monospace; min-width:90px; text-align:center;">idle</div><div style="font:400 28px 'IBM Plex Sans',sans-serif; color:#5c5446;">→ evicted, write again</div></div>
+    </div>
+    <div style="flex:1; display:flex; flex-direction:column; gap:28px;">
+      <div style="flex:1; background:#16130e; color:#f4efe6; border-radius:14px; padding:34px 38px; display:flex; flex-direction:column; justify-content:center;">
+        <div style="font:700 80px 'Space Grotesk',sans-serif; color:#ff5c35; line-height:1;">5 min</div>
+        <div style="font:400 26px 'IBM Plex Sans',sans-serif; color:#cabfac; margin-top:10px;">default · sliding, resets on every read</div>
+      </div>
+      <div style="flex:1; background:#efe7d8; border-radius:14px; padding:34px 38px; display:flex; flex-direction:column; justify-content:center;">
+        <div style="font:700 80px 'Space Grotesk',sans-serif; color:#16130e; line-height:1;">1 hr</div>
+        <div style="font:400 26px 'IBM Plex Sans',sans-serif; color:#5c5446; margin-top:10px;">optional · different price point</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 23 · MULTIPLE BREAKPOINTS ===================== -->
+<section data-label="Multiple breakpoints" data-speaker-notes="You can set several breakpoints to create nested cacheable segments — useful when parts of your context change at different rates. A request hits the longest still-valid prefix. If the docs changed but tools and system didn't, you still get a partial hit up through the system breakpoint." style="background:#f4efe6; color:#16130e; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">Multiple breakpoints</div>
+  <h2 style="margin:14px 0 16px; font:700 64px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">Nested segments for different rates</h2>
+  <p style="margin:0 0 44px; font:400 30px 'IBM Plex Sans',sans-serif; color:#5c5446; max-width:1450px;">A request hits the longest still-valid prefix — so a partial hit survives when only the later blocks change.</p>
+  <div style="flex:1; display:flex; flex-direction:column; gap:14px; justify-content:center; max-width:1500px;">
+    <div style="display:flex; align-items:center; gap:24px;"><div style="flex:1; background:#16130e; color:#f4efe6; border-radius:8px; padding:22px 30px; font:600 27px 'IBM Plex Mono',monospace;">tool defs</div><span style="font:500 24px 'IBM Plex Mono',monospace; color:#ff5c35; width:240px;">◂ breakpoint 1</span><span style="font:400 24px 'IBM Plex Sans',sans-serif; color:#a39684; width:170px;">never changes</span></div>
+    <div style="display:flex; align-items:center; gap:24px;"><div style="flex:1; background:#1c1812; color:#f4efe6; border-radius:8px; padding:22px 30px; font:600 27px 'IBM Plex Mono',monospace;">system prompt</div><span style="font:500 24px 'IBM Plex Mono',monospace; color:#ff5c35; width:240px;">◂ breakpoint 2</span><span style="font:400 24px 'IBM Plex Sans',sans-serif; color:#a39684; width:170px;">rarely changes</span></div>
+    <div style="display:flex; align-items:center; gap:24px;"><div style="flex:1; background:#efe7d8; color:#16130e; border-radius:8px; padding:22px 30px; font:600 27px 'IBM Plex Mono',monospace;">documents</div><span style="font:500 24px 'IBM Plex Mono',monospace; color:#ff5c35; width:240px;">◂ breakpoint 3</span><span style="font:400 24px 'IBM Plex Sans',sans-serif; color:#a39684; width:170px;">changes daily</span></div>
+    <div style="display:flex; align-items:center; gap:24px;"><div style="flex:1; background:#e3d9c6; color:#5c5446; border-radius:8px; padding:22px 30px; font:600 27px 'IBM Plex Mono',monospace;">conversation</div><span style="font:500 24px 'IBM Plex Sans',sans-serif; color:#a39684; width:240px;">— no breakpoint</span><span style="font:400 24px 'IBM Plex Sans',sans-serif; color:#a39684; width:170px;">every turn</span></div>
+  </div>
+</section>
+
+<!-- ===================== 24 · IN CODE: CACHING (dark) ===================== -->
+<section data-label="Code: caching" data-speaker-notes="In practice: the stable instruction and big document go in the system array, with cache_control on the document block. The volatile question stays at the back. Watch the usage object — cache_creation_input_tokens on the first call is the write, cache_read_input_tokens on every call after is the read. That's how you verify caching actually fired." style="background:#16130e; color:#f4efe6; padding:80px 110px 76px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">In code</div>
+  <h2 style="margin:14px 0 26px; font:700 56px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">Marking the breakpoint</h2>
+  <div style="flex:1; display:flex; gap:36px; align-items:stretch;">
+    <div style="flex:1.5; background:#0e0c08; border:1.5px solid #2c281f; border-radius:14px; padding:28px 32px; font:500 24px 'IBM Plex Mono',monospace; line-height:1.6; color:#e8dfcf;">
+      <div>resp = client.messages.create(</div>
+      <div>&nbsp;&nbsp;model=MODEL, max_tokens=<span style="color:#d9a441;">1024</span>,</div>
+      <div>&nbsp;&nbsp;system=[</div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;{<span style="color:#7fb98a;">"type"</span>:<span style="color:#7fb98a;">"text"</span>, <span style="color:#7fb98a;">"text"</span>: INSTRUCTIONS},</div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;{<span style="color:#7fb98a;">"type"</span>:<span style="color:#7fb98a;">"text"</span>, <span style="color:#7fb98a;">"text"</span>: big_document,</div>
+      <div style="background:rgba(255,92,53,.13); border-left:3px solid #ff5c35; margin:3px -32px; padding:3px 29px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#7fb98a;">"cache_control"</span>:{<span style="color:#7fb98a;">"type"</span>:<span style="color:#7fb98a;">"ephemeral"</span>}},<span style="color:#8a7f6d;"> # ← breakpoint</span></div>
+      <div>&nbsp;&nbsp;],</div>
+      <div style="color:#8a7f6d;">&nbsp;&nbsp;# volatile → stays at the back</div>
+      <div>&nbsp;&nbsp;messages=[{<span style="color:#7fb98a;">"role"</span>:<span style="color:#7fb98a;">"user"</span>,<span style="color:#7fb98a;">"content"</span>:question}],</div>
+      <div>)</div>
+    </div>
+    <div style="flex:1; display:flex; flex-direction:column; gap:18px;">
+      <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.04em;">VERIFY VIA usage</div>
+      <div style="background:#1c1812; border-radius:12px; padding:24px 26px;">
+        <div style="font:600 24px 'IBM Plex Mono',monospace; color:#f4efe6;">cache_creation…</div>
+        <div style="font:400 24px 'IBM Plex Sans',sans-serif; color:#cabfac; margin-top:6px;">the write — first call only</div>
+      </div>
+      <div style="background:#1c1812; border-radius:12px; padding:24px 26px;">
+        <div style="font:600 24px 'IBM Plex Mono',monospace; color:#7fdc8a;">cache_read…</div>
+        <div style="font:400 24px 'IBM Plex Sans',sans-serif; color:#cabfac; margin-top:6px;">the read — every call after</div>
+      </div>
+      <div style="font:400 24px 'IBM Plex Sans',sans-serif; color:#8a7f6d; margin-top:auto;">If both stay zero, caching silently didn't fire.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 24b · IN CLAUDE CODE: CACHING ===================== -->
+<section data-label="In Claude Code" data-speaker-notes="Caching, by contrast, you simply never see while you work — no indicator, no message. It runs silently on the server. The one place it surfaces is the cost readout: run /cost and you'll see a huge cache-read number next to a tiny fresh-input number. That gap is the savings. You didn't configure any of it — Claude Code placed the breakpoints and manages the cache for you. Invisible mechanism, visible bill." style="background:#f4efe6; color:#16130e; padding:88px 110px 80px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">In Claude Code</div>
+  <h2 style="margin:14px 0 12px; font:700 60px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">Caching you'll never notice</h2>
+  <p style="margin:0 0 32px; font:400 30px 'IBM Plex Sans',sans-serif; color:#5c5446; max-width:1480px; text-wrap:pretty;">It runs silently as you work — the one place it surfaces is your cost readout.</p>
+  <div style="flex:1; display:flex; gap:40px; align-items:stretch;">
+    <div style="flex:1.65; background:#14110c; border:1px solid #2c281f; border-radius:14px; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 18px 50px rgba(0,0,0,.26);">
+      <div style="display:flex; align-items:center; gap:9px; padding:15px 20px; background:#1d1810; border-bottom:1px solid #2c281f;">
+        <span style="width:14px; height:14px; border-radius:50%; background:#ff5f57;"></span>
+        <span style="width:14px; height:14px; border-radius:50%; background:#febc2e;"></span>
+        <span style="width:14px; height:14px; border-radius:50%; background:#28c840;"></span>
+        <span style="margin-left:14px; font:500 22px 'IBM Plex Mono',monospace; color:#8a7f6d;">claude — ~/acme-api</span>
+      </div>
+      <div style="flex:1; padding:28px 34px; font:500 24px/1.6 'IBM Plex Mono', ui-monospace, Menlo, monospace; color:#e8dfcf;">
+        <div style="color:#f4efe6;"><span style="color:#ff5c35;">&gt;</span> /cost</div>
+        <div style="height:18px;"></div>
+        <div style="padding-left:30px; color:#8a7f6d;">⎿&nbsp;&nbsp;<span style="color:#e8dfcf;">Total cost (session)</span></div>
+        <div style="width:560px; max-width:100%; padding-left:60px; display:flex; flex-direction:column; gap:7px; margin-top:6px;">
+          <div style="display:flex; justify-content:space-between;"><span style="color:#8a7f6d;">cost</span><span style="color:#cabfac;">$0.42</span></div>
+          <div style="display:flex; justify-content:space-between;"><span style="color:#8a7f6d;">duration (API)</span><span style="color:#cabfac;">2m 50s</span></div>
+        </div>
+        <div style="height:20px;"></div>
+        <div style="padding-left:30px; color:#cabfac;">Token usage</div>
+        <div style="width:560px; max-width:100%; padding-left:60px; display:flex; flex-direction:column; gap:7px; margin-top:6px;">
+          <div style="display:flex; justify-content:space-between;"><span style="color:#8a7f6d;">input (fresh)</span><span style="color:#cabfac;">1,920</span></div>
+          <div style="display:flex; justify-content:space-between;"><span style="color:#8a7f6d;">output</span><span style="color:#cabfac;">7,340</span></div>
+          <div style="display:flex; justify-content:space-between;"><span style="color:#8a7f6d;">cache write</span><span style="color:#cabfac;">22,180</span></div>
+          <div style="display:flex; justify-content:space-between;"><span style="color:#ff5c35;">cache read</span><span style="color:#ff5c35; font-weight:700;">486,500</span></div>
+        </div>
+        <div style="padding-left:60px; margin-top:12px; font:500 22px 'IBM Plex Mono', ui-monospace, Menlo, monospace; color:#7fdc8a;">↑ reused context — a fraction of the input price</div>
+      </div>
+    </div>
+    <div style="flex:1; display:flex; flex-direction:column; gap:22px;">
+      <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.04em;">HOW TO READ IT</div>
+      <div style="background:#efe7d8; border:2px solid #cbbfa9; border-radius:14px; padding:26px 30px;">
+        <div style="font:700 28px 'Space Grotesk',sans-serif; color:#16130e;">You set up none of it</div>
+        <div style="font:400 25px 'IBM Plex Sans',sans-serif; color:#5c5446; margin-top:8px; text-wrap:pretty;">Claude Code places the cache breakpoints and manages them for you — no flags, no config.</div>
+      </div>
+      <div style="background:#efe7d8; border:2px solid #cbbfa9; border-radius:14px; padding:26px 30px;">
+        <div style="font:700 28px 'Space Grotesk',sans-serif; color:#16130e;">Cache read &gt;&gt; fresh input</div>
+        <div style="font:400 25px 'IBM Plex Sans',sans-serif; color:#5c5446; margin-top:8px; text-wrap:pretty;">That big number is reused context, billed at a fraction of the price. The gap is your savings.</div>
+      </div>
+      <div style="margin-top:auto; font:400 24px 'IBM Plex Sans',sans-serif; color:#a39684; text-wrap:pretty;">Invisible, by design — the work happens on the server.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 25 · WHERE THEY REINFORCE ===================== -->
+<section data-label="Where they reinforce" data-speaker-notes="Here's where the two topics meet. When you spawn many subagents sharing the same system prompt and tool set, that common prefix caches across all of them. The first subagent pays the write; every other one reads it cheaply. The fan-out becomes far cheaper than it looks — caching and subagents reinforce each other." style="background:#f4efe6; color:#16130e; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">Where they reinforce</div>
+  <h2 style="margin:14px 0 16px; font:700 64px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">One shared prefix, many subagents</h2>
+  <p style="margin:0 0 44px; font:400 31px 'IBM Plex Sans',sans-serif; color:#5c5446; max-width:1450px; text-wrap:pretty;">Fan out subagents that share a system prompt and tools, and that common prefix caches across all of them — written once, read by every one after.</p>
+  <div style="flex:1; display:flex; align-items:center; gap:46px;">
+    <div style="background:#16130e; color:#f4efe6; border-radius:14px; padding:40px 30px; text-align:center; min-width:220px;">
+      <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; margin-bottom:14px;">SHARED SYSTEM</div>
+      <div style="font:400 24px 'IBM Plex Sans',sans-serif; color:#cabfac;">prompt + tools</div>
+      <div style="height:1px; background:#3a342a; margin:20px 0;"></div>
+      <div style="font:500 24px 'IBM Plex Mono',monospace; color:#f4efe6;">cached prefix</div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:20px; flex:1;">
+      <div style="display:flex; align-items:center; gap:20px;"><span style="font:600 24px 'IBM Plex Mono',monospace; color:#b9361a; width:130px;">writes ✎</span><div style="flex:1; border:2px solid #ff5c35; border-radius:10px; padding:18px 26px; font:600 25px 'Space Grotesk',sans-serif;">Sub A</div></div>
+      <div style="display:flex; align-items:center; gap:20px;"><span style="font:600 24px 'IBM Plex Mono',monospace; color:#1f7a32; width:130px;">reads ↺</span><div style="flex:1; border:2px solid #cbbfa9; border-radius:10px; padding:18px 26px; font:600 25px 'Space Grotesk',sans-serif; color:#5c5446;">Sub B</div></div>
+      <div style="display:flex; align-items:center; gap:20px;"><span style="font:600 24px 'IBM Plex Mono',monospace; color:#1f7a32; width:130px;">reads ↺</span><div style="flex:1; border:2px solid #cbbfa9; border-radius:10px; padding:18px 26px; font:600 25px 'Space Grotesk',sans-serif; color:#5c5446;">Sub C</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 26 · SECTION: SUBSCRIPTION ===================== -->
+<section data-label="03 Subscription" data-speaker-notes="One practical section for the IT admins in the room: what's allowed when you run this under a Pro or Max subscription, versus an API key. This part of policy has been actively enforced." style="background:#16130e; color:#f4efe6; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; justify-content:center; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.14em; text-transform:uppercase;">Part Three</div>
+  <div style="font:700 200px 'Space Grotesk',sans-serif; color:#ff5c35; line-height:0.85; letter-spacing:-0.03em; margin:18px 0 4px;">03</div>
+  <h2 style="margin:0; font:700 80px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">Under a subscription</h2>
+  <div style="width:120px; height:4px; background:#ff5c35; margin:38px 0 26px;"></div>
+  <p style="margin:0; font:400 36px 'IBM Plex Sans',sans-serif; color:#cabfac; max-width:1200px;">Subscription OAuth vs an API key — drawing the line for automation.</p>
+</section>
+
+<!-- ===================== 26b · INTUITION: SUBSCRIPTION ===================== -->
+<section data-label="Who's talking?" data-speaker-notes="The plain framing before the policy detail. It all comes down to one question: who's actually doing the talking? If it's you — at the keyboard, including through the official Claude Code tool — a subscription fits. If it's your programs talking on their own, they should use an API key. The only real no-no is dressing a program up as you to slip past that line. The next slide has the precise allowed-and-not list." style="background:#f4efe6; color:#16130e; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">The big idea</div>
+  <h2 style="margin:14px 0 14px; font:700 64px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">Who's doing the talking?</h2>
+  <p style="margin:0 0 46px; font:400 32px 'IBM Plex Sans',sans-serif; color:#5c5446; max-width:1480px; text-wrap:pretty;">It comes down to one question. A subscription is for <strong style="color:#16130e;">you</strong> using Claude yourself; an API key is for your <strong style="color:#16130e;">programs</strong> to use it on their own.</p>
+  <div style="flex:1; display:grid; grid-template-columns:1fr 1fr; gap:48px;">
+    <div style="border:2px solid #16130e; border-radius:16px; padding:36px 40px; display:flex; flex-direction:column;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:22px;">
+        <span style="background:#ff5c35; color:#16130e; border-radius:10px; padding:12px 26px; font:700 26px 'Space Grotesk',sans-serif;">YOU</span>
+        <span style="font:600 30px 'Space Grotesk',sans-serif;">at the keyboard</span>
+      </div>
+      <div style="font:400 28px 'IBM Plex Sans',sans-serif; color:#5c5446; text-wrap:pretty;">Using Claude yourself — including through the official Claude Code tool.</div>
+      <div style="margin-top:auto; padding-top:28px; font:600 26px 'IBM Plex Mono',monospace; color:#ff5c35;">→ a subscription fits</div>
+    </div>
+    <div style="border:2px solid #cbbfa9; background:#efe7d8; border-radius:16px; padding:36px 40px; display:flex; flex-direction:column;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:22px;">
+        <span style="background:#16130e; color:#f4efe6; border-radius:10px; padding:12px 22px; font:700 26px 'IBM Plex Mono',monospace;">&gt;_</span>
+        <span style="font:600 30px 'Space Grotesk',sans-serif;">your programs</span>
+      </div>
+      <div style="font:400 28px 'IBM Plex Sans',sans-serif; color:#5c5446; text-wrap:pretty;">Scripts and automations calling on their own, with no one at the keyboard.</div>
+      <div style="margin-top:auto; padding-top:28px; font:600 26px 'IBM Plex Mono',monospace; color:#b9361a;">→ give them an API key</div>
+    </div>
+  </div>
+  <div style="margin-top:32px; background:#16130e; border-radius:12px; padding:24px 34px; font:500 28px 'IBM Plex Sans',sans-serif; color:#f4efe6; text-wrap:pretty;">The only real no-no: dressing a program up as <span style="color:#ff5c35;">you</span> to dodge the line.</div>
+</section>
+
+<!-- ===================== 27 · DECISION TABLE ===================== -->
+<section data-label="Allowed vs not" data-speaker-notes="The line is about which client makes the call, not the auth mechanism. Allowed: an API key from the Console for any SDK or automation, and running the real Claude Code CLI under your subscription — local, cron, CI. Not allowed: extracting a subscription OAuth token and calling the API yourself, or piping it through a third-party client. This was enforced for real — accounts were suspended." style="background:#f4efe6; color:#16130e; padding:88px 110px 80px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">OAuth &amp; subscriptions</div>
+  <h2 style="margin:14px 0 14px; font:700 60px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">Allowed vs. not allowed</h2>
+  <p style="margin:0 0 38px; font:400 28px 'IBM Plex Sans',sans-serif; color:#5c5446; max-width:1450px;">The line is about <strong style="color:#16130e;">which client makes the call</strong> — not the auth mechanism itself.</p>
+  <div style="flex:1; display:grid; grid-template-columns:1fr 1fr; gap:40px;">
+    <div style="border:2px solid #16130e; border-radius:16px; padding:34px 38px; display:flex; flex-direction:column;">
+      <div style="display:flex; align-items:center; gap:14px; margin-bottom:26px;"><span style="width:38px; height:38px; background:#1f7a32; color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font:700 24px 'Space Grotesk',sans-serif;">✓</span><span style="font:700 32px 'Space Grotesk',sans-serif;">Allowed</span></div>
+      <div style="display:flex; flex-direction:column; gap:22px;">
+        <div><div style="font:600 28px 'Space Grotesk',sans-serif;">API key for SDK &amp; automation</div><div style="font:400 24px 'IBM Plex Sans',sans-serif; color:#5c5446; margin-top:5px;">The <span style="font-family:'IBM Plex Mono',monospace;">sk-ant-api…</span> key from the Console — no automation limits.</div></div>
+        <div><div style="font:600 28px 'Space Grotesk',sans-serif;">The real Claude Code CLI</div><div style="font:400 24px 'IBM Plex Sans',sans-serif; color:#5c5446; margin-top:5px;">Run <span style="font-family:'IBM Plex Mono',monospace;">claude</span> under your plan — local, cron, CI on your own repo.</div></div>
+      </div>
+    </div>
+    <div style="border:2px solid #cbbfa9; background:#efe7d8; border-radius:16px; padding:34px 38px; display:flex; flex-direction:column;">
+      <div style="display:flex; align-items:center; gap:14px; margin-bottom:26px;"><span style="width:38px; height:38px; background:#b9361a; color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font:700 24px 'Space Grotesk',sans-serif;">✕</span><span style="font:700 32px 'Space Grotesk',sans-serif; color:#8a7f6d;">Not allowed</span></div>
+      <div style="display:flex; flex-direction:column; gap:22px;">
+        <div><div style="font:600 28px 'Space Grotesk',sans-serif;">OAuth tokens in your own script</div><div style="font:400 24px 'IBM Plex Sans',sans-serif; color:#5c5446; margin-top:5px;">Extracting a subscription token to call <span style="font-family:'IBM Plex Mono',monospace;">api.anthropic.com</span> yourself.</div></div>
+        <div><div style="font:600 28px 'Space Grotesk',sans-serif;">…or in third-party clients</div><div style="font:400 24px 'IBM Plex Sans',sans-serif; color:#5c5446; margin-top:5px;">Consumer-plan OAuth in other tools violates the terms — actively enforced.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 28 · WHAT TO DO INSTEAD ===================== -->
+<section data-label="What to do instead" data-speaker-notes="So, concretely: if you want the API surface, use an API key — the unambiguous path with no automation restrictions; the code runs identically, only the credential source changes. If your goal was a flat-rate cap, the legitimate route is to run your logic inside Claude Code, shelling out to claude -p, which keeps you on the subscription and inside the official harness. One caveat: this policy area has been volatile, so check the current usage policy page before architecting around it." style="background:#f4efe6; color:#16130e; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">What to do instead</div>
+  <h2 style="margin:14px 0 50px; font:700 64px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">Two legitimate paths</h2>
+  <div style="flex:1; display:grid; grid-template-columns:1fr 1fr; gap:48px;">
+    <div style="background:#16130e; color:#f4efe6; border-radius:16px; padding:40px 44px; display:flex; flex-direction:column;">
+      <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; margin-bottom:18px;">NEED THE API SURFACE</div>
+      <div style="font:700 40px 'Space Grotesk',sans-serif; margin-bottom:18px;">Use an API key</div>
+      <div style="font:400 28px 'IBM Plex Sans',sans-serif; color:#cabfac; line-height:1.5; text-wrap:pretty;">From the Console. No automation restrictions. The code runs identically — only the credential source changes.</div>
+    </div>
+    <div style="background:#efe7d8; border-radius:16px; padding:40px 44px; display:flex; flex-direction:column;">
+      <div style="font:600 24px 'IBM Plex Mono',monospace; color:#b9361a; margin-bottom:18px;">WANT A FLAT-RATE CAP</div>
+      <div style="font:700 40px 'Space Grotesk',sans-serif; margin-bottom:18px;">Run inside Claude Code</div>
+      <div style="font:400 28px 'IBM Plex Sans',sans-serif; color:#5c5446; line-height:1.5; text-wrap:pretty;">Shell out to <span style="font-family:'IBM Plex Mono',monospace;">claude -p</span>. Stays on your subscription, inside the official harness — caching managed for you.</div>
+    </div>
+  </div>
+  <p style="margin:32px 0 0; font:500 26px 'IBM Plex Sans',sans-serif; color:#b9361a;">Caveat: this policy area has been volatile — check the current usage policy page before you architect around it.</p>
+</section>
+
+<!-- ===================== 29 · TAKEAWAYS ===================== -->
+<section data-label="Takeaways" data-speaker-notes="To recap. Subagents trade tokens for clean context and parallelism — reach for them on read-heavy or independent work. Task strings must be self-contained and the return explicitly shaped. Caching reuses an exact prefix — keep stable content at the front, volatile at the back. And the two compound: a shared, cached prefix makes fan-out cheap." style="background:#16130e; color:#f4efe6; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">Key takeaways</div>
+  <h2 style="margin:14px 0 50px; font:700 64px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">What to carry out of the room</h2>
+  <div style="flex:1; display:grid; grid-template-columns:1fr 1fr; gap:30px 56px;">
+    <div style="display:flex; gap:24px; align-items:baseline; border-top:2px solid #3a342a; padding-top:22px;"><span style="font:700 44px 'Space Grotesk',sans-serif; color:#ff5c35;">01</span><div style="font:400 30px 'IBM Plex Sans',sans-serif; color:#cabfac; text-wrap:pretty;">Subagents trade tokens for clean context + parallelism. Use them for read-heavy, independent work.</div></div>
+    <div style="display:flex; gap:24px; align-items:baseline; border-top:2px solid #3a342a; padding-top:22px;"><span style="font:700 44px 'Space Grotesk',sans-serif; color:#ff5c35;">02</span><div style="font:400 30px 'IBM Plex Sans',sans-serif; color:#cabfac; text-wrap:pretty;">The task string must be self-contained; the return must be explicitly shaped.</div></div>
+    <div style="display:flex; gap:24px; align-items:baseline; border-top:2px solid #3a342a; padding-top:22px;"><span style="font:700 44px 'Space Grotesk',sans-serif; color:#ff5c35;">03</span><div style="font:400 30px 'IBM Plex Sans',sans-serif; color:#cabfac; text-wrap:pretty;">Caching reuses an exact prefix: stable content at the front, volatile at the back.</div></div>
+    <div style="display:flex; gap:24px; align-items:baseline; border-top:2px solid #3a342a; padding-top:22px;"><span style="font:700 44px 'Space Grotesk',sans-serif; color:#ff5c35;">04</span><div style="font:400 30px 'IBM Plex Sans',sans-serif; color:#cabfac; text-wrap:pretty;">They compound — a shared, cached prefix makes fan-out cheap.</div></div>
+  </div>
+</section>
+
+<!-- ===================== 30 · CLOSE ===================== -->
+<section data-label="Close" data-speaker-notes="The through-line for everything today: both primitives exist to protect the lead agent's context — one by isolating work, the other by reusing it. Thank you — happy to take questions." style="background:#16130e; color:#f4efe6; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; justify-content:center; font-family:'IBM Plex Sans',sans-serif; position:relative; overflow:hidden;">
+  <div style="position:absolute; bottom:0; left:0; width:300px; height:300px; background:#ff5c35; border-top-right-radius:300px;"></div>
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">The through-line</div>
+  <h2 style="margin:22px 0 0; font:700 96px 'Space Grotesk',sans-serif; letter-spacing:-0.03em; line-height:1.0; max-width:1400px;">Both protect the lead's context.</h2>
+  <p style="margin:34px 0 0; font:400 36px 'IBM Plex Sans',sans-serif; color:#cabfac; max-width:1150px;">One by isolating work. One by reusing it.</p>
+  <div style="position:absolute; right:110px; bottom:70px; font:500 24px 'IBM Plex Mono',monospace; color:#8a7f6d; text-align:right;">Thank you — questions?</div>
+</section>
+
+</x-import>
+</x-dc>
+</body>
+</html>

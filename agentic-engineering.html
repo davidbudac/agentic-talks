@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agentic Engineering — basics for developers</title>
+
+<!-- Fonts: Space Grotesk (display) + IBM Plex Sans (body) + IBM Plex Mono (mono) — Ember design system -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+
+<style>
+/* ===========================================
+   THEME — Ember. Warm tri-tone: ink · paper · coral.
+   Tokens inlined from ember_design_system/tokens.
+   =========================================== */
+:root{
+  /* Core surfaces */
+  --ink:#16130e; --ink-2:#1c1812; --ink-3:#0e0c08;
+  --paper:#f4efe6; --paper-2:#efe7d8; --paper-3:#e3d9c6;
+  /* Accent */
+  --coral:#ff5c35; --coral-ink:#b9361a; --coral-soft:#ffe9e2; --coral-tint:#ffe0d6;
+  /* Text ramps */
+  --text-strong:#16130e; --text-muted:#5c5446; --text-faint:#a39684;
+  --on-dark:#f4efe6; --on-dark-muted:#cabfac; --on-dark-faint:#8a7f6d;
+  /* Lines & diagram bars */
+  --line-light:#cbbfa9; --line-light-2:#ddd2bf; --line-card:#d8ccb6;
+  --line-dark:#3a342a; --line-dark-2:#2c281f; --bar:#ddd0ba; --bar-dark:#46402f;
+  /* Semantic */
+  --positive:#3fb950; --positive-on-dark:#7fdc8a; --warning:#d9a441; --danger:#b9361a;
+  /* Code syntax (on --code-bg) */
+  --code-bg:#0e0c08; --code-text:#e8dfcf; --code-keyword:#e0795f; --code-string:#7fb98a;
+  --code-number:#d9a441; --code-comment:#8a7f6d;
+  /* Effects */
+  --ring-accent:0 0 0 6px rgba(255,92,53,.16); --ring-accent-dark:0 0 0 6px rgba(255,92,53,.22);
+  --shadow-terminal:0 18px 50px rgba(0,0,0,.26);
+  /* Fonts */
+  --font-d:'Space Grotesk',system-ui,sans-serif; --font-b:'IBM Plex Sans',system-ui,sans-serif; --font-m:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  /* Type scale (clamp — mapped onto Ember's 1920×1080 proportions) */
+  --h2-size:clamp(1.3rem,3.7vw,2.8rem); --h3-size:clamp(1rem,2.2vw,1.5rem);
+  --body-size:clamp(.76rem,1.38vw,1.1rem); --small-size:clamp(.63rem,1vw,.86rem);
+  --slide-padding:clamp(1.05rem,3.5vw,3.4rem); --content-gap:clamp(.5rem,1.7vw,1.3rem);
+  --ease:cubic-bezier(.16,1,.3,1); --dur:.6s;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+
+/* ===== VIEWPORT FITTING (mandatory base) ===== */
+html, body{height:100%;overflow-x:hidden}
+html{scroll-snap-type:y mandatory;scroll-behavior:smooth}
+.slide{width:100vw;height:100vh;height:100dvh;overflow:hidden;scroll-snap-align:start;
+  display:flex;flex-direction:column;position:relative}
+.slide-content{flex:1;display:flex;flex-direction:column;justify-content:center;max-height:100%;
+  overflow:hidden;padding:var(--slide-padding)}
+img{max-width:100%;max-height:min(50vh,400px);object-fit:contain}
+@media (max-height:760px){:root{--slide-padding:clamp(.8rem,3vw,2.1rem);--content-gap:clamp(.38rem,1.3vw,.95rem);
+  --h2-size:clamp(1.15rem,3.3vw,2.2rem);--body-size:clamp(.72rem,1.28vw,1rem)}}
+@media (max-height:620px){:root{--slide-padding:clamp(.5rem,2.3vw,1.3rem);--content-gap:clamp(.28rem,1vw,.65rem);
+  --h2-size:clamp(1rem,2.9vw,1.65rem);--body-size:clamp(.66rem,1.1vw,.88rem)}
+  .nav-dots,.keyboard-hint,.decorative{display:none}}
+@media (max-height:500px){:root{--slide-padding:clamp(.4rem,2vw,1rem);--h2-size:clamp(.92rem,2.5vw,1.35rem);
+  --body-size:clamp(.6rem,1vw,.8rem)}}
+@media (max-width:640px){.cards.c3,.cards.c2,.cards.c4{grid-template-columns:1fr !important}
+  .split{grid-template-columns:1fr !important}.gloss{grid-template-columns:1fr !important}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms !important;transition-duration:.2s !important}
+  html{scroll-behavior:auto}}
+
+/* ===== SLIDE SCHEMES — Ember light/dark rhythm ===== */
+/* PAPER (default): scoped vars every component reads. */
+.slide{
+  --s-bg:var(--paper); --s-text:var(--text-strong); --s-muted:var(--text-muted); --s-faint:var(--text-faint);
+  --s-line:var(--line-light-2); --s-line-strong:var(--line-light);
+  --s-card-bg:var(--paper-2); --s-card-border:var(--line-card); --s-box-mid:var(--paper-3);
+  --s-outer-fill:var(--coral-soft); --s-callout-bg:var(--coral-soft);
+  --s-accent:var(--coral-ink); --s-bar:var(--bar);
+  background:var(--s-bg); color:var(--s-text);
+}
+/* INK (dark hero / divider / title / closing). */
+.slide.dark{
+  --s-bg:var(--ink); --s-text:var(--on-dark); --s-muted:var(--on-dark-muted); --s-faint:var(--on-dark-faint);
+  --s-line:var(--line-dark-2); --s-line-strong:var(--line-dark);
+  --s-card-bg:var(--ink-2); --s-card-border:var(--line-dark); --s-box-mid:var(--ink-2);
+  --s-outer-fill:rgba(255,92,53,.10); --s-callout-bg:rgba(255,92,53,.10);
+  --s-accent:var(--coral); --s-bar:var(--bar-dark);
+}
+
+/* ===== GLOBAL LOOK ===== */
+body{background:var(--paper);color:var(--text-strong);font-family:var(--font-b)}
+.slide-content{position:relative;z-index:1}
+
+/* Header */
+.slide-head{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;
+  margin-bottom:clamp(.5rem,1.8vh,1.2rem);border-bottom:1px solid var(--s-line);padding-bottom:clamp(.35rem,1.1vh,.8rem)}
+.snum{font-family:var(--font-d);font-weight:700;color:var(--s-accent);font-size:clamp(1.1rem,2.8vw,2.2rem);line-height:1;letter-spacing:-.02em}
+.crumb{font-family:var(--font-m);font-size:var(--small-size);letter-spacing:.1em;text-transform:uppercase;color:var(--s-muted);font-weight:500;text-align:right}
+.crumb b{color:var(--s-accent);font-weight:600}
+
+h2{font-family:var(--font-d);font-weight:700;font-size:var(--h2-size);line-height:1.0;letter-spacing:-.025em;margin-bottom:clamp(.35rem,1.4vh,.9rem);text-transform:none;color:var(--s-text)}
+h2 .o{color:var(--s-accent)}
+h3{font-family:var(--font-d);font-weight:700;font-size:var(--h3-size);line-height:1.05;letter-spacing:-.02em;color:var(--s-text)}
+.lead{font-size:clamp(.92rem,1.95vw,1.45rem);line-height:1.45;max-width:48ch;color:var(--s-text)}
+.lead b{color:var(--s-accent)}
+.muted{color:var(--s-muted)}
+
+ul.bul{list-style:none;display:flex;flex-direction:column;gap:clamp(.35rem,1.2vh,.85rem);max-width:68ch}
+ul.bul li{font-size:var(--body-size);line-height:1.45;padding-left:1.55em;position:relative;color:var(--s-text)}
+ul.bul li::before{content:"";position:absolute;left:0;top:.44em;width:.6em;height:.6em;background:var(--s-accent);clip-path:polygon(0 0,100% 50%,0 100%)}
+ul.bul li b{color:var(--s-text);font-weight:600}
+
+.cards{display:grid;gap:clamp(.45rem,1.3vw,1rem)}
+.cards.c3{grid-template-columns:repeat(3,1fr)}
+.cards.c2{grid-template-columns:repeat(2,1fr)}
+.cards.c4{grid-template-columns:repeat(2,1fr)}
+.tile{border:1.5px solid var(--s-card-border);border-radius:14px;padding:clamp(.65rem,1.5vw,1.25rem);background:var(--s-card-bg);display:flex;flex-direction:column;gap:.32rem}
+.tile .k{font-family:var(--font-d);font-weight:700;color:var(--s-accent);font-size:clamp(.82rem,1.75vw,1.25rem);letter-spacing:-.02em}
+.tile p{font-size:var(--body-size);line-height:1.4;color:var(--s-text)}
+/* .tile.fill → Ember callout: coral wash + 6px coral left border */
+.tile.fill{background:var(--s-callout-bg);border-color:var(--s-card-border);border-left:6px solid var(--coral);border-radius:0 14px 14px 0}
+.tile.fill .k{color:var(--s-accent)}
+.tile.fill p{color:var(--s-text)}
+
+/* .kcard → Ember prominent callout */
+.kcard{background:var(--s-callout-bg);color:var(--s-text);border:1.5px solid var(--s-card-border);border-left:6px solid var(--coral);border-radius:0 16px 16px 0;padding:clamp(.85rem,2.5vw,1.9rem);position:relative;overflow:hidden}
+.slide.dark .kcard{box-shadow:var(--ring-accent-dark)}
+.kcard .big{font-family:var(--font-d);font-weight:700;color:var(--s-accent);font-size:clamp(1.3rem,3.8vw,2.7rem);line-height:1.02;letter-spacing:-.025em;position:relative}
+.kcard p{font-size:var(--body-size);line-height:1.42;margin-top:.5rem;position:relative;max-width:50ch;color:var(--s-text)}
+
+.split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(.85rem,2.5vw,2.1rem);align-items:center}
+
+table.tbl{width:100%;border-collapse:collapse;font-size:var(--body-size)}
+table.tbl th,table.tbl td{text-align:left;padding:clamp(.32rem,1vh,.72rem) clamp(.42rem,1.1vw,.88rem);border-bottom:1px solid var(--s-line)}
+table.tbl th{font-family:var(--font-m);color:var(--s-accent);font-weight:600;font-size:var(--small-size);letter-spacing:.06em;text-transform:uppercase}
+table.tbl td{color:var(--s-text)}
+table.tbl td b{color:var(--s-text);font-weight:600}
+table.tbl tr:last-child td{border-bottom:none}
+.note{font-size:var(--small-size);color:var(--s-muted);margin-top:clamp(.45rem,1.3vh,.85rem);line-height:1.45}
+.note b{color:var(--s-text);font-weight:600}
+
+.extag{display:inline-block;font-family:var(--font-m);font-size:var(--small-size);color:var(--s-accent);background:var(--s-callout-bg);border:1px solid var(--s-card-border);padding:.14rem .6rem;border-radius:6px;margin-bottom:.45rem;letter-spacing:.04em;text-transform:uppercase}
+
+/* Code block — always the deep-ink surface, warm syntax, coral key-line */
+.code{background:var(--code-bg);border:1.5px solid var(--s-line);border-left:3px solid var(--coral);border-radius:14px;
+  padding:clamp(.55rem,1.4vw,1rem) clamp(.7rem,1.6vw,1.2rem);font-family:var(--font-m);
+  font-size:clamp(.58rem,1.1vw,.88rem);line-height:1.6;overflow:hidden;color:var(--code-text);white-space:pre-wrap}
+.code .c{color:var(--code-comment)} .code .o{color:var(--code-keyword)} .code .g{color:var(--code-string)} .code .b{color:var(--code-number)} .code .d{color:var(--code-keyword)}
+
+.pills{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.3rem}
+.pill{font-family:var(--font-m);border:1px solid var(--coral);color:var(--s-accent);border-radius:100px;padding:.22rem .7rem;font-size:var(--small-size);font-weight:600;letter-spacing:.04em}
+
+/* Section divider — dark, giant coral numeral + accent rule */
+.divider .slide-content{align-items:flex-start;justify-content:center;text-align:left}
+.divider .dnum{font-family:var(--font-d);font-weight:700;color:var(--coral);font-size:clamp(3rem,13vw,9.5rem);line-height:.85;letter-spacing:-.03em;margin-bottom:.35rem}
+.divider h2{font-size:clamp(1.7rem,5.5vw,3.6rem)}
+.divider h2::after{content:"";display:block;width:clamp(64px,9vw,120px);height:4px;background:var(--coral);border-radius:2px;margin:.55em 0 .1em}
+.divider .dsub{color:var(--s-muted);font-size:clamp(.85rem,1.8vw,1.2rem);max-width:42ch;margin:.4rem 0 0;line-height:1.45}
+.divider .dsub b{color:var(--s-text);font-weight:600}
+
+/* Glossary */
+.gloss{display:grid;grid-template-columns:1fr 1fr;gap:.15rem 1.6rem}
+.gloss .row{display:flex;gap:.7rem;align-items:baseline;padding:clamp(.2rem,.7vh,.42rem) 0;border-bottom:1px solid var(--s-line)}
+.gloss .term{font-family:var(--font-d);font-weight:600;color:var(--s-accent);font-size:var(--body-size);min-width:6.2em;flex-shrink:0;letter-spacing:-.01em}
+.gloss .def{font-size:var(--body-size);color:var(--s-text);line-height:1.35}
+
+/* Use-case list */
+.uses{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.45rem,1.3vw,1rem)}
+@media (max-width:640px){.uses{grid-template-columns:1fr}}
+
+/* ===== DIAGRAMS (inline SVG) — remapped to scheme vars ===== */
+.diagram{width:100%;display:flex;justify-content:center;margin-top:.25rem}
+.diagram svg{width:100%;max-width:min(94vw,900px);height:auto;max-height:min(50vh,440px)}
+.dg-box{fill:var(--s-card-bg);stroke:var(--s-card-border);stroke-width:1.5}
+.dg-box.hot{fill:var(--coral);stroke:var(--coral)}
+.dg-box.outer{fill:var(--s-outer-fill);stroke:var(--coral);stroke-dasharray:6 5}
+.dg-box.mid{fill:var(--s-box-mid);stroke:var(--s-card-border)}
+.dg-t{fill:var(--s-text);font-family:var(--font-b);font-weight:600}
+.dg-t.on{fill:var(--ink)}
+.dg-t.mut{fill:var(--s-muted);font-weight:500}
+.dg-t.acc{fill:var(--s-accent);font-family:var(--font-m);font-weight:600}
+.dg-line{stroke:var(--s-accent);stroke-width:2.5;fill:none}
+.dg-line.dim{stroke:var(--s-line-strong);stroke-width:1.5}
+.dg-fill-g{fill:var(--positive)}.dg-fill-a{fill:var(--warning)}.dg-fill-r{fill:var(--coral)}
+.dg-cap{text-align:center;font-size:var(--small-size);color:var(--s-muted);margin-top:.4rem}
+.dg-cap b{color:var(--s-text)}
+/* Arrowhead markers adapt to scheme (CSS overrides the inline fill attribute) */
+.diagram marker path{fill:var(--s-accent)}
+#sq2 path,#ad2 path{fill:var(--s-faint)}
+
+/* ===== TITLE SLIDE ===== */
+.title-slide{display:grid;grid-template-columns:1.1fr .9fr;background:var(--ink)}
+.ts-left{padding:var(--slide-padding);display:flex;flex-direction:column;justify-content:space-between}
+.ts-top{display:flex;justify-content:space-between;align-items:center;color:var(--on-dark-faint);font-family:var(--font-m);font-size:var(--small-size);letter-spacing:.12em;text-transform:uppercase}
+.ts-top .num{font-family:var(--font-d);font-weight:700;color:var(--coral);font-size:clamp(1.3rem,2.8vw,2.2rem)}
+.ts-kick{font-family:var(--font-m);font-size:clamp(.66rem,1.4vw,1rem);letter-spacing:.14em;text-transform:uppercase;color:var(--coral);font-weight:600;margin-bottom:clamp(.6rem,1.7vh,1.1rem)}
+.ts-title{font-family:var(--font-d);font-weight:700;line-height:.95;font-size:clamp(2.3rem,8.5vw,6.5rem);letter-spacing:-.03em;color:var(--on-dark)}
+.ts-sub{font-size:clamp(.88rem,2vw,1.5rem);color:var(--on-dark-muted);margin-top:clamp(.7rem,2.1vh,1.4rem);font-weight:400;max-width:24ch}
+.ts-sub b{color:var(--on-dark);font-weight:600}
+.ts-author{font-size:clamp(.76rem,1.5vw,1.06rem);color:var(--on-dark-muted)}
+.ts-author b{color:var(--coral);font-weight:600}
+.ts-right{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--ink-2);border-left:1.5px solid var(--line-dark)}
+.ts-right::before{content:"";position:absolute;top:0;right:0;width:clamp(160px,24vw,300px);height:clamp(160px,24vw,300px);background:var(--coral);border-bottom-left-radius:100%}
+.ts-badge{font-family:var(--font-d);color:var(--coral);text-align:center;position:relative;z-index:2;transform:rotate(-4deg)}
+.ts-badge .b1{font-size:clamp(3rem,10vw,7.5rem);line-height:.82}
+.ts-badge .b2{font-family:var(--font-m);font-weight:500;letter-spacing:.14em;text-transform:uppercase;font-size:clamp(.56rem,1.25vw,.9rem);margin-top:.55rem;color:var(--on-dark-muted)}
+@media (max-width:700px){.title-slide{grid-template-columns:1fr}.ts-right{display:none}}
+
+.thanks{font-family:var(--font-d);font-weight:700;font-size:clamp(1.9rem,7vw,5rem);line-height:.98;letter-spacing:-.03em;color:var(--s-text)}
+.thanks .o{color:var(--s-accent)}
+
+/* Links grid */
+.links{display:grid;grid-template-columns:1fr 1fr;gap:clamp(.5rem,2vw,1.7rem)}
+.linkcol h3{color:var(--s-accent);font-family:var(--font-d);font-weight:600;margin-bottom:.45rem;font-size:clamp(.82rem,1.7vw,1.12rem);letter-spacing:-.01em}
+.linkcol a{display:block;color:var(--s-text);text-decoration:none;font-size:clamp(.64rem,1.12vw,.9rem);line-height:1.32;padding:.25rem 0;border-bottom:1px solid var(--s-line)}
+.linkcol a:hover{color:var(--s-accent)}
+.linkcol a .u{display:block;color:var(--s-muted);font-family:var(--font-m);font-size:.82em;margin-top:.05em}
+
+/* ===== ANIMATIONS ===== */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity var(--dur) var(--ease),transform var(--dur) var(--ease)}
+.slide.visible .reveal{opacity:1;transform:translateY(0)}
+.slide.visible .reveal:nth-child(1){transition-delay:.05s}
+.slide.visible .reveal:nth-child(2){transition-delay:.14s}
+.slide.visible .reveal:nth-child(3){transition-delay:.23s}
+.slide.visible .reveal:nth-child(4){transition-delay:.32s}
+.slide.visible .reveal:nth-child(5){transition-delay:.41s}
+.ts-left>*{opacity:0;animation:rise .9s var(--ease) both}
+.ts-left .ts-top{animation-delay:.1s}.ts-left .ts-mid{animation-delay:.3s}.ts-left .ts-author{animation-delay:.5s}
+.ts-right{opacity:0;animation:slideIn 1s var(--ease) both .2s}
+@keyframes rise{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:translateX(0)}}
+
+/* ===== CHROME ===== */
+.progress-bar{position:fixed;top:0;left:0;height:3px;width:0;background:var(--coral);z-index:9999}
+.nav-dots{position:fixed;right:clamp(.45rem,1.2vw,1.1rem);top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:.35rem;z-index:9998}
+.nav-dots button{width:8px;height:8px;border-radius:50%;border:none;cursor:pointer;padding:0;background:rgba(140,127,109,.55);transition:all .3s var(--ease)}
+.nav-dots button.active{background:var(--coral);transform:scale(1.5)}
+.keyboard-hint{position:fixed;bottom:clamp(.45rem,1.2vh,.95rem);left:50%;transform:translateX(-50%);font-family:var(--font-m);font-size:var(--small-size);color:var(--on-dark-faint);z-index:9998;opacity:.85;letter-spacing:.05em}
+.keyboard-hint kbd{font-family:var(--font-m);background:rgba(140,127,109,.16);border:1px solid rgba(140,127,109,.4);border-radius:5px;padding:.1em .45em;font-size:.85em;color:inherit}
+
+/* ===== INLINE EDITING ===== */
+.edit-hotzone{position:fixed;top:0;left:0;width:80px;height:80px;z-index:10000;cursor:pointer}
+.edit-toggle{position:fixed;top:clamp(.45rem,1.2vh,.95rem);left:clamp(.45rem,1.2vw,.95rem);width:42px;height:42px;border-radius:11px;border:1.5px solid var(--line-dark);background:rgba(28,24,18,.92);color:var(--on-dark);font-size:1.1rem;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .3s ease;z-index:10001;display:flex;align-items:center;justify-content:center}
+.edit-toggle.show,.edit-toggle.active{opacity:1;pointer-events:auto}
+.edit-toggle.active{background:var(--coral);color:var(--ink);border-color:var(--coral)}
+body.editing [contenteditable="true"]{outline:1px dashed rgba(255,92,53,.7);outline-offset:3px;border-radius:3px;cursor:text}
+body.editing [contenteditable="true"]:focus{outline:2px solid var(--coral);background:rgba(255,92,53,.07)}
+.edit-bar{position:fixed;bottom:clamp(.45rem,1.2vh,.95rem);right:clamp(.45rem,1.2vw,.95rem);z-index:10001;display:none;gap:.5rem}
+body.editing .edit-bar{display:flex}
+.edit-bar button{font-family:var(--font-m);font-weight:600;border:1.5px solid var(--line-dark);background:rgba(28,24,18,.94);color:var(--on-dark);border-radius:9px;padding:.5rem .9rem;cursor:pointer;font-size:var(--small-size)}
+.edit-bar button.primary{background:var(--coral);color:var(--ink);border-color:var(--coral)}
+.edit-toast{position:fixed;bottom:clamp(3rem,8vh,4.2rem);right:clamp(.45rem,1.2vw,.95rem);z-index:10002;background:var(--coral);color:var(--ink);font-family:var(--font-m);font-weight:600;padding:.5rem .9rem;border-radius:9px;font-size:var(--small-size);opacity:0;transform:translateY(8px);transition:all .3s var(--ease);pointer-events:none}
+.edit-toast.show{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<!--
+  ============================================================
+  Agentic Engineering — basics for developers.
+  Developer follow-up to agentic-ai.html. One thread runs
+  throughout: the CONTEXT WINDOW and who manages it (watch the
+  ● CONTEXT markers). Arc: the machine (model / harness / client
+  + a client-server sequence diagram) → foundations (prediction,
+  attention, statelessness, cost, KV cache) → levers (model ×
+  effort, Fable techniques) → the ladder (loops, verifiers,
+  workflows) → extensibility (skills & plugins). Same template.
+  No live demos; skill/plugin sections are static walkthroughs.
+  ============================================================
+-->
+
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
+<div class="keyboard-hint decorative">Navigate: <kbd>↑</kbd> <kbd>↓</kbd> / <kbd>␣</kbd> · edit: <kbd>E</kbd></div>
+
+<div class="edit-hotzone" aria-hidden="true"></div>
+<button class="edit-toggle" id="editToggle" title="Edit mode (E)" aria-label="Edit mode">✎</button>
+<div class="edit-bar">
+  <button id="resetBtn" title="Restore original text">↺ Reset</button>
+  <button id="exportBtn" class="primary" title="Download HTML with your edits">↓ Export</button>
+</div>
+<div class="edit-toast" id="editToast">Saved</div>
+
+<!-- TITLE -->
+<section class="slide title-slide dark">
+  <div class="ts-left">
+    <div class="ts-top"><span class="num">01</span><span>Internal talk · July 2026</span></div>
+    <div class="ts-mid">
+      <div class="ts-kick">A developer's guide to working with coding agents</div>
+      <h1 class="ts-title">Agentic<br>Engineering</h1>
+      <p class="ts-sub">From <b>token prediction</b> to <b>self-verifying loops</b></p>
+    </div>
+    <div class="ts-author">David&nbsp;Budáč &nbsp;/&nbsp; <b>ČSOB</b></div>
+  </div>
+  <div class="ts-right">
+    <div class="ts-badge"><div class="b1">⌘</div><div class="b2">context · effort · loops</div></div>
+  </div>
+</section>
+
+<!-- HOOK -->
+<section class="slide dark">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">2</span><div class="crumb"><b>The hook</b></div></div>
+    <h2 class="reveal">Same model. <span class="o">Two prompts.</span></h2>
+    <div class="code reveal"><span class="o">you ›</span> <span class="b">"fix the bug"</span>
+  <span class="c">agent flails — edits three files, tweaks the test until</span>
+  <span class="c">it passes, declares victory. The bug is still there.</span>
+
+<span class="o">you ›</span> <span class="b">/goal make test_invoice pass — `pytest -q` must exit 0.</span>
+       <span class="b">Do NOT edit or skip the test. Paste the final output.</span>
+  <span class="g">agent nails it — real fix, real green, evidence attached.</span></div>
+    <p class="note reveal">The engineering around the model made the difference. <b>That's this whole talk.</b></p>
+  </div>
+</section>
+
+<!-- AGENDA -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">3</span><div class="crumb"><b>Agenda</b></div></div>
+    <h2 class="reveal">Where we're <span class="o">going</span></h2>
+    <p class="lead reveal" style="margin-bottom:var(--content-gap)">One thread runs through everything: the <b>context window</b> and what you put in it.</p>
+    <div class="gloss reveal">
+      <div class="row"><span class="term">The machine</span><span class="def">Model · harness · client.</span></div>
+      <div class="row"><span class="term">Foundations</span><span class="def">What an LLM does; the context is the program.</span></div>
+      <div class="row"><span class="term">Levers</span><span class="def">Model size × reasoning effort.</span></div>
+      <div class="row"><span class="term">The ladder</span><span class="def">Tools → loops → verifiers → workflows.</span></div>
+      <div class="row"><span class="term">Make it yours</span><span class="def">Skills &amp; plugins.</span></div>
+    </div>
+    <p class="note reveal"><span class="pill">● CONTEXT</span> Watch for this marker — it flags where a topic ties back to the thread. New to all this? Start with the beginner deck.</p>
+  </div>
+</section>
+
+<!-- ============ PART 1 — THE MACHINE ============ -->
+
+<!-- DIVIDER 01 -->
+<section class="slide divider dark">
+  <div class="slide-content">
+    <div class="dnum reveal">01</div>
+    <h2 class="reveal">The <span class="o">machine</span></h2>
+    <p class="dsub reveal">Three parts you rent and run: <b>model</b>, <b>harness</b>, <b>client</b>.</p>
+  </div>
+</section>
+
+<!-- MACHINE PARTS -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">4</span><div class="crumb"><b>The machine</b> · the three parts</div></div>
+    <h2 class="reveal">Model · harness · <span class="o">client</span></h2>
+    <div class="cards c3 reveal">
+      <div class="tile"><span class="k">Model</span><p>The brain — an API you rent. <b>Fable · Opus · Sonnet</b> (Anthropic) · <b>GPT‑5.6 Sol</b> (OpenAI) · <b>Gemini 3 Pro</b> (Google).</p></div>
+      <div class="tile"><span class="k">Harness</span><p>The loop around the model: assembles context, runs tools, manages permissions. <b>Claude Code · Codex CLI · Gemini CLI · Jules</b> (async).</p></div>
+      <div class="tile fill"><span class="k">Client</span><p>Where you meet the harness: <b>terminal · IDE extension</b> (VS Code, JetBrains, Antigravity) <b>· desktop · web · CI</b>.</p></div>
+    </div>
+    <p class="note reveal">Rent the model, run the harness, pick the client. Mix and match — most models work in most harnesses.</p>
+  </div>
+</section>
+
+<!-- CLIENT / SERVER SEQUENCE — CENTREPIECE -->
+<section class="slide dark">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">5</span><div class="crumb"><b>The machine</b> · client &amp; server</div></div>
+    <h2 class="reveal">The harness is a <span class="o">client.</span> The model is a <span class="o">server.</span></h2>
+    <div class="diagram reveal">
+      <svg viewBox="0 0 900 400" role="img" aria-label="Sequence over one session: you talk to the harness (client), which POSTs the full and growing context to the stateless model API (server) each turn, running tools locally in between">
+        <defs>
+          <marker id="sq1" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="var(--coral)"/></marker>
+          <marker id="sq2" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="var(--s-faint)"/></marker>
+        </defs>
+        <!-- headers -->
+        <rect class="dg-box" x="40" y="14" width="120" height="42" rx="9"/><text class="dg-t" x="100" y="40" font-size="14" text-anchor="middle">YOU</text>
+        <rect class="dg-box hot" x="330" y="14" width="180" height="42" rx="9"/><text class="dg-t on" x="420" y="34" font-size="13" text-anchor="middle">HARNESS</text><text class="dg-t on" x="420" y="49" font-size="10" text-anchor="middle">client</text>
+        <rect class="dg-box mid" x="690" y="14" width="180" height="42" rx="9"/><text class="dg-t" x="780" y="34" font-size="13" text-anchor="middle">MODEL API</text><text class="dg-t mut" x="780" y="49" font-size="10" text-anchor="middle">stateless server</text>
+        <!-- lifelines -->
+        <line class="dg-line dim" x1="100" y1="56" x2="100" y2="384"/>
+        <line class="dg-line dim" x1="420" y1="56" x2="420" y2="384"/>
+        <line class="dg-line dim" x1="780" y1="56" x2="780" y2="384"/>
+        <!-- turn 1 -->
+        <path class="dg-line" d="M104 86 L 416 86" marker-end="url(#sq1)"/><text class="dg-t mut" x="150" y="80" font-size="11">type: "fix the bug"</text>
+        <rect class="dg-fill-r" x="426" y="100" width="70" height="9" rx="2"/><text class="dg-t mut" x="504" y="108" font-size="10">context ~5k</text>
+        <path class="dg-line" d="M426 130 L 776 130" marker-end="url(#sq1)"/><text class="dg-t acc" x="600" y="124" font-size="11" text-anchor="middle">POST full context</text>
+        <path class="dg-line dim" d="M776 154 L 426 154" marker-end="url(#sq2)"/><text class="dg-t mut" x="600" y="148" font-size="10.5" text-anchor="middle">tokens + tool call</text>
+        <path class="dg-line" d="M420 170 C 472 170, 472 190, 424 190" marker-end="url(#sq1)"/><text class="dg-t mut" x="486" y="186" font-size="10">run tool locally</text>
+        <!-- turn 2 -->
+        <rect class="dg-fill-r" x="426" y="208" width="130" height="9" rx="2"/><text class="dg-t mut" x="564" y="216" font-size="10">context ~9k</text>
+        <path class="dg-line" d="M426 238 L 776 238" marker-end="url(#sq1)"/><text class="dg-t acc" x="600" y="232" font-size="11" text-anchor="middle">POST full context — bigger</text>
+        <path class="dg-line dim" d="M776 262 L 426 262" marker-end="url(#sq2)"/><text class="dg-t mut" x="600" y="256" font-size="10.5" text-anchor="middle">tokens + tool call</text>
+        <path class="dg-line" d="M420 278 C 472 278, 472 298, 424 298" marker-end="url(#sq1)"/><text class="dg-t mut" x="486" y="294" font-size="10">run tool locally</text>
+        <!-- turn 3 -->
+        <rect class="dg-fill-r" x="426" y="316" width="200" height="9" rx="2"/><text class="dg-t mut" x="634" y="324" font-size="10">context ~14k</text>
+        <path class="dg-line" d="M426 346 L 776 346" marker-end="url(#sq1)"/><text class="dg-t acc" x="600" y="340" font-size="11" text-anchor="middle">POST full context — bigger still</text>
+        <path class="dg-line dim" d="M776 370 L 426 370" marker-end="url(#sq2)"/><text class="dg-t mut" x="600" y="364" font-size="10.5" text-anchor="middle">final answer</text>
+      </svg>
+    </div>
+    <p class="note reveal">Every arrow to the server carries the <b>whole conversation again</b> — the API keeps nothing between calls. Remember the growing bars; Foundations explains the why and the price.</p>
+  </div>
+</section>
+
+<!-- ============ PART 2 — FOUNDATIONS ============ -->
+
+<!-- DIVIDER 02 -->
+<section class="slide divider dark">
+  <div class="slide-content">
+    <div class="dnum reveal">02</div>
+    <h2 class="reveal"><span class="o">Foundations</span></h2>
+    <p class="dsub reveal">You can't engineer what you think is <b>magic.</b></p>
+  </div>
+</section>
+
+<!-- LLM = NEXT-TOKEN PREDICTION + DIAGRAM -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">6</span><div class="crumb"><b>Foundations</b> · what an LLM does</div></div>
+    <h2 class="reveal">It predicts the <span class="o">next token</span>. That's it.</h2>
+    <div class="split">
+      <ul class="bul reveal">
+        <li>One job, forever: given the text so far, <b>guess the next chunk.</b> Then loop.</li>
+        <li>It's your phone keyboard's <b>middle suggestion</b> — at a trillion-parameter scale.</li>
+        <li>Everything else — chat, tools, agents — is <b>scaffolding</b> we build around that one trick.</li>
+      </ul>
+      <div class="diagram reveal">
+        <svg viewBox="0 0 400 250" role="img" aria-label="The prompt 'The tests are' goes into the model, which outputs candidate next tokens with probabilities">
+          <defs><marker id="np1" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="var(--coral)"/></marker></defs>
+          <rect class="dg-box mid" x="14" y="98" width="132" height="50" rx="9"/>
+          <text class="dg-t" x="80" y="120" font-size="12.5" text-anchor="middle">"The tests</text>
+          <text class="dg-t" x="80" y="138" font-size="12.5" text-anchor="middle">are ___"</text>
+          <circle class="dg-box hot" cx="200" cy="123" r="34"/>
+          <text class="dg-t on" x="200" y="120" font-size="12" text-anchor="middle">MODEL</text>
+          <text class="dg-t on" x="200" y="136" font-size="9.5" text-anchor="middle">next?</text>
+          <path class="dg-line" d="M148 123 L 162 123" marker-end="url(#np1)"/>
+          <!-- candidate bars -->
+          <text class="dg-t" x="252" y="62" font-size="12">passing</text><rect class="dg-fill-r" x="312" y="52" width="74" height="12" rx="3"/><text class="dg-t mut" x="252" y="76" font-size="10">0.62</text>
+          <text class="dg-t" x="252" y="102" font-size="12">failing</text><rect class="dg-fill-a" x="312" y="92" width="34" height="12" rx="3"/><text class="dg-t mut" x="252" y="116" font-size="10">0.28</text>
+          <text class="dg-t mut" x="252" y="150" font-size="12">green</text><rect class="dg-box" x="312" y="140" width="10" height="12" rx="3"/><text class="dg-t mut" x="252" y="164" font-size="10">0.06</text>
+          <text class="dg-t mut" x="252" y="198" font-size="12">red</text><rect class="dg-box" x="312" y="188" width="7" height="12" rx="3"/><text class="dg-t mut" x="252" y="212" font-size="10">0.04</text>
+          <path class="dg-line dim" d="M234 118 C 250 100, 250 80, 300 60"/>
+        </svg>
+      </div>
+    </div>
+    <p class="note reveal">A model is a <b>probability distribution over the next token</b>, sampled one token at a time.</p>
+  </div>
+</section>
+
+<!-- THE MIDDLE-BUTTON MESSAGE -->
+<section class="slide dark">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">7</span><div class="crumb"><b>Foundations</b> · the middle button</div></div>
+    <h2 class="reveal">Drift without <span class="o">a destination</span></h2>
+    <span class="extag reveal">EXAMPLE — a message typed only with the keyboard's middle suggestion</span>
+    <div class="code reveal"><span class="c"># tap the centre autocomplete key, over and over:</span>
+<span class="b">"I am going to be a little more than the first time I</span>
+<span class="b"> have to get the car and the kids are not going to be</span>
+<span class="b"> a good idea to have a great day…"</span>
+
+<span class="c"># every word locally plausible · the whole thing goes nowhere</span></div>
+    <p class="note reveal">An LLM with <b>no useful context</b> is exactly this, with a much bigger vocabulary.</p>
+  </div>
+</section>
+
+<!-- ATTENTION IS THE ALGORITHM + DIAGRAM -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">8</span><div class="crumb"><b>Foundations</b> · attention</div></div>
+    <h2 class="reveal">Attention: it weighs <span class="o">every token</span></h2>
+    <div class="diagram reveal">
+      <svg viewBox="0 0 800 210" role="img" aria-label="For the newest token the model weighs every earlier token in the context, with different strengths">
+        <defs><marker id="at1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--coral)"/></marker></defs>
+        <!-- token row -->
+        <rect class="dg-box" x="30" y="150" width="90" height="34" rx="7"/><text class="dg-t" x="75" y="172" font-size="13" text-anchor="middle">The</text>
+        <rect class="dg-box" x="150" y="150" width="110" height="34" rx="7"/><text class="dg-t" x="205" y="172" font-size="13" text-anchor="middle">invoice</text>
+        <rect class="dg-box" x="290" y="150" width="90" height="34" rx="7"/><text class="dg-t" x="335" y="172" font-size="13" text-anchor="middle">test</text>
+        <rect class="dg-box" x="410" y="150" width="120" height="34" rx="7"/><text class="dg-t" x="470" y="172" font-size="13" text-anchor="middle">expects</text>
+        <rect class="dg-box" x="560" y="150" width="70" height="34" rx="7"/><text class="dg-t" x="595" y="172" font-size="13" text-anchor="middle">VAT</text>
+        <rect class="dg-box hot" x="660" y="150" width="110" height="34" rx="7"/><text class="dg-t on" x="715" y="172" font-size="13" text-anchor="middle">so ___ ?</text>
+        <!-- attention arcs back from newest -->
+        <path class="dg-line" d="M700 148 C 640 70, 240 70, 205 146" marker-end="url(#at1)"/>
+        <path class="dg-line" d="M705 148 C 660 90, 350 90, 335 146" marker-end="url(#at1)"/>
+        <path class="dg-line dim" d="M712 148 C 690 110, 500 110, 470 146" marker-end="url(#at1)"/>
+        <path class="dg-line" d="M718 148 C 700 120, 610 120, 595 146" marker-end="url(#at1)"/>
+        <path class="dg-line dim" d="M695 148 C 560 60, 130 60, 75 146" marker-end="url(#at1)"/>
+        <text class="dg-t acc" x="400" y="40" font-size="14" text-anchor="middle">the newest token looks back at all of them — with different strengths</text>
+      </svg>
+    </div>
+    <ul class="bul reveal">
+      <li>The keyboard sees the last <b>~2 words.</b> The model weighs the <b>entire context</b> for every token — that's why it's not gibberish.</li>
+      <li><b>The context IS the program.</b> Curating it is the job.</li>
+    </ul>
+    <p class="note reveal"><span class="pill">● CONTEXT</span> This is the thread: attention runs over the context window, so what you load into it <b>is</b> the program.</p>
+  </div>
+</section>
+
+<!-- REASONING — THE EXAMPLE -->
+<section class="slide dark">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">9</span><div class="crumb"><b>Foundations</b> · reasoning</div></div>
+    <h2 class="reveal">Reasoning: the model writes its <span class="o">own context</span></h2>
+    <span class="extag reveal">EXAMPLE — the invoice test: total 100, but the test expects 121</span>
+    <div class="code reveal"><span class="c"># without reasoning — one hard prediction, pattern-matched</span>
+<span class="o">you ›</span> <span class="b">why does the test expect 121, not 100?</span>
+<span class="o">model ›</span> Probably a rounding bug.   <span class="c">✕ wrong</span>
+
+<span class="c"># with reasoning — the model writes a scratchpad first</span>
+<span class="o">thinking ›</span> <span class="g">test asserts 121 · input total is 100</span>
+<span class="o">         ›</span> <span class="g">121 / 100 = 1.21 → 21% — the VAT rate</span>
+<span class="o">         ›</span> <span class="g">so the test expects VAT applied</span>
+<span class="o">model ›</span> The test expects 21% VAT to be applied.   <span class="g">✓</span></div>
+    <p class="note reveal">Same model, same question. The only difference: it <b>thought on paper</b> before it answered.</p>
+  </div>
+</section>
+
+<!-- REASONING — WHY IT WORKS -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">10</span><div class="crumb"><b>Foundations</b> · why thinking works</div></div>
+    <h2 class="reveal">Why <span class="o">thinking</span> works</h2>
+    <div class="split">
+      <ul class="bul reveal">
+        <li><b>One forward pass per token.</b> Force the answer into the next token and it gets exactly one pass of compute — hard problems don't fit.</li>
+        <li>Reasoning = the model writing <b>intermediate steps into its own context</b>, then attending to them. The scratchpad <b>becomes part of the program.</b></li>
+        <li>Each step is an <b>easy</b> next-token guess; a chain of easy predictions replaces one impossible one. More tokens spent = <b>more compute on the answer</b> ("test-time compute").</li>
+        <li>Those thinking tokens are billed as <b>output</b> and land <b>in the context window</b> — exactly what the <b>effort dial</b> (next section) buys more or less of.</li>
+      </ul>
+      <div class="diagram reveal">
+        <svg viewBox="0 0 400 220" role="img" aria-label="One context window holds the prompt, then a highlighted span of thinking tokens the model writes for itself, then the answer — the answer attends back over the whole strip including the scratchpad">
+          <defs><marker id="rz1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--coral)"/></marker></defs>
+          <text class="dg-t mut" x="20" y="42" font-size="11">one context window →</text>
+          <rect class="dg-box mid" x="20" y="54" width="88" height="46" rx="8"/><text class="dg-t" x="64" y="82" font-size="12" text-anchor="middle">prompt</text>
+          <rect class="dg-box outer" x="116" y="54" width="170" height="46" rx="8"/><text class="dg-t acc" x="201" y="78" font-size="11" text-anchor="middle">thinking tokens</text><text class="dg-t mut" x="201" y="92" font-size="9" text-anchor="middle">written by the model</text>
+          <rect class="dg-box hot" x="294" y="54" width="86" height="46" rx="8"/><text class="dg-t on" x="337" y="82" font-size="12" text-anchor="middle">answer</text>
+          <path class="dg-line" d="M108 77 L 114 77" marker-end="url(#rz1)"/>
+          <path class="dg-line" d="M286 77 L 292 77" marker-end="url(#rz1)"/>
+          <!-- answer attends back over prompt + scratchpad -->
+          <path class="dg-line dim" d="M300 102 C 262 152, 232 152, 201 104" marker-end="url(#rz1)"/>
+          <path class="dg-line dim" d="M300 106 C 220 172, 96 172, 64 104" marker-end="url(#rz1)"/>
+          <text class="dg-t acc" x="200" y="200" font-size="11" text-anchor="middle">the answer attends to the model's own scratchpad</text>
+        </svg>
+      </div>
+    </div>
+    <p class="note reveal"><span class="pill">● CONTEXT</span> Reasoning is the model <b>extending its own context</b> — the scratchpad is program it writes for itself.</p>
+  </div>
+</section>
+
+<!-- WHAT'S IN THE CONTEXT -->
+<section class="slide dark">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">11</span><div class="crumb"><b>Foundations</b> · one turn's context</div></div>
+    <h2 class="reveal">One line typed, <span class="o">~20,000 tokens</span> sent</h2>
+    <span class="extag reveal">EXAMPLE — what one Claude Code turn actually assembles</span>
+    <div class="code reveal"><span class="c"># you type one line — the harness builds all of this:</span>
+system prompt          <span class="o">~2,600</span>   <span class="c">who it is, the rules</span>
+tool definitions       <span class="o">~4,100</span>   <span class="c">every tool's schema</span>
+CLAUDE.md + skills      <span class="o">~1,800</span>   <span class="c">your conventions</span>
+conversation so far    <span class="o">~9,200</span>   <span class="c">every earlier turn</span>
+tool results           <span class="o">~2,300</span>   <span class="c">files read, cmd output</span>
+your message               <span class="o">11</span>   <span class="b">"wire up the CSV export"</span></div>
+    <p class="note reveal">Which tokens fill that <b>context window</b> is what you're really controlling.</p>
+  </div>
+</section>
+
+<!-- THE MODEL IS STATELESS + MEMENTO DIAGRAM -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">12</span><div class="crumb"><b>Foundations</b> · statelessness · the why</div></div>
+    <h2 class="reveal">Why re-send <span class="o">everything?</span></h2>
+    <div class="split">
+      <div class="diagram reveal">
+        <svg viewBox="0 0 400 300" role="img" aria-label="Each call re-sends the entire history; the model remembers nothing between calls">
+          <defs><marker id="st1" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="var(--coral)"/></marker></defs>
+          <circle class="dg-box hot" cx="312" cy="150" r="64"/>
+          <text class="dg-t on" x="312" y="144" font-size="17" text-anchor="middle">MODEL</text>
+          <text class="dg-t on" x="312" y="166" font-size="12" text-anchor="middle">forgets all</text>
+          <rect class="dg-box mid" x="20" y="36" width="120" height="30" rx="6"/><text class="dg-t mut" x="30" y="56" font-size="12.5">call 1: [m1]</text>
+          <rect class="dg-box mid" x="20" y="118" width="180" height="30" rx="6"/><text class="dg-t mut" x="30" y="138" font-size="12.5">call 2: [m1,m2]</text>
+          <rect class="dg-box mid" x="20" y="200" width="232" height="30" rx="6"/><text class="dg-t mut" x="30" y="220" font-size="12.5">call 3: [m1,m2,m3]</text>
+          <path class="dg-line" d="M144 51 C 220 60, 250 110, 258 128" marker-end="url(#st1)"/>
+          <path class="dg-line" d="M204 133 C 235 140, 245 145, 250 148" marker-end="url(#st1)"/>
+          <path class="dg-line" d="M254 212 C 258 207, 261 202, 265 196" marker-end="url(#st1)"/>
+          <text class="dg-t acc" x="150" y="284" font-size="13">every call re-sends the whole history</text>
+        </svg>
+      </div>
+      <ul class="bul reveal">
+        <li>The API is a <b>pure function</b>: tokens in → tokens out. No session, no memory — like the guy in <b>Memento.</b></li>
+        <li>The sequence diagram's re-sends weren't waste — they're the <b>only</b> way the model sees turn 1 again.</li>
+        <li>So <b>memory = whatever is in context</b>, rebuilt by the harness every turn.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- TOKENS TRAVELLING -->
+<section class="slide dark">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">13</span><div class="crumb"><b>Foundations</b> · the growing input</div></div>
+    <h2 class="reveal">Those bars, <span class="o">in numbers</span></h2>
+    <div class="diagram reveal">
+      <svg viewBox="0 0 800 340" role="img" aria-label="Bar chart of input tokens re-sent per turn in one session: turn 1 ~5,000, turn 2 ~9,000, turn 5 ~34,000, turn 10 ~70,000, turn 20 ~150,000 — the final bar highlighted">
+        <text class="dg-t mut" x="34" y="150" font-size="12" transform="rotate(-90 34 150)" style="font-family:var(--font-m)">input tokens sent →</text>
+        <line class="dg-line dim" x1="60" y1="40" x2="60" y2="280"/>
+        <line class="dg-line dim" x1="60" y1="280" x2="760" y2="280"/>
+        <!-- bars (neutral --s-bar, coral for turn 20) -->
+        <rect x="97"  y="272" width="84" height="8"   rx="2" fill="var(--s-bar)" stroke="var(--s-line-strong)" stroke-width="1"/>
+        <rect x="235" y="266" width="84" height="14"  rx="2" fill="var(--s-bar)" stroke="var(--s-line-strong)" stroke-width="1"/>
+        <rect x="373" y="226" width="84" height="54"  rx="2" fill="var(--s-bar)" stroke="var(--s-line-strong)" stroke-width="1"/>
+        <rect x="511" y="168" width="84" height="112" rx="2" fill="var(--s-bar)" stroke="var(--s-line-strong)" stroke-width="1"/>
+        <rect class="dg-fill-r" x="649" y="40" width="84" height="240" rx="2"/>
+        <!-- token counts above bars (mono) -->
+        <text class="dg-t" x="139" y="262" font-size="13" text-anchor="middle" style="font-family:var(--font-m)">5,000</text>
+        <text class="dg-t" x="277" y="256" font-size="13" text-anchor="middle" style="font-family:var(--font-m)">9,000</text>
+        <text class="dg-t" x="415" y="216" font-size="13" text-anchor="middle" style="font-family:var(--font-m)">34,000</text>
+        <text class="dg-t" x="553" y="158" font-size="13" text-anchor="middle" style="font-family:var(--font-m)">~70,000</text>
+        <text class="dg-t acc" x="691" y="30" font-size="14" text-anchor="middle">150,000</text>
+        <!-- turn labels below baseline (mono) -->
+        <text class="dg-t mut" x="139" y="300" font-size="12" text-anchor="middle" style="font-family:var(--font-m)">turn 1</text>
+        <text class="dg-t mut" x="277" y="300" font-size="12" text-anchor="middle" style="font-family:var(--font-m)">turn 2</text>
+        <text class="dg-t mut" x="415" y="300" font-size="12" text-anchor="middle" style="font-family:var(--font-m)">turn 5</text>
+        <text class="dg-t mut" x="553" y="300" font-size="12" text-anchor="middle" style="font-family:var(--font-m)">turn 10</text>
+        <text class="dg-t acc" x="691" y="300" font-size="12" text-anchor="middle">turn 20</text>
+      </svg>
+    </div>
+    <div class="dg-cap reveal">the growing bars from the client/server slide — now measured; input climbs roughly quadratically over a session.</div>
+    <p class="note reveal">Turn 20 drags <b>all 19 previous turns</b> with it — the longer the session, the <b>heavier and slower</b> every turn.</p>
+  </div>
+</section>
+
+<!-- COSTS: INPUT VS OUTPUT -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">14</span><div class="crumb"><b>Foundations</b> · input vs output</div></div>
+    <h2 class="reveal">Two token bills, <span class="o">very different</span></h2>
+    <table class="tbl reveal">
+      <thead><tr><th></th><th>Input tokens</th><th>Output tokens</th></tr></thead>
+      <tbody>
+        <tr><td><b>What</b></td><td>everything re-sent — history, files, tool results</td><td>generated text, <b>incl. thinking tokens</b></td></tr>
+        <tr><td><b>Volume</b></td><td>huge, grows every turn</td><td>usually small</td></tr>
+        <tr><td><b>Price / token</b></td><td>baseline (cheap)</td><td><b>~5× input</b></td></tr>
+        <tr><td><b>Cacheable?</b></td><td>yes — next slide</td><td>no</td></tr>
+      </tbody>
+    </table>
+    <p class="note reveal">Agentic sessions are <b>input-dominated</b>: the model reads far more than it writes.</p>
+    <p class="note reveal" style="margin-top:.3rem">Per million tokens (in / out), mid-2026: <b>Haiku</b> $1/$5 · <b>Sonnet</b> $3/$15 · <b>Opus</b> $5/$25 · <b>Fable</b> $10/$50.</p>
+  </div>
+</section>
+
+<!-- KV CACHING — HOW IT WORKS + DIAGRAM -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">15</span><div class="crumb"><b>Foundations</b> · KV cache · how</div></div>
+    <h2 class="reveal">KV caching: <span class="o">don't recompute the prefix</span></h2>
+    <div class="split">
+      <ul class="bul reveal">
+        <li>The provider <b>caches the computed attention state</b> (the KV pairs) for a prefix it has already seen.</li>
+        <li>Send the <b>same prefix</b> again → cached input is <b>~10× cheaper</b> and faster. But it must be <b>byte-identical.</b></li>
+        <li>So harnesses <b>append, never rewrite.</b> Edit the system prompt or reorder history and you <b>bust the cache</b> — full price again.</li>
+      </ul>
+      <div class="diagram reveal">
+        <svg viewBox="0 0 400 200" role="img" aria-label="A context bar that is mostly cached prefix with a small tail of new tokens">
+          <rect class="dg-box mid" x="20" y="60" width="360" height="70" rx="10"/>
+          <rect class="dg-fill-g" x="30" y="70" width="292" height="50" rx="6" opacity="0.85"/>
+          <text class="dg-t on" x="176" y="100" font-size="13" text-anchor="middle">cached prefix ✓  (~10× cheaper)</text>
+          <rect class="dg-box hot" x="326" y="70" width="44" height="50" rx="6"/>
+          <text class="dg-t on" x="348" y="98" font-size="10" text-anchor="middle">new</text>
+          <text class="dg-t mut" x="20" y="50" font-size="12">one turn's input →</text>
+          <text class="dg-t acc" x="348" y="150" font-size="11" text-anchor="middle">only this</text>
+          <text class="dg-t acc" x="348" y="165" font-size="11" text-anchor="middle">is fresh</text>
+        </svg>
+      </div>
+    </div>
+    <p class="note reveal"><span class="pill">● CONTEXT</span> Caching = paying less to re-send the same context.</p>
+  </div>
+</section>
+
+<!-- KV CACHING — HOW LONG DOES IT LIVE + TIMELINE -->
+<section class="slide dark">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">16</span><div class="crumb"><b>Foundations</b> · KV cache · lifetime</div></div>
+    <h2 class="reveal">How long does the cache <span class="o">live?</span></h2>
+    <div class="split">
+      <ul class="bul reveal">
+        <li>Default TTL is <b>5 minutes</b> — and every cache hit <b>resets the clock</b>, so an active session stays warm indefinitely.</li>
+        <li>A coffee break longer than the TTL → cache gone; the next turn <b>rewrites it at full price.</b> (A <b>1-hour</b> TTL is available, for more.)</li>
+        <li>Reads cost <b>~0.1×</b> input; writes cost a premium — <b>1.25×</b> (5-min) or <b>2×</b> (1-hour). Break-even after <b>~2 requests.</b></li>
+      </ul>
+      <div class="diagram reveal">
+        <svg viewBox="0 0 800 220" role="img" aria-label="A session timeline: each turn resets the 5-minute cache TTL; a gap longer than the TTL leaves the cache cold and the next turn rewrites it at full price">
+          <defs><marker id="tt1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--coral)"/></marker></defs>
+          <text class="dg-t acc" x="185" y="34" font-size="13" text-anchor="middle">active session — cache stays warm</text>
+          <rect class="dg-fill-g" x="50" y="112" width="272" height="16" rx="4" opacity="0.65"/>
+          <line class="dg-line" x1="80" y1="104" x2="80" y2="136"/><text class="dg-t mut" x="80" y="152" font-size="10" text-anchor="middle">t1</text>
+          <line class="dg-line" x1="150" y1="104" x2="150" y2="136"/><text class="dg-t mut" x="150" y="152" font-size="10" text-anchor="middle">t2</text>
+          <line class="dg-line" x1="220" y1="104" x2="220" y2="136"/><text class="dg-t mut" x="220" y="152" font-size="10" text-anchor="middle">t3</text>
+          <line class="dg-line" x1="290" y1="104" x2="290" y2="136"/><text class="dg-t mut" x="290" y="152" font-size="10" text-anchor="middle">t4</text>
+          <path class="dg-line dim" d="M80 100 A 35 20 0 0 1 150 100"/>
+          <path class="dg-line dim" d="M150 100 A 35 20 0 0 1 220 100"/>
+          <path class="dg-line dim" d="M220 100 A 35 20 0 0 1 290 100"/>
+          <text class="dg-t mut" x="185" y="80" font-size="10" text-anchor="middle">each hit resets the 5-min TTL</text>
+          <line class="dg-line dim" x1="322" y1="120" x2="500" y2="120" stroke-dasharray="5 5"/>
+          <text class="dg-t mut" x="411" y="112" font-size="11" text-anchor="middle">&gt; 5 min break</text>
+          <path class="dg-line" d="M334 138 L 488 138" marker-end="url(#tt1)"/><text class="dg-t mut" x="411" y="154" font-size="10" text-anchor="middle">TTL expires</text>
+          <rect class="dg-box hot" x="512" y="104" width="250" height="32" rx="6"/>
+          <text class="dg-t on" x="637" y="124" font-size="12" text-anchor="middle">cache gone — full-price rewrite</text>
+        </svg>
+      </div>
+    </div>
+    <p class="note reveal"><span class="pill">● CONTEXT</span> Cache is <b>per-model</b> — switch models mid-session and you pay to rebuild the cached context.</p>
+  </div>
+</section>
+
+<!-- THE DUMB ZONE -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">17</span><div class="crumb"><b>Foundations</b> · the dumb zone</div></div>
+    <h2 class="reveal">The <span class="o">dumb zone</span></h2>
+    <div class="split">
+      <ul class="bul reveal">
+        <li>Attention <b>dilutes</b> over long contexts — degradation starts <b>well before</b> the window limit.</li>
+        <li>Symptoms: <b>forgets instructions</b>, redoes finished work, ignores a fact that's right there.</li>
+        <li>Hygiene: <b>/clear</b>, <b>/compact</b>, a <b>fresh session per task</b>, and <b>subagents</b> that summarise back.</li>
+      </ul>
+      <div class="diagram reveal">
+        <svg viewBox="0 0 440 260" role="img" aria-label="Answer quality declines as the context window fills; the last stretch is the dumb zone where the model forgets instructions, redoes work and ignores facts that are right there">
+          <!-- dumb-zone shaded region -->
+          <rect class="dg-box outer" x="290" y="28" width="120" height="172" rx="8"/>
+          <text class="dg-t acc" x="350" y="52" font-size="12" text-anchor="middle">THE DUMB ZONE</text>
+          <text class="dg-t mut" x="350" y="68" font-size="9.5" text-anchor="middle">last stretch of the window</text>
+          <!-- axes -->
+          <line class="dg-line dim" x1="50" y1="24" x2="50" y2="200"/>
+          <line class="dg-line dim" x1="50" y1="200" x2="410" y2="200"/>
+          <text class="dg-t mut" x="24" y="112" font-size="12" transform="rotate(-90 24 112)">quality</text>
+          <text class="dg-t mut" x="230" y="222" font-size="12" text-anchor="middle">context filled →</text>
+          <!-- quality curve -->
+          <path class="dg-line" d="M50 48 C 150 54, 210 74, 260 108 C 300 138, 350 170, 410 188"/>
+          <!-- symptom annotation inside the zone -->
+          <text class="dg-t mut" x="350" y="150" font-size="9.5" text-anchor="middle">forgets · redoes · ignores</text>
+          <!-- zone strip under the axis -->
+          <rect class="dg-fill-g" x="50" y="200" width="110" height="7"/><text class="dg-fill-g" x="60" y="196" font-size="10" style="font-family:var(--font-m)">sharp</text>
+          <rect class="dg-fill-a" x="160" y="200" width="130" height="7"/><text class="dg-fill-a" x="170" y="196" font-size="10" style="font-family:var(--font-m)">slipping</text>
+          <rect class="dg-fill-r" x="290" y="200" width="120" height="7"/><text class="dg-fill-r" x="300" y="196" font-size="10" style="font-family:var(--font-m)">rot</text>
+        </svg>
+      </div>
+    </div>
+    <p class="note reveal"><span class="pill">● CONTEXT</span> Where agents go to get confused is the <b>last stretch of the window</b> — hygiene is just keeping it lean.</p>
+  </div>
+</section>
+
+<!-- GO PLAY WITH ONE -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">18</span><div class="crumb"><b>Foundations</b> · go build one</div></div>
+    <h2 class="reveal">Go <span class="o">play with one</span></h2>
+    <div class="links reveal">
+      <div class="linkcol">
+        <h3>See it run</h3>
+        <a href="https://poloclub.github.io/transformer-explainer/" target="_blank" rel="noopener">Transformer Explainer — a live GPT-2 in your browser; type text and watch the next-token probabilities form, play with temperature<span class="u">poloclub.github.io/transformer-explainer</span></a>
+        <a href="https://bbycroft.net/llm" target="_blank" rel="noopener">LLM Visualization — a full GPT rendered in interactive 3D; zoom into every attention head and matrix, watch inference token by token<span class="u">bbycroft.net/llm</span></a>
+      </div>
+      <div class="linkcol">
+        <h3>Build one</h3>
+        <a href="https://www.languagemodelbuilder.com/" target="_blank" rel="noopener">Language Model Builder — free macOS app: a ~90-min interactive textbook, then train your own tiny LLM locally on Apple Silicon (MLX)<span class="u">languagemodelbuilder.com</span></a>
+        <a href="https://karpathy.ai/zero-to-hero.html" target="_blank" rel="noopener">Karpathy — Neural Networks: Zero to Hero — build GPT from scratch in code, from backprop up (the nanoGPT lineage)<span class="u">karpathy.ai/zero-to-hero.html</span></a>
+      </div>
+    </div>
+    <p class="note reveal"><span class="pill">● CONTEXT</span> Two of these let you watch attention actually run over the context — the thread, lit up.</p>
+  </div>
+</section>
+
+<!-- ============ PART 3 — LEVERS ============ -->
+
+<!-- DIVIDER 03 -->
+<section class="slide divider dark">
+  <div class="slide-content">
+    <div class="dnum reveal">03</div>
+    <h2 class="reveal">Pick your <span class="o">brain</span></h2>
+    <p class="dsub reveal">Two dials: <b>model size</b> and <b>reasoning effort.</b> Most people only touch the first.</p>
+  </div>
+</section>
+
+<!-- THE LINEUPS -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">19</span><div class="crumb"><b>Levers</b> · the lineups</div></div>
+    <h2 class="reveal">Same shape <span class="o">everywhere</span></h2>
+    <table class="tbl reveal">
+      <thead><tr><th>Maker</th><th>Small</th><th>Medium</th><th>Large</th><th>Above (frontier)</th></tr></thead>
+      <tbody>
+        <tr><td><b>Anthropic</b></td><td>Haiku</td><td>Sonnet</td><td>Opus</td><td><b>Fable</b> · Mythos-class</td></tr>
+        <tr><td><b>OpenAI</b> · GPT‑5.6</td><td>Luna</td><td>Terra</td><td>Sol</td><td>—</td></tr>
+        <tr><td><b>Google</b> · Gemini 3</td><td>Flash‑Lite</td><td>Flash</td><td>Pro</td><td>Deep Think</td></tr>
+      </tbody>
+    </table>
+    <p class="note reveal">S / M / L repeats at every lab; Anthropic adds <b>Fable</b>, a Mythos-class tier <b>above</b> the large model. Snapshot, mid-2026 — this reshuffles constantly.</p>
+  </div>
+</section>
+
+<!-- THE EFFORT DIAL (levels + quality/token chart) -->
+<section class="slide dark">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>Levers</b> · the effort dial</div></div>
+    <h2 class="reveal">The other dial: <span class="o">effort</span></h2>
+    <div class="split">
+      <div>
+        <table class="tbl reveal">
+          <thead><tr><th>Effort</th><th>Reach for it when…</th></tr></thead>
+          <tbody>
+            <tr><td><span style="font-family:var(--font-m);color:var(--s-accent);font-weight:600">low</span></td><td>cheapest &amp; fastest — bulk work, subagents.</td></tr>
+            <tr><td><span style="font-family:var(--font-m);color:var(--s-accent);font-weight:600">medium</span></td><td>the cost-saving step-down; solid default for routine agentic work.</td></tr>
+            <tr><td><span style="font-family:var(--font-m);color:var(--s-accent);font-weight:600">high</span></td><td>the API default — complex reasoning &amp; coding.</td></tr>
+            <tr><td><span style="font-family:var(--font-m);color:var(--s-accent);font-weight:600">xhigh</span></td><td>long-horizon agentic/coding work; the recommended start for coding on Opus.</td></tr>
+            <tr><td><span style="font-family:var(--font-m);color:var(--s-accent);font-weight:600">max</span></td><td>frontier problems only — past xhigh it can overthink and mostly adds cost.</td></tr>
+          </tbody>
+        </table>
+        <p class="note reveal" style="font-family:var(--font-m)">Claude Code's <b>"ultracode"</b> = xhigh + standing permission to run multi-agent workflows — a harness mode, not an API level.</p>
+      </div>
+      <div class="diagram reveal">
+        <svg viewBox="0 0 470 300" role="img" aria-label="SWE-bench Verified score versus average output tokens: Opus 4.5 at medium effort matches Sonnet 4.5's best score using 76 percent fewer tokens, and Opus at high effort scores higher again">
+          <line class="dg-line dim" x1="62" y1="36" x2="62" y2="232"/>
+          <line class="dg-line dim" x1="62" y1="232" x2="446" y2="232"/>
+          <text class="dg-t mut" x="24" y="140" font-size="11" transform="rotate(-90 24 140)" style="font-family:var(--font-m)">SWE-bench Verified →</text>
+          <text class="dg-t mut" x="255" y="256" font-size="11" text-anchor="middle" style="font-family:var(--font-m)">avg output tokens (relative) →</text>
+          <!-- y ticks -->
+          <text class="dg-t mut" x="56" y="143" font-size="10" text-anchor="end" style="font-family:var(--font-m)">77.2%</text>
+          <text class="dg-t mut" x="56" y="88" font-size="10" text-anchor="end" style="font-family:var(--font-m)">81.5%</text>
+          <!-- x ticks -->
+          <text class="dg-t mut" x="152" y="247" font-size="10" text-anchor="middle" style="font-family:var(--font-m)">24</text>
+          <text class="dg-t mut" x="247" y="247" font-size="10" text-anchor="middle" style="font-family:var(--font-m)">52</text>
+          <text class="dg-t mut" x="412" y="247" font-size="10" text-anchor="middle" style="font-family:var(--font-m)">100</text>
+          <!-- Opus curve + dashed low extension -->
+          <path class="dg-line" d="M152 139 C 188 118, 214 100, 247 84"/>
+          <path class="dg-line" d="M152 139 C 132 149, 120 156, 110 163" stroke-dasharray="5 5"/>
+          <text class="dg-t mut" x="98" y="178" font-size="9" text-anchor="middle" style="font-family:var(--font-m)">↙ lower effort</text>
+          <!-- same-score annotation -->
+          <line class="dg-line dim" x1="152" y1="139" x2="152" y2="118" stroke-dasharray="3 3"/>
+          <line class="dg-line dim" x1="412" y1="139" x2="412" y2="118" stroke-dasharray="3 3"/>
+          <line class="dg-line dim" x1="158" y1="118" x2="406" y2="118" stroke-dasharray="4 4"/>
+          <text class="dg-t acc" x="282" y="111" font-size="11" text-anchor="middle">same score · 76% fewer tokens</text>
+          <!-- data points -->
+          <circle cx="412" cy="139" r="6" fill="var(--s-muted)"/>
+          <text class="dg-t" x="406" y="132" font-size="11" text-anchor="end">Sonnet 4.5</text>
+          <text class="dg-t mut" x="406" y="157" font-size="9" text-anchor="end">best · with thinking</text>
+          <circle class="dg-fill-r" cx="152" cy="139" r="6"/>
+          <text class="dg-t" x="150" y="158" font-size="11" text-anchor="middle">Opus · medium</text>
+          <circle class="dg-fill-r" cx="247" cy="84" r="6"/>
+          <text class="dg-t" x="255" y="78" font-size="11" text-anchor="start">Opus · high</text>
+          <text class="dg-t mut" x="446" y="278" font-size="8.5" text-anchor="end" opacity="0.75" style="font-family:var(--font-m)">data: Anthropic — Opus 4.5 launch, SWE-bench Verified</text>
+        </svg>
+      </div>
+    </div>
+    <p class="note reveal">Effort moves you along a model's token/quality curve; the <b>model</b> picks which curve you're on — a bigger model at <b>medium</b> can match a smaller one's best while spending a <b>quarter of the tokens.</b></p>
+  </div>
+</section>
+
+<!-- TWO DIALS + DIAGRAM -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">21</span><div class="crumb"><b>Levers</b> · two dials</div></div>
+    <h2 class="reveal">Capability = model <span class="o">×</span> effort</h2>
+    <div class="split">
+      <ul class="bul reveal">
+        <li>The dials move <b>independently.</b> A small model thinking hard can beat a big one thinking lazily.</li>
+        <li><b>Effort</b> buys thinking tokens — billed as <b>output</b> (~5×), and they fill your context. Not free.</li>
+      </ul>
+      <div class="diagram reveal">
+        <svg viewBox="0 0 400 260" role="img" aria-label="A 2-axis grid of model size against reasoning effort, with example points">
+          <line class="dg-line dim" x1="60" y1="30" x2="60" y2="210"/>
+          <line class="dg-line dim" x1="60" y1="210" x2="380" y2="210"/>
+          <text class="dg-t mut" x="24" y="120" font-size="12" transform="rotate(-90 24 120)">effort →</text>
+          <text class="dg-t mut" x="220" y="234" font-size="12" text-anchor="middle">model size →</text>
+          <text class="dg-t mut" x="52" y="214" font-size="9" text-anchor="end">low</text>
+          <text class="dg-t mut" x="52" y="40" font-size="9" text-anchor="end">xhigh</text>
+          <!-- example dots -->
+          <circle class="dg-fill-a" cx="170" cy="95" r="7"/><text class="dg-t" x="182" y="99" font-size="11">sonnet·high</text>
+          <circle class="dg-box hot" cx="265" cy="55" r="8"/><text class="dg-t" x="253" y="42" font-size="11" text-anchor="end">opus·xhigh</text>
+          <circle class="dg-fill-r" cx="345" cy="175" r="7"/><text class="dg-t" x="333" y="179" font-size="11" text-anchor="end">fable·low</text>
+        </svg>
+      </div>
+    </div>
+    <p class="note reveal"><span class="pill">● CONTEXT</span> Thinking tokens are output that lands right back in the context window.</p>
+  </div>
+</section>
+
+<!-- ROUTING HEURISTICS -->
+<section class="slide dark">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">22</span><div class="crumb"><b>Levers</b> · routing heuristics</div></div>
+    <h2 class="reveal">Three rules for <span class="o">routing</span></h2>
+    <div class="cards c3 reveal">
+      <div class="tile"><span class="k">Crank effort first</span><p>Before you reach for a bigger model, turn the <b>effort</b> up. <b>opus·xhigh</b> is the agentic workhorse.</p></div>
+      <div class="tile"><span class="k">Cheapest that works</span><p>Route to the <b>smallest model that clears the bar</b>. Escalate on <b>failure</b>, not vibes.</p></div>
+      <div class="tile fill"><span class="k">Fable resets the curve</span><p><b>fable·low</b> often matches or beats prior models at <b>xhigh</b> — a cheaper floor for hard calls.</p></div>
+    </div>
+    <p class="note reveal">The escalation ladder: same model, more effort → bigger model → Fable. Move up only when something <b>actually fails</b>. (Switching models also busts your cache — one more reason not to hop on vibes.)</p>
+  </div>
+</section>
+
+<!-- WHAT FABLE IS -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">23</span><div class="crumb"><b>Levers</b> · what Fable is</div></div>
+    <h2 class="reveal">Fable is a <span class="o">tier, not an increment</span></h2>
+    <div class="split">
+      <ul class="bul reveal">
+        <li><b>Mythos-class</b> — a step <b>above</b> Opus.</li>
+        <li>Where it shines: <b>judgement</b> — planning, taste, self-correction, spotting the flaw in its own diff.</li>
+        <li>Where it's wasteful: <b>grunt work.</b> Mechanical edits, bulk refactors, running tests — a smaller model does those fine, for a fraction of the cost.</li>
+      </ul>
+      <div class="kcard reveal">
+        <div class="big">Don't make Fable type</div>
+        <p>You hired a staff engineer. Use it for the <b>hard call</b> and the <b>review</b> — then hand the typing to something cheaper.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FABLE PATTERN 1 — ADVISOR -->
+<section class="slide dark">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">24</span><div class="crumb"><b>Levers</b> · Fable · the advisor</div></div>
+    <h2 class="reveal">Pattern 1 — the <span class="o">advisor</span></h2>
+    <div class="split">
+      <div class="diagram reveal">
+        <svg viewBox="0 0 400 230" role="img" aria-label="An advisor model above an executor model: the executor does the work loop and consults the advisor, which returns a verdict">
+          <defs>
+            <marker id="ad1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--coral)"/></marker>
+            <marker id="ad2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--s-faint)"/></marker>
+          </defs>
+          <rect class="dg-box mid" x="110" y="24" width="180" height="52" rx="10"/>
+          <text class="dg-t acc" x="200" y="48" font-size="14" text-anchor="middle">ADVISOR</text>
+          <text class="dg-t mut" x="200" y="66" font-size="11" text-anchor="middle">fable · judgement</text>
+          <rect class="dg-box hot" x="110" y="150" width="180" height="58" rx="10"/>
+          <text class="dg-t on" x="200" y="176" font-size="14" text-anchor="middle">EXECUTOR</text>
+          <text class="dg-t on" x="200" y="194" font-size="11" text-anchor="middle">opus · does the work</text>
+          <path class="dg-line" d="M172 148 L 172 80" marker-end="url(#ad1)"/><text class="dg-t mut" x="164" y="116" font-size="10" text-anchor="end">consult ↑</text>
+          <path class="dg-line dim" d="M228 80 L 228 148" marker-end="url(#ad2)"/><text class="dg-t mut" x="236" y="116" font-size="10">verdict ↓</text>
+          <path class="dg-line" d="M290 178 C 342 178, 342 200, 292 200" marker-end="url(#ad1)"/><text class="dg-t mut" x="352" y="196" font-size="10">work</text>
+        </svg>
+      </div>
+      <div>
+        <div class="code reveal"><span class="c"># opus executes; fable is consulted on plans &amp; hard calls</span>
+<span class="o">claude</span> --model opus --advisor fable</div>
+        <p class="note reveal">At the API level too: the <b>advisor tool</b> pairs an executor with a higher-intelligence advisor consulted <b>mid-generation</b> (beta; the advisor must be <b>≥</b> the executor).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FABLE PATTERN 2 — ORCHESTRATOR -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">25</span><div class="crumb"><b>Levers</b> · Fable · the orchestrator</div></div>
+    <h2 class="reveal">Pattern 2 — the <span class="o">orchestrator</span></h2>
+    <div class="split">
+      <div>
+        <span class="extag reveal">RULE — drop this in your CLAUDE.md</span>
+        <div class="code reveal"><span class="c"># CLAUDE.md</span>
+<span class="b">For all coding tasks use your judgement to decide</span>
+<span class="b">an appropriate lower-power model and run that in</span>
+<span class="b">a subagent.</span></div>
+        <p class="note reveal">Fable plans, delegates, and reviews what comes back; <b>haiku / sonnet / opus</b> do the typing.</p>
+      </div>
+      <div class="diagram reveal">
+        <svg viewBox="0 0 400 230" role="img" aria-label="Fable at the top fans work out to three subagents on haiku, sonnet and opus, which return results">
+          <defs>
+            <marker id="or1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--coral)"/></marker>
+          </defs>
+          <rect class="dg-box hot" x="140" y="20" width="120" height="48" rx="10"/>
+          <text class="dg-t on" x="200" y="41" font-size="13" text-anchor="middle">FABLE</text>
+          <text class="dg-t on" x="200" y="58" font-size="10" text-anchor="middle">plan · delegate · review</text>
+          <rect class="dg-box mid" x="24" y="158" width="104" height="48" rx="9"/><text class="dg-t" x="76" y="180" font-size="12" text-anchor="middle">subagent</text><text class="dg-t mut" x="76" y="197" font-size="10" text-anchor="middle">haiku</text>
+          <rect class="dg-box mid" x="148" y="158" width="104" height="48" rx="9"/><text class="dg-t" x="200" y="180" font-size="12" text-anchor="middle">subagent</text><text class="dg-t mut" x="200" y="197" font-size="10" text-anchor="middle">sonnet</text>
+          <rect class="dg-box mid" x="272" y="158" width="104" height="48" rx="9"/><text class="dg-t" x="324" y="180" font-size="12" text-anchor="middle">subagent</text><text class="dg-t mut" x="324" y="197" font-size="10" text-anchor="middle">opus</text>
+          <path class="dg-line" d="M172 68 C 122 100, 92 130, 80 154" marker-end="url(#or1)"/>
+          <path class="dg-line" d="M200 68 L 200 154" marker-end="url(#or1)"/>
+          <path class="dg-line" d="M228 68 C 278 100, 308 130, 320 154" marker-end="url(#or1)"/>
+          <text class="dg-t acc" x="112" y="112" font-size="10">delegate ↓</text>
+          <text class="dg-t mut" x="304" y="140" font-size="10" text-anchor="middle">↑ results</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FABLE — WHERE TO SPEND IT -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>Levers</b> · Fable · where to spend</div></div>
+    <h2 class="reveal">Where to <span class="o">spend</span> it</h2>
+    <div class="cards c2 reveal">
+      <div class="tile"><span class="k">Do</span><p>Plan reviews · code-review passes · final polish of user-facing work · the hard architectural call · the verify stage in a workflow.</p></div>
+      <div class="tile fill"><span class="k">Don't</span><p>Bulk implementation · mechanical edits · running tests · first drafts · anything a smaller model already nails.</p></div>
+    </div>
+    <p class="note reveal">Same split every time: Fable <b>decides and checks</b>; cheaper models <b>produce the volume.</b></p>
+  </div>
+</section>
+
+<!-- ============ PART 4 — THE AGENTIC LADDER ============ -->
+
+<!-- DIVIDER 04 -->
+<section class="slide divider dark">
+  <div class="slide-content">
+    <div class="dnum reveal">04</div>
+    <h2 class="reveal">The agentic <span class="o">ladder</span></h2>
+    <p class="dsub reveal">Knowledge → reasoning → tools → <b>loops.</b> Engineering starts at the top rung.</p>
+  </div>
+</section>
+
+<!-- FOUR LEVELS + DIAGRAM -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">27</span><div class="crumb"><b>Ladder</b> · four levels</div></div>
+    <h2 class="reveal">Four levels, each <span class="o">contains the last</span></h2>
+    <div class="diagram reveal">
+      <svg viewBox="0 0 800 300" role="img" aria-label="A staircase of four levels: in-model knowledge, reasoning, tools, then loops at the top">
+        <rect class="dg-box mid" x="30" y="234" width="180" height="46" rx="8"/>
+        <text class="dg-t" x="120" y="255" font-size="13" text-anchor="middle">① In-model</text>
+        <text class="dg-t mut" x="120" y="272" font-size="11" text-anchor="middle">what it just knows</text>
+        <rect class="dg-box mid" x="220" y="176" width="180" height="104" rx="8"/>
+        <text class="dg-t" x="310" y="197" font-size="13" text-anchor="middle">② Reasoning</text>
+        <text class="dg-t mut" x="310" y="214" font-size="11" text-anchor="middle">think before answering</text>
+        <rect class="dg-box mid" x="410" y="112" width="180" height="168" rx="8"/>
+        <text class="dg-t" x="500" y="133" font-size="13" text-anchor="middle">③ Tools</text>
+        <text class="dg-t mut" x="500" y="150" font-size="11" text-anchor="middle">read, run, call — act</text>
+        <rect class="dg-box hot" x="600" y="44" width="180" height="236" rx="8"/>
+        <text class="dg-t on" x="690" y="65" font-size="13" text-anchor="middle">④ Loops</text>
+        <text class="dg-t on" x="690" y="82" font-size="11" text-anchor="middle">act → check → repeat</text>
+        <text class="dg-t on" x="690" y="112" font-size="11" text-anchor="middle">engineering</text>
+        <text class="dg-t on" x="690" y="127" font-size="11" text-anchor="middle">starts here</text>
+      </svg>
+    </div>
+    <p class="note reveal">Levels 1–3 you mostly <b>get for free.</b> Level 4 — closing the loop against a <b>goal</b> — is where the engineering and the failure modes live.</p>
+  </div>
+</section>
+
+<!-- LOOPS: RALPH -> /GOAL -->
+<section class="slide dark">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">28</span><div class="crumb"><b>Ladder</b> · the loop primitive</div></div>
+    <h2 class="reveal">From <span class="o">ralph</span> to <span class="o">/goal</span></h2>
+    <div class="split">
+      <div class="code reveal"><span class="c"># the original "ralph" loop — dumb on purpose</span>
+<span class="d">while</span> :; <span class="d">do</span>
+  <span class="o">claude</span> -p <span class="g">"$(cat PROMPT.md)"</span>
+<span class="d">done</span>
+
+<span class="c"># 2026: same idea, with a finish line</span>
+<span class="o">/goal</span> ship the CSV export —
+      <span class="b">`npm test` must exit 0</span></div>
+      <ul class="bul reveal">
+        <li>A <b>loop</b> just re-runs the agent until a condition is met. The primitive is <b>trivial</b> — a shell <span style="font-family:var(--font-m)">while</span>.</li>
+        <li>All the intelligence lives in the <b>goal and the stopping condition</b> you hand it.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- NEVER LOOP WITHOUT VERIFIERS -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">29</span><div class="crumb"><b>Ladder</b> · verifiers</div></div>
+    <h2 class="reveal">Never loop without a <span class="o">verifier</span></h2>
+    <div class="split">
+      <div class="kcard reveal">
+        <div class="big">"Looks done" is not a verifier.</div>
+        <p>"exit code 0" is. A verifier is an <b>objective check the model can't argue with.</b></p>
+      </div>
+      <ul class="bul reveal">
+        <li>A loop is a <b>repeated cycle toward a verifiable goal.</b> No verifier → no goal → nothing to stop for.</li>
+        <li>Good verifiers: <b>a test suite</b>, the <b>compiler / type-checker</b>, a <b>build</b>, a <b>screenshot diff.</b></li>
+        <li>The verifier is the loop's <b>ground truth.</b> Everything else is the model's opinion.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- HOW LOOPS FAIL -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">30</span><div class="crumb"><b>Ladder</b> · failure modes</div></div>
+    <h2 class="reveal">Two ways loops go <span class="o">wrong</span></h2>
+    <div class="cards c2 reveal">
+      <div class="tile"><span class="k">Spiralling</span><p>Never recognises completion — each lap piles <b>new code on broken code</b>. Burns tokens, gets worse.</p></div>
+      <div class="tile fill"><span class="k">Cheating</span><p>Reward hacking: <b>test.skip</b>, hardcoded expected values, <b>deleting tests</b>, appending <b>|| true</b>. The verifier goes green; the work is fake.</p></div>
+    </div>
+    <p class="note reveal">Both are <b>spec bugs, not model bugs.</b> The loop optimises exactly what you wrote down; if "pass" is gameable, it gets gamed.</p>
+  </div>
+</section>
+
+<!-- WRITING A LOOP THAT WORKS -->
+<section class="slide dark">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">31</span><div class="crumb"><b>Ladder</b> · a loop that works</div></div>
+    <h2 class="reveal">Be <span class="o">annoyingly specific</span></h2>
+    <span class="extag reveal">PATTERN — a goal prompt that can't be gamed</span>
+    <div class="code reveal"><span class="o">/goal</span>
+  <span class="b">GOAL:</span>      export invoices to CSV
+  <span class="b">VERIFY:</span>    <span class="g">`pytest tests/test_export.py -q`</span> exits 0
+  <span class="b">FORBIDDEN:</span> do NOT skip, delete or weaken any test;
+             no <span class="g">`|| true`</span>, no hardcoded expected values
+  <span class="b">EVIDENCE:</span>  paste the final test output here</div>
+    <p class="note reveal">Name the <b>verifier command</b>, forbid the <b>shortcuts</b> by name, and demand <b>real evidence</b> — test output, an exit code, a screenshot diff.</p>
+  </div>
+</section>
+
+<!-- DYNAMIC WORKFLOWS: WHAT + DIAGRAM -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">32</span><div class="crumb"><b>Ladder</b> · dynamic workflows</div></div>
+    <h2 class="reveal">Workflows: <span class="o">everything at once</span></h2>
+    <div class="split">
+      <ul class="bul reveal">
+        <li>A <b>workflow</b> is a small orchestration the agent writes &amp; runs: <b>agent()</b> (fresh subagent), <b>parallel()</b> (fan out), <b>pipeline()</b> of phases.</li>
+        <li>It combines all three lessons: <b>fresh context per stage</b> (rot antidote), <b>per-stage model routing</b> (cost), <b>verifiers between phases</b> (the loop).</li>
+      </ul>
+      <div class="diagram reveal">
+        <svg viewBox="0 0 400 250" role="img" aria-label="A workflow: parallel explore on haiku, plan on fable, implement on opus, verify with tests, looping back on failure">
+          <defs><marker id="wf1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--coral)"/></marker></defs>
+          <rect class="dg-box mid" x="14" y="24" width="96" height="24" rx="5"/><text class="dg-t mut" x="62" y="41" font-size="10.5" text-anchor="middle">explore · haiku</text>
+          <rect class="dg-box mid" x="14" y="54" width="96" height="24" rx="5"/><text class="dg-t mut" x="62" y="71" font-size="10.5" text-anchor="middle">explore · haiku</text>
+          <rect class="dg-box mid" x="14" y="84" width="96" height="24" rx="5"/><text class="dg-t mut" x="62" y="101" font-size="10.5" text-anchor="middle">explore · haiku</text>
+          <text class="dg-t acc" x="62" y="124" font-size="10" text-anchor="middle">∥ parallel</text>
+          <rect class="dg-box" x="150" y="54" width="100" height="30" rx="6"/><text class="dg-t" x="200" y="73" font-size="11" text-anchor="middle">plan · fable</text>
+          <rect class="dg-box hot" x="150" y="118" width="100" height="30" rx="6"/><text class="dg-t on" x="200" y="137" font-size="11" text-anchor="middle">build · opus</text>
+          <rect class="dg-box" x="150" y="182" width="100" height="30" rx="6"/><text class="dg-t" x="200" y="201" font-size="11" text-anchor="middle">verify · tests</text>
+          <path class="dg-line" d="M112 69 L 146 69" marker-end="url(#wf1)"/>
+          <path class="dg-line" d="M200 84 L 200 116" marker-end="url(#wf1)"/>
+          <path class="dg-line" d="M200 148 L 200 180" marker-end="url(#wf1)"/>
+          <path class="dg-line" d="M254 197 C 320 197, 320 133, 254 133" marker-end="url(#wf1)"/>
+          <text class="dg-t acc" x="330" y="168" font-size="10" text-anchor="middle">fail →</text>
+          <text class="dg-t acc" x="330" y="181" font-size="10" text-anchor="middle">retry</text>
+          <path class="dg-line dim" d="M200 212 L 200 236"/><text class="dg-t g" x="200" y="248" font-size="10" text-anchor="middle" fill="var(--positive)">pass ✓ done</text>
+        </svg>
+      </div>
+    </div>
+    <p class="note reveal"><span class="pill">● CONTEXT</span> Each stage gets a fresh window — one stage's mess never carries into the next.</p>
+  </div>
+</section>
+
+<!-- WORKFLOWS: HOW -->
+<section class="slide dark">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">33</span><div class="crumb"><b>Ladder</b> · workflows in code</div></div>
+    <h2 class="reveal">What a workflow <span class="o">looks like</span></h2>
+    <span class="extag reveal">SKETCH — you rarely hand-write this; you ask for it</span>
+    <div class="code reveal"><span class="o">phase</span>(<span class="g">'Explore'</span>);
+<span class="o">parallel</span>(
+  <span class="o">agent</span>(<span class="g">'map the data layer'</span>, {model:<span class="b">'haiku'</span>}),
+  <span class="o">agent</span>(<span class="g">'map the API routes'</span>, {model:<span class="b">'haiku'</span>}),
+);
+<span class="o">phase</span>(<span class="g">'Plan'</span>);    <span class="o">agent</span>(<span class="g">'write the plan'</span>, {model:<span class="b">'fable'</span>});
+<span class="o">phase</span>(<span class="g">'Build'</span>);   <span class="o">agent</span>(<span class="g">'implement it'</span>,  {model:<span class="b">'opus'</span>});
+<span class="o">phase</span>(<span class="g">'Verify'</span>);  <span class="o">run</span>(<span class="g">'pytest -q'</span>);   <span class="c">// gate: must pass</span></div>
+    <p class="note reveal">Knowing the shape tells you <b>what to ask for</b> — stages, a model per stage, a verify gate.</p>
+  </div>
+</section>
+
+<!-- WHEN TO REACH FOR EACH -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">34</span><div class="crumb"><b>Ladder</b> · which tool when</div></div>
+    <h2 class="reveal">Which tool, <span class="o">when</span></h2>
+    <div class="gloss reveal">
+      <div class="row"><span class="term">Ask</span><span class="def">Single question, one answer → just talk to it.</span></div>
+      <div class="row"><span class="term">Agent</span><span class="def">Multi-step task in your repo → agent + tools, one session.</span></div>
+      <div class="row"><span class="term">/goal</span><span class="def">Repetitive "keep going until done" → a loop with a real verifier.</span></div>
+      <div class="row"><span class="term">Workflow</span><span class="def">Big, parallelisable, multi-stage job → orchestrate subagents.</span></div>
+    </div>
+    <p class="note reveal">Reach for the <b>simplest</b> rung that does the job. A workflow for a one-line question is as wrong as eyeballing a thousand-file migration by hand.</p>
+  </div>
+</section>
+
+<!-- ============ PART 5 — EXTENSIBILITY ============ -->
+
+<!-- DIVIDER 05 -->
+<section class="slide divider dark">
+  <div class="slide-content">
+    <div class="dnum reveal">05</div>
+    <h2 class="reveal">Make it <span class="o">yours</span></h2>
+    <p class="dsub reveal"><b>Skills</b> teach the agent how <i>you</i> work. <b>Plugins</b> ship that to your team.</p>
+  </div>
+</section>
+
+<!-- SKILLS: ANATOMY -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">35</span><div class="crumb"><b>Extensibility</b> · skill anatomy</div></div>
+    <h2 class="reveal">A skill is a <span class="o">folder + SKILL.md</span></h2>
+    <div class="split">
+      <ul class="bul reveal">
+        <li>The <b>folder name</b> is the skill name. One field does the work: <b>description</b> — the trigger the harness matches on.</li>
+        <li>The body loads <b>only when the skill is used</b> — auto-matched, or invoked directly as <b>/skill-name.</b> Costs almost nothing until you need it.</li>
+        <li>Lives in <b>.claude/skills/</b> (this project) or <b>~/.claude/skills/</b> (everywhere you work).</li>
+      </ul>
+      <div class="code reveal"><span class="c"># .claude/skills/release-notes/SKILL.md</span>
+<span class="d">---</span>
+<span class="b">description:</span> Draft release notes from git
+  history since the last tag. <span class="o">← the trigger</span>
+<span class="d">---</span>
+<span class="c"># instructions the agent loads on match…</span></div>
+    </div>
+    <p class="note reveal"><span class="pill">● CONTEXT</span> Skills exist to be lazy-loaded into context only when it makes sense.</p>
+  </div>
+</section>
+
+<!-- WALKTHROUGH: BUILD A SKILL -->
+<section class="slide dark">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">36</span><div class="crumb"><b>Extensibility</b> · build a skill</div></div>
+    <h2 class="reveal">Build one in <span class="o">three steps</span></h2>
+    <span class="extag reveal">WALKTHROUGH — a release-notes skill</span>
+    <div class="code reveal"><span class="o">1.</span> <span class="g">mkdir -p .claude/skills/release-notes</span>
+
+<span class="o">2.</span> <span class="c"># write SKILL.md — a description, then the recipe:</span>
+   <span class="c">"Read `git log` since the last tag, group commits</span>
+   <span class="c"> by type, write RELEASE_NOTES.md."</span>
+
+<span class="o">3.</span> <span class="c"># fresh session — you just type:</span>
+   <span class="b">"prep the release notes"</span>   <span class="o">→ skill auto-triggers</span></div>
+    <p class="note reveal">No registration, no restart — the harness matches your sentence to the <b>description</b> and loads the body. A skill is just <b>context, injected at the right moment.</b></p>
+  </div>
+</section>
+
+<!-- SKILL SYSTEMS AT SCALE -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">37</span><div class="crumb"><b>Extensibility</b> · skills at scale</div></div>
+    <h2 class="reveal">From one skill to a <span class="o">system</span></h2>
+    <div class="cards c2 reveal">
+      <div class="tile"><span class="k">Composable sets</span><p>Matt Pocock's approach: <b>dozens of tiny skills</b> — conventions, testing style, PR etiquette — each triggering on its own cue.</p></div>
+      <div class="tile fill"><span class="k">Compound Engineering</span><p>A whole method as a skill system: <b>brainstorm → plan → work → review → compound.</b> Every solved problem becomes a <b>new doc or skill.</b></p></div>
+    </div>
+    <p class="note reveal">A skill system is an <b>engineering culture the agent can read.</b></p>
+  </div>
+</section>
+
+<!-- PLUGINS: ANATOMY + DIAGRAM -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">38</span><div class="crumb"><b>Extensibility</b> · plugin anatomy</div></div>
+    <h2 class="reveal">Plugins <span class="o">distribute</span> all of it</h2>
+    <div class="split">
+      <ul class="bul reveal">
+        <li>A <b>plugin</b> bundles <b>skills + agents + hooks + MCP servers</b> (LSP servers, monitors too) — one <b>plugin.json</b> under <b>.claude-plugin/</b>.</li>
+        <li>A <b>marketplace</b> is a <b>git repo</b> with a <b>.claude-plugin/marketplace.json</b> listing its plugins.</li>
+        <li>Installed skills are <b>namespaced</b> — <b>/plugin-name:skill-name</b> — so nothing collides.</li>
+      </ul>
+      <div class="diagram reveal">
+        <svg viewBox="0 0 400 240" role="img" aria-label="A plugin bundles skills, agents and hooks, MCP servers, LSP and monitors, publishes to a marketplace git repo, and a teammate installs it">
+          <defs><marker id="pl1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--coral)"/></marker></defs>
+          <rect class="dg-box mid" x="14" y="40" width="130" height="150" rx="10"/>
+          <text class="dg-t" x="79" y="62" font-size="12" text-anchor="middle">PLUGIN</text>
+          <rect class="dg-box hot" x="30" y="74" width="98" height="20" rx="5"/><text class="dg-t on" x="79" y="88" font-size="9.5" text-anchor="middle">skills</text>
+          <rect class="dg-box hot" x="30" y="100" width="98" height="20" rx="5"/><text class="dg-t on" x="79" y="114" font-size="9.5" text-anchor="middle">agents · hooks</text>
+          <rect class="dg-box hot" x="30" y="126" width="98" height="20" rx="5"/><text class="dg-t on" x="79" y="140" font-size="9.5" text-anchor="middle">MCP servers</text>
+          <rect class="dg-box hot" x="30" y="152" width="98" height="20" rx="5"/><text class="dg-t on" x="79" y="166" font-size="9.5" text-anchor="middle">LSP · monitors</text>
+          <rect class="dg-box" x="184" y="90" width="94" height="52" rx="10"/><text class="dg-t" x="231" y="112" font-size="11" text-anchor="middle">marketplace</text><text class="dg-t mut" x="231" y="128" font-size="9.5" text-anchor="middle">git repo</text>
+          <rect class="dg-box mid" x="308" y="90" width="80" height="52" rx="10"/><text class="dg-t" x="348" y="110" font-size="10.5" text-anchor="middle">teammate</text><text class="dg-t mut" x="348" y="126" font-size="9" text-anchor="middle">/plugin install</text>
+          <path class="dg-line" d="M146 116 L 182 116" marker-end="url(#pl1)"/>
+          <path class="dg-line" d="M280 116 L 306 116" marker-end="url(#pl1)"/>
+        </svg>
+      </div>
+    </div>
+    <p class="note reveal"><span class="pill">● CONTEXT</span> A plugin is your team's context, made distributable.</p>
+  </div>
+</section>
+
+<!-- WALKTHROUGH: PUBLISH A PLUGIN -->
+<section class="slide dark">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">39</span><div class="crumb"><b>Extensibility</b> · publish a plugin</div></div>
+    <h2 class="reveal">Ship it to the <span class="o">whole team</span></h2>
+    <span class="extag reveal">WALKTHROUGH — from your skill to their /install</span>
+    <div class="code reveal"><span class="o">1.</span> <span class="c"># wrap it up (skills/ sits at the plugin root):</span>
+   my-plugin/.claude-plugin/<span class="b">plugin.json</span>   <span class="c"># name (required)</span>
+   my-plugin/skills/release-notes/SKILL.md
+
+<span class="o">2.</span> <span class="c"># list it in the marketplace repo &amp; push:</span>
+   .claude-plugin/<span class="b">marketplace.json</span>   <span class="c"># name: claude-tools</span>
+   <span class="g">git push</span>
+
+<span class="o">3.</span> <span class="c"># teammate, one time:</span>
+   <span class="o">/plugin marketplace add</span> your-org/claude-tools
+   <span class="o">/plugin install</span> release-notes@claude-tools</div>
+    <p class="note reveal"><b>Skills = your habits. Plugins = your team's habits</b> — versioned, installable in one command.</p>
+  </div>
+</section>
+
+<!-- ============ CLOSE ============ -->
+
+<!-- RECAP -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">40</span><div class="crumb"><b>Close</b> · recap</div></div>
+    <h2 class="reveal">It's all <span class="o">context engineering</span></h2>
+    <div class="split">
+      <div class="kcard reveal">
+        <div class="big">It was one thread all along</div>
+        <p>Prediction over context → <b>curate the context</b> → route the <b>cheapest adequate brain</b> → loop against a <b>verifier</b> → package what worked as a <b>skill.</b></p>
+      </div>
+      <ul class="bul reveal">
+        <li>Try <b>--advisor fable</b> on your next non-trivial task.</li>
+        <li>Write <b>one skill</b> for your most-repeated chore.</li>
+        <li>Add a <b>real verifier</b> to your next <b>/goal</b> — a command, not a vibe.</li>
+      </ul>
+    </div>
+    <p class="note reveal"><span class="pill">● CONTEXT</span> Every marker in this deck pointed back here.</p>
+  </div>
+</section>
+
+<!-- THANKS + SOURCES -->
+<section class="slide dark">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">41</span><div class="crumb"><b>Close</b> · thanks &amp; sources</div></div>
+    <p class="thanks reveal">Thanks! <span class="o">Questions?</span></p>
+    <div class="links reveal" style="margin-top:var(--content-gap)">
+      <div class="linkcol">
+        <h3>Read</h3>
+        <a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener">Vaswani et al. — Attention Is All You Need<span class="u">arxiv.org/abs/1706.03762</span></a>
+        <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">Anthropic — Effective context engineering<span class="u">anthropic.com/engineering</span></a>
+        <a href="https://www.cerebras.ai/blog/never-loop-without-verifiers" target="_blank" rel="noopener">Cerebras — Never Loop Without Verifiers<span class="u">cerebras.ai/blog/never-loop-without-verifiers</span></a>
+        <a href="https://x.com/ClaudeDevs/article/2074900291062034618" target="_blank" rel="noopener">Model vs effort — the two dials<span class="u">x.com/ClaudeDevs · article</span></a>
+        <a href="https://www.anthropic.com/news/claude-opus-4-5" target="_blank" rel="noopener">Anthropic — Opus 4.5: the effort parameter<span class="u">anthropic.com/news/claude-opus-4-5</span></a>
+      </div>
+      <div class="linkcol">
+        <h3>Steal</h3>
+        <a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener">Claude Code — Agent Skills<span class="u">code.claude.com/docs · skills</span></a>
+        <a href="https://code.claude.com/docs/en/plugins" target="_blank" rel="noopener">Claude Code — Plugins &amp; marketplaces<span class="u">code.claude.com/docs · plugins</span></a>
+        <a href="https://www.aihero.dev/" target="_blank" rel="noopener">Matt Pocock — composable skill setups<span class="u">aihero.dev</span></a>
+        <a href="https://github.com/davidbudac/claude_intro_csob" target="_blank" rel="noopener">This repo — both decks<span class="u">github.com/davidbudac/claude_intro_csob</span></a>
+      </div>
+    </div>
+    <p class="note reveal">David&nbsp;Budáč / ČSOB · figures a mid-2026 snapshot — models &amp; prices move fast, so re-check the primary sources.</p>
+  </div>
+</section>
+
+<script>
+/* ===== SLIDE CONTROLLER ===== */
+class SlidePresentation{
+  constructor(){
+    this.slides=[...document.querySelectorAll('.slide')];this.current=0;
+    this.setupObserver();this.setupNavDots();this.setupKeyboard();this.setupTouch();this.setupProgress();
+  }
+  setupObserver(){
+    this.io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){
+      e.target.classList.add('visible');this.current=this.slides.indexOf(e.target);this.syncDots();}});},{threshold:0.55});
+    this.slides.forEach(s=>this.io.observe(s));this.slides[0]?.classList.add('visible');
+  }
+  setupNavDots(){
+    const nav=document.getElementById('navDots');
+    this.slides.forEach((s,i)=>{const b=document.createElement('button');b.setAttribute('aria-label','Slide '+(i+1));
+      b.addEventListener('click',()=>this.go(i));nav.appendChild(b);});
+    this.dots=[...nav.children];this.syncDots();
+  }
+  syncDots(){this.dots?.forEach((d,i)=>d.classList.toggle('active',i===this.current))}
+  go(i){i=Math.max(0,Math.min(this.slides.length-1,i));this.slides[i].scrollIntoView({behavior:'smooth'})}
+  next(){this.go(this.current+1)} prev(){this.go(this.current-1)}
+  setupKeyboard(){
+    document.addEventListener('keydown',(e)=>{
+      if(e.target.getAttribute&&e.target.getAttribute('contenteditable')==='true')return;
+      switch(e.key){
+        case 'ArrowDown':case 'ArrowRight':case 'PageDown':e.preventDefault();this.next();break;
+        case ' ':e.preventDefault();e.shiftKey?this.prev():this.next();break;
+        case 'ArrowUp':case 'ArrowLeft':case 'PageUp':e.preventDefault();this.prev();break;
+        case 'Home':e.preventDefault();this.go(0);break;
+        case 'End':e.preventDefault();this.go(this.slides.length-1);break;
+      }
+    });
+  }
+  setupTouch(){
+    let y0=null;
+    document.addEventListener('touchstart',e=>{y0=e.touches[0].clientY},{passive:true});
+    document.addEventListener('touchend',e=>{if(y0===null)return;const dy=y0-e.changedTouches[0].clientY;
+      if(Math.abs(dy)>55){dy>0?this.next():this.prev()}y0=null;},{passive:true});
+  }
+  setupProgress(){
+    const bar=document.getElementById('progressBar');
+    const update=()=>{const h=document.documentElement.scrollHeight-window.innerHeight;
+      bar.style.width=(h>0?(window.scrollY/h)*100:0)+'%'};
+    window.addEventListener('scroll',update,{passive:true});update();
+  }
+}
+
+/* ===== INLINE EDITOR ===== */
+class InlineEditor{
+  constructor(){
+    this.isActive=false;this.KEY='agentic-engineering-edits-v1';
+    this.sel='h1,h2,h3,p,li,td,th,.tile .k,.kcard .big,.code,.gloss .term,.gloss .def,.ts-title,.ts-sub,.ts-kick,.ts-author,.crumb,.thanks,.ts-badge .b1,.ts-badge .b2,.linkcol h3,.divider .dsub';
+    this.nodes=[...document.querySelectorAll(this.sel)];
+    this.nodes.forEach((n,i)=>n.dataset.ek='n'+i);this.restore();this.wire();
+  }
+  restore(){let d={};try{d=JSON.parse(localStorage.getItem(this.KEY)||'{}')}catch(e){}
+    this.nodes.forEach(n=>{if(d[n.dataset.ek]!=null)n.innerHTML=d[n.dataset.ek]})}
+  save(){const d={};this.nodes.forEach(n=>d[n.dataset.ek]=n.innerHTML);
+    localStorage.setItem(this.KEY,JSON.stringify(d));this.toast('Saved')}
+  toast(m){const t=document.getElementById('editToast');t.textContent=m;t.classList.add('show');
+    clearTimeout(this._tt);this._tt=setTimeout(()=>t.classList.remove('show'),1100)}
+  toggleEditMode(){
+    this.isActive=!this.isActive;document.body.classList.toggle('editing',this.isActive);
+    document.getElementById('editToggle').classList.toggle('active',this.isActive);
+    this.nodes.forEach(n=>{if(this.isActive){n.setAttribute('contenteditable','true');
+      n.addEventListener('input',this._oi=this._oi||(()=>this._dsave()))}else{n.removeAttribute('contenteditable')}});
+    if(this.isActive)this.toast('Edit mode — click any text');
+  }
+  _dsave(){clearTimeout(this._st);this._st=setTimeout(()=>this.save(),500)}
+  reset(){if(!confirm('Restore all text to the original? Your edits will be lost.'))return;
+    localStorage.removeItem(this.KEY);location.reload()}
+  export(){
+    const clone=document.documentElement.cloneNode(true);
+    clone.querySelectorAll('[contenteditable]').forEach(n=>n.removeAttribute('contenteditable'));
+    clone.querySelectorAll('[data-ek]').forEach(n=>n.removeAttribute('data-ek'));
+    clone.querySelector('body').classList.remove('editing');
+    const blob=new Blob(['<!DOCTYPE html>\n'+clone.outerHTML],{type:'text/html'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='agentic-engineering.html';a.click();
+    URL.revokeObjectURL(a.href);this.toast('Exported');
+  }
+  wire(){
+    const toggle=document.getElementById('editToggle');const hotzone=document.querySelector('.edit-hotzone');let h=null;
+    toggle.addEventListener('click',()=>this.toggleEditMode());
+    hotzone.addEventListener('click',()=>this.toggleEditMode());
+    hotzone.addEventListener('mouseenter',()=>{clearTimeout(h);toggle.classList.add('show')});
+    hotzone.addEventListener('mouseleave',()=>{h=setTimeout(()=>{if(!this.isActive)toggle.classList.remove('show')},400)});
+    toggle.addEventListener('mouseenter',()=>clearTimeout(h));
+    toggle.addEventListener('mouseleave',()=>{h=setTimeout(()=>{if(!this.isActive)toggle.classList.remove('show')},400)});
+    document.addEventListener('keydown',(e)=>{if((e.key==='e'||e.key==='E')&&!(e.target.getAttribute&&e.target.getAttribute('contenteditable')==='true'))this.toggleEditMode();});
+    document.getElementById('resetBtn').addEventListener('click',()=>this.reset());
+    document.getElementById('exportBtn').addEventListener('click',()=>this.export());
+    document.addEventListener('keydown',(e)=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'&&this.isActive){e.preventDefault();this.save()}});
+  }
+}
+
+new SlidePresentation();
+new InlineEditor();
+</script>
+</body>
+</html>

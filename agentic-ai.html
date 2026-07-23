@@ -5,21 +5,38 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agentic AI — How Claude Code, Codex &amp; co. actually work</title>
 
-<!-- Fonts: Archivo Black (display) + Space Grotesk (body) + JetBrains Mono (code) — Bold Signal preset -->
+<!-- Fonts: Space Grotesk (display) + IBM Plex Sans (body) + IBM Plex Mono (labels/code) — Ember -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
 
 <style>
 /* ===========================================
-   THEME — Bold Signal. Edit these to restyle.
+   THEME — Ember. Warm ink / paper / coral.
    =========================================== */
 :root{
-  --bg1:#161616; --bg2:#262626;
-  --bg-gradient:linear-gradient(135deg,#161616 0%,#262626 50%,#161616 100%);
-  --card:#FF5722; --ink:#ffffff; --oncard:#161616; --muted:#9a9a9a;
-  --line:rgba(255,255,255,.12);
-  --font-d:'Archivo Black',sans-serif; --font-b:'Space Grotesk',sans-serif; --font-m:'JetBrains Mono',monospace;
+  /* Core surfaces */
+  --ink:#16130e; --ink-2:#1c1812; --ink-3:#0e0c08;
+  --paper:#f4efe6; --paper-2:#efe7d8; --paper-3:#e3d9c6;
+  /* Accent */
+  --coral:#ff5c35; --coral-ink:#b9361a; --coral-soft:#ffe9e2; --coral-tint:#ffe0d6;
+  /* Text ramps */
+  --text-strong:#16130e; --text-muted:#5c5446; --text-faint:#a39684;
+  --on-dark:#f4efe6; --on-dark-muted:#cabfac; --on-dark-faint:#8a7f6d;
+  /* Lines & diagram bars */
+  --line-light:#cbbfa9; --line-light-2:#ddd2bf; --line-card:#d8ccb6;
+  --line-dark:#3a342a; --line-dark-2:#2c281f; --bar:#ddd0ba; --bar-dark:#46402f;
+  /* Semantic */
+  --positive:#3fb950; --warning:#d9a441; --danger:#b9361a;
+  /* Code syntax (on --code-bg) */
+  --code-bg:#0e0c08; --code-text:#e8dfcf; --code-keyword:#e0795f; --code-string:#7fb98a; --code-number:#d9a441; --code-comment:#8a7f6d;
+  /* Effects & radii */
+  --ring-accent:0 0 0 6px rgba(255,92,53,.16); --ring-accent-dark:0 0 0 6px rgba(255,92,53,.22);
+  --shadow-terminal:0 18px 50px rgba(0,0,0,.26);
+  --radius-sm:7px; --radius-md:12px; --radius-lg:14px; --radius-xl:18px;
+  /* Fonts */
+  --font-d:'Space Grotesk',system-ui,sans-serif; --font-b:'IBM Plex Sans',system-ui,sans-serif; --font-m:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  /* Type scale (viewport-fit clamps preserved) */
   --h2-size:clamp(1.3rem,3.7vw,2.8rem); --h3-size:clamp(1rem,2.2vw,1.5rem);
   --body-size:clamp(.76rem,1.38vw,1.1rem); --small-size:clamp(.63rem,1vw,.86rem);
   --slide-padding:clamp(1.05rem,3.5vw,3.4rem); --content-gap:clamp(.5rem,1.7vw,1.3rem);
@@ -47,80 +64,100 @@ img{max-width:100%;max-height:min(50vh,400px);object-fit:contain}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms !important;transition-duration:.2s !important}
   html{scroll-behavior:auto}}
 
-/* ===== GLOBAL LOOK ===== */
-body{background:var(--bg-gradient);background-attachment:fixed;color:var(--ink);font-family:var(--font-b)}
-.slide::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
-  background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);
-  background-size:54px 54px;mask-image:radial-gradient(ellipse at 70% 30%,#000 20%,transparent 85%)}
+/* ===== GLOBAL LOOK — flat warm surfaces ===== */
+body{background:var(--paper);color:var(--text-strong);font-family:var(--font-b)}
+/* Scheme scoping: each slide is PAPER (light) by default … */
+.slide{background:var(--s-bg);color:var(--s-text);
+  --s-bg:var(--paper); --s-text:var(--text-strong); --s-muted:var(--text-muted); --s-faint:var(--text-faint);
+  --s-line:var(--line-light-2); --s-line-strong:var(--line-light);
+  --s-card-bg:var(--paper-2); --s-card-border:var(--line-card);
+  --s-mid-fill:var(--paper-3); --s-mid-stroke:var(--line-light);
+  --s-outer-fill:var(--coral-soft); --s-accent:var(--coral-ink); --s-bar:var(--bar)}
+/* … or INK (dark) when the section carries class "dark". */
+.slide.dark{
+  --s-bg:var(--ink); --s-text:var(--on-dark); --s-muted:var(--on-dark-muted); --s-faint:var(--on-dark-faint);
+  --s-line:var(--line-dark-2); --s-line-strong:var(--line-dark);
+  --s-card-bg:var(--ink-2); --s-card-border:var(--line-dark);
+  --s-mid-fill:var(--ink-2); --s-mid-stroke:var(--line-dark);
+  --s-outer-fill:rgba(255,92,53,.10); --s-accent:var(--coral); --s-bar:var(--bar-dark)}
 .slide-content{position:relative;z-index:1}
 
 /* Header */
 .slide-head{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;
-  margin-bottom:clamp(.5rem,1.8vh,1.2rem);border-bottom:1px solid var(--line);padding-bottom:clamp(.35rem,1.1vh,.8rem)}
-.snum{font-family:var(--font-d);color:var(--card);font-size:clamp(1.1rem,2.8vw,2.2rem);line-height:1}
-.crumb{font-size:var(--small-size);letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:700;text-align:right}
-.crumb b{color:var(--ink)}
+  margin-bottom:clamp(.5rem,1.8vh,1.2rem);border-bottom:1px solid var(--s-line);padding-bottom:clamp(.35rem,1.1vh,.8rem)}
+.snum{font-family:var(--font-d);font-weight:700;color:var(--s-accent);font-size:clamp(1.1rem,2.8vw,2.2rem);line-height:1;letter-spacing:-.02em}
+.crumb{font-family:var(--font-m);font-size:var(--small-size);letter-spacing:.1em;text-transform:uppercase;color:var(--s-accent);font-weight:500;text-align:right}
+.crumb b{color:var(--s-text);font-weight:600}
 
-h2{font-family:var(--font-d);font-size:var(--h2-size);line-height:1.02;letter-spacing:-.01em;margin-bottom:clamp(.35rem,1.4vh,.9rem)}
-h2 .o{color:var(--card)}
-h3{font-family:var(--font-d);font-size:var(--h3-size);line-height:1.05}
-.lead{font-size:clamp(.92rem,1.95vw,1.45rem);line-height:1.36;max-width:48ch}
-.lead b{color:var(--card)}
-.muted{color:var(--muted)}
+h2{font-family:var(--font-d);font-weight:700;font-size:var(--h2-size);line-height:1.04;letter-spacing:-.025em;margin-bottom:clamp(.35rem,1.4vh,.9rem)}
+h2 .o{color:var(--s-accent)}
+h3{font-family:var(--font-d);font-weight:700;font-size:var(--h3-size);line-height:1.1;letter-spacing:-.02em}
+.lead{font-size:clamp(.92rem,1.95vw,1.45rem);line-height:1.45;max-width:48ch}
+.lead b{color:var(--s-accent)}
+.muted{color:var(--s-muted)}
 
 ul.bul{list-style:none;display:flex;flex-direction:column;gap:clamp(.35rem,1.2vh,.85rem);max-width:68ch}
-ul.bul li{font-size:var(--body-size);line-height:1.38;padding-left:1.55em;position:relative}
-ul.bul li::before{content:"";position:absolute;left:0;top:.42em;width:.64em;height:.64em;background:var(--card);clip-path:polygon(0 0,100% 50%,0 100%)}
-ul.bul li b{color:var(--ink)}
+ul.bul li{font-size:var(--body-size);line-height:1.45;padding-left:1.55em;position:relative}
+ul.bul li::before{content:"";position:absolute;left:0;top:.42em;width:.62em;height:.62em;background:var(--coral);clip-path:polygon(0 0,100% 50%,0 100%)}
+ul.bul li b{color:var(--s-text);font-weight:600}
 
 .cards{display:grid;gap:clamp(.45rem,1.3vw,1rem)}
 .cards.c3{grid-template-columns:repeat(3,1fr)}
 .cards.c2{grid-template-columns:repeat(2,1fr)}
 .cards.c4{grid-template-columns:repeat(2,1fr)}
-.tile{border:1px solid var(--line);border-radius:13px;padding:clamp(.65rem,1.5vw,1.25rem);background:rgba(255,255,255,.025);display:flex;flex-direction:column;gap:.32rem}
-.tile .k{font-family:var(--font-d);color:var(--card);font-size:clamp(.82rem,1.75vw,1.25rem)}
-.tile p{font-size:var(--body-size);line-height:1.3}
-.tile.fill{background:var(--card);border-color:var(--card)}
-.tile.fill .k{color:var(--oncard)}
-.tile.fill p{color:var(--oncard)}
+.tile{border:1.5px solid var(--s-card-border);border-radius:var(--radius-md);padding:clamp(.65rem,1.5vw,1.25rem);background:var(--s-card-bg);display:flex;flex-direction:column;gap:.32rem}
+.tile .k{font-family:var(--font-d);font-weight:700;letter-spacing:-.015em;color:var(--s-accent);font-size:clamp(.82rem,1.75vw,1.25rem)}
+.tile p{font-size:var(--body-size);line-height:1.4;color:var(--s-text)}
+/* Coral callout tile — light: soft wash + 6px coral edge; dark: ring-spotlit card */
+.tile.fill{background:var(--coral-soft);border:none;border-left:6px solid var(--coral);border-radius:0 var(--radius-md) var(--radius-md) 0}
+.tile.fill .k{color:var(--coral-ink)}
+.tile.fill p{color:var(--ink)}
+.slide.dark .tile.fill{background:var(--ink-2);border:2px solid var(--coral);border-radius:var(--radius-md);box-shadow:var(--ring-accent-dark)}
+.slide.dark .tile.fill .k{color:var(--coral)}
+.slide.dark .tile.fill p{color:var(--on-dark-muted)}
 
-.kcard{background:var(--card);color:var(--oncard);border-radius:16px;padding:clamp(.85rem,2.5vw,1.9rem);position:relative;overflow:hidden}
-.kcard::after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(0,0,0,.05) 2px,transparent 2px),linear-gradient(90deg,rgba(0,0,0,.05) 2px,transparent 2px);background-size:32px 32px;pointer-events:none}
-.kcard .big{font-family:var(--font-d);font-size:clamp(1.3rem,3.8vw,2.7rem);line-height:1;position:relative}
-.kcard p{font-size:var(--body-size);line-height:1.36;margin-top:.45rem;position:relative;max-width:50ch}
+/* Big callout card — same light/dark treatment */
+.kcard{background:var(--coral-soft);color:var(--ink);border-left:6px solid var(--coral);border-radius:0 var(--radius-md) var(--radius-md) 0;padding:clamp(.85rem,2.5vw,1.9rem);position:relative;overflow:hidden}
+.kcard .big{font-family:var(--font-d);font-weight:700;letter-spacing:-.02em;color:var(--coral-ink);font-size:clamp(1.3rem,3.8vw,2.7rem);line-height:1.04;position:relative}
+.kcard p{font-size:var(--body-size);line-height:1.45;margin-top:.45rem;position:relative;max-width:50ch}
+.slide.dark .kcard{background:var(--ink-2);color:var(--on-dark);border:2px solid var(--coral);border-radius:var(--radius-md);box-shadow:var(--ring-accent-dark)}
+.slide.dark .kcard .big{color:var(--coral)}
+.slide.dark .kcard p{color:var(--on-dark-muted)}
 
 .split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(.85rem,2.5vw,2.1rem);align-items:center}
 
 table.tbl{width:100%;border-collapse:collapse;font-size:var(--body-size)}
-table.tbl th,table.tbl td{text-align:left;padding:clamp(.32rem,1vh,.72rem) clamp(.42rem,1.1vw,.88rem);border-bottom:1px solid var(--line)}
-table.tbl th{font-family:var(--font-d);color:var(--card);font-weight:400;font-size:var(--small-size);letter-spacing:.04em;text-transform:uppercase}
-table.tbl td b{color:var(--ink)}
+table.tbl th,table.tbl td{text-align:left;padding:clamp(.32rem,1vh,.72rem) clamp(.42rem,1.1vw,.88rem);border-bottom:1px solid var(--s-line)}
+table.tbl th{font-family:var(--font-m);color:var(--s-accent);font-weight:600;font-size:var(--small-size);letter-spacing:.08em;text-transform:uppercase}
+table.tbl td{color:var(--s-text)}
+table.tbl td b{color:var(--s-text);font-weight:600}
 table.tbl tr:last-child td{border-bottom:none}
-.note{font-size:var(--small-size);color:var(--muted);margin-top:clamp(.45rem,1.3vh,.85rem);line-height:1.4}
-.note b{color:var(--ink)}
+.note{font-size:var(--small-size);color:var(--s-muted);margin-top:clamp(.45rem,1.3vh,.85rem);line-height:1.45}
+.note b{color:var(--s-text);font-weight:600}
 
-.extag{display:inline-block;font-family:var(--font-d);font-size:var(--small-size);color:var(--oncard);background:var(--card);padding:.12rem .6rem;border-radius:6px;margin-bottom:.45rem;letter-spacing:.03em}
+.extag{display:inline-block;font-family:var(--font-m);font-weight:500;font-size:var(--small-size);color:var(--ink);background:var(--coral);padding:.12rem .6rem;border-radius:var(--radius-sm);margin-bottom:.45rem;letter-spacing:.04em;text-transform:uppercase}
 
-.code{background:#0d0d0d;border:1px solid var(--line);border-left:3px solid var(--card);border-radius:10px;
+.code{background:var(--code-bg);border:1px solid var(--line-dark);border-left:3px solid var(--coral);border-radius:var(--radius-lg);
   padding:clamp(.55rem,1.4vw,1rem) clamp(.7rem,1.6vw,1.2rem);font-family:var(--font-m);
-  font-size:clamp(.58rem,1.1vw,.88rem);line-height:1.55;overflow:hidden;color:#d8d8d8;white-space:pre-wrap}
-.code .c{color:#7d7d7d} .code .o{color:var(--card)} .code .g{color:#7fd18b} .code .b{color:#6fb0ff} .code .d{color:#cda9ff}
+  font-size:clamp(.58rem,1.1vw,.88rem);line-height:1.6;overflow:hidden;color:var(--code-text);white-space:pre-wrap}
+.code .c{color:var(--code-comment)} .code .o{color:var(--coral)} .code .g{color:var(--code-string)} .code .b{color:var(--code-keyword)} .code .d{color:var(--code-number)}
 
 .pills{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.3rem}
-.pill{border:1px solid var(--card);color:var(--card);border-radius:100px;padding:.22rem .7rem;font-size:var(--small-size);font-weight:700}
+.pill{font-family:var(--font-m);border:1px solid var(--s-accent);color:var(--s-accent);border-radius:100px;padding:.22rem .7rem;font-size:var(--small-size);font-weight:500}
 
-/* Section divider */
-.divider .slide-content{align-items:center;justify-content:center;text-align:center}
-.divider .dnum{font-family:var(--font-d);color:var(--card);font-size:clamp(2.2rem,7vw,5rem);line-height:1;margin-bottom:.4rem}
+/* Section divider — always dark, giant coral numeral + accent bar */
+.divider .slide-content{align-items:flex-start;justify-content:center;text-align:left}
+.divider .dnum{font-family:var(--font-d);font-weight:700;color:var(--coral);font-size:clamp(2.4rem,8.5vw,6rem);line-height:.9;letter-spacing:-.03em;margin-bottom:.3rem}
 .divider h2{font-size:clamp(1.7rem,5.5vw,3.6rem)}
-.divider .dsub{color:var(--muted);font-size:clamp(.85rem,1.8vw,1.2rem);max-width:42ch;margin:.4rem auto 0}
-.divider .dsub b{color:var(--ink)}
+.divider h2::after{content:"";display:block;width:clamp(70px,9vw,120px);height:4px;background:var(--coral);margin:clamp(.5rem,1.6vh,1rem) 0 clamp(.4rem,1.2vh,.8rem)}
+.divider .dsub{color:var(--s-muted);font-size:clamp(.85rem,1.8vw,1.2rem);max-width:42ch;margin:0}
+.divider .dsub b{color:var(--s-text)}
 
 /* Glossary */
 .gloss{display:grid;grid-template-columns:1fr 1fr;gap:.15rem 1.6rem}
-.gloss .row{display:flex;gap:.7rem;align-items:baseline;padding:clamp(.2rem,.7vh,.42rem) 0;border-bottom:1px solid var(--line)}
-.gloss .term{font-family:var(--font-d);color:var(--card);font-size:var(--body-size);min-width:6.2em;flex-shrink:0}
-.gloss .def{font-size:var(--body-size);color:var(--ink);line-height:1.28}
+.gloss .row{display:flex;gap:.7rem;align-items:baseline;padding:clamp(.2rem,.7vh,.42rem) 0;border-bottom:1px solid var(--s-line)}
+.gloss .term{font-family:var(--font-d);font-weight:700;letter-spacing:-.015em;color:var(--s-accent);font-size:var(--body-size);min-width:6.2em;flex-shrink:0}
+.gloss .def{font-size:var(--body-size);color:var(--s-text);line-height:1.35}
 
 /* Use-case list */
 .uses{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.45rem,1.3vw,1rem)}
@@ -129,48 +166,50 @@ table.tbl tr:last-child td{border-bottom:none}
 /* ===== DIAGRAMS (inline SVG) ===== */
 .diagram{width:100%;display:flex;justify-content:center;margin-top:.25rem}
 .diagram svg{width:100%;max-width:min(94vw,900px);height:auto;max-height:min(50vh,440px)}
-.dg-box{fill:rgba(255,255,255,.045);stroke:rgba(255,255,255,.22);stroke-width:1.5}
-.dg-box.hot{fill:var(--card);stroke:var(--card)}
-.dg-box.outer{fill:rgba(255,87,34,.06);stroke:rgba(255,87,34,.55);stroke-dasharray:6 5}
-.dg-box.mid{fill:rgba(255,255,255,.028);stroke:rgba(255,255,255,.16)}
-.dg-t{fill:var(--ink);font-family:var(--font-b);font-weight:700}
-.dg-t.on{fill:var(--oncard)}
-.dg-t.mut{fill:var(--muted);font-weight:500}
-.dg-t.acc{fill:var(--card);font-family:var(--font-d);font-weight:400}
-.dg-line{stroke:var(--card);stroke-width:2.5;fill:none}
-.dg-line.dim{stroke:rgba(255,255,255,.25);stroke-width:1.5}
-.dg-fill-g{fill:#7fd18b}.dg-fill-a{fill:#e3b341}.dg-fill-r{fill:var(--card)}
-.dg-cap{text-align:center;font-size:var(--small-size);color:var(--muted);margin-top:.4rem}
-.dg-cap b{color:var(--ink)}
+.dg-box{fill:var(--s-card-bg);stroke:var(--s-card-border);stroke-width:1.5}
+.dg-box.hot{fill:var(--coral);stroke:var(--coral)}
+.dg-box.outer{fill:var(--s-outer-fill);stroke:var(--coral);stroke-dasharray:6 5}
+.dg-box.mid{fill:var(--s-mid-fill);stroke:var(--s-mid-stroke)}
+.dg-t{fill:var(--s-text);font-family:var(--font-b);font-weight:600}
+.dg-t.on{fill:var(--ink)}
+.dg-t.mut{fill:var(--s-muted);font-weight:500}
+.dg-t.acc{fill:var(--s-accent);font-family:var(--font-d);font-weight:700}
+.dg-line{stroke:var(--coral);stroke-width:2.5;fill:none}
+.dg-line.dim{stroke:var(--s-line-strong);stroke-width:1.5}
+.dg-arrow-dim{fill:var(--s-faint)}
+.dg-tangle{stroke:var(--s-faint);fill:none}
+.dg-dash{stroke:var(--s-line-strong);fill:none}
+.dg-fill-g{fill:var(--positive)}.dg-fill-a{fill:var(--warning)}.dg-fill-r{fill:var(--coral)}
+.dg-cap{text-align:center;font-size:var(--small-size);color:var(--s-muted);margin-top:.4rem}
+.dg-cap b{color:var(--s-text)}
 
-/* ===== TITLE SLIDE ===== */
+/* ===== TITLE SLIDE (dark, coral quarter-circle) ===== */
 .title-slide{display:grid;grid-template-columns:1.1fr .9fr}
-.title-slide::before{display:none}
 .ts-left{padding:var(--slide-padding);display:flex;flex-direction:column;justify-content:space-between}
-.ts-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:var(--small-size);letter-spacing:.18em;text-transform:uppercase}
-.ts-top .num{font-family:var(--font-d);color:var(--card);font-size:clamp(1.3rem,2.8vw,2.2rem)}
-.ts-kick{font-size:clamp(.66rem,1.4vw,1rem);letter-spacing:.3em;text-transform:uppercase;color:var(--card);font-weight:700;margin-bottom:clamp(.6rem,1.7vh,1.1rem)}
-.ts-title{font-family:var(--font-d);line-height:.9;font-size:clamp(2.3rem,8.5vw,6.5rem);letter-spacing:-.01em}
-.ts-sub{font-size:clamp(.88rem,2vw,1.5rem);color:var(--muted);margin-top:clamp(.7rem,2.1vh,1.4rem);font-weight:500;max-width:24ch}
-.ts-sub b{color:var(--ink)}
-.ts-author{font-size:clamp(.76rem,1.5vw,1.06rem);color:var(--muted)}
-.ts-author b{color:var(--ink)}
-.ts-right{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--card)}
-.ts-right::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(0,0,0,.06) 2px,transparent 2px),linear-gradient(90deg,rgba(0,0,0,.06) 2px,transparent 2px);background-size:40px 40px}
-.ts-badge{font-family:var(--font-d);color:var(--oncard);text-align:center;position:relative;z-index:2;transform:rotate(-4deg)}
-.ts-badge .b1{font-size:clamp(3rem,10vw,7.5rem);line-height:.82}
-.ts-badge .b2{font-family:var(--font-b);font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:clamp(.56rem,1.25vw,.9rem);margin-top:.55rem}
+.ts-top{display:flex;justify-content:space-between;align-items:center;color:var(--on-dark-faint);font-family:var(--font-m);font-size:var(--small-size);letter-spacing:.1em;text-transform:uppercase}
+.ts-top .num{font-family:var(--font-d);font-weight:700;color:var(--coral);font-size:clamp(1.3rem,2.8vw,2.2rem);letter-spacing:-.02em}
+.ts-kick{font-family:var(--font-m);font-size:clamp(.66rem,1.4vw,1rem);letter-spacing:.1em;text-transform:uppercase;color:var(--coral);font-weight:600;margin-bottom:clamp(.6rem,1.7vh,1.1rem)}
+.ts-title{font-family:var(--font-d);font-weight:700;line-height:.92;font-size:clamp(2.3rem,8.5vw,6.5rem);letter-spacing:-.03em;color:var(--on-dark)}
+.ts-sub{font-size:clamp(.88rem,2vw,1.5rem);color:var(--on-dark-muted);margin-top:clamp(.7rem,2.1vh,1.4rem);font-weight:400;max-width:24ch}
+.ts-sub b{color:var(--on-dark)}
+.ts-author{font-size:clamp(.76rem,1.5vw,1.06rem);color:var(--on-dark-faint)}
+.ts-author b{color:var(--on-dark)}
+.ts-right{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--ink);border-left:1px solid var(--line-dark)}
+.ts-right::before{content:"";position:absolute;top:0;right:0;width:clamp(160px,24vw,300px);height:clamp(160px,24vw,300px);background:var(--coral);border-bottom-left-radius:100%}
+.ts-badge{text-align:center;position:relative;z-index:2}
+.ts-badge .b1{font-family:var(--font-d);font-weight:700;color:var(--on-dark);font-size:clamp(3rem,10vw,7.5rem);line-height:.85;letter-spacing:-.03em}
+.ts-badge .b2{font-family:var(--font-m);font-weight:500;letter-spacing:.14em;text-transform:uppercase;font-size:clamp(.56rem,1.25vw,.9rem);margin-top:.7rem;color:var(--on-dark-muted)}
 @media (max-width:700px){.title-slide{grid-template-columns:1fr}.ts-right{display:none}}
 
-.thanks{font-family:var(--font-d);font-size:clamp(1.9rem,7vw,5rem);line-height:.95}
-.thanks .o{color:var(--card)}
+.thanks{font-family:var(--font-d);font-weight:700;letter-spacing:-.025em;font-size:clamp(1.9rem,7vw,5rem);line-height:1}
+.thanks .o{color:var(--s-accent)}
 
 /* Links grid */
 .links{display:grid;grid-template-columns:1fr 1fr;gap:clamp(.5rem,2vw,1.7rem)}
-.linkcol h3{color:var(--card);margin-bottom:.45rem;font-size:clamp(.82rem,1.7vw,1.12rem)}
-.linkcol a{display:block;color:var(--ink);text-decoration:none;font-size:clamp(.64rem,1.12vw,.9rem);line-height:1.28;padding:.25rem 0;border-bottom:1px solid rgba(255,255,255,.06)}
-.linkcol a:hover{color:var(--card)}
-.linkcol a .u{display:block;color:var(--muted);font-family:var(--font-m);font-size:.82em;margin-top:.05em}
+.linkcol h3{color:var(--s-accent);margin-bottom:.45rem;font-size:clamp(.82rem,1.7vw,1.12rem)}
+.linkcol a{display:block;color:var(--s-text);text-decoration:none;font-size:clamp(.64rem,1.12vw,.9rem);line-height:1.3;padding:.25rem 0;border-bottom:1px solid var(--s-line)}
+.linkcol a:hover{color:var(--s-accent)}
+.linkcol a .u{display:block;color:var(--s-faint);font-family:var(--font-m);font-size:.82em;margin-top:.05em}
 
 /* ===== ANIMATIONS ===== */
 .reveal{opacity:0;transform:translateY(26px);transition:opacity var(--dur) var(--ease),transform var(--dur) var(--ease)}
@@ -187,25 +226,25 @@ table.tbl tr:last-child td{border-bottom:none}
 @keyframes slideIn{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:translateX(0)}}
 
 /* ===== CHROME ===== */
-.progress-bar{position:fixed;top:0;left:0;height:3px;width:0;background:var(--card);z-index:9999;box-shadow:0 0 12px var(--card)}
+.progress-bar{position:fixed;top:0;left:0;height:3px;width:0;background:var(--coral);z-index:9999}
 .nav-dots{position:fixed;right:clamp(.45rem,1.2vw,1.1rem);top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:.35rem;z-index:9998}
-.nav-dots button{width:8px;height:8px;border-radius:50%;border:none;cursor:pointer;padding:0;background:rgba(255,255,255,.25);transition:all .3s var(--ease)}
-.nav-dots button.active{background:var(--card);transform:scale(1.5);box-shadow:0 0 10px var(--card)}
-.keyboard-hint{position:fixed;bottom:clamp(.45rem,1.2vh,.95rem);left:50%;transform:translateX(-50%);font-size:var(--small-size);color:var(--muted);z-index:9998;opacity:.7;letter-spacing:.05em}
-.keyboard-hint kbd{font-family:var(--font-b);background:rgba(255,255,255,.08);border:1px solid var(--line);border-radius:5px;padding:.1em .45em;font-size:.85em;color:var(--ink)}
+.nav-dots button{width:8px;height:8px;border-radius:50%;border:none;cursor:pointer;padding:0;background:rgba(255,92,53,.32);transition:all .3s var(--ease)}
+.nav-dots button.active{background:var(--coral);transform:scale(1.5)}
+.keyboard-hint{position:fixed;bottom:clamp(.45rem,1.2vh,.95rem);left:50%;transform:translateX(-50%);font-family:var(--font-m);font-size:var(--small-size);color:var(--on-dark-faint);z-index:9998;opacity:.75;letter-spacing:.04em}
+.keyboard-hint kbd{font-family:var(--font-m);background:rgba(255,92,53,.12);border:1px solid var(--on-dark-faint);border-radius:5px;padding:.1em .45em;font-size:.85em;color:inherit}
 
 /* ===== INLINE EDITING ===== */
 .edit-hotzone{position:fixed;top:0;left:0;width:80px;height:80px;z-index:10000;cursor:pointer}
-.edit-toggle{position:fixed;top:clamp(.45rem,1.2vh,.95rem);left:clamp(.45rem,1.2vw,.95rem);width:42px;height:42px;border-radius:11px;border:1px solid var(--line);background:rgba(20,20,20,.9);color:var(--ink);font-size:1.1rem;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .3s ease;z-index:10001;display:flex;align-items:center;justify-content:center}
+.edit-toggle{position:fixed;top:clamp(.45rem,1.2vh,.95rem);left:clamp(.45rem,1.2vw,.95rem);width:42px;height:42px;border-radius:11px;border:1px solid var(--line-dark);background:var(--ink-2);color:var(--on-dark);font-size:1.1rem;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .3s ease;z-index:10001;display:flex;align-items:center;justify-content:center}
 .edit-toggle.show,.edit-toggle.active{opacity:1;pointer-events:auto}
-.edit-toggle.active{background:var(--card);color:var(--oncard);border-color:var(--card)}
-body.editing [contenteditable="true"]{outline:1px dashed rgba(255,87,34,.7);outline-offset:3px;border-radius:3px;cursor:text}
-body.editing [contenteditable="true"]:focus{outline:2px solid var(--card);background:rgba(255,87,34,.07)}
+.edit-toggle.active{background:var(--coral);color:var(--ink);border-color:var(--coral)}
+body.editing [contenteditable="true"]{outline:1px dashed rgba(255,92,53,.7);outline-offset:3px;border-radius:3px;cursor:text}
+body.editing [contenteditable="true"]:focus{outline:2px solid var(--coral);background:rgba(255,92,53,.08)}
 .edit-bar{position:fixed;bottom:clamp(.45rem,1.2vh,.95rem);right:clamp(.45rem,1.2vw,.95rem);z-index:10001;display:none;gap:.5rem}
 body.editing .edit-bar{display:flex}
-.edit-bar button{font-family:var(--font-b);font-weight:700;border:1px solid var(--line);background:rgba(20,20,20,.92);color:var(--ink);border-radius:9px;padding:.5rem .9rem;cursor:pointer;font-size:var(--small-size)}
-.edit-bar button.primary{background:var(--card);color:var(--oncard);border-color:var(--card)}
-.edit-toast{position:fixed;bottom:clamp(3rem,8vh,4.2rem);right:clamp(.45rem,1.2vw,.95rem);z-index:10002;background:var(--card);color:var(--oncard);font-weight:700;padding:.5rem .9rem;border-radius:9px;font-size:var(--small-size);opacity:0;transform:translateY(8px);transition:all .3s var(--ease);pointer-events:none}
+.edit-bar button{font-family:var(--font-b);font-weight:600;border:1px solid var(--line-dark);background:var(--ink-2);color:var(--on-dark);border-radius:9px;padding:.5rem .9rem;cursor:pointer;font-size:var(--small-size)}
+.edit-bar button.primary{background:var(--coral);color:var(--ink);border-color:var(--coral)}
+.edit-toast{position:fixed;bottom:clamp(3rem,8vh,4.2rem);right:clamp(.45rem,1.2vw,.95rem);z-index:10002;background:var(--coral);color:var(--ink);font-weight:600;padding:.5rem .9rem;border-radius:9px;font-size:var(--small-size);opacity:0;transform:translateY(8px);transition:all .3s var(--ease);pointer-events:none}
 .edit-toast.show{opacity:1;transform:translateY(0)}
 </style>
 </head>
@@ -223,8 +262,8 @@ body.editing .edit-bar{display:flex}
   Other good tasks (~3–8 min, several tool calls): "add a /health endpoint
   WITH a test, then run the tests". Avoid <20s tasks or anything needing login.
 
-  KICK IT OFF at the "🔴 LIVE" anchor slide (right after the hook), then
-  CHECK BACK at the slides marked with a 🔴 LIVE pill:
+  KICK IT OFF at the "● LIVE" anchor slide (right after the hook), then
+  CHECK BACK at the slides marked with a ● LIVE pill:
     • Agent loop          → the scrolling tool calls
     • Thinking            → a thinking block before an action
     • Context · keep lean → the live context %
@@ -238,17 +277,17 @@ body.editing .edit-bar{display:flex}
 <div class="keyboard-hint decorative">Navigate: <kbd>↑</kbd> <kbd>↓</kbd> / <kbd>␣</kbd> · edit: <kbd>E</kbd></div>
 
 <div class="edit-hotzone" aria-hidden="true"></div>
-<button class="edit-toggle" id="editToggle" title="Edit mode (E)" aria-label="Edit mode">✏️</button>
+<button class="edit-toggle" id="editToggle" title="Edit mode (E)" aria-label="Edit mode">✎</button>
 <div class="edit-bar">
   <button id="resetBtn" title="Restore original text">↺ Reset</button>
-  <button id="exportBtn" class="primary" title="Download HTML with your edits">⬇ Export</button>
+  <button id="exportBtn" class="primary" title="Download HTML with your edits">↓ Export</button>
 </div>
 <div class="edit-toast" id="editToast">Saved</div>
 
 <!-- TITLE -->
-<section class="slide title-slide">
+<section class="slide title-slide dark">
   <div class="ts-left">
-    <div class="ts-top"><span class="num">01</span><span>Internal talk · June 2026</span></div>
+    <div class="ts-top"><span class="num">01</span><span>Internal talk · July 2026</span></div>
     <div class="ts-mid">
       <div class="ts-kick">A beginner's introduction to agentic AI</div>
       <h1 class="ts-title">Agentic<br>AI</h1>
@@ -262,25 +301,25 @@ body.editing .edit-bar{display:flex}
 </section>
 
 <!-- HOOK -->
-<section class="slide">
+<section class="slide dark">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">2</span><div class="crumb"><b>The hook</b></div></div>
     <h2 class="reveal">You type <span class="o">one line.</span> It does the rest.</h2>
     <div class="code reveal"><span class="o">you ›</span> <span class="b">"the invoice test is failing — fix it"</span>
 
 <span class="c">…then, with no further input, the AI on its own:</span>
-  ✔ ran the tests           <span class="c">saw it expected 121, got 100</span>
-  ✔ opened invoice.py       <span class="c">spotted VAT was never applied</span>
-  ✔ edited the code         <span class="c">added the 21% VAT line</span>
-  ✔ ran the tests again     <span class="g">PASS ✓</span></div>
+  ✓ ran the tests           <span class="c">saw it expected 121, got 100</span>
+  ✓ opened invoice.py       <span class="c">spotted VAT was never applied</span>
+  ✓ edited the code         <span class="c">added the 21% VAT line</span>
+  ✓ ran the tests again     <span class="g">PASS ✓</span></div>
     <p class="note reveal">That autonomy — deciding <b>and acting</b>, step after step — is what makes it an <b>agent</b>. The rest of this talk is simply <b>how it works.</b></p>
   </div>
 </section>
 
 <!-- LIVE DEMO ANCHOR (interlude, no number) -->
-<section class="slide divider">
+<section class="slide divider dark">
   <div class="slide-content">
-    <div class="dnum reveal" style="color:var(--card)">🔴 LIVE</div>
+    <div class="dnum reveal" style="color:var(--coral)">● LIVE</div>
     <h2 class="reveal">Meanwhile — a real agent is <span class="o">working</span></h2>
     <p class="dsub reveal">I just set <b>Claude Code</b> loose on a real task. It runs while we talk — we'll <b>check back</b> when we hit <b>the loop</b>, <b>thinking</b>, and <b>context</b>.</p>
   </div>
@@ -303,13 +342,13 @@ body.editing .edit-bar{display:flex}
 </section>
 
 <!-- THREE BUILDING BLOCKS + DIAGRAM A -->
-<section class="slide">
+<section class="slide dark">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">4</span><div class="crumb"><b>Core</b> · the basics</div></div>
     <h2 class="reveal">Three building <span class="o">blocks</span></h2>
     <div class="diagram reveal">
       <svg viewBox="0 0 800 270" role="img" aria-label="Agent contains a harness, which runs the model and tools in a loop">
-        <defs><marker id="ahA" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#FF5722"/></marker></defs>
+        <defs><marker id="ahA" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#ff5c35"/></marker></defs>
         <!-- Agent (outer) -->
         <rect class="dg-box outer" x="12" y="14" width="776" height="242" rx="20"/>
         <text class="dg-t acc" x="34" y="44" font-size="19">AGENT</text>
@@ -322,9 +361,9 @@ body.editing .edit-bar{display:flex}
         <text class="dg-t on" x="190" y="153" font-size="18" text-anchor="middle">MODEL</text>
         <text class="dg-t on" x="190" y="174" font-size="12.5" text-anchor="middle">the brain</text>
         <!-- Tools -->
-        <rect class="dg-box" x="540" y="104" width="190" height="34" rx="8"/><text class="dg-t" x="635" y="126" font-size="14" text-anchor="middle">📄 read / write files</text>
+        <rect class="dg-box" x="540" y="104" width="190" height="34" rx="8"/><text class="dg-t" x="635" y="126" font-size="14" text-anchor="middle">read / write files</text>
         <rect class="dg-box" x="540" y="146" width="190" height="34" rx="8"/><text class="dg-t" x="635" y="168" font-size="14" text-anchor="middle">▸ run commands</text>
-        <rect class="dg-box" x="540" y="188" width="190" height="34" rx="8"/><text class="dg-t" x="635" y="210" font-size="14" text-anchor="middle">🌐 call APIs / web</text>
+        <rect class="dg-box" x="540" y="188" width="190" height="34" rx="8"/><text class="dg-t" x="635" y="210" font-size="14" text-anchor="middle">call APIs / web</text>
         <!-- arrows model <-> tools -->
         <path class="dg-line" d="M255 150 C 380 120, 430 120, 535 121" marker-end="url(#ahA)"/>
         <path class="dg-line dim" d="M535 205 C 410 205, 360 188, 256 168" marker-end="url(#ahA)"/>
@@ -357,14 +396,14 @@ body.editing .edit-bar{display:flex}
 </section>
 
 <!-- MODEL STATELESS + MEMENTO + DIAGRAM B -->
-<section class="slide">
+<section class="slide dark">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">6</span><div class="crumb"><b>Model</b> · the brain</div></div>
     <h2 class="reveal">The model has <span class="o">no memory</span></h2>
     <div class="split">
       <div class="diagram reveal">
         <svg viewBox="0 0 400 300" role="img" aria-label="Each call re-sends the entire history; the model remembers nothing between calls">
-          <defs><marker id="ahB" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#FF5722"/></marker></defs>
+          <defs><marker id="ahB" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#ff5c35"/></marker></defs>
           <!-- model -->
           <circle class="dg-box hot" cx="312" cy="150" r="64"/>
           <text class="dg-t on" x="312" y="144" font-size="17" text-anchor="middle">MODEL</text>
@@ -405,15 +444,15 @@ messages = [
 </section>
 
 <!-- HARNESS (what runs where) -->
-<section class="slide">
+<section class="slide dark">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">8</span><div class="crumb"><b>Harness</b> · what runs where</div></div>
     <h2 class="reveal">Model in the cloud, harness on your <span class="o">machine</span></h2>
     <div class="diagram reveal">
       <svg viewBox="0 0 820 320" role="img" aria-label="You talk to the agent. The agent is Claude Code (the harness, running locally with your files and terminal) looping with the stateless model in the cloud.">
         <defs>
-          <marker id="ahH" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#FF5722"/></marker>
-          <marker id="ahHd" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="rgba(255,255,255,.4)"/></marker>
+          <marker id="ahH" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#ff5c35"/></marker>
+          <marker id="ahHd" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" class="dg-arrow-dim"/></marker>
         </defs>
         <!-- USER (outside the agent) -->
         <rect class="dg-box" x="12" y="116" width="100" height="84" rx="12"/>
@@ -427,12 +466,12 @@ messages = [
         <text class="dg-t mut" x="246" y="44" font-size="12.5">= harness + model, in a loop</text>
         <!-- YOUR MACHINE zone -->
         <rect class="dg-box mid" x="168" y="62" width="336" height="230" rx="12"/>
-        <text class="dg-t" x="186" y="86" font-size="13.5">💻 YOUR MACHINE (local)</text>
+        <text class="dg-t" x="186" y="86" font-size="13.5">YOUR MACHINE (local)</text>
         <rect class="dg-box hot" x="192" y="102" width="288" height="64" rx="10"/>
         <text class="dg-t on" x="336" y="128" font-size="16" text-anchor="middle">CLAUDE CODE</text>
         <text class="dg-t on" x="336" y="148" font-size="12" text-anchor="middle">the harness</text>
         <rect class="dg-box" x="192" y="212" width="138" height="46" rx="8"/>
-        <text class="dg-t" x="261" y="240" font-size="13" text-anchor="middle">📄 your files</text>
+        <text class="dg-t" x="261" y="240" font-size="13" text-anchor="middle">your files</text>
         <rect class="dg-box" x="342" y="212" width="138" height="46" rx="8"/>
         <text class="dg-t" x="411" y="240" font-size="13" text-anchor="middle">▸ terminal</text>
         <path class="dg-line" d="M262 166 L 260 210" marker-end="url(#ahH)"/>
@@ -440,14 +479,14 @@ messages = [
         <text class="dg-t mut" x="336" y="190" font-size="11" text-anchor="middle">runs actions</text>
         <!-- CLOUD zone -->
         <rect class="dg-box mid" x="528" y="102" width="262" height="150" rx="12"/>
-        <text class="dg-t" x="546" y="126" font-size="13.5">☁ CLOUD</text>
+        <text class="dg-t" x="546" y="126" font-size="13.5">CLOUD</text>
         <rect class="dg-box" x="552" y="140" width="214" height="96" rx="10"/>
         <text class="dg-t" x="659" y="170" font-size="16" text-anchor="middle">MODEL</text>
         <text class="dg-t mut" x="659" y="190" font-size="12" text-anchor="middle">Claude Opus 4.8</text>
         <text class="dg-t mut" x="659" y="208" font-size="11" text-anchor="middle">stateless — no memory</text>
         <!-- loop arrows harness <-> model -->
         <path class="dg-line" d="M482 120 C 515 124, 530 138, 550 156" marker-end="url(#ahH)"/>
-        <text class="dg-t acc" x="512" y="110" font-size="11.5" text-anchor="middle">sends context →</text>
+        <text class="dg-t acc" x="520" y="92" font-size="11.5" text-anchor="middle">sends context →</text>
         <path class="dg-line dim" d="M550 198 C 528 196, 512 168, 484 150" marker-end="url(#ahHd)"/>
         <text class="dg-t mut" x="512" y="232" font-size="11.5" text-anchor="middle">← next action</text>
       </svg>
@@ -467,20 +506,20 @@ messages = [
 <span class="o">2.</span> CLAUDE.md            <span class="c"># project rules &amp; conventions</span>
 <span class="o">3.</span> conversation so far  <span class="c"># every previous message</span>
 <span class="o">4.</span> tool results         <span class="c"># files read, command output</span>
-<span class="o">5.</span> your new message      <span class="b">"fix the failing test"</span></div>
+<span class="o">5.</span> your new message     <span class="b">"fix the failing test"</span></div>
     <p class="note reveal">One line in → <b>thousands of tokens</b> of context out. And it does this again on every turn.</p>
   </div>
 </section>
 
 <!-- AGENT LOOP + DIAGRAM C -->
-<section class="slide">
+<section class="slide dark">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">10</span><div class="crumb"><b>Agent</b> · the loop</div></div>
     <h2 class="reveal">An agent is a <span class="o">loop</span></h2>
     <div class="split">
       <div class="diagram reveal">
         <svg viewBox="0 0 480 380" role="img" aria-label="The agent loop: model proposes an action, harness runs it, result returns to the model, repeat until done">
-          <defs><marker id="ahC" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#FF5722"/></marker></defs>
+          <defs><marker id="ahC" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#ff5c35"/></marker></defs>
           <!-- nodes -->
           <rect class="dg-box" x="140" y="14" width="200" height="60" rx="12"/>
           <text class="dg-t" x="240" y="40" font-size="15" text-anchor="middle">① Model proposes</text>
@@ -509,7 +548,7 @@ messages = [
         <li>This loop is the whole "magic" of agentic AI — no magic, just <b>disciplined repetition.</b></li>
       </ul>
     </div>
-    <p class="note reveal"><span class="pill">🔴 LIVE</span> Glance at our running agent — those scrolling <b>tool calls</b> are this loop, for real.</p>
+    <p class="note reveal"><span class="pill">● LIVE</span> Glance at our running agent — those scrolling <b>tool calls</b> are this loop, for real.</p>
   </div>
 </section>
 
@@ -528,19 +567,19 @@ messages = [
 </section>
 
 <!-- THINKING: HOW IT WORKS -->
-<section class="slide">
+<section class="slide dark">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">12</span><div class="crumb"><b>Thinking</b> · how it works</div></div>
     <h2 class="reveal">The model <span class="o">thinks</span> before it answers</h2>
     <div class="split">
       <div class="diagram reveal">
         <svg viewBox="0 0 400 300" role="img" aria-label="The model first produces a hidden thinking scratchpad of reasoning, then the final answer">
-          <defs><marker id="ahT" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#FF5722"/></marker></defs>
+          <defs><marker id="ahT" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#ff5c35"/></marker></defs>
           <rect class="dg-box" x="116" y="12" width="168" height="42" rx="9"/>
           <text class="dg-t" x="200" y="39" font-size="14" text-anchor="middle">PROMPT</text>
           <path class="dg-line" d="M200 54 L200 76" marker-end="url(#ahT)"/>
           <rect class="dg-box outer" x="50" y="80" width="300" height="152" rx="12"/>
-          <text class="dg-t acc" x="68" y="104" font-size="13" text-anchor="start">🧠 THINKING — hidden scratchpad</text>
+          <text class="dg-t acc" x="68" y="104" font-size="13" text-anchor="start">THINKING — hidden scratchpad</text>
           <text class="dg-t mut" x="72" y="130" font-size="12.5">• recall the VAT rule (21%)</text>
           <text class="dg-t mut" x="72" y="152" font-size="12.5">• 100 × 1.21 = 121</text>
           <text class="dg-t mut" x="72" y="174" font-size="12.5">• so the test expects the tax added</text>
@@ -557,7 +596,7 @@ messages = [
         <li>Usually a dial: <b>low / medium / high effort.</b> Newer Claude models decide <b>adaptively</b> how hard to think.</li>
       </ul>
     </div>
-    <p class="note reveal"><span class="pill">🔴 LIVE</span> Watch for a <b>thinking block</b> in our running agent before it takes its next action.</p>
+    <p class="note reveal"><span class="pill">● LIVE</span> Watch for a <b>thinking block</b> in our running agent before it takes its next action.</p>
   </div>
 </section>
 
@@ -597,7 +636,7 @@ messages = [
 </section>
 
 <!-- DIVIDER: THE LANDSCAPE -->
-<section class="slide divider">
+<section class="slide divider dark">
   <div class="slide-content">
     <div class="dnum reveal">▸</div>
     <h2 class="reveal">The <span class="o">landscape</span></h2>
@@ -611,19 +650,19 @@ messages = [
     <div class="slide-head reveal"><span class="snum">15</span><div class="crumb"><b>Landscape</b> · models</div></div>
     <h2 class="reveal">Today's best <span class="o">models</span></h2>
     <table class="tbl reveal">
-      <thead><tr><th>Maker</th><th>Flagship lineup (June 2026)</th><th>Known for</th></tr></thead>
+      <thead><tr><th>Maker</th><th>Flagship lineup (July 2026)</th><th>Known for</th></tr></thead>
       <tbody>
-        <tr><td><b>Anthropic</b></td><td>Claude Opus 4.8 · Sonnet 4.6 · Haiku 4.5</td><td>coding, agents, long context</td></tr>
-        <tr><td><b>OpenAI</b></td><td>GPT‑5.5 · GPT‑5.5 Pro</td><td>general reasoning, Codex</td></tr>
-        <tr><td><b>Google</b></td><td>Gemini 3.5 Flash · 3.5 Pro</td><td>multimodal, large context</td></tr>
+        <tr><td><b>Anthropic</b></td><td>Claude Fable 5 · Opus 4.8 · Sonnet 5 · Haiku 4.5</td><td>coding, agents, long context</td></tr>
+        <tr><td><b>OpenAI</b></td><td>GPT‑5.6 — Sol · Terra · Luna</td><td>general reasoning, Codex</td></tr>
+        <tr><td><b>Google</b></td><td>Gemini 3.5 Flash (3.5 Pro on the way)</td><td>multimodal, large context</td></tr>
       </tbody>
     </table>
-    <p class="note reveal">The same three tiers repeat everywhere: <b>large</b> (smartest, priciest) · <b>medium</b> (the sweet spot) · <b>small</b> (fast &amp; cheap). "SOTA" = state of the art — and it reshuffles every few months, so treat any list as a snapshot.</p>
+    <p class="note reveal">The same three tiers repeat everywhere: <b>large</b> (smartest, priciest) · <b>medium</b> (the sweet spot) · <b>small</b> (fast &amp; cheap) — and lately a <b>frontier tier on top</b> (Claude Fable 5, GPT‑5.6 Sol). "SOTA" = state of the art — and it reshuffles every few months, so treat any list as a snapshot.</p>
   </div>
 </section>
 
 <!-- PICKING A TIER -->
-<section class="slide">
+<section class="slide dark">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">16</span><div class="crumb"><b>Landscape</b> · picking a tier</div></div>
     <h2 class="reveal">Which tier <span class="o">when?</span></h2>
@@ -654,13 +693,13 @@ messages = [
 </section>
 
 <!-- APPLICATIONS — what form factor you run them in -->
-<section class="slide">
+<section class="slide dark">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">18</span><div class="crumb"><b>Landscape</b> · the apps</div></div>
     <h2 class="reveal">Same agent, different <span class="o">front door</span></h2>
     <div class="cards c3 reveal">
       <div class="tile fill"><span class="k">▸ Terminal (CLI)</span><p>Lives in your shell, scriptable. <b>Claude Code</b> · <b>Codex</b> · <b>Gemini CLI</b> · Aider.</p></div>
-      <div class="tile"><span class="k">🖥 Desktop app</span><p>A standalone window, less terminal-y. <b>Claude Code</b> app · <b>Codex</b> in the ChatGPT app.</p></div>
+      <div class="tile"><span class="k">Desktop app</span><p>A standalone window, less terminal-y. <b>Claude Code</b> app · <b>Codex</b> in the ChatGPT app.</p></div>
       <div class="tile"><span class="k">⌨ In your IDE</span><p>Inline with your editor. Claude Code &amp; Codex extensions · Cursor · Windsurf · <b>Antigravity</b> · Copilot.</p></div>
     </div>
     <p class="note reveal">It's the <b>same loop underneath</b> — just a different front door. Most of the big ones ship in <b>several of these at once;</b> pick whichever fits how you work.</p>
@@ -677,15 +716,15 @@ messages = [
       <tbody>
         <tr><td><b>Free</b></td><td>limited usage</td><td>limited usage</td></tr>
         <tr><td><b>Entry</b></td><td>Pro — ~$20/mo</td><td>Go ~$8 · Plus ~$20/mo</td></tr>
-        <tr><td><b>Power</b></td><td>Max 5× ~$100 · Max 20× ~$200/mo</td><td>Pro ~$200/mo</td></tr>
+        <tr><td><b>Power</b></td><td>Max 5× ~$100 · Max 20× ~$200/mo</td><td>Pro 5× ~$100 · Pro 20× ~$200/mo</td></tr>
       </tbody>
     </table>
-    <p class="note reveal">Higher tiers buy <b>more usage</b> and <b>priority access</b> to the newest models. Prices as of June 2026 — they change often, so verify before quoting.</p>
+    <p class="note reveal">Higher tiers buy <b>more usage</b> and <b>priority access</b> to the newest models. Prices as of July 2026 — they change often, so verify before quoting.</p>
   </div>
 </section>
 
 <!-- SUBSCRIPTION VS API -->
-<section class="slide">
+<section class="slide dark">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>Landscape</b> · plan vs API</div></div>
     <h2 class="reveal">Subscription <span class="o">vs API</span></h2>
@@ -717,7 +756,7 @@ messages = [
           <rect class="dg-box" x="34" y="122" width="332" height="26" rx="5"/><text class="dg-t" x="44" y="140" font-size="12.5">conversation history</text>
           <rect class="dg-box" x="34" y="154" width="332" height="26" rx="5"/><text class="dg-t" x="44" y="172" font-size="12.5">files you opened</text>
           <rect class="dg-box" x="34" y="186" width="220" height="26" rx="5"/><text class="dg-t" x="44" y="204" font-size="12.5">tool output</text>
-          <rect x="258" y="186" width="108" height="26" rx="5" fill="none" stroke="rgba(255,255,255,.18)" stroke-dasharray="4 4"/><text class="dg-t mut" x="312" y="204" font-size="12" text-anchor="middle">free space</text>
+          <rect x="258" y="186" width="108" height="26" rx="5" class="dg-dash" stroke-dasharray="4 4"/><text class="dg-t mut" x="312" y="204" font-size="12" text-anchor="middle">free space</text>
         </svg>
       </div>
     </div>
@@ -725,7 +764,7 @@ messages = [
 </section>
 
 <!-- CONTEXT ROT + DIAGRAM -->
-<section class="slide">
+<section class="slide dark">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">22</span><div class="crumb"><b>Context</b> · the "stupidity threshold"</div></div>
     <h2 class="reveal">Fuller context = <span class="o">dumber model</span></h2>
@@ -769,12 +808,12 @@ messages = [
       <li>Climbing past ~40–50%? Quality starts to slip — time to <b>trim or restart.</b></li>
       <li><b>Habit:</b> finish a task, then start a <b>fresh chat</b> rather than dragging a bloated one onward.</li>
     </ul>
-    <p class="note reveal"><span class="pill">🔴 LIVE</span> Check the <b>context %</b> on our running agent right now — see how far it's climbed.</p>
+    <p class="note reveal"><span class="pill">● LIVE</span> Check the <b>context %</b> on our running agent right now — see how far it's climbed.</p>
   </div>
 </section>
 
 <!-- UNDER THE HOOD: CACHING + COMPACTION -->
-<section class="slide">
+<section class="slide dark">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">24</span><div class="crumb"><b>Context</b> · under the hood</div></div>
     <h2 class="reveal">How harnesses <span class="o">cope</span></h2>
@@ -794,8 +833,8 @@ messages = [
     <div class="split">
       <div class="diagram reveal">
         <svg viewBox="0 0 420 270" role="img" aria-label="A main agent delegates messy work to sub-agents that have their own context and return only a short summary">
-          <defs><marker id="ahE" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#FF5722"/></marker>
-          <marker id="ahEd" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="rgba(255,255,255,.4)"/></marker></defs>
+          <defs><marker id="ahE" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#ff5c35"/></marker>
+          <marker id="ahEd" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" class="dg-arrow-dim"/></marker></defs>
           <rect class="dg-box hot" x="135" y="14" width="150" height="48" rx="10"/>
           <text class="dg-t on" x="210" y="43" font-size="15" text-anchor="middle">MAIN AGENT</text>
           <!-- subagents -->
@@ -820,7 +859,7 @@ messages = [
 </section>
 
 <!-- PERMISSIONS -->
-<section class="slide">
+<section class="slide dark">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>Safety</b> · permissions</div></div>
     <h2 class="reveal">Safety through <span class="o">permissions</span></h2>
@@ -829,7 +868,7 @@ messages = [
       <div class="tile"><span class="k">Auto · accept edits</span><p>Pre-approve a class of actions (e.g. file edits) so it won't interrupt on routine steps.</p></div>
       <div class="tile fill"><span class="k">Bypass · "YOLO"</span><p>Asks for <b>nothing.</b> Fast, but it can run <b>any</b> command — only in a sandbox.</p></div>
     </div>
-    <p class="note reveal"><span class="pill">🔴 LIVE</span> Our running agent is in <b>auto mode</b> — that's why it hasn't stopped to ask. Both Claude Code and Codex ship these modes (Codex calls them <i>suggest / auto-edit / full-auto</i>). More freedom demands more isolation.</p>
+    <p class="note reveal"><span class="pill">● LIVE</span> Our running agent is in <b>auto mode</b> — that's why it hasn't stopped to ask. Both Claude Code and Codex ship these modes (Codex calls them <i>read-only / auto / full access</i>). More freedom demands more isolation.</p>
   </div>
 </section>
 
@@ -846,14 +885,14 @@ messages = [
       </ul>
       <div class="kcard reveal">
         <div class="big">Freedom ∝ isolation</div>
-        <p>The rule: the more autonomy you grant, the more <b>walls</b> you put around it. Speed is worth it — recklessness isn't.</p>
+        <p>The rule: the more autonomy you grant, the more <b>walls</b> you put around it.</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- RECAP: MEMENTO CALLBACK -->
-<section class="slide">
+<section class="slide dark">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">28</span><div class="crumb"><b>Memory</b> · the problem</div></div>
     <h2 class="reveal">Back to the model with <span class="o">no memory</span></h2>
@@ -890,7 +929,7 @@ messages = [
 </section>
 
 <!-- SKILLS & PLUGINS -->
-<section class="slide">
+<section class="slide dark">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">30</span><div class="crumb"><b>Memory</b> · skills &amp; plugins</div></div>
     <h2 class="reveal">Skills &amp; <span class="o">plugins</span></h2>
@@ -923,7 +962,7 @@ messages = [
 </section>
 
 <!-- MCP + DIAGRAM F -->
-<section class="slide">
+<section class="slide dark">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">32</span><div class="crumb"><b>Reaching out</b> · MCP</div></div>
     <h2 class="reveal">MCP = <span class="o">"USB-C for agents"</span></h2>
@@ -936,7 +975,7 @@ messages = [
           <g>
             <rect class="dg-box" x="20" y="40" width="54" height="26" rx="5"/><rect class="dg-box" x="20" y="100" width="54" height="26" rx="5"/><rect class="dg-box" x="20" y="160" width="54" height="26" rx="5"/>
             <rect class="dg-box" x="150" y="40" width="46" height="26" rx="5"/><rect class="dg-box" x="150" y="100" width="46" height="26" rx="5"/><rect class="dg-box" x="150" y="160" width="46" height="26" rx="5"/>
-            <g stroke="rgba(255,255,255,.22)" stroke-width="1" fill="none">
+            <g class="dg-tangle" stroke-width="1">
               <path d="M74 53 L150 53"/><path d="M74 53 L150 113"/><path d="M74 53 L150 173"/>
               <path d="M74 113 L150 53"/><path d="M74 113 L150 113"/><path d="M74 113 L150 173"/>
               <path d="M74 173 L150 53"/><path d="M74 173 L150 113"/><path d="M74 173 L150 173"/>
@@ -947,7 +986,7 @@ messages = [
             <rect class="dg-box" x="244" y="40" width="54" height="26" rx="5"/><rect class="dg-box" x="244" y="100" width="54" height="26" rx="5"/><rect class="dg-box" x="244" y="160" width="54" height="26" rx="5"/>
             <rect class="dg-box hot" x="330" y="92" width="44" height="44" rx="10"/><text class="dg-t on" x="352" y="118" font-size="12" text-anchor="middle">MCP</text>
             <rect class="dg-box" x="392" y="40" width="40" height="26" rx="5"/><rect class="dg-box" x="392" y="100" width="40" height="26" rx="5"/><rect class="dg-box" x="392" y="160" width="40" height="26" rx="5"/>
-            <g stroke="#FF5722" stroke-width="1.6" fill="none">
+            <g stroke="#ff5c35" stroke-width="1.6" fill="none">
               <path d="M298 53 L330 110"/><path d="M298 113 L330 114"/><path d="M298 173 L330 118"/>
               <path d="M374 114 L392 53"/><path d="M374 114 L392 113"/><path d="M374 114 L392 173"/>
             </g>
@@ -973,12 +1012,12 @@ messages = [
       <div class="tile"><span class="k">2 · Remember Memento</span><p>No context = <b>no idea what you mean.</b> The agent only knows what's in front of it — and quality <b>rots</b> as that fills with junk.</p></div>
       <div class="tile fill"><span class="k">3 · Feed &amp; hand off</span><p>It orients <b>fast</b> from what you give it. Keep a <b>CLAUDE.md</b>; when passing work on, ask it to <b>write a summary for the next agent.</b></p></div>
     </div>
-    <p class="note reveal">Good context in → good work out. Most of "prompting skill" is really just <b>managing what the agent can see.</b></p>
+    <p class="note reveal">Most of "prompting skill" is really just <b>managing what the agent can see.</b></p>
   </div>
 </section>
 
 <!-- SUMMARY -->
-<section class="slide">
+<section class="slide dark">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">34</span><div class="crumb"><b>Summary</b></div></div>
     <h2 class="reveal">What to <span class="o">take away</span></h2>
@@ -1003,9 +1042,9 @@ messages = [
         <h3>Models &amp; pricing</h3>
         <a href="https://platform.claude.com/docs/en/about-claude/models/overview" target="_blank" rel="noopener">Anthropic — Claude models overview<span class="u">platform.claude.com/docs · models</span></a>
         <a href="https://claude.com/pricing" target="_blank" rel="noopener">Claude — plans &amp; pricing<span class="u">claude.com/pricing</span></a>
-        <a href="https://openai.com/index/introducing-gpt-5-5/" target="_blank" rel="noopener">OpenAI — Introducing GPT-5.5<span class="u">openai.com/index/introducing-gpt-5-5</span></a>
+        <a href="https://openai.com/index/gpt-5-6/" target="_blank" rel="noopener">OpenAI — GPT-5.6 (Sol · Terra · Luna)<span class="u">openai.com/index/gpt-5-6</span></a>
         <a href="https://chatgpt.com/pricing/" target="_blank" rel="noopener">ChatGPT — pricing tiers<span class="u">chatgpt.com/pricing</span></a>
-        <a href="https://blog.google/innovation-and-ai/technology/ai/google-io-2026-all-our-announcements/" target="_blank" rel="noopener">Google — I/O 2026 (Gemini 3.5)<span class="u">blog.google · io-2026</span></a>
+        <a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/" target="_blank" rel="noopener">Google — Gemini 3.5<span class="u">blog.google · gemini-3-5</span></a>
       </div>
       <div class="linkcol">
         <h3>Harnesses</h3>
@@ -1041,7 +1080,7 @@ messages = [
         <a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">Model Context Protocol — spec &amp; docs<span class="u">modelcontextprotocol.io</span></a>
       </div>
     </div>
-    <p class="note reveal">All figures verified June 2026. Models &amp; prices move fast — re-check the primary sources before quoting.</p>
+    <p class="note reveal">All figures verified July 2026. Models &amp; prices move fast — re-check the primary sources before quoting.</p>
   </div>
 </section>
 

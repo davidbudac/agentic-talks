@@ -1,0 +1,61 @@
+<!-- @dsCard group="Components" viewport="700x470" name="Code & terminal" subtitle="CodeBlock · CodeLine · TerminalWindow" -->
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<style>
+  body{margin:0;padding:24px;background:var(--paper);
+    --fs-mono:14px; --fs-eyebrow:13px;}
+  #r{display:flex;flex-direction:column;gap:18px;}
+  .note{font:400 13px/1.6 var(--font-mono);color:var(--text-faint);}
+  .note b{color:var(--text-muted);}
+  code{font-family:var(--font-mono);color:var(--coral-ink);}
+</style>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="../../_ds_bundle.js"></script>
+</head>
+<body>
+<div id="r">
+  <div style="font:600 14px var(--font-mono);color:var(--coral);letter-spacing:0.1em;text-transform:uppercase;">Code components</div>
+  <div style="margin-top:6px;font:700 20px var(--font-display);color:var(--text-strong);letter-spacing:-0.02em;">CodeBlock · CodeLine · TerminalWindow</div>
+  <div class="note" style="margin-top:10px;">Live preview renders once this project is set to <b>Design System</b> in the Share menu (that compiles the <code>_ds_bundle.js</code> these cards mount). Until then, see each component's <code>.prompt.md</code> for usage.</div>
+</div>
+<script type="text/babel" data-presets="react">
+  function findDS(names){
+    for (const k of Object.keys(window)){
+      try { const v = window[k];
+        if (v && typeof v==='object' && names.every(n=>typeof v[n]==='function')) return v;
+      } catch(e){}
+    }
+    return null;
+  }
+  try {
+    const DS = (window.React && window.ReactDOM) ? findDS(['CodeBlock','CodeLine','TerminalWindow']) : null;
+    if (DS){
+      const { CodeBlock, CodeLine, TerminalWindow } = DS;
+      const kw = {color:"var(--code-keyword)"}, cm = {color:"var(--code-comment)"}, nu = {color:"var(--code-number)"};
+      ReactDOM.createRoot(document.getElementById('r')).render(
+        <React.Fragment>
+          <CodeBlock style={{padding:"14px 0"}}>
+            <CodeLine><span style={kw}>def</span> run_subagent(task):</CodeLine>
+            <CodeLine indent={1}>resp = client.messages.create(</CodeLine>
+            <CodeLine indent={2}>system=SUBAGENT_SYSTEM,<span style={cm}> # cached prefix</span></CodeLine>
+            <CodeLine highlight indent={1}><span style={kw}>return</span> resp.content[<span style={nu}>0</span>].text</CodeLine>
+          </CodeBlock>
+          <TerminalWindow title="claude — ~/acme-api">
+            <div style={{color:"var(--paper)"}}><span style={{color:"var(--coral)"}}>&gt;</span> /cost</div>
+            <div style={{display:"flex", justifyContent:"space-between", maxWidth:320, marginTop:8}}>
+              <span style={{color:"var(--on-dark-faint)"}}>cache read</span>
+              <span style={{color:"var(--coral)", fontWeight:700}}>486,500</span>
+            </div>
+          </TerminalWindow>
+        </React.Fragment>
+      );
+    }
+  } catch(e){ console.warn('Ember card:', e); }
+</script>
+</body>
+</html>

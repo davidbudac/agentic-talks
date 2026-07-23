@@ -1,0 +1,19 @@
+/* Ember — shadows, rings, and signature composite effects.
+   Ember is a mostly-flat system: emphasis comes from borders, the coral ring,
+   and the warm palette — not from drop shadows. Shadows appear only on
+   "floating" surfaces like the terminal window. */
+
+:root {
+  --shadow-terminal: 0 18px 50px rgba(0, 0, 0, 0.26);
+  --shadow-float: 0 12px 40px rgba(22, 19, 14, 0.16);
+
+  /* The "where it happens" highlight — coral ring hugging a card */
+  --ring-accent: 0 0 0 6px rgba(255, 92, 53, 0.16);      /* on light */
+  --ring-accent-dark: 0 0 0 6px rgba(255, 92, 53, 0.22); /* on dark */
+
+  /* "One or more" stacked-card hint (used on diagram tiles) */
+  --stack-shadow: 4px 4px 0 0 #e2d8c4, 8px 8px 0 0 #dccfb9;
+
+  /* Section accent rule */
+  --accent-bar-w: 120px;
+}

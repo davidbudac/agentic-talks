@@ -1,16 +1,23 @@
-# Agentic AI — intro talk
+# Agentic talks
 
-A self-contained, zero-dependency HTML slide deck introducing **agentic AI** to a
-general audience — how tools like **Claude Code** and **Codex** actually work.
+Two self-contained, zero-dependency HTML slide decks on how coding agents actually
+work — a beginner intro and a developer follow-up. Same template, same aesthetic.
 
-Author: **David Budáč / ČSOB** · 30 slides · English
+Author: **David Budáč / ČSOB** · English
+
+- **[`agentic-ai.html`](agentic-ai.html)** — *Intro to Agentic AI* (Claude Code for
+  beginners). Model / harness / agent, the loop, context, permissions, memory & MCP. 36 slides.
+- **[`agentic-engineering.html`](agentic-engineering.html)** — *Agentic Engineering*
+  (basics for developers). One thread — the context window — runs through: the machine
+  (model / harness / client) → foundations → model × effort (incl. Fable) → loops &
+  verifiers → skills & plugins. 43 slides. **No live demos.**
 
 ## View it
 
-- **Locally:** open [`agentic-ai.html`](agentic-ai.html) in any modern browser
-  (macOS: `open agentic-ai.html`).
-- **Online:** if GitHub Pages is enabled, the deck is served at the repo's Pages URL
-  (the root redirects to the deck).
+- **Locally:** open either `.html` file in any modern browser (macOS:
+  `open index.html` opens the chooser). `index.html` is a small chooser page
+  linking both decks.
+- **Online:** if GitHub Pages is enabled, the repo's Pages root serves the chooser.
 
 ## Navigate
 
@@ -28,14 +35,22 @@ The deck has a built-in editor (no build step):
 
 ## What's covered
 
-Model / harness / agent · the agent loop · reasoning / "thinking" ·
-current SOTA models & harnesses · pricing (subscriptions vs API) ·
+**Intro to Agentic AI** — model / harness / agent · the agent loop · reasoning /
+"thinking" · current SOTA models & harnesses · pricing (subscriptions vs API) ·
 context (context rot, caching, compaction, sub-agents) · permissions & safety ·
 memory (CLAUDE.md, skills, plugins) · APIs, CLIs & MCP · how to work with it well.
 
-## Live demo (optional, recommended)
+**Agentic Engineering** — the machine (model / harness / client + a client-server
+sequence diagram) · next-token prediction & attention · context as the program ·
+statelessness, token cost & KV caching (with cache-lifetime economics) · the "dumb
+zone" · interactive projects to go build/see an LLM · model × reasoning-effort routing
+and Fable techniques (advisor & orchestrator patterns) · the agentic ladder · loops &
+verifiers (spiralling, reward-hacking) · dynamic workflows · skills & plugins.
+A single **context** thread ties the sections together (🧵 markers throughout).
 
-The deck is built to run alongside a live agent. There's a **🔴 LIVE** anchor
+## Live demo (agentic-ai deck only, optional)
+
+The *Intro to Agentic AI* deck is built to run alongside a live agent. There's a **🔴 LIVE** anchor
 slide right after the hook, and **🔴 LIVE** callback markers on the loop,
 thinking, and context slides. A presenter quick-reference is in an HTML comment
 at the top of `agentic-ai.html`.
@@ -54,7 +69,7 @@ All styling is driven by CSS variables in the `:root` block of `agentic-ai.html`
 
 ## Notes
 
-- Facts (model names, prices) are **verified as of June 2026** and labelled on-slide —
+- Facts (model names, prices) are **verified as of July 2026** and labelled on-slide —
   this space moves fast, so re-check the primary sources (see the deck's final two
   "Sources" slides) before reusing.
 
@@ -62,7 +77,8 @@ All styling is driven by CSS variables in the `:root` block of `agentic-ai.html`
 
 | File | Purpose |
 |------|---------|
-| `agentic-ai.html` | The presentation (self-contained). |
-| `index.html` | Redirect to the deck (for GitHub Pages root). |
+| `agentic-ai.html` | *Intro to Agentic AI* deck — beginners (self-contained). |
+| `agentic-engineering.html` | *Agentic Engineering* deck — developers (self-contained; no live demo). |
+| `index.html` | Chooser page linking both decks (GitHub Pages root). |
 | `prez_prompt.txt` | Original brief / topic outline. |
 | `my_slides.md` | Earlier scratch notes (unused). |

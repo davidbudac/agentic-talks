@@ -1,0 +1,22 @@
+<!-- @dsCard group="Slides" viewport="1280x720" name="Takeaways" subtitle="Dark slide, numbered 2×2 grid" -->
+<!-- @startingPoint section="Slides" subtitle="Key takeaways slide" viewport="1280x720" -->
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>body{margin:0;display:flex;align-items:center;justify-content:center;background:#cdc3b0;font-family:var(--font-body);}</style>
+</head>
+<body>
+<div style="width:1280px;height:720px;overflow:hidden;background:var(--ink);color:var(--on-dark);box-sizing:border-box;padding:64px 73px 56px;display:flex;flex-direction:column;">
+  <div style="font:600 16px var(--font-mono);color:var(--coral);letter-spacing:0.1em;text-transform:uppercase;">Key takeaways</div>
+  <h2 style="margin:9px 0 34px;font:700 43px var(--font-display);letter-spacing:-0.025em;">What to carry out of the room</h2>
+  <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:20px 38px;">
+    <div style="display:flex;gap:16px;align-items:baseline;border-top:2px solid var(--line-dark);padding-top:16px;"><span style="font:700 29px var(--font-display);color:var(--coral);">01</span><div style="font:400 20px var(--font-body);color:var(--on-dark-muted);text-wrap:pretty;">Subagents trade tokens for clean context + parallelism. Use them for read-heavy, independent work.</div></div>
+    <div style="display:flex;gap:16px;align-items:baseline;border-top:2px solid var(--line-dark);padding-top:16px;"><span style="font:700 29px var(--font-display);color:var(--coral);">02</span><div style="font:400 20px var(--font-body);color:var(--on-dark-muted);text-wrap:pretty;">The task string must be self-contained; the return must be explicitly shaped.</div></div>
+    <div style="display:flex;gap:16px;align-items:baseline;border-top:2px solid var(--line-dark);padding-top:16px;"><span style="font:700 29px var(--font-display);color:var(--coral);">03</span><div style="font:400 20px var(--font-body);color:var(--on-dark-muted);text-wrap:pretty;">Caching reuses an exact prefix: stable content at the front, volatile at the back.</div></div>
+    <div style="display:flex;gap:16px;align-items:baseline;border-top:2px solid var(--line-dark);padding-top:16px;"><span style="font:700 29px var(--font-display);color:var(--coral);">04</span><div style="font:400 20px var(--font-body);color:var(--on-dark-muted);text-wrap:pretty;">They compound — a shared, cached prefix makes fan-out cheap.</div></div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!-- @dsCard group="Components" viewport="700x440" name="Slide blocks" subtitle="DualPanel · StatTile" -->
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<style>
+  body{margin:0;padding:24px;background:var(--paper);
+    --fs-title:18px; --fs-body:14px; --fs-body-sm:13px; --fs-eyebrow:12px;}
+  #r{display:flex;flex-direction:column;gap:18px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .note{font:400 13px/1.6 var(--font-mono);color:var(--text-faint);}
+  .note b{color:var(--text-muted);}
+  code{font-family:var(--font-mono);color:var(--coral-ink);}
+</style>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="../../_ds_bundle.js"></script>
+</head>
+<body>
+<div id="r">
+  <div style="font:600 14px var(--font-mono);color:var(--coral);letter-spacing:0.1em;text-transform:uppercase;">Slide blocks</div>
+  <div style="margin-top:6px;font:700 20px var(--font-display);color:var(--text-strong);letter-spacing:-0.02em;">DualPanel · StatTile</div>
+  <div class="note" style="margin-top:10px;">Live preview renders once this project is set to <b>Design System</b> in the Share menu (that compiles the <code>_ds_bundle.js</code> these cards mount). Until then, see each component's <code>.prompt.md</code> for usage.</div>
+</div>
+<script type="text/babel" data-presets="react">
+  function findDS(names){
+    for (const k of Object.keys(window)){
+      try { const v = window[k];
+        if (v && typeof v==='object' && names.every(n=>typeof v[n]==='function')) return v;
+      } catch(e){}
+    }
+    return null;
+  }
+  try {
+    const DS = (window.React && window.ReactDOM) ? findDS(['DualPanel','StatTile']) : null;
+    if (DS){
+      const { DualPanel, StatTile } = DS;
+      ReactDOM.createRoot(document.getElementById('r')).render(
+        <React.Fragment>
+          <DualPanel
+            gap={16}
+            left={{ label:"YOU PAY", body:"Every subagent re-pays a fixed setup cost." }}
+            right={{ label:"YOU WIN WHEN", body:"Isolated work would otherwise pollute the lead." }}
+          />
+          <div className="grid2">
+            <StatTile value="5 min" label="default · sliding TTL" accent />
+            <StatTile value="1 hr" label="optional · other price" tone="light" />
+          </div>
+        </React.Fragment>
+      );
+    }
+  } catch(e){ console.warn('Ember card:', e); }
+</script>
+</body>
+</html>
