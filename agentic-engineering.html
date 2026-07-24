@@ -1701,5 +1701,222 @@ table.tbl tr:last-child td{border-bottom:none}
     if (v) { v.currentTime = 0; var p = v.play(); if (p && p.catch) p.catch(function(){}); }
   });
 </script>
+
+<style id="presenter-ui-css">
+  /* ─── Presenter aids (outside <deck-stage>: siblings paint above it) ─── */
+  .pui-controls{
+    position:fixed; right:18px; bottom:18px; z-index:40;
+    display:flex; gap:8px;
+    opacity:0; transition:opacity .25s; pointer-events:none;
+  }
+  body.pui-mouse .pui-controls,
+  .pui-controls:hover,
+  .pui-controls:focus-within{ opacity:1; pointer-events:auto; }
+  .pui-controls button{
+    font:var(--w-semibold) 12px/1 var(--font-mono); letter-spacing:.08em;
+    color:var(--on-dark-muted); background:var(--ink-2);
+    border:1px solid var(--line-dark); border-radius:var(--radius-pill);
+    padding:9px 14px; cursor:pointer;
+  }
+  .pui-controls button:hover{ color:var(--paper); border-color:var(--coral); }
+  .pui-controls kbd{ color:var(--coral); font:inherit; margin-left:6px; }
+  .pui-notes{
+    position:fixed; left:0; right:0; bottom:0; z-index:39;
+    background:var(--ink-2); color:var(--on-dark);
+    border-top:2px solid var(--coral);
+    padding:20px 34px 24px; max-height:38vh; overflow:auto;
+    font:var(--w-regular) clamp(15px,1.6vw,21px)/1.55 var(--font-b, var(--font-body));
+    display:none;
+  }
+  .pui-notes.open{ display:block; }
+  .pui-notes .pui-nhead{
+    font:var(--w-semibold) 12px/1 var(--font-mono); letter-spacing:.12em;
+    text-transform:uppercase; color:var(--coral); margin-bottom:12px;
+  }
+  @media print{ .pui-controls, .pui-notes{ display:none !important; } }
+</style>
+<div class="pui-controls">
+  <button type="button" data-pui="notes">NOTES<kbd>N</kbd></button>
+  <button type="button" data-pui="present">PRESENT<kbd>P</kbd></button>
+  <button type="button" data-pui="fullscreen">FULLSCREEN<kbd>F</kbd></button>
+</div>
+<div class="pui-notes" role="note" aria-live="polite">
+  <div class="pui-nhead"></div>
+  <div class="pui-nbody"></div>
+</div>
+
+<script>
+/* ─── Presenter aids: notes overlay (N), fullscreen (F), presenter window (P) ─── */
+(function(){
+  if (window.self !== window.top) return; /* skip when embedded by a host/viewer */
+  var ds = document.querySelector('deck-stage');
+  var notesEl = document.querySelector('.pui-notes');
+  var nHead = notesEl.querySelector('.pui-nhead');
+  var nBody = notesEl.querySelector('.pui-nbody');
+  var current = 0, presenter = null, mouseT = null;
+
+  function slides(){ return Array.prototype.slice.call(ds.querySelectorAll(':scope > section')); }
+  function noteOf(s){ return s.getAttribute('data-speaker-notes') || 'No notes for this slide.'; }
+  function labelOf(s){ return s.getAttribute('data-label') || ''; }
+
+  /* controls fade in on mouse activity, like the component's own overlay */
+  document.addEventListener('mousemove', function(){
+    document.body.classList.add('pui-mouse');
+    clearTimeout(mouseT);
+    mouseT = setTimeout(function(){ document.body.classList.remove('pui-mouse'); }, 1800);
+  });
+
+  function syncNotes(){
+    var all = slides(), s = all[current];
+    if (!s) return;
+    nHead.textContent = 'Notes · ' + labelOf(s) + ' · ' + (current + 1) + ' / ' + all.length;
+    nBody.textContent = noteOf(s);
+  }
+  function toggleNotes(){ notesEl.classList.toggle('open'); if (notesEl.classList.contains('open')) syncNotes(); }
+
+  function toggleFullscreen(){
+    if (document.fullscreenElement) { document.exitFullscreen(); }
+    else { document.documentElement.requestFullscreen().catch(function(){}); }
+  }
+  /* fullscreen = clean presenting surface: hide the thumbnail rail while in it */
+  var railWasOff = false;
+  document.addEventListener('fullscreenchange', function(){
+    if (document.fullscreenElement) {
+      railWasOff = ds.hasAttribute('no-rail');
+      ds.setAttribute('no-rail', '');
+    } else if (!railWasOff) {
+      ds.removeAttribute('no-rail');
+    }
+  });
+
+  /* ── presenter window: current + next previews, notes, timer, clock ── */
+  function openPresenter(){
+    if (presenter && !presenter.closed) { presenter.focus(); return; }
+    presenter = window.open('', 'deck-presenter', 'width=1200,height=760');
+    if (!presenter) {
+      nHead.textContent = 'Presenter window';
+      nBody.textContent = 'The browser blocked the pop-up — allow pop-ups for this page and press P again.';
+      notesEl.classList.add('open');
+      return;
+    }
+    var pd = presenter.document;
+    pd.open();
+    pd.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Presenter — ' + document.title.replace(/</g,'&lt;') + '</title><base href="' + document.baseURI + '"></head><body></body></html>');
+    pd.close();
+    /* carry the deck's stylesheets + tokens over so slide clones render 1:1 */
+    document.head.querySelectorAll('link[rel="stylesheet"], link[rel="preconnect"], style').forEach(function(el){
+      var c = pd.importNode(el, true);
+      if (el.tagName === 'LINK' && el.href) c.setAttribute('href', el.href);
+      pd.head.appendChild(c);
+    });
+    var st = pd.createElement('style');
+    st.textContent =
+      '*,*::before,*::after{animation:none !important;transition:none !important}' +
+      'html,body{margin:0;height:100%;background:#0e0c08;color:var(--on-dark);font-family:var(--font-m,monospace);overflow:hidden}' +
+      '.pw{display:grid;grid-template-rows:52px 1fr;height:100%}' +
+      '.pw-bar{display:flex;align-items:center;gap:22px;padding:0 20px;border-bottom:1px solid var(--line-dark);font-size:13px;letter-spacing:.06em;color:var(--on-dark-muted)}' +
+      '.pw-bar .cnt{color:var(--coral);font-weight:700;font-size:16px}' +
+      '.pw-bar .lbl{color:var(--paper);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}' +
+      '.pw-bar .tmr{cursor:pointer}.pw-bar .tmr b{color:var(--paper)}' +
+      '.pw-bar button{font:inherit;color:var(--on-dark-muted);background:none;border:1px solid var(--line-dark);border-radius:6px;padding:5px 12px;cursor:pointer}' +
+      '.pw-bar button:hover{color:var(--paper);border-color:var(--coral)}' +
+      '.pw-main{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:14px;padding:14px;min-height:0}' +
+      '.pw-col{display:grid;grid-template-rows:auto 1fr;min-height:0;gap:8px}' +
+      '.pw-col.right{grid-template-rows:auto auto auto minmax(0,1fr)}' +
+      '.pw-cap{font-size:11px;letter-spacing:.14em;color:var(--on-dark-faint);text-transform:uppercase}' +
+      '.pw-box{position:relative;min-height:0;overflow:hidden;border:1px solid var(--line-dark);border-radius:8px;background:#000}' +
+      '.pw-canvas{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;background:var(--paper)}' +
+      '.pw-canvas > section{width:1920px;height:1080px;position:relative;overflow:hidden}' +
+      '.pw-notes{overflow:auto;font-family:var(--font-b,sans-serif);font-size:19px;line-height:1.55;color:var(--on-dark);padding-right:6px}';
+    pd.head.appendChild(st);
+    pd.body.innerHTML =
+      '<div class="pw">' +
+        '<div class="pw-bar">' +
+          '<span class="cnt"></span><span class="lbl"></span>' +
+          '<span class="tmr" title="click to reset">elapsed <b class="el">00:00</b></span>' +
+          '<span>clock <b class="ck"></b></span>' +
+          '<button data-nav="-1">‹ prev</button><button data-nav="1">next ›</button>' +
+        '</div>' +
+        '<div class="pw-main">' +
+          '<div class="pw-col"><div class="pw-cap">Current</div><div class="pw-box" id="pwCur"><div class="pw-canvas"></div></div></div>' +
+          '<div class="pw-col right"><div class="pw-cap">Next</div><div class="pw-box" id="pwNext" style="aspect-ratio:16/9;min-height:120px"><div class="pw-canvas"></div></div>' +
+          '<div class="pw-cap" style="margin-top:6px">Notes</div><div class="pw-notes"></div></div>' +
+        '</div>' +
+      '</div>';
+
+    var t0 = Date.now();
+    function two(n){ return (n < 10 ? '0' : '') + n; }
+    function tick(){
+      if (presenter.closed) return;
+      var el = Math.floor((Date.now() - t0) / 1000);
+      pd.querySelector('.el').textContent = two(Math.floor(el / 60)) + ':' + two(el % 60);
+      var d = new Date();
+      pd.querySelector('.ck').textContent = two(d.getHours()) + ':' + two(d.getMinutes());
+      presenter.setTimeout(tick, 1000);
+    }
+    tick();
+    pd.querySelector('.tmr').addEventListener('click', function(){ t0 = Date.now(); });
+
+    function fit(boxId){
+      var box = pd.getElementById(boxId), cv = box.querySelector('.pw-canvas');
+      var k = Math.min(box.clientWidth / 1920, box.clientHeight / 1080);
+      cv.style.transform = 'scale(' + k + ')';
+      cv.style.left = ((box.clientWidth - 1920 * k) / 2) + 'px';
+      cv.style.top = ((box.clientHeight - 1080 * k) / 2) + 'px';
+    }
+    function fill(boxId, slide){
+      var cv = pd.getElementById(boxId).querySelector('.pw-canvas');
+      cv.textContent = '';
+      if (slide) {
+        var c = pd.importNode(slide, true);
+        c.setAttribute('data-deck-active', '');
+        cv.appendChild(c);
+      }
+      fit(boxId);
+    }
+    presenter.__update = function(i){
+      var all = slides(), s = all[i];
+      if (!s) return;
+      var next = i + 1;
+      while (next < all.length && all[next].hasAttribute('data-deck-skip')) next++;
+      fill('pwCur', s);
+      fill('pwNext', all[next] || null);
+      pd.querySelector('.cnt').textContent = (i + 1) + ' / ' + all.length;
+      pd.querySelector('.lbl').textContent = labelOf(s) + (all[next] ? '   →   next: ' + labelOf(all[next]) : '   ·   last slide');
+      pd.querySelector('.pw-notes').textContent = noteOf(s);
+    };
+    presenter.addEventListener('resize', function(){ fit('pwCur'); fit('pwNext'); });
+    pd.addEventListener('keydown', function(e){
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); ds.next(); }
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); ds.prev(); }
+      else if (e.key === 'Home') { ds.goTo(0); }
+      else if (e.key === 'End') { ds.goTo(slides().length - 1); }
+    });
+    pd.querySelectorAll('[data-nav]').forEach(function(b){
+      b.addEventListener('click', function(){ this.dataset.nav === '1' ? ds.next() : ds.prev(); });
+    });
+    presenter.__update(current);
+  }
+
+  ds.addEventListener('slidechange', function(e){
+    current = e.detail.index;
+    if (notesEl.classList.contains('open')) syncNotes();
+    if (presenter && !presenter.closed && presenter.__update) presenter.__update(current);
+  });
+
+  document.addEventListener('keydown', function(e){
+    var t = e.target;
+    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = e.key.toLowerCase();
+    if (k === 'n') { toggleNotes(); }
+    else if (k === 'f') { toggleFullscreen(); }
+    else if (k === 'p') { openPresenter(); }
+  });
+  document.querySelector('[data-pui="notes"]').addEventListener('click', toggleNotes);
+  document.querySelector('[data-pui="fullscreen"]').addEventListener('click', toggleFullscreen);
+  document.querySelector('[data-pui="present"]').addEventListener('click', openPresenter);
+})();
+</script>
 </body>
 </html>
