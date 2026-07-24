@@ -1702,11 +1702,18 @@ class InlineEditor{
     this.isActive=false;this.KEY='agentic-engineering-edits-v2';
     this.sel='h1,h2,h3,p,li,td,th,.tile .k,.kcard .big,.code,.gloss .term,.gloss .def,.ts-title,.ts-sub,.ts-kick,.ts-author,.crumb,.thanks,.ts-badge .b1,.ts-badge .b2,.linkcol h3,.divider .dsub';
     this.nodes=[...document.querySelectorAll(this.sel)];
-    this.nodes.forEach((n,i)=>n.dataset.ek='n'+i);this.restore();this.wire();
+    this.nodes.forEach((n,i)=>n.dataset.ek='n'+i);
+    this.orig=new Map(this.nodes.map(n=>[n.dataset.ek,n.innerHTML]));
+    this.restore();this.wire();
   }
+  /* Edit keys are positional (DOM index), so each edit is stored with the node's
+     original HTML and re-applied only while the node still matches it — edits to
+     the deck file invalidate stale saves instead of landing on the wrong element. */
   restore(){let d={};try{d=JSON.parse(localStorage.getItem(this.KEY)||'{}')}catch(e){}
-    this.nodes.forEach(n=>{if(d[n.dataset.ek]!=null)n.innerHTML=d[n.dataset.ek]})}
-  save(){const d={};this.nodes.forEach(n=>d[n.dataset.ek]=n.innerHTML);
+    this.nodes.forEach(n=>{const e=d[n.dataset.ek];
+      if(e&&e.o===this.orig.get(n.dataset.ek))n.innerHTML=e.h})}
+  save(){const d={};this.nodes.forEach(n=>{const o=this.orig.get(n.dataset.ek);
+    if(n.innerHTML!==o)d[n.dataset.ek]={o,h:n.innerHTML}});
     localStorage.setItem(this.KEY,JSON.stringify(d));this.toast('Saved')}
   toast(m){const t=document.getElementById('editToast');t.textContent=m;t.classList.add('show');
     clearTimeout(this._tt);this._tt=setTimeout(()=>t.classList.remove('show'),1100)}
@@ -1745,7 +1752,7 @@ class InlineEditor{
 }
 
 new SlidePresentation();
-new InlineEditor();
+window.__editor=new InlineEditor();
 </script>
 </body>
 </html>
