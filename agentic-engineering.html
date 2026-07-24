@@ -498,21 +498,32 @@ body.editing .edit-bar{display:flex}
         <li><b>One forward pass per token.</b> Force the answer into the next token and it gets exactly one pass of compute — hard problems don't fit.</li>
         <li>Reasoning = the model writing <b>intermediate steps into its own context</b>, then attending to them. The scratchpad <b>becomes part of the program.</b></li>
         <li>Each step is an <b>easy</b> next-token guess; a chain of easy predictions replaces one impossible one. More tokens spent = <b>more compute on the answer</b> ("test-time compute").</li>
-        <li>Those thinking tokens are billed as <b>output</b> and land <b>in the context window</b> — exactly what the <b>effort dial</b> (next slide) buys more or less of.</li>
+        <li>Thinking tokens are billed as <b>output</b> — the priciest tokens you buy. They stay in context <b>for the rest of that turn</b>, then the API <b>strips them</b>: gone next turn, never re-billed as input. <b>Billed once.</b> The <b>effort dial</b> (next slide) sets how many.</li>
       </ul>
       <div class="diagram reveal">
-        <svg viewBox="0 0 400 220" role="img" aria-label="One context window holds the prompt, then a highlighted span of thinking tokens the model writes for itself, then the answer — the answer attends back over the whole strip including the scratchpad">
+        <svg viewBox="0 0 400 320" role="img" aria-label="Two stacked context windows. In this turn, the window holds the prompt, a highlighted span of thinking tokens the model writes for itself, then the answer, which attends back over the whole strip including the scratchpad. On the next turn the same strip reappears but the thinking span is an empty dashed outline — the API strips it, so it is never re-sent or re-billed as input">
           <defs><marker id="rz1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--coral)"/></marker></defs>
-          <text class="dg-t mut" x="20" y="42" font-size="11">one context window →</text>
-          <rect class="dg-box mid" x="20" y="54" width="88" height="46" rx="8"/><text class="dg-t" x="64" y="82" font-size="12" text-anchor="middle">prompt</text>
-          <rect class="dg-box outer" x="116" y="54" width="170" height="46" rx="8"/><text class="dg-t acc" x="201" y="78" font-size="11" text-anchor="middle">thinking tokens</text><text class="dg-t mut" x="201" y="92" font-size="9" text-anchor="middle">written by the model</text>
-          <rect class="dg-box hot" x="294" y="54" width="86" height="46" rx="8"/><text class="dg-t on" x="337" y="82" font-size="12" text-anchor="middle">answer</text>
-          <path class="dg-line" d="M108 77 L 114 77" marker-end="url(#rz1)"/>
-          <path class="dg-line" d="M286 77 L 292 77" marker-end="url(#rz1)"/>
+          <!-- ── this turn ── -->
+          <text class="dg-t mut" x="20" y="26" font-size="11">this turn →</text>
+          <rect class="dg-box mid" x="20" y="38" width="88" height="46" rx="8"/><text class="dg-t" x="64" y="66" font-size="12" text-anchor="middle">prompt</text>
+          <rect class="dg-box outer" x="116" y="38" width="170" height="46" rx="8"/><text class="dg-t acc" x="201" y="62" font-size="11" text-anchor="middle">thinking tokens</text><text class="dg-t mut" x="201" y="76" font-size="9" text-anchor="middle">written by the model</text>
+          <rect class="dg-box hot" x="294" y="38" width="86" height="46" rx="8"/><text class="dg-t on" x="337" y="66" font-size="12" text-anchor="middle">answer</text>
+          <path class="dg-line" d="M108 61 L 114 61" marker-end="url(#rz1)"/>
+          <path class="dg-line" d="M286 61 L 292 61" marker-end="url(#rz1)"/>
           <!-- answer attends back over prompt + scratchpad -->
-          <path class="dg-line dim" d="M300 102 C 262 152, 232 152, 201 104" marker-end="url(#rz1)"/>
-          <path class="dg-line dim" d="M300 106 C 220 172, 96 172, 64 104" marker-end="url(#rz1)"/>
-          <text class="dg-t acc" x="200" y="200" font-size="11" text-anchor="middle">the answer attends to the model's own scratchpad</text>
+          <path class="dg-line dim" d="M300 86 C 262 136, 232 136, 201 88" marker-end="url(#rz1)"/>
+          <path class="dg-line dim" d="M300 90 C 220 156, 96 156, 64 88" marker-end="url(#rz1)"/>
+          <text class="dg-t acc" x="200" y="180" font-size="11" text-anchor="middle">the answer attends to the model's own scratchpad</text>
+          <!-- ── divider ── -->
+          <line class="dg-line dim" x1="20" y1="202" x2="380" y2="202" stroke-dasharray="4 5" opacity="0.6"/>
+          <!-- ── next turn: same strip, scratchpad gone ── -->
+          <text class="dg-t mut" x="20" y="228" font-size="11">next turn →</text>
+          <rect class="dg-box mid" x="20" y="240" width="88" height="46" rx="8"/><text class="dg-t" x="64" y="268" font-size="12" text-anchor="middle">prompt</text>
+          <rect x="116" y="240" width="170" height="46" rx="8" fill="none" stroke="var(--s-line-strong)" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.55"/>
+          <text class="dg-t mut" x="201" y="264" font-size="11" text-anchor="middle" text-decoration="line-through">thinking tokens</text>
+          <text class="dg-t mut" x="201" y="278" font-size="9" text-anchor="middle">stripped by the API</text>
+          <rect class="dg-box mid" x="294" y="240" width="86" height="46" rx="8"/><text class="dg-t" x="337" y="268" font-size="12" text-anchor="middle">answer</text>
+          <text class="dg-t acc" x="200" y="308" font-size="11" text-anchor="middle">never re-sent — so never re-billed as input</text>
         </svg>
       </div>
     </div>
@@ -967,7 +978,7 @@ prose ("I'll add…")        <span class="o">~250</span>
 Edit tool call (the diff)  <span class="o">~450</span></div>
     </div>
     <p class="note reveal"><b>The bill</b> (Opus, $5 / $25 per MTok): input would be <b>$0.11</b>, but ~19k of it is cache-read at 0.1× → <b>~$0.03</b>. Output: 1,600 × $25/M → <b>~$0.04</b>.</p>
-    <p class="note reveal" style="margin-top:.3rem">The model reads <b>14× more than it writes</b> — yet the tiny output side <b>costs more</b>: output is 5× the price and never cached. That's why <b>thinking tokens</b> are the expensive dial.</p>
+    <p class="note reveal" style="margin-top:.3rem">The model reads <b>14× more than it writes</b> — yet the tiny output side <b>costs more</b>: output is 5× the price and never cached. That's why <b>thinking tokens</b> are the expensive dial — billed once, here, then stripped from context: they never come back on the input side.</p>
   </div>
 </section>
 
