@@ -2,257 +2,260 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agentic AI — How Claude Code, Codex &amp; co. actually work</title>
 
-<!-- Fonts: Space Grotesk (display) + IBM Plex Sans (body) + IBM Plex Mono (labels/code) — Ember -->
+<!-- Fonts: Space Grotesk (display) + IBM Plex Sans (body) + IBM Plex Mono (mono) — Ember design system -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
 
+<link rel="stylesheet" href="ember_design_system/styles.css">
+<style>deck-stage:not(:defined){visibility:hidden}</style>
 <style>
-/* ===========================================
-   THEME — Ember. Warm ink / paper / coral.
-   =========================================== */
+/* ═══════════════════════════════════════════════════════════════════
+   Agentic AI (beginner deck) — Ember design system, token-driven.
+   Fixed 1920×1080 canvas: sizes are px, colours/spacing are tokens.
+   ═══════════════════════════════════════════════════════════════════ */
 :root{
-  /* Core surfaces */
-  --ink:#16130e; --ink-2:#1c1812; --ink-3:#0e0c08;
-  --paper:#f4efe6; --paper-2:#efe7d8; --paper-3:#e3d9c6;
-  /* Accent */
-  --coral:#ff5c35; --coral-ink:#b9361a; --coral-soft:#ffe9e2; --coral-tint:#ffe0d6;
-  /* Text ramps */
-  --text-strong:#16130e; --text-muted:#5c5446; --text-faint:#a39684;
-  --on-dark:#f4efe6; --on-dark-muted:#cabfac; --on-dark-faint:#8a7f6d;
-  /* Lines & diagram bars */
-  --line-light:#cbbfa9; --line-light-2:#ddd2bf; --line-card:#d8ccb6;
-  --line-dark:#3a342a; --line-dark-2:#2c281f; --bar:#ddd0ba; --bar-dark:#46402f;
-  /* Semantic */
-  --positive:#3fb950; --warning:#d9a441; --danger:#b9361a;
-  /* Code syntax (on --code-bg) */
-  --code-bg:#0e0c08; --code-text:#e8dfcf; --code-keyword:#e0795f; --code-string:#7fb98a; --code-number:#d9a441; --code-comment:#8a7f6d;
-  /* Effects & radii */
-  --ring-accent:0 0 0 6px rgba(255,92,53,.16); --ring-accent-dark:0 0 0 6px rgba(255,92,53,.22);
-  --shadow-terminal:0 18px 50px rgba(0,0,0,.26);
-  --radius-sm:7px; --radius-md:12px; --radius-lg:14px; --radius-xl:18px;
-  /* Fonts */
-  --font-d:'Space Grotesk',system-ui,sans-serif; --font-b:'IBM Plex Sans',system-ui,sans-serif; --font-m:'IBM Plex Mono',ui-monospace,Menlo,monospace;
-  /* Type scale (viewport-fit clamps preserved) */
-  --h2-size:clamp(1.3rem,3.7vw,2.8rem); --h3-size:clamp(1rem,2.2vw,1.5rem);
-  --body-size:clamp(.76rem,1.38vw,1.1rem); --small-size:clamp(.63rem,1vw,.86rem);
-  --slide-padding:clamp(1.05rem,3.5vw,3.4rem); --content-gap:clamp(.5rem,1.7vw,1.3rem);
-  --ease:cubic-bezier(.16,1,.3,1); --dur:.6s;
+  --ease:cubic-bezier(.16,1,.3,1);
+  /* short aliases the slide markup uses inline */
+  --font-d:var(--font-display); --font-b:var(--font-body); --font-m:var(--font-mono);
 }
 *{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--ink);color:var(--text-strong);font-family:var(--font-body)}
 
-/* ===== VIEWPORT FITTING (mandatory base) ===== */
-html, body{height:100%;overflow-x:hidden}
-html{scroll-snap-type:y mandatory;scroll-behavior:smooth}
-.slide{width:100vw;height:100vh;height:100dvh;overflow:hidden;scroll-snap-align:start;
-  display:flex;flex-direction:column;position:relative}
-.slide-content{flex:1;display:flex;flex-direction:column;justify-content:center;max-height:100%;
-  overflow:hidden;padding:var(--slide-padding)}
-img{max-width:100%;max-height:min(50vh,400px);object-fit:contain}
-@media (max-height:760px){:root{--slide-padding:clamp(.8rem,3vw,2.1rem);--content-gap:clamp(.38rem,1.3vw,.95rem);
-  --h2-size:clamp(1.15rem,3.3vw,2.2rem);--body-size:clamp(.72rem,1.28vw,1rem)}}
-@media (max-height:620px){:root{--slide-padding:clamp(.5rem,2.3vw,1.3rem);--content-gap:clamp(.28rem,1vw,.65rem);
-  --h2-size:clamp(1rem,2.9vw,1.65rem);--body-size:clamp(.66rem,1.1vw,.88rem)}
-  .nav-dots,.keyboard-hint,.decorative{display:none}}
-@media (max-height:500px){:root{--slide-padding:clamp(.4rem,2vw,1rem);--h2-size:clamp(.92rem,2.5vw,1.35rem);
-  --body-size:clamp(.6rem,1vw,.8rem)}}
-@media (max-width:640px){.cards.c3,.cards.c2,.cards.c4{grid-template-columns:1fr !important}
-  .split{grid-template-columns:1fr !important}.gloss{grid-template-columns:1fr !important}}
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms !important;transition-duration:.2s !important}
-  html{scroll-behavior:auto}}
+/* ── SLIDE FRAME + local type scale ──────────────────────────────── */
+.slide{
+  display:flex; flex-direction:column; overflow:hidden;
+  font-family:var(--font-body); -webkit-font-smoothing:antialiased;
+  --pad-x:var(--slide-pad-x); --pad-t:var(--slide-pad-top); --pad-b:var(--slide-pad-bottom);
+  --h2-size:var(--fs-h2); --h3-size:34px; --lead-size:34px;
+  --body-size:26px; --small-size:20px; --code-size:20px;
+  --gap:28px; --content-gap:var(--gap); --diag-h:440px;
+}
+.slide.dense{
+  --pad-x:88px; --pad-t:var(--slide-pad-top-dense); --pad-b:var(--slide-pad-bottom-dense);
+  --h2-size:var(--fs-h2-sm); --h3-size:30px; --lead-size:30px;
+  --body-size:23px; --small-size:18px; --code-size:18px; --gap:20px; --diag-h:400px;
+}
+.slide.tight{
+  --pad-x:76px; --pad-t:60px; --pad-b:52px;
+  --h2-size:46px; --h3-size:27px; --lead-size:27px;
+  --body-size:21px; --small-size:16px; --code-size:16px; --gap:14px; --diag-h:340px;
+}
+.slide-content{
+  flex:1; min-height:0; display:flex; flex-direction:column; justify-content:center;
+  padding:var(--pad-t) var(--pad-x) var(--pad-b); overflow:hidden; position:relative; z-index:1;
+}
 
-/* ===== GLOBAL LOOK — flat warm surfaces ===== */
-body{background:var(--paper);color:var(--text-strong);font-family:var(--font-b)}
-/* Scheme scoping: each slide is PAPER (light) by default … */
-.slide{background:var(--s-bg);color:var(--s-text);
+/* ── SCHEMES — Ember light/dark rhythm. Every component reads --s-*. ─ */
+.slide,.slide.light{
   --s-bg:var(--paper); --s-text:var(--text-strong); --s-muted:var(--text-muted); --s-faint:var(--text-faint);
   --s-line:var(--line-light-2); --s-line-strong:var(--line-light);
-  --s-card-bg:var(--paper-2); --s-card-border:var(--line-card);
-  --s-mid-fill:var(--paper-3); --s-mid-stroke:var(--line-light);
-  --s-outer-fill:var(--coral-soft); --s-accent:var(--coral-ink); --s-bar:var(--bar)}
-/* … or INK (dark) when the section carries class "dark". */
+  --s-card-bg:var(--paper-2); --s-card-border:var(--line-card); --s-box-mid:var(--paper-3);
+  --s-outer-fill:var(--coral-soft); --s-callout-bg:var(--coral-soft);
+  --s-accent:var(--coral-ink); --s-bar:var(--bar);
+  background:var(--s-bg); color:var(--s-text);
+}
 .slide.dark{
   --s-bg:var(--ink); --s-text:var(--on-dark); --s-muted:var(--on-dark-muted); --s-faint:var(--on-dark-faint);
   --s-line:var(--line-dark-2); --s-line-strong:var(--line-dark);
-  --s-card-bg:var(--ink-2); --s-card-border:var(--line-dark);
-  --s-mid-fill:var(--ink-2); --s-mid-stroke:var(--line-dark);
-  --s-outer-fill:rgba(255,92,53,.10); --s-accent:var(--coral); --s-bar:var(--bar-dark)}
-.slide-content{position:relative;z-index:1}
+  --s-card-bg:var(--ink-2); --s-card-border:var(--line-dark); --s-box-mid:var(--ink-2);
+  --s-outer-fill:rgba(255,92,53,.10); --s-callout-bg:rgba(255,92,53,.10);
+  --s-accent:var(--coral); --s-bar:var(--bar-dark);
+  background:var(--s-bg); color:var(--s-text);
+}
 
-/* Header */
-.slide-head{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;
-  margin-bottom:clamp(.5rem,1.8vh,1.2rem);border-bottom:1px solid var(--s-line);padding-bottom:clamp(.35rem,1.1vh,.8rem)}
-.snum{font-family:var(--font-d);font-weight:700;color:var(--s-accent);font-size:clamp(1.1rem,2.8vw,2.2rem);line-height:1;letter-spacing:-.02em}
-.crumb{font-family:var(--font-m);font-size:var(--small-size);letter-spacing:.1em;text-transform:uppercase;color:var(--s-accent);font-weight:500;text-align:right}
-.crumb b{color:var(--s-text);font-weight:600}
+/* ── HEADER ──────────────────────────────────────────────────────── */
+.slide-head{
+  display:flex; align-items:baseline; justify-content:space-between; gap:var(--space-5);
+  margin-bottom:var(--gap); border-bottom:var(--bw-hair) solid var(--s-line); padding-bottom:18px;
+}
+.snum{font:var(--w-bold) 48px/1 var(--font-display); color:var(--s-accent); letter-spacing:var(--track-snug)}
+.crumb{font:var(--w-medium) var(--small-size)/1.2 var(--font-mono); letter-spacing:var(--track-eyebrow);
+  text-transform:uppercase; color:var(--s-muted); text-align:right}
+.crumb b{color:var(--s-accent); font-weight:var(--w-semibold)}
 
-h2{font-family:var(--font-d);font-weight:700;font-size:var(--h2-size);line-height:1.04;letter-spacing:-.025em;margin-bottom:clamp(.35rem,1.4vh,.9rem)}
+/* ── TYPE ────────────────────────────────────────────────────────── */
+h2{font-family:var(--font-display); font-weight:var(--w-bold); font-size:var(--h2-size);
+  line-height:var(--lh-snug); letter-spacing:var(--track-snug); margin-bottom:22px; color:var(--s-text); text-wrap:balance}
 h2 .o{color:var(--s-accent)}
-h3{font-family:var(--font-d);font-weight:700;font-size:var(--h3-size);line-height:1.1;letter-spacing:-.02em}
-.lead{font-size:clamp(.92rem,1.95vw,1.45rem);line-height:1.45;max-width:48ch}
+h3{font-family:var(--font-display); font-weight:var(--w-bold); font-size:var(--h3-size);
+  line-height:var(--lh-snug); letter-spacing:var(--track-snug); color:var(--s-text)}
+.lead{font-size:var(--lead-size); line-height:1.45; max-width:48ch; color:var(--s-text); text-wrap:pretty}
 .lead b{color:var(--s-accent)}
 .muted{color:var(--s-muted)}
+strong,b{font-weight:var(--w-semibold)}
 
-ul.bul{list-style:none;display:flex;flex-direction:column;gap:clamp(.35rem,1.2vh,.85rem);max-width:68ch}
-ul.bul li{font-size:var(--body-size);line-height:1.45;padding-left:1.55em;position:relative}
-ul.bul li::before{content:"";position:absolute;left:0;top:.42em;width:.62em;height:.62em;background:var(--coral);clip-path:polygon(0 0,100% 50%,0 100%)}
-ul.bul li b{color:var(--s-text);font-weight:600}
+ul.bul{list-style:none; display:flex; flex-direction:column; gap:20px; max-width:68ch}
+ul.bul li{font-size:var(--body-size); line-height:1.45; padding-left:1.55em; position:relative;
+  color:var(--s-text); text-wrap:pretty}
+ul.bul li::before{content:""; position:absolute; left:0; top:.44em; width:.6em; height:.6em;
+  background:var(--s-accent); clip-path:polygon(0 0,100% 50%,0 100%)}
+ul.bul li b{color:var(--s-text); font-weight:var(--w-semibold)}
 
-.cards{display:grid;gap:clamp(.45rem,1.3vw,1rem)}
+.note{font-size:var(--small-size); color:var(--s-muted); margin-top:20px; line-height:1.45; text-wrap:pretty}
+.note b{color:var(--s-text); font-weight:var(--w-semibold)}
+
+/* ── CARDS / TILES ───────────────────────────────────────────────── */
+.cards{display:grid; gap:var(--space-5)}
 .cards.c3{grid-template-columns:repeat(3,1fr)}
-.cards.c2{grid-template-columns:repeat(2,1fr)}
-.cards.c4{grid-template-columns:repeat(2,1fr)}
-.tile{border:1.5px solid var(--s-card-border);border-radius:var(--radius-md);padding:clamp(.65rem,1.5vw,1.25rem);background:var(--s-card-bg);display:flex;flex-direction:column;gap:.32rem}
-.tile .k{font-family:var(--font-d);font-weight:700;letter-spacing:-.015em;color:var(--s-accent);font-size:clamp(.82rem,1.75vw,1.25rem)}
-.tile p{font-size:var(--body-size);line-height:1.4;color:var(--s-text)}
-/* Coral callout tile — light: soft wash + 6px coral edge; dark: ring-spotlit card */
-.tile.fill{background:var(--coral-soft);border:none;border-left:6px solid var(--coral);border-radius:0 var(--radius-md) var(--radius-md) 0}
-.tile.fill .k{color:var(--coral-ink)}
-.tile.fill p{color:var(--ink)}
-.slide.dark .tile.fill{background:var(--ink-2);border:2px solid var(--coral);border-radius:var(--radius-md);box-shadow:var(--ring-accent-dark)}
-.slide.dark .tile.fill .k{color:var(--coral)}
-.slide.dark .tile.fill p{color:var(--on-dark-muted)}
+.cards.c2,.cards.c4{grid-template-columns:repeat(2,1fr)}
+.tile{border:var(--bw) solid var(--s-card-border); border-radius:var(--radius-lg);
+  padding:30px 32px; background:var(--s-card-bg); display:flex; flex-direction:column; gap:10px}
+.tile .k{font-family:var(--font-display); font-weight:var(--w-bold); color:var(--s-accent);
+  font-size:30px; letter-spacing:var(--track-snug)}
+.tile p{font-size:var(--body-size); line-height:1.4; color:var(--s-text); text-wrap:pretty}
+.tile.fill{background:var(--s-callout-bg); border-color:var(--s-card-border);
+  border-left:var(--bw-callout) solid var(--coral); border-radius:0 var(--radius-lg) var(--radius-lg) 0}
 
-/* Big callout card — same light/dark treatment */
-.kcard{background:var(--coral-soft);color:var(--ink);border-left:6px solid var(--coral);border-radius:0 var(--radius-md) var(--radius-md) 0;padding:clamp(.85rem,2.5vw,1.9rem);position:relative;overflow:hidden}
-.kcard .big{font-family:var(--font-d);font-weight:700;letter-spacing:-.02em;color:var(--coral-ink);font-size:clamp(1.3rem,3.8vw,2.7rem);line-height:1.04;position:relative}
-.kcard p{font-size:var(--body-size);line-height:1.45;margin-top:.45rem;position:relative;max-width:50ch}
-.slide.dark .kcard{background:var(--ink-2);color:var(--on-dark);border:2px solid var(--coral);border-radius:var(--radius-md);box-shadow:var(--ring-accent-dark)}
-.slide.dark .kcard .big{color:var(--coral)}
-.slide.dark .kcard p{color:var(--on-dark-muted)}
+.kcard{background:var(--s-callout-bg); color:var(--s-text); border:var(--bw) solid var(--s-card-border);
+  border-left:var(--bw-callout) solid var(--coral); border-radius:0 var(--radius-xl) var(--radius-xl) 0;
+  padding:40px 44px; position:relative; overflow:hidden}
+.slide.dark .kcard{box-shadow:var(--ring-accent-dark)}
+.kcard .big{font-family:var(--font-display); font-weight:var(--w-bold); color:var(--s-accent);
+  font-size:56px; line-height:1.02; letter-spacing:var(--track-snug)}
+.kcard p{font-size:var(--body-size); line-height:1.42; margin-top:14px; max-width:50ch; color:var(--s-text)}
 
-.split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(.85rem,2.5vw,2.1rem);align-items:center}
+.split{display:grid; grid-template-columns:1fr 1fr; gap:var(--space-8); align-items:center; min-height:0}
 
-table.tbl{width:100%;border-collapse:collapse;font-size:var(--body-size)}
-table.tbl th,table.tbl td{text-align:left;padding:clamp(.32rem,1vh,.72rem) clamp(.42rem,1.1vw,.88rem);border-bottom:1px solid var(--s-line)}
-table.tbl th{font-family:var(--font-m);color:var(--s-accent);font-weight:600;font-size:var(--small-size);letter-spacing:.08em;text-transform:uppercase}
+/* ── TABLES ──────────────────────────────────────────────────────── */
+table.tbl{width:100%; border-collapse:collapse; font-size:var(--body-size)}
+table.tbl th,table.tbl td{text-align:left; padding:16px 20px; border-bottom:var(--bw-hair) solid var(--s-line)}
+table.tbl th{font-family:var(--font-mono); color:var(--s-accent); font-weight:var(--w-semibold);
+  font-size:var(--small-size); letter-spacing:var(--track-label); text-transform:uppercase}
 table.tbl td{color:var(--s-text)}
-table.tbl td b{color:var(--s-text);font-weight:600}
+table.tbl td b{color:var(--s-text); font-weight:var(--w-semibold)}
 table.tbl tr:last-child td{border-bottom:none}
-.note{font-size:var(--small-size);color:var(--s-muted);margin-top:clamp(.45rem,1.3vh,.85rem);line-height:1.45}
-.note b{color:var(--s-text);font-weight:600}
 
-.extag{display:inline-block;font-family:var(--font-m);font-weight:500;font-size:var(--small-size);color:var(--ink);background:var(--coral);padding:.12rem .6rem;border-radius:var(--radius-sm);margin-bottom:.45rem;letter-spacing:.04em;text-transform:uppercase}
+/* ── CHIPS ───────────────────────────────────────────────────────── */
+.extag{display:inline-block; font-family:var(--font-mono); font-size:var(--small-size); color:var(--s-accent);
+  background:var(--s-callout-bg); border:var(--bw-hair) solid var(--s-card-border);
+  padding:4px 14px; border-radius:var(--radius-sm); margin-bottom:12px; letter-spacing:var(--track-label);
+  text-transform:uppercase}
+.pills{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px}
+.pill{font-family:var(--font-mono); border:var(--bw-hair) solid var(--coral); color:var(--s-accent);
+  border-radius:var(--radius-pill); padding:4px 16px; font-size:var(--small-size);
+  font-weight:var(--w-semibold); letter-spacing:var(--track-label); white-space:nowrap}
 
-.code{background:var(--code-bg);border:1px solid var(--line-dark);border-left:3px solid var(--coral);border-radius:var(--radius-lg);
-  padding:clamp(.55rem,1.4vw,1rem) clamp(.7rem,1.6vw,1.2rem);font-family:var(--font-m);
-  font-size:clamp(.58rem,1.1vw,.88rem);line-height:1.6;overflow:hidden;color:var(--code-text);white-space:pre-wrap}
-.code .c{color:var(--code-comment)} .code .o{color:var(--coral)} .code .g{color:var(--code-string)} .code .b{color:var(--code-keyword)} .code .d{color:var(--code-number)}
+/* ── CODE ────────────────────────────────────────────────────────── */
+.code{background:var(--code-bg); border:var(--bw) solid var(--s-line); border-left:3px solid var(--coral);
+  border-radius:var(--radius-lg); padding:24px 28px; font-family:var(--font-mono);
+  font-size:var(--code-size); line-height:var(--lh-mono); overflow:hidden; color:var(--code-text);
+  white-space:pre-wrap}
+.code .c{color:var(--code-comment)}
+.code .o{color:var(--code-keyword)}
+.code .g{color:var(--code-string)}
+.code .b{color:var(--code-number)}
+.code .d{color:var(--code-keyword)}
 
-.pills{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.3rem}
-.pill{font-family:var(--font-m);border:1px solid var(--s-accent);color:var(--s-accent);border-radius:100px;padding:.22rem .7rem;font-size:var(--small-size);font-weight:500}
+/* ── SECTION DIVIDER ─────────────────────────────────────────────── */
+.divider .slide-content{align-items:flex-start; justify-content:center; text-align:left}
+.divider .dnum{font:var(--w-bold) var(--fs-mega)/var(--lh-tight) var(--font-display);
+  color:var(--coral); letter-spacing:var(--track-tight); margin-bottom:10px}
+.divider h2{font-size:var(--fs-h1)}
+.divider h2::after{content:""; display:block; width:var(--accent-bar-w); height:var(--bw-accent);
+  background:var(--coral); border-radius:var(--radius-bar); margin:.45em 0 .1em}
+.divider .dsub{color:var(--s-muted); font-size:var(--fs-body-lg); max-width:42ch;
+  margin-top:18px; line-height:var(--lh-body)}
+.divider .dsub b{color:var(--s-text); font-weight:var(--w-semibold)}
 
-/* Section divider — always dark, giant coral numeral + accent bar */
-.divider .slide-content{align-items:flex-start;justify-content:center;text-align:left}
-.divider .dnum{font-family:var(--font-d);font-weight:700;color:var(--coral);font-size:clamp(2.4rem,8.5vw,6rem);line-height:.9;letter-spacing:-.03em;margin-bottom:.3rem}
-.divider h2{font-size:clamp(1.7rem,5.5vw,3.6rem)}
-.divider h2::after{content:"";display:block;width:clamp(70px,9vw,120px);height:4px;background:var(--coral);margin:clamp(.5rem,1.6vh,1rem) 0 clamp(.4rem,1.2vh,.8rem)}
-.divider .dsub{color:var(--s-muted);font-size:clamp(.85rem,1.8vw,1.2rem);max-width:42ch;margin:0}
-.divider .dsub b{color:var(--s-text)}
+/* ── GLOSSARY / USES ─────────────────────────────────────────────── */
+.gloss{display:grid; grid-template-columns:1fr 1fr; gap:4px 44px}
+.gloss .row{display:flex; gap:18px; align-items:baseline; padding:12px 0;
+  border-bottom:var(--bw-hair) solid var(--s-line)}
+.gloss .term{font-family:var(--font-display); font-weight:var(--w-semibold); color:var(--s-accent);
+  font-size:var(--body-size); min-width:6.2em; flex-shrink:0; letter-spacing:var(--track-snug)}
+.gloss .def{font-size:var(--body-size); color:var(--s-text); line-height:1.35}
+.uses{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-5)}
 
-/* Glossary */
-.gloss{display:grid;grid-template-columns:1fr 1fr;gap:.15rem 1.6rem}
-.gloss .row{display:flex;gap:.7rem;align-items:baseline;padding:clamp(.2rem,.7vh,.42rem) 0;border-bottom:1px solid var(--s-line)}
-.gloss .term{font-family:var(--font-d);font-weight:700;letter-spacing:-.015em;color:var(--s-accent);font-size:var(--body-size);min-width:6.2em;flex-shrink:0}
-.gloss .def{font-size:var(--body-size);color:var(--s-text);line-height:1.35}
-
-/* Use-case list */
-.uses{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.45rem,1.3vw,1rem)}
-@media (max-width:640px){.uses{grid-template-columns:1fr}}
-
-/* ===== DIAGRAMS (inline SVG) ===== */
-.diagram{width:100%;display:flex;justify-content:center;margin-top:.25rem}
-.diagram svg{width:100%;max-width:min(94vw,900px);height:auto;max-height:min(50vh,440px)}
-.diagram video{width:100%;max-width:min(94vw,900px);height:auto;max-height:min(50vh,440px);display:block;background:var(--s-bg)}
-.dg-box{fill:var(--s-card-bg);stroke:var(--s-card-border);stroke-width:1.5}
-.dg-box.hot{fill:var(--coral);stroke:var(--coral)}
-.dg-box.outer{fill:var(--s-outer-fill);stroke:var(--coral);stroke-dasharray:6 5}
-.dg-box.mid{fill:var(--s-mid-fill);stroke:var(--s-mid-stroke)}
-.dg-t{fill:var(--s-text);font-family:var(--font-b);font-weight:600}
+/* ── DIAGRAMS (inline SVG + explainer video) ─────────────────────── */
+.diagram{width:100%; display:flex; justify-content:center; align-items:center; margin-top:8px; min-height:0}
+.diagram svg{width:100%; height:auto; max-height:var(--diag-h)}
+.diagram video{width:auto; height:auto; max-width:100%; max-height:var(--diag-h);
+  display:block; background:transparent; border-radius:var(--radius-md)}
+.dg-box{fill:var(--s-card-bg); stroke:var(--s-card-border); stroke-width:1.5}
+.dg-box.hot{fill:var(--coral); stroke:var(--coral)}
+.dg-box.outer{fill:var(--s-outer-fill); stroke:var(--coral); stroke-dasharray:6 5}
+.dg-box.mid{fill:var(--s-box-mid); stroke:var(--s-card-border)}
+.dg-t{fill:var(--s-text); font-family:var(--font-body); font-weight:var(--w-semibold)}
 .dg-t.on{fill:var(--ink)}
-.dg-t.mut{fill:var(--s-muted);font-weight:500}
-.dg-t.acc{fill:var(--s-accent);font-family:var(--font-d);font-weight:700}
-.dg-line{stroke:var(--coral);stroke-width:2.5;fill:none}
-.dg-line.dim{stroke:var(--s-line-strong);stroke-width:1.5}
-.dg-arrow-dim{fill:var(--s-faint)}
-.dg-tangle{stroke:var(--s-faint);fill:none}
-.dg-dash{stroke:var(--s-line-strong);fill:none}
-.dg-fill-g{fill:var(--positive)}.dg-fill-a{fill:var(--warning)}.dg-fill-r{fill:var(--coral)}
-.dg-cap{text-align:center;font-size:var(--small-size);color:var(--s-muted);margin-top:.4rem}
+.dg-t.mut{fill:var(--s-muted); font-weight:var(--w-medium)}
+.dg-t.acc{fill:var(--s-accent); font-family:var(--font-mono); font-weight:var(--w-semibold)}
+.dg-line{stroke:var(--s-accent); stroke-width:2.5; fill:none}
+.dg-line.dim{stroke:var(--s-line-strong); stroke-width:1.5}
+.dg-tangle{stroke:var(--s-faint); fill:none}
+.dg-dash{stroke:var(--s-line-strong); fill:none}
+.dg-fill-g{fill:var(--positive)} .dg-fill-a{fill:var(--warning)} .dg-fill-r{fill:var(--coral)}
+.dg-cap{text-align:center; font-size:var(--small-size); color:var(--s-muted); margin-top:10px}
 .dg-cap b{color:var(--s-text)}
+.diagram marker path{fill:var(--s-accent)}
+#ahHd path{fill:var(--s-faint)}
 
-/* ===== TITLE SLIDE (dark, coral quarter-circle) ===== */
-.title-slide{display:grid;grid-template-columns:1.1fr .9fr}
-.ts-left{padding:var(--slide-padding);display:flex;flex-direction:column;justify-content:space-between}
-.ts-top{display:flex;justify-content:space-between;align-items:center;color:var(--on-dark-faint);font-family:var(--font-m);font-size:var(--small-size);letter-spacing:.1em;text-transform:uppercase}
-.ts-top .num{font-family:var(--font-d);font-weight:700;color:var(--coral);font-size:clamp(1.3rem,2.8vw,2.2rem);letter-spacing:-.02em}
-.ts-kick{font-family:var(--font-m);font-size:clamp(.66rem,1.4vw,1rem);letter-spacing:.1em;text-transform:uppercase;color:var(--coral);font-weight:600;margin-bottom:clamp(.6rem,1.7vh,1.1rem)}
-.ts-title{font-family:var(--font-d);font-weight:700;line-height:.92;font-size:clamp(2.3rem,8.5vw,6.5rem);letter-spacing:-.03em;color:var(--on-dark)}
-.ts-sub{font-size:clamp(.88rem,2vw,1.5rem);color:var(--on-dark-muted);margin-top:clamp(.7rem,2.1vh,1.4rem);font-weight:400;max-width:24ch}
-.ts-sub b{color:var(--on-dark)}
-.ts-author{font-size:clamp(.76rem,1.5vw,1.06rem);color:var(--on-dark-faint)}
-.ts-author b{color:var(--on-dark)}
-.ts-right{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--ink);border-left:1px solid var(--line-dark)}
-.ts-right::before{content:"";position:absolute;top:0;right:0;width:clamp(160px,24vw,300px);height:clamp(160px,24vw,300px);background:var(--coral);border-bottom-left-radius:100%}
-.ts-badge{text-align:center;position:relative;z-index:2}
-.ts-badge .b1{font-family:var(--font-d);font-weight:700;color:var(--on-dark);font-size:clamp(3rem,10vw,7.5rem);line-height:.85;letter-spacing:-.03em}
-.ts-badge .b2{font-family:var(--font-m);font-weight:500;letter-spacing:.14em;text-transform:uppercase;font-size:clamp(.56rem,1.25vw,.9rem);margin-top:.7rem;color:var(--on-dark-muted)}
-@media (max-width:700px){.title-slide{grid-template-columns:1fr}.ts-right{display:none}}
+/* ── TITLE SLIDE ─────────────────────────────────────────────────── */
+.title-slide{display:grid; grid-template-columns:1.1fr .9fr; background:var(--ink)}
+.ts-left{padding:var(--slide-pad-top) var(--slide-pad-x) var(--slide-pad-bottom);
+  display:flex; flex-direction:column; justify-content:space-between}
+.ts-top{display:flex; justify-content:space-between; align-items:center; color:var(--on-dark-faint);
+  font-family:var(--font-mono); font-size:var(--fs-eyebrow); letter-spacing:var(--track-eyebrow);
+  text-transform:uppercase}
+.ts-top .num{font-family:var(--font-display); font-weight:var(--w-bold); color:var(--coral); font-size:48px}
+.ts-kick{font-family:var(--font-mono); font-size:var(--fs-eyebrow); letter-spacing:var(--track-eyebrow);
+  text-transform:uppercase; color:var(--coral); font-weight:var(--w-semibold); margin-bottom:26px}
+.ts-title{font-family:var(--font-display); font-weight:var(--w-bold); line-height:.95;
+  font-size:var(--fs-display); letter-spacing:var(--track-tight); color:var(--on-dark)}
+.ts-sub{font-size:var(--fs-subtitle); color:var(--on-dark-muted); margin-top:32px;
+  font-weight:var(--w-regular); max-width:24ch}
+.ts-sub b{color:var(--on-dark); font-weight:var(--w-semibold)}
+.ts-author{font-size:26px; color:var(--on-dark-muted)}
+.ts-author b{color:var(--coral); font-weight:var(--w-semibold)}
+.ts-right{position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center;
+  background:var(--ink-2); border-left:var(--bw) solid var(--line-dark)}
+.ts-right::before{content:""; position:absolute; top:0; right:0; width:300px; height:300px;
+  background:var(--coral); border-bottom-left-radius:100%}
+.ts-badge{font-family:var(--font-display); color:var(--on-dark); text-align:center; position:relative; z-index:2}
+.ts-badge .b1{font-size:150px; line-height:.85; font-weight:var(--w-bold); letter-spacing:var(--track-tight)}
+.ts-badge .b2{font-family:var(--font-mono); font-weight:var(--w-medium); letter-spacing:var(--track-eyebrow);
+  text-transform:uppercase; font-size:22px; margin-top:18px; color:var(--on-dark-muted)}
 
-.thanks{font-family:var(--font-d);font-weight:700;letter-spacing:-.025em;font-size:clamp(1.9rem,7vw,5rem);line-height:1}
+/* ── CLOSING ─────────────────────────────────────────────────────── */
+.thanks{font-family:var(--font-display); font-weight:var(--w-bold); font-size:104px; line-height:.98;
+  letter-spacing:var(--track-tight); color:var(--s-text)}
 .thanks .o{color:var(--s-accent)}
-
-/* Links grid */
-.links{display:grid;grid-template-columns:1fr 1fr;gap:clamp(.5rem,2vw,1.7rem)}
-.linkcol h3{color:var(--s-accent);margin-bottom:.45rem;font-size:clamp(.82rem,1.7vw,1.12rem)}
-.linkcol a{display:block;color:var(--s-text);text-decoration:none;font-size:clamp(.64rem,1.12vw,.9rem);line-height:1.3;padding:.25rem 0;border-bottom:1px solid var(--s-line)}
+.links{display:grid; grid-template-columns:1fr 1fr; gap:var(--space-7)}
+.linkcol h3{color:var(--s-accent); font-family:var(--font-display); font-weight:var(--w-semibold);
+  margin-bottom:12px; font-size:26px; letter-spacing:var(--track-snug)}
+.linkcol a{display:block; color:var(--s-text); text-decoration:none; font-size:21px; line-height:1.32;
+  padding:7px 0; border-bottom:var(--bw-hair) solid var(--s-line)}
 .linkcol a:hover{color:var(--s-accent)}
-.linkcol a .u{display:block;color:var(--s-faint);font-family:var(--font-m);font-size:.82em;margin-top:.05em}
+.linkcol a .u{display:block; color:var(--s-muted); font-family:var(--font-mono); font-size:.82em; margin-top:.08em}
 
-/* ===== ANIMATIONS ===== */
-.reveal{opacity:0;transform:translateY(26px);transition:opacity var(--dur) var(--ease),transform var(--dur) var(--ease)}
-.slide.visible .reveal{opacity:1;transform:translateY(0)}
-.slide.visible .reveal:nth-child(1){transition-delay:.05s}
-.slide.visible .reveal:nth-child(2){transition-delay:.14s}
-.slide.visible .reveal:nth-child(3){transition-delay:.23s}
-.slide.visible .reveal:nth-child(4){transition-delay:.32s}
-.slide.visible .reveal:nth-child(5){transition-delay:.41s}
-.ts-left>*{opacity:0;animation:rise .9s var(--ease) both}
-.ts-left .ts-top{animation-delay:.1s}.ts-left .ts-mid{animation-delay:.3s}.ts-left .ts-author{animation-delay:.5s}
-.ts-right{opacity:0;animation:slideIn 1s var(--ease) both .2s}
-@keyframes rise{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
-@keyframes slideIn{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:translateX(0)}}
-
-/* ===== CHROME ===== */
-.progress-bar{position:fixed;top:0;left:0;height:3px;width:0;background:var(--coral);z-index:9999}
-.nav-dots{position:fixed;right:clamp(.45rem,1.2vw,1.1rem);top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:.35rem;z-index:9998}
-.nav-dots button{width:8px;height:8px;border-radius:50%;border:none;cursor:pointer;padding:0;background:rgba(255,92,53,.32);transition:all .3s var(--ease)}
-.nav-dots button.active{background:var(--coral);transform:scale(1.5)}
-.keyboard-hint{position:fixed;bottom:clamp(.45rem,1.2vh,.95rem);left:50%;transform:translateX(-50%);font-family:var(--font-m);font-size:var(--small-size);color:var(--on-dark-faint);z-index:9998;opacity:.75;letter-spacing:.04em}
-.keyboard-hint kbd{font-family:var(--font-m);background:rgba(255,92,53,.12);border:1px solid var(--on-dark-faint);border-radius:5px;padding:.1em .45em;font-size:.85em;color:inherit}
-
-/* ===== INLINE EDITING ===== */
-.edit-hotzone{position:fixed;top:0;left:0;width:80px;height:80px;z-index:10000;cursor:pointer}
-.edit-toggle{position:fixed;top:clamp(.45rem,1.2vh,.95rem);left:clamp(.45rem,1.2vw,.95rem);width:42px;height:42px;border-radius:11px;border:1px solid var(--line-dark);background:var(--ink-2);color:var(--on-dark);font-size:1.1rem;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .3s ease;z-index:10001;display:flex;align-items:center;justify-content:center}
-.edit-toggle.show,.edit-toggle.active{opacity:1;pointer-events:auto}
-.edit-toggle.active{background:var(--coral);color:var(--ink);border-color:var(--coral)}
-body.editing [contenteditable="true"]{outline:1px dashed rgba(255,92,53,.7);outline-offset:3px;border-radius:3px;cursor:text}
-body.editing [contenteditable="true"]:focus{outline:2px solid var(--coral);background:rgba(255,92,53,.08)}
-.edit-bar{position:fixed;bottom:clamp(.45rem,1.2vh,.95rem);right:clamp(.45rem,1.2vw,.95rem);z-index:10001;display:none;gap:.5rem}
-body.editing .edit-bar{display:flex}
-.edit-bar button{font-family:var(--font-b);font-weight:600;border:1px solid var(--line-dark);background:var(--ink-2);color:var(--on-dark);border-radius:9px;padding:.5rem .9rem;cursor:pointer;font-size:var(--small-size)}
-.edit-bar button.primary{background:var(--coral);color:var(--ink);border-color:var(--coral)}
-.edit-toast{position:fixed;bottom:clamp(3rem,8vh,4.2rem);right:clamp(.45rem,1.2vw,.95rem);z-index:10002;background:var(--coral);color:var(--ink);font-weight:600;padding:.5rem .9rem;border-radius:9px;font-size:var(--small-size);opacity:0;transform:translateY(8px);transition:all .3s var(--ease);pointer-events:none}
-.edit-toast.show{opacity:1;transform:translateY(0)}
+/* ── ENTRANCE MOTION ─────────────────────────────────────────────────
+   Visible end-state is the base style; we animate FROM hidden, only on
+   the active slide and only when motion is welcome. Print + reduced
+   motion therefore always show the finished slide. ─────────────────── */
+@keyframes ae-rise{from{opacity:0; transform:translateY(22px)} to{opacity:1; transform:none}}
+@keyframes ae-slide-in{from{opacity:0; transform:translateX(48px)} to{opacity:1; transform:none}}
+@media (prefers-reduced-motion:no-preference){
+  [data-deck-active] .reveal{animation:ae-rise .5s var(--ease) both}
+  [data-deck-active] .reveal:nth-child(2){animation-delay:.07s}
+  [data-deck-active] .reveal:nth-child(3){animation-delay:.14s}
+  [data-deck-active] .reveal:nth-child(4){animation-delay:.21s}
+  [data-deck-active] .reveal:nth-child(n+5){animation-delay:.27s}
+  [data-deck-active] .ts-left>*{animation:ae-rise .8s var(--ease) both}
+  [data-deck-active] .ts-left .ts-mid{animation-delay:.18s}
+  [data-deck-active] .ts-left .ts-author{animation-delay:.34s}
+  [data-deck-active].title-slide .ts-right{animation:ae-slide-in .9s var(--ease) both .12s}
+}
 </style>
 </head>
 <body>
 
 <!--
   ============================================================
+  Agentic AI — a beginner's introduction. Companion deck to
+  agentic-engineering.html (the developer follow-up).
+
   LIVE DEMO — presenter quick reference (not shown to the audience)
   ------------------------------------------------------------
   BEFORE the talk: start Claude Code on a real task in AUTO / accept-edits
@@ -270,867 +273,1015 @@ body.editing .edit-bar{display:flex}
     • Context · keep lean → the live context %
     • Permissions         → the mode you chose
   Fallback if it stalls: keep talking; revisit at the next checkpoint.
+
+  Runs on the Ember deck-stage component: ←/→, Space, Home/End, number
+  keys; R resets; speaker notes live on each section (N / P / F).
   ============================================================
 -->
 
-<div class="progress-bar" id="progressBar"></div>
-<nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
-<div class="keyboard-hint decorative">Navigate: <kbd>↑</kbd> <kbd>↓</kbd> / <kbd>␣</kbd> · edit: <kbd>E</kbd></div>
+<deck-stage width="1920" height="1080">
 
-<div class="edit-hotzone" aria-hidden="true"></div>
-<button class="edit-toggle" id="editToggle" title="Edit mode (E)" aria-label="Edit mode">✎</button>
-<div class="edit-bar">
-  <button id="resetBtn" title="Restore original text">↺ Reset</button>
-  <button id="exportBtn" class="primary" title="Download HTML with your edits">↓ Export</button>
-</div>
-<div class="edit-toast" id="editToast">Saved</div>
-
-<!-- TITLE -->
-<section class="slide title-slide dark">
-  <div class="ts-left">
-    <div class="ts-top"><span class="num">01</span><span>Internal talk · July 2026</span></div>
-    <div class="ts-mid">
-      <div class="ts-kick">A beginner's introduction to agentic AI</div>
-      <h1 class="ts-title">Agentic<br>AI</h1>
-      <p class="ts-sub">How <b>Claude&nbsp;Code</b>, <b>Codex</b> &amp; co. actually work</p>
+  <!-- TITLE -->
+  <section class="slide dark title-slide" data-label="Title"
+    data-speaker-notes="Open warm and low-jargon: this is the beginner deck, no coding background needed. Promise the one thing they will leave with — model, harness, agent, and the loop that ties them together. Mention there is a live agent running during the talk, so they know to look out for the LIVE markers.">
+    <div class="ts-left">
+      <div class="ts-top"><span class="num">01</span><span>Internal talk · July 2026</span></div>
+      <div class="ts-mid">
+        <div class="ts-kick">A beginner's introduction to agentic AI</div>
+        <h1 class="ts-title">Agentic<br>AI</h1>
+        <p class="ts-sub">How <b>Claude&nbsp;Code</b>, <b>Codex</b> &amp; co. actually work</p>
+      </div>
+      <div class="ts-author">David&nbsp;Budáč &nbsp;/&nbsp; <b>ČSOB</b></div>
     </div>
-    <div class="ts-author">David&nbsp;Budáč &nbsp;/&nbsp; <b>ČSOB</b></div>
-  </div>
-  <div class="ts-right">
-    <div class="ts-badge"><div class="b1">AI</div><div class="b2">model · harness · agent</div></div>
-  </div>
-</section>
+    <div class="ts-right">
+      <div class="ts-badge"><div class="b1">AI</div><div class="b2">model · harness · agent</div></div>
+    </div>
+  </section>
 
-<!-- HOOK -->
-<section class="slide dark">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">2</span><div class="crumb"><b>The hook</b></div></div>
-    <h2 class="reveal">You type <span class="o">one line.</span> It does the rest.</h2>
-    <div class="code reveal"><span class="o">you ›</span> <span class="b">"the invoice test is failing — fix it"</span>
+  <!-- HOOK -->
+  <section class="slide dark" data-label="The hook"
+    data-speaker-notes="Read the one-line prompt out loud, then walk the four ticks slowly — tests, file, edit, tests again. The point to land is that nobody typed anything after the first line. That autonomy, deciding and then acting, is the definition of an agent, and the rest of the talk is just how it works.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">2</span><div class="crumb"><b>The hook</b></div></div>
+      <h2 class="reveal">You type <span class="o">one line.</span> It does the rest.</h2>
+      <div class="code reveal"><span class="o">you ›</span> <span class="b">"the invoice test is failing — fix it"</span>
 
 <span class="c">…then, with no further input, the AI on its own:</span>
   ✓ ran the tests           <span class="c">saw it expected 121, got 100</span>
   ✓ opened invoice.py       <span class="c">spotted VAT was never applied</span>
   ✓ edited the code         <span class="c">added the 21% VAT line</span>
   ✓ ran the tests again     <span class="g">PASS ✓</span></div>
-    <p class="note reveal">That autonomy — deciding <b>and acting</b>, step after step — is what makes it an <b>agent</b>. The rest of this talk is simply <b>how it works.</b></p>
-  </div>
-</section>
-
-<!-- LIVE DEMO ANCHOR (interlude, no number) -->
-<section class="slide divider dark">
-  <div class="slide-content">
-    <div class="dnum reveal" style="color:var(--coral)">● LIVE</div>
-    <h2 class="reveal">Meanwhile — a real agent is <span class="o">working</span></h2>
-    <p class="dsub reveal">I just set <b>Claude Code</b> loose on a real task. It runs while we talk — we'll <b>check back</b> when we hit <b>the loop</b>, <b>thinking</b>, and <b>context</b>.</p>
-  </div>
-</section>
-
-<!-- AGENDA -->
-<section class="slide">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">3</span><div class="crumb"><b>Agenda</b></div></div>
-    <h2 class="reveal">What we'll <span class="o">cover</span></h2>
-    <div class="cards c3 reveal">
-      <div class="tile"><span class="k">The core idea</span><p>Model, harness, agent — the loop that ties them together, and how it "thinks".</p></div>
-      <div class="tile"><span class="k">The landscape</span><p>Today's models &amp; tools, prices and plans.</p></div>
-      <div class="tile"><span class="k">Context</span><p>The model's short-term memory — and how to keep it sharp.</p></div>
-      <div class="tile"><span class="k">Safety</span><p>Permissions: ask, auto, and bypass ("YOLO") mode.</p></div>
-      <div class="tile"><span class="k">Memory</span><p>CLAUDE.md, memory, skills &amp; plugins.</p></div>
-      <div class="tile fill"><span class="k">Reaching out</span><p>APIs, CLIs and MCP — touching other systems.</p></div>
+      <p class="note reveal">That autonomy — deciding <b>and acting</b>, step after step — is what makes it an <b>agent</b>. The rest of this talk is simply <b>how it works.</b></p>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- THREE BUILDING BLOCKS + DIAGRAM A -->
-<section class="slide dark">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">4</span><div class="crumb"><b>Core</b> · the basics</div></div>
-    <h2 class="reveal">Three building <span class="o">blocks</span></h2>
-    <div class="diagram reveal">
-      <svg viewBox="0 0 800 270" role="img" aria-label="Agent contains a harness, which runs the model and tools in a loop">
-        <defs><marker id="ahA" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#ff5c35"/></marker></defs>
-        <!-- Agent (outer) -->
-        <rect class="dg-box outer" x="12" y="14" width="776" height="242" rx="20"/>
-        <text class="dg-t acc" x="34" y="44" font-size="19">AGENT</text>
-        <text class="dg-t mut" x="118" y="44" font-size="14">= the whole thing, doing work in a loop</text>
-        <!-- Harness (mid) -->
-        <rect class="dg-box mid" x="44" y="64" width="712" height="170" rx="15"/>
-        <text class="dg-t" x="66" y="90" font-size="16">HARNESS</text>
-        <!-- Model -->
-        <circle class="dg-box hot" cx="190" cy="158" r="62"/>
-        <text class="dg-t on" x="190" y="153" font-size="18" text-anchor="middle">MODEL</text>
-        <text class="dg-t on" x="190" y="174" font-size="12.5" text-anchor="middle">the brain</text>
-        <!-- Tools -->
-        <rect class="dg-box" x="540" y="104" width="190" height="34" rx="8"/><text class="dg-t" x="635" y="126" font-size="14" text-anchor="middle">read / write files</text>
-        <rect class="dg-box" x="540" y="146" width="190" height="34" rx="8"/><text class="dg-t" x="635" y="168" font-size="14" text-anchor="middle">▸ run commands</text>
-        <rect class="dg-box" x="540" y="188" width="190" height="34" rx="8"/><text class="dg-t" x="635" y="210" font-size="14" text-anchor="middle">call APIs / web</text>
-        <!-- arrows model <-> tools -->
-        <path class="dg-line" d="M255 150 C 380 120, 430 120, 535 121" marker-end="url(#ahA)"/>
-        <path class="dg-line dim" d="M535 205 C 410 205, 360 188, 256 168" marker-end="url(#ahA)"/>
-        <text class="dg-t mut" x="395" y="112" font-size="12.5" text-anchor="middle">asks for an action</text>
-        <text class="dg-t mut" x="392" y="223" font-size="12.5" text-anchor="middle">gets the result back</text>
-      </svg>
+  <!-- LIVE DEMO ANCHOR (interlude, no number) -->
+  <section class="slide dark divider" data-label="Live demo anchor"
+    data-speaker-notes="Switch to the terminal here and actually kick off the task, in auto mode so it will not stop to ask. Say plainly that it will keep working in the background while we talk. Tell them we come back to it three times — at the loop, at thinking, and at context — so they know the markers are real, not decoration.">
+    <div class="slide-content">
+      <div class="dnum reveal" style="font-size:120px">● LIVE</div>
+      <h2 class="reveal">Meanwhile — a real agent is <span class="o">working</span></h2>
+      <p class="dsub reveal">I just set <b>Claude Code</b> loose on a real task. It runs while we talk — we'll <b>check back</b> when we hit <b>the loop</b>, <b>thinking</b>, and <b>context</b>.</p>
     </div>
-    <p class="note reveal">The one line to remember: <b>"agent" means it does something.</b> The model alone only predicts text — the harness gives it hands.</p>
-  </div>
-</section>
+  </section>
 
-<!-- GLOSSARY -->
-<section class="slide">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">5</span><div class="crumb"><b>Core</b> · cheat sheet</div></div>
-    <h2 class="reveal">Words you'll <span class="o">keep hearing</span></h2>
-    <div class="gloss reveal">
-      <div class="row"><span class="term">Token</span><span class="def">A chunk of text ≈ ¾ of a word. The unit models read and bill in.</span></div>
-      <div class="row"><span class="term">Prompt</span><span class="def">The text you send the model.</span></div>
-      <div class="row"><span class="term">Context</span><span class="def">Everything the model sees in one call.</span></div>
-      <div class="row"><span class="term">Context window</span><span class="def">The max size of that context (e.g. 200K tokens).</span></div>
-      <div class="row"><span class="term">Tool call</span><span class="def">An action the model asks the harness to run.</span></div>
-      <div class="row"><span class="term">Harness</span><span class="def">The program running the model + its tools.</span></div>
-      <div class="row"><span class="term">Agent</span><span class="def">Model + harness, doing things in a loop.</span></div>
-      <div class="row"><span class="term">SOTA</span><span class="def">"State of the art" — today's best.</span></div>
-      <div class="row"><span class="term">MCP</span><span class="def">Model Context Protocol — a standard plug for tools/data.</span></div>
-    </div>
-    <p class="note reveal">Don't worry about memorising these — every one gets a slide of its own. This is just your map.</p>
-  </div>
-</section>
-
-<!-- MODEL STATELESS + MEMENTO + DIAGRAM B -->
-<section class="slide dark">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">6</span><div class="crumb"><b>Model</b> · the brain</div></div>
-    <h2 class="reveal">The model has <span class="o">no memory</span></h2>
-    <div class="split">
-      <div class="diagram reveal">
-        <!-- Remotion animation (remotion/src/Stateless.tsx) -->
-        <video src="assets/anim/stateless-dark.mp4" width="1200" height="900" autoplay muted loop playsinline aria-label="Each call re-sends the entire history; the model remembers nothing between calls"></video>
+  <!-- AGENDA -->
+  <section class="slide light" data-label="Agenda"
+    data-speaker-notes="Twenty seconds per tile at most — this is a map, not content. Say the first three are how the thing works, the last three are how you live with it day to day. Point at Reaching out as the payoff tile, because that is where it stops being a chat window and starts touching real systems.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">3</span><div class="crumb"><b>Agenda</b></div></div>
+      <h2 class="reveal">What we'll <span class="o">cover</span></h2>
+      <div class="cards c3 reveal">
+        <div class="tile"><span class="k">The core idea</span><p>Model, harness, agent — the loop that ties them together, and how it "thinks".</p></div>
+        <div class="tile"><span class="k">The landscape</span><p>Today's models &amp; tools, prices and plans.</p></div>
+        <div class="tile"><span class="k">Context</span><p>The model's short-term memory — and how to keep it sharp.</p></div>
+        <div class="tile"><span class="k">Safety</span><p>Permissions: ask, auto, and bypass ("YOLO") mode.</p></div>
+        <div class="tile"><span class="k">Memory</span><p>CLAUDE.md, memory, skills &amp; plugins.</p></div>
+        <div class="tile fill"><span class="k">Reaching out</span><p>APIs, CLIs and MCP — touching other systems.</p></div>
       </div>
-      <ul class="bul reveal">
-        <li>Think of the guy in <b>Memento</b>: each interaction, the model has <b>no idea</b> what we said before.</li>
-        <li>It just <b>predicts the next token</b> — text in, text out. No database, no "you".</li>
-        <li>So the harness must <b>re-send everything</b> it should know, every single call.</li>
-      </ul>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- MODEL EXAMPLE -->
-<section class="slide">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">7</span><div class="crumb"><b>Model</b> · example</div></div>
-    <h2 class="reveal">"No memory" in <span class="o">practice</span></h2>
-    <p class="lead reveal" style="margin-bottom:var(--content-gap)">There's no "conversation" on the model's side. Each call hands it the <b>whole history</b> as one flat list:</p>
-    <div class="code reveal"><span class="c"># Turn 3 — the model is handed ALL prior turns again</span>
+  <!-- THREE BUILDING BLOCKS + DIAGRAM A -->
+  <section class="slide dark" data-label="Three building blocks"
+    data-speaker-notes="Walk the diagram from the inside out: the model is the brain, the harness is the program around it with the tools, and agent is the name for the whole thing doing work in a loop. Trace the two arrows out loud — it asks for an action, it gets the result back. The one line to leave them with is that a model alone only predicts text; the harness gives it hands.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">4</span><div class="crumb"><b>Core</b> · the basics</div></div>
+      <h2 class="reveal">Three building <span class="o">blocks</span></h2>
+      <div class="diagram reveal">
+        <svg viewBox="0 0 800 270" role="img" aria-label="Agent contains a harness, which runs the model and tools in a loop">
+          <defs><marker id="ahA" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="var(--coral)"/></marker></defs>
+          <!-- Agent (outer) -->
+          <rect class="dg-box outer" x="12" y="14" width="776" height="242" rx="20"/>
+          <text class="dg-t acc" x="34" y="44" font-size="19">AGENT</text>
+          <text class="dg-t mut" x="118" y="44" font-size="14">= the whole thing, doing work in a loop</text>
+          <!-- Harness (mid) -->
+          <rect class="dg-box mid" x="44" y="64" width="712" height="170" rx="15"/>
+          <text class="dg-t" x="66" y="90" font-size="16">HARNESS</text>
+          <!-- Model -->
+          <circle class="dg-box hot" cx="190" cy="158" r="62"/>
+          <text class="dg-t on" x="190" y="153" font-size="18" text-anchor="middle">MODEL</text>
+          <text class="dg-t on" x="190" y="174" font-size="12.5" text-anchor="middle">the brain</text>
+          <!-- Tools -->
+          <rect class="dg-box" x="540" y="104" width="190" height="34" rx="8"/><text class="dg-t" x="635" y="126" font-size="14" text-anchor="middle">read / write files</text>
+          <rect class="dg-box" x="540" y="146" width="190" height="34" rx="8"/><text class="dg-t" x="635" y="168" font-size="14" text-anchor="middle">▸ run commands</text>
+          <rect class="dg-box" x="540" y="188" width="190" height="34" rx="8"/><text class="dg-t" x="635" y="210" font-size="14" text-anchor="middle">call APIs / web</text>
+          <!-- arrows model <-> tools -->
+          <path class="dg-line" d="M255 150 C 380 120, 430 120, 535 121" marker-end="url(#ahA)"/>
+          <path class="dg-line dim" d="M535 205 C 410 205, 360 188, 256 168" marker-end="url(#ahA)"/>
+          <text class="dg-t mut" x="395" y="112" font-size="12.5" text-anchor="middle">asks for an action</text>
+          <text class="dg-t mut" x="392" y="223" font-size="12.5" text-anchor="middle">gets the result back</text>
+        </svg>
+      </div>
+      <p class="note reveal">The one line to remember: <b>"agent" means it does something.</b> The model alone only predicts text — the harness gives it hands.</p>
+    </div>
+  </section>
+
+  <!-- GLOSSARY -->
+  <section class="slide light" data-label="Glossary"
+    data-speaker-notes="Do not read all nine — read Token, Context and Agent, and tell them the rest each get their own slide later. This exists so nobody spends the next twenty minutes quietly wondering what a token is. Say it out loud: this is a map, not a memory test.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">5</span><div class="crumb"><b>Core</b> · cheat sheet</div></div>
+      <h2 class="reveal">Words you'll <span class="o">keep hearing</span></h2>
+      <div class="gloss reveal">
+        <div class="row"><span class="term">Token</span><span class="def">A chunk of text ≈ ¾ of a word. The unit models read and bill in.</span></div>
+        <div class="row"><span class="term">Prompt</span><span class="def">The text you send the model.</span></div>
+        <div class="row"><span class="term">Context</span><span class="def">Everything the model sees in one call.</span></div>
+        <div class="row"><span class="term">Context window</span><span class="def">The max size of that context (e.g. 200K tokens).</span></div>
+        <div class="row"><span class="term">Tool call</span><span class="def">An action the model asks the harness to run.</span></div>
+        <div class="row"><span class="term">Harness</span><span class="def">The program running the model + its tools.</span></div>
+        <div class="row"><span class="term">Agent</span><span class="def">Model + harness, doing things in a loop.</span></div>
+        <div class="row"><span class="term">SOTA</span><span class="def">"State of the art" — today's best.</span></div>
+        <div class="row"><span class="term">MCP</span><span class="def">Model Context Protocol — a standard plug for tools/data.</span></div>
+      </div>
+      <p class="note reveal">Don't worry about memorising these — every one gets a slide of its own. This is just your map.</p>
+    </div>
+  </section>
+
+  <!-- MODEL STATELESS + MEMENTO + DIAGRAM B -->
+  <section class="slide dark" data-label="The model has no memory"
+    data-speaker-notes="This is the single most surprising fact for a non-technical audience, so slow down. The Memento comparison usually does the work: every call, the model starts from nothing. Let the animation run a full cycle while you say the consequence — the harness has to re-send everything it should know, every single time.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">6</span><div class="crumb"><b>Model</b> · the brain</div></div>
+      <h2 class="reveal">The model has <span class="o">no memory</span></h2>
+      <div class="split">
+        <div class="diagram reveal">
+          <!-- Remotion animation (remotion/src/Stateless.tsx) -->
+          <video src="assets/anim/stateless-dark.mp4" width="1200" height="900" autoplay muted loop playsinline aria-label="Each call re-sends the entire history; the model remembers nothing between calls"></video>
+        </div>
+        <ul class="bul reveal">
+          <li>Think of the guy in <b>Memento</b>: each interaction, the model has <b>no idea</b> what we said before.</li>
+          <li>It just <b>predicts the next token</b> — text in, text out. No database, no "you".</li>
+          <li>So the harness must <b>re-send everything</b> it should know, every single call.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODEL EXAMPLE -->
+  <section class="slide light" data-label="No memory in practice"
+    data-speaker-notes="Make the abstract concrete: there is no conversation on the model's side, just a flat list handed over again each turn. Point at the arrow on the last line and say that turn 1 is only there because it was re-sent. Then the punchline — delete the first line and it genuinely cannot answer, so the memory lives in the request, not in the model.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">7</span><div class="crumb"><b>Model</b> · example</div></div>
+      <h2 class="reveal">"No memory" in <span class="o">practice</span></h2>
+      <p class="lead reveal" style="margin-bottom:var(--content-gap)">There's no "conversation" on the model's side. Each call hands it the <b>whole history</b> as one flat list:</p>
+      <div class="code reveal"><span class="c"># Turn 3 — the model is handed ALL prior turns again</span>
 messages = [
   {role:<span class="g">"user"</span>,      content:<span class="g">"My name is David."</span>},
   {role:<span class="g">"assistant"</span>, content:<span class="g">"Nice to meet you, David."</span>},
   {role:<span class="g">"user"</span>,      content:<span class="g">"What's my name?"</span>}   <span class="c">← needs turn 1 re-sent</span>
 ]</div>
-    <p class="note reveal">Delete the first line and the model <b>can't answer.</b> The "memory" lives in the request — not the model.</p>
-  </div>
-</section>
-
-<!-- HARNESS (what runs where) -->
-<section class="slide dark">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">8</span><div class="crumb"><b>Harness</b> · what runs where</div></div>
-    <h2 class="reveal">Model in the cloud, harness on your <span class="o">machine</span></h2>
-    <div class="diagram reveal">
-      <svg viewBox="0 0 820 320" role="img" aria-label="You talk to the agent. The agent is Claude Code (the harness, running locally with your files and terminal) looping with the stateless model in the cloud.">
-        <defs>
-          <marker id="ahH" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#ff5c35"/></marker>
-          <marker id="ahHd" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" class="dg-arrow-dim"/></marker>
-        </defs>
-        <!-- USER (outside the agent) -->
-        <rect class="dg-box" x="12" y="116" width="100" height="84" rx="12"/>
-        <text class="dg-t" x="62" y="152" font-size="15" text-anchor="middle">YOU</text>
-        <text class="dg-t mut" x="62" y="174" font-size="12" text-anchor="middle">you talk →</text>
-        <path class="dg-line" d="M114 156 C 145 150, 165 144, 188 140" marker-end="url(#ahH)"/>
-        <text class="dg-t mut" x="150" y="126" font-size="11.5" text-anchor="middle">chat</text>
-        <!-- AGENT (the whole running system) -->
-        <rect class="dg-box outer" x="150" y="16" width="658" height="290" rx="18"/>
-        <text class="dg-t acc" x="170" y="44" font-size="18">AGENT</text>
-        <text class="dg-t mut" x="246" y="44" font-size="12.5">= harness + model, in a loop</text>
-        <!-- YOUR MACHINE zone -->
-        <rect class="dg-box mid" x="168" y="62" width="336" height="230" rx="12"/>
-        <text class="dg-t" x="186" y="86" font-size="13.5">YOUR MACHINE (local)</text>
-        <rect class="dg-box hot" x="192" y="102" width="288" height="64" rx="10"/>
-        <text class="dg-t on" x="336" y="128" font-size="16" text-anchor="middle">CLAUDE CODE</text>
-        <text class="dg-t on" x="336" y="148" font-size="12" text-anchor="middle">the harness</text>
-        <rect class="dg-box" x="192" y="212" width="138" height="46" rx="8"/>
-        <text class="dg-t" x="261" y="240" font-size="13" text-anchor="middle">your files</text>
-        <rect class="dg-box" x="342" y="212" width="138" height="46" rx="8"/>
-        <text class="dg-t" x="411" y="240" font-size="13" text-anchor="middle">▸ terminal</text>
-        <path class="dg-line" d="M262 166 L 260 210" marker-end="url(#ahH)"/>
-        <path class="dg-line" d="M410 166 L 412 210" marker-end="url(#ahH)"/>
-        <text class="dg-t mut" x="336" y="190" font-size="11" text-anchor="middle">runs actions</text>
-        <!-- CLOUD zone -->
-        <rect class="dg-box mid" x="528" y="102" width="262" height="150" rx="12"/>
-        <text class="dg-t" x="546" y="126" font-size="13.5">CLOUD</text>
-        <rect class="dg-box" x="552" y="140" width="214" height="96" rx="10"/>
-        <text class="dg-t" x="659" y="170" font-size="16" text-anchor="middle">MODEL</text>
-        <text class="dg-t mut" x="659" y="190" font-size="12" text-anchor="middle">Claude Opus 4.8</text>
-        <text class="dg-t mut" x="659" y="208" font-size="11" text-anchor="middle">stateless — no memory</text>
-        <!-- loop arrows harness <-> model -->
-        <path class="dg-line" d="M482 120 C 515 124, 530 138, 550 156" marker-end="url(#ahH)"/>
-        <text class="dg-t acc" x="520" y="92" font-size="11.5" text-anchor="middle">sends context →</text>
-        <path class="dg-line dim" d="M550 198 C 528 196, 512 168, 484 150" marker-end="url(#ahHd)"/>
-        <text class="dg-t mut" x="512" y="232" font-size="11.5" text-anchor="middle">← next action</text>
-      </svg>
+      <p class="note reveal">Delete the first line and the model <b>can't answer.</b> The "memory" lives in the request — not the model.</p>
     </div>
-    <p class="note reveal">You talk to the <b>agent.</b> <b>Claude Code is the harness</b> — it runs locally with your files &amp; terminal, and loops with the <b>model in the cloud</b> (which stays stateless). The agent isn't a separate thing — <b>it's that loop.</b></p>
-  </div>
-</section>
+  </section>
 
-<!-- HARNESS EXAMPLE -->
-<section class="slide">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">9</span><div class="crumb"><b>Harness</b> · example</div></div>
-    <h2 class="reveal">What one turn <span class="o">really</span> sends</h2>
-    <span class="extag reveal">EXAMPLE — a single Claude Code prompt</span>
-    <div class="code reveal"><span class="c"># You type one line. The harness builds all of this for the model:</span>
+  <!-- HARNESS (what runs where) -->
+  <section class="slide dark" data-label="Model in the cloud"
+    data-speaker-notes="Answer the question everyone has: where does this actually run? Claude Code sits on your machine with your files and terminal; the model is a service in the cloud that stays stateless. Trace the loop arrows once and land the closing line — the agent is not a separate thing, it is that loop.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">8</span><div class="crumb"><b>Harness</b> · what runs where</div></div>
+      <h2 class="reveal">Model in the cloud, harness on your <span class="o">machine</span></h2>
+      <div class="diagram reveal">
+        <svg viewBox="0 0 820 320" role="img" aria-label="You talk to the agent. The agent is Claude Code (the harness, running locally with your files and terminal) looping with the stateless model in the cloud.">
+          <defs>
+            <marker id="ahH" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="var(--coral)"/></marker>
+            <marker id="ahHd" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z"/></marker>
+          </defs>
+          <!-- USER (outside the agent) -->
+          <rect class="dg-box" x="12" y="116" width="100" height="84" rx="12"/>
+          <text class="dg-t" x="62" y="152" font-size="15" text-anchor="middle">YOU</text>
+          <text class="dg-t mut" x="62" y="174" font-size="12" text-anchor="middle">you talk →</text>
+          <path class="dg-line" d="M114 156 C 145 150, 165 144, 188 140" marker-end="url(#ahH)"/>
+          <text class="dg-t mut" x="150" y="126" font-size="11.5" text-anchor="middle">chat</text>
+          <!-- AGENT (the whole running system) -->
+          <rect class="dg-box outer" x="150" y="16" width="658" height="290" rx="18"/>
+          <text class="dg-t acc" x="170" y="44" font-size="18">AGENT</text>
+          <text class="dg-t mut" x="246" y="44" font-size="12.5">= harness + model, in a loop</text>
+          <!-- YOUR MACHINE zone -->
+          <rect class="dg-box mid" x="168" y="62" width="336" height="230" rx="12"/>
+          <text class="dg-t" x="186" y="86" font-size="13.5">YOUR MACHINE (local)</text>
+          <rect class="dg-box hot" x="192" y="102" width="288" height="64" rx="10"/>
+          <text class="dg-t on" x="336" y="128" font-size="16" text-anchor="middle">CLAUDE CODE</text>
+          <text class="dg-t on" x="336" y="148" font-size="12" text-anchor="middle">the harness</text>
+          <rect class="dg-box" x="192" y="212" width="138" height="46" rx="8"/>
+          <text class="dg-t" x="261" y="240" font-size="13" text-anchor="middle">your files</text>
+          <rect class="dg-box" x="342" y="212" width="138" height="46" rx="8"/>
+          <text class="dg-t" x="411" y="240" font-size="13" text-anchor="middle">▸ terminal</text>
+          <path class="dg-line" d="M262 166 L 260 210" marker-end="url(#ahH)"/>
+          <path class="dg-line" d="M410 166 L 412 210" marker-end="url(#ahH)"/>
+          <text class="dg-t mut" x="336" y="190" font-size="11" text-anchor="middle">runs actions</text>
+          <!-- CLOUD zone -->
+          <rect class="dg-box mid" x="528" y="102" width="262" height="150" rx="12"/>
+          <text class="dg-t" x="546" y="126" font-size="13.5">CLOUD</text>
+          <rect class="dg-box" x="552" y="140" width="214" height="96" rx="10"/>
+          <text class="dg-t" x="659" y="170" font-size="16" text-anchor="middle">MODEL</text>
+          <text class="dg-t mut" x="659" y="190" font-size="12" text-anchor="middle">Claude Opus 4.8</text>
+          <text class="dg-t mut" x="659" y="208" font-size="11" text-anchor="middle">stateless — no memory</text>
+          <!-- loop arrows harness <-> model -->
+          <path class="dg-line" d="M482 120 C 515 124, 530 138, 550 156" marker-end="url(#ahH)"/>
+          <text class="dg-t acc" x="520" y="92" font-size="11.5" text-anchor="middle">sends context →</text>
+          <path class="dg-line dim" d="M550 198 C 528 196, 512 168, 484 150" marker-end="url(#ahHd)"/>
+          <text class="dg-t mut" x="512" y="232" font-size="11.5" text-anchor="middle">← next action</text>
+        </svg>
+      </div>
+      <p class="note reveal">You talk to the <b>agent.</b> <b>Claude Code is the harness</b> — it runs locally with your files &amp; terminal, and loops with the <b>model in the cloud</b> (which stays stateless). The agent isn't a separate thing — <b>it's that loop.</b></p>
+    </div>
+  </section>
+
+  <!-- HARNESS EXAMPLE -->
+  <section class="slide light" data-label="What one turn sends"
+    data-speaker-notes="Read the five numbered items top to bottom — this is everything the harness quietly assembles around the one line you typed. Stress item 3 and 4: the whole conversation and every file it has read go along for the ride. Close with the scale, one line in, thousands of tokens out, and it happens again on every turn.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">9</span><div class="crumb"><b>Harness</b> · example</div></div>
+      <h2 class="reveal">What one turn <span class="o">really</span> sends</h2>
+      <span class="extag reveal">EXAMPLE — a single Claude Code prompt</span>
+      <div class="code reveal"><span class="c"># You type one line. The harness builds all of this for the model:</span>
 <span class="o">1.</span> system prompt        <span class="c"># who it is, what tools exist</span>
 <span class="o">2.</span> CLAUDE.md            <span class="c"># project rules &amp; conventions</span>
 <span class="o">3.</span> conversation so far  <span class="c"># every previous message</span>
 <span class="o">4.</span> tool results         <span class="c"># files read, command output</span>
 <span class="o">5.</span> your new message     <span class="b">"fix the failing test"</span></div>
-    <p class="note reveal">One line in → <b>thousands of tokens</b> of context out. And it does this again on every turn.</p>
-  </div>
-</section>
-
-<!-- AGENT LOOP + DIAGRAM C -->
-<section class="slide dark">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">10</span><div class="crumb"><b>Agent</b> · the loop</div></div>
-    <h2 class="reveal">An agent is a <span class="o">loop</span></h2>
-    <div class="split">
-      <div class="diagram reveal">
-        <!-- Remotion animation (remotion/src/AgentLoop.tsx) -->
-        <video src="assets/anim/agent-loop-dark.mp4" width="1152" height="912" autoplay muted loop playsinline aria-label="The agent loop: model proposes an action, harness runs it, result returns to the model, repeat until done"></video>
-      </div>
-      <ul class="bul reveal">
-        <li>The model proposes, the harness acts, the result comes back. <b>Repeat until the task is done.</b></li>
-        <li>Like a <b>cook</b>: read the recipe → do a step → taste → adjust → repeat.</li>
-        <li>This loop is the whole "magic" of agentic AI — no magic, just <b>disciplined repetition.</b></li>
-      </ul>
+      <p class="note reveal">One line in → <b>thousands of tokens</b> of context out. And it does this again on every turn.</p>
     </div>
-    <p class="note reveal"><span class="pill">● LIVE</span> Glance at our running agent — those scrolling <b>tool calls</b> are this loop, for real.</p>
-  </div>
-</section>
+  </section>
 
-<!-- AGENT WORKED EXAMPLE -->
-<section class="slide">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">11</span><div class="crumb"><b>Agent</b> · worked example</div></div>
-    <h2 class="reveal">Our hook, <span class="o">as the loop</span></h2>
-    <div class="code reveal"><span class="o">▸ ①②③</span> run_tests()           <span class="c">→ FAIL: expected 121, got 100</span>
+  <!-- AGENT LOOP + DIAGRAM C -->
+  <section class="slide dark" data-label="The agent loop"
+    data-speaker-notes="This is the centrepiece of the whole talk — model proposes, harness acts, result comes back, repeat until done. The cook analogy lands well: read the recipe, do a step, taste, adjust. This is the first LIVE checkpoint, so switch to the terminal and point at the scrolling tool calls as the same loop, for real.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">10</span><div class="crumb"><b>Agent</b> · the loop</div></div>
+      <h2 class="reveal">An agent is a <span class="o">loop</span></h2>
+      <div class="split">
+        <div class="diagram reveal">
+          <!-- Remotion animation (remotion/src/AgentLoop.tsx) -->
+          <video src="assets/anim/agent-loop-dark.mp4" width="1152" height="912" autoplay muted loop playsinline aria-label="The agent loop: model proposes an action, harness runs it, result returns to the model, repeat until done"></video>
+        </div>
+        <ul class="bul reveal">
+          <li>The model proposes, the harness acts, the result comes back. <b>Repeat until the task is done.</b></li>
+          <li>Like a <b>cook</b>: read the recipe → do a step → taste → adjust → repeat.</li>
+          <li>This loop is the whole "magic" of agentic AI — no magic, just <b>disciplined repetition.</b></li>
+        </ul>
+      </div>
+      <p class="note reveal"><span class="pill">● LIVE</span> Glance at our running agent — those scrolling <b>tool calls</b> are this loop, for real.</p>
+    </div>
+  </section>
+
+  <!-- AGENT WORKED EXAMPLE -->
+  <section class="slide light" data-label="The loop, worked example"
+    data-speaker-notes="Tie the hook back to the loop: each of these four lines is one lap. Read them across — the action on the left, what came back on the right. The correction worth making explicitly is that the model never ran anything itself; the harness did, and reported back each time.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">11</span><div class="crumb"><b>Agent</b> · worked example</div></div>
+      <h2 class="reveal">Our hook, <span class="o">as the loop</span></h2>
+      <div class="code reveal"><span class="o">▸ ①②③</span> run_tests()           <span class="c">→ FAIL: expected 121, got 100</span>
 <span class="o">▸ ①②③</span> read_file(invoice.py)  <span class="c">→ sees VAT is never applied</span>
 <span class="o">▸ ①②③</span> edit_file(invoice.py)  <span class="c">→ adds  total *= 1.21</span>
 <span class="o">▸ ①②③</span> run_tests()           <span class="g">→ PASS ✓</span>
 <span class="d">▸ ④ done — 4 trips through the loop, no human in between</span></div>
-    <p class="note reveal">Each line is one lap of the loop. The model never "ran" anything itself — the <b>harness</b> did, and reported back each time.</p>
-  </div>
-</section>
+      <p class="note reveal">Each line is one lap of the loop. The model never "ran" anything itself — the <b>harness</b> did, and reported back each time.</p>
+    </div>
+  </section>
 
-<!-- THINKING: HOW IT WORKS -->
-<section class="slide dark">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">12</span><div class="crumb"><b>Thinking</b> · how it works</div></div>
-    <h2 class="reveal">The model <span class="o">thinks</span> before it answers</h2>
-    <div class="split">
-      <div class="diagram reveal">
-        <svg viewBox="0 0 400 300" role="img" aria-label="The model first produces a hidden thinking scratchpad of reasoning, then the final answer">
-          <defs><marker id="ahT" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#ff5c35"/></marker></defs>
-          <rect class="dg-box" x="116" y="12" width="168" height="42" rx="9"/>
-          <text class="dg-t" x="200" y="39" font-size="14" text-anchor="middle">PROMPT</text>
-          <path class="dg-line" d="M200 54 L200 76" marker-end="url(#ahT)"/>
-          <rect class="dg-box outer" x="50" y="80" width="300" height="152" rx="12"/>
-          <text class="dg-t acc" x="68" y="104" font-size="13" text-anchor="start">THINKING — hidden scratchpad</text>
-          <text class="dg-t mut" x="72" y="130" font-size="12.5">• recall the VAT rule (21%)</text>
-          <text class="dg-t mut" x="72" y="152" font-size="12.5">• 100 × 1.21 = 121</text>
-          <text class="dg-t mut" x="72" y="174" font-size="12.5">• so the test expects the tax added</text>
-          <text class="dg-t mut" x="72" y="206" font-size="11.5">(these reasoning tokens cost money too)</text>
-          <path class="dg-line" d="M200 232 L200 254" marker-end="url(#ahT)"/>
-          <rect class="dg-box hot" x="116" y="258" width="168" height="40" rx="9"/>
-          <text class="dg-t on" x="200" y="284" font-size="14" text-anchor="middle">ANSWER</text>
-        </svg>
+  <!-- THINKING: HOW IT WORKS -->
+  <section class="slide dark" data-label="Thinking"
+    data-speaker-notes="Explain thinking as a private scratchpad the model writes before answering — still next-token prediction, just allowed to think out loud. Read the three scratchpad lines in the diagram; the VAT arithmetic makes it concrete. Mention the dial (low, medium, high) and note that more thinking helps on hard problems but can tip into overthinking. This is the second LIVE checkpoint, so look for a thinking block in the running agent.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">12</span><div class="crumb"><b>Thinking</b> · how it works</div></div>
+      <h2 class="reveal">The model <span class="o">thinks</span> before it answers</h2>
+      <div class="split">
+        <div class="diagram reveal">
+          <svg viewBox="0 0 400 300" role="img" aria-label="The model first produces a hidden thinking scratchpad of reasoning, then the final answer">
+            <defs><marker id="ahT" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="var(--coral)"/></marker></defs>
+            <rect class="dg-box" x="116" y="12" width="168" height="42" rx="9"/>
+            <text class="dg-t" x="200" y="39" font-size="14" text-anchor="middle">PROMPT</text>
+            <path class="dg-line" d="M200 54 L200 76" marker-end="url(#ahT)"/>
+            <rect class="dg-box outer" x="50" y="80" width="300" height="152" rx="12"/>
+            <text class="dg-t acc" x="68" y="104" font-size="13" text-anchor="start">THINKING — hidden scratchpad</text>
+            <text class="dg-t mut" x="72" y="130" font-size="12.5">• recall the VAT rule (21%)</text>
+            <text class="dg-t mut" x="72" y="152" font-size="12.5">• 100 × 1.21 = 121</text>
+            <text class="dg-t mut" x="72" y="174" font-size="12.5">• so the test expects the tax added</text>
+            <text class="dg-t mut" x="72" y="206" font-size="11.5">(these reasoning tokens cost money too)</text>
+            <path class="dg-line" d="M200 232 L200 254" marker-end="url(#ahT)"/>
+            <rect class="dg-box hot" x="116" y="258" width="168" height="40" rx="9"/>
+            <text class="dg-t on" x="200" y="284" font-size="14" text-anchor="middle">ANSWER</text>
+          </svg>
+        </div>
+        <ul class="bul reveal">
+          <li><b>Reasoning</b> (or "thinking") models work the problem out <b>step by step first</b> — a private scratchpad — then give the answer.</li>
+          <li>It's still next-token prediction, just allowed to <b>"think out loud."</b> Empirically far better at maths, coding &amp; planning.</li>
+          <li><b>More thinking → better</b> on hard problems ("test-time compute") — but past a point it <b>overthinks</b> and gets worse.</li>
+          <li>Usually a dial: <b>low / medium / high effort.</b> Newer Claude models decide <b>adaptively</b> how hard to think.</li>
+        </ul>
       </div>
-      <ul class="bul reveal">
-        <li><b>Reasoning</b> (or "thinking") models work the problem out <b>step by step first</b> — a private scratchpad — then give the answer.</li>
-        <li>It's still next-token prediction, just allowed to <b>"think out loud."</b> Empirically far better at maths, coding &amp; planning.</li>
-        <li><b>More thinking → better</b> on hard problems ("test-time compute") — but past a point it <b>overthinks</b> and gets worse.</li>
-        <li>Usually a dial: <b>low / medium / high effort.</b> Newer Claude models decide <b>adaptively</b> how hard to think.</li>
-      </ul>
+      <p class="note reveal"><span class="pill">● LIVE</span> Watch for a <b>thinking block</b> in our running agent before it takes its next action.</p>
     </div>
-    <p class="note reveal"><span class="pill">● LIVE</span> Watch for a <b>thinking block</b> in our running agent before it takes its next action.</p>
-  </div>
-</section>
+  </section>
 
-<!-- THINKING: IN AGENTS + THE CATCH -->
-<section class="slide">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">13</span><div class="crumb"><b>Thinking</b> · in agents &amp; the catch</div></div>
-    <h2 class="reveal">Thinking inside the <span class="o">loop</span></h2>
-    <div class="split">
-      <ul class="bul reveal">
-        <li>In the loop, the model <b>thinks before each action</b>: which tool, why, did the last result work? ("interleaved thinking") → better plans, fewer wrong turns.</li>
-        <li>It isn't free: thinking tokens are <b>billed as output</b> and <b>fill the context window</b> — so don't crank the effort for simple jobs.</li>
-        <li>Rule of thumb: <b>hard, multi-step task → think more; quick edit → think less.</b></li>
-      </ul>
-      <div class="kcard reveal">
-        <div class="big">Don't fully trust it</div>
-        <p>Anthropic's own research: when a hidden hint changed the model's answer, its reasoning <b>mentioned that hint only ~25% of the time.</b> The visible "thinking" is a <b>helpful narration — not proof</b> of what really happened.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- WHAT YOU CAN DO -->
-<section class="slide">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">14</span><div class="crumb"><b>Core</b> · so what?</div></div>
-    <h2 class="reveal">What it's actually <span class="o">good for</span></h2>
-    <div class="uses reveal">
-      <div class="tile"><span class="k">Write &amp; fix code</span><p>Features, refactors, bug fixes, writing tests.</p></div>
-      <div class="tile"><span class="k">Understand a codebase</span><p>"Where is X handled?" — answers grounded in your repo.</p></div>
-      <div class="tile"><span class="k">Automate chores</span><p>Triage issues, bump dependencies, wire up CI.</p></div>
-      <div class="tile"><span class="k">Work over your data</span><p>Query docs, tickets, databases (via MCP).</p></div>
-      <div class="tile"><span class="k">Draft &amp; research</span><p>Summaries, emails, first drafts, comparisons.</p></div>
-      <div class="tile fill"><span class="k">…with a human in the loop</span><p>You review &amp; approve. It's a power tool, not a replacement.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- DIVIDER: THE LANDSCAPE -->
-<section class="slide divider dark">
-  <div class="slide-content">
-    <div class="dnum reveal">▸</div>
-    <h2 class="reveal">The <span class="o">landscape</span></h2>
-    <p class="dsub reveal">A quick detour through today's <b>models, tools and prices</b> — then we're straight back to how it all works.</p>
-  </div>
-</section>
-
-<!-- SOTA MODELS -->
-<section class="slide">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">15</span><div class="crumb"><b>Landscape</b> · models</div></div>
-    <h2 class="reveal">Today's best <span class="o">models</span></h2>
-    <table class="tbl reveal">
-      <thead><tr><th>Maker</th><th>Flagship lineup (July 2026)</th><th>Known for</th></tr></thead>
-      <tbody>
-        <tr><td><b>Anthropic</b></td><td>Claude Fable 5 · Opus 4.8 · Sonnet 5 · Haiku 4.5</td><td>coding, agents, long context</td></tr>
-        <tr><td><b>OpenAI</b></td><td>GPT‑5.6 — Sol · Terra · Luna</td><td>general reasoning, Codex</td></tr>
-        <tr><td><b>Google</b></td><td>Gemini 3.5 Flash (3.5 Pro on the way)</td><td>multimodal, large context</td></tr>
-      </tbody>
-    </table>
-    <p class="note reveal">The same three tiers repeat everywhere: <b>large</b> (smartest, priciest) · <b>medium</b> (the sweet spot) · <b>small</b> (fast &amp; cheap) — and lately a <b>frontier tier on top</b> (Claude Fable 5, GPT‑5.6 Sol). "SOTA" = state of the art — and it reshuffles every few months, so treat any list as a snapshot.</p>
-  </div>
-</section>
-
-<!-- PICKING A TIER -->
-<section class="slide dark">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">16</span><div class="crumb"><b>Landscape</b> · picking a tier</div></div>
-    <h2 class="reveal">Which tier <span class="o">when?</span></h2>
-    <div class="cards c3 reveal">
-      <div class="tile fill"><span class="k">Large · Opus</span><p>Hard reasoning, tricky multi-file refactors, architecture. Slow &amp; pricey — reach for it when it matters.</p></div>
-      <div class="tile"><span class="k">Medium · Sonnet</span><p>The daily driver. Most coding &amp; agent work. Often beats last gen's flagship at a fraction of the cost.</p></div>
-      <div class="tile"><span class="k">Small · Haiku</span><p>High-volume, simple, fast: classification, quick edits, sub-agent grunt work.</p></div>
-    </div>
-    <p class="note reveal"><b>Example:</b> a cheap Haiku sub-agent skims 200 files and summarises; the pricey Opus only does the actual design call. Cheap legwork, expensive thinking only where needed.</p>
-  </div>
-</section>
-
-<!-- SOTA HARNESSES -->
-<section class="slide">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">17</span><div class="crumb"><b>Landscape</b> · harnesses</div></div>
-    <h2 class="reveal">Today's best <span class="o">harnesses</span></h2>
-    <div class="cards c3 reveal">
-      <div class="tile fill"><span class="k">Claude Code</span><p>Anthropic. CLI + IDE + web. Agentic coding over your whole repo.</p></div>
-      <div class="tile"><span class="k">Codex</span><p>OpenAI. Terminal-first agent on GPT‑5.5, with cloud &amp; worktrees.</p></div>
-      <div class="tile"><span class="k">Cursor</span><p>An IDE built around an AI agent.</p></div>
-      <div class="tile"><span class="k">GitHub Copilot</span><p>Agent + autocomplete inside your editor.</p></div>
-      <div class="tile"><span class="k">Windsurf</span><p>Another agentic IDE.</p></div>
-      <div class="tile"><span class="k">Aider</span><p>Open-source terminal coding agent.</p></div>
-    </div>
-    <p class="note reveal">The harness decides what the model can <b>actually do</b> — tools, sandboxing, memory, parallelism. At least as important as the model.</p>
-  </div>
-</section>
-
-<!-- APPLICATIONS — what form factor you run them in -->
-<section class="slide dark">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">18</span><div class="crumb"><b>Landscape</b> · the apps</div></div>
-    <h2 class="reveal">Same agent, different <span class="o">front door</span></h2>
-    <div class="cards c3 reveal">
-      <div class="tile fill"><span class="k">▸ Terminal (CLI)</span><p>Lives in your shell, scriptable. <b>Claude Code</b> · <b>Codex</b> · <b>Gemini CLI</b> · Aider.</p></div>
-      <div class="tile"><span class="k">Desktop app</span><p>A standalone window, less terminal-y. <b>Claude Code</b> app · <b>Codex</b> in the ChatGPT app.</p></div>
-      <div class="tile"><span class="k">⌨ In your IDE</span><p>Inline with your editor. Claude Code &amp; Codex extensions · Cursor · Windsurf · <b>Antigravity</b> · Copilot.</p></div>
-    </div>
-    <p class="note reveal">It's the <b>same loop underneath</b> — just a different front door. Most of the big ones ship in <b>several of these at once;</b> pick whichever fits how you work.</p>
-  </div>
-</section>
-
-<!-- PRICING SUBSCRIPTIONS -->
-<section class="slide">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">19</span><div class="crumb"><b>Landscape</b> · plans</div></div>
-    <h2 class="reveal">Subscriptions <span class="o">(consumer)</span></h2>
-    <table class="tbl reveal">
-      <thead><tr><th>Tier</th><th>Claude (Anthropic)</th><th>ChatGPT (OpenAI)</th></tr></thead>
-      <tbody>
-        <tr><td><b>Free</b></td><td>limited usage</td><td>limited usage</td></tr>
-        <tr><td><b>Entry</b></td><td>Pro — ~$20/mo</td><td>Go ~$8 · Plus ~$20/mo</td></tr>
-        <tr><td><b>Power</b></td><td>Max 5× ~$100 · Max 20× ~$200/mo</td><td>Pro 5× ~$100 · Pro 20× ~$200/mo</td></tr>
-      </tbody>
-    </table>
-    <p class="note reveal">Higher tiers buy <b>more usage</b> and <b>priority access</b> to the newest models. Prices as of July 2026 — they change often, so verify before quoting.</p>
-  </div>
-</section>
-
-<!-- SUBSCRIPTION VS API -->
-<section class="slide dark">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>Landscape</b> · plan vs API</div></div>
-    <h2 class="reveal">Subscription <span class="o">vs API</span></h2>
-    <div class="split">
-      <div class="tile reveal"><span class="k">Subscription</span><p>A <b>flat monthly fee</b> for a person using the app or CLI. Simple, capped by usage limits. Best for everyday work.</p></div>
-      <div class="tile fill reveal"><span class="k">API</span><p>Pay <b>per token</b> (input + output). No cap, scales to production. Best for building integrations.</p></div>
-    </div>
-    <p class="note reveal"><b>Why tokens matter:</b> a long agent session can read your files dozens of times — and on the API <b>you pay for every re-read.</b> That's exactly why caching (coming up) exists.</p>
-  </div>
-</section>
-
-<!-- CONTEXT: WHAT IT IS + DIAGRAM D -->
-<section class="slide">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">21</span><div class="crumb"><b>Context</b> · what it is</div></div>
-    <h2 class="reveal">Context = the model's <span class="o">short-term memory</span></h2>
-    <div class="split">
-      <ul class="bul reveal">
-        <li>Everything the model sees in <b>one call</b>: system prompt, CLAUDE.md, chat history, files, tool output.</li>
-        <li>Measured in <b>tokens.</b> The <b>context window</b> is the max — typically <b>200K</b> (≈ 500 pages), up to <b>1M</b> on top models.</li>
-        <li>If it isn't in the context, it <b>doesn't exist</b> for the model.</li>
-      </ul>
-      <div class="diagram reveal">
-        <svg viewBox="0 0 400 250" role="img" aria-label="The context window is a fixed-size box filled by system prompt, rules, history, files and tool output">
-          <rect class="dg-box mid" x="20" y="20" width="360" height="210" rx="12"/>
-          <text class="dg-t acc" x="200" y="44" font-size="14" text-anchor="middle">CONTEXT WINDOW · 200K tokens</text>
-          <rect class="dg-fill-r" x="34" y="58" width="332" height="26" rx="5" opacity="0.9"/><text class="dg-t on" x="44" y="76" font-size="12.5">system prompt</text>
-          <rect class="dg-box hot" x="34" y="90" width="332" height="26" rx="5"/><text class="dg-t on" x="44" y="108" font-size="12.5">CLAUDE.md · rules</text>
-          <rect class="dg-box" x="34" y="122" width="332" height="26" rx="5"/><text class="dg-t" x="44" y="140" font-size="12.5">conversation history</text>
-          <rect class="dg-box" x="34" y="154" width="332" height="26" rx="5"/><text class="dg-t" x="44" y="172" font-size="12.5">files you opened</text>
-          <rect class="dg-box" x="34" y="186" width="220" height="26" rx="5"/><text class="dg-t" x="44" y="204" font-size="12.5">tool output</text>
-          <rect x="258" y="186" width="108" height="26" rx="5" class="dg-dash" stroke-dasharray="4 4"/><text class="dg-t mut" x="312" y="204" font-size="12" text-anchor="middle">free space</text>
-        </svg>
+  <!-- THINKING: IN AGENTS + THE CATCH -->
+  <section class="slide light" data-label="Thinking in the loop"
+    data-speaker-notes="Inside the loop the model thinks before each action — which tool, why, did the last result work. Give the practical rule: hard multi-step task, think more; quick edit, think less, because thinking is billed as output and fills the window. Then take the callout seriously — Anthropic's own research found the visible reasoning mentioned a decisive hidden hint only about a quarter of the time, so treat it as helpful narration, not proof.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">13</span><div class="crumb"><b>Thinking</b> · in agents &amp; the catch</div></div>
+      <h2 class="reveal">Thinking inside the <span class="o">loop</span></h2>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>In the loop, the model <b>thinks before each action</b>: which tool, why, did the last result work? ("interleaved thinking") → better plans, fewer wrong turns.</li>
+          <li>It isn't free: thinking tokens are <b>billed as output</b> and <b>fill the context window</b> — so don't crank the effort for simple jobs.</li>
+          <li>Rule of thumb: <b>hard, multi-step task → think more; quick edit → think less.</b></li>
+        </ul>
+        <div class="kcard reveal">
+          <div class="big">Don't fully trust it</div>
+          <p>Anthropic's own research: when a hidden hint changed the model's answer, its reasoning <b>mentioned that hint only ~25% of the time.</b> The visible "thinking" is a <b>helpful narration — not proof</b> of what really happened.</p>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- CONTEXT ROT + DIAGRAM -->
-<section class="slide dark">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">22</span><div class="crumb"><b>Context</b> · the "stupidity threshold"</div></div>
-    <h2 class="reveal">Fuller context = <span class="o">dumber model</span></h2>
-    <div class="split">
-      <div class="diagram reveal">
-        <!-- Remotion animation (remotion/src/QualityCurve.tsx) -->
-        <video src="assets/anim/quality-dark.mp4" width="1056" height="624" autoplay muted loop playsinline aria-label="Answer quality falls as the context fills; the last stretch of the window is where the model forgets, redoes and ignores"></video>
-      </div>
-      <ul class="bul reveal">
-        <li><b>"Context rot"</b> (Chroma): 18 frontier models all got <b>worse</b> as input grew — even when the answer was right there.</li>
-        <li><b>"Lost in the middle"</b> (Stanford): models recall the start &amp; end, but miss facts buried in the middle.</li>
-        <li>The "40% threshold of stupidity" is folklore, not a law — but the lesson holds: <b>keep the window well under full.</b> Curation beats capacity.</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<!-- MEASURING -->
-<section class="slide">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">23</span><div class="crumb"><b>Context</b> · keeping it lean</div></div>
-    <h2 class="reveal">Watch it, <span class="o">keep it lean</span></h2>
-    <span class="extag reveal">EXAMPLE — a harness status line</span>
-    <div class="code reveal"><span class="d">claude-opus-4-8</span>   <span class="o">context: 38%</span>  (76k / 200k)   <span class="g">$0.42</span></div>
-    <ul class="bul reveal" style="margin-top:var(--content-gap)">
-      <li>Most harnesses show <b>live % used</b> — glance at it.</li>
-      <li>Climbing past ~40–50%? Quality starts to slip — time to <b>trim or restart.</b></li>
-      <li><b>Habit:</b> finish a task, then start a <b>fresh chat</b> rather than dragging a bloated one onward.</li>
-    </ul>
-    <p class="note reveal"><span class="pill">● LIVE</span> Check the <b>context %</b> on our running agent right now — see how far it's climbed.</p>
-  </div>
-</section>
-
-<!-- UNDER THE HOOD: CACHING + COMPACTION -->
-<section class="slide dark">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">24</span><div class="crumb"><b>Context</b> · under the hood</div></div>
-    <h2 class="reveal">How harnesses <span class="o">cope</span></h2>
-    <div class="cards c2 reveal">
-      <div class="tile"><span class="k">Caching</span><p>Stable parts (system prompt, CLAUDE.md, files) are <b>remembered between calls</b>, so reusing them is much <b>cheaper and faster</b> than re-reading every time.</p></div>
-      <div class="tile fill"><span class="k">Compaction</span><p>When the window fills, the harness <b>summarises older turns</b> into a short recap and drops the raw text — freeing space to keep going.</p></div>
-    </div>
-    <p class="note reveal">Both are automatic. The catch with compaction: anything <b>not</b> kept in the summary is forgotten — so the summary has to keep what matters.</p>
-  </div>
-</section>
-
-<!-- SUBAGENTS + DIAGRAM E -->
-<section class="slide">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">25</span><div class="crumb"><b>Context</b> · sub-agents</div></div>
-    <h2 class="reveal">Sub-agents <span class="o">keep the main context clean</span></h2>
-    <div class="split">
-      <div class="diagram reveal">
-        <!-- Remotion animation (remotion/src/Subagents.tsx) -->
-        <video src="assets/anim/subagents-light.mp4" width="1176" height="756" autoplay muted loop playsinline aria-label="A main agent delegates messy work to sub-agents that have their own context and return only a short summary"></video>
-      </div>
-      <ul class="bul reveal">
-        <li>A <b>sub-agent</b> is a separate agent with its <b>own fresh context</b> for one sub-task.</li>
-        <li>It does the messy work and returns <b>only the conclusion.</b></li>
-        <li><b>Example:</b> "search these 200 files" burns 80k tokens <b>inside</b> the sub-agent — the main chat gets a 200-token answer. They can also run <b>in parallel.</b></li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<!-- PERMISSIONS -->
-<section class="slide dark">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>Safety</b> · permissions</div></div>
-    <h2 class="reveal">Safety through <span class="o">permissions</span></h2>
-    <div class="cards c3 reveal">
-      <div class="tile"><span class="k">Default · ask</span><p>The agent <b>asks first</b> before any risky action (write a file, run a command). Safest.</p></div>
-      <div class="tile"><span class="k">Auto · accept edits</span><p>Pre-approve a class of actions (e.g. file edits) so it won't interrupt on routine steps.</p></div>
-      <div class="tile fill"><span class="k">Bypass · "YOLO"</span><p>Asks for <b>nothing.</b> Fast, but it can run <b>any</b> command — only in a sandbox.</p></div>
-    </div>
-    <p class="note reveal"><span class="pill">● LIVE</span> Our running agent is in <b>auto mode</b> — that's why it hasn't stopped to ask. Both Claude Code and Codex ship these modes (Codex calls them <i>read-only / auto / full access</i>). More freedom demands more isolation.</p>
-  </div>
-</section>
-
-<!-- BYPASS MODE -->
-<section class="slide">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">27</span><div class="crumb"><b>Safety</b> · bypass mode</div></div>
-    <h2 class="reveal">When is "YOLO" <span class="o">OK?</span></h2>
-    <div class="split">
-      <ul class="bul reveal">
-        <li>Only where a mistake <b>can't hurt:</b> a throwaway container or VM, an isolated copy of the project, or a CI job.</li>
-        <li><b>Never</b> on your main machine with real passwords and no backup.</li>
-        <li>Remember: an agent reads files and the web — a <b>hidden malicious instruction</b> in either can hijack a no-questions-asked agent.</li>
-      </ul>
-      <div class="kcard reveal">
-        <div class="big">Freedom ∝ isolation</div>
-        <p>The rule: the more autonomy you grant, the more <b>walls</b> you put around it.</p>
+  <!-- WHAT YOU CAN DO -->
+  <section class="slide light" data-label="What it is good for"
+    data-speaker-notes="This is the so-what slide for a mixed audience, so pick the two tiles closest to the room's job and give a concrete example of each. Note that Work over your data is the one that surprises non-developers most. End on the last tile: a human still reviews and approves, it is a power tool, not a replacement.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">14</span><div class="crumb"><b>Core</b> · so what?</div></div>
+      <h2 class="reveal">What it's actually <span class="o">good for</span></h2>
+      <div class="uses reveal">
+        <div class="tile"><span class="k">Write &amp; fix code</span><p>Features, refactors, bug fixes, writing tests.</p></div>
+        <div class="tile"><span class="k">Understand a codebase</span><p>"Where is X handled?" — answers grounded in your repo.</p></div>
+        <div class="tile"><span class="k">Automate chores</span><p>Triage issues, bump dependencies, wire up CI.</p></div>
+        <div class="tile"><span class="k">Work over your data</span><p>Query docs, tickets, databases (via MCP).</p></div>
+        <div class="tile"><span class="k">Draft &amp; research</span><p>Summaries, emails, first drafts, comparisons.</p></div>
+        <div class="tile fill"><span class="k">…with a human in the loop</span><p>You review &amp; approve. It's a power tool, not a replacement.</p></div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- RECAP: MEMENTO CALLBACK -->
-<section class="slide dark">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">28</span><div class="crumb"><b>Memory</b> · the problem</div></div>
-    <h2 class="reveal">Back to the model with <span class="o">no memory</span></h2>
-    <div class="split">
-      <div class="kcard reveal">
-        <div class="big">It forgets every time</div>
-        <p>Remember Memento (slide 6)? Every call re-reads the whole context — and <b>keeps nothing</b> afterwards.</p>
-      </div>
-      <ul class="bul reveal">
-        <li>So how do we give it knowledge that <b>survives</b> across sessions…</li>
-        <li>…<b>without</b> stuffing the context window full (and rotting it)?</li>
-        <li>Four tools: <b>CLAUDE.md</b>, <b>memory</b>, <b>skills</b> and <b>plugins.</b></li>
-      </ul>
+  <!-- DIVIDER: THE LANDSCAPE -->
+  <section class="slide dark divider" data-label="The landscape"
+    data-speaker-notes="Signpost the detour: a few slides on who makes what and what it costs, then straight back to mechanics. Say it is a snapshot that will be stale within months, so nobody writes the model names down as gospel. Two sentences and move on.">
+    <div class="slide-content">
+      <div class="dnum reveal">▸</div>
+      <h2 class="reveal">The <span class="o">landscape</span></h2>
+      <p class="dsub reveal">A quick detour through today's <b>models, tools and prices</b> — then we're straight back to how it all works.</p>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- CLAUDE.md + MEMORY -->
-<section class="slide">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">29</span><div class="crumb"><b>Memory</b> · CLAUDE.md</div></div>
-    <h2 class="reveal">Memory that <span class="o">survives sessions</span></h2>
-    <span class="extag reveal">EXAMPLE — CLAUDE.md in your repo root</span>
-    <div class="code reveal"><span class="c"># CLAUDE.md — auto-injected into every prompt</span>
+  <!-- SOTA MODELS -->
+  <section class="slide light" data-label="Today's models"
+    data-speaker-notes="Do not read the table row by row — the pattern below it is the actual content. The same three tiers repeat at every maker: large, medium, small, plus a frontier tier on top lately. Say clearly that this reshuffles every few months, so treat any such list as a snapshot rather than a recommendation.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">15</span><div class="crumb"><b>Landscape</b> · models</div></div>
+      <h2 class="reveal">Today's best <span class="o">models</span></h2>
+      <table class="tbl reveal">
+        <thead><tr><th>Maker</th><th>Flagship lineup (July 2026)</th><th>Known for</th></tr></thead>
+        <tbody>
+          <tr><td><b>Anthropic</b></td><td>Claude Fable 5 · Opus 4.8 · Sonnet 5 · Haiku 4.5</td><td>coding, agents, long context</td></tr>
+          <tr><td><b>OpenAI</b></td><td>GPT‑5.6 — Sol · Terra · Luna</td><td>general reasoning, Codex</td></tr>
+          <tr><td><b>Google</b></td><td>Gemini 3.5 Flash (3.5 Pro on the way)</td><td>multimodal, large context</td></tr>
+        </tbody>
+      </table>
+      <p class="note reveal">The same three tiers repeat everywhere: <b>large</b> (smartest, priciest) · <b>medium</b> (the sweet spot) · <b>small</b> (fast &amp; cheap) — and lately a <b>frontier tier on top</b> (Claude Fable 5, GPT‑5.6 Sol). "SOTA" = state of the art — and it reshuffles every few months, so treat any list as a snapshot.</p>
+    </div>
+  </section>
+
+  <!-- PICKING A TIER -->
+  <section class="slide dark" data-label="Which tier when"
+    data-speaker-notes="Give them the practical version: medium is the daily driver, large is for when it really matters, small is for volume. The example at the bottom is the one to dwell on — cheap legwork by a small model, expensive thinking only where it counts. Mention that today's medium often beats last year's flagship, which is why defaults keep shifting.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">16</span><div class="crumb"><b>Landscape</b> · picking a tier</div></div>
+      <h2 class="reveal">Which tier <span class="o">when?</span></h2>
+      <div class="cards c3 reveal">
+        <div class="tile fill"><span class="k">Large · Opus</span><p>Hard reasoning, tricky multi-file refactors, architecture. Slow &amp; pricey — reach for it when it matters.</p></div>
+        <div class="tile"><span class="k">Medium · Sonnet</span><p>The daily driver. Most coding &amp; agent work. Often beats last gen's flagship at a fraction of the cost.</p></div>
+        <div class="tile"><span class="k">Small · Haiku</span><p>High-volume, simple, fast: classification, quick edits, sub-agent grunt work.</p></div>
+      </div>
+      <p class="note reveal"><b>Example:</b> a cheap Haiku sub-agent skims 200 files and summarises; the pricey Opus only does the actual design call. Cheap legwork, expensive thinking only where needed.</p>
+    </div>
+  </section>
+
+  <!-- SOTA HARNESSES -->
+  <section class="slide light" data-label="Today's harnesses"
+    data-speaker-notes="Name the two most people will meet — Claude Code and Codex — and treat the rest as a list, not a review. The line that matters is underneath: the harness decides what the model can actually do, so it is at least as important as the model. If someone asks which to pick, say most models run in most harnesses and the choice is mostly about how you like to work.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">17</span><div class="crumb"><b>Landscape</b> · harnesses</div></div>
+      <h2 class="reveal">Today's best <span class="o">harnesses</span></h2>
+      <div class="cards c3 reveal">
+        <div class="tile fill"><span class="k">Claude Code</span><p>Anthropic. CLI + IDE + web. Agentic coding over your whole repo.</p></div>
+        <div class="tile"><span class="k">Codex</span><p>OpenAI. Terminal-first agent on GPT‑5.5, with cloud &amp; worktrees.</p></div>
+        <div class="tile"><span class="k">Cursor</span><p>An IDE built around an AI agent.</p></div>
+        <div class="tile"><span class="k">GitHub Copilot</span><p>Agent + autocomplete inside your editor.</p></div>
+        <div class="tile"><span class="k">Windsurf</span><p>Another agentic IDE.</p></div>
+        <div class="tile"><span class="k">Aider</span><p>Open-source terminal coding agent.</p></div>
+      </div>
+      <p class="note reveal">The harness decides what the model can <b>actually do</b> — tools, sandboxing, memory, parallelism. At least as important as the model.</p>
+    </div>
+  </section>
+
+  <!-- APPLICATIONS — what form factor you run them in -->
+  <section class="slide dark" data-label="Front doors"
+    data-speaker-notes="Head off the confusion between products and front doors: terminal, desktop app and IDE are three ways into the same loop. Say that the big ones ship in several of these at once, so choosing is about habit, not capability. If the room is non-developer, point at the desktop app as the least intimidating entry point.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">18</span><div class="crumb"><b>Landscape</b> · the apps</div></div>
+      <h2 class="reveal">Same agent, different <span class="o">front door</span></h2>
+      <div class="cards c3 reveal">
+        <div class="tile fill"><span class="k">▸ Terminal (CLI)</span><p>Lives in your shell, scriptable. <b>Claude Code</b> · <b>Codex</b> · <b>Gemini CLI</b> · Aider.</p></div>
+        <div class="tile"><span class="k">Desktop app</span><p>A standalone window, less terminal-y. <b>Claude Code</b> app · <b>Codex</b> in the ChatGPT app.</p></div>
+        <div class="tile"><span class="k">⌨ In your IDE</span><p>Inline with your editor. Claude Code &amp; Codex extensions · Cursor · Windsurf · <b>Antigravity</b> · Copilot.</p></div>
+      </div>
+      <p class="note reveal">It's the <b>same loop underneath</b> — just a different front door. Most of the big ones ship in <b>several of these at once;</b> pick whichever fits how you work.</p>
+    </div>
+  </section>
+
+  <!-- PRICING SUBSCRIPTIONS -->
+  <section class="slide light" data-label="Subscriptions"
+    data-speaker-notes="Keep this brisk: free, roughly twenty a month for entry, roughly a hundred or two hundred for heavy use. What the higher tiers buy is more usage and earlier access to the newest models, not a different product. Flag the date, prices move, so verify before quoting any of this outside the room.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">19</span><div class="crumb"><b>Landscape</b> · plans</div></div>
+      <h2 class="reveal">Subscriptions <span class="o">(consumer)</span></h2>
+      <table class="tbl reveal">
+        <thead><tr><th>Tier</th><th>Claude (Anthropic)</th><th>ChatGPT (OpenAI)</th></tr></thead>
+        <tbody>
+          <tr><td><b>Free</b></td><td>limited usage</td><td>limited usage</td></tr>
+          <tr><td><b>Entry</b></td><td>Pro — ~$20/mo</td><td>Go ~$8 · Plus ~$20/mo</td></tr>
+          <tr><td><b>Power</b></td><td>Max 5× ~$100 · Max 20× ~$200/mo</td><td>Pro 5× ~$100 · Pro 20× ~$200/mo</td></tr>
+        </tbody>
+      </table>
+      <p class="note reveal">Higher tiers buy <b>more usage</b> and <b>priority access</b> to the newest models. Prices as of July 2026 — they change often, so verify before quoting.</p>
+    </div>
+  </section>
+
+  <!-- SUBSCRIPTION VS API -->
+  <section class="slide dark" data-label="Subscription vs API"
+    data-speaker-notes="Two different billing worlds: a flat fee for a person using the app, versus per-token pricing for software you build. Use the note to make tokens tangible — a long session re-reads your files dozens of times, and on the API you pay for every re-read. That is the setup for caching, which comes a few slides later.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>Landscape</b> · plan vs API</div></div>
+      <h2 class="reveal">Subscription <span class="o">vs API</span></h2>
+      <div class="split">
+        <div class="tile reveal"><span class="k">Subscription</span><p>A <b>flat monthly fee</b> for a person using the app or CLI. Simple, capped by usage limits. Best for everyday work.</p></div>
+        <div class="tile fill reveal"><span class="k">API</span><p>Pay <b>per token</b> (input + output). No cap, scales to production. Best for building integrations.</p></div>
+      </div>
+      <p class="note reveal"><b>Why tokens matter:</b> a long agent session can read your files dozens of times — and on the API <b>you pay for every re-read.</b> That's exactly why caching (coming up) exists.</p>
+    </div>
+  </section>
+
+  <!-- CONTEXT: WHAT IT IS + DIAGRAM D -->
+  <section class="slide light" data-label="What context is"
+    data-speaker-notes="Define context plainly as everything the model sees in one call, and point at the stacked bars as that one call's payload. Give them the scale: two hundred thousand tokens is roughly five hundred pages, up to a million on top models. The sentence to repeat is that if it is not in the context, it does not exist for the model.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">21</span><div class="crumb"><b>Context</b> · what it is</div></div>
+      <h2 class="reveal">Context = the model's <span class="o">short-term memory</span></h2>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>Everything the model sees in <b>one call</b>: system prompt, CLAUDE.md, chat history, files, tool output.</li>
+          <li>Measured in <b>tokens.</b> The <b>context window</b> is the max — typically <b>200K</b> (≈ 500 pages), up to <b>1M</b> on top models.</li>
+          <li>If it isn't in the context, it <b>doesn't exist</b> for the model.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 400 250" role="img" aria-label="The context window is a fixed-size box filled by system prompt, rules, history, files and tool output">
+            <rect class="dg-box mid" x="20" y="20" width="360" height="210" rx="12"/>
+            <text class="dg-t acc" x="200" y="44" font-size="14" text-anchor="middle">CONTEXT WINDOW · 200K tokens</text>
+            <rect class="dg-fill-r" x="34" y="58" width="332" height="26" rx="5" opacity="0.9"/><text class="dg-t on" x="44" y="76" font-size="12.5">system prompt</text>
+            <rect class="dg-box hot" x="34" y="90" width="332" height="26" rx="5"/><text class="dg-t on" x="44" y="108" font-size="12.5">CLAUDE.md · rules</text>
+            <rect class="dg-box" x="34" y="122" width="332" height="26" rx="5"/><text class="dg-t" x="44" y="140" font-size="12.5">conversation history</text>
+            <rect class="dg-box" x="34" y="154" width="332" height="26" rx="5"/><text class="dg-t" x="44" y="172" font-size="12.5">files you opened</text>
+            <rect class="dg-box" x="34" y="186" width="220" height="26" rx="5"/><text class="dg-t" x="44" y="204" font-size="12.5">tool output</text>
+            <rect x="258" y="186" width="108" height="26" rx="5" class="dg-dash" stroke-dasharray="4 4"/><text class="dg-t mut" x="312" y="204" font-size="12" text-anchor="middle">free space</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTEXT ROT + DIAGRAM -->
+  <section class="slide dark" data-label="Context rot"
+    data-speaker-notes="The counter-intuitive bit: a fuller window makes the model worse, not better. Cite the two studies briefly — Chroma found all eighteen frontier models degraded as input grew, Stanford found facts buried in the middle get missed. Be honest that the forty percent threshold is folklore; the lesson that survives is to keep the window well under full, because curation beats capacity.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">22</span><div class="crumb"><b>Context</b> · the "stupidity threshold"</div></div>
+      <h2 class="reveal">Fuller context = <span class="o">dumber model</span></h2>
+      <div class="split">
+        <div class="diagram reveal">
+          <!-- Remotion animation (remotion/src/QualityCurve.tsx) -->
+          <video src="assets/anim/quality-dark.mp4" width="1056" height="624" autoplay muted loop playsinline aria-label="Answer quality falls as the context fills; the last stretch of the window is where the model forgets, redoes and ignores"></video>
+        </div>
+        <ul class="bul reveal">
+          <li><b>"Context rot"</b> (Chroma): 18 frontier models all got <b>worse</b> as input grew — even when the answer was right there.</li>
+          <li><b>"Lost in the middle"</b> (Stanford): models recall the start &amp; end, but miss facts buried in the middle.</li>
+          <li>The "40% threshold of stupidity" is folklore, not a law — but the lesson holds: <b>keep the window well under full.</b> Curation beats capacity.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- MEASURING -->
+  <section class="slide light" data-label="Keep it lean"
+    data-speaker-notes="This is the most immediately useful slide for beginners, so give them the habit: glance at the context percentage the harness shows you. Past roughly forty or fifty percent, quality starts slipping, so trim or start fresh. This is the third LIVE checkpoint — show the real percentage on the running agent and note how far it has climbed.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">23</span><div class="crumb"><b>Context</b> · keeping it lean</div></div>
+      <h2 class="reveal">Watch it, <span class="o">keep it lean</span></h2>
+      <span class="extag reveal">EXAMPLE — a harness status line</span>
+      <div class="code reveal"><span class="d">claude-opus-4-8</span>   <span class="o">context: 38%</span>  (76k / 200k)   <span class="g">$0.42</span></div>
+      <ul class="bul reveal" style="margin-top:var(--content-gap)">
+        <li>Most harnesses show <b>live % used</b> — glance at it.</li>
+        <li>Climbing past ~40–50%? Quality starts to slip — time to <b>trim or restart.</b></li>
+        <li><b>Habit:</b> finish a task, then start a <b>fresh chat</b> rather than dragging a bloated one onward.</li>
+      </ul>
+      <p class="note reveal"><span class="pill">● LIVE</span> Check the <b>context %</b> on our running agent right now — see how far it's climbed.</p>
+    </div>
+  </section>
+
+  <!-- UNDER THE HOOD: CACHING + COMPACTION -->
+  <section class="slide dark" data-label="Caching and compaction"
+    data-speaker-notes="Two things the harness does for you automatically. Caching remembers the stable parts between calls so re-using them is cheaper and faster; compaction summarises older turns when the window fills. Land the catch — whatever the summary leaves out is simply gone, which is why the summary has to keep what matters.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">24</span><div class="crumb"><b>Context</b> · under the hood</div></div>
+      <h2 class="reveal">How harnesses <span class="o">cope</span></h2>
+      <div class="cards c2 reveal">
+        <div class="tile"><span class="k">Caching</span><p>Stable parts (system prompt, CLAUDE.md, files) are <b>remembered between calls</b>, so reusing them is much <b>cheaper and faster</b> than re-reading every time.</p></div>
+        <div class="tile fill"><span class="k">Compaction</span><p>When the window fills, the harness <b>summarises older turns</b> into a short recap and drops the raw text — freeing space to keep going.</p></div>
+      </div>
+      <p class="note reveal">Both are automatic. The catch with compaction: anything <b>not</b> kept in the summary is forgotten — so the summary has to keep what matters.</p>
+    </div>
+  </section>
+
+  <!-- SUBAGENTS + DIAGRAM E -->
+  <section class="slide light" data-label="Sub-agents"
+    data-speaker-notes="A sub-agent is just another agent with its own fresh context, sent off to do one messy job and report back a conclusion. The numbers make it click: eighty thousand tokens burned inside the sub-agent, two hundred tokens land in the main chat. Mention they can run in parallel, which is why big tasks finish faster than you would expect.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">25</span><div class="crumb"><b>Context</b> · sub-agents</div></div>
+      <h2 class="reveal">Sub-agents <span class="o">keep the main context clean</span></h2>
+      <div class="split">
+        <div class="diagram reveal">
+          <!-- Remotion animation (remotion/src/Subagents.tsx) -->
+          <video src="assets/anim/subagents-light.mp4" width="1176" height="756" autoplay muted loop playsinline aria-label="A main agent delegates messy work to sub-agents that have their own context and return only a short summary"></video>
+        </div>
+        <ul class="bul reveal">
+          <li>A <b>sub-agent</b> is a separate agent with its <b>own fresh context</b> for one sub-task.</li>
+          <li>It does the messy work and returns <b>only the conclusion.</b></li>
+          <li><b>Example:</b> "search these 200 files" burns 80k tokens <b>inside</b> the sub-agent — the main chat gets a 200-token answer. They can also run <b>in parallel.</b></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PERMISSIONS -->
+  <section class="slide dark" data-label="Permissions"
+    data-speaker-notes="Three modes, increasing freedom: ask before anything risky, pre-approve a class of actions, or ask for nothing at all. This is the fourth LIVE checkpoint — say which mode the running agent is in and why it has not interrupted us. Note that Codex has the same three under different names, and close on the rule that more freedom demands more isolation.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>Safety</b> · permissions</div></div>
+      <h2 class="reveal">Safety through <span class="o">permissions</span></h2>
+      <div class="cards c3 reveal">
+        <div class="tile"><span class="k">Default · ask</span><p>The agent <b>asks first</b> before any risky action (write a file, run a command). Safest.</p></div>
+        <div class="tile"><span class="k">Auto · accept edits</span><p>Pre-approve a class of actions (e.g. file edits) so it won't interrupt on routine steps.</p></div>
+        <div class="tile fill"><span class="k">Bypass · "YOLO"</span><p>Asks for <b>nothing.</b> Fast, but it can run <b>any</b> command — only in a sandbox.</p></div>
+      </div>
+      <p class="note reveal"><span class="pill">● LIVE</span> Our running agent is in <b>auto mode</b> — that's why it hasn't stopped to ask. Both Claude Code and Codex ship these modes (Codex calls them <i>read-only / auto / full access</i>). More freedom demands more isolation.</p>
+    </div>
+  </section>
+
+  <!-- BYPASS MODE -->
+  <section class="slide light" data-label="Bypass mode"
+    data-speaker-notes="Be concrete about when no-questions-asked mode is fine: a throwaway container, an isolated copy, a CI job. Be equally concrete about when it is not — your main machine, with real credentials and no backup. The prompt-injection point is worth spelling out for beginners: the agent reads files and web pages, and a hidden instruction in either can steer it.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">27</span><div class="crumb"><b>Safety</b> · bypass mode</div></div>
+      <h2 class="reveal">When is "YOLO" <span class="o">OK?</span></h2>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>Only where a mistake <b>can't hurt:</b> a throwaway container or VM, an isolated copy of the project, or a CI job.</li>
+          <li><b>Never</b> on your main machine with real passwords and no backup.</li>
+          <li>Remember: an agent reads files and the web — a <b>hidden malicious instruction</b> in either can hijack a no-questions-asked agent.</li>
+        </ul>
+        <div class="kcard reveal">
+          <div class="big">Freedom ∝ isolation</div>
+          <p>The rule: the more autonomy you grant, the more <b>walls</b> you put around it.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RECAP: MEMENTO CALLBACK -->
+  <section class="slide dark" data-label="Back to no memory"
+    data-speaker-notes="Call back to Memento deliberately — this is the setup for the last section. Pose the question the way they would: how do we give it knowledge that survives across sessions without stuffing the window full and rotting it. Then name the four answers coming up, so the next three slides feel like a list being completed.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">28</span><div class="crumb"><b>Memory</b> · the problem</div></div>
+      <h2 class="reveal">Back to the model with <span class="o">no memory</span></h2>
+      <div class="split">
+        <div class="kcard reveal">
+          <div class="big">It forgets every time</div>
+          <p>Remember Memento (slide 6)? Every call re-reads the whole context — and <b>keeps nothing</b> afterwards.</p>
+        </div>
+        <ul class="bul reveal">
+          <li>So how do we give it knowledge that <b>survives</b> across sessions…</li>
+          <li>…<b>without</b> stuffing the context window full (and rotting it)?</li>
+          <li>Four tools: <b>CLAUDE.md</b>, <b>memory</b>, <b>skills</b> and <b>plugins.</b></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLAUDE.md + MEMORY -->
+  <section class="slide light" data-label="CLAUDE.md and memory"
+    data-speaker-notes="Read two lines of the example file — package manager and never edit generated — and say this is just a plain text file in the repo root. It gets read at the start of every session, so it is where standing rules and conventions belong. Add that memory files are the same idea but written by the agent itself, and some harnesses do it automatically.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">29</span><div class="crumb"><b>Memory</b> · CLAUDE.md</div></div>
+      <h2 class="reveal">Memory that <span class="o">survives sessions</span></h2>
+      <span class="extag reveal">EXAMPLE — CLAUDE.md in your repo root</span>
+      <div class="code reveal"><span class="c"># CLAUDE.md — auto-injected into every prompt</span>
 - Package manager: <span class="b">pnpm</span> (never npm)
 - Run tests with: <span class="b">make test</span>
 - API code lives in <span class="b">/services</span>; never edit <span class="b">/generated</span>
 - Style: small functions, no comments unless asked</div>
-    <ul class="bul reveal" style="margin-top:var(--content-gap)">
-      <li><b>CLAUDE.md</b> — read at the <b>start of every session;</b> your standing rules &amp; conventions.</li>
-      <li><b>Memory files</b> — durable notes the agent saves and reloads later (some harnesses do this <b>automatically</b>).</li>
-    </ul>
-  </div>
-</section>
-
-<!-- SKILLS & PLUGINS -->
-<section class="slide dark">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">30</span><div class="crumb"><b>Memory</b> · skills &amp; plugins</div></div>
-    <h2 class="reveal">Skills &amp; <span class="o">plugins</span></h2>
-    <div class="split">
-      <ul class="bul reveal">
-        <li><b>Skill</b> = a folder with a <b>SKILL.md</b> (a name + description, plus instructions, scripts, resources).</li>
-        <li><b>Loaded only when needed:</b> the agent reads a skill's full instructions <b>only when a task matches</b> — so you can keep dozens around for almost no context cost.</li>
-        <li><b>Plugins</b> bundle &amp; <b>distribute</b> skills, commands and MCP servers across a team.</li>
-      </ul>
-      <div class="kcard reveal">
-        <div class="big">Just-in-time know-how</div>
-        <p><b>Example:</b> a "make-slides" skill stays dormant until you ask for a deck — then its full playbook loads.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- REACHING OUT -->
-<section class="slide">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">31</span><div class="crumb"><b>Reaching out</b> · other systems</div></div>
-    <h2 class="reveal">Touching <span class="o">other systems</span></h2>
-    <div class="cards c3 reveal">
-      <div class="tile"><span class="k">API</span><p>Services called <b>programmatically</b> over HTTP. The agent sends a request, gets structured data back.</p></div>
-      <div class="tile"><span class="k">CLI</span><p><b>Command-line tools</b> the agent runs like a human in a terminal (<span style="font-family:var(--font-m)">git</span>, <span style="font-family:var(--font-m)">gh</span>, <span style="font-family:var(--font-m)">kubectl</span>…).</p></div>
-      <div class="tile fill"><span class="k">MCP</span><p><b>Model Context Protocol</b> — an open standard to plug tools &amp; data into any agent.</p></div>
-    </div>
-    <p class="note reveal">CLIs &amp; APIs already exist everywhere — the agent just <b>uses</b> them. MCP is the newer, agent-native way to connect.</p>
-  </div>
-</section>
-
-<!-- MCP + DIAGRAM F -->
-<section class="slide dark">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">32</span><div class="crumb"><b>Reaching out</b> · MCP</div></div>
-    <h2 class="reveal">MCP = <span class="o">"USB-C for agents"</span></h2>
-    <div class="split">
-      <div class="diagram reveal">
-        <svg viewBox="0 0 440 250" role="img" aria-label="Without MCP every app needs a custom connector to every tool; with MCP each connects once through a shared hub">
-          <text class="dg-t mut" x="105" y="20" font-size="13" text-anchor="middle">without MCP — N×M glue</text>
-          <text class="dg-t acc" x="335" y="20" font-size="13" text-anchor="middle">with MCP — connect once</text>
-          <!-- left tangle -->
-          <g>
-            <rect class="dg-box" x="20" y="40" width="54" height="26" rx="5"/><rect class="dg-box" x="20" y="100" width="54" height="26" rx="5"/><rect class="dg-box" x="20" y="160" width="54" height="26" rx="5"/>
-            <rect class="dg-box" x="150" y="40" width="46" height="26" rx="5"/><rect class="dg-box" x="150" y="100" width="46" height="26" rx="5"/><rect class="dg-box" x="150" y="160" width="46" height="26" rx="5"/>
-            <g class="dg-tangle" stroke-width="1">
-              <path d="M74 53 L150 53"/><path d="M74 53 L150 113"/><path d="M74 53 L150 173"/>
-              <path d="M74 113 L150 53"/><path d="M74 113 L150 113"/><path d="M74 113 L150 173"/>
-              <path d="M74 173 L150 53"/><path d="M74 173 L150 113"/><path d="M74 173 L150 173"/>
-            </g>
-          </g>
-          <!-- right hub -->
-          <g>
-            <rect class="dg-box" x="244" y="40" width="54" height="26" rx="5"/><rect class="dg-box" x="244" y="100" width="54" height="26" rx="5"/><rect class="dg-box" x="244" y="160" width="54" height="26" rx="5"/>
-            <rect class="dg-box hot" x="330" y="92" width="44" height="44" rx="10"/><text class="dg-t on" x="352" y="118" font-size="12" text-anchor="middle">MCP</text>
-            <rect class="dg-box" x="392" y="40" width="40" height="26" rx="5"/><rect class="dg-box" x="392" y="100" width="40" height="26" rx="5"/><rect class="dg-box" x="392" y="160" width="40" height="26" rx="5"/>
-            <g stroke="#ff5c35" stroke-width="1.6" fill="none">
-              <path d="M298 53 L330 110"/><path d="M298 113 L330 114"/><path d="M298 173 L330 118"/>
-              <path d="M374 114 L392 53"/><path d="M374 114 L392 113"/><path d="M374 114 L392 173"/>
-            </g>
-          </g>
-        </svg>
-      </div>
-      <ul class="bul reveal">
-        <li>Anthropic's open standard (Nov 2024). Stop writing a <b>custom connector for every tool × every app.</b></li>
-        <li>Run an <b>MCP server</b> once; <b>any</b> MCP-aware agent can use it. Thousands now exist.</li>
-        <li><b>Example:</b> "find my next meeting with the audit team and draft a follow-up" — Calendar + Gmail, one agent, no glue code.</li>
+      <ul class="bul reveal" style="margin-top:var(--content-gap)">
+        <li><b>CLAUDE.md</b> — read at the <b>start of every session;</b> your standing rules &amp; conventions.</li>
+        <li><b>Memory files</b> — durable notes the agent saves and reloads later (some harnesses do this <b>automatically</b>).</li>
       </ul>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- HOW TO WORK WITH IT WELL -->
-<section class="slide">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">33</span><div class="crumb"><b>In practice</b> · how to work with it</div></div>
-    <h2 class="reveal">If you remember <span class="o">three things</span></h2>
-    <div class="cards c3 reveal">
-      <div class="tile"><span class="k">1 · Just talk to it</span><p>Treat it like a <b>colleague</b>, in plain language. Give the goal &amp; context, then iterate. Natural beats over-engineered prompts.</p></div>
-      <div class="tile"><span class="k">2 · Remember Memento</span><p>No context = <b>no idea what you mean.</b> The agent only knows what's in front of it — and quality <b>rots</b> as that fills with junk.</p></div>
-      <div class="tile fill"><span class="k">3 · Feed &amp; hand off</span><p>It orients <b>fast</b> from what you give it. Keep a <b>CLAUDE.md</b>; when passing work on, ask it to <b>write a summary for the next agent.</b></p></div>
-    </div>
-    <p class="note reveal">Most of "prompting skill" is really just <b>managing what the agent can see.</b></p>
-  </div>
-</section>
-
-<!-- SUMMARY -->
-<section class="slide dark">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">34</span><div class="crumb"><b>Summary</b></div></div>
-    <h2 class="reveal">What to <span class="o">take away</span></h2>
-    <ul class="bul reveal">
-      <li><b>Model</b> = a stateless brain · <b>harness</b> = the body &amp; memory · <b>agent</b> = the loop that does things.</li>
-      <li><b>Mind the context</b> — quality rots as it fills; caching, compaction &amp; sub-agents are how we cope.</li>
-      <li><b>Permissions</b> are your safety net; bypass mode only inside isolation.</li>
-      <li><b>CLAUDE.md, memory, skills, MCP</b> = how we give a forgetful model durable knowledge &amp; reach.</li>
-    </ul>
-    <p class="thanks reveal" style="margin-top:var(--content-gap)">Thanks! <span class="o">Questions?</span></p>
-    <p class="note reveal">David&nbsp;Budáč / ČSOB</p>
-  </div>
-</section>
-
-<!-- SOURCES 1 -->
-<section class="slide">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">35</span><div class="crumb"><b>Sources</b> · further reading</div></div>
-    <h2 class="reveal">Sources &amp; <span class="o">links</span> (1/2)</h2>
-    <div class="links reveal">
-      <div class="linkcol">
-        <h3>Models &amp; pricing</h3>
-        <a href="https://platform.claude.com/docs/en/about-claude/models/overview" target="_blank" rel="noopener">Anthropic — Claude models overview<span class="u">platform.claude.com/docs · models</span></a>
-        <a href="https://claude.com/pricing" target="_blank" rel="noopener">Claude — plans &amp; pricing<span class="u">claude.com/pricing</span></a>
-        <a href="https://openai.com/index/gpt-5-6/" target="_blank" rel="noopener">OpenAI — GPT-5.6 (Sol · Terra · Luna)<span class="u">openai.com/index/gpt-5-6</span></a>
-        <a href="https://chatgpt.com/pricing/" target="_blank" rel="noopener">ChatGPT — pricing tiers<span class="u">chatgpt.com/pricing</span></a>
-        <a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/" target="_blank" rel="noopener">Google — Gemini 3.5<span class="u">blog.google · gemini-3-5</span></a>
-      </div>
-      <div class="linkcol">
-        <h3>Harnesses</h3>
-        <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">Claude Code — memory &amp; CLAUDE.md<span class="u">code.claude.com/docs · memory</span></a>
-        <a href="https://code.claude.com/docs/en/sub-agents" target="_blank" rel="noopener">Claude Code — sub-agents<span class="u">code.claude.com/docs · sub-agents</span></a>
-        <a href="https://openai.com/codex/" target="_blank" rel="noopener">OpenAI — Codex<span class="u">openai.com/codex</span></a>
-        <a href="https://github.com/openai/codex" target="_blank" rel="noopener">Codex CLI — source<span class="u">github.com/openai/codex</span></a>
+  <!-- SKILLS & PLUGINS -->
+  <section class="slide dark" data-label="Skills and plugins"
+    data-speaker-notes="A skill is just a folder with instructions in it, and the key property is that it loads only when a task matches. That is why you can keep dozens around for almost no context cost — it is the answer to the rot problem from two slides back. Use the make-slides example: dormant until you ask for a deck, then the full playbook loads. Plugins are how a team shares all of that.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">30</span><div class="crumb"><b>Memory</b> · skills &amp; plugins</div></div>
+      <h2 class="reveal">Skills &amp; <span class="o">plugins</span></h2>
+      <div class="split">
+        <ul class="bul reveal">
+          <li><b>Skill</b> = a folder with a <b>SKILL.md</b> (a name + description, plus instructions, scripts, resources).</li>
+          <li><b>Loaded only when needed:</b> the agent reads a skill's full instructions <b>only when a task matches</b> — so you can keep dozens around for almost no context cost.</li>
+          <li><b>Plugins</b> bundle &amp; <b>distribute</b> skills, commands and MCP servers across a team.</li>
+        </ul>
+        <div class="kcard reveal">
+          <div class="big">Just-in-time know-how</div>
+          <p><b>Example:</b> a "make-slides" skill stays dormant until you ask for a deck — then its full playbook loads.</p>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- SOURCES 2 -->
-<section class="slide">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">36</span><div class="crumb"><b>Sources</b> · context, memory &amp; MCP</div></div>
-    <h2 class="reveal">Sources &amp; <span class="o">links</span> (2/2)</h2>
-    <div class="links reveal">
-      <div class="linkcol">
-        <h3>Context, caching &amp; reasoning</h3>
-        <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">Anthropic — Effective context engineering<span class="u">anthropic.com/engineering</span></a>
-        <a href="https://www.trychroma.com/research/context-rot" target="_blank" rel="noopener">Chroma — Context Rot (18-model study)<span class="u">trychroma.com/research/context-rot</span></a>
-        <a href="https://arxiv.org/abs/2307.03172" target="_blank" rel="noopener">Liu et al. — Lost in the Middle<span class="u">arxiv.org/abs/2307.03172</span></a>
-        <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noopener">Anthropic — Prompt caching<span class="u">platform.claude.com/docs · prompt-caching</span></a>
-        <a href="https://platform.claude.com/docs/en/build-with-claude/extended-thinking" target="_blank" rel="noopener">Anthropic — Extended / adaptive thinking<span class="u">platform.claude.com/docs · extended-thinking</span></a>
-        <a href="https://www.anthropic.com/research/reasoning-models-dont-say-think" target="_blank" rel="noopener">Anthropic — Reasoning models don't always say what they think<span class="u">anthropic.com/research · cot-faithfulness</span></a>
+  <!-- REACHING OUT -->
+  <section class="slide light" data-label="Touching other systems"
+    data-speaker-notes="Three ways an agent reaches beyond your files: call an API, run a command-line tool like a human would, or connect through MCP. The reassuring part for beginners is that CLIs and APIs already exist everywhere and the agent simply uses them. MCP is the newer, agent-native option, and it gets the next slide.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">31</span><div class="crumb"><b>Reaching out</b> · other systems</div></div>
+      <h2 class="reveal">Touching <span class="o">other systems</span></h2>
+      <div class="cards c3 reveal">
+        <div class="tile"><span class="k">API</span><p>Services called <b>programmatically</b> over HTTP. The agent sends a request, gets structured data back.</p></div>
+        <div class="tile"><span class="k">CLI</span><p><b>Command-line tools</b> the agent runs like a human in a terminal (<span style="font-family:var(--font-m)">git</span>, <span style="font-family:var(--font-m)">gh</span>, <span style="font-family:var(--font-m)">kubectl</span>…).</p></div>
+        <div class="tile fill"><span class="k">MCP</span><p><b>Model Context Protocol</b> — an open standard to plug tools &amp; data into any agent.</p></div>
       </div>
-      <div class="linkcol">
-        <h3>Skills, plugins &amp; MCP</h3>
-        <a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills" target="_blank" rel="noopener">Anthropic — Agent Skills<span class="u">anthropic.com/engineering · agent-skills</span></a>
-        <a href="https://github.com/anthropics/skills" target="_blank" rel="noopener">Anthropic — Skills repo (SKILL.md)<span class="u">github.com/anthropics/skills</span></a>
-        <a href="https://www.anthropic.com/news/model-context-protocol" target="_blank" rel="noopener">Anthropic — Introducing MCP<span class="u">anthropic.com/news · model-context-protocol</span></a>
-        <a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">Model Context Protocol — spec &amp; docs<span class="u">modelcontextprotocol.io</span></a>
+      <p class="note reveal">CLIs &amp; APIs already exist everywhere — the agent just <b>uses</b> them. MCP is the newer, agent-native way to connect.</p>
+    </div>
+  </section>
+
+  <!-- MCP + DIAGRAM F -->
+  <section class="slide dark" data-label="MCP"
+    data-speaker-notes="Point at the left half of the diagram first — every app needing custom glue to every tool — then the right, where each side connects once through a shared standard. Say it is Anthropic's open standard from late 2024 and thousands of MCP servers now exist. The calendar-plus-email example is the one that lands for non-developers: two systems, one agent, no glue code.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">32</span><div class="crumb"><b>Reaching out</b> · MCP</div></div>
+      <h2 class="reveal">MCP = <span class="o">"USB-C for agents"</span></h2>
+      <div class="split">
+        <div class="diagram reveal">
+          <svg viewBox="0 0 440 250" role="img" aria-label="Without MCP every app needs a custom connector to every tool; with MCP each connects once through a shared hub">
+            <text class="dg-t mut" x="105" y="20" font-size="13" text-anchor="middle">without MCP — N×M glue</text>
+            <text class="dg-t acc" x="335" y="20" font-size="13" text-anchor="middle">with MCP — connect once</text>
+            <!-- left tangle -->
+            <g>
+              <rect class="dg-box" x="20" y="40" width="54" height="26" rx="5"/><rect class="dg-box" x="20" y="100" width="54" height="26" rx="5"/><rect class="dg-box" x="20" y="160" width="54" height="26" rx="5"/>
+              <rect class="dg-box" x="150" y="40" width="46" height="26" rx="5"/><rect class="dg-box" x="150" y="100" width="46" height="26" rx="5"/><rect class="dg-box" x="150" y="160" width="46" height="26" rx="5"/>
+              <g class="dg-tangle" stroke-width="1">
+                <path d="M74 53 L150 53"/><path d="M74 53 L150 113"/><path d="M74 53 L150 173"/>
+                <path d="M74 113 L150 53"/><path d="M74 113 L150 113"/><path d="M74 113 L150 173"/>
+                <path d="M74 173 L150 53"/><path d="M74 173 L150 113"/><path d="M74 173 L150 173"/>
+              </g>
+            </g>
+            <!-- right hub -->
+            <g>
+              <rect class="dg-box" x="244" y="40" width="54" height="26" rx="5"/><rect class="dg-box" x="244" y="100" width="54" height="26" rx="5"/><rect class="dg-box" x="244" y="160" width="54" height="26" rx="5"/>
+              <rect class="dg-box hot" x="330" y="92" width="44" height="44" rx="10"/><text class="dg-t on" x="352" y="118" font-size="12" text-anchor="middle">MCP</text>
+              <rect class="dg-box" x="392" y="40" width="40" height="26" rx="5"/><rect class="dg-box" x="392" y="100" width="40" height="26" rx="5"/><rect class="dg-box" x="392" y="160" width="40" height="26" rx="5"/>
+              <g stroke="var(--coral)" stroke-width="1.6" fill="none">
+                <path d="M298 53 L330 110"/><path d="M298 113 L330 114"/><path d="M298 173 L330 118"/>
+                <path d="M374 114 L392 53"/><path d="M374 114 L392 113"/><path d="M374 114 L392 173"/>
+              </g>
+            </g>
+          </svg>
+        </div>
+        <ul class="bul reveal">
+          <li>Anthropic's open standard (Nov 2024). Stop writing a <b>custom connector for every tool × every app.</b></li>
+          <li>Run an <b>MCP server</b> once; <b>any</b> MCP-aware agent can use it. Thousands now exist.</li>
+          <li><b>Example:</b> "find my next meeting with the audit team and draft a follow-up" — Calendar + Gmail, one agent, no glue code.</li>
+        </ul>
       </div>
     </div>
-    <p class="note reveal">All figures verified July 2026. Models &amp; prices move fast — re-check the primary sources before quoting.</p>
-  </div>
-</section>
+  </section>
+
+  <!-- HOW TO WORK WITH IT WELL -->
+  <section class="slide light" data-label="Three things to remember"
+    data-speaker-notes="If they forget everything else, these three should stick. Just talk to it like a colleague — natural language beats over-engineered prompts. Remember Memento, because the agent only knows what is in front of it. And feed it well, keep a CLAUDE.md, and ask it to write a summary when handing work on. Close on the note: most of prompting skill is really managing what the agent can see.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">33</span><div class="crumb"><b>In practice</b> · how to work with it</div></div>
+      <h2 class="reveal">If you remember <span class="o">three things</span></h2>
+      <div class="cards c3 reveal">
+        <div class="tile"><span class="k">1 · Just talk to it</span><p>Treat it like a <b>colleague</b>, in plain language. Give the goal &amp; context, then iterate. Natural beats over-engineered prompts.</p></div>
+        <div class="tile"><span class="k">2 · Remember Memento</span><p>No context = <b>no idea what you mean.</b> The agent only knows what's in front of it — and quality <b>rots</b> as that fills with junk.</p></div>
+        <div class="tile fill"><span class="k">3 · Feed &amp; hand off</span><p>It orients <b>fast</b> from what you give it. Keep a <b>CLAUDE.md</b>; when passing work on, ask it to <b>write a summary for the next agent.</b></p></div>
+      </div>
+      <p class="note reveal">Most of "prompting skill" is really just <b>managing what the agent can see.</b></p>
+    </div>
+  </section>
+
+  <!-- SUMMARY -->
+  <section class="slide dark" data-label="Summary"
+    data-speaker-notes="Recite the first bullet as the spine of the talk: stateless brain, harness as body and memory, agent as the loop. Then the three practical takeaways — mind the context, permissions are the safety net, and CLAUDE.md, skills and MCP give a forgetful model durable knowledge. Wrap up the live demo here by showing what it finished, then open the floor.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">34</span><div class="crumb"><b>Summary</b></div></div>
+      <h2 class="reveal">What to <span class="o">take away</span></h2>
+      <ul class="bul reveal">
+        <li><b>Model</b> = a stateless brain · <b>harness</b> = the body &amp; memory · <b>agent</b> = the loop that does things.</li>
+        <li><b>Mind the context</b> — quality rots as it fills; caching, compaction &amp; sub-agents are how we cope.</li>
+        <li><b>Permissions</b> are your safety net; bypass mode only inside isolation.</li>
+        <li><b>CLAUDE.md, memory, skills, MCP</b> = how we give a forgetful model durable knowledge &amp; reach.</li>
+      </ul>
+      <p class="thanks reveal" style="margin-top:var(--content-gap)">Thanks! <span class="o">Questions?</span></p>
+      <p class="note reveal">David&nbsp;Budáč / ČSOB</p>
+    </div>
+  </section>
+
+  <!-- SOURCES 1 -->
+  <section class="slide light" data-label="Sources 1 of 2"
+    data-speaker-notes="Leave this up while questions run rather than reading it. Point out the two most useful starting places for a beginner — the Claude models overview and the pricing page — and say the rest are there for anyone who wants the primary source. Mention the deck lives in the repo, so nobody needs to photograph the links.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">35</span><div class="crumb"><b>Sources</b> · further reading</div></div>
+      <h2 class="reveal">Sources &amp; <span class="o">links</span> (1/2)</h2>
+      <div class="links reveal">
+        <div class="linkcol">
+          <h3>Models &amp; pricing</h3>
+          <a href="https://platform.claude.com/docs/en/about-claude/models/overview" target="_blank" rel="noopener">Anthropic — Claude models overview<span class="u">platform.claude.com/docs · models</span></a>
+          <a href="https://claude.com/pricing" target="_blank" rel="noopener">Claude — plans &amp; pricing<span class="u">claude.com/pricing</span></a>
+          <a href="https://openai.com/index/gpt-5-6/" target="_blank" rel="noopener">OpenAI — GPT-5.6 (Sol · Terra · Luna)<span class="u">openai.com/index/gpt-5-6</span></a>
+          <a href="https://chatgpt.com/pricing/" target="_blank" rel="noopener">ChatGPT — pricing tiers<span class="u">chatgpt.com/pricing</span></a>
+          <a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/" target="_blank" rel="noopener">Google — Gemini 3.5<span class="u">blog.google · gemini-3-5</span></a>
+        </div>
+        <div class="linkcol">
+          <h3>Harnesses</h3>
+          <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">Claude Code — memory &amp; CLAUDE.md<span class="u">code.claude.com/docs · memory</span></a>
+          <a href="https://code.claude.com/docs/en/sub-agents" target="_blank" rel="noopener">Claude Code — sub-agents<span class="u">code.claude.com/docs · sub-agents</span></a>
+          <a href="https://openai.com/codex/" target="_blank" rel="noopener">OpenAI — Codex<span class="u">openai.com/codex</span></a>
+          <a href="https://github.com/openai/codex" target="_blank" rel="noopener">Codex CLI — source<span class="u">github.com/openai/codex</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOURCES 2 -->
+  <section class="slide light" data-label="Sources 2 of 2"
+    data-speaker-notes="These are the papers behind the claims made earlier — context rot, lost in the middle, and the reasoning-faithfulness research from the thinking section. Point at them if anyone challenges a number. Repeat the closing caveat: everything here was verified in July 2026 and moves fast, so re-check before quoting.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">36</span><div class="crumb"><b>Sources</b> · context, memory &amp; MCP</div></div>
+      <h2 class="reveal">Sources &amp; <span class="o">links</span> (2/2)</h2>
+      <div class="links reveal">
+        <div class="linkcol">
+          <h3>Context, caching &amp; reasoning</h3>
+          <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">Anthropic — Effective context engineering<span class="u">anthropic.com/engineering</span></a>
+          <a href="https://www.trychroma.com/research/context-rot" target="_blank" rel="noopener">Chroma — Context Rot (18-model study)<span class="u">trychroma.com/research/context-rot</span></a>
+          <a href="https://arxiv.org/abs/2307.03172" target="_blank" rel="noopener">Liu et al. — Lost in the Middle<span class="u">arxiv.org/abs/2307.03172</span></a>
+          <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noopener">Anthropic — Prompt caching<span class="u">platform.claude.com/docs · prompt-caching</span></a>
+          <a href="https://platform.claude.com/docs/en/build-with-claude/extended-thinking" target="_blank" rel="noopener">Anthropic — Extended / adaptive thinking<span class="u">platform.claude.com/docs · extended-thinking</span></a>
+          <a href="https://www.anthropic.com/research/reasoning-models-dont-say-think" target="_blank" rel="noopener">Anthropic — Reasoning models don't always say what they think<span class="u">anthropic.com/research · cot-faithfulness</span></a>
+        </div>
+        <div class="linkcol">
+          <h3>Skills, plugins &amp; MCP</h3>
+          <a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills" target="_blank" rel="noopener">Anthropic — Agent Skills<span class="u">anthropic.com/engineering · agent-skills</span></a>
+          <a href="https://github.com/anthropics/skills" target="_blank" rel="noopener">Anthropic — Skills repo (SKILL.md)<span class="u">github.com/anthropics/skills</span></a>
+          <a href="https://www.anthropic.com/news/model-context-protocol" target="_blank" rel="noopener">Anthropic — Introducing MCP<span class="u">anthropic.com/news · model-context-protocol</span></a>
+          <a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">Model Context Protocol — spec &amp; docs<span class="u">modelcontextprotocol.io</span></a>
+        </div>
+      </div>
+      <p class="note reveal">All figures verified July 2026. Models &amp; prices move fast — re-check the primary sources before quoting.</p>
+    </div>
+  </section>
+
+</deck-stage>
+<script src="ember_design_system/deck-stage.js"></script>
+<script>
+  /* restart embedded explainer videos when their slide becomes active */
+  document.querySelector('deck-stage').addEventListener('slidechange', function(e){
+    var v = e.detail.slide && e.detail.slide.querySelector('video');
+    if (v) { v.currentTime = 0; var p = v.play(); if (p && p.catch) p.catch(function(){}); }
+  });
+</script>
+
+<style id="presenter-ui-css">
+  /* ─── Presenter aids (outside <deck-stage>: siblings paint above it) ─── */
+  .pui-controls{
+    position:fixed; right:18px; bottom:18px; z-index:40;
+    display:flex; gap:8px;
+    opacity:0; transition:opacity .25s; pointer-events:none;
+  }
+  body.pui-mouse .pui-controls,
+  .pui-controls:hover,
+  .pui-controls:focus-within{ opacity:1; pointer-events:auto; }
+  .pui-controls button{
+    font:var(--w-semibold) 12px/1 var(--font-mono); letter-spacing:.08em;
+    color:var(--on-dark-muted); background:var(--ink-2);
+    border:1px solid var(--line-dark); border-radius:var(--radius-pill);
+    padding:9px 14px; cursor:pointer;
+  }
+  .pui-controls button:hover{ color:var(--paper); border-color:var(--coral); }
+  .pui-controls kbd{ color:var(--coral); font:inherit; margin-left:6px; }
+  .pui-notes{
+    position:fixed; left:0; right:0; bottom:0; z-index:39;
+    background:var(--ink-2); color:var(--on-dark);
+    border-top:2px solid var(--coral);
+    padding:20px 34px 24px; max-height:38vh; overflow:auto;
+    font:var(--w-regular) clamp(15px,1.6vw,21px)/1.55 var(--font-b, var(--font-body));
+    display:none;
+  }
+  .pui-notes.open{ display:block; }
+  .pui-notes .pui-nhead{
+    font:var(--w-semibold) 12px/1 var(--font-mono); letter-spacing:.12em;
+    text-transform:uppercase; color:var(--coral); margin-bottom:12px;
+  }
+  @media print{ .pui-controls, .pui-notes{ display:none !important; } }
+</style>
+<div class="pui-controls">
+  <button type="button" data-pui="notes">NOTES<kbd>N</kbd></button>
+  <button type="button" data-pui="present">PRESENT<kbd>P</kbd></button>
+  <button type="button" data-pui="fullscreen">FULLSCREEN<kbd>F</kbd></button>
+</div>
+<div class="pui-notes" role="note" aria-live="polite">
+  <div class="pui-nhead"></div>
+  <div class="pui-nbody"></div>
+</div>
 
 <script>
-/* ===== SLIDE CONTROLLER ===== */
-class SlidePresentation{
-  constructor(){
-    this.slides=[...document.querySelectorAll('.slide')];this.current=0;
-    this.setupObserver();this.setupNavDots();this.setupKeyboard();this.setupTouch();this.setupProgress();
+/* ─── Presenter aids: notes overlay (N), fullscreen (F), presenter window (P) ─── */
+(function(){
+  if (window.self !== window.top) return; /* skip when embedded by a host/viewer */
+  var ds = document.querySelector('deck-stage');
+  var notesEl = document.querySelector('.pui-notes');
+  var nHead = notesEl.querySelector('.pui-nhead');
+  var nBody = notesEl.querySelector('.pui-nbody');
+  var current = 0, presenter = null, mouseT = null;
+
+  function slides(){ return Array.prototype.slice.call(ds.querySelectorAll(':scope > section')); }
+  function noteOf(s){ return s.getAttribute('data-speaker-notes') || 'No notes for this slide.'; }
+  function labelOf(s){ return s.getAttribute('data-label') || ''; }
+
+  /* controls fade in on mouse activity, like the component's own overlay */
+  document.addEventListener('mousemove', function(){
+    document.body.classList.add('pui-mouse');
+    clearTimeout(mouseT);
+    mouseT = setTimeout(function(){ document.body.classList.remove('pui-mouse'); }, 1800);
+  });
+
+  function syncNotes(){
+    var all = slides(), s = all[current];
+    if (!s) return;
+    nHead.textContent = 'Notes · ' + labelOf(s) + ' · ' + (current + 1) + ' / ' + all.length;
+    nBody.textContent = noteOf(s);
   }
-  setupObserver(){
-    this.io=new IntersectionObserver((es)=>{es.forEach(e=>{
-      const vids=e.target.querySelectorAll('video');
-      if(e.isIntersecting){
-        e.target.classList.add('visible');this.current=this.slides.indexOf(e.target);this.syncDots();
-        vids.forEach(v=>{v.currentTime=0;v.play().catch(()=>{});});
-      }else{vids.forEach(v=>v.pause());}});},{threshold:0.55});
-    this.slides.forEach(s=>this.io.observe(s));this.slides[0]?.classList.add('visible');
+  function toggleNotes(){ notesEl.classList.toggle('open'); if (notesEl.classList.contains('open')) syncNotes(); }
+
+  function toggleFullscreen(){
+    if (document.fullscreenElement) { document.exitFullscreen(); }
+    else { document.documentElement.requestFullscreen().catch(function(){}); }
   }
-  setupNavDots(){
-    const nav=document.getElementById('navDots');
-    this.slides.forEach((s,i)=>{const b=document.createElement('button');b.setAttribute('aria-label','Slide '+(i+1));
-      b.addEventListener('click',()=>this.go(i));nav.appendChild(b);});
-    this.dots=[...nav.children];this.syncDots();
-  }
-  syncDots(){this.dots?.forEach((d,i)=>d.classList.toggle('active',i===this.current))}
-  go(i){i=Math.max(0,Math.min(this.slides.length-1,i));this.slides[i].scrollIntoView({behavior:'smooth'})}
-  next(){this.go(this.current+1)} prev(){this.go(this.current-1)}
-  setupKeyboard(){
-    document.addEventListener('keydown',(e)=>{
-      if(e.target.getAttribute&&e.target.getAttribute('contenteditable')==='true')return;
-      switch(e.key){
-        case 'ArrowDown':case 'ArrowRight':case 'PageDown':e.preventDefault();this.next();break;
-        case ' ':e.preventDefault();e.shiftKey?this.prev():this.next();break;
-        case 'ArrowUp':case 'ArrowLeft':case 'PageUp':e.preventDefault();this.prev();break;
-        case 'Home':e.preventDefault();this.go(0);break;
-        case 'End':e.preventDefault();this.go(this.slides.length-1);break;
-      }
+  /* fullscreen = clean presenting surface: hide the thumbnail rail while in it */
+  var railWasOff = false;
+  document.addEventListener('fullscreenchange', function(){
+    if (document.fullscreenElement) {
+      railWasOff = ds.hasAttribute('no-rail');
+      ds.setAttribute('no-rail', '');
+    } else if (!railWasOff) {
+      ds.removeAttribute('no-rail');
+    }
+  });
+
+  /* ── presenter window: current + next previews, notes, timer, clock ── */
+  function openPresenter(){
+    if (presenter && !presenter.closed) { presenter.focus(); return; }
+    presenter = window.open('', 'deck-presenter', 'width=1200,height=760');
+    if (!presenter) {
+      nHead.textContent = 'Presenter window';
+      nBody.textContent = 'The browser blocked the pop-up — allow pop-ups for this page and press P again.';
+      notesEl.classList.add('open');
+      return;
+    }
+    var pd = presenter.document;
+    pd.open();
+    pd.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Presenter — ' + document.title.replace(/</g,'&lt;') + '</title><base href="' + document.baseURI + '"></head><body></body></html>');
+    pd.close();
+    /* carry the deck's stylesheets + tokens over so slide clones render 1:1 */
+    document.head.querySelectorAll('link[rel="stylesheet"], link[rel="preconnect"], style').forEach(function(el){
+      var c = pd.importNode(el, true);
+      if (el.tagName === 'LINK' && el.href) c.setAttribute('href', el.href);
+      pd.head.appendChild(c);
     });
-  }
-  setupTouch(){
-    let y0=null;
-    document.addEventListener('touchstart',e=>{y0=e.touches[0].clientY},{passive:true});
-    document.addEventListener('touchend',e=>{if(y0===null)return;const dy=y0-e.changedTouches[0].clientY;
-      if(Math.abs(dy)>55){dy>0?this.next():this.prev()}y0=null;},{passive:true});
-  }
-  setupProgress(){
-    const bar=document.getElementById('progressBar');
-    const update=()=>{const h=document.documentElement.scrollHeight-window.innerHeight;
-      bar.style.width=(h>0?(window.scrollY/h)*100:0)+'%'};
-    window.addEventListener('scroll',update,{passive:true});update();
-  }
-}
+    var st = pd.createElement('style');
+    st.textContent =
+      '*,*::before,*::after{animation:none !important;transition:none !important}' +
+      'html,body{margin:0;height:100%;background:#0e0c08;color:var(--on-dark);font-family:var(--font-m,monospace);overflow:hidden}' +
+      '.pw{display:grid;grid-template-rows:52px 1fr;height:100%}' +
+      '.pw-bar{display:flex;align-items:center;gap:22px;padding:0 20px;border-bottom:1px solid var(--line-dark);font-size:13px;letter-spacing:.06em;color:var(--on-dark-muted)}' +
+      '.pw-bar .cnt{color:var(--coral);font-weight:700;font-size:16px}' +
+      '.pw-bar .lbl{color:var(--paper);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}' +
+      '.pw-bar .tmr{cursor:pointer}.pw-bar .tmr b{color:var(--paper)}' +
+      '.pw-bar button{font:inherit;color:var(--on-dark-muted);background:none;border:1px solid var(--line-dark);border-radius:6px;padding:5px 12px;cursor:pointer}' +
+      '.pw-bar button:hover{color:var(--paper);border-color:var(--coral)}' +
+      '.pw-main{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:14px;padding:14px;min-height:0}' +
+      '.pw-col{display:grid;grid-template-rows:auto 1fr;min-height:0;gap:8px}' +
+      '.pw-col.right{grid-template-rows:auto auto auto minmax(0,1fr)}' +
+      '.pw-cap{font-size:11px;letter-spacing:.14em;color:var(--on-dark-faint);text-transform:uppercase}' +
+      '.pw-box{position:relative;min-height:0;overflow:hidden;border:1px solid var(--line-dark);border-radius:8px;background:#000}' +
+      '.pw-canvas{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;background:var(--paper)}' +
+      '.pw-canvas > section{width:1920px;height:1080px;position:relative;overflow:hidden}' +
+      '.pw-notes{overflow:auto;font-family:var(--font-b,sans-serif);font-size:19px;line-height:1.55;color:var(--on-dark);padding-right:6px}';
+    pd.head.appendChild(st);
+    pd.body.innerHTML =
+      '<div class="pw">' +
+        '<div class="pw-bar">' +
+          '<span class="cnt"></span><span class="lbl"></span>' +
+          '<span class="tmr" title="click to reset">elapsed <b class="el">00:00</b></span>' +
+          '<span>clock <b class="ck"></b></span>' +
+          '<button data-nav="-1">‹ prev</button><button data-nav="1">next ›</button>' +
+        '</div>' +
+        '<div class="pw-main">' +
+          '<div class="pw-col"><div class="pw-cap">Current</div><div class="pw-box" id="pwCur"><div class="pw-canvas"></div></div></div>' +
+          '<div class="pw-col right"><div class="pw-cap">Next</div><div class="pw-box" id="pwNext" style="aspect-ratio:16/9;min-height:120px"><div class="pw-canvas"></div></div>' +
+          '<div class="pw-cap" style="margin-top:6px">Notes</div><div class="pw-notes"></div></div>' +
+        '</div>' +
+      '</div>';
 
-/* ===== INLINE EDITOR ===== */
-class InlineEditor{
-  constructor(){
-    this.isActive=false;this.KEY='agentic-ai-edits-v3';
-    this.sel='h1,h2,h3,p,li,td,th,.tile .k,.kcard .big,.code,.gloss .term,.gloss .def,.ts-title,.ts-sub,.ts-kick,.ts-author,.crumb,.thanks,.ts-badge .b1,.ts-badge .b2,.linkcol h3,.divider .dsub';
-    this.nodes=[...document.querySelectorAll(this.sel)];
-    this.nodes.forEach((n,i)=>n.dataset.ek='n'+i);
-    this.orig=new Map(this.nodes.map(n=>[n.dataset.ek,n.innerHTML]));
-    this.restore();this.wire();
-  }
-  /* Edit keys are positional (DOM index), so each edit is stored with the node's
-     original HTML and re-applied only while the node still matches it — edits to
-     the deck file invalidate stale saves instead of landing on the wrong element. */
-  restore(){let d={};try{d=JSON.parse(localStorage.getItem(this.KEY)||'{}')}catch(e){}
-    this.nodes.forEach(n=>{const e=d[n.dataset.ek];
-      if(e&&e.o===this.orig.get(n.dataset.ek))n.innerHTML=e.h})}
-  save(){const d={};this.nodes.forEach(n=>{const o=this.orig.get(n.dataset.ek);
-    if(n.innerHTML!==o)d[n.dataset.ek]={o,h:n.innerHTML}});
-    localStorage.setItem(this.KEY,JSON.stringify(d));this.toast('Saved')}
-  toast(m){const t=document.getElementById('editToast');t.textContent=m;t.classList.add('show');
-    clearTimeout(this._tt);this._tt=setTimeout(()=>t.classList.remove('show'),1100)}
-  toggleEditMode(){
-    this.isActive=!this.isActive;document.body.classList.toggle('editing',this.isActive);
-    document.getElementById('editToggle').classList.toggle('active',this.isActive);
-    this.nodes.forEach(n=>{if(this.isActive){n.setAttribute('contenteditable','true');
-      n.addEventListener('input',this._oi=this._oi||(()=>this._dsave()))}else{n.removeAttribute('contenteditable')}});
-    if(this.isActive)this.toast('Edit mode — click any text');
-  }
-  _dsave(){clearTimeout(this._st);this._st=setTimeout(()=>this.save(),500)}
-  reset(){if(!confirm('Restore all text to the original? Your edits will be lost.'))return;
-    localStorage.removeItem(this.KEY);location.reload()}
-  export(){
-    const clone=document.documentElement.cloneNode(true);
-    clone.querySelectorAll('[contenteditable]').forEach(n=>n.removeAttribute('contenteditable'));
-    clone.querySelectorAll('[data-ek]').forEach(n=>n.removeAttribute('data-ek'));
-    clone.querySelector('body').classList.remove('editing');
-    const blob=new Blob(['<!DOCTYPE html>\n'+clone.outerHTML],{type:'text/html'});
-    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='agentic-ai.html';a.click();
-    URL.revokeObjectURL(a.href);this.toast('Exported');
-  }
-  wire(){
-    const toggle=document.getElementById('editToggle');const hotzone=document.querySelector('.edit-hotzone');let h=null;
-    toggle.addEventListener('click',()=>this.toggleEditMode());
-    hotzone.addEventListener('click',()=>this.toggleEditMode());
-    hotzone.addEventListener('mouseenter',()=>{clearTimeout(h);toggle.classList.add('show')});
-    hotzone.addEventListener('mouseleave',()=>{h=setTimeout(()=>{if(!this.isActive)toggle.classList.remove('show')},400)});
-    toggle.addEventListener('mouseenter',()=>clearTimeout(h));
-    toggle.addEventListener('mouseleave',()=>{h=setTimeout(()=>{if(!this.isActive)toggle.classList.remove('show')},400)});
-    document.addEventListener('keydown',(e)=>{if((e.key==='e'||e.key==='E')&&!(e.target.getAttribute&&e.target.getAttribute('contenteditable')==='true'))this.toggleEditMode();});
-    document.getElementById('resetBtn').addEventListener('click',()=>this.reset());
-    document.getElementById('exportBtn').addEventListener('click',()=>this.export());
-    document.addEventListener('keydown',(e)=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'&&this.isActive){e.preventDefault();this.save()}});
-  }
-}
+    var t0 = Date.now();
+    function two(n){ return (n < 10 ? '0' : '') + n; }
+    function tick(){
+      if (presenter.closed) return;
+      var el = Math.floor((Date.now() - t0) / 1000);
+      pd.querySelector('.el').textContent = two(Math.floor(el / 60)) + ':' + two(el % 60);
+      var d = new Date();
+      pd.querySelector('.ck').textContent = two(d.getHours()) + ':' + two(d.getMinutes());
+      presenter.setTimeout(tick, 1000);
+    }
+    tick();
+    pd.querySelector('.tmr').addEventListener('click', function(){ t0 = Date.now(); });
 
-new SlidePresentation();
-window.__editor=new InlineEditor();
+    function fit(boxId){
+      var box = pd.getElementById(boxId), cv = box.querySelector('.pw-canvas');
+      var k = Math.min(box.clientWidth / 1920, box.clientHeight / 1080);
+      cv.style.transform = 'scale(' + k + ')';
+      cv.style.left = ((box.clientWidth - 1920 * k) / 2) + 'px';
+      cv.style.top = ((box.clientHeight - 1080 * k) / 2) + 'px';
+    }
+    function fill(boxId, slide){
+      var cv = pd.getElementById(boxId).querySelector('.pw-canvas');
+      cv.textContent = '';
+      if (slide) {
+        var c = pd.importNode(slide, true);
+        c.setAttribute('data-deck-active', '');
+        cv.appendChild(c);
+      }
+      fit(boxId);
+    }
+    presenter.__update = function(i){
+      var all = slides(), s = all[i];
+      if (!s) return;
+      var next = i + 1;
+      while (next < all.length && all[next].hasAttribute('data-deck-skip')) next++;
+      fill('pwCur', s);
+      fill('pwNext', all[next] || null);
+      pd.querySelector('.cnt').textContent = (i + 1) + ' / ' + all.length;
+      pd.querySelector('.lbl').textContent = labelOf(s) + (all[next] ? '   →   next: ' + labelOf(all[next]) : '   ·   last slide');
+      pd.querySelector('.pw-notes').textContent = noteOf(s);
+    };
+    presenter.addEventListener('resize', function(){ fit('pwCur'); fit('pwNext'); });
+    pd.addEventListener('keydown', function(e){
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); ds.next(); }
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); ds.prev(); }
+      else if (e.key === 'Home') { ds.goTo(0); }
+      else if (e.key === 'End') { ds.goTo(slides().length - 1); }
+    });
+    pd.querySelectorAll('[data-nav]').forEach(function(b){
+      b.addEventListener('click', function(){ this.dataset.nav === '1' ? ds.next() : ds.prev(); });
+    });
+    presenter.__update(current);
+  }
+
+  ds.addEventListener('slidechange', function(e){
+    current = e.detail.index;
+    if (notesEl.classList.contains('open')) syncNotes();
+    if (presenter && !presenter.closed && presenter.__update) presenter.__update(current);
+  });
+
+  document.addEventListener('keydown', function(e){
+    var t = e.target;
+    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = e.key.toLowerCase();
+    if (k === 'n') { toggleNotes(); }
+    else if (k === 'f') { toggleFullscreen(); }
+    else if (k === 'p') { openPresenter(); }
+  });
+  document.querySelector('[data-pui="notes"]').addEventListener('click', toggleNotes);
+  document.querySelector('[data-pui="fullscreen"]').addEventListener('click', toggleFullscreen);
+  document.querySelector('[data-pui="present"]').addEventListener('click', openPresenter);
+})();
 </script>
 </body>
 </html>
