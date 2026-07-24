@@ -11,9 +11,10 @@ Author: **David Budáč / ČSOB** · English
 - **[`agentic-ai.html`](agentic-ai.html)** — *Intro to Agentic AI* (Claude Code for
   beginners). Model / harness / agent, the loop, context, permissions, memory & MCP. 36 slides.
 - **[`agentic-engineering.html`](agentic-engineering.html)** — *Agentic Engineering*
-  (basics for developers). One thread — the context window — runs through: the machine
-  (model / harness / client) → foundations → model × effort (incl. Fable) → loops &
-  verifiers → skills & plugins. 43 slides. **No live demos.**
+  (basics for developers). Told as an evolution story — each chapter fixes the previous
+  one's limitation: the predictor → thinking → hands (tool calls) → the loop → the bill
+  → split the work (routing & subagents) → make it stick (CLAUDE.md, skills, plugins).
+  One thread throughout: the context window. 51 slides. **No live demos.**
 
 ## View it
 
@@ -72,12 +73,12 @@ rendered MP4s as muted loops that restart whenever you land on their slide:
 
 | Animation | Concept | Used on |
 |-----------|---------|---------|
-| `agent-loop` | the agent loop (propose → run → result → repeat) | intro s10 |
-| `stateless` | no memory: every call re-sends the whole history | intro s6 · eng s12 |
-| `next-token` | next-token prediction with sampled probabilities | eng s6 |
-| `quality` | quality vs. context fill — context rot / the dumb zone | intro s22 · eng s17 |
-| `kv-cache` | KV caching: cached prefix + fresh tail, append-only | eng s15 |
-| `subagents` | delegation: messy work inside, tiny summary back | intro s25 |
+| `agent-loop` | the agent loop (propose → run → result → repeat) | intro s10 · eng s17 |
+| `stateless` | no memory: every call re-sends the whole history | intro s6 · eng s14 |
+| `next-token` | next-token prediction with sampled probabilities | eng s4 |
+| `quality` | quality vs. context fill — context rot / the dumb zone | intro s22 · eng s28 |
+| `kv-cache` | KV caching: cached prefix + fresh tail, append-only | eng s26 |
+| `subagents` | delegation: messy work inside, tiny summary back | intro s25 · eng s29 |
 
 To tweak or re-render: `cd remotion && npm i`, then `npx remotion studio` to
 preview or `npx remotion render <composition-id> ../assets/anim/<id>.mp4` to
