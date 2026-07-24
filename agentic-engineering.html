@@ -366,15 +366,42 @@ body.editing .edit-bar{display:flex}
 <section class="slide dark">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">5</span><div class="crumb"><b>The predictor</b> · the middle button</div></div>
-    <h2 class="reveal">Drift without <span class="o">a destination</span></h2>
-    <span class="extag reveal">EXAMPLE — a message typed only with the keyboard's middle suggestion</span>
-    <div class="code reveal"><span class="c"># tap the centre autocomplete key, over and over:</span>
-<span class="b">"I am going to be a little more than the first time I</span>
-<span class="b"> have to get the car and the kids are not going to be</span>
-<span class="b"> a good idea to have a great day…"</span>
-
-<span class="c"># every word locally plausible · the whole thing goes nowhere</span></div>
-    <p class="note reveal">An LLM with <b>no useful context</b> is exactly this, with a much bigger vocabulary.</p>
+    <h2 class="reveal">Prediction 1.0: <span class="o">one word of memory</span></h2>
+    <div class="split">
+      <div>
+        <span class="extag reveal">EXAMPLE — typing with only the middle suggestion</span>
+        <div class="code reveal"><span class="c"># tap the centre autocomplete key, over and over:</span>
+<span class="b">"I am going to be a little more than the</span>
+<span class="b"> first time I have to get the car and the</span>
+<span class="b"> kids are not going to be a good idea to</span>
+<span class="b"> have a great day…"</span></div>
+        <ul class="bul reveal" style="margin-top:var(--content-gap)">
+          <li>Every word is a <b>fine guess given the word before it</b> — and the sentence goes <b>nowhere</b>.</li>
+          <li>That's next-token prediction, <b>original flavour</b>: a lookback of one.</li>
+        </ul>
+      </div>
+      <div class="diagram reveal">
+        <svg viewBox="0 0 460 200" role="img" aria-label="A chain of words where each guess looks back at only the single word before it — one-step hops; a long dashed arc back to the start of the sentence is crossed out as impossible">
+          <defs><marker id="mb1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--coral)"/></marker></defs>
+          <!-- word row -->
+          <rect class="dg-box" x="14" y="150" width="64" height="34" rx="7"/><text class="dg-t" x="46" y="172" font-size="13" text-anchor="middle">the</text>
+          <rect class="dg-box" x="92" y="150" width="70" height="34" rx="7"/><text class="dg-t" x="127" y="172" font-size="13" text-anchor="middle">kids</text>
+          <rect class="dg-box" x="176" y="150" width="64" height="34" rx="7"/><text class="dg-t" x="208" y="172" font-size="13" text-anchor="middle">are</text>
+          <rect class="dg-box" x="254" y="150" width="64" height="34" rx="7"/><text class="dg-t" x="286" y="172" font-size="13" text-anchor="middle">not</text>
+          <rect class="dg-box hot" x="332" y="150" width="92" height="34" rx="7"/><text class="dg-t on" x="378" y="172" font-size="13" text-anchor="middle">___ ?</text>
+          <!-- one-hop lookbacks: dim for past steps, coral for the live one -->
+          <path class="dg-line dim" d="M120 148 C 106 122, 64 122, 52 146"/>
+          <path class="dg-line dim" d="M201 148 C 187 122, 145 122, 133 146"/>
+          <path class="dg-line dim" d="M279 148 C 265 122, 223 122, 211 146"/>
+          <path class="dg-line" d="M370 148 C 354 114, 304 114, 292 146" marker-end="url(#mb1)"/>
+          <text class="dg-t acc" x="332" y="104" font-size="11" text-anchor="middle">one step back — that's all</text>
+          <!-- the look it cannot make -->
+          <path class="dg-line dim" d="M378 148 C 330 44, 98 44, 50 146" stroke-dasharray="6 5"/>
+          <text class="dg-t mut" x="214" y="66" font-size="11" text-anchor="middle">✕ can't see this far back</text>
+        </svg>
+      </div>
+    </div>
+    <p class="note reveal">Your keyboard sees ~one word; the old n-gram models saw two or three. An LLM with <b>no useful context</b> drifts exactly like this — the upgrade that sees <b>everything</b> is next.</p>
   </div>
 </section>
 
