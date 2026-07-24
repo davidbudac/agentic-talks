@@ -651,8 +651,21 @@ your message               <span class="o">11</span>   <span class="b">"wire up 
         <tr><td><b>Cacheable?</b></td><td>yes — coming up</td><td>no</td></tr>
       </tbody>
     </table>
-    <p class="note reveal">Agentic sessions are <b>input-dominated</b>: the model reads far more than it writes.</p>
-    <p class="note reveal" style="margin-top:.3rem">Per million tokens (in / out), mid-2026: <b>Haiku</b> $1/$5 · <b>Sonnet</b> $3/$15 · <b>Opus</b> $5/$25 · <b>Fable</b> $10/$50.</p>
+    <div class="split reveal" style="align-items:start;margin-top:var(--content-gap)">
+      <table class="tbl">
+        <thead><tr><th>Model · mid-2026</th><th>Input / MTok</th><th>Output / MTok</th></tr></thead>
+        <tbody>
+          <tr><td><b>Haiku 4.5</b></td><td>$1</td><td>$5</td></tr>
+          <tr><td><b>Sonnet 5</b></td><td>$3 <span style="color:var(--s-muted)">· intro $2</span></td><td>$15 <span style="color:var(--s-muted)">· intro $10</span></td></tr>
+          <tr><td><b>Opus 4.8</b></td><td>$5</td><td>$25</td></tr>
+          <tr><td><b>Fable 5</b></td><td><b>$10</b></td><td><b>$50</b></td></tr>
+        </tbody>
+      </table>
+      <div>
+        <p class="note" style="margin-top:0">Agentic sessions are <b>input-dominated</b>: the model reads far more than it writes.</p>
+        <p class="note">Two patterns to read off the table: the <b>~5× output premium</b> holds across the whole lineup, and each tier jump roughly <b>doubles</b> both prices — which is why <b>routing</b> (who does the bulk work) moves your bill more than any single knob.</p>
+      </div>
+    </div>
   </div>
 </section>
 
