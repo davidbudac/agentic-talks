@@ -256,13 +256,15 @@ body.editing .edit-bar{display:flex}
 <!--
   ============================================================
   Agentic Engineering — basics for developers.
-  Developer follow-up to agentic-ai.html. One thread runs
-  throughout: the CONTEXT WINDOW and who manages it (watch the
-  ● CONTEXT markers). Arc: the machine (model / harness / client
-  + a client-server sequence diagram) → foundations (prediction,
-  attention, statelessness, cost, KV cache) → levers (model ×
-  effort, Fable techniques) → the ladder (loops, verifiers,
-  workflows) → extensibility (skills & plugins). Same template.
+  Developer follow-up to agentic-ai.html. Told as an evolution
+  story — each chapter fixes the previous one's limitation:
+  01 the predictor (chat-only, can only guess) → 02 thinking
+  (scratchpad + effort dial) → 03 hands (tool calls, harness,
+  statelessness) → 04 the loop (agents, verifiers) → 05 the bill
+  (cost growth, KV cache, context rot) → 06 split the work
+  (routing, subagents, workflows) → 07 make it stick (CLAUDE.md,
+  skills, plugins). One thread throughout: the CONTEXT WINDOW
+  (watch the ● CONTEXT markers). Same template as the intro deck.
   No live demos; skill/plugin sections are static walkthroughs.
   ============================================================
 -->
@@ -278,6 +280,7 @@ body.editing .edit-bar{display:flex}
   <button id="exportBtn" class="primary" title="Download HTML with your edits">↓ Export</button>
 </div>
 <div class="edit-toast" id="editToast">Saved</div>
+
 
 <!-- TITLE -->
 <section class="slide title-slide dark">
@@ -315,48 +318,290 @@ body.editing .edit-bar{display:flex}
 <section class="slide">
   <div class="slide-content">
     <div class="slide-head reveal"><span class="snum">3</span><div class="crumb"><b>Agenda</b></div></div>
-    <h2 class="reveal">Where we're <span class="o">going</span></h2>
-    <p class="lead reveal" style="margin-bottom:var(--content-gap)">One thread runs through everything: the <b>context window</b> and what you put in it.</p>
+    <h2 class="reveal">One idea, <span class="o">seven upgrades</span></h2>
+    <p class="lead reveal" style="margin-bottom:var(--content-gap)">We'll rebuild today's coding agents the way they evolved — each upgrade fixes the last one's limit. The thread throughout: the <b>context window</b>.</p>
     <div class="gloss reveal">
-      <div class="row"><span class="term">The machine</span><span class="def">Model · harness · client.</span></div>
-      <div class="row"><span class="term">Foundations</span><span class="def">What an LLM does; the context is the program.</span></div>
-      <div class="row"><span class="term">Levers</span><span class="def">Model size × reasoning effort.</span></div>
-      <div class="row"><span class="term">The ladder</span><span class="def">Tools → loops → verifiers → workflows.</span></div>
-      <div class="row"><span class="term">Make it yours</span><span class="def">Skills &amp; plugins.</span></div>
+      <div class="row"><span class="term">The predictor</span><span class="def">A text box that guesses the next token.</span></div>
+      <div class="row"><span class="term">Thinking</span><span class="def">It guesses one-shot → let it write a scratchpad.</span></div>
+      <div class="row"><span class="term">Hands</span><span class="def">It only talks → tool calls + a harness.</span></div>
+      <div class="row"><span class="term">The loop</span><span class="def">You're the relay → it re-runs against a verifier.</span></div>
+      <div class="row"><span class="term">The bill</span><span class="def">The loop re-sends everything → count the cost.</span></div>
+      <div class="row"><span class="term">Split the work</span><span class="def">One window carries it all → routing &amp; subagents.</span></div>
+      <div class="row"><span class="term">Make it stick</span><span class="def">Sessions start blank → CLAUDE.md, skills, plugins.</span></div>
     </div>
     <p class="note reveal"><span class="pill">● CONTEXT</span> Watch for this marker — it flags where a topic ties back to the thread. New to all this? Start with the beginner deck.</p>
   </div>
 </section>
 
-<!-- ============ PART 1 — THE MACHINE ============ -->
+<!-- ============ PART 1 — THE PREDICTOR ============ -->
 
 <!-- DIVIDER 01 -->
 <section class="slide divider dark">
   <div class="slide-content">
     <div class="dnum reveal">01</div>
-    <h2 class="reveal">The <span class="o">machine</span></h2>
-    <p class="dsub reveal">Three parts you rent and run: <b>model</b>, <b>harness</b>, <b>client</b>.</p>
+    <h2 class="reveal">A machine that <span class="o">talks</span></h2>
+    <p class="dsub reveal">Where it started: a text box and a next-token predictor. Astonishing — and all it can do is <b>guess</b>.</p>
+  </div>
+</section>
+
+<!-- LLM = NEXT-TOKEN PREDICTION + DIAGRAM -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">4</span><div class="crumb"><b>The predictor</b> · what an LLM does</div></div>
+    <h2 class="reveal">It predicts the <span class="o">next token</span>. That's it.</h2>
+    <div class="split">
+      <ul class="bul reveal">
+        <li>One job, forever: given the text so far, <b>guess the next chunk.</b> Then loop.</li>
+        <li>It's your phone keyboard's <b>middle suggestion</b> — at a trillion-parameter scale.</li>
+        <li>Everything else — chat, tools, agents — is <b>scaffolding</b> we build around that one trick.</li>
+      </ul>
+      <div class="diagram reveal">
+        <!-- Remotion animation (remotion/src/NextToken.tsx) -->
+        <video src="assets/anim/next-token-light.mp4" width="1200" height="750" autoplay muted loop playsinline aria-label="The prompt 'The tests are' goes into the model, candidate next tokens get probabilities, and the winner is sampled into the blank"></video>
+      </div>
+    </div>
+    <p class="note reveal">A model is a <b>probability distribution over the next token</b>, sampled one token at a time.</p>
+  </div>
+</section>
+
+<!-- THE MIDDLE-BUTTON MESSAGE -->
+<section class="slide dark">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">5</span><div class="crumb"><b>The predictor</b> · the middle button</div></div>
+    <h2 class="reveal">Drift without <span class="o">a destination</span></h2>
+    <span class="extag reveal">EXAMPLE — a message typed only with the keyboard's middle suggestion</span>
+    <div class="code reveal"><span class="c"># tap the centre autocomplete key, over and over:</span>
+<span class="b">"I am going to be a little more than the first time I</span>
+<span class="b"> have to get the car and the kids are not going to be</span>
+<span class="b"> a good idea to have a great day…"</span>
+
+<span class="c"># every word locally plausible · the whole thing goes nowhere</span></div>
+    <p class="note reveal">An LLM with <b>no useful context</b> is exactly this, with a much bigger vocabulary.</p>
+  </div>
+</section>
+
+<!-- ATTENTION IS THE ALGORITHM + DIAGRAM -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">6</span><div class="crumb"><b>The predictor</b> · attention</div></div>
+    <h2 class="reveal">Attention: it weighs <span class="o">every token</span></h2>
+    <div class="diagram reveal">
+      <svg viewBox="0 0 800 210" role="img" aria-label="For the newest token the model weighs every earlier token in the context, with different strengths">
+        <defs><marker id="at1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--coral)"/></marker></defs>
+        <!-- token row -->
+        <rect class="dg-box" x="30" y="150" width="90" height="34" rx="7"/><text class="dg-t" x="75" y="172" font-size="13" text-anchor="middle">The</text>
+        <rect class="dg-box" x="150" y="150" width="110" height="34" rx="7"/><text class="dg-t" x="205" y="172" font-size="13" text-anchor="middle">invoice</text>
+        <rect class="dg-box" x="290" y="150" width="90" height="34" rx="7"/><text class="dg-t" x="335" y="172" font-size="13" text-anchor="middle">test</text>
+        <rect class="dg-box" x="410" y="150" width="120" height="34" rx="7"/><text class="dg-t" x="470" y="172" font-size="13" text-anchor="middle">expects</text>
+        <rect class="dg-box" x="560" y="150" width="70" height="34" rx="7"/><text class="dg-t" x="595" y="172" font-size="13" text-anchor="middle">VAT</text>
+        <rect class="dg-box hot" x="660" y="150" width="110" height="34" rx="7"/><text class="dg-t on" x="715" y="172" font-size="13" text-anchor="middle">so ___ ?</text>
+        <!-- attention arcs back from newest -->
+        <path class="dg-line" d="M700 148 C 640 70, 240 70, 205 146" marker-end="url(#at1)"/>
+        <path class="dg-line" d="M705 148 C 660 90, 350 90, 335 146" marker-end="url(#at1)"/>
+        <path class="dg-line dim" d="M712 148 C 690 110, 500 110, 470 146" marker-end="url(#at1)"/>
+        <path class="dg-line" d="M718 148 C 700 120, 610 120, 595 146" marker-end="url(#at1)"/>
+        <path class="dg-line dim" d="M695 148 C 560 60, 130 60, 75 146" marker-end="url(#at1)"/>
+        <text class="dg-t acc" x="400" y="40" font-size="14" text-anchor="middle">the newest token looks back at all of them — with different strengths</text>
+      </svg>
+    </div>
+    <ul class="bul reveal">
+      <li>The keyboard sees the last <b>~2 words.</b> The model weighs the <b>entire context</b> for every token — that's why it's not gibberish.</li>
+      <li><b>The context IS the program.</b> Curating it is the job.</li>
+    </ul>
+    <p class="note reveal"><span class="pill">● CONTEXT</span> This is the thread: attention runs over the context window, so what you load into it <b>is</b> the program.</p>
+  </div>
+</section>
+
+<!-- GO PLAY WITH ONE -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">7</span><div class="crumb"><b>The predictor</b> · go build one</div></div>
+    <h2 class="reveal">Go <span class="o">play with one</span></h2>
+    <div class="links reveal">
+      <div class="linkcol">
+        <h3>See it run</h3>
+        <a href="https://poloclub.github.io/transformer-explainer/" target="_blank" rel="noopener">Transformer Explainer — a live GPT-2 in your browser; type text and watch the next-token probabilities form, play with temperature<span class="u">poloclub.github.io/transformer-explainer</span></a>
+        <a href="https://bbycroft.net/llm" target="_blank" rel="noopener">LLM Visualization — a full GPT rendered in interactive 3D; zoom into every attention head and matrix, watch inference token by token<span class="u">bbycroft.net/llm</span></a>
+      </div>
+      <div class="linkcol">
+        <h3>Build one</h3>
+        <a href="https://www.languagemodelbuilder.com/" target="_blank" rel="noopener">Language Model Builder — free macOS app: a ~90-min interactive textbook, then train your own tiny LLM locally on Apple Silicon (MLX)<span class="u">languagemodelbuilder.com</span></a>
+        <a href="https://karpathy.ai/zero-to-hero.html" target="_blank" rel="noopener">Karpathy — Neural Networks: Zero to Hero — build GPT from scratch in code, from backprop up (the nanoGPT lineage)<span class="u">karpathy.ai/zero-to-hero.html</span></a>
+      </div>
+    </div>
+    <p class="note reveal"><span class="pill">● CONTEXT</span> Two of these let you watch attention actually run over the context — the thread, lit up.</p>
+  </div>
+</section>
+
+<!-- ============ PART 2 — THINKING ============ -->
+
+<!-- DIVIDER 02 -->
+<section class="slide divider dark">
+  <div class="slide-content">
+    <div class="dnum reveal">02</div>
+    <h2 class="reveal">Teach it to <span class="o">think</span></h2>
+    <p class="dsub reveal">Problem: hard answers don’t fit in <b>one forward pass</b>. Fix: let the model write itself a <b>scratchpad</b> — and dial how much.</p>
+  </div>
+</section>
+
+<!-- REASONING — THE EXAMPLE -->
+<section class="slide dark">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">8</span><div class="crumb"><b>Thinking</b> · reasoning</div></div>
+    <h2 class="reveal">Reasoning: the model writes its <span class="o">own context</span></h2>
+    <span class="extag reveal">EXAMPLE — the invoice test: total 100, but the test expects 121</span>
+    <div class="code reveal"><span class="c"># without reasoning — one hard prediction, pattern-matched</span>
+<span class="o">you ›</span> <span class="b">why does the test expect 121, not 100?</span>
+<span class="o">model ›</span> Probably a rounding bug.   <span class="c">✕ wrong</span>
+
+<span class="c"># with reasoning — the model writes a scratchpad first</span>
+<span class="o">thinking ›</span> <span class="g">test asserts 121 · input total is 100</span>
+<span class="o">         ›</span> <span class="g">121 / 100 = 1.21 → 21% — the VAT rate</span>
+<span class="o">         ›</span> <span class="g">so the test expects VAT applied</span>
+<span class="o">model ›</span> The test expects 21% VAT to be applied.   <span class="g">✓</span></div>
+    <p class="note reveal">Same model, same question. The only difference: it <b>thought on paper</b> before it answered.</p>
+  </div>
+</section>
+
+<!-- REASONING — WHY IT WORKS -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">9</span><div class="crumb"><b>Thinking</b> · why it works</div></div>
+    <h2 class="reveal">Why <span class="o">thinking</span> works</h2>
+    <div class="split">
+      <ul class="bul reveal">
+        <li><b>One forward pass per token.</b> Force the answer into the next token and it gets exactly one pass of compute — hard problems don't fit.</li>
+        <li>Reasoning = the model writing <b>intermediate steps into its own context</b>, then attending to them. The scratchpad <b>becomes part of the program.</b></li>
+        <li>Each step is an <b>easy</b> next-token guess; a chain of easy predictions replaces one impossible one. More tokens spent = <b>more compute on the answer</b> ("test-time compute").</li>
+        <li>Those thinking tokens are billed as <b>output</b> and land <b>in the context window</b> — exactly what the <b>effort dial</b> (next slide) buys more or less of.</li>
+      </ul>
+      <div class="diagram reveal">
+        <svg viewBox="0 0 400 220" role="img" aria-label="One context window holds the prompt, then a highlighted span of thinking tokens the model writes for itself, then the answer — the answer attends back over the whole strip including the scratchpad">
+          <defs><marker id="rz1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--coral)"/></marker></defs>
+          <text class="dg-t mut" x="20" y="42" font-size="11">one context window →</text>
+          <rect class="dg-box mid" x="20" y="54" width="88" height="46" rx="8"/><text class="dg-t" x="64" y="82" font-size="12" text-anchor="middle">prompt</text>
+          <rect class="dg-box outer" x="116" y="54" width="170" height="46" rx="8"/><text class="dg-t acc" x="201" y="78" font-size="11" text-anchor="middle">thinking tokens</text><text class="dg-t mut" x="201" y="92" font-size="9" text-anchor="middle">written by the model</text>
+          <rect class="dg-box hot" x="294" y="54" width="86" height="46" rx="8"/><text class="dg-t on" x="337" y="82" font-size="12" text-anchor="middle">answer</text>
+          <path class="dg-line" d="M108 77 L 114 77" marker-end="url(#rz1)"/>
+          <path class="dg-line" d="M286 77 L 292 77" marker-end="url(#rz1)"/>
+          <!-- answer attends back over prompt + scratchpad -->
+          <path class="dg-line dim" d="M300 102 C 262 152, 232 152, 201 104" marker-end="url(#rz1)"/>
+          <path class="dg-line dim" d="M300 106 C 220 172, 96 172, 64 104" marker-end="url(#rz1)"/>
+          <text class="dg-t acc" x="200" y="200" font-size="11" text-anchor="middle">the answer attends to the model's own scratchpad</text>
+        </svg>
+      </div>
+    </div>
+    <p class="note reveal"><span class="pill">● CONTEXT</span> Reasoning is the model <b>extending its own context</b> — the scratchpad is program it writes for itself.</p>
+  </div>
+</section>
+
+<!-- THE EFFORT DIAL (levels + quality/token chart) -->
+<section class="slide dark">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">10</span><div class="crumb"><b>Thinking</b> · the effort dial</div></div>
+    <h2 class="reveal">The other dial: <span class="o">effort</span></h2>
+    <div class="split">
+      <div>
+        <table class="tbl reveal">
+          <thead><tr><th>Effort</th><th>Reach for it when…</th></tr></thead>
+          <tbody>
+            <tr><td><span style="font-family:var(--font-m);color:var(--s-accent);font-weight:600">low</span></td><td>cheapest &amp; fastest — bulk, delegated grunt work.</td></tr>
+            <tr><td><span style="font-family:var(--font-m);color:var(--s-accent);font-weight:600">medium</span></td><td>the cost-saving step-down; solid default for routine agentic work.</td></tr>
+            <tr><td><span style="font-family:var(--font-m);color:var(--s-accent);font-weight:600">high</span></td><td>the API default — complex reasoning &amp; coding.</td></tr>
+            <tr><td><span style="font-family:var(--font-m);color:var(--s-accent);font-weight:600">xhigh</span></td><td>long-horizon agentic/coding work; the recommended start for coding on Opus.</td></tr>
+            <tr><td><span style="font-family:var(--font-m);color:var(--s-accent);font-weight:600">max</span></td><td>frontier problems only — past xhigh it can overthink and mostly adds cost.</td></tr>
+          </tbody>
+        </table>
+        <p class="note reveal" style="font-family:var(--font-m)">Claude Code's <b>"ultracode"</b> = xhigh + standing permission to run multi-agent workflows (chapter 06) — a harness mode, not an API level.</p>
+      </div>
+      <div class="diagram reveal">
+        <svg viewBox="0 0 470 300" role="img" aria-label="Internal agentic coding eval score versus output tokens per task: Opus 4.7 at xhigh scores about 71 percent at about 100k tokens, beating Opus 4.6's max at 200k tokens; Opus 4.7 at max reaches about 74.5 percent but doubles the tokens">
+          <line class="dg-line dim" x1="62" y1="36" x2="62" y2="232"/>
+          <line class="dg-line dim" x1="62" y1="232" x2="446" y2="232"/>
+          <text class="dg-t mut" x="24" y="140" font-size="11" transform="rotate(-90 24 140)" style="font-family:var(--font-m)">agentic coding score →</text>
+          <text class="dg-t mut" x="255" y="256" font-size="11" text-anchor="middle" style="font-family:var(--font-m)">output tokens per task →</text>
+          <!-- y ticks -->
+          <text class="dg-t mut" x="56" y="124" font-size="10" text-anchor="end" style="font-family:var(--font-m)">~71%</text>
+          <text class="dg-t mut" x="56" y="92" font-size="10" text-anchor="end" style="font-family:var(--font-m)">~74.5%</text>
+          <!-- x ticks -->
+          <text class="dg-t mut" x="240" y="247" font-size="10" text-anchor="middle" style="font-family:var(--font-m)">~100k</text>
+          <text class="dg-t mut" x="400" y="247" font-size="10" text-anchor="middle" style="font-family:var(--font-m)">~200k</text>
+          <!-- Opus 4.7 curve + dashed low extension -->
+          <path class="dg-line" d="M240 120 C 300 104, 355 93, 400 88"/>
+          <path class="dg-line" d="M240 120 C 205 133, 175 147, 150 160" stroke-dasharray="5 5"/>
+          <text class="dg-t mut" x="138" y="176" font-size="9" text-anchor="middle" style="font-family:var(--font-m)">↙ lower effort</text>
+          <!-- half-the-tokens annotation -->
+          <line class="dg-line dim" x1="246" y1="120" x2="394" y2="120" stroke-dasharray="4 4"/>
+          <line class="dg-line dim" x1="400" y1="124" x2="400" y2="130" stroke-dasharray="3 3"/>
+          <text class="dg-t acc" x="316" y="111" font-size="11" text-anchor="middle">beats the old max · half the tokens</text>
+          <!-- data points -->
+          <circle cx="400" cy="138" r="6" fill="var(--s-muted)"/>
+          <text class="dg-t" x="394" y="158" font-size="11" text-anchor="end">Opus 4.6 · max</text>
+          <text class="dg-t mut" x="394" y="172" font-size="9" text-anchor="end">its best · 200k tokens</text>
+          <circle class="dg-fill-r" cx="240" cy="120" r="6"/>
+          <text class="dg-t" x="240" y="140" font-size="11" text-anchor="middle">Opus 4.7 · xhigh</text>
+          <circle class="dg-fill-r" cx="400" cy="88" r="6"/>
+          <text class="dg-t" x="394" y="78" font-size="11" text-anchor="end">Opus 4.7 · max</text>
+          <text class="dg-t mut" x="446" y="278" font-size="8.5" text-anchor="end" opacity="0.75" style="font-family:var(--font-m)">data: Anthropic — Opus 4.7 launch (Apr 2026), internal agentic coding eval</text>
+        </svg>
+      </div>
+    </div>
+    <p class="note reveal">Effort moves you along a model's token/quality curve; the <b>model</b> picks which curve you're on — a newer model at <b>xhigh</b> beats the old one's <b>max</b> on <b>half the tokens</b>, and past xhigh ~3.5 pts more costs <b>double</b>. (Opus 4.8's <b>high</b> default: same spend as 4.7's, better score.)</p>
+  </div>
+</section>
+
+<!-- ============ PART 3 — HANDS ============ -->
+
+<!-- DIVIDER 03 -->
+<section class="slide divider dark">
+  <div class="slide-content">
+    <div class="dnum reveal">03</div>
+    <h2 class="reveal">Give it <span class="o">hands</span></h2>
+    <p class="dsub reveal">Problem: it can only <b>talk</b> — it can’t read your repo or run a test. Fix: <b>tool calls</b>, and a <b>harness</b> to execute them.</p>
   </div>
 </section>
 
 <!-- MACHINE PARTS -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">4</span><div class="crumb"><b>The machine</b> · the three parts</div></div>
+    <div class="slide-head reveal"><span class="snum">11</span><div class="crumb"><b>Hands</b> · the three parts</div></div>
     <h2 class="reveal">Model · harness · <span class="o">client</span></h2>
     <div class="cards c3 reveal">
       <div class="tile"><span class="k">Model</span><p>The brain — an API you rent. <b>Fable · Opus · Sonnet</b> (Anthropic) · <b>GPT‑5.6 Sol</b> (OpenAI) · <b>Gemini 3 Pro</b> (Google).</p></div>
       <div class="tile"><span class="k">Harness</span><p>The loop around the model: assembles context, runs tools, manages permissions. <b>Claude Code · Codex CLI · Gemini CLI · Jules</b> (async).</p></div>
       <div class="tile fill"><span class="k">Client</span><p>Where you meet the harness: <b>terminal · IDE extension</b> (VS Code, JetBrains, Antigravity) <b>· desktop · web · CI</b>.</p></div>
     </div>
-    <p class="note reveal">Rent the model, run the harness, pick the client. Mix and match — most models work in most harnesses.</p>
+    <p class="note reveal">The model only emits tokens — the <b>harness</b> is the program that gives them hands. Rent the model, run the harness, pick the client; most models work in most harnesses.</p>
+  </div>
+</section>
+
+<!-- TOOL CALL — ANATOMY -->
+<section class="slide dark">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">12</span><div class="crumb"><b>Hands</b> · anatomy of a tool call</div></div>
+    <h2 class="reveal">A tool call is <span class="o">just tokens</span></h2>
+    <div class="split" style="align-items:start">
+      <div class="code reveal"><span class="c"># the model can't run anything — it can only emit this:</span>
+<span class="o">model ›</span>   <span class="g">{"tool": "bash", "input": {"cmd": "pytest -q"}}</span>
+
+<span class="o">harness ›</span> <span class="c">runs it locally · exit 1 · 3 lines of output</span>
+<span class="o">harness ›</span> <span class="c">appends the result to the context, POSTs it all back</span>
+
+<span class="o">model ›</span>   <span class="b">"test_invoice expects VAT — patching calc.py…"</span></div>
+      <ul class="bul reveal">
+        <li>The "call" is ordinary next-token output in a <b>structured shape</b> — still just prediction.</li>
+        <li>The <b>harness</b> parses it, runs it locally under <b>your permissions</b>, and appends the result to the context.</li>
+        <li>The model never touches disk or network — it sees your repo <b>only as tokens</b> in the next request.</li>
+      </ul>
+    </div>
+    <p class="note reveal"><span class="pill">● CONTEXT</span> A tool result is just more context. "Reading a file" = loading its tokens into the window.</p>
   </div>
 </section>
 
 <!-- CLIENT / SERVER SEQUENCE — CENTREPIECE -->
 <section class="slide dark">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">5</span><div class="crumb"><b>The machine</b> · client &amp; server</div></div>
+    <div class="slide-head reveal"><span class="snum">13</span><div class="crumb"><b>Hands</b> · client &amp; server</div></div>
     <h2 class="reveal">The harness is a <span class="o">client.</span> The model is a <span class="o">server.</span></h2>
     <div class="diagram reveal">
       <svg viewBox="0 0 900 400" role="img" aria-label="Sequence over one session: you talk to the harness (client), which POSTs the full and growing context to the stateless model API (server) each turn, running tools locally in between">
@@ -389,161 +634,14 @@ body.editing .edit-bar{display:flex}
         <path class="dg-line dim" d="M776 370 L 426 370" marker-end="url(#sq2)"/><text class="dg-t mut" x="600" y="364" font-size="10.5" text-anchor="middle">final answer</text>
       </svg>
     </div>
-    <p class="note reveal">Every arrow to the server carries the <b>whole conversation again</b> — the API keeps nothing between calls. Remember the growing bars; Foundations explains the why and the price.</p>
-  </div>
-</section>
-
-<!-- ============ PART 2 — FOUNDATIONS ============ -->
-
-<!-- DIVIDER 02 -->
-<section class="slide divider dark">
-  <div class="slide-content">
-    <div class="dnum reveal">02</div>
-    <h2 class="reveal"><span class="o">Foundations</span></h2>
-    <p class="dsub reveal">You can't engineer what you think is <b>magic.</b></p>
-  </div>
-</section>
-
-<!-- LLM = NEXT-TOKEN PREDICTION + DIAGRAM -->
-<section class="slide">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">6</span><div class="crumb"><b>Foundations</b> · what an LLM does</div></div>
-    <h2 class="reveal">It predicts the <span class="o">next token</span>. That's it.</h2>
-    <div class="split">
-      <ul class="bul reveal">
-        <li>One job, forever: given the text so far, <b>guess the next chunk.</b> Then loop.</li>
-        <li>It's your phone keyboard's <b>middle suggestion</b> — at a trillion-parameter scale.</li>
-        <li>Everything else — chat, tools, agents — is <b>scaffolding</b> we build around that one trick.</li>
-      </ul>
-      <div class="diagram reveal">
-        <!-- Remotion animation (remotion/src/NextToken.tsx) -->
-        <video src="assets/anim/next-token-light.mp4" width="1200" height="750" autoplay muted loop playsinline aria-label="The prompt 'The tests are' goes into the model, candidate next tokens get probabilities, and the winner is sampled into the blank"></video>
-      </div>
-    </div>
-    <p class="note reveal">A model is a <b>probability distribution over the next token</b>, sampled one token at a time.</p>
-  </div>
-</section>
-
-<!-- THE MIDDLE-BUTTON MESSAGE -->
-<section class="slide dark">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">7</span><div class="crumb"><b>Foundations</b> · the middle button</div></div>
-    <h2 class="reveal">Drift without <span class="o">a destination</span></h2>
-    <span class="extag reveal">EXAMPLE — a message typed only with the keyboard's middle suggestion</span>
-    <div class="code reveal"><span class="c"># tap the centre autocomplete key, over and over:</span>
-<span class="b">"I am going to be a little more than the first time I</span>
-<span class="b"> have to get the car and the kids are not going to be</span>
-<span class="b"> a good idea to have a great day…"</span>
-
-<span class="c"># every word locally plausible · the whole thing goes nowhere</span></div>
-    <p class="note reveal">An LLM with <b>no useful context</b> is exactly this, with a much bigger vocabulary.</p>
-  </div>
-</section>
-
-<!-- ATTENTION IS THE ALGORITHM + DIAGRAM -->
-<section class="slide">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">8</span><div class="crumb"><b>Foundations</b> · attention</div></div>
-    <h2 class="reveal">Attention: it weighs <span class="o">every token</span></h2>
-    <div class="diagram reveal">
-      <svg viewBox="0 0 800 210" role="img" aria-label="For the newest token the model weighs every earlier token in the context, with different strengths">
-        <defs><marker id="at1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--coral)"/></marker></defs>
-        <!-- token row -->
-        <rect class="dg-box" x="30" y="150" width="90" height="34" rx="7"/><text class="dg-t" x="75" y="172" font-size="13" text-anchor="middle">The</text>
-        <rect class="dg-box" x="150" y="150" width="110" height="34" rx="7"/><text class="dg-t" x="205" y="172" font-size="13" text-anchor="middle">invoice</text>
-        <rect class="dg-box" x="290" y="150" width="90" height="34" rx="7"/><text class="dg-t" x="335" y="172" font-size="13" text-anchor="middle">test</text>
-        <rect class="dg-box" x="410" y="150" width="120" height="34" rx="7"/><text class="dg-t" x="470" y="172" font-size="13" text-anchor="middle">expects</text>
-        <rect class="dg-box" x="560" y="150" width="70" height="34" rx="7"/><text class="dg-t" x="595" y="172" font-size="13" text-anchor="middle">VAT</text>
-        <rect class="dg-box hot" x="660" y="150" width="110" height="34" rx="7"/><text class="dg-t on" x="715" y="172" font-size="13" text-anchor="middle">so ___ ?</text>
-        <!-- attention arcs back from newest -->
-        <path class="dg-line" d="M700 148 C 640 70, 240 70, 205 146" marker-end="url(#at1)"/>
-        <path class="dg-line" d="M705 148 C 660 90, 350 90, 335 146" marker-end="url(#at1)"/>
-        <path class="dg-line dim" d="M712 148 C 690 110, 500 110, 470 146" marker-end="url(#at1)"/>
-        <path class="dg-line" d="M718 148 C 700 120, 610 120, 595 146" marker-end="url(#at1)"/>
-        <path class="dg-line dim" d="M695 148 C 560 60, 130 60, 75 146" marker-end="url(#at1)"/>
-        <text class="dg-t acc" x="400" y="40" font-size="14" text-anchor="middle">the newest token looks back at all of them — with different strengths</text>
-      </svg>
-    </div>
-    <ul class="bul reveal">
-      <li>The keyboard sees the last <b>~2 words.</b> The model weighs the <b>entire context</b> for every token — that's why it's not gibberish.</li>
-      <li><b>The context IS the program.</b> Curating it is the job.</li>
-    </ul>
-    <p class="note reveal"><span class="pill">● CONTEXT</span> This is the thread: attention runs over the context window, so what you load into it <b>is</b> the program.</p>
-  </div>
-</section>
-
-<!-- REASONING — THE EXAMPLE -->
-<section class="slide dark">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">9</span><div class="crumb"><b>Foundations</b> · reasoning</div></div>
-    <h2 class="reveal">Reasoning: the model writes its <span class="o">own context</span></h2>
-    <span class="extag reveal">EXAMPLE — the invoice test: total 100, but the test expects 121</span>
-    <div class="code reveal"><span class="c"># without reasoning — one hard prediction, pattern-matched</span>
-<span class="o">you ›</span> <span class="b">why does the test expect 121, not 100?</span>
-<span class="o">model ›</span> Probably a rounding bug.   <span class="c">✕ wrong</span>
-
-<span class="c"># with reasoning — the model writes a scratchpad first</span>
-<span class="o">thinking ›</span> <span class="g">test asserts 121 · input total is 100</span>
-<span class="o">         ›</span> <span class="g">121 / 100 = 1.21 → 21% — the VAT rate</span>
-<span class="o">         ›</span> <span class="g">so the test expects VAT applied</span>
-<span class="o">model ›</span> The test expects 21% VAT to be applied.   <span class="g">✓</span></div>
-    <p class="note reveal">Same model, same question. The only difference: it <b>thought on paper</b> before it answered.</p>
-  </div>
-</section>
-
-<!-- REASONING — WHY IT WORKS -->
-<section class="slide">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">10</span><div class="crumb"><b>Foundations</b> · why thinking works</div></div>
-    <h2 class="reveal">Why <span class="o">thinking</span> works</h2>
-    <div class="split">
-      <ul class="bul reveal">
-        <li><b>One forward pass per token.</b> Force the answer into the next token and it gets exactly one pass of compute — hard problems don't fit.</li>
-        <li>Reasoning = the model writing <b>intermediate steps into its own context</b>, then attending to them. The scratchpad <b>becomes part of the program.</b></li>
-        <li>Each step is an <b>easy</b> next-token guess; a chain of easy predictions replaces one impossible one. More tokens spent = <b>more compute on the answer</b> ("test-time compute").</li>
-        <li>Those thinking tokens are billed as <b>output</b> and land <b>in the context window</b> — exactly what the <b>effort dial</b> (next section) buys more or less of.</li>
-      </ul>
-      <div class="diagram reveal">
-        <svg viewBox="0 0 400 220" role="img" aria-label="One context window holds the prompt, then a highlighted span of thinking tokens the model writes for itself, then the answer — the answer attends back over the whole strip including the scratchpad">
-          <defs><marker id="rz1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--coral)"/></marker></defs>
-          <text class="dg-t mut" x="20" y="42" font-size="11">one context window →</text>
-          <rect class="dg-box mid" x="20" y="54" width="88" height="46" rx="8"/><text class="dg-t" x="64" y="82" font-size="12" text-anchor="middle">prompt</text>
-          <rect class="dg-box outer" x="116" y="54" width="170" height="46" rx="8"/><text class="dg-t acc" x="201" y="78" font-size="11" text-anchor="middle">thinking tokens</text><text class="dg-t mut" x="201" y="92" font-size="9" text-anchor="middle">written by the model</text>
-          <rect class="dg-box hot" x="294" y="54" width="86" height="46" rx="8"/><text class="dg-t on" x="337" y="82" font-size="12" text-anchor="middle">answer</text>
-          <path class="dg-line" d="M108 77 L 114 77" marker-end="url(#rz1)"/>
-          <path class="dg-line" d="M286 77 L 292 77" marker-end="url(#rz1)"/>
-          <!-- answer attends back over prompt + scratchpad -->
-          <path class="dg-line dim" d="M300 102 C 262 152, 232 152, 201 104" marker-end="url(#rz1)"/>
-          <path class="dg-line dim" d="M300 106 C 220 172, 96 172, 64 104" marker-end="url(#rz1)"/>
-          <text class="dg-t acc" x="200" y="200" font-size="11" text-anchor="middle">the answer attends to the model's own scratchpad</text>
-        </svg>
-      </div>
-    </div>
-    <p class="note reveal"><span class="pill">● CONTEXT</span> Reasoning is the model <b>extending its own context</b> — the scratchpad is program it writes for itself.</p>
-  </div>
-</section>
-
-<!-- WHAT'S IN THE CONTEXT -->
-<section class="slide dark">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">11</span><div class="crumb"><b>Foundations</b> · one turn's context</div></div>
-    <h2 class="reveal">One line typed, <span class="o">~20,000 tokens</span> sent</h2>
-    <span class="extag reveal">EXAMPLE — what one Claude Code turn actually assembles</span>
-    <div class="code reveal"><span class="c"># you type one line — the harness builds all of this:</span>
-system prompt          <span class="o">~2,600</span>   <span class="c">who it is, the rules</span>
-tool definitions       <span class="o">~4,100</span>   <span class="c">every tool's schema</span>
-CLAUDE.md + skills      <span class="o">~1,800</span>   <span class="c">your conventions</span>
-conversation so far    <span class="o">~9,200</span>   <span class="c">every earlier turn</span>
-tool results           <span class="o">~2,300</span>   <span class="c">files read, cmd output</span>
-your message               <span class="o">11</span>   <span class="b">"wire up the CSV export"</span></div>
-    <p class="note reveal">Which tokens fill that <b>context window</b> is what you're really controlling.</p>
+    <p class="note reveal">Every arrow to the server carries the <b>whole conversation again</b> — the API keeps nothing between calls. Remember the growing bars; the why is next, the price is chapter 05.</p>
   </div>
 </section>
 
 <!-- THE MODEL IS STATELESS + MEMENTO DIAGRAM -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">12</span><div class="crumb"><b>Foundations</b> · statelessness · the why</div></div>
+    <div class="slide-head reveal"><span class="snum">14</span><div class="crumb"><b>Hands</b> · statelessness · the why</div></div>
     <h2 class="reveal">Why re-send <span class="o">everything?</span></h2>
     <div class="split">
       <div class="diagram reveal">
@@ -559,10 +657,166 @@ your message               <span class="o">11</span>   <span class="b">"wire up 
   </div>
 </section>
 
+<!-- WHAT'S IN THE CONTEXT -->
+<section class="slide dark">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">15</span><div class="crumb"><b>Hands</b> · one turn’s payload</div></div>
+    <h2 class="reveal">One line typed, <span class="o">~20,000 tokens</span> sent</h2>
+    <span class="extag reveal">EXAMPLE — what one Claude Code turn actually assembles</span>
+    <div class="code reveal"><span class="c"># you type one line — the harness builds all of this:</span>
+system prompt          <span class="o">~2,600</span>   <span class="c">who it is, the rules</span>
+tool definitions       <span class="o">~4,100</span>   <span class="c">every tool's schema</span>
+CLAUDE.md + skills      <span class="o">~1,800</span>   <span class="c">your conventions</span>
+conversation so far    <span class="o">~9,200</span>   <span class="c">every earlier turn</span>
+tool results           <span class="o">~2,300</span>   <span class="c">files read, cmd output</span>
+your message               <span class="o">11</span>   <span class="b">"wire up the CSV export"</span></div>
+    <p class="note reveal">Which tokens fill that <b>context window</b> is what you're really controlling.</p>
+  </div>
+</section>
+
+<!-- ============ PART 4 — THE LOOP ============ -->
+
+<!-- DIVIDER 04 -->
+<section class="slide divider dark">
+  <div class="slide-content">
+    <div class="dnum reveal">04</div>
+    <h2 class="reveal">Close the <span class="o">loop</span></h2>
+    <p class="dsub reveal">Problem: one step per turn — <b>you</b> are the relay. Fix: the harness re-runs until a <b>verifier</b> says done.</p>
+  </div>
+</section>
+
+<!-- FOUR LEVELS + DIAGRAM -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">16</span><div class="crumb"><b>The loop</b> · four levels</div></div>
+    <h2 class="reveal">Four levels, each <span class="o">contains the last</span></h2>
+    <div class="diagram reveal">
+      <svg viewBox="0 0 800 300" role="img" aria-label="A staircase of four levels: in-model knowledge, reasoning, tools, then loops at the top">
+        <rect class="dg-box mid" x="30" y="234" width="180" height="46" rx="8"/>
+        <text class="dg-t" x="120" y="255" font-size="13" text-anchor="middle">① In-model</text>
+        <text class="dg-t mut" x="120" y="272" font-size="11" text-anchor="middle">what it just knows</text>
+        <rect class="dg-box mid" x="220" y="176" width="180" height="104" rx="8"/>
+        <text class="dg-t" x="310" y="197" font-size="13" text-anchor="middle">② Reasoning</text>
+        <text class="dg-t mut" x="310" y="214" font-size="11" text-anchor="middle">think before answering</text>
+        <rect class="dg-box mid" x="410" y="112" width="180" height="168" rx="8"/>
+        <text class="dg-t" x="500" y="133" font-size="13" text-anchor="middle">③ Tools</text>
+        <text class="dg-t mut" x="500" y="150" font-size="11" text-anchor="middle">read, run, call — act</text>
+        <rect class="dg-box hot" x="600" y="44" width="180" height="236" rx="8"/>
+        <text class="dg-t on" x="690" y="65" font-size="13" text-anchor="middle">④ Loops</text>
+        <text class="dg-t on" x="690" y="82" font-size="11" text-anchor="middle">act → check → repeat</text>
+        <text class="dg-t on" x="690" y="112" font-size="11" text-anchor="middle">engineering</text>
+        <text class="dg-t on" x="690" y="127" font-size="11" text-anchor="middle">starts here</text>
+      </svg>
+    </div>
+    <p class="note reveal">Levels 1–3 are the deck so far: knowledge (ch 01), thinking (ch 02), tools (ch 03) — you mostly <b>get them for free.</b> Level 4 — closing the loop against a <b>goal</b> — is this chapter, and where the failure modes live.</p>
+  </div>
+</section>
+
+<!-- THE INNER LOOP -->
+<section class="slide dark">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">17</span><div class="crumb"><b>The loop</b> · the inner loop</div></div>
+    <h2 class="reveal">The harness <span class="o">keeps going</span></h2>
+    <div class="split">
+      <ul class="bul reveal">
+        <li>Last chapter <b>you</b> pressed send after every tool result — the model was a single-step oracle.</li>
+        <li>An <b>agent</b> is the harness feeding results straight back and re-POSTing, <b>until the goal is met</b> — no human relay.</li>
+        <li>Nothing changed inside the model. The loop is <b>pure harness engineering</b> around a stateless predictor.</li>
+      </ul>
+      <div class="diagram reveal">
+        <!-- Remotion animation (remotion/src/AgentLoop.tsx) -->
+        <video src="assets/anim/agent-loop-dark.mp4" width="1152" height="912" autoplay muted loop playsinline aria-label="The agent loop: model proposes an action, harness runs it, result returns to the model, repeat until done"></video>
+      </div>
+    </div>
+    <p class="note reveal">That's the entire trick: a <b>while-loop around a token predictor</b>. Which raises the question the next slide answers — who decides when it's <b>done</b>?</p>
+  </div>
+</section>
+
+<!-- LOOPS: RALPH -> /GOAL -->
+<section class="slide dark">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">18</span><div class="crumb"><b>The loop</b> · the loop primitive</div></div>
+    <h2 class="reveal">From <span class="o">ralph</span> to <span class="o">/goal</span></h2>
+    <div class="split">
+      <div class="code reveal"><span class="c"># the original "ralph" loop — dumb on purpose</span>
+<span class="d">while</span> :; <span class="d">do</span>
+  <span class="o">claude</span> -p <span class="g">"$(cat PROMPT.md)"</span>
+<span class="d">done</span>
+
+<span class="c"># 2026: same idea, with a finish line</span>
+<span class="o">/goal</span> ship the CSV export —
+      <span class="b">`npm test` must exit 0</span></div>
+      <ul class="bul reveal">
+        <li>A <b>loop</b> just re-runs the agent until a condition is met. The primitive is <b>trivial</b> — a shell <span style="font-family:var(--font-m)">while</span>.</li>
+        <li>All the intelligence lives in the <b>goal and the stopping condition</b> you hand it.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- NEVER LOOP WITHOUT VERIFIERS -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">19</span><div class="crumb"><b>The loop</b> · verifiers</div></div>
+    <h2 class="reveal">Never loop without a <span class="o">verifier</span></h2>
+    <div class="split">
+      <div class="kcard reveal">
+        <div class="big">"Looks done" is not a verifier.</div>
+        <p>"exit code 0" is. A verifier is an <b>objective check the model can't argue with.</b></p>
+      </div>
+      <ul class="bul reveal">
+        <li>A loop is a <b>repeated cycle toward a verifiable goal.</b> No verifier → no goal → nothing to stop for.</li>
+        <li>Good verifiers: <b>a test suite</b>, the <b>compiler / type-checker</b>, a <b>build</b>, a <b>screenshot diff.</b></li>
+        <li>The verifier is the loop's <b>ground truth.</b> Everything else is the model's opinion.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- HOW LOOPS FAIL -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>The loop</b> · failure modes</div></div>
+    <h2 class="reveal">Two ways loops go <span class="o">wrong</span></h2>
+    <div class="cards c2 reveal">
+      <div class="tile"><span class="k">Spiralling</span><p>Never recognises completion — each lap piles <b>new code on broken code</b>. Burns tokens, gets worse.</p></div>
+      <div class="tile fill"><span class="k">Cheating</span><p>Reward hacking: <b>test.skip</b>, hardcoded expected values, <b>deleting tests</b>, appending <b>|| true</b>. The verifier goes green; the work is fake.</p></div>
+    </div>
+    <p class="note reveal">Both are <b>spec bugs, not model bugs.</b> The loop optimises exactly what you wrote down; if "pass" is gameable, it gets gamed.</p>
+  </div>
+</section>
+
+<!-- WRITING A LOOP THAT WORKS -->
+<section class="slide dark">
+  <div class="slide-content">
+    <div class="slide-head reveal"><span class="snum">21</span><div class="crumb"><b>The loop</b> · a loop that works</div></div>
+    <h2 class="reveal">Be <span class="o">annoyingly specific</span></h2>
+    <span class="extag reveal">PATTERN — a goal prompt that can't be gamed</span>
+    <div class="code reveal"><span class="o">/goal</span>
+  <span class="b">GOAL:</span>      export invoices to CSV
+  <span class="b">VERIFY:</span>    <span class="g">`pytest tests/test_export.py -q`</span> exits 0
+  <span class="b">FORBIDDEN:</span> do NOT skip, delete or weaken any test;
+             no <span class="g">`|| true`</span>, no hardcoded expected values
+  <span class="b">EVIDENCE:</span>  paste the final test output here</div>
+    <p class="note reveal">Name the <b>verifier command</b>, forbid the <b>shortcuts</b> by name, and demand <b>real evidence</b> — test output, an exit code, a screenshot diff.</p>
+  </div>
+</section>
+
+<!-- ============ PART 5 — THE BILL ============ -->
+
+<!-- DIVIDER 05 -->
+<section class="slide divider dark">
+  <div class="slide-content">
+    <div class="dnum reveal">05</div>
+    <h2 class="reveal">The bill <span class="o">comes due</span></h2>
+    <p class="dsub reveal">Problem: every lap re-sends the <b>whole history</b> — cost grows quadratically and quality rots. First, the diagnosis.</p>
+  </div>
+</section>
+
 <!-- CONTEXT GROWTH — BLOW BY BLOW -->
 <section class="slide dark">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">13</span><div class="crumb"><b>Foundations</b> · context growth</div></div>
+    <div class="slide-head reveal"><span class="snum">22</span><div class="crumb"><b>The bill</b> · context growth</div></div>
     <h2 class="reveal">One session, <span class="o">blow by blow</span></h2>
     <span class="extag reveal">EXAMPLE — three turns, payload by payload</span>
     <div class="diagram reveal">
@@ -605,7 +859,7 @@ your message               <span class="o">11</span>   <span class="b">"wire up 
 <!-- TOKENS TRAVELLING -->
 <section class="slide dark">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">14</span><div class="crumb"><b>Foundations</b> · the growing input</div></div>
+    <div class="slide-head reveal"><span class="snum">23</span><div class="crumb"><b>The bill</b> · the growing input</div></div>
     <h2 class="reveal">Those bars, <span class="o">in numbers</span></h2>
     <div class="diagram reveal">
       <svg viewBox="0 0 800 340" role="img" aria-label="Bar chart of input tokens re-sent per turn in one session: turn 1 ~5,000, turn 2 ~9,000, turn 5 ~34,000, turn 10 ~70,000, turn 20 ~150,000 — the final bar highlighted">
@@ -640,7 +894,7 @@ your message               <span class="o">11</span>   <span class="b">"wire up 
 <!-- COSTS: INPUT VS OUTPUT -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">15</span><div class="crumb"><b>Foundations</b> · input vs output</div></div>
+    <div class="slide-head reveal"><span class="snum">24</span><div class="crumb"><b>The bill</b> · input vs output</div></div>
     <h2 class="reveal">Two token bills, <span class="o">very different</span></h2>
     <table class="tbl reveal">
       <thead><tr><th></th><th>Input tokens</th><th>Output tokens</th></tr></thead>
@@ -672,7 +926,7 @@ your message               <span class="o">11</span>   <span class="b">"wire up 
 <!-- INPUT VS OUTPUT — ONE REAL TURN -->
 <section class="slide dark">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">16</span><div class="crumb"><b>Foundations</b> · input vs output · example</div></div>
+    <div class="slide-head reveal"><span class="snum">25</span><div class="crumb"><b>The bill</b> · input vs output · example</div></div>
     <h2 class="reveal">Where the money goes: <span class="o">one turn</span></h2>
     <span class="extag reveal">EXAMPLE — "add a --json flag to the export command"</span>
     <div class="split" style="align-items:start">
@@ -695,7 +949,7 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- KV CACHING — HOW IT WORKS + DIAGRAM -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">17</span><div class="crumb"><b>Foundations</b> · KV cache · how</div></div>
+    <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>The bill</b> · KV cache · how</div></div>
     <h2 class="reveal">KV caching: <span class="o">don't recompute the prefix</span></h2>
     <div class="split">
       <ul class="bul reveal">
@@ -715,7 +969,7 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- KV CACHING — HOW LONG DOES IT LIVE + TIMELINE -->
 <section class="slide dark">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">18</span><div class="crumb"><b>Foundations</b> · KV cache · lifetime</div></div>
+    <div class="slide-head reveal"><span class="snum">27</span><div class="crumb"><b>The bill</b> · KV cache · lifetime</div></div>
     <h2 class="reveal">How long does the cache <span class="o">live?</span></h2>
     <div class="split">
       <ul class="bul reveal">
@@ -751,7 +1005,7 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- THE DUMB ZONE -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">19</span><div class="crumb"><b>Foundations</b> · the dumb zone</div></div>
+    <div class="slide-head reveal"><span class="snum">28</span><div class="crumb"><b>The bill</b> · the dumb zone</div></div>
     <h2 class="reveal">The <span class="o">dumb zone</span></h2>
     <div class="split">
       <ul class="bul reveal">
@@ -770,42 +1024,41 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
   </div>
 </section>
 
-<!-- GO PLAY WITH ONE -->
-<section class="slide">
+<!-- ============ PART 6 — SPLIT THE WORK ============ -->
+
+<!-- DIVIDER 06 -->
+<section class="slide divider dark">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>Foundations</b> · go build one</div></div>
-    <h2 class="reveal">Go <span class="o">play with one</span></h2>
-    <div class="links reveal">
-      <div class="linkcol">
-        <h3>See it run</h3>
-        <a href="https://poloclub.github.io/transformer-explainer/" target="_blank" rel="noopener">Transformer Explainer — a live GPT-2 in your browser; type text and watch the next-token probabilities form, play with temperature<span class="u">poloclub.github.io/transformer-explainer</span></a>
-        <a href="https://bbycroft.net/llm" target="_blank" rel="noopener">LLM Visualization — a full GPT rendered in interactive 3D; zoom into every attention head and matrix, watch inference token by token<span class="u">bbycroft.net/llm</span></a>
-      </div>
-      <div class="linkcol">
-        <h3>Build one</h3>
-        <a href="https://www.languagemodelbuilder.com/" target="_blank" rel="noopener">Language Model Builder — free macOS app: a ~90-min interactive textbook, then train your own tiny LLM locally on Apple Silicon (MLX)<span class="u">languagemodelbuilder.com</span></a>
-        <a href="https://karpathy.ai/zero-to-hero.html" target="_blank" rel="noopener">Karpathy — Neural Networks: Zero to Hero — build GPT from scratch in code, from backprop up (the nanoGPT lineage)<span class="u">karpathy.ai/zero-to-hero.html</span></a>
-      </div>
-    </div>
-    <p class="note reveal"><span class="pill">● CONTEXT</span> Two of these let you watch attention actually run over the context — the thread, lit up.</p>
+    <div class="dnum reveal">06</div>
+    <h2 class="reveal">Split the <span class="o">work</span></h2>
+    <p class="dsub reveal">Problem: one window, one brain, carrying <b>everything</b>. Fix: route the cheapest adequate brain; delegate to <b>fresh windows</b>.</p>
   </div>
 </section>
 
-<!-- ============ PART 3 — LEVERS ============ -->
-
-<!-- DIVIDER 03 -->
-<section class="slide divider dark">
+<!-- SUBAGENTS — FRESH WINDOWS -->
+<section class="slide">
   <div class="slide-content">
-    <div class="dnum reveal">03</div>
-    <h2 class="reveal">Pick your <span class="o">brain</span></h2>
-    <p class="dsub reveal">Two dials: <b>model size</b> and <b>reasoning effort.</b> Most people only touch the first.</p>
+    <div class="slide-head reveal"><span class="snum">29</span><div class="crumb"><b>Split the work</b> · subagents</div></div>
+    <h2 class="reveal">Subagents: <span class="o">fresh windows</span>, tiny summaries</h2>
+    <div class="split">
+      <ul class="bul reveal">
+        <li>A subagent starts with an <b>empty context window</b> — the messy exploration happens over there. That's the <b>rot</b> fix.</li>
+        <li>Only a <b>short summary</b> comes back; the parent's window stays lean.</li>
+        <li>Each subagent picks its <b>own model and effort</b> — grunt work goes cheap. That's the <b>cost</b> fix. The rest of this chapter: who to route what.</li>
+      </ul>
+      <div class="diagram reveal">
+        <!-- Remotion animation (remotion/src/Subagents.tsx) -->
+        <video src="assets/anim/subagents-light.mp4" width="1176" height="756" autoplay muted loop playsinline aria-label="A main agent delegates messy work to sub-agents that have their own context and return only a short summary"></video>
+      </div>
+    </div>
+    <p class="note reveal"><span class="pill">● CONTEXT</span> Delegation is context engineering — spend the main window on decisions, not exhaust.</p>
   </div>
 </section>
 
 <!-- THE LINEUPS -->
-<section class="slide">
+<section class="slide dark">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">21</span><div class="crumb"><b>Levers</b> · the lineups</div></div>
+    <div class="slide-head reveal"><span class="snum">30</span><div class="crumb"><b>Split the work</b> · the lineups</div></div>
     <h2 class="reveal">Same shape <span class="o">everywhere</span></h2>
     <table class="tbl reveal">
       <thead><tr><th>Maker</th><th>Small</th><th>Medium</th><th>Large</th><th>Above (frontier)</th></tr></thead>
@@ -819,69 +1072,14 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
   </div>
 </section>
 
-<!-- THE EFFORT DIAL (levels + quality/token chart) -->
-<section class="slide dark">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">22</span><div class="crumb"><b>Levers</b> · the effort dial</div></div>
-    <h2 class="reveal">The other dial: <span class="o">effort</span></h2>
-    <div class="split">
-      <div>
-        <table class="tbl reveal">
-          <thead><tr><th>Effort</th><th>Reach for it when…</th></tr></thead>
-          <tbody>
-            <tr><td><span style="font-family:var(--font-m);color:var(--s-accent);font-weight:600">low</span></td><td>cheapest &amp; fastest — bulk work, subagents.</td></tr>
-            <tr><td><span style="font-family:var(--font-m);color:var(--s-accent);font-weight:600">medium</span></td><td>the cost-saving step-down; solid default for routine agentic work.</td></tr>
-            <tr><td><span style="font-family:var(--font-m);color:var(--s-accent);font-weight:600">high</span></td><td>the API default — complex reasoning &amp; coding.</td></tr>
-            <tr><td><span style="font-family:var(--font-m);color:var(--s-accent);font-weight:600">xhigh</span></td><td>long-horizon agentic/coding work; the recommended start for coding on Opus.</td></tr>
-            <tr><td><span style="font-family:var(--font-m);color:var(--s-accent);font-weight:600">max</span></td><td>frontier problems only — past xhigh it can overthink and mostly adds cost.</td></tr>
-          </tbody>
-        </table>
-        <p class="note reveal" style="font-family:var(--font-m)">Claude Code's <b>"ultracode"</b> = xhigh + standing permission to run multi-agent workflows — a harness mode, not an API level.</p>
-      </div>
-      <div class="diagram reveal">
-        <svg viewBox="0 0 470 300" role="img" aria-label="Internal agentic coding eval score versus output tokens per task: Opus 4.7 at xhigh scores about 71 percent at about 100k tokens, beating Opus 4.6's max at 200k tokens; Opus 4.7 at max reaches about 74.5 percent but doubles the tokens">
-          <line class="dg-line dim" x1="62" y1="36" x2="62" y2="232"/>
-          <line class="dg-line dim" x1="62" y1="232" x2="446" y2="232"/>
-          <text class="dg-t mut" x="24" y="140" font-size="11" transform="rotate(-90 24 140)" style="font-family:var(--font-m)">agentic coding score →</text>
-          <text class="dg-t mut" x="255" y="256" font-size="11" text-anchor="middle" style="font-family:var(--font-m)">output tokens per task →</text>
-          <!-- y ticks -->
-          <text class="dg-t mut" x="56" y="124" font-size="10" text-anchor="end" style="font-family:var(--font-m)">~71%</text>
-          <text class="dg-t mut" x="56" y="92" font-size="10" text-anchor="end" style="font-family:var(--font-m)">~74.5%</text>
-          <!-- x ticks -->
-          <text class="dg-t mut" x="240" y="247" font-size="10" text-anchor="middle" style="font-family:var(--font-m)">~100k</text>
-          <text class="dg-t mut" x="400" y="247" font-size="10" text-anchor="middle" style="font-family:var(--font-m)">~200k</text>
-          <!-- Opus 4.7 curve + dashed low extension -->
-          <path class="dg-line" d="M240 120 C 300 104, 355 93, 400 88"/>
-          <path class="dg-line" d="M240 120 C 205 133, 175 147, 150 160" stroke-dasharray="5 5"/>
-          <text class="dg-t mut" x="138" y="176" font-size="9" text-anchor="middle" style="font-family:var(--font-m)">↙ lower effort</text>
-          <!-- half-the-tokens annotation -->
-          <line class="dg-line dim" x1="246" y1="120" x2="394" y2="120" stroke-dasharray="4 4"/>
-          <line class="dg-line dim" x1="400" y1="124" x2="400" y2="130" stroke-dasharray="3 3"/>
-          <text class="dg-t acc" x="316" y="111" font-size="11" text-anchor="middle">beats the old max · half the tokens</text>
-          <!-- data points -->
-          <circle cx="400" cy="138" r="6" fill="var(--s-muted)"/>
-          <text class="dg-t" x="394" y="158" font-size="11" text-anchor="end">Opus 4.6 · max</text>
-          <text class="dg-t mut" x="394" y="172" font-size="9" text-anchor="end">its best · 200k tokens</text>
-          <circle class="dg-fill-r" cx="240" cy="120" r="6"/>
-          <text class="dg-t" x="240" y="140" font-size="11" text-anchor="middle">Opus 4.7 · xhigh</text>
-          <circle class="dg-fill-r" cx="400" cy="88" r="6"/>
-          <text class="dg-t" x="394" y="78" font-size="11" text-anchor="end">Opus 4.7 · max</text>
-          <text class="dg-t mut" x="446" y="278" font-size="8.5" text-anchor="end" opacity="0.75" style="font-family:var(--font-m)">data: Anthropic — Opus 4.7 launch (Apr 2026), internal agentic coding eval</text>
-        </svg>
-      </div>
-    </div>
-    <p class="note reveal">Effort moves you along a model's token/quality curve; the <b>model</b> picks which curve you're on — a newer model at <b>xhigh</b> beats the old one's <b>max</b> on <b>half the tokens</b>, and past xhigh ~3.5 pts more costs <b>double</b>. (Opus 4.8's <b>high</b> default: same spend as 4.7's, better score.)</p>
-  </div>
-</section>
-
 <!-- TWO DIALS + DIAGRAM -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">23</span><div class="crumb"><b>Levers</b> · two dials</div></div>
+    <div class="slide-head reveal"><span class="snum">31</span><div class="crumb"><b>Split the work</b> · two dials</div></div>
     <h2 class="reveal">Capability = model <span class="o">×</span> effort</h2>
     <div class="split">
       <ul class="bul reveal">
-        <li>The dials move <b>independently.</b> A small model thinking hard can beat a big one thinking lazily.</li>
+        <li>Remember the <b>effort dial</b> from chapter 02 — model size and effort move <b>independently.</b> A small model thinking hard can beat a big one thinking lazily.</li>
         <li><b>Effort</b> buys thinking tokens — billed as <b>output</b> (~5×), and they fill your context. Not free.</li>
       </ul>
       <div class="diagram reveal">
@@ -906,7 +1104,7 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- ROUTING HEURISTICS -->
 <section class="slide dark">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">24</span><div class="crumb"><b>Levers</b> · routing heuristics</div></div>
+    <div class="slide-head reveal"><span class="snum">32</span><div class="crumb"><b>Split the work</b> · routing heuristics</div></div>
     <h2 class="reveal">Three rules for <span class="o">routing</span></h2>
     <div class="cards c3 reveal">
       <div class="tile"><span class="k">Crank effort first</span><p>Before you reach for a bigger model, turn the <b>effort</b> up. <b>opus·xhigh</b> is the agentic workhorse.</p></div>
@@ -920,7 +1118,7 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- WHAT FABLE IS -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">25</span><div class="crumb"><b>Levers</b> · what Fable is</div></div>
+    <div class="slide-head reveal"><span class="snum">33</span><div class="crumb"><b>Split the work</b> · what Fable is</div></div>
     <h2 class="reveal">Fable is a <span class="o">tier, not an increment</span></h2>
     <div class="split">
       <ul class="bul reveal">
@@ -939,7 +1137,7 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- FABLE PATTERN 1 — ADVISOR -->
 <section class="slide dark">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>Levers</b> · Fable · the advisor</div></div>
+    <div class="slide-head reveal"><span class="snum">34</span><div class="crumb"><b>Split the work</b> · Fable · the advisor</div></div>
     <h2 class="reveal">Pattern 1 — the <span class="o">advisor</span></h2>
     <div class="split">
       <div class="diagram reveal">
@@ -973,7 +1171,7 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- FABLE PATTERN 2 — ORCHESTRATOR -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">27</span><div class="crumb"><b>Levers</b> · Fable · the orchestrator</div></div>
+    <div class="slide-head reveal"><span class="snum">35</span><div class="crumb"><b>Split the work</b> · Fable · the orchestrator</div></div>
     <h2 class="reveal">Pattern 2 — the <span class="o">orchestrator</span></h2>
     <div class="split">
       <div>
@@ -1009,7 +1207,7 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- FABLE PATTERN 2b — CROSS-VENDOR ORCHESTRATION -->
 <section class="slide dark">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">28</span><div class="crumb"><b>Levers</b> · Fable · cross-vendor</div></div>
+    <div class="slide-head reveal"><span class="snum">36</span><div class="crumb"><b>Split the work</b> · Fable · cross-vendor</div></div>
     <h2 class="reveal">Pattern 2b — delegate <span class="o">across vendors</span></h2>
     <div class="split">
       <div>
@@ -1056,7 +1254,7 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- FABLE — WHERE TO SPEND IT -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">29</span><div class="crumb"><b>Levers</b> · where to spend</div></div>
+    <div class="slide-head reveal"><span class="snum">37</span><div class="crumb"><b>Split the work</b> · where to spend</div></div>
     <h2 class="reveal">Where to <span class="o">spend</span> what</h2>
     <table class="tbl reveal">
       <thead><tr><th>Tier · the lineup from before</th><th>Suggested usage</th></tr></thead>
@@ -1071,123 +1269,15 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
   </div>
 </section>
 
-<!-- ============ PART 4 — THE AGENTIC LADDER ============ -->
-
-<!-- DIVIDER 04 -->
-<section class="slide divider dark">
-  <div class="slide-content">
-    <div class="dnum reveal">04</div>
-    <h2 class="reveal">The agentic <span class="o">ladder</span></h2>
-    <p class="dsub reveal">Knowledge → reasoning → tools → <b>loops.</b> Engineering starts at the top rung.</p>
-  </div>
-</section>
-
-<!-- FOUR LEVELS + DIAGRAM -->
-<section class="slide">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">30</span><div class="crumb"><b>Ladder</b> · four levels</div></div>
-    <h2 class="reveal">Four levels, each <span class="o">contains the last</span></h2>
-    <div class="diagram reveal">
-      <svg viewBox="0 0 800 300" role="img" aria-label="A staircase of four levels: in-model knowledge, reasoning, tools, then loops at the top">
-        <rect class="dg-box mid" x="30" y="234" width="180" height="46" rx="8"/>
-        <text class="dg-t" x="120" y="255" font-size="13" text-anchor="middle">① In-model</text>
-        <text class="dg-t mut" x="120" y="272" font-size="11" text-anchor="middle">what it just knows</text>
-        <rect class="dg-box mid" x="220" y="176" width="180" height="104" rx="8"/>
-        <text class="dg-t" x="310" y="197" font-size="13" text-anchor="middle">② Reasoning</text>
-        <text class="dg-t mut" x="310" y="214" font-size="11" text-anchor="middle">think before answering</text>
-        <rect class="dg-box mid" x="410" y="112" width="180" height="168" rx="8"/>
-        <text class="dg-t" x="500" y="133" font-size="13" text-anchor="middle">③ Tools</text>
-        <text class="dg-t mut" x="500" y="150" font-size="11" text-anchor="middle">read, run, call — act</text>
-        <rect class="dg-box hot" x="600" y="44" width="180" height="236" rx="8"/>
-        <text class="dg-t on" x="690" y="65" font-size="13" text-anchor="middle">④ Loops</text>
-        <text class="dg-t on" x="690" y="82" font-size="11" text-anchor="middle">act → check → repeat</text>
-        <text class="dg-t on" x="690" y="112" font-size="11" text-anchor="middle">engineering</text>
-        <text class="dg-t on" x="690" y="127" font-size="11" text-anchor="middle">starts here</text>
-      </svg>
-    </div>
-    <p class="note reveal">Levels 1–3 you mostly <b>get for free.</b> Level 4 — closing the loop against a <b>goal</b> — is where the engineering and the failure modes live.</p>
-  </div>
-</section>
-
-<!-- LOOPS: RALPH -> /GOAL -->
-<section class="slide dark">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">31</span><div class="crumb"><b>Ladder</b> · the loop primitive</div></div>
-    <h2 class="reveal">From <span class="o">ralph</span> to <span class="o">/goal</span></h2>
-    <div class="split">
-      <div class="code reveal"><span class="c"># the original "ralph" loop — dumb on purpose</span>
-<span class="d">while</span> :; <span class="d">do</span>
-  <span class="o">claude</span> -p <span class="g">"$(cat PROMPT.md)"</span>
-<span class="d">done</span>
-
-<span class="c"># 2026: same idea, with a finish line</span>
-<span class="o">/goal</span> ship the CSV export —
-      <span class="b">`npm test` must exit 0</span></div>
-      <ul class="bul reveal">
-        <li>A <b>loop</b> just re-runs the agent until a condition is met. The primitive is <b>trivial</b> — a shell <span style="font-family:var(--font-m)">while</span>.</li>
-        <li>All the intelligence lives in the <b>goal and the stopping condition</b> you hand it.</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<!-- NEVER LOOP WITHOUT VERIFIERS -->
-<section class="slide">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">32</span><div class="crumb"><b>Ladder</b> · verifiers</div></div>
-    <h2 class="reveal">Never loop without a <span class="o">verifier</span></h2>
-    <div class="split">
-      <div class="kcard reveal">
-        <div class="big">"Looks done" is not a verifier.</div>
-        <p>"exit code 0" is. A verifier is an <b>objective check the model can't argue with.</b></p>
-      </div>
-      <ul class="bul reveal">
-        <li>A loop is a <b>repeated cycle toward a verifiable goal.</b> No verifier → no goal → nothing to stop for.</li>
-        <li>Good verifiers: <b>a test suite</b>, the <b>compiler / type-checker</b>, a <b>build</b>, a <b>screenshot diff.</b></li>
-        <li>The verifier is the loop's <b>ground truth.</b> Everything else is the model's opinion.</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<!-- HOW LOOPS FAIL -->
-<section class="slide">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">33</span><div class="crumb"><b>Ladder</b> · failure modes</div></div>
-    <h2 class="reveal">Two ways loops go <span class="o">wrong</span></h2>
-    <div class="cards c2 reveal">
-      <div class="tile"><span class="k">Spiralling</span><p>Never recognises completion — each lap piles <b>new code on broken code</b>. Burns tokens, gets worse.</p></div>
-      <div class="tile fill"><span class="k">Cheating</span><p>Reward hacking: <b>test.skip</b>, hardcoded expected values, <b>deleting tests</b>, appending <b>|| true</b>. The verifier goes green; the work is fake.</p></div>
-    </div>
-    <p class="note reveal">Both are <b>spec bugs, not model bugs.</b> The loop optimises exactly what you wrote down; if "pass" is gameable, it gets gamed.</p>
-  </div>
-</section>
-
-<!-- WRITING A LOOP THAT WORKS -->
-<section class="slide dark">
-  <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">34</span><div class="crumb"><b>Ladder</b> · a loop that works</div></div>
-    <h2 class="reveal">Be <span class="o">annoyingly specific</span></h2>
-    <span class="extag reveal">PATTERN — a goal prompt that can't be gamed</span>
-    <div class="code reveal"><span class="o">/goal</span>
-  <span class="b">GOAL:</span>      export invoices to CSV
-  <span class="b">VERIFY:</span>    <span class="g">`pytest tests/test_export.py -q`</span> exits 0
-  <span class="b">FORBIDDEN:</span> do NOT skip, delete or weaken any test;
-             no <span class="g">`|| true`</span>, no hardcoded expected values
-  <span class="b">EVIDENCE:</span>  paste the final test output here</div>
-    <p class="note reveal">Name the <b>verifier command</b>, forbid the <b>shortcuts</b> by name, and demand <b>real evidence</b> — test output, an exit code, a screenshot diff.</p>
-  </div>
-</section>
-
 <!-- DYNAMIC WORKFLOWS: WHAT + DIAGRAM -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">35</span><div class="crumb"><b>Ladder</b> · dynamic workflows</div></div>
+    <div class="slide-head reveal"><span class="snum">38</span><div class="crumb"><b>Split the work</b> · dynamic workflows</div></div>
     <h2 class="reveal">Workflows: <span class="o">everything at once</span></h2>
     <div class="split">
       <ul class="bul reveal">
         <li>A <b>workflow</b> is a small orchestration the agent writes &amp; runs: <b>agent()</b> (fresh subagent), <b>parallel()</b> (fan out), <b>pipeline()</b> of phases.</li>
-        <li>It combines all three lessons: <b>fresh context per stage</b> (rot antidote), <b>per-stage model routing</b> (cost), <b>verifiers between phases</b> (the loop).</li>
+        <li>It combines the whole story: <b>fresh context per stage</b> (chapter 05's rot), <b>per-stage model routing</b> (this chapter), <b>verifiers between phases</b> (chapter 04's loop).</li>
       </ul>
       <div class="diagram reveal">
         <svg viewBox="0 0 400 250" role="img" aria-label="A workflow: parallel explore on haiku, plan on fable, implement on opus, verify with tests, looping back on failure">
@@ -1216,7 +1306,7 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- WORKFLOWS: HOW -->
 <section class="slide dark">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">36</span><div class="crumb"><b>Ladder</b> · workflows in code</div></div>
+    <div class="slide-head reveal"><span class="snum">39</span><div class="crumb"><b>Split the work</b> · workflows in code</div></div>
     <h2 class="reveal">What a workflow <span class="o">looks like</span></h2>
     <div class="split" style="align-items:start">
       <div>
@@ -1251,7 +1341,7 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- WHEN TO REACH FOR EACH -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">37</span><div class="crumb"><b>Ladder</b> · which tool when</div></div>
+    <div class="slide-head reveal"><span class="snum">40</span><div class="crumb"><b>Split the work</b> · which tool when</div></div>
     <h2 class="reveal">Which tool, <span class="o">when</span></h2>
     <div class="gloss reveal">
       <div class="row"><span class="term">Ask</span><span class="def">Single question, one answer → just talk to it.</span></div>
@@ -1263,21 +1353,21 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
   </div>
 </section>
 
-<!-- ============ PART 5 — EXTENSIBILITY ============ -->
+<!-- ============ PART 7 — MAKE IT STICK ============ -->
 
-<!-- DIVIDER 05 -->
+<!-- DIVIDER 07 -->
 <section class="slide divider dark">
   <div class="slide-content">
-    <div class="dnum reveal">05</div>
-    <h2 class="reveal">Make it <span class="o">yours</span></h2>
-    <p class="dsub reveal"><b>CLAUDE.md</b> sets the standing rules. <b>Skills</b> teach the agent how <i>you</i> work. <b>Plugins</b> ship it to your team.</p>
+    <div class="dnum reveal">07</div>
+    <h2 class="reveal">Make it <span class="o">stick</span></h2>
+    <p class="dsub reveal">Problem: everything you fixed dies at <b>/clear</b> — every session starts blank. Fix: durable context — <b>CLAUDE.md · skills · plugins</b>.</p>
   </div>
 </section>
 
 <!-- CLAUDE.md / AGENTS.md -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">38</span><div class="crumb"><b>Extensibility</b> · CLAUDE.md</div></div>
+    <div class="slide-head reveal"><span class="snum">41</span><div class="crumb"><b>Make it stick</b> · CLAUDE.md</div></div>
     <h2 class="reveal">The standing orders: <span class="o">CLAUDE.md</span></h2>
     <div class="split">
       <ul class="bul reveal">
@@ -1306,7 +1396,7 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- WHY SKILLS AT ALL -->
 <section class="slide dark">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">39</span><div class="crumb"><b>Extensibility</b> · why skills</div></div>
+    <div class="slide-head reveal"><span class="snum">42</span><div class="crumb"><b>Make it stick</b> · why skills</div></div>
     <h2 class="reveal">Why skills? Every session starts <span class="o">blank</span></h2>
     <div class="cards c3 reveal">
       <div class="tile"><span class="k">Groundhog Day</span><p>The model knows the world, <b>not your workflow.</b> Release-notes format, review checklist, deploy steps — re-explained <b>every single session.</b></p></div>
@@ -1320,7 +1410,7 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- SKILLS: ANATOMY -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">40</span><div class="crumb"><b>Extensibility</b> · skill anatomy</div></div>
+    <div class="slide-head reveal"><span class="snum">43</span><div class="crumb"><b>Make it stick</b> · skill anatomy</div></div>
     <h2 class="reveal">A skill is a <span class="o">folder + SKILL.md</span></h2>
     <div class="split">
       <ul class="bul reveal">
@@ -1342,7 +1432,7 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- WALKTHROUGH: BUILD A SKILL -->
 <section class="slide dark">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">41</span><div class="crumb"><b>Extensibility</b> · build a skill</div></div>
+    <div class="slide-head reveal"><span class="snum">44</span><div class="crumb"><b>Make it stick</b> · build a skill</div></div>
     <h2 class="reveal">Build one in <span class="o">three steps</span></h2>
     <span class="extag reveal">WALKTHROUGH — a release-notes skill</span>
     <div class="code reveal"><span class="o">1.</span> <span class="g">mkdir -p .claude/skills/release-notes</span>
@@ -1360,7 +1450,7 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- SKILL SYSTEMS AT SCALE -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">42</span><div class="crumb"><b>Extensibility</b> · skills at scale</div></div>
+    <div class="slide-head reveal"><span class="snum">45</span><div class="crumb"><b>Make it stick</b> · skills at scale</div></div>
     <h2 class="reveal">From one skill to a <span class="o">system</span></h2>
     <div class="cards c2 reveal">
       <div class="tile"><span class="k">Composable sets</span><p>Matt Pocock's approach: <b>dozens of tiny skills</b> — conventions, testing style, PR etiquette — each triggering on its own cue.</p></div>
@@ -1373,7 +1463,7 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- WORKED EXAMPLE: MATT POCOCK'S SKILLS -->
 <section class="slide dark">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">43</span><div class="crumb"><b>Extensibility</b> · example · pocock</div></div>
+    <div class="slide-head reveal"><span class="snum">46</span><div class="crumb"><b>Make it stick</b> · example · pocock</div></div>
     <h2 class="reveal">Worked example: <span class="o">mattpocock/skills</span></h2>
     <div class="split">
       <ul class="bul reveal">
@@ -1399,7 +1489,7 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- WORKED EXAMPLE: COMPOUND ENGINEERING -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">44</span><div class="crumb"><b>Extensibility</b> · example · compound</div></div>
+    <div class="slide-head reveal"><span class="snum">47</span><div class="crumb"><b>Make it stick</b> · example · compound</div></div>
     <h2 class="reveal">Worked example: <span class="o">Compound Engineering</span></h2>
     <div class="split">
       <div class="code reveal"><span class="c"># one loop, five skills (Every's CE plugin):</span>
@@ -1422,7 +1512,7 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- PLUGINS: ANATOMY + DIAGRAM -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">45</span><div class="crumb"><b>Extensibility</b> · plugin anatomy</div></div>
+    <div class="slide-head reveal"><span class="snum">48</span><div class="crumb"><b>Make it stick</b> · plugin anatomy</div></div>
     <h2 class="reveal">Plugins <span class="o">distribute</span> all of it</h2>
     <div class="split">
       <ul class="bul reveal">
@@ -1453,7 +1543,7 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- WALKTHROUGH: PUBLISH A PLUGIN -->
 <section class="slide dark">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">46</span><div class="crumb"><b>Extensibility</b> · publish a plugin</div></div>
+    <div class="slide-head reveal"><span class="snum">49</span><div class="crumb"><b>Make it stick</b> · publish a plugin</div></div>
     <h2 class="reveal">Ship it to the <span class="o">whole team</span></h2>
     <span class="extag reveal">WALKTHROUGH — from your skill to their /install</span>
     <div class="code reveal"><span class="o">1.</span> <span class="c"># wrap it up (skills/ sits at the plugin root):</span>
@@ -1476,15 +1566,15 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- RECAP -->
 <section class="slide">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">47</span><div class="crumb"><b>Close</b> · recap</div></div>
+    <div class="slide-head reveal"><span class="snum">50</span><div class="crumb"><b>Close</b> · recap</div></div>
     <h2 class="reveal">It's all <span class="o">context engineering</span></h2>
     <div class="split">
       <div class="kcard reveal">
-        <div class="big">It was one thread all along</div>
-        <p>Prediction over context → <b>curate the context</b> → route the <b>cheapest adequate brain</b> → loop against a <b>verifier</b> → package what worked as a <b>skill.</b></p>
+        <div class="big">It was one machine all along</div>
+        <p>A token predictor → that <b>thinks</b> → with <b>hands</b> → in a <b>loop</b> → whose <b>context you engineer</b>: route it, delegate it, cache it, write it down.</p>
       </div>
       <ul class="bul reveal">
-        <li>Try <b>--advisor fable</b> on your next non-trivial task.</li>
+        <li>Give Fable the <b>advisor job</b> — a standing rule in CLAUDE.md, not a flag.</li>
         <li>Write <b>one skill</b> for your most-repeated chore.</li>
         <li>Add a <b>real verifier</b> to your next <b>/goal</b> — a command, not a vibe.</li>
       </ul>
@@ -1496,7 +1586,7 @@ Edit tool call (the diff)  <span class="o">~450</span></div>
 <!-- THANKS + SOURCES -->
 <section class="slide dark">
   <div class="slide-content">
-    <div class="slide-head reveal"><span class="snum">48</span><div class="crumb"><b>Close</b> · thanks &amp; sources</div></div>
+    <div class="slide-head reveal"><span class="snum">51</span><div class="crumb"><b>Close</b> · thanks &amp; sources</div></div>
     <p class="thanks reveal">Thanks! <span class="o">Questions?</span></p>
     <div class="links reveal" style="margin-top:var(--content-gap)">
       <div class="linkcol">
@@ -1573,7 +1663,7 @@ class SlidePresentation{
 /* ===== INLINE EDITOR ===== */
 class InlineEditor{
   constructor(){
-    this.isActive=false;this.KEY='agentic-engineering-edits-v1';
+    this.isActive=false;this.KEY='agentic-engineering-edits-v2';
     this.sel='h1,h2,h3,p,li,td,th,.tile .k,.kcard .big,.code,.gloss .term,.gloss .def,.ts-title,.ts-sub,.ts-kick,.ts-author,.crumb,.thanks,.ts-badge .b1,.ts-badge .b2,.linkcol h3,.divider .dsub';
     this.nodes=[...document.querySelectorAll(this.sel)];
     this.nodes.forEach((n,i)=>n.dataset.ek='n'+i);this.restore();this.wire();
