@@ -6,3 +6,6 @@
 
 # Dependencies
 remotion/node_modules/
+
+# Office lock files
+~$*
