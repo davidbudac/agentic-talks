@@ -803,6 +803,44 @@
   </div>
 </section>
 
+<!-- ===================== 22b · TTL ECONOMICS ===================== -->
+<section data-label="TTL economics" data-speaker-notes="The concrete numbers behind the last two slides. Writes cost a premium over normal input: 1.25x for the default five-minute cache, 2x for the one-hour option. Reads are about a tenth of the normal price either way. That premium is why break-even depends on the TTL: with five minutes you're ahead after the second hit, with one hour you need three. Two fine-print items: hits refresh the timer at no extra cost, and prefixes below roughly a thousand tokens silently don't cache at all — no error, just zero cache reads in usage." style="background:#16130e; color:#f4efe6; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">TTL economics</div>
+  <h2 style="margin:14px 0 44px; font:700 64px 'Space Grotesk',sans-serif; letter-spacing:-0.025em;">The exact numbers</h2>
+  <div style="flex:1; display:flex; gap:44px;">
+    <div style="flex:1.3; display:flex; flex-direction:column; gap:16px; justify-content:center;">
+      <div style="display:grid; grid-template-columns: 1.4fr 1fr 1fr; gap:2px; font:500 26px 'IBM Plex Sans',sans-serif;">
+        <div style="padding:16px 24px; font:600 23px 'IBM Plex Mono',monospace; color:#8a7f6d;">&nbsp;</div>
+        <div style="padding:16px 24px; font:600 23px 'IBM Plex Mono',monospace; color:#ff5c35;">5 min TTL</div>
+        <div style="padding:16px 24px; font:600 23px 'IBM Plex Mono',monospace; color:#cabfac;">1 hr TTL</div>
+        <div style="background:#1c1812; padding:18px 24px; border-radius:8px 0 0 0;">cache write</div>
+        <div style="background:#1c1812; padding:18px 24px; color:#ff5c35; font-weight:600;">1.25× base</div>
+        <div style="background:#1c1812; padding:18px 24px; color:#f4efe6; font-weight:600; border-radius:0 8px 0 0;">2× base</div>
+        <div style="background:#221d15; padding:18px 24px;">cache read</div>
+        <div style="background:#221d15; padding:18px 24px; color:#7fdc8a; font-weight:600;">~0.1× base</div>
+        <div style="background:#221d15; padding:18px 24px; color:#7fdc8a; font-weight:600;">~0.1× base</div>
+        <div style="background:#1c1812; padding:18px 24px; border-radius:0 0 0 8px;">break-even</div>
+        <div style="background:#1c1812; padding:18px 24px; font-weight:600;">2 hits</div>
+        <div style="background:#1c1812; padding:18px 24px; font-weight:600; border-radius:0 0 8px 0;">3 hits</div>
+      </div>
+    </div>
+    <div style="flex:1; display:flex; flex-direction:column; gap:26px; justify-content:center;">
+      <div style="border-left:4px solid #ff5c35; padding-left:24px;">
+        <div style="font:600 29px 'Space Grotesk',sans-serif;">Hits refresh for free</div>
+        <div style="font:400 26px 'IBM Plex Sans',sans-serif; color:#cabfac; margin-top:8px; text-wrap:pretty;">Every read resets the timer at no extra cost — steady traffic keeps the cache warm indefinitely.</div>
+      </div>
+      <div style="border-left:4px solid #3a342a; padding-left:24px;">
+        <div style="font:600 29px 'Space Grotesk',sans-serif;">Minimum prefix size</div>
+        <div style="font:400 26px 'IBM Plex Sans',sans-serif; color:#cabfac; margin-top:8px; text-wrap:pretty;">Prefixes under ~1,024 tokens (model-dependent) <b style="color:#f4efe6;">silently don't cache</b> — no error, just zero cache reads.</div>
+      </div>
+      <div style="border-left:4px solid #3a342a; padding-left:24px;">
+        <div style="font:600 29px 'Space Grotesk',sans-serif;">Pick 1 hr for bursty traffic</div>
+        <div style="font:400 26px 'IBM Plex Sans',sans-serif; color:#cabfac; margin-top:8px; text-wrap:pretty;">The doubled write cost only pays off when gaps between requests exceed 5 minutes.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ===================== 23 · MULTIPLE BREAKPOINTS ===================== -->
 <section data-label="Multiple breakpoints" data-speaker-notes="You can set several breakpoints to create nested cacheable segments — useful when parts of your context change at different rates. A request hits the longest still-valid prefix. If the docs changed but tools and system didn't, you still get a partial hit up through the system breakpoint." style="background:#f4efe6; color:#16130e; padding:96px 110px 84px; box-sizing:border-box; display:flex; flex-direction:column; font-family:'IBM Plex Sans',sans-serif;">
   <div style="font:600 24px 'IBM Plex Mono',monospace; color:#ff5c35; letter-spacing:0.1em; text-transform:uppercase;">Multiple breakpoints</div>
