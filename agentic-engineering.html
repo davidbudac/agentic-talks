@@ -191,31 +191,24 @@ table.tbl tr:last-child td{border-bottom:none}
 #sq2 path,#ad2 path{fill:var(--s-faint)}
 
 /* ── TITLE SLIDE ─────────────────────────────────────────────────── */
-.title-slide{display:grid; grid-template-columns:1.1fr .9fr; background:var(--ink)}
-.ts-left{padding:var(--slide-pad-top) var(--slide-pad-x) var(--slide-pad-bottom);
-  display:flex; flex-direction:column; justify-content:space-between}
-.ts-top{display:flex; justify-content:space-between; align-items:center; color:var(--on-dark-faint);
-  font-family:var(--font-mono); font-size:var(--fs-eyebrow); letter-spacing:var(--track-eyebrow);
-  text-transform:uppercase}
-.ts-top .num{font-family:var(--font-display); font-weight:var(--w-bold); color:var(--coral); font-size:48px}
-.ts-kick{font-family:var(--font-mono); font-size:var(--fs-eyebrow); letter-spacing:var(--track-eyebrow);
-  text-transform:uppercase; color:var(--coral); font-weight:var(--w-semibold); margin-bottom:26px}
-.ts-title{font-family:var(--font-display); font-weight:var(--w-bold); line-height:.95;
-  font-size:var(--fs-display); letter-spacing:var(--track-tight); color:var(--on-dark)}
-.ts-sub{font-size:var(--fs-subtitle); color:var(--on-dark-muted); margin-top:32px;
-  font-weight:var(--w-regular); max-width:24ch}
-.ts-sub b{color:var(--on-dark); font-weight:var(--w-semibold)}
+.title-slide{display:flex; flex-direction:column; justify-content:space-between; background:var(--ink);
+  padding:88px 96px 0}
+.ts-top{display:flex; justify-content:space-between; align-items:baseline; font:600 var(--fs-eyebrow) var(--font-mono);
+  letter-spacing:var(--track-eyebrow); text-transform:uppercase}
+.ts-top .k{color:var(--coral)}
+.ts-top .meta{color:var(--on-dark-faint); font-weight:500}
+.ts-hero h1{font-family:var(--font-display); font-weight:var(--w-bold); letter-spacing:-.035em; line-height:.9;
+  color:var(--on-dark); font-size:186px}
+.ts-hero h1 .dot{color:var(--coral)}
+.ts-sub{font-size:38px; color:var(--on-dark-muted); margin-top:44px; font-weight:400}
+.ts-sub b{color:var(--on-dark); font-weight:600}
+.ts-foot{border-top:var(--bw-hair) solid var(--line-dark); margin:0 -96px; padding:34px 96px 40px;
+  display:flex; justify-content:space-between; align-items:center}
 .ts-author{font-size:26px; color:var(--on-dark-muted)}
 .ts-author b{color:var(--coral); font-weight:var(--w-semibold)}
-.ts-right{position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center;
-  background:var(--ink-2); border-left:var(--bw) solid var(--line-dark)}
-.ts-right::before{content:""; position:absolute; top:0; right:0; width:300px; height:300px;
-  background:var(--coral); border-bottom-left-radius:100%}
-.ts-badge{font-family:var(--font-display); color:var(--coral); text-align:center; position:relative;
-  z-index:2; transform:rotate(-4deg)}
-.ts-badge .b1{font-size:170px; line-height:.82}
-.ts-badge .b2{font-family:var(--font-mono); font-weight:var(--w-medium); letter-spacing:var(--track-eyebrow);
-  text-transform:uppercase; font-size:22px; margin-top:16px; color:var(--on-dark-muted)}
+.ts-loopline{font:500 24px var(--font-mono); letter-spacing:.04em; color:var(--on-dark-faint)}
+.ts-loopline .a{color:var(--coral)}
+.ts-loopline .w{color:var(--on-dark-muted)}
 
 /* ── CLOSING ─────────────────────────────────────────────────────── */
 .thanks{font-family:var(--font-display); font-weight:var(--w-bold); font-size:104px; line-height:.98;
@@ -234,17 +227,15 @@ table.tbl tr:last-child td{border-bottom:none}
    the active slide and only when motion is welcome. Print + reduced
    motion therefore always show the finished slide. ─────────────────── */
 @keyframes ae-rise{from{opacity:0; transform:translateY(22px)} to{opacity:1; transform:none}}
-@keyframes ae-slide-in{from{opacity:0; transform:translateX(48px)} to{opacity:1; transform:none}}
 @media (prefers-reduced-motion:no-preference){
   [data-deck-active] .reveal{animation:ae-rise .5s var(--ease) both}
   [data-deck-active] .reveal:nth-child(2){animation-delay:.07s}
   [data-deck-active] .reveal:nth-child(3){animation-delay:.14s}
   [data-deck-active] .reveal:nth-child(4){animation-delay:.21s}
   [data-deck-active] .reveal:nth-child(n+5){animation-delay:.27s}
-  [data-deck-active] .ts-left>*{animation:ae-rise .8s var(--ease) both}
-  [data-deck-active] .ts-left .ts-mid{animation-delay:.18s}
-  [data-deck-active] .ts-left .ts-author{animation-delay:.34s}
-  [data-deck-active].title-slide .ts-right{animation:ae-slide-in .9s var(--ease) both .12s}
+  [data-deck-active] .title-slide>*{animation:ae-rise .8s var(--ease) both}
+  [data-deck-active] .title-slide>.ts-hero{animation-delay:.15s}
+  [data-deck-active] .title-slide>.ts-foot{animation-delay:.3s}
 }
 </style>
 </head>
@@ -273,17 +264,14 @@ table.tbl tr:last-child td{border-bottom:none}
   <!-- TITLE -->
   <section class="slide dark title-slide" data-label="Title"
     data-speaker-notes="Open cold, no preamble: this is the developer follow-up to the beginner deck. Say the through-line out loud once, from token prediction to self-verifying loops, because every chapter pays it off. Mention it is an internal talk with no live demos, so nobody waits on a terminal.">
-    <div class="ts-left">
-      <div class="ts-top"><span class="num">01</span><span>Internal talk · July 2026</span></div>
-      <div class="ts-mid">
-        <div class="ts-kick">A developer's guide to working with coding agents</div>
-        <h1 class="ts-title">Agentic<br>Engineering</h1>
-        <p class="ts-sub">From <b>token prediction</b> to <b>self-verifying loops</b></p>
-      </div>
-      <div class="ts-author">David&nbsp;Budáč &nbsp;/&nbsp; <b>ČSOB</b></div>
+    <div class="ts-top"><span class="k">A developer's guide to coding agents</span><span class="meta">Internal talk · July 2026</span></div>
+    <div class="ts-hero">
+      <h1>Agentic<br>Engineering<span class="dot">.</span></h1>
+      <p class="ts-sub">From <b>token prediction</b> to <b>self-verifying loops</b></p>
     </div>
-    <div class="ts-right">
-      <div class="ts-badge"><div class="b1">⌘</div><div class="b2">context · effort · loops</div></div>
+    <div class="ts-foot">
+      <div class="ts-author">David&nbsp;Budáč &nbsp;/&nbsp; <b>ČSOB</b></div>
+      <div class="ts-loopline"><span class="w">context</span> <span class="a">→</span> <span class="w">effort</span> <span class="a">→</span> <span class="w">verify</span> <span class="a">↺</span></div>
     </div>
   </section>
 
