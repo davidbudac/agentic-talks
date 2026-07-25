@@ -9,12 +9,12 @@ so keep those folders next to the `.html` files.
 Author: **David Budáč / ČSOB** · English
 
 - **[`agentic-ai.html`](agentic-ai.html)** — *Intro to Agentic AI* (Claude Code for
-  beginners). Model / harness / agent, the loop, context, permissions, memory & MCP. 36 slides.
+  beginners). Model / harness / agent, the loop, context, permissions, memory & MCP. 37 slides.
 - **[`agentic-engineering.html`](agentic-engineering.html)** — *Agentic Engineering*
   (basics for developers). Told as an evolution story — each chapter fixes the previous
   one's limitation: the predictor → thinking → hands (tool calls) → the loop → the bill
   → split the work (routing & subagents) → make it stick (CLAUDE.md, skills, plugins).
-  One thread throughout: the context window. 51 slides. **No live demos.**
+  One thread throughout: the context window. 53 slides. **No live demos.**
 
 ## View it
 
