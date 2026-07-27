@@ -403,7 +403,7 @@ table.tbl tr:last-child td{border-bottom:none}
         <div class="row"><span class="term">Token</span><span class="def">A chunk of text ≈ ¾ of a word (<i>un·believ·able</i> = 3). What models read &amp; bill in.</span></div>
         <div class="row"><span class="term">Prompt</span><span class="def">The text you send the model.</span></div>
         <div class="row"><span class="term">Context</span><span class="def">Everything the model sees in one call.</span></div>
-        <div class="row"><span class="term">Context window</span><span class="def">The max size of that context (e.g. 200K tokens).</span></div>
+        <div class="row"><span class="term">Context window</span><span class="def">The max size of that context (1M tokens on today's top models).</span></div>
         <div class="row"><span class="term">Tool call</span><span class="def">An action the model asks the harness to run.</span></div>
         <div class="row"><span class="term">Harness</span><span class="def">The program running the model + its tools.</span></div>
         <div class="row"><span class="term">Agent</span><span class="def">Model + harness, doing things in a loop.</span></div>
@@ -605,7 +605,7 @@ table.tbl tr:last-child td{border-bottom:none}
         </ul>
         <div class="kcard reveal">
           <div class="big">Don't fully trust it</div>
-          <p>Anthropic's own research: when a hidden hint changed the model's answer, its reasoning <b>mentioned that hint only ~25% of the time.</b> The visible "thinking" is a <b>helpful narration — not proof</b> of what really happened.</p>
+          <p>Anthropic's own research (2025): when a hidden hint changed the model's answer, its reasoning <b>mentioned that hint only ~25% of the time.</b> The visible "thinking" is a <b>helpful narration — not proof</b> of what really happened.</p>
         </div>
       </div>
     </div>
@@ -640,7 +640,7 @@ table.tbl tr:last-child td{border-bottom:none}
 
   <!-- SOTA MODELS -->
   <section class="slide light dense" data-label="Today's models"
-    data-speaker-notes="Do not read the table row by row — the pattern below it is the actual content. The same three tiers repeat at every maker: large, medium, small, plus a frontier tier on top lately. Say clearly that this reshuffles every few months, so treat any such list as a snapshot rather than a recommendation. Then the three stat tiles, left to right: SWE-bench means fixing a real bug in a real repo; ARC-AGI-3 was built to be unsolvable by the previous generation and one model later it is at thirty percent; so six-month-old assumptions about what AI can't do are usually wrong.">
+    data-speaker-notes="Do not read the table row by row — the pattern below it is the actual content. The same three tiers repeat at every maker: large, medium, small, plus a frontier tier on top lately. Say clearly that this reshuffles every few months, so treat any such list as a snapshot rather than a recommendation. Then the three stat tiles, left to right: SWE-bench Verified means fixing a real bug in a real repo; ARC-AGI-3 is deliberately built so it can't be memorised, and Opus 5 scores three times the next-best model on it; so six-month-old assumptions about what AI can't do are usually wrong.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">16</span><div class="crumb"><b>Landscape</b> · models</div></div>
       <h2 class="reveal">Today's best <span class="o">models</span></h2>
@@ -649,13 +649,13 @@ table.tbl tr:last-child td{border-bottom:none}
         <tbody>
           <tr><td><b>Anthropic</b></td><td>Claude Fable 5 · <b>Opus 5</b> · Sonnet 5 · Haiku 4.5</td><td>coding, agents, long context</td></tr>
           <tr><td><b>OpenAI</b></td><td>GPT‑5.6 — Sol · Terra · Luna</td><td>general reasoning, Codex</td></tr>
-          <tr><td><b>Google</b></td><td>Gemini 3.5 Flash (3.5 Pro on the way)</td><td>multimodal, large context</td></tr>
+          <tr><td><b>Google</b></td><td>Gemini 3.6 Flash · 3.5 Flash‑Lite <span style="color:var(--s-muted)">(3.5 Pro still unreleased)</span></td><td>multimodal, large context</td></tr>
         </tbody>
       </table>
-      <p class="note reveal">The same three tiers repeat everywhere: <b>large</b> (smartest, priciest) · <b>medium</b> (the sweet spot) · <b>small</b> (fast &amp; cheap) — and lately a <b>frontier tier on top</b> (Claude Fable 5, GPT‑5.6 Sol). It reshuffles every few months, so treat any list as a snapshot. How fast does it move? —</p>
+      <p class="note reveal">The same three tiers repeat everywhere: <b>large</b> (smartest, priciest) · <b>medium</b> (the sweet spot) · <b>small</b> (fast &amp; cheap) — and Anthropic adds a <b>frontier tier on top</b> (Claude Fable 5). It reshuffles every few months, so treat any list as a snapshot. How fast does it move? —</p>
       <div class="cards c3 reveal" style="margin-top:18px">
-        <div class="tile stat"><span class="k">96%</span><p><b>SWE-bench</b> — Opus 5 fixing real bugs in real code projects</p></div>
-        <div class="tile stat"><span class="k">1.5% → 30%</span><p><b>ARC-AGI-3</b> — puzzles built to stump the previous generation, one model later</p></div>
+        <div class="tile stat"><span class="k">96%</span><p><b>SWE-bench Verified</b> — Opus 5 fixing real bugs in real code projects</p></div>
+        <div class="tile stat"><span class="k">3× the field</span><p><b>ARC-AGI-3</b> — Opus 5 scores <b>30%</b>, three times the next-best model, on puzzles built to resist memorising</p></div>
         <div class="tile stat"><span class="k">~6 months</span><p>how long "what AI <b>can't</b> do" assumptions stay true</p></div>
       </div>
     </div>
@@ -831,20 +831,20 @@ table.tbl tr:last-child td{border-bottom:none}
 
   <!-- CONTEXT: WHAT IT IS + DIAGRAM D -->
   <section class="slide light" data-label="What context is"
-    data-speaker-notes="Define context plainly as everything the model sees in one call, and point at the stacked bars as that one call's payload. Give them the scale: two hundred thousand tokens is roughly five hundred pages, up to a million on top models. The sentence to repeat is that if it is not in the context, it does not exist for the model.">
+    data-speaker-notes="Define context plainly as everything the model sees in one call, and point at the stacked bars as that one call's payload. Give them the scale: a million tokens is roughly two and a half thousand pages on today's top models, with two hundred thousand on the small ones. The sentence to repeat is that if it is not in the context, it does not exist for the model.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>Context</b> · what it is</div></div>
       <h2 class="reveal">Context = the model's <span class="o">short-term memory</span></h2>
       <div class="split">
         <ul class="bul reveal">
           <li>Everything the model sees in <b>one call</b>: system prompt, CLAUDE.md, chat history, files, tool output.</li>
-          <li>Measured in <b>tokens.</b> The <b>context window</b> is the max — typically <b>200K</b> (≈ 500 pages), up to <b>1M</b> on top models.</li>
+          <li>Measured in <b>tokens.</b> The <b>context window</b> is the max — <b>1M</b> (≈ 2,500 pages) on today's top models, <b>200K</b> on the small ones.</li>
           <li>If it isn't in the context, it <b>doesn't exist</b> for the model.</li>
         </ul>
         <div class="diagram reveal">
           <svg viewBox="0 0 400 250" role="img" aria-label="The context window is a fixed-size box filled by system prompt, rules, history, files and tool output">
             <rect class="dg-box mid" x="20" y="20" width="360" height="210" rx="12"/>
-            <text class="dg-t acc" x="200" y="44" font-size="14" text-anchor="middle">CONTEXT WINDOW · 200K tokens</text>
+            <text class="dg-t acc" x="200" y="44" font-size="14" text-anchor="middle">CONTEXT WINDOW · 1M tokens</text>
             <rect class="dg-fill-r" x="34" y="58" width="332" height="26" rx="5" opacity="0.9"/><text class="dg-t on" x="44" y="76" font-size="12.5">system prompt</text>
             <rect class="dg-box hot" x="34" y="90" width="332" height="26" rx="5"/><text class="dg-t on" x="44" y="108" font-size="12.5">CLAUDE.md · rules</text>
             <rect class="dg-box" x="34" y="122" width="332" height="26" rx="5"/><text class="dg-t" x="44" y="140" font-size="12.5">conversation history</text>
@@ -884,7 +884,7 @@ table.tbl tr:last-child td{border-bottom:none}
       <div class="slide-head reveal"><span class="snum">28</span><div class="crumb"><b>Context</b> · keeping it lean</div></div>
       <h2 class="reveal">Watch it, <span class="o">keep it lean</span></h2>
       <span class="extag reveal">EXAMPLE — a harness status line</span>
-      <div class="code reveal"><span class="d">claude-opus-5</span>     <span class="o">context: 38%</span>  (76k / 200k)   <span class="g">$0.42</span></div>
+      <div class="code reveal"><span class="d">claude-opus-5</span>     <span class="o">context: 38%</span>  (380k / 1M)   <span class="g">$0.42</span></div>
       <ul class="bul reveal" style="margin-top:var(--content-gap)">
         <li>Most harnesses show <b>live % used</b> — glance at it.</li>
         <li>Climbing past ~40–50%? Quality starts to slip — time to <b>trim or restart.</b></li>
