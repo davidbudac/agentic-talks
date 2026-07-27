@@ -446,7 +446,7 @@ table.tbl tr:last-child td{border-bottom:none}
         <tbody>
           <tr><td><b>Anthropic</b></td><td>Claude Fable 5 · <b>Opus 5</b> · Sonnet 5 · Haiku 4.5</td><td>coding, agents, long context</td></tr>
           <tr><td><b>OpenAI</b></td><td>GPT‑5.6 — Sol · Terra · Luna</td><td>general reasoning, Codex</td></tr>
-          <tr><td><b>Google</b></td><td>Gemini 3.5 Flash (3.5 Pro on the way)</td><td>multimodal, large context</td></tr>
+          <tr><td><b>Google</b></td><td>Gemini 3.6 Flash · 3.5 Flash‑Lite <span style="color:var(--s-muted)">(3.5 Pro still unreleased)</span></td><td>multimodal, large context</td></tr>
         </tbody>
       </table>
       <p class="note reveal">The same tiers repeat everywhere: <b>large</b> (smartest, priciest) · <b>medium</b> (the sweet spot) · <b>small</b> (fast &amp; cheap) — plus a <b>frontier tier on top</b> lately. It reshuffles every few months — treat any list as a snapshot. For today, the <b>products</b> matter more than the model names —</p>
@@ -603,14 +603,14 @@ table.tbl tr:last-child td{border-bottom:none}
 
   <!-- 19 · PRODUCT CHURN -->
   <section class="slide dark dense" data-label="Products churn fast"
-    data-speaker-notes="The warning-label slide, and secretly one of the most useful. All six of these happened within roughly the last year: Sora — OpenAI's famous video app — shut down in April, reportedly burning a million dollars a day against two million of lifetime revenue; the Atlas browser is being retired; the Canvas workspace was quietly removed; NotebookLM got renamed this month; Freepik rebranded to Magnific; and Tome, 2023's most hyped AI deck tool, is dead. Two lessons: verify before you quote anything AI-related, and never build a process on a single tool without a fallback.">
+    data-speaker-notes="The warning-label slide, and secretly one of the most useful. All six of these happened within roughly the last year: Sora — OpenAI's famous video app — was shut down in March against a lifetime revenue of about two million dollars, with running costs reported anywhere between one and fifteen million a day depending on whose estimate you read, which is itself a nice illustration of how soft these numbers are; the Atlas browser retires on the ninth of August; Gemini 3.5 Pro was announced for June and still has not shipped; NotebookLM got renamed this month; Freepik rebranded to Magnific in April; and Tome, 2023's most hyped AI deck tool, is dead. Two lessons: verify before you quote anything AI-related, and never build a process on a single tool without a fallback.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">19</span><div class="crumb"><b>Big three</b> · a warning label</div></div>
       <h2 class="reveal">All of this happened in <span class="o">about a year</span></h2>
       <div class="cards c3 reveal">
-        <div class="tile stat"><span class="k">Sora ☠</span><p>OpenAI's video app, <b>shut down Apr 2026</b> — reportedly ~$1M/day costs vs ~$2M lifetime revenue</p></div>
-        <div class="tile stat"><span class="k">Atlas ☠</span><p>OpenAI's AI browser, launched Oct 2025 — <b>retiring Aug 2026</b></p></div>
-        <div class="tile stat"><span class="k">Canvas ☠</span><p>ChatGPT's side-by-side workspace — <b>quietly removed</b> May 2026</p></div>
+        <div class="tile stat"><span class="k">Sora ☠</span><p>OpenAI's video app, <b>shut down Mar 2026</b> — reported costs of $1M–15M/day vs ~$2M lifetime revenue</p></div>
+        <div class="tile stat"><span class="k">Atlas ☠</span><p>OpenAI's AI browser, launched Oct 2025 — <b>retiring 9 Aug 2026</b></p></div>
+        <div class="tile stat"><span class="k">Gemini 3.5 Pro ⏳</span><p>announced for June 2026 — <b>still unreleased</b>, delayed over coding performance</p></div>
         <div class="tile stat"><span class="k">NotebookLM →</span><p>renamed <b>Gemini Notebook</b>, July 2026 — same product, new name</p></div>
         <div class="tile stat"><span class="k">Freepik →</span><p>rebranded to <b>Magnific</b>, Apr 2026 — your subscription moved with it</p></div>
         <div class="tile stat"><span class="k">Tome ☠</span><p>2023's most-hyped AI deck tool — <b>dead Apr 2025</b>, pivoted away</p></div>
@@ -717,12 +717,12 @@ table.tbl tr:last-child td{border-bottom:none}
 
   <!-- 24 · VIBE CODING / APP BUILDERS -->
   <section class="slide light dense" data-label="Prompt-to-app builders"
-    data-speaker-notes="First category: describe a web page or small app in a chat box and a working, hosted, shareable site comes out. Lovable is the runaway leader — roughly four hundred million in annual revenue barely two years in. v0 is the design-quality pick, especially from a Figma file. The realistic use case is not production software: it's campaign microsites, calculators and above all clickable prototypes to align stakeholders before real work starts. Two caveats: credit models burn fast when you iterate, and anything public-facing still needs a proper security review — these tools produce real code handling real data.">
+    data-speaker-notes="First category: describe a web page or small app in a chat box and a working, hosted, shareable site comes out. Lovable is the runaway leader — a five-hundred-million-dollar annual run-rate as of June, barely two years in, up from two hundred million last autumn. v0 is the design-quality pick, especially from a Figma file. The realistic use case is not production software: it's campaign microsites, calculators and above all clickable prototypes to align stakeholders before real work starts. Two caveats: credit models burn fast when you iterate, and anything public-facing still needs a proper security review — these tools produce real code handling real data.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">24</span><div class="crumb"><b>Landscape</b> · prompt-to-app</div></div>
       <h2 class="reveal">Describe an app, <span class="o">get an app</span></h2>
       <div class="cards c3 reveal">
-        <div class="tile fill"><span class="k">Lovable</span><p><b>The leader</b> (~$400M yearly revenue). Chat → a real, hosted site with forms &amp; a database. Free · Pro ~$25 · Business ~$50/mo, credit-based.</p></div>
+        <div class="tile fill"><span class="k">Lovable</span><p><b>The leader</b> (~$500M annual run-rate, June 2026). Chat → a real, hosted site with forms &amp; a database. Free · Pro ~$25 · Business ~$50/mo, credit-based.</p></div>
         <div class="tile"><span class="k">v0 · Vercel</span><p>The <b>design-quality</b> pick — polished pages from a prompt or a <b>Figma file</b>. Free · Premium ~$20/mo.</p></div>
         <div class="tile"><span class="k">The rest</span><p><b>Bolt.new</b> (friendliest free tier) · <b>Replit</b> (real backends, ~$20) · <b>Figma Make</b> (inside Figma seats).</p></div>
       </div>
@@ -793,7 +793,7 @@ table.tbl tr:last-child td{border-bottom:none}
 
   <!-- 28 · ELEVENLABS -->
   <section class="slide light" data-label="ElevenLabs"
-    data-speaker-notes="The star of the audio world, and the cheapest wow in the whole deck. Best-in-class text-to-speech; voice cloning — a synthetic copy of a consenting speaker's voice; and dubbing that re-narrates a video in twenty-nine-plus languages while keeping the speaker's vocal character. Use cases land themselves: re-record a voice-over instantly when legal changes one word, one consistent brand voice across all channels, audio versions of long content. Pricing is the important nuance: the free tier explicitly excludes commercial use — the five-dollar Starter is where the commercial licence begins, and a thousand credits is roughly a minute of audio.">
+    data-speaker-notes="The star of the audio world, and the cheapest wow in the whole deck. Best-in-class text-to-speech; voice cloning — a synthetic copy of a consenting speaker's voice; and dubbing that re-narrates a video in twenty-nine-plus languages while keeping the speaker's vocal character. Use cases land themselves: re-record a voice-over instantly when legal changes one word, one consistent brand voice across all channels, audio versions of long content. Pricing is the important nuance: the free tier explicitly excludes commercial use, watermarks the audio and requires you to credit ElevenLabs — the five-dollar Starter is where the commercial licence begins, and a thousand credits is roughly a minute of audio. One detail worth getting right if someone asks: Starter includes instant voice cloning, but the higher-quality professional cloning starts at Creator, at twenty-two.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">28</span><div class="crumb"><b>Landscape</b> · voice</div></div>
       <h2 class="reveal">ElevenLabs — the <span class="o">voice</span> everyone uses</h2>
@@ -805,7 +805,7 @@ table.tbl tr:last-child td{border-bottom:none}
         </ul>
         <div class="kcard reveal">
           <div class="big">$5 buys the licence</div>
-          <p>Free: 10 min/mo — <b>no commercial use.</b> Starter <b>~$5/mo</b>: commercial licence + voice cloning. Creator ~$22 · Pro ~$99/mo. The cheapest professional "wow" in this deck.</p>
+          <p>Free: 10 min/mo — <b>no commercial licence</b>, watermarked, attribution required. Starter <b>~$5/mo</b>: commercial licence + instant voice cloning. Creator ~$22 (adds <b>professional</b> cloning) · Pro ~$99/mo. The cheapest professional "wow" in this deck.</p>
         </div>
       </div>
       <p class="note reveal">Prices July 2026 — credit-based, shared across speech, dubbing &amp; effects.</p>
@@ -880,7 +880,7 @@ table.tbl tr:last-child td{border-bottom:none}
 
   <!-- 33 · RESEARCH & SEARCH -->
   <section class="slide dark" data-label="Perplexity"
-    data-speaker-notes="Perplexity is search rebuilt around answers: ask a question, get prose with citations and live sources instead of ten blue links — and the citations are the point, because you can verify every claim. Pro at twenty dollars adds twenty deep-research runs a day. Comet, its browser with the assistant built in, went free in March after being gated behind the two-hundred-dollar tier. Then deliver the kcard warning seriously: an AI browser that can act on pages you're logged into is a documented prompt-injection risk — a hidden instruction on a malicious page can steer it — so keep agentic browsers away from sensitive logged-in systems.">
+    data-speaker-notes="Perplexity is search rebuilt around answers: ask a question, get prose with citations and live sources instead of ten blue links — and the citations are the point, because you can verify every claim. Pro at twenty dollars adds twenty deep-research runs a day. Comet, its browser with the assistant built in, went free worldwide in October 2025 after launching gated behind the two-hundred-dollar Max tier. Then deliver the kcard warning seriously: an AI browser that can act on pages you're logged into is a documented prompt-injection risk — a hidden instruction on a malicious page can steer it — so keep agentic browsers away from sensitive logged-in systems.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">33</span><div class="crumb"><b>Landscape</b> · research &amp; search</div></div>
       <h2 class="reveal">Perplexity — search that <span class="o">shows its sources</span></h2>
@@ -888,7 +888,7 @@ table.tbl tr:last-child td{border-bottom:none}
         <ul class="bul reveal">
           <li>Ask a question → an answer in prose <b>with citations to live sources</b> — every claim verifiable, not ten blue links.</li>
           <li><b>Pro ~$20/mo:</b> unlimited pro search + <b>20 deep-research runs a day.</b> Enterprise ~$40/seat.</li>
-          <li><b>Comet</b> — its browser with the assistant built in — went <b>free</b> in March 2026 (was gated behind the $200 tier).</li>
+          <li><b>Comet</b> — its browser with the assistant built in — went <b>free worldwide</b> in October 2025 (before that, gated behind the $200 Max tier).</li>
         </ul>
         <div class="kcard reveal">
           <div class="big">Careful where it clicks</div>
@@ -901,12 +901,12 @@ table.tbl tr:last-child td{border-bottom:none}
 
   <!-- 34 · AUTOMATION GLUE -->
   <section class="slide light dense" data-label="Automation glue"
-    data-speaker-notes="Last category: the plumbing that connects tools so routine work happens by itself — and the AI layer means you now describe the automation in plain language instead of configuring it. Zapier is the easy leader with seven-thousand-plus apps; Make does the same for roughly a third the cost with a visual canvas and a steeper curve. Then two names to drop for the questions you'll get: n8n is open-source and self-hostable — the answer when data must not leave your infrastructure; Relay.app builds human approval steps into the flow — the AI drafts, the workflow pauses for sign-off, then publishes. Lindy for 'AI employees' that own a whole inbox.">
+    data-speaker-notes="Last category: the plumbing that connects tools so routine work happens by itself — and the AI layer means you now describe the automation in plain language instead of configuring it. Zapier is the easy leader with eight-thousand-plus apps; Make does the same for roughly a third the cost with a visual canvas and a steeper curve. Then two names to drop for the questions you'll get: n8n is open-source and self-hostable — the answer when data must not leave your infrastructure; Relay.app builds human approval steps into the flow — the AI drafts, the workflow pauses for sign-off, then publishes. Lindy for 'AI employees' that own a whole inbox.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">34</span><div class="crumb"><b>Landscape</b> · automation</div></div>
       <h2 class="reveal">The <span class="o">glue</span>: when X happens, do Y</h2>
       <div class="cards c4 reveal">
-        <div class="tile fill"><span class="k">Zapier</span><p><b>The leader</b> — 7,000+ apps; describe the automation in plain English. Free 100 tasks/mo · from ~$30/mo.</p></div>
+        <div class="tile fill"><span class="k">Zapier</span><p><b>The leader</b> — 8,000+ apps; describe the automation in plain English. Free 100 tasks/mo · from ~$30/mo.</p></div>
         <div class="tile"><span class="k">Make</span><p>Visual drag-and-drop canvas, <b>~3–5× cheaper</b> per operation (~$10–34/mo, per workspace). Steeper curve.</p></div>
         <div class="tile"><span class="k">n8n</span><p>Open-source, <b>self-hostable</b> — the answer when data must not leave your own infrastructure. Free to self-host.</p></div>
         <div class="tile"><span class="k">Relay.app · Lindy</span><p>Relay: built-in <b>human approval steps</b> — AI drafts, pauses for sign-off. Lindy: "AI employees" for a whole inbox. From ~$19–20/mo.</p></div>
@@ -1067,7 +1067,7 @@ table.tbl tr:last-child td{border-bottom:none}
 
   <!-- 42 · MCP -->
   <section class="slide dark" data-label="MCP"
-    data-speaker-notes="Point at the left half first — every AI needing custom glue to every tool, N times M integrations — then the right, where each side connects once through a shared standard. MCP, the Model Context Protocol: Anthropic open-sourced it in late 2024, OpenAI, Google and Microsoft all adopted it in 2025, and it was donated to the Linux Foundation in December — it belongs to nobody now, with over ten thousand servers. The practical takeaway for this room: every 'connector' or 'app' on the next slides is one of these under the hood — you never see it, but it's why all the assistants can suddenly reach the same tools.">
+    data-speaker-notes="Point at the left half first — every AI needing custom glue to every tool, N times M integrations — then the right, where each side connects once through a shared standard. MCP, the Model Context Protocol: Anthropic open-sourced it in late 2024, OpenAI, Google and Microsoft all adopted it in 2025, and in December it was donated to the Agentic AI Foundation, a new fund under the Linux Foundation — it belongs to nobody now, with over ten thousand servers. The practical takeaway for this room: every 'connector' or 'app' on the next slides is one of these under the hood — you never see it, but it's why all the assistants can suddenly reach the same tools.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">42</span><div class="crumb"><b>Plugging in</b> · mcp</div></div>
       <h2 class="reveal">MCP = <span class="o">"USB-C for AI"</span></h2>
@@ -1100,7 +1100,7 @@ table.tbl tr:last-child td{border-bottom:none}
         </div>
         <ul class="bul reveal">
           <li>Before: a <b>custom connector for every AI × every tool.</b> MCP is the standard plug: build once, works everywhere.</li>
-          <li>Anthropic open-sourced it (Nov 2024) → <b>OpenAI, Google &amp; Microsoft adopted it</b> (2025) → donated to the <b>Linux Foundation</b> (Dec 2025). <b>10,000+ servers</b> exist.</li>
+          <li>Anthropic open-sourced it (Nov 2024) → <b>OpenAI, Google &amp; Microsoft adopted it</b> (2025) → donated to the Linux Foundation's new <b>Agentic AI Foundation</b> (Dec 2025). <b>10,000+ servers</b> exist.</li>
           <li>Every "connector" or "app" on the next slides is <b>this, under the hood.</b> You never see it — it just makes the plugs fit.</li>
         </ul>
       </div>
@@ -1179,7 +1179,7 @@ table.tbl tr:last-child td{border-bottom:none}
       <h2 class="reveal">The <span class="o">universal adapter</span> for everything else</h2>
       <div class="split">
         <ul class="bul reveal">
-          <li>No official connector for your tool? <b>Zapier MCP</b>: one connection exposes <b>~30,000 actions across ~9,000 apps</b> to Claude or ChatGPT.</li>
+          <li>No official connector for your tool? <b>Zapier MCP</b>: one connection exposes <b>~30,000 actions across 8,000+ apps</b> to Claude or ChatGPT.</li>
           <li>Setup is paste-a-URL — then just say it: <i>"add this lead to the CRM and post a summary to the channel."</i></li>
           <li><b>Make</b> offers the same on its visual canvas. Both need their own (cheap) plan + a paid AI plan.</li>
         </ul>
