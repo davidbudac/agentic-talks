@@ -16,18 +16,20 @@ Author: **David Budáč / ČSOB** · English
   plugging AI into Excel / PowerPoint & co. (connectors, MCP). Pricing runs through
   every tool slide (July 2026 snapshot). 57 slides. **No live demos.**
 - **[`agentic-ai.html`](agentic-ai.html)** — *Intro to Agentic AI* (Claude Code for
-  beginners). Model / harness / agent, the loop, context, permissions, memory & MCP. 37 slides.
+  beginners). Model / harness / agent, the loop, context, permissions, memory & MCP. 43 slides.
 - **[`agentic-engineering.html`](agentic-engineering.html)** — *Agentic Engineering*
   (basics for developers). Told as an evolution story — each chapter fixes the previous
   one's limitation: the predictor → thinking → hands (tool calls) → the loop → the bill
   → split the work (routing & subagents) → make it stick (CLAUDE.md, skills, plugins).
-  One thread throughout: the context window. 53 slides. **No live demos.**
+  One thread throughout: the context window. 60 slides. **No live demos.**
 
 ## View it
 
 - **Locally:** open any `.html` deck in a modern browser (macOS:
-  `open index.html` opens the chooser). `index.html` is a small chooser page
-  linking all three decks.
+  `open index.html` opens the chooser). `index.html` routes the reader to the
+  right deck by audience — non-technical (01) → developers new to agents (02) →
+  developers going deeper (03) — with self-identification bullets per deck and a
+  one-question fallback for the undecided.
 - **Online:** if GitHub Pages is enabled, the repo's Pages root serves the chooser.
 
 ## Navigate
@@ -120,6 +122,6 @@ animations read the same palette from `remotion/src/theme.ts`.
 | `ai-toolbox.html` | *The AI Toolbox* deck — tool landscape for everyone (no live demo). |
 | `agentic-ai.html` | *Intro to Agentic AI* deck — beginners. |
 | `agentic-engineering.html` | *Agentic Engineering* deck — developers (no live demo). |
-| `index.html` | Chooser page linking the decks (GitHub Pages root). |
+| `index.html` | Landing page routing readers to the right deck by audience (GitHub Pages root). |
 | `assets/anim/` | Rendered concept animations (MP4 loops) embedded by the decks. |
 | `remotion/` | Remotion project — sources for the animations. |
