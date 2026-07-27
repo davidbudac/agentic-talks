@@ -1,13 +1,20 @@
 # Agentic talks
 
-Two zero-build HTML slide decks on how coding agents actually work — a beginner
-intro and a developer follow-up. Same template, same aesthetic. The key concepts
-are illustrated by short looping animations rendered with
+Three zero-build HTML slide decks — a general-audience tool landscape, a beginner
+intro to agentic AI, and a developer follow-up. Same template, same aesthetic. The
+key concepts are illustrated by short looping animations rendered with
 [Remotion](https://www.remotion.dev/) (in `assets/anim/`, sources in `remotion/`),
 so keep those folders next to the `.html` files.
 
 Author: **David Budáč / ČSOB** · English
 
+- **[`ai-toolbox.html`](ai-toolbox.html)** — *The AI Toolbox* (a field guide for
+  everyone — no coding background assumed). The big three labs (Claude app / Code /
+  Cowork / Design, ChatGPT / Codex, Gemini / Notebook / Flow) → what agents can do →
+  the wider tool landscape by category (app builders, video, HyperFrames, avatars,
+  voice, music, images, decks, copy, research, automation) → five real-world stories →
+  plugging AI into Excel / PowerPoint & co. (connectors, MCP). Pricing runs through
+  every tool slide (July 2026 snapshot). 57 slides. **No live demos.**
 - **[`agentic-ai.html`](agentic-ai.html)** — *Intro to Agentic AI* (Claude Code for
   beginners). Model / harness / agent, the loop, context, permissions, memory & MCP. 37 slides.
 - **[`agentic-engineering.html`](agentic-engineering.html)** — *Agentic Engineering*
@@ -18,9 +25,9 @@ Author: **David Budáč / ČSOB** · English
 
 ## View it
 
-- **Locally:** open either `.html` file in any modern browser (macOS:
+- **Locally:** open any `.html` deck in a modern browser (macOS:
   `open index.html` opens the chooser). `index.html` is a small chooser page
-  linking both decks.
+  linking all three decks.
 - **Online:** if GitHub Pages is enabled, the repo's Pages root serves the chooser.
 
 ## Navigate
@@ -38,6 +45,15 @@ The deck has a built-in editor (no build step):
 - Bottom-right: **↺ Reset** (restore original) · **⬇ Export** (download a clean copy with edits baked in).
 
 ## What's covered
+
+**The AI Toolbox** — pricing literacy (subscription / credits / per-seat / API) ·
+chatbot vs agent, the loop, no memory (condensed core) · the big three labs plan by
+plan (Cowork, Claude Design, agent mode, Gemini Notebook, Veo/Flow) · product churn ·
+a week of real tasks · the wider landscape with a leader per category · the fine print
+(licences, public tiers, provenance, credit budgeting) · five documented stories
+(Project Vend, the superbug result, CFA/IMO, the security double, the Super Bowl
+twist) · connectors & MCP, Claude/ChatGPT × Office, M365 Copilot & Gemini Workspace,
+Zapier MCP.
 
 **Intro to Agentic AI** — model / harness / agent · the agent loop · reasoning /
 "thinking" · current SOTA models & harnesses · pricing (subscriptions vs API) ·
@@ -73,8 +89,8 @@ rendered MP4s as muted loops that restart whenever you land on their slide:
 
 | Animation | Concept | Used on |
 |-----------|---------|---------|
-| `agent-loop` | the agent loop (propose → run → result → repeat) | intro s10 · eng s17 |
-| `stateless` | no memory: every call re-sends the whole history | intro s6 · eng s14 |
+| `agent-loop` | the agent loop (propose → run → result → repeat) | toolbox s6 · intro s10 · eng s17 |
+| `stateless` | no memory: every call re-sends the whole history | toolbox s7 · intro s6 · eng s14 |
 | `next-token` | next-token prediction with sampled probabilities | eng s4 |
 | `quality` | quality vs. context fill — context rot / the dumb zone | intro s22 · eng s28 |
 | `kv-cache` | KV caching: cached prefix + fresh tail, append-only | eng s26 |
@@ -101,8 +117,9 @@ animations read the same palette from `remotion/src/theme.ts`.
 
 | File | Purpose |
 |------|---------|
+| `ai-toolbox.html` | *The AI Toolbox* deck — tool landscape for everyone (no live demo). |
 | `agentic-ai.html` | *Intro to Agentic AI* deck — beginners. |
 | `agentic-engineering.html` | *Agentic Engineering* deck — developers (no live demo). |
-| `index.html` | Chooser page linking both decks (GitHub Pages root). |
-| `assets/anim/` | Rendered concept animations (MP4 loops) embedded by both decks. |
+| `index.html` | Chooser page linking the decks (GitHub Pages root). |
+| `assets/anim/` | Rendered concept animations (MP4 loops) embedded by the decks. |
 | `remotion/` | Remotion project — sources for the animations. |

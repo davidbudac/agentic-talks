@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Title-slide mockups — Ember design system</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="ember_design_system/styles.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#cdc3b0;font-family:var(--font-body);color:var(--ink);padding:56px 40px 96px}
+.sheet{max-width:1040px;margin:0 auto}
+.sheet>h1{font:700 44px var(--font-display);letter-spacing:-.02em;margin-bottom:8px}
+.sheet>.intro{font-size:17px;color:#5c5446;max-width:70ch;margin-bottom:48px;line-height:1.5}
+.concept{margin-bottom:72px}
+.concept h2{font:700 26px var(--font-display);letter-spacing:-.02em;margin-bottom:4px}
+.concept h2 .tag{font:600 13px var(--font-mono);color:var(--coral-ink);letter-spacing:.1em;text-transform:uppercase;margin-right:12px}
+.concept .why{font-size:15.5px;color:#5c5446;max-width:78ch;margin-bottom:20px;line-height:1.5}
+.frame{width:1000px;height:562.5px;overflow:hidden;border-radius:6px;box-shadow:0 12px 40px rgba(22,19,14,.28);margin-bottom:26px}
+.frame .slide{width:1920px;height:1080px;transform:scale(.5208);transform-origin:top left;position:relative;overflow:hidden;background:var(--ink);color:var(--on-dark)}
+.deck-label{font:600 12px var(--font-mono);letter-spacing:.12em;text-transform:uppercase;color:#7a7060;margin:0 0 8px 2px}
+
+/* ═══ shared slide bits ═══ */
+.eyebrow-row{display:flex;justify-content:space-between;align-items:baseline;
+  font:600 24px var(--font-mono);letter-spacing:.1em;text-transform:uppercase}
+.eyebrow-row .k{color:var(--coral)}
+.eyebrow-row .meta{color:var(--on-dark-faint);font-weight:500}
+.author{font-size:26px;color:var(--on-dark-muted)}
+.author b{color:var(--coral);font-weight:600}
+
+/* ═══ CONCEPT 1 — Monolith ═══ */
+.mono1{display:flex;flex-direction:column;justify-content:space-between;padding:88px 96px 0}
+.mono1 .hero{margin-top:-30px}
+.mono1 h1{font:700 232px/0.9 var(--font-display);letter-spacing:-.035em;color:var(--on-dark)}
+.mono1.eng h1{font-size:186px}
+.mono1 h1 .dot{color:var(--coral)}
+.mono1 .sub{font-size:38px;color:var(--on-dark-muted);margin-top:44px;font-weight:400}
+.mono1 .sub b{color:var(--on-dark);font-weight:600}
+.mono1 .foot{border-top:1px solid var(--line-dark);margin:0 -96px;padding:34px 96px 40px;
+  display:flex;justify-content:space-between;align-items:center}
+.mono1 .loopline{font:500 24px var(--font-mono);letter-spacing:.04em;color:var(--on-dark-faint)}
+.mono1 .loopline .a{color:var(--coral)}
+.mono1 .loopline .w{color:var(--on-dark-muted)}
+
+/* ═══ CONCEPT 2 — Terminal ═══ */
+.term2{display:flex;flex-direction:column;padding:80px 96px 72px;gap:0}
+.term2 .hero{margin-top:64px}
+.term2 h1{font:700 148px/0.92 var(--font-display);letter-spacing:-.03em}
+.term2 h1 .o{color:var(--coral)}
+.term2 .sub{font-size:34px;color:var(--on-dark-muted);margin-top:28px}
+.term2 .sub b{color:var(--on-dark);font-weight:600}
+.term2 .term{margin-top:auto;background:var(--term-bg);border:1px solid var(--line-dark);
+  border-radius:14px;overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,.45)}
+.term2 .tbar{background:var(--term-bar);padding:16px 22px;display:flex;gap:10px;align-items:center}
+.term2 .tbar i{width:15px;height:15px;border-radius:50%;display:block}
+.term2 .tbar .r{background:var(--term-dot-red)}.term2 .tbar .y{background:var(--term-dot-yellow)}.term2 .tbar .g{background:var(--term-dot-green)}
+.term2 .tbar .tt{font:500 18px var(--font-mono);color:var(--on-dark-faint);margin-left:12px;letter-spacing:.04em}
+.term2 pre{font:500 25px/1.75 var(--font-mono);color:var(--code-text);padding:30px 36px 34px;white-space:pre-wrap}
+.term2 pre .p{color:var(--coral)}
+.term2 pre .c{color:var(--code-comment)}
+.term2 pre .ok{color:var(--positive-on-dark)}
+.term2 pre .cursor{display:inline-block;width:.6em;height:1.15em;background:var(--coral);vertical-align:text-bottom}
+.term2 .foot2{display:flex;justify-content:space-between;align-items:center;margin-top:40px}
+
+/* ═══ CONCEPT 3 — Split that earns its right panel ═══ */
+.split3{display:grid;grid-template-columns:1.08fr .92fr}
+.split3 .L{padding:88px 96px 76px;display:flex;flex-direction:column;justify-content:space-between}
+.split3 .kick{font:600 24px var(--font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--coral);margin-bottom:30px}
+.split3 h1{font:700 138px/0.95 var(--font-display);letter-spacing:-.03em}
+.split3 .sub{font-size:36px;color:var(--on-dark-muted);margin-top:34px;max-width:24ch}
+.split3 .sub b{color:var(--on-dark);font-weight:600}
+.split3 .R{background:var(--ink-2);border-left:1px solid var(--line-dark);position:relative;
+  display:flex;flex-direction:column;justify-content:center;gap:0;padding:0 110px}
+.split3 .R::after{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--coral)}
+.split3 .stack{display:flex;flex-direction:column}
+.split3 .cell{padding:52px 8px 50px;border-bottom:1px solid var(--line-dark)}
+.split3 .cell:last-child{border-bottom:none}
+.split3 .cell .lab{font:700 54px var(--font-display);letter-spacing:-.02em;color:var(--on-dark)}
+.split3 .cell .lab .n{font:600 22px var(--font-mono);color:var(--on-dark-faint);letter-spacing:.1em;margin-right:22px;vertical-align:14px}
+.split3 .cell .gl{font:400 24px var(--font-body);color:var(--on-dark-muted);margin-top:10px}
+.split3 .cell.hot .lab{color:var(--coral)}
+.split3 .cell.hot .gl{color:var(--on-dark-muted)}
+.split3 .arrow{align-self:flex-start;color:var(--coral);font:600 30px var(--font-mono);padding:2px 8px}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <h1>Title-slide mockups</h1>
+  <p class="intro">Three directions, each shown for both decks so they stay visual siblings. All of them
+  drop the big-glyph badge and keep everything on Ember tokens (ink / paper / coral, Space Grotesk +
+  IBM Plex). Slides are true 1920×1080, scaled to fit.</p>
+
+  <!-- ═══════════════ CONCEPT 1 ═══════════════ -->
+  <div class="concept">
+    <h2><span class="tag">Option 1</span>Monolith</h2>
+    <p class="why">Full-bleed typography — the title *is* the visual. No split, no badge; the mega
+    numeral scale the system already uses for section dividers, a coral full stop, and a footer strip
+    that quietly states each deck's core loop in mono. Calm, confident, zero filler.</p>
+
+    <p class="deck-label">Agentic AI (beginner deck)</p>
+    <div class="frame"><div class="slide mono1">
+      <div class="eyebrow-row" style="padding-top:0"><span class="k">A beginner's introduction</span><span class="meta">Internal talk · July 2026</span></div>
+      <div class="hero">
+        <h1>Agentic<br>AI<span class="dot">.</span></h1>
+        <p class="sub">How <b>Claude&nbsp;Code</b>, <b>Codex</b> &amp; co. actually work</p>
+      </div>
+      <div class="foot">
+        <div class="author">David&nbsp;Budáč &nbsp;/&nbsp; <b>ČSOB</b></div>
+        <div class="loopline"><span class="w">model</span> <span class="a">→</span> <span class="w">harness</span> <span class="a">→</span> <span class="w">agent</span> <span class="a">↺</span></div>
+      </div>
+    </div></div>
+
+    <p class="deck-label">Agentic Engineering (developer deck)</p>
+    <div class="frame"><div class="slide mono1 eng">
+      <div class="eyebrow-row" style="padding-top:0"><span class="k">A developer's guide</span><span class="meta">Internal talk · July 2026</span></div>
+      <div class="hero">
+        <h1>Agentic<br>Engineering<span class="dot">.</span></h1>
+        <p class="sub">From <b>token prediction</b> to <b>self-verifying loops</b></p>
+      </div>
+      <div class="foot">
+        <div class="author">David&nbsp;Budáč &nbsp;/&nbsp; <b>ČSOB</b></div>
+        <div class="loopline"><span class="w">context</span> <span class="a">→</span> <span class="w">effort</span> <span class="a">→</span> <span class="w">verify</span> <span class="a">↺</span></div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- ═══════════════ CONCEPT 2 ═══════════════ -->
+  <div class="concept">
+    <h2><span class="tag">Option 2</span>Terminal hero</h2>
+    <p class="why">Leans into each deck's actual hook. The beginner deck opens with “you type one line —
+    it does the rest”, so the title slide shows exactly that, mid-run, cursor blinking. It also
+    foreshadows the live demo running during the talk. Uses the system's terminal chrome tokens.</p>
+
+    <p class="deck-label">Agentic AI (beginner deck)</p>
+    <div class="frame"><div class="slide term2">
+      <div class="eyebrow-row"><span class="k">A beginner's introduction to agentic AI</span><span class="meta">Internal talk · July 2026</span></div>
+      <div class="hero">
+        <h1>Agentic <span class="o">AI</span></h1>
+        <p class="sub">How <b>Claude&nbsp;Code</b>, <b>Codex</b> &amp; co. actually work</p>
+      </div>
+      <div class="term">
+        <div class="tbar"><i class="r"></i><i class="y"></i><i class="g"></i><span class="tt">live — running during this talk</span></div>
+        <pre><span class="p">you ›</span> "the invoice test is failing — fix it"
+<span class="c">⏺ reading test output…</span>  <span class="ok">✓</span>  <span class="c">editing invoice.py…</span>  <span class="ok">✓</span>  <span class="c">re-running tests…</span> <span class="cursor"></span></pre>
+      </div>
+      <div class="foot2">
+        <div class="author">David&nbsp;Budáč &nbsp;/&nbsp; <b>ČSOB</b></div>
+        <div class="loopline" style="font:500 22px var(--font-mono);color:var(--on-dark-faint);letter-spacing:.04em">model · harness · agent</div>
+      </div>
+    </div></div>
+
+    <p class="deck-label">Agentic Engineering (developer deck)</p>
+    <div class="frame"><div class="slide term2">
+      <div class="eyebrow-row"><span class="k">A developer's guide to coding agents</span><span class="meta">Internal talk · July 2026</span></div>
+      <div class="hero">
+        <h1>Agentic <span class="o">Engineering</span></h1>
+        <p class="sub">From <b>token prediction</b> to <b>self-verifying loops</b></p>
+      </div>
+      <div class="term">
+        <div class="tbar"><i class="r"></i><i class="y"></i><i class="g"></i><span class="tt">same model — better engineering</span></div>
+        <pre><span class="p">$</span> claude -p "fix the flaky invoice test; run pytest to prove it"
+<span class="c">⏺ plan…</span> <span class="ok">✓</span>  <span class="c">edit…</span> <span class="ok">✓</span>  <span class="c">pytest — 42 passed</span> <span class="ok">✓</span>  <span class="c">done in 3 loops</span> <span class="cursor"></span></pre>
+      </div>
+      <div class="foot2">
+        <div class="author">David&nbsp;Budáč &nbsp;/&nbsp; <b>ČSOB</b></div>
+        <div class="loopline" style="font:500 22px var(--font-mono);color:var(--on-dark-faint);letter-spacing:.04em">context · effort · loops</div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- ═══════════════ CONCEPT 3 ═══════════════ -->
+  <div class="concept">
+    <h2><span class="tag">Option 3</span>Split, but the right panel earns its place</h2>
+    <p class="why">Keeps your current two-column DNA — but replaces the decorative badge with the deck's
+    actual thesis: the three concepts the talk will teach, stacked as a numbered ladder with the
+    punchline in coral. The audience reads the whole talk's arc before you say a word.</p>
+
+    <p class="deck-label">Agentic AI (beginner deck)</p>
+    <div class="frame"><div class="slide split3">
+      <div class="L">
+        <div class="eyebrow-row"><span class="meta">Internal talk · July 2026</span></div>
+        <div>
+          <div class="kick">A beginner's introduction to agentic AI</div>
+          <h1>Agentic<br>AI</h1>
+          <p class="sub">How <b>Claude&nbsp;Code</b>, <b>Codex</b> &amp; co. actually work</p>
+        </div>
+        <div class="author">David&nbsp;Budáč &nbsp;/&nbsp; <b>ČSOB</b></div>
+      </div>
+      <div class="R"><div class="stack">
+        <div class="cell"><div class="lab"><span class="n">01</span>Model</div><div class="gl">predicts the next token — nothing more</div></div>
+        <div class="cell"><div class="lab"><span class="n">02</span>Harness</div><div class="gl">gives it hands: files, terminal, tools</div></div>
+        <div class="cell hot"><div class="lab"><span class="n">03</span>Agent</div><div class="gl">the loop that ties them together</div></div>
+      </div></div>
+    </div></div>
+
+    <p class="deck-label">Agentic Engineering (developer deck)</p>
+    <div class="frame"><div class="slide split3">
+      <div class="L">
+        <div class="eyebrow-row"><span class="meta">Internal talk · July 2026</span></div>
+        <div>
+          <div class="kick">A developer's guide to working with coding agents</div>
+          <h1>Agentic<br>Engineering</h1>
+          <p class="sub">From <b>token prediction</b> to <b>self-verifying loops</b></p>
+        </div>
+        <div class="author">David&nbsp;Budáč &nbsp;/&nbsp; <b>ČSOB</b></div>
+      </div>
+      <div class="R"><div class="stack">
+        <div class="cell"><div class="lab"><span class="n">01</span>Context</div><div class="gl">what the model sees decides what it does</div></div>
+        <div class="cell"><div class="lab"><span class="n">02</span>Effort</div><div class="gl">match reasoning depth to the problem</div></div>
+        <div class="cell hot"><div class="lab"><span class="n">03</span>Loops</div><div class="gl">agents that verify their own work</div></div>
+      </div></div>
+    </div></div>
+  </div>
+
+</div>
+</body>
+</html>
