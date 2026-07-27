@@ -178,6 +178,8 @@ table.tbl tr:last-child td{border-bottom:none}
 .diagram svg{width:100%; height:auto; max-height:var(--diag-h)}
 .diagram video{width:auto; height:auto; max-width:100%; max-height:var(--diag-h);
   display:block; background:transparent; border-radius:var(--radius-md)}
+.diagram img.shot{width:100%; height:auto; max-height:var(--diag-h); object-fit:cover; object-position:top;
+  display:block; border-radius:var(--radius-md); border:var(--bw-hair) solid var(--s-card-border)}
 .dg-box{fill:var(--s-card-bg); stroke:var(--s-card-border); stroke-width:1.5}
 .dg-box.hot{fill:var(--coral); stroke:var(--coral)}
 .dg-box.outer{fill:var(--s-outer-fill); stroke:var(--coral); stroke-dasharray:6 5}
@@ -707,11 +709,65 @@ table.tbl tr:last-child td{border-bottom:none}
     </div>
   </section>
 
+  <!-- BEYOND CODE: LOVABLE -->
+  <section class="slide light" data-label="Lovable"
+    data-speaker-notes="First of three quick looks beyond coding. Lovable is the poster child of prompt-to-app: describe what you want in plain language, get a working web app with pages, a database and login, then keep iterating by chat. Land the connection out loud — it is the same model-plus-harness loop from earlier, just wrapped in a friendly website instead of a terminal. Name-drop v0 and Bolt as the same category so nobody thinks it is one magic product.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>Landscape</b> · beyond code</div></div>
+      <h2 class="reveal">Lovable: describe an app, <span class="o">get an app</span></h2>
+      <div class="split">
+        <div class="diagram reveal"><img class="shot" src="assets/tools/lovable.png" alt="Lovable's homepage: 'Build something Lovable — create apps and websites by chatting with AI', with a single prompt box"></div>
+        <ul class="bul reveal">
+          <li>You <b>describe</b> the app in plain language — Lovable builds a <b>working web app</b>: pages, database, login, hosting.</li>
+          <li>Then you <b>iterate by chat</b>: "make the header sticky", "add a monthly chart" — it edits the live app.</li>
+          <li>Underneath: <b>the same agent loop</b> we just saw, wrapped in a website. Same category: <b>v0, Bolt, Replit.</b></li>
+        </ul>
+      </div>
+      <p class="note reveal"><b>Example:</b> "Build an expense tracker: add expenses, a monthly chart, login." → minutes later, a running app on a shareable link — source code included.</p>
+    </div>
+  </section>
+
+  <!-- BEYOND CODE: HIGGSFIELD -->
+  <section class="slide dark" data-label="Higgsfield"
+    data-speaker-notes="Second stop: video generation. Higgsfield turns text or image prompts into finished clips — cinematic camera moves, characters that stay consistent across shots, many generation models under one roof. The agentic part to point at is the AI director: it splits your idea into shots, generates each, and stitches them — our loop again, different domain. It is aimed squarely at marketing and social content; the product-URL-to-ready-ad flow usually gets a reaction. Keep expectations honest: short punchy clips, not feature films.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">21</span><div class="crumb"><b>Landscape</b> · beyond code</div></div>
+      <h2 class="reveal">Higgsfield: video from a <span class="o">prompt</span></h2>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>Text or image in → <b>finished video out</b>: cinematic camera moves, characters that stay <b>consistent</b> across shots.</li>
+          <li>An <b>AI director</b> splits your idea into shots, generates each, stitches them — <b>our loop again</b>, different domain.</li>
+          <li>Built for <b>marketing &amp; social</b> — even "product URL in → ready-made ad out". Same category: <b>Sora, Veo, Runway.</b></li>
+        </ul>
+        <div class="diagram reveal"><img class="shot" src="assets/tools/higgsfield.png" alt="Higgsfield's explore page with tiles for Cinema Studio, Seedance 2.0, and other video generation tools"></div>
+      </div>
+      <p class="note reveal"><b>Example:</b> "A 15-second ad for our mobile bank: phone in hand, city at dusk, upbeat." → storyboard → shots → rendered clip, ready for social.</p>
+    </div>
+  </section>
+
+  <!-- BEYOND CODE: HYPERFRAMES -->
+  <section class="slide light" data-label="HyperFrames"
+    data-speaker-notes="Close the trio with HyperFrames and connect it back to the deck: it renders video from an ordinary web page, deterministically — and writing web pages is exactly what coding agents are good at. Claude Code installs it as a skill (that word gets its own slide later) and then edits video the way it edits code, by chat. Same file in, same video out, which is what makes it automatable. If anyone asks: this deck's own animations are the same video-from-code idea.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">22</span><div class="crumb"><b>Landscape</b> · beyond code</div></div>
+      <h2 class="reveal">HyperFrames: agents that <span class="o">make video</span></h2>
+      <div class="split">
+        <div class="diagram reveal"><img class="shot" src="assets/tools/hyperframes.png" alt="HyperFrames homepage: 'HyperFrames lets AI agents compose videos by writing HTML, CSS and JS' — an HTML file on the left rendering to a video on the right"></div>
+        <ul class="bul reveal">
+          <li>Open-source (HeyGen): a <b>web page</b> with timing attributes in → a pixel-perfect <b>MP4</b> out.</li>
+          <li>Built <b>for agents</b>: Claude Code installs it as a skill, then <b>edits video by chat</b> — the way it edits code.</li>
+          <li>Same file in → <b>same video out, every time</b> — ideal for explainers, product demos, captions.</li>
+        </ul>
+      </div>
+      <p class="note reveal"><b>Example:</b> "Turn this slide's diagram into a 20-second animated explainer." → the agent writes the HTML, renders it, hands you the MP4.</p>
+    </div>
+  </section>
+
   <!-- PRICING SUBSCRIPTIONS -->
   <section class="slide light" data-label="Subscriptions"
     data-speaker-notes="Keep this brisk: free, roughly twenty a month for entry, roughly a hundred or two hundred for heavy use. What the higher tiers buy is more usage and earlier access to the newest models, not a different product. Flag the date, prices move, so verify before quoting any of this outside the room.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>Landscape</b> · plans</div></div>
+      <div class="slide-head reveal"><span class="snum">23</span><div class="crumb"><b>Landscape</b> · plans</div></div>
       <h2 class="reveal">Subscriptions <span class="o">(consumer)</span></h2>
       <table class="tbl reveal">
         <thead><tr><th>Tier</th><th>Claude (Anthropic)</th><th>ChatGPT (OpenAI)</th></tr></thead>
@@ -729,7 +785,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide dark" data-label="Subscription vs API"
     data-speaker-notes="Two different billing worlds: a flat fee for a person using the app, versus per-token pricing for software you build. Use the note to make tokens tangible — a long session re-reads your files dozens of times, and on the API you pay for every re-read. That is the setup for caching, which comes a few slides later.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">21</span><div class="crumb"><b>Landscape</b> · plan vs API</div></div>
+      <div class="slide-head reveal"><span class="snum">24</span><div class="crumb"><b>Landscape</b> · plan vs API</div></div>
       <h2 class="reveal">Subscription <span class="o">vs API</span></h2>
       <div class="split">
         <div class="tile reveal"><span class="k">Subscription</span><p>A <b>flat monthly fee</b> for a person using the app or CLI. Simple, capped by usage limits. Best for everyday work.</p></div>
@@ -743,7 +799,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide dark dense" data-label="Smarter can be cheaper"
     data-speaker-notes="This is the counter-intuitive slide of the money section, so slow down. Everyone walks in assuming the big model is the expensive one, and per word that is exactly right. Per job it is often backwards. Read the three bullets in order, and land the middle one hard: a weaker model flails, and every retry re-sends the entire conversation, which is the no-memory point from earlier coming back to bite. Then the chart, same benchmark score, seventy-six percent fewer words. Give one more number if the room is engaged, Opus 5 reaching its best score on about a seventh of the thinking of the model before it. Finish on the caveat so nobody leaves thinking the answer is always the biggest model, because for simple jobs it genuinely is not.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">22</span><div class="crumb"><b>Landscape</b> · what it really costs</div></div>
+      <div class="slide-head reveal"><span class="snum">25</span><div class="crumb"><b>Landscape</b> · what it really costs</div></div>
       <h2 class="reveal">Cheaper per word, <span class="o">pricier per job</span></h2>
       <div class="split">
         <ul class="bul reveal">
@@ -777,7 +833,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide light" data-label="What context is"
     data-speaker-notes="Define context plainly as everything the model sees in one call, and point at the stacked bars as that one call's payload. Give them the scale: two hundred thousand tokens is roughly five hundred pages, up to a million on top models. The sentence to repeat is that if it is not in the context, it does not exist for the model.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">23</span><div class="crumb"><b>Context</b> · what it is</div></div>
+      <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>Context</b> · what it is</div></div>
       <h2 class="reveal">Context = the model's <span class="o">short-term memory</span></h2>
       <div class="split">
         <ul class="bul reveal">
@@ -805,7 +861,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide dark" data-label="Context rot"
     data-speaker-notes="The counter-intuitive bit: a fuller window makes the model worse, not better. Cite the two studies briefly — Chroma found all eighteen frontier models degraded as input grew, Stanford found facts buried in the middle get missed. Be honest that the forty percent threshold is folklore; the lesson that survives is to keep the window well under full, because curation beats capacity.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">24</span><div class="crumb"><b>Context</b> · the "stupidity threshold"</div></div>
+      <div class="slide-head reveal"><span class="snum">27</span><div class="crumb"><b>Context</b> · the "stupidity threshold"</div></div>
       <h2 class="reveal">Fuller context = <span class="o">dumber model</span></h2>
       <div class="split">
         <div class="diagram reveal">
@@ -825,7 +881,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide light" data-label="Keep it lean"
     data-speaker-notes="This is the most immediately useful slide for beginners, so give them the habit: glance at the context percentage the harness shows you. Past roughly forty or fifty percent, quality starts slipping, so trim or start fresh. This is the third LIVE checkpoint — show the real percentage on the running agent and note how far it has climbed.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">25</span><div class="crumb"><b>Context</b> · keeping it lean</div></div>
+      <div class="slide-head reveal"><span class="snum">28</span><div class="crumb"><b>Context</b> · keeping it lean</div></div>
       <h2 class="reveal">Watch it, <span class="o">keep it lean</span></h2>
       <span class="extag reveal">EXAMPLE — a harness status line</span>
       <div class="code reveal"><span class="d">claude-opus-5</span>     <span class="o">context: 38%</span>  (76k / 200k)   <span class="g">$0.42</span></div>
@@ -842,7 +898,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide dark" data-label="Caching and compaction"
     data-speaker-notes="Two things the harness does for you automatically. Caching remembers the stable parts between calls so re-using them is cheaper and faster; compaction summarises older turns when the window fills. Land the catch — whatever the summary leaves out is simply gone, which is why the summary has to keep what matters.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>Context</b> · under the hood</div></div>
+      <div class="slide-head reveal"><span class="snum">29</span><div class="crumb"><b>Context</b> · under the hood</div></div>
       <h2 class="reveal">How harnesses <span class="o">cope</span></h2>
       <div class="cards c2 reveal">
         <div class="tile"><span class="k">Caching</span><p>Stable parts (system prompt, CLAUDE.md, files) are <b>remembered between calls</b>, so reusing them is much <b>cheaper and faster</b> than re-reading every time.</p></div>
@@ -856,7 +912,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide light" data-label="Sub-agents"
     data-speaker-notes="A sub-agent is just another agent with its own fresh context, sent off to do one messy job and report back a conclusion. The numbers make it click: eighty thousand tokens burned inside the sub-agent, two hundred tokens land in the main chat. Mention they can run in parallel, which is why big tasks finish faster than you would expect.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">27</span><div class="crumb"><b>Context</b> · sub-agents</div></div>
+      <div class="slide-head reveal"><span class="snum">30</span><div class="crumb"><b>Context</b> · sub-agents</div></div>
       <h2 class="reveal">Sub-agents <span class="o">keep the main context clean</span></h2>
       <div class="split">
         <div class="diagram reveal">
@@ -876,7 +932,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide dark" data-label="Permissions"
     data-speaker-notes="Three modes, increasing freedom: ask before anything risky, pre-approve a class of actions, or ask for nothing at all. This is the fourth LIVE checkpoint — say which mode the running agent is in and why it has not interrupted us. Note that Codex has the same three under different names, and close on the rule that more freedom demands more isolation.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">28</span><div class="crumb"><b>Safety</b> · permissions</div></div>
+      <div class="slide-head reveal"><span class="snum">31</span><div class="crumb"><b>Safety</b> · permissions</div></div>
       <h2 class="reveal">Safety through <span class="o">permissions</span></h2>
       <div class="cards c3 reveal">
         <div class="tile"><span class="k">Default · ask</span><p>The agent <b>asks first</b> before any risky action (write a file, run a command). Safest.</p></div>
@@ -891,7 +947,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide light" data-label="Bypass mode"
     data-speaker-notes="Be concrete about when no-questions-asked mode is fine: a throwaway container, an isolated copy, a CI job. Be equally concrete about when it is not — your main machine, with real credentials and no backup. The prompt-injection point is worth spelling out for beginners: the agent reads files and web pages, and a hidden instruction in either can steer it.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">29</span><div class="crumb"><b>Safety</b> · bypass mode</div></div>
+      <div class="slide-head reveal"><span class="snum">32</span><div class="crumb"><b>Safety</b> · bypass mode</div></div>
       <h2 class="reveal">When is "YOLO" <span class="o">OK?</span></h2>
       <div class="split">
         <ul class="bul reveal">
@@ -911,7 +967,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide dark" data-label="Back to no memory"
     data-speaker-notes="Call back to Memento deliberately — this is the setup for the last section. Pose the question the way they would: how do we give it knowledge that survives across sessions without stuffing the window full and rotting it. Then name the four answers coming up, so the next three slides feel like a list being completed.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">30</span><div class="crumb"><b>Memory</b> · the problem</div></div>
+      <div class="slide-head reveal"><span class="snum">33</span><div class="crumb"><b>Memory</b> · the problem</div></div>
       <h2 class="reveal">Back to the model with <span class="o">no memory</span></h2>
       <div class="split">
         <div class="kcard reveal">
@@ -931,7 +987,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide light" data-label="CLAUDE.md and memory"
     data-speaker-notes="Read two lines of the example file — package manager and never edit generated — and say this is just a plain text file in the repo root. It gets read at the start of every session, so it is where standing rules and conventions belong. Add that memory files are the same idea but written by the agent itself, and some harnesses do it automatically.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">31</span><div class="crumb"><b>Memory</b> · CLAUDE.md</div></div>
+      <div class="slide-head reveal"><span class="snum">34</span><div class="crumb"><b>Memory</b> · CLAUDE.md</div></div>
       <h2 class="reveal">Memory that <span class="o">survives sessions</span></h2>
       <span class="extag reveal">EXAMPLE — CLAUDE.md in your repo root</span>
       <div class="code reveal"><span class="c"># CLAUDE.md — auto-injected into every prompt</span>
@@ -950,7 +1006,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide dark" data-label="Skills and plugins"
     data-speaker-notes="A skill is just a folder with instructions in it, and the key property is that it loads only when a task matches. That is why you can keep dozens around for almost no context cost — it is the answer to the rot problem from two slides back. Use the make-slides example: dormant until you ask for a deck, then the full playbook loads. Plugins are how a team shares all of that.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">32</span><div class="crumb"><b>Memory</b> · skills &amp; plugins</div></div>
+      <div class="slide-head reveal"><span class="snum">35</span><div class="crumb"><b>Memory</b> · skills &amp; plugins</div></div>
       <h2 class="reveal">Skills &amp; <span class="o">plugins</span></h2>
       <div class="split">
         <ul class="bul reveal">
@@ -970,7 +1026,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide light" data-label="Touching other systems"
     data-speaker-notes="Three ways an agent reaches beyond your files: call an API, run a command-line tool like a human would, or connect through MCP. The reassuring part for beginners is that CLIs and APIs already exist everywhere and the agent simply uses them. MCP is the newer, agent-native option, and it gets the next slide.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">33</span><div class="crumb"><b>Reaching out</b> · other systems</div></div>
+      <div class="slide-head reveal"><span class="snum">36</span><div class="crumb"><b>Reaching out</b> · other systems</div></div>
       <h2 class="reveal">Touching <span class="o">other systems</span></h2>
       <div class="cards c3 reveal">
         <div class="tile"><span class="k">API</span><p>Services called <b>programmatically</b> over HTTP. The agent sends a request, gets structured data back.</p></div>
@@ -985,7 +1041,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide dark" data-label="MCP"
     data-speaker-notes="Point at the left half of the diagram first — every app needing custom glue to every tool — then the right, where each side connects once through a shared standard. Say it is Anthropic's open standard from late 2024 and thousands of MCP servers now exist. The calendar-plus-email example is the one that lands for non-developers: two systems, one agent, no glue code.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">34</span><div class="crumb"><b>Reaching out</b> · MCP</div></div>
+      <div class="slide-head reveal"><span class="snum">37</span><div class="crumb"><b>Reaching out</b> · MCP</div></div>
       <h2 class="reveal">MCP = <span class="o">"USB-C for agents"</span></h2>
       <div class="split">
         <div class="diagram reveal">
@@ -1027,7 +1083,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide light" data-label="Three things to remember"
     data-speaker-notes="If they forget everything else, these three should stick. Just talk to it like a colleague — natural language beats over-engineered prompts. Remember Memento, because the agent only knows what is in front of it. And feed it well, keep a CLAUDE.md, and ask it to write a summary when handing work on. Close on the note: most of prompting skill is really managing what the agent can see.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">35</span><div class="crumb"><b>In practice</b> · how to work with it</div></div>
+      <div class="slide-head reveal"><span class="snum">38</span><div class="crumb"><b>In practice</b> · how to work with it</div></div>
       <h2 class="reveal">If you remember <span class="o">three things</span></h2>
       <div class="cards c3 reveal">
         <div class="tile"><span class="k">1 · Just talk to it</span><p>Treat it like a <b>colleague</b>, in plain language. Give the goal &amp; context, then iterate. Natural beats over-engineered prompts.</p></div>
@@ -1042,7 +1098,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide dark" data-label="Summary"
     data-speaker-notes="Recite the first bullet as the spine of the talk: stateless brain, harness as body and memory, agent as the loop. Then the three practical takeaways — mind the context, permissions are the safety net, and CLAUDE.md, skills and MCP give a forgetful model durable knowledge. Wrap up the live demo here by showing what it finished, then open the floor.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">36</span><div class="crumb"><b>Summary</b></div></div>
+      <div class="slide-head reveal"><span class="snum">39</span><div class="crumb"><b>Summary</b></div></div>
       <h2 class="reveal">What to <span class="o">take away</span></h2>
       <ul class="bul reveal">
         <li><b>Model</b> = a stateless brain · <b>harness</b> = the body &amp; memory · <b>agent</b> = the loop that does things.</li>
@@ -1059,7 +1115,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide light" data-label="Sources 1 of 2"
     data-speaker-notes="Leave this up while questions run rather than reading it. Point out the two most useful starting places for a beginner — the Claude models overview and the pricing page — and say the rest are there for anyone who wants the primary source. Mention the deck lives in the repo, so nobody needs to photograph the links.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">37</span><div class="crumb"><b>Sources</b> · further reading</div></div>
+      <div class="slide-head reveal"><span class="snum">40</span><div class="crumb"><b>Sources</b> · further reading</div></div>
       <h2 class="reveal">Sources &amp; <span class="o">links</span> (1/2)</h2>
       <div class="links reveal">
         <div class="linkcol">
@@ -1087,7 +1143,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide light" data-label="Sources 2 of 2"
     data-speaker-notes="These are the papers behind the claims made earlier — context rot, lost in the middle, and the reasoning-faithfulness research from the thinking section. Point at them if anyone challenges a number. Repeat the closing caveat: everything here was verified in July 2026 and moves fast, so re-check before quoting.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">38</span><div class="crumb"><b>Sources</b> · context, memory &amp; MCP</div></div>
+      <div class="slide-head reveal"><span class="snum">41</span><div class="crumb"><b>Sources</b> · context, memory &amp; MCP</div></div>
       <h2 class="reveal">Sources &amp; <span class="o">links</span> (2/2)</h2>
       <div class="links reveal">
         <div class="linkcol">
