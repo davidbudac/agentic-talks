@@ -223,6 +223,8 @@ table.tbl tr:last-child td{border-bottom:none}
 .ts-foot{border-top:var(--bw-hair) solid var(--line-dark); margin:0 -96px; padding:34px 96px 40px;
   display:flex; justify-content:space-between; align-items:center}
 .ts-author{font-size:26px; color:var(--on-dark-muted)}
+.ts-author a{color:inherit;text-decoration:none;border-bottom:1px solid transparent;transition:border-color .15s}
+.ts-author a:hover{border-color:currentColor}
 .ts-author b{color:var(--coral); font-weight:var(--w-semibold)}
 .ts-loopline{font:500 24px var(--font-mono); letter-spacing:.04em; color:var(--on-dark-faint)}
 .ts-loopline .a{color:var(--coral)}
@@ -284,7 +286,7 @@ table.tbl tr:last-child td{border-bottom:none}
       <p class="ts-sub">What it <b>costs</b>, how to spend <b>context</b> well, how to <b>orchestrate</b> more than one agent, and how to <b>measure</b> whether any of it worked.</p>
     </div>
     <div class="ts-foot">
-      <div class="ts-author">David&nbsp;Budáč</div>
+      <div class="ts-author"><a href="https://davidbudac.cz" target="_blank" rel="noopener">David&nbsp;Budáč</a></div>
       <div class="ts-loopline"><span class="w">cost</span> <span class="a">→</span> <span class="w">context</span> <span class="a">→</span> <span class="w">orchestration</span> <span class="a">→</span> <span class="w">measurement</span></div>
     </div>
   </section>
