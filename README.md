@@ -1,13 +1,13 @@
 # Agentic talks
 
-Four zero-build HTML slide decks — a general-audience tool landscape, a beginner
-intro to agentic AI, a developer follow-up, and an engineering deep dive. Same
-template, same aesthetic. The
+Five zero-build HTML slide decks — a general-audience tool landscape, a beginner
+intro to agentic AI, a developer follow-up, an engineering deep dive, and a
+workshop on working smarter with agents. Same template, same aesthetic. The
 key concepts are illustrated by short looping animations rendered with
 [Remotion](https://www.remotion.dev/) (in `assets/anim/`, sources in `remotion/`),
 so keep those folders next to the `.html` files.
 
-Author: **David Budáč / ČSOB** · English
+Author: **David Budáč** · English
 
 - **[`ai-toolbox.html`](ai-toolbox.html)** — *The AI Toolbox* (a field guide for
   everyone — no coding background assumed). The big three labs (Claude app / Code /
@@ -29,13 +29,19 @@ Author: **David Budáč / ČSOB** · English
   constraint → the caching mechanism (exact-match prefixes, breakpoints, TTL & eviction)
   and its economics → where the two reinforce each other → what's allowed under a
   subscription vs an API key. 39 slides, ~30 min. **No live demos.**
+- **[`working-smarter.html`](working-smarter.html)** — *Working Smarter with
+  Agents* (WIP, half-day workshop with live demos, for engineers already using
+  Claude Code who want to level up). What agents really cost (tokens,
+  subscriptions, Bedrock) → efficient context work (CLAUDE.md, evals, traces) →
+  orchestration, local open-source models & alternative harnesses. ~85 slides.
 
 ## View it
 
 - **Locally:** open any `.html` deck in a modern browser (macOS:
   `open index.html` opens the chooser). `index.html` routes the reader to the
   right deck by audience — non-technical (01) → developers new to agents (02) →
-  developers going deeper (03) → devs & IT admins on internals (04) — with
+  developers going deeper (03) → devs & IT admins on internals (04) → devs
+  levelling up on cost & orchestration (05, WIP) — with
   self-identification bullets per deck and a
   one-question fallback for the undecided.
 - **Online:** if GitHub Pages is enabled, the repo's Pages root serves the chooser.
@@ -78,7 +84,11 @@ and Fable techniques (advisor & orchestrator patterns) · the agentic ladder · 
 verifiers (spiralling, reward-hacking) · dynamic workflows · skills & plugins.
 A single **context** thread ties the sections together (🧵 markers throughout).
 
-## Live demo (agentic-ai deck only, optional)
+**Working Smarter with Agents** *(WIP)* — what agents really cost (tokens,
+subscriptions, Bedrock) · efficient context work (CLAUDE.md, evals, traces) ·
+orchestration, local open-source models & alternative harnesses.
+
+## Live demo (agentic-ai deck, optional; the WIP workshop deck also has live demos)
 
 The *Intro to Agentic AI* deck is built to run alongside a live agent. There's a **🔴 LIVE** anchor
 slide right after the hook, and **🔴 LIVE** callback markers on the loop,
@@ -131,6 +141,7 @@ animations read the same palette from `remotion/src/theme.ts`.
 | `agentic-ai.html` | *Intro to Agentic AI* deck — beginners. |
 | `agentic-engineering.html` | *Agentic Engineering* deck — developers (no live demo). |
 | `subagents-prompt-caching.html` | *Subagents & Prompt Caching* deck — engineering deep dive (no live demo). |
+| `working-smarter.html` | *Working Smarter with Agents* deck — half-day workshop on cost, context efficiency & orchestration (WIP, live demos). |
 | `index.html` | Landing page routing readers to the right deck by audience (GitHub Pages root). |
 | `assets/anim/` | Rendered concept animations (MP4 loops) embedded by the decks. |
 | `remotion/` | Remotion project — sources for the animations. |

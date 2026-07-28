@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Presentations — David Budáč / ČSOB</title>
+<title>Presentations — David Budáč</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
@@ -45,7 +45,7 @@
 
   .cards{display:grid;gap:clamp(.8rem,1.8vw,1.1rem);grid-template-columns:1fr}
   @media (min-width:880px){ .cards{grid-template-columns:repeat(2,1fr)} }
-  @media (min-width:1240px){ .cards{grid-template-columns:repeat(4,1fr)} }
+  @media (min-width:1240px){ .cards{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))} }
 
   a.card{display:flex;flex-direction:column;text-decoration:none;color:var(--on-dark);
     border:1.5px solid var(--line-dark);border-radius:14px;
@@ -58,6 +58,7 @@
   .badge .num{display:inline-flex;align-items:center;justify-content:center;min-width:1.55rem;height:1.55rem;
     border:1.5px solid var(--coral);border-radius:50%;color:var(--coral);font-weight:600;font-size:.72rem}
   .badge .lvl{color:var(--on-dark-muted);font-weight:500}
+  .badge .wip{color:var(--coral);font-weight:600;border:1px solid var(--coral);border-radius:4px;padding:.05rem .4rem;font-size:.64rem;letter-spacing:.08em}
 
   a.card .t{font-family:var(--font-d);font-weight:700;letter-spacing:-.02em;font-size:clamp(1.15rem,2.4vw,1.45rem);
     color:var(--coral);margin-bottom:.5rem;display:flex;align-items:baseline;justify-content:space-between;gap:.8rem;line-height:1.1}
@@ -96,9 +97,9 @@
 </head>
 <body>
   <div class="wrap">
-    <div class="kick">David Budáč · ČSOB</div>
-    <h1>Four decks.<br>Pick your level.</h1>
-    <p class="sub">Same story, four depths. Each deck is self-contained — you don't need the one before it. <b>Find yourself below</b> and start there.</p>
+    <div class="kick">David Budáč</div>
+    <h1>Five decks.<br>Pick your level.</h1>
+    <p class="sub">Same story, five depths. Each deck is self-contained — you don't need the one before it. <b>Find yourself below</b> and start there.</p>
 
     <div class="ladder">
       <span class="step"><b>01</b> Curious, non-technical</span>
@@ -108,6 +109,8 @@
       <span class="step"><b>03</b> Developers going deeper</span>
       <span class="sep">———</span>
       <span class="step"><b>04</b> Devs &amp; IT admins, internals</span>
+      <span class="sep">———</span>
+      <span class="step"><b>05</b> Devs, cost &amp; orchestration</span>
     </div>
 
     <div class="cards">
@@ -164,6 +167,19 @@
         <p class="meta">39 slides · devs &amp; IT admins · 30 min</p>
       </a>
 
+      <a class="card" href="./working-smarter.html">
+        <span class="badge"><span class="num">05</span><span class="lvl">Level up</span><span class="wip">WIP</span></span>
+        <span class="t">Working Smarter with Agents <span class="arw">→</span></span>
+        <p class="who">You already use Claude Code every day. Now make it cheaper, leaner, and better-orchestrated.</p>
+        <ul class="fit">
+          <li>You want to know what agents really cost — tokens, subscriptions, Bedrock</li>
+          <li>You want efficient context work: CLAUDE.md, evals, traces</li>
+          <li>You're curious about orchestration, local open-source models &amp; alternative harnesses</li>
+        </ul>
+        <p class="covers"><b>You'll leave with</b> A practical playbook for cheaper, measurable, better-orchestrated agent work.</p>
+        <p class="meta">~85 slides · experienced devs · half-day workshop</p>
+      </a>
+
     </div>
 
     <div class="unsure">
@@ -184,6 +200,10 @@
         <div>
           <dt>Do you know why a cache hit is 10× cheaper?</dt>
           <dd>Not exactly → <a href="./subagents-prompt-caching.html">Subagents &amp; Prompt Caching</a></dd>
+        </div>
+        <div>
+          <dt>Already fluent and want to optimize cost, context, and orchestration?</dt>
+          <dd>Yes → <a href="./working-smarter.html">Working Smarter with Agents</a></dd>
         </div>
       </dl>
     </div>
