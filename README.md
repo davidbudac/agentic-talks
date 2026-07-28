@@ -1,7 +1,8 @@
 # Agentic talks
 
-Three zero-build HTML slide decks — a general-audience tool landscape, a beginner
-intro to agentic AI, and a developer follow-up. Same template, same aesthetic. The
+Four zero-build HTML slide decks — a general-audience tool landscape, a beginner
+intro to agentic AI, a developer follow-up, and an engineering deep dive. Same
+template, same aesthetic. The
 key concepts are illustrated by short looping animations rendered with
 [Remotion](https://www.remotion.dev/) (in `assets/anim/`, sources in `remotion/`),
 so keep those folders next to the `.html` files.
@@ -22,13 +23,20 @@ Author: **David Budáč / ČSOB** · English
   one's limitation: the predictor → thinking → hands (tool calls) → the loop → the bill
   → split the work (routing & subagents) → make it stick (CLAUDE.md, skills, plugins).
   One thread throughout: the context window. 60 slides. **No live demos.**
+- **[`subagents-prompt-caching.html`](subagents-prompt-caching.html)** — *Subagents &
+  Prompt Caching* (engineering deep dive, for developers & IT admins). Subagent
+  architecture and the four context crossings → parallel fan-out and its integration
+  constraint → the caching mechanism (exact-match prefixes, breakpoints, TTL & eviction)
+  and its economics → where the two reinforce each other → what's allowed under a
+  subscription vs an API key. 39 slides, ~30 min. **No live demos.**
 
 ## View it
 
 - **Locally:** open any `.html` deck in a modern browser (macOS:
   `open index.html` opens the chooser). `index.html` routes the reader to the
   right deck by audience — non-technical (01) → developers new to agents (02) →
-  developers going deeper (03) — with self-identification bullets per deck and a
+  developers going deeper (03) → devs & IT admins on internals (04) — with
+  self-identification bullets per deck and a
   one-question fallback for the undecided.
 - **Online:** if GitHub Pages is enabled, the repo's Pages root serves the chooser.
 
@@ -122,6 +130,7 @@ animations read the same palette from `remotion/src/theme.ts`.
 | `ai-toolbox.html` | *The AI Toolbox* deck — tool landscape for everyone (no live demo). |
 | `agentic-ai.html` | *Intro to Agentic AI* deck — beginners. |
 | `agentic-engineering.html` | *Agentic Engineering* deck — developers (no live demo). |
+| `subagents-prompt-caching.html` | *Subagents & Prompt Caching* deck — engineering deep dive (no live demo). |
 | `index.html` | Landing page routing readers to the right deck by audience (GitHub Pages root). |
 | `assets/anim/` | Rendered concept animations (MP4 loops) embedded by the decks. |
 | `remotion/` | Remotion project — sources for the animations. |

@@ -23,7 +23,7 @@
   /* Coral quarter-circle motif, bleeding off the top-right corner */
   body::before{content:"";position:absolute;top:0;right:0;width:clamp(160px,26vw,340px);height:clamp(160px,26vw,340px);
     background:var(--coral);border-bottom-left-radius:100%;pointer-events:none}
-  .wrap{width:100%;max-width:1120px;position:relative;z-index:1}
+  .wrap{width:100%;max-width:1320px;position:relative;z-index:1}
 
   .kick{font-family:var(--font-m);font-size:clamp(.66rem,1.5vw,.85rem);letter-spacing:.1em;text-transform:uppercase;
     color:var(--coral);font-weight:600;margin-bottom:.8rem}
@@ -44,7 +44,8 @@
   }
 
   .cards{display:grid;gap:clamp(.8rem,1.8vw,1.1rem);grid-template-columns:1fr}
-  @media (min-width:880px){ .cards{grid-template-columns:repeat(3,1fr)} }
+  @media (min-width:880px){ .cards{grid-template-columns:repeat(2,1fr)} }
+  @media (min-width:1240px){ .cards{grid-template-columns:repeat(4,1fr)} }
 
   a.card{display:flex;flex-direction:column;text-decoration:none;color:var(--on-dark);
     border:1.5px solid var(--line-dark);border-radius:14px;
@@ -81,7 +82,8 @@
   .unsure h2{font-family:var(--font-m);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;
     color:var(--coral);font-weight:600;margin-bottom:.7rem}
   .unsure dl{display:grid;gap:.5rem}
-  @media (min-width:880px){ .unsure dl{grid-template-columns:repeat(3,1fr);gap:.55rem 1.4rem} }
+  @media (min-width:880px){ .unsure dl{grid-template-columns:repeat(2,1fr);gap:.55rem 1.4rem} }
+  @media (min-width:1240px){ .unsure dl{grid-template-columns:repeat(4,1fr)} }
   .unsure dt{color:var(--on-dark-muted);font-size:clamp(.78rem,1.5vw,.88rem);line-height:1.4}
   .unsure dd{margin-top:.2rem}
   .unsure a{color:var(--coral);text-decoration:none;font-weight:600;font-size:clamp(.78rem,1.5vw,.88rem);
@@ -95,8 +97,8 @@
 <body>
   <div class="wrap">
     <div class="kick">David Budáč · ČSOB</div>
-    <h1>Three decks.<br>Pick your level.</h1>
-    <p class="sub">Same story, three depths. Each deck is self-contained — you don't need the one before it. <b>Find yourself below</b> and start there.</p>
+    <h1>Four decks.<br>Pick your level.</h1>
+    <p class="sub">Same story, four depths. Each deck is self-contained — you don't need the one before it. <b>Find yourself below</b> and start there.</p>
 
     <div class="ladder">
       <span class="step"><b>01</b> Curious, non-technical</span>
@@ -104,6 +106,8 @@
       <span class="step"><b>02</b> Developers, new to agents</span>
       <span class="sep">———</span>
       <span class="step"><b>03</b> Developers going deeper</span>
+      <span class="sep">———</span>
+      <span class="step"><b>04</b> Devs &amp; IT admins, internals</span>
     </div>
 
     <div class="cards">
@@ -147,6 +151,19 @@
         <p class="meta">60 slides · no live demo</p>
       </a>
 
+      <a class="card" href="./subagents-prompt-caching.html">
+        <span class="badge"><span class="num">04</span><span class="lvl">Deep dive · one topic</span></span>
+        <span class="t">Subagents &amp; Prompt Caching <span class="arw">→</span></span>
+        <p class="who">You've done the deep end. Now you want the two primitives that decide what an agent costs.</p>
+        <ul class="fit">
+          <li>You spawn subagents and want to know exactly what crosses the boundary</li>
+          <li>Your token bill is the problem, not the model</li>
+          <li>You run this on a subscription and need to know what's allowed</li>
+        </ul>
+        <p class="covers"><b>You'll leave with</b> Subagent isolation and the four context crossings, parallel fan-out and its limits, cache breakpoints, exact-match prefixes, TTL &amp; eviction, break-even math — and the subscription-vs-API-key rules.</p>
+        <p class="meta">39 slides · devs &amp; IT admins · 30 min</p>
+      </a>
+
     </div>
 
     <div class="unsure">
@@ -163,6 +180,10 @@
         <div>
           <dt>Do you know why a long chat gets dumber?</dt>
           <dd>No, and I want to → <a href="./agentic-engineering.html">Agentic Engineering</a></dd>
+        </div>
+        <div>
+          <dt>Do you know why a cache hit is 10× cheaper?</dt>
+          <dd>Not exactly → <a href="./subagents-prompt-caching.html">Subagents &amp; Prompt Caching</a></dd>
         </div>
       </dl>
     </div>
