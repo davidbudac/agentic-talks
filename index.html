@@ -58,7 +58,14 @@
   .badge .num{display:inline-flex;align-items:center;justify-content:center;min-width:1.55rem;height:1.55rem;
     border:1.5px solid var(--coral);border-radius:50%;color:var(--coral);font-weight:600;font-size:.72rem}
   .badge .lvl{color:var(--on-dark-muted);font-weight:500}
-  .badge .wip{color:var(--coral);font-weight:600;border:1px solid var(--coral);border-radius:4px;padding:.05rem .4rem;font-size:.64rem;letter-spacing:.08em}
+  .badge .wip{color:var(--on-dark-faint);font-weight:600;border:1px solid var(--line-dark);border-radius:4px;padding:.05rem .4rem;font-size:.64rem;letter-spacing:.08em}
+
+  /* --- not finished yet: dimmed, but still openable --- */
+  a.card.wip-card{opacity:.5;filter:saturate(.35)}
+  a.card.wip-card .badge .num{border-color:var(--on-dark-faint);color:var(--on-dark-faint)}
+  a.card.wip-card .t{color:var(--on-dark-muted)}
+  a.card.wip-card .fit li::before{color:var(--on-dark-faint)}
+  a.card.wip-card:hover{opacity:.85;filter:none;border-color:var(--line-dark-2);box-shadow:none}
 
   a.card .t{font-family:var(--font-d);font-weight:700;letter-spacing:-.02em;font-size:clamp(1.15rem,2.4vw,1.45rem);
     color:var(--coral);margin-bottom:.5rem;display:flex;align-items:baseline;justify-content:space-between;gap:.8rem;line-height:1.1}
@@ -90,6 +97,10 @@
   .unsure a{color:var(--coral);text-decoration:none;font-weight:600;font-size:clamp(.78rem,1.5vw,.88rem);
     border-bottom:1px solid rgba(255,92,53,.35)}
   .unsure a:hover{border-bottom-color:var(--coral)}
+  .unsure a.wip-link{color:var(--on-dark-muted);border-bottom-color:var(--line-dark)}
+  .unsure a.wip-link:hover{border-bottom-color:var(--on-dark-muted)}
+  .wip-note{font-family:var(--font-m);font-size:.6rem;letter-spacing:.08em;color:var(--on-dark-faint);
+    border:1px solid var(--line-dark);border-radius:4px;padding:.05rem .3rem;vertical-align:.08em}
 
   .foot{margin-top:clamp(1.1rem,3vh,1.7rem);color:var(--on-dark-faint);font-family:var(--font-m);font-size:.75rem;letter-spacing:.02em;line-height:1.6}
   .foot b{color:var(--on-dark-muted);font-weight:500}
@@ -98,8 +109,8 @@
 <body>
   <div class="wrap">
     <div class="kick"><a href="https://davidbudac.cz" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">David Budáč</a></div>
-    <h1>Five decks.<br>Pick your level.</h1>
-    <p class="sub">Same story, five depths. Each deck is self-contained — you don't need the one before it. <b>Find yourself below</b> and start there.</p>
+    <h1>Seven decks.<br>Pick your level.</h1>
+    <p class="sub">Same story, from first steps to deep dives. Each deck is self-contained — you don't need the one before it. <b>Find yourself below</b> and start there.</p>
 
     <div class="ladder">
       <span class="step"><b>01</b> Curious, non-technical</span>
@@ -110,7 +121,7 @@
       <span class="sep">———</span>
       <span class="step"><b>04</b> Devs &amp; IT admins, internals</span>
       <span class="sep">———</span>
-      <span class="step"><b>05</b> Devs, cost &amp; orchestration</span>
+      <span class="step"><b>05–07</b> Deep dives: cost · orchestration · measurement</span>
     </div>
 
     <div class="cards">
@@ -167,17 +178,43 @@
         <p class="meta">39 slides · devs &amp; IT admins · 30 min</p>
       </a>
 
-      <a class="card" href="./working-smarter.html">
-        <span class="badge"><span class="num">05</span><span class="lvl">Level up</span><span class="wip">WIP</span></span>
-        <span class="t">Working Smarter with Agents <span class="arw">→</span></span>
-        <p class="who">You already use Claude Code every day. Now make it cheaper, leaner, and better-orchestrated.</p>
+      <a class="card wip-card" href="./cost-and-context.html">
+        <span class="badge"><span class="num">05</span><span class="lvl">Deep dive · level up</span><span class="wip">WIP</span></span>
+        <span class="t">Cost &amp; Context <span class="arw">→</span></span>
+        <p class="who">You already use Claude Code every day. Now find out what it actually bills — and stop wasting the window.</p>
         <ul class="fit">
-          <li>You want to know what agents really cost — tokens, subscriptions, Bedrock</li>
-          <li>You want efficient context work: CLAUDE.md, evals, traces</li>
-          <li>You're curious about orchestration, local open-source models &amp; alternative harnesses</li>
+          <li>You want the real numbers — tokens, subscriptions, API, Bedrock</li>
+          <li>You've never traced what one session costs, line by line</li>
+          <li>Your CLAUDE.md has grown and nobody's measured it</li>
         </ul>
-        <p class="covers"><b>You'll leave with</b> A practical playbook for cheaper, measurable, better-orchestrated agent work.</p>
-        <p class="meta">~85 slides · experienced devs · half-day workshop</p>
+        <p class="covers"><b>You'll leave with</b> Three pricing meters, a which-plan-for-which-team table, the context lifecycle, CLAUDE.md hygiene, /clear vs /compact — and a live bloated-vs-lean demo.</p>
+        <p class="meta">28 slides · experienced devs · ~30 min</p>
+      </a>
+
+      <a class="card wip-card" href="./orchestrating-agents.html">
+        <span class="badge"><span class="num">06</span><span class="lvl">Deep dive · level up</span><span class="wip">WIP</span></span>
+        <span class="t">Orchestrating Agents <span class="arw">→</span></span>
+        <p class="who">One agent is table stakes. Run several — safely — and give them the right capabilities.</p>
+        <ul class="fit">
+          <li>You're juggling agent terminals and want a dashboard, worktrees, or a backlog-driven fleet</li>
+          <li>You want sandboxing before you let agents run unattended</li>
+          <li>You keep debating skills vs CLAUDE.md vs MCP vs CLI</li>
+        </ul>
+        <p class="covers"><b>You'll leave with</b> A map of the orchestration ecosystem, the three failure modes of parallel agents, skills &amp; plugins for teams, and a per-capability MCP-vs-CLI heuristic.</p>
+        <p class="meta">32 slides · experienced devs · ~30 min</p>
+      </a>
+
+      <a class="card wip-card" href="./measuring-what-works.html">
+        <span class="badge"><span class="num">07</span><span class="lvl">Deep dive · level up</span><span class="wip">WIP</span></span>
+        <span class="t">Measuring What Works <span class="arw">→</span></span>
+        <p class="who">Stop arguing about prompts from vibes. Measure — then route models and harnesses by the numbers.</p>
+        <ul class="fit">
+          <li>Your team tweaks CLAUDE.md and prompts with no way to compare</li>
+          <li>You want to read traces for wasted turns and real cost</li>
+          <li>You're curious about open-weight models, local inference &amp; alternative harnesses</li>
+        </ul>
+        <p class="covers"><b>You'll leave with</b> A minimal eval loop you can start this week, trace-reading skills, the July-2026 open-model landscape (Gemma 4, Qwen 3.6, GLM-5.2), and daily habits that compound.</p>
+        <p class="meta">31 slides · experienced devs · ~30 min</p>
       </a>
 
     </div>
@@ -202,13 +239,20 @@
           <dd>Not exactly → <a href="./subagents-prompt-caching.html">Subagents &amp; Prompt Caching</a></dd>
         </div>
         <div>
-          <dt>Already fluent and want to optimize cost, context, and orchestration?</dt>
-          <dd>Yes → <a href="./working-smarter.html">Working Smarter with Agents</a></dd>
+          <dt>Know what your agent sessions actually bill?</dt>
+          <dd>Not really → <a class="wip-link" href="./cost-and-context.html">Cost &amp; Context</a> <span class="wip-note">WIP</span></dd>
+        </div>
+        <div>
+          <dt>Ever run more than one agent at once?</dt>
+          <dd>Want to → <a class="wip-link" href="./orchestrating-agents.html">Orchestrating Agents</a> <span class="wip-note">WIP</span></dd>
+        </div>
+        <div>
+          <dt>Still judging prompt changes by feel?</dt>
+          <dd>Yes → <a class="wip-link" href="./measuring-what-works.html">Measuring What Works</a> <span class="wip-note">WIP</span></dd>
         </div>
       </dl>
     </div>
 
-    <p class="foot">Self-contained HTML · <b>← →</b> or <b>Space</b> to navigate · <b>N</b> notes · <b>P</b> presenter view · <b>F</b> fullscreen · mid-2026 snapshot.</p>
   </div>
 </body>
 </html>
