@@ -169,9 +169,11 @@ table.tbl tr:last-child td{border-bottom:none}
 .gloss .def{font-size:var(--body-size); color:var(--s-text); line-height:1.35}
 .uses{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-5)}
 
-/* ── DIAGRAMS (pure HTML/CSS boxes — no video assets in this deck) ── */
+/* ── DIAGRAMS (inline SVG + explainer video) ─────────────────────── */
 .diagram{width:100%; display:flex; justify-content:center; align-items:center; margin-top:8px; min-height:0}
 .diagram svg{width:100%; height:auto; max-height:var(--diag-h)}
+.diagram video{width:auto; height:auto; max-width:100%; max-height:var(--diag-h);
+  display:block; background:transparent; border-radius:var(--radius-md)}
 .dg-box{fill:var(--s-card-bg); stroke:var(--s-card-border); stroke-width:1.5}
 .dg-box.hot{fill:var(--coral); stroke:var(--coral)}
 .dg-box.outer{fill:var(--s-outer-fill); stroke:var(--coral); stroke-dasharray:6 5}
@@ -182,6 +184,7 @@ table.tbl tr:last-child td{border-bottom:none}
 .dg-t.acc{fill:var(--s-accent); font-family:var(--font-mono); font-weight:var(--w-semibold)}
 .dg-line{stroke:var(--s-accent); stroke-width:2.5; fill:none}
 .dg-line.dim{stroke:var(--s-line-strong); stroke-width:1.5}
+.dg-fill-g{fill:var(--positive)} .dg-fill-a{fill:var(--warning)} .dg-fill-r{fill:var(--coral)}
 .dg-cap{text-align:center; font-size:var(--small-size); color:var(--s-muted); margin-top:10px}
 .dg-cap b{color:var(--s-text)}
 .diagram marker path{fill:var(--s-accent)}
@@ -326,9 +329,23 @@ table.tbl tr:last-child td{border-bottom:none}
       <div class="slide-head reveal"><span class="snum">3</span><div class="crumb"><b>Cost</b> · tokens, priced</div></div>
       <h2 class="reveal">Three meters, <span class="o">not one</span></h2>
       <div class="cards c3 reveal">
-        <div class="tile"><span class="k">Input</span><p>Everything sent with the request — prompt, files, tool results, history. Cheapest per-token meter.</p></div>
+        <div class="tile"><span class="k">Input</span><p>Everything sent with the request — prompt, files, tool results, history. The base meter: cheaper than output, pricier than cached.</p></div>
         <div class="tile"><span class="k">Output</span><p>Everything the model generates — including thinking tokens. The priciest meter, often 5× input.</p></div>
         <div class="tile fill"><span class="k">Cached input</span><p>Repeated context (system prompt, CLAUDE.md, tool schemas) served from cache — up to <b>~90% cheaper</b>.</p></div>
+      </div>
+      <div class="diagram reveal" style="--diag-h:240px">
+        <svg viewBox="0 0 800 150" role="img" aria-label="The same million tokens at Sonnet 5 rates: $15 as output, $3 as input, about 30 cents as cached input — a 50 times spread between the dearest and cheapest meter">
+          <text class="dg-t" x="178" y="34" font-size="14" text-anchor="end">output</text>
+          <rect class="dg-fill-r" x="190" y="14" width="540" height="30" rx="6"/>
+          <text class="dg-t on" x="720" y="34" font-size="13" text-anchor="end" font-family="var(--font-mono)">$15 /M</text>
+          <text class="dg-t" x="178" y="80" font-size="14" text-anchor="end">input</text>
+          <rect class="dg-box mid" x="190" y="60" width="108" height="30" rx="6"/>
+          <text class="dg-t mut" x="308" y="80" font-size="13" font-family="var(--font-mono)">$3 /M</text>
+          <text class="dg-t" x="178" y="126" font-size="14" text-anchor="end">cached input</text>
+          <rect class="dg-fill-g" x="190" y="106" width="12" height="30" rx="3"/>
+          <text class="dg-t mut" x="212" y="126" font-size="13" font-family="var(--font-mono)">~$0.30 /M</text>
+          <text class="dg-t acc" x="730" y="126" font-size="13" text-anchor="end">← same million tokens, 50× apart</text>
+        </svg>
       </div>
       <p class="note reveal">July 2026 rates, e.g. Sonnet 5: <b>$3/M input · $15/M output</b> (introductory $2/$10 through Aug 31, 2026). Spot-check <span class="muted">platform.claude.com/docs/en/pricing</span> before quoting externally.</p>
     </div>
@@ -490,7 +507,7 @@ table.tbl tr:last-child td{border-bottom:none}
     data-speaker-notes="Frame the three failure modes together: quality degrades as the window fills even before the hard limit, every turn re-sends (and re-bills) most of what's there, and any edit near the start of the conversation invalidates the prefix cache for everything after it. This is the thesis slide for the whole part.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">13</span><div class="crumb"><b>Context</b> · the scarce resource</div></div>
-      <h2 class="reveal">Context is <span class="o">scarce</span> — spend it like it</h2>
+      <h2 class="reveal">Context is <span class="o">scarce</span> — spend it that way</h2>
       <ul class="bul reveal">
         <li><b>Degrades with fill.</b> Quality starts slipping well before the hard token limit — a full window is not a healthy window.</li>
         <li><b>Costs on every turn.</b> Most of what's in the window gets resent (and mostly re-billed) each time you send a message.</li>
@@ -501,31 +518,30 @@ table.tbl tr:last-child td{border-bottom:none}
   </section>
 
   <section class="slide dark" data-label="The context lifecycle"
-    data-speaker-notes="Walk the flow left to right: system prompt loads once, CLAUDE.md loads once and is resent every turn, tool schemas load once, then the conversation itself grows unbounded. Point out that only the conversation portion is genuinely dynamic — everything before it is fixed overhead you pay repeatedly.">
+    data-speaker-notes="Let the animation run one full cycle before talking over it: turn 1 assembles the window piece by piece — system prompt, CLAUDE.md, tool schemas, then the conversation. Turns 2 and 3 stamp the identical fixed prefix back in (same bytes, billed again) while only the coral conversation segment grows. Point out that only the conversation portion is genuinely dynamic — everything before it is fixed overhead you pay repeatedly, and it's the part you chose.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">14</span><div class="crumb"><b>Context</b> · the lifecycle</div></div>
       <h2 class="reveal">The context lifecycle of a <span class="o">session</span></h2>
-      <div class="flow reveal">
-        <div class="step">system prompt</div><div class="arrow">→</div>
-        <div class="step">CLAUDE.md</div><div class="arrow">→</div>
-        <div class="step">tool schemas</div><div class="arrow">→</div>
-        <div class="step hot">conversation (grows every turn)</div>
+      <div class="diagram reveal">
+        <!-- Remotion animation (remotion/src/ContextLifecycle.tsx) -->
+        <video src="assets/anim/context-lifecycle-dark.mp4" width="1176" height="700" autoplay muted loop playsinline aria-label="Turn after turn, the same fixed overhead — system prompt, CLAUDE.md, tool schemas — is stamped back into the request; only the conversation segment grows"></video>
       </div>
       <p class="note reveal">Everything left of "conversation" is fixed overhead, resent and re-billed every turn (cached, but not free). Only the conversation genuinely grows — and it's the part you control least by default.</p>
     </div>
   </section>
 
   <section class="slide light" data-label="What's resent every turn"
-    data-speaker-notes="Make this concrete with a number: a session with a bloated CLAUDE.md and a dozen tool schemas can be paying several thousand tokens of fixed overhead before the user has typed a single word. Cached, so cheaper than raw input — but not zero, and it compounds across every message in a long session.">
+    data-speaker-notes="Make this concrete: in Claude Code the fixed overhead is bigger than people expect — system prompt plus built-in tool schemas alone run into the low tens of thousands of tokens, before CLAUDE.md or a single MCP server is added. Cached, so cheaper than raw input — but not zero, and it compounds across every message in a long session. Have everyone run /context live if there's time — seeing their own breakdown lands harder than the slide.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">15</span><div class="crumb"><b>Context</b> · what's resent</div></div>
       <h2 class="reveal">What gets <span class="o">resent every turn</span></h2>
       <div class="code reveal"><span class="c"># turn N of a real session — before the user has typed anything:</span>
-  <span class="o">system prompt ›</span>   <span class="b">~1–2K tokens</span>  <span class="c">(cached)</span>
-  <span class="o">CLAUDE.md ›</span>       <span class="b">variable</span>     <span class="c">(cached — but size still matters, see next slides)</span>
-  <span class="o">tool schemas ›</span>   <span class="b">~1–5K tokens</span> <span class="c">(cached, scales with tool/MCP count)</span>
-  <span class="o">conversation ›</span>   <span class="b">grows every turn</span> <span class="c">(the part you actually control turn-to-turn)</span></div>
-      <p class="note reveal">Caching makes this cheaper, not free — and a cache miss (from any upstream edit) means the <b>full</b> price, every time.</p>
+  <span class="o">system prompt ›</span>          <span class="b">~2–3K tokens</span>  <span class="c">(cached)</span>
+  <span class="o">built-in tool schemas ›</span>  <span class="b">~10–15K tokens</span> <span class="c">(cached — before a single MCP server is added)</span>
+  <span class="o">MCP tool schemas ›</span>       <span class="b">variable</span>       <span class="c">(cached, scales with server/tool count)</span>
+  <span class="o">CLAUDE.md ›</span>              <span class="b">variable</span>       <span class="c">(cached — but size still matters, see next slides)</span>
+  <span class="o">conversation ›</span>           <span class="b">grows every turn</span> <span class="c">(the part you actually control turn-to-turn)</span></div>
+      <p class="note reveal">Caching makes this cheaper, not free — and a cache miss (from any upstream edit) means the <b>full</b> price, every time. Run <b>/context</b> in Claude Code to see your own session's exact breakdown.</p>
     </div>
   </section>
 
@@ -579,7 +595,32 @@ table.tbl tr:last-child td{border-bottom:none}
         <div class="tile"><span class="k">/clear</span><p>Full reset. Use when the task is genuinely done and the next one is unrelated — don't drag dead context into a fresh task.</p></div>
         <div class="tile fill"><span class="k">/compact</span><p>Summarize and continue. Use mid-task when the window is filling but you still need the thread.</p></div>
       </div>
-      <p class="note reveal">Wrong choice either direction costs you: <b>/clear</b> too early loses context you needed; <b>/compact</b> too rarely drags a bloated window into every remaining turn.</p>
+      <div class="diagram reveal" style="--diag-h:250px">
+        <svg viewBox="0 0 800 180" role="img" aria-label="/clear empties the window completely for an unrelated task; /compact replaces a filling window with a short summary and the thread continues">
+          <defs><marker id="cc1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+          <!-- /clear: full window → empty window -->
+          <text class="dg-t mut" x="90" y="48" font-size="12" text-anchor="middle">task A — done</text>
+          <rect class="dg-box" x="20" y="60" width="140" height="36" rx="7"/>
+          <rect class="dg-fill-r" x="25" y="65" width="130" height="26" rx="4" opacity="0.85"/>
+          <text class="dg-t acc" x="200" y="52" font-size="14" text-anchor="middle">/clear</text>
+          <path class="dg-line" d="M168 78 L 226 78" marker-end="url(#cc1)"/>
+          <rect class="dg-box" x="240" y="60" width="140" height="36" rx="7"/>
+          <text class="dg-t mut" x="310" y="83" font-size="12" text-anchor="middle">empty</text>
+          <text class="dg-t mut" x="310" y="120" font-size="12" text-anchor="middle">fresh start, zero baggage</text>
+          <line class="dg-line dim" x1="400" y1="34" x2="400" y2="146"/>
+          <!-- /compact: filling window → summary + room -->
+          <text class="dg-t mut" x="490" y="48" font-size="12" text-anchor="middle">task A — mid-flight</text>
+          <rect class="dg-box" x="420" y="60" width="140" height="36" rx="7"/>
+          <rect class="dg-fill-r" x="425" y="65" width="118" height="26" rx="4" opacity="0.85"/>
+          <text class="dg-t acc" x="600" y="52" font-size="14" text-anchor="middle">/compact</text>
+          <path class="dg-line" d="M568 78 L 626 78" marker-end="url(#cc1)"/>
+          <rect class="dg-box" x="640" y="60" width="140" height="36" rx="7"/>
+          <rect class="dg-fill-g" x="645" y="65" width="34" height="26" rx="4"/>
+          <text class="dg-t mut" x="730" y="83" font-size="11" text-anchor="middle">room</text>
+          <text class="dg-t mut" x="710" y="120" font-size="12" text-anchor="middle">summary + the thread continues</text>
+        </svg>
+      </div>
+      <p class="note reveal">Wrong choice either direction costs you: <b>/clear</b> too early loses context you needed; <b>/compact</b> too rarely drags a bloated window into every remaining turn. And <b>/compact</b> isn't free — the summarization pass itself reads the whole window one more time.</p>
     </div>
   </section>
 
@@ -588,11 +629,17 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>Context</b> · subagents as firewalls</div></div>
       <h2 class="reveal">Subagents as <span class="o">context firewalls</span></h2>
-      <ul class="bul reveal">
-        <li>A subagent explores, searches, or reads in its <b>own context window</b> — the parent session never absorbs the raw noise.</li>
-        <li>Only the <b>distilled report</b> comes back. Ten files read in a subagent cost the parent session one summary.</li>
-        <li>Full mechanics: deck 04, <i>Subagents & Prompt Caching</i>.</li>
-      </ul>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>A subagent explores, searches, or reads in its <b>own context window</b> — the parent session never absorbs the raw noise.</li>
+          <li>Only the <b>distilled report</b> comes back. Ten files read in a subagent cost the parent session one summary.</li>
+          <li>Full mechanics: deck 04, <i>Subagents & Prompt Caching</i>.</li>
+        </ul>
+        <div class="diagram reveal">
+          <!-- Remotion animation (remotion/src/Subagents.tsx) -->
+          <video src="assets/anim/subagents-dark.mp4" width="1176" height="756" autoplay muted loop playsinline aria-label="A main agent delegates messy work to sub-agents that have their own context and return only a short summary"></video>
+        </div>
+      </div>
       <p class="note reveal">This is context hygiene applied at the architecture level, not just a discipline you have to remember mid-session.</p>
     </div>
   </section>
@@ -639,11 +686,12 @@ table.tbl tr:last-child td{border-bottom:none}
   </section>
 
   <section class="slide dark" data-label="Context hygiene checklist"
-    data-speaker-notes="Close the part with a checklist people can screenshot: trim CLAUDE.md to what can't be derived, clear or compact deliberately rather than by habit, push broad exploration into subagents, and read selectively. Say the thesis one more time before the recap — this is the highest-leverage change most of the room can make this week.">
+    data-speaker-notes="Close the part with a checklist people can screenshot: measure first with /context, trim CLAUDE.md to what can't be derived, clear or compact deliberately rather than by habit, push broad exploration into subagents, and read selectively. Say the thesis one more time before the recap — this is the highest-leverage change most of the room can make this week.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">24</span><div class="crumb"><b>Context</b> · recap</div></div>
       <h2 class="reveal">Context hygiene: <span class="o">the checklist</span></h2>
       <ul class="bul reveal">
+        <li>Measure first: run <b>/context</b> — know what your fixed overhead actually is.</li>
         <li>Trim CLAUDE.md to what the repo genuinely can't express.</li>
         <li>Choose <b>/clear</b> or <b>/compact</b> deliberately, not by habit.</li>
         <li>Push broad exploration into subagents — keep the parent thread distilled.</li>

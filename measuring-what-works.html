@@ -182,6 +182,7 @@ table.tbl tr:last-child td{border-bottom:none}
 .dg-t.acc{fill:var(--s-accent); font-family:var(--font-mono); font-weight:var(--w-semibold)}
 .dg-line{stroke:var(--s-accent); stroke-width:2.5; fill:none}
 .dg-line.dim{stroke:var(--s-line-strong); stroke-width:1.5}
+.dg-fill-g{fill:var(--positive)} .dg-fill-a{fill:var(--warning)} .dg-fill-r{fill:var(--coral)}
 .dg-cap{text-align:center; font-size:var(--small-size); color:var(--s-muted); margin-top:10px}
 .dg-cap b{color:var(--s-text)}
 .diagram marker path{fill:var(--s-accent)}
@@ -360,14 +361,41 @@ table.tbl tr:last-child td{border-bottom:none}
   </section>
 
   <section class="slide dark" data-label="Eval type: pass@k"
-    data-speaker-notes="Pass@k runs the same task k times and checks whether at least one attempt succeeds — useful for agentic work where variance run-to-run is real and a single run can mislead. On a fixed repo task set, it's the honest way to compare two configurations when either one occasionally fails by chance.">
+    data-speaker-notes="Pass@k runs the same task k times and checks whether at least one attempt succeeds — useful for agentic work where variance run-to-run is real and a single run can mislead. On a fixed repo task set, it's the honest way to compare two configurations when either one occasionally fails by chance. Also name the mirror metric, pass^k — all k runs succeed: pass@k measures whether a config can do the task at all, pass^k whether you can rely on it unattended. For anything you'll run in CI or overnight, pass^k is the one that matters.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">6</span><div class="crumb"><b>Evals</b> · eval types</div></div>
       <h2 class="reveal"><span class="o">Pass@k</span> on a fixed repo task set</h2>
-      <ul class="bul reveal">
-        <li>Run the same task <b>k times</b>; check whether at least one attempt succeeds.</li>
-        <li>Accounts for run-to-run variance in agentic work — a single run can mislead either direction.</li>
-      </ul>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>Run the same task <b>k times</b>; check whether at least one attempt succeeds.</li>
+          <li>Accounts for run-to-run variance in agentic work — a single run can mislead either direction.</li>
+          <li>The mirror metric: <b>pass^k</b> — <i>all</i> k attempts succeed. Use it when you need reliability, not just best-case ability.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 440 280" role="img" aria-label="The same task run five times with one success: pass at 5 passes because one success is enough, pass to the power of 5 fails because every run must succeed">
+            <text class="dg-t mut" x="250" y="26" font-size="12" text-anchor="middle">the same task, run 5 times</text>
+            <!-- run outcomes: ✗ ✗ ✓ ✗ ✗ -->
+            <circle class="dg-box" cx="120" cy="70" r="21"/>
+            <circle class="dg-box" cx="185" cy="70" r="21"/>
+            <circle class="dg-fill-g" cx="250" cy="70" r="21"/>
+            <circle class="dg-box" cx="315" cy="70" r="21"/>
+            <circle class="dg-box" cx="380" cy="70" r="21"/>
+            <text class="dg-t mut" x="120" y="76" font-size="15" text-anchor="middle">✗</text>
+            <text class="dg-t mut" x="185" y="76" font-size="15" text-anchor="middle">✗</text>
+            <text class="dg-t on" x="250" y="76" font-size="15" text-anchor="middle">✓</text>
+            <text class="dg-t mut" x="315" y="76" font-size="15" text-anchor="middle">✗</text>
+            <text class="dg-t mut" x="380" y="76" font-size="15" text-anchor="middle">✗</text>
+            <!-- two verdicts on the same runs -->
+            <text class="dg-t acc" x="96" y="146" font-size="14" text-anchor="end">pass@5</text>
+            <text class="dg-t" x="112" y="146" font-size="13"><tspan class="dg-t" style="fill:var(--positive)" font-size="15">✓</tspan>  passes — one success is enough</text>
+            <text class="dg-t mut" x="112" y="168" font-size="11.5">answers: can it do the task at all?</text>
+            <text class="dg-t acc" x="96" y="212" font-size="14" text-anchor="end">pass^5</text>
+            <text class="dg-t" x="112" y="212" font-size="13"><tspan class="dg-t acc" font-size="15">✗</tspan>  fails — every run must succeed</text>
+            <text class="dg-t mut" x="112" y="234" font-size="11.5">answers: can you rely on it unattended?</text>
+            <text class="dg-t acc" x="220" y="272" font-size="12.5" text-anchor="middle">same five runs — two different questions</text>
+          </svg>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -388,20 +416,56 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">8</span><div class="crumb"><b>Evals</b> · traces</div></div>
       <h2 class="reveal">Reading traces for <span class="o">wasted turns</span></h2>
-      <ul class="bul reveal">
-        <li>Look for: a file read twice, a plan restated repeatedly, a failed tool call retried blind.</li>
-        <li>This is where <b>deck 05, Cost & Context</b>'s cost anatomy and context hygiene become <b>actionable on a real session.</b></li>
-      </ul>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>Look for: a file read twice, a plan restated repeatedly, a failed tool call retried blind.</li>
+          <li>This is where <b>deck 05, Cost & Context</b>'s cost anatomy and context hygiene become <b>actionable on a real session.</b></li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 440 300" role="img" aria-label="A six-turn trace read top to bottom: a re-read of the same file, a restated plan and a blind retry are flagged as waste">
+            <line class="dg-line dim" x1="58" y1="30" x2="58" y2="262"/>
+            <!-- t1 ok -->
+            <text class="dg-t mut" x="48" y="45" font-size="11" text-anchor="end" font-family="var(--font-mono)">t1</text>
+            <rect class="dg-box" x="70" y="26" width="240" height="30" rx="6"/>
+            <text class="dg-t mut" x="84" y="46" font-size="12" font-family="var(--font-mono)">read auth.ts</text>
+            <!-- t2 ok -->
+            <text class="dg-t mut" x="48" y="87" font-size="11" text-anchor="end" font-family="var(--font-mono)">t2</text>
+            <rect class="dg-box" x="70" y="68" width="240" height="30" rx="6"/>
+            <text class="dg-t mut" x="84" y="88" font-size="12" font-family="var(--font-mono)">write the plan</text>
+            <!-- t3 waste: re-read -->
+            <text class="dg-t mut" x="48" y="129" font-size="11" text-anchor="end" font-family="var(--font-mono)">t3</text>
+            <rect class="dg-fill-a" x="70" y="110" width="240" height="30" rx="6" opacity="0.9"/>
+            <text class="dg-t on" x="84" y="130" font-size="12" font-family="var(--font-mono)">read auth.ts — again</text>
+            <text class="dg-t acc" x="322" y="130" font-size="12">⚑ re-read</text>
+            <!-- t4 waste: restated plan -->
+            <text class="dg-t mut" x="48" y="171" font-size="11" text-anchor="end" font-family="var(--font-mono)">t4</text>
+            <rect class="dg-fill-a" x="70" y="152" width="240" height="30" rx="6" opacity="0.9"/>
+            <text class="dg-t on" x="84" y="172" font-size="12" font-family="var(--font-mono)">restate the plan</text>
+            <text class="dg-t acc" x="322" y="172" font-size="12">⚑ repeat</text>
+            <!-- t5 waste: blind retry -->
+            <text class="dg-t mut" x="48" y="213" font-size="11" text-anchor="end" font-family="var(--font-mono)">t5</text>
+            <rect class="dg-fill-a" x="70" y="194" width="240" height="30" rx="6" opacity="0.9"/>
+            <text class="dg-t on" x="84" y="214" font-size="12" font-family="var(--font-mono)">retry failed call, same args</text>
+            <text class="dg-t acc" x="322" y="214" font-size="12">⚑ blind retry</text>
+            <!-- t6 ok -->
+            <text class="dg-t mut" x="48" y="255" font-size="11" text-anchor="end" font-family="var(--font-mono)">t6</text>
+            <rect class="dg-box" x="70" y="236" width="240" height="30" rx="6"/>
+            <text class="dg-t mut" x="84" y="256" font-size="12" font-family="var(--font-mono)">edit + tests pass ✓</text>
+            <text class="dg-t acc" x="220" y="292" font-size="12.5" text-anchor="middle">every ⚑ is tokens paid twice — half this trace is waste</text>
+          </svg>
+        </div>
+      </div>
     </div>
   </section>
 
   <section class="slide light" data-label="Trace tooling"
-    data-speaker-notes="Name the tooling category without over-selling any one vendor: OTel-based observability stacks capture agent traces the same way they'd capture microservice traces, and most model providers now ship their own usage/trace dashboards. Point people at whichever their org already has before reaching for a new tool.">
+    data-speaker-notes="Name the tooling category without over-selling any one vendor: OTel-based observability stacks capture agent traces the same way they'd capture microservice traces, and most model providers now ship their own usage/trace dashboards. Call out that Claude Code itself exports OTel metrics — tokens, cost, tool usage — via standard exporters, so a team with an existing Grafana/Datadog stack can start today with zero new vendors. Point people at whichever their org already has before reaching for a new tool.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">9</span><div class="crumb"><b>Evals</b> · tooling</div></div>
       <h2 class="reveal">Tools: <span class="o">OTel & provider dashboards</span></h2>
       <ul class="bul reveal">
         <li><b>OTel-based observability:</b> capture agent traces the same way you'd capture microservice traces.</li>
+        <li><b>Claude Code ships OTel support</b> out of the box — token, cost, and tool-usage metrics via standard exporters. Zero new vendors to start.</li>
         <li><b>Provider dashboards:</b> most model providers now ship usage/trace views out of the box — check what your org already has before adding a new tool.</li>
       </ul>
     </div>
@@ -468,7 +532,35 @@ table.tbl tr:last-child td{border-bottom:none}
         <li>No single model or harness wins on all three axes at once.</li>
         <li>Cheap and fast for bulk, mechanical work; smarter models for hard unsupervised problems; highest-taste models only where UI/copy quality is the actual bottleneck.</li>
       </ul>
-      <p class="note reveal">This is the same discipline at every layer — model choice, harness choice, even open-vs-hosted choice.</p>
+      <div class="diagram reveal" style="--diag-h:280px">
+        <svg viewBox="0 0 800 200" role="img" aria-label="Three models placed on three axes — cost efficiency, intelligence and taste: the cheap model leads on cost, the frontier model on intelligence and taste, no model leads all three">
+          <defs><marker id="ax1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+          <!-- legend -->
+          <circle class="dg-fill-g" cx="286" cy="16" r="10"/><text class="dg-t on" x="286" y="20" font-size="10" text-anchor="middle">A</text>
+          <text class="dg-t mut" x="302" y="20" font-size="12">cheap &amp; fast</text>
+          <circle class="dg-fill-a" cx="446" cy="16" r="10"/><text class="dg-t on" x="446" y="20" font-size="10" text-anchor="middle">B</text>
+          <text class="dg-t mut" x="462" y="20" font-size="12">workhorse</text>
+          <circle class="dg-fill-r" cx="586" cy="16" r="10"/><text class="dg-t on" x="586" y="20" font-size="10" text-anchor="middle">C</text>
+          <text class="dg-t mut" x="602" y="20" font-size="12">frontier</text>
+          <!-- axes -->
+          <text class="dg-t" x="196" y="66" font-size="13" text-anchor="end">cheaper →</text>
+          <line class="dg-line dim" x1="210" y1="62" x2="756" y2="62"/>
+          <circle class="dg-fill-r" cx="292" cy="62" r="11"/><text class="dg-t on" x="292" y="66" font-size="10.5" text-anchor="middle">C</text>
+          <circle class="dg-fill-a" cx="480" cy="62" r="11"/><text class="dg-t on" x="480" y="66" font-size="10.5" text-anchor="middle">B</text>
+          <circle class="dg-fill-g" cx="700" cy="62" r="11"/><text class="dg-t on" x="700" y="66" font-size="10.5" text-anchor="middle">A</text>
+          <text class="dg-t" x="196" y="122" font-size="13" text-anchor="end">smarter →</text>
+          <line class="dg-line dim" x1="210" y1="118" x2="756" y2="118"/>
+          <circle class="dg-fill-g" cx="400" cy="118" r="11"/><text class="dg-t on" x="400" y="122" font-size="10.5" text-anchor="middle">A</text>
+          <circle class="dg-fill-a" cx="600" cy="118" r="11"/><text class="dg-t on" x="600" y="122" font-size="10.5" text-anchor="middle">B</text>
+          <circle class="dg-fill-r" cx="716" cy="118" r="11"/><text class="dg-t on" x="716" y="122" font-size="10.5" text-anchor="middle">C</text>
+          <text class="dg-t" x="196" y="178" font-size="13" text-anchor="end">finer taste →</text>
+          <line class="dg-line dim" x1="210" y1="174" x2="756" y2="174"/>
+          <circle class="dg-fill-g" cx="430" cy="174" r="11"/><text class="dg-t on" x="430" y="178" font-size="10.5" text-anchor="middle">A</text>
+          <circle class="dg-fill-a" cx="580" cy="174" r="11"/><text class="dg-t on" x="580" y="178" font-size="10.5" text-anchor="middle">B</text>
+          <circle class="dg-fill-r" cx="726" cy="174" r="11"/><text class="dg-t on" x="726" y="178" font-size="10.5" text-anchor="middle">C</text>
+        </svg>
+      </div>
+      <p class="note reveal">No column sweeps all three rows — route per task. This is the same discipline at every layer: model choice, harness choice, even open-vs-hosted choice.</p>
     </div>
   </section>
 
@@ -586,6 +678,29 @@ table.tbl tr:last-child td{border-bottom:none}
         <li><b>Colibri</b>: a ~2,400-line pure-C inference engine — keeps ~17B dense params in RAM (int4), streams routed experts from disk via an LRU cache.</li>
         <li>Runs on ordinary hardware, <b>no GPU</b>, about <b>25GB RAM.</b> Speed: ~0.05–1 tokens/sec — value is running it at all, not fast.</li>
       </ul>
+      <div class="diagram reveal" style="--diag-h:280px">
+        <svg viewBox="0 0 800 200" role="img" aria-label="Colibri's trick: the bulk of GLM-5.2's mixture-of-experts weights stay on disk; each token, only the routed experts stream into a small LRU cache next to the always-resident 17-billion-parameter dense core in about 25 gigabytes of RAM">
+          <defs><marker id="cb1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+          <!-- disk -->
+          <rect class="dg-box mid" x="40" y="46" width="230" height="112" rx="12"/>
+          <text class="dg-t acc" x="155" y="74" font-size="13" text-anchor="middle">SSD</text>
+          <text class="dg-t" x="155" y="100" font-size="13" text-anchor="middle">all routed experts</text>
+          <text class="dg-t mut" x="155" y="122" font-size="12" text-anchor="middle">the bulk of ~753B params</text>
+          <text class="dg-t mut" x="155" y="142" font-size="12" text-anchor="middle">never all in memory</text>
+          <!-- stream -->
+          <path class="dg-line" d="M278 102 L 366 102" marker-end="url(#cb1)"/>
+          <text class="dg-t acc" x="322" y="86" font-size="11.5" text-anchor="middle">per token:</text>
+          <text class="dg-t acc" x="322" y="126" font-size="11.5" text-anchor="middle">only the routed few</text>
+          <!-- RAM -->
+          <rect class="dg-box outer" x="380" y="30" width="300" height="144" rx="12"/>
+          <text class="dg-t acc" x="530" y="56" font-size="13" text-anchor="middle">RAM — ~25GB total</text>
+          <rect class="dg-fill-r" x="398" y="70" width="264" height="40" rx="7" opacity="0.9"/>
+          <text class="dg-t on" x="530" y="95" font-size="12.5" text-anchor="middle">dense core ~17B · int4 · always resident</text>
+          <rect class="dg-box" x="398" y="120" width="264" height="40" rx="7"/>
+          <text class="dg-t" x="530" y="145" font-size="12.5" text-anchor="middle">hot experts — LRU cache</text>
+          <text class="dg-t acc" x="400" y="196" font-size="12.5" text-anchor="middle">no GPU anywhere · ~0.05–1 tok/s — the value is that it runs at all</text>
+        </svg>
+      </div>
     </div>
   </section>
 
@@ -662,6 +777,11 @@ table.tbl tr:last-child td{border-bottom:none}
         <div class="step">02 route</div><div class="arrow">→</div>
         <div class="step">03 habits</div>
       </div>
+      <ul class="bul reveal">
+        <li><b>Measure first.</b> Five real tasks and a written rubric beat any amount of prompt debate — start this week, in a spreadsheet.</li>
+        <li><b>Route by the numbers.</b> No model or harness wins on cost, intelligence, and taste at once — pick per task, not by loyalty.</li>
+        <li><b>Habits compound.</b> Voice, parallel sessions, background tasks, git checkpoints — small daily wins that add up.</li>
+      </ul>
       <p class="note reveal">Act on <b>measurement</b> (part 01) first — without evals, the routing choices in part 02 are just a more expensive set of vibes.</p>
     </div>
   </section>
@@ -674,8 +794,10 @@ table.tbl tr:last-child td{border-bottom:none}
       <h2 class="reveal"><span class="o">Sources</span> — all claims dated July 2026</h2>
       <div class="links reveal">
         <div class="linkcol">
-          <h3>Harnesses & pricing</h3>
+          <h3>Harnesses &amp; routing</h3>
           <a href="https://www.nxcode.io/resources/news/cursor-ai-pricing-plans-guide-2026" target="_blank" rel="noopener">Cursor pricing guide 2026<span class="u">nxcode.io</span></a>
+          <a href="https://openrouter.ai" target="_blank" rel="noopener">OpenRouter<span class="u">openrouter.ai</span></a>
+          <a href="https://ollama.com" target="_blank" rel="noopener">Ollama — local inference<span class="u">ollama.com</span></a>
         </div>
         <div class="linkcol">
           <h3>Models</h3>
