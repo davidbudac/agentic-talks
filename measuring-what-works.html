@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Measuring What Works — evals, traces & the wider model landscape</title>
+
+<!-- Fonts: Space Grotesk (display) + IBM Plex Sans (body) + IBM Plex Mono (mono) — Ember design system -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+
+<link rel="stylesheet" href="ember_design_system/styles.css">
+<style>deck-stage:not(:defined){visibility:hidden}</style>
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   Working Smarter with Agents — Ember design system, token-driven.
+   Fixed 1920×1080 canvas: sizes are px, colours/spacing are tokens.
+   ═══════════════════════════════════════════════════════════════════ */
+:root{
+  --ease:cubic-bezier(.16,1,.3,1);
+  --font-d:var(--font-display); --font-b:var(--font-body); --font-m:var(--font-mono);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--ink);color:var(--text-strong);font-family:var(--font-body)}
+
+/* ── SLIDE FRAME + local type scale ──────────────────────────────── */
+.slide{
+  display:flex; flex-direction:column; overflow:hidden;
+  font-family:var(--font-body); -webkit-font-smoothing:antialiased;
+  --pad-x:var(--slide-pad-x); --pad-t:var(--slide-pad-top); --pad-b:var(--slide-pad-bottom);
+  --h2-size:var(--fs-h2); --h3-size:34px; --lead-size:34px;
+  --body-size:26px; --small-size:20px; --code-size:20px;
+  --gap:28px; --content-gap:var(--gap); --diag-h:440px;
+}
+.slide.dense{
+  --pad-x:88px; --pad-t:var(--slide-pad-top-dense); --pad-b:var(--slide-pad-bottom-dense);
+  --h2-size:var(--fs-h2-sm); --h3-size:30px; --lead-size:30px;
+  --body-size:23px; --small-size:18px; --code-size:18px; --gap:20px; --diag-h:400px;
+}
+.slide.tight{
+  --pad-x:76px; --pad-t:60px; --pad-b:52px;
+  --h2-size:46px; --h3-size:27px; --lead-size:27px;
+  --body-size:21px; --small-size:16px; --code-size:16px; --gap:14px; --diag-h:340px;
+}
+.slide-content{
+  flex:1; min-height:0; display:flex; flex-direction:column; justify-content:center;
+  padding:var(--pad-t) var(--pad-x) var(--pad-b); overflow:hidden; position:relative; z-index:1;
+}
+
+/* ── SCHEMES — Ember light/dark rhythm. Every component reads --s-*. ─ */
+.slide,.slide.light{
+  --s-bg:var(--paper); --s-text:var(--text-strong); --s-muted:var(--text-muted); --s-faint:var(--text-faint);
+  --s-line:var(--line-light-2); --s-line-strong:var(--line-light);
+  --s-card-bg:var(--paper-2); --s-card-border:var(--line-card); --s-box-mid:var(--paper-3);
+  --s-outer-fill:var(--coral-soft); --s-callout-bg:var(--coral-soft);
+  --s-accent:var(--coral-ink); --s-bar:var(--bar);
+  background:var(--s-bg); color:var(--s-text);
+}
+.slide.dark{
+  --s-bg:var(--ink); --s-text:var(--on-dark); --s-muted:var(--on-dark-muted); --s-faint:var(--on-dark-faint);
+  --s-line:var(--line-dark-2); --s-line-strong:var(--line-dark);
+  --s-card-bg:var(--ink-2); --s-card-border:var(--line-dark); --s-box-mid:var(--ink-2);
+  --s-outer-fill:rgba(255,92,53,.10); --s-callout-bg:rgba(255,92,53,.10);
+  --s-accent:var(--coral); --s-bar:var(--bar-dark);
+  background:var(--s-bg); color:var(--s-text);
+}
+
+/* ── HEADER ──────────────────────────────────────────────────────── */
+.slide-head{
+  display:flex; align-items:baseline; justify-content:space-between; gap:var(--space-5);
+  margin-bottom:var(--gap); border-bottom:var(--bw-hair) solid var(--s-line); padding-bottom:18px;
+}
+.snum{font:var(--w-bold) 48px/1 var(--font-display); color:var(--s-accent); letter-spacing:var(--track-snug)}
+.crumb{font:var(--w-medium) var(--small-size)/1.2 var(--font-mono); letter-spacing:var(--track-eyebrow);
+  text-transform:uppercase; color:var(--s-muted); text-align:right}
+.crumb b{color:var(--s-accent); font-weight:var(--w-semibold)}
+
+/* ── TYPE ────────────────────────────────────────────────────────── */
+h2{font-family:var(--font-display); font-weight:var(--w-bold); font-size:var(--h2-size);
+  line-height:var(--lh-snug); letter-spacing:var(--track-snug); margin-bottom:22px; color:var(--s-text); text-wrap:balance}
+h2 .o{color:var(--s-accent)}
+h3{font-family:var(--font-display); font-weight:var(--w-bold); font-size:var(--h3-size);
+  line-height:var(--lh-snug); letter-spacing:var(--track-snug); color:var(--s-text)}
+.lead{font-size:var(--lead-size); line-height:1.45; max-width:48ch; color:var(--s-text); text-wrap:pretty}
+.lead b{color:var(--s-accent)}
+.muted{color:var(--s-muted)}
+strong,b{font-weight:var(--w-semibold)}
+
+ul.bul{list-style:none; display:flex; flex-direction:column; gap:20px; max-width:68ch}
+ul.bul li{font-size:var(--body-size); line-height:1.45; padding-left:1.55em; position:relative;
+  color:var(--s-text); text-wrap:pretty}
+ul.bul li::before{content:""; position:absolute; left:0; top:.44em; width:.6em; height:.6em;
+  background:var(--s-accent); clip-path:polygon(0 0,100% 50%,0 100%)}
+ul.bul li b{color:var(--s-text); font-weight:var(--w-semibold)}
+
+.note{font-size:var(--small-size); color:var(--s-muted); margin-top:20px; line-height:1.45; text-wrap:pretty}
+.note b{color:var(--s-text); font-weight:var(--w-semibold)}
+
+/* ── CARDS / TILES ───────────────────────────────────────────────── */
+.cards{display:grid; gap:var(--space-5)}
+.cards.c3{grid-template-columns:repeat(3,1fr)}
+.cards.c2,.cards.c4{grid-template-columns:repeat(2,1fr)}
+.tile{border:var(--bw) solid var(--s-card-border); border-radius:var(--radius-lg);
+  padding:30px 32px; background:var(--s-card-bg); display:flex; flex-direction:column; gap:10px}
+.tile .k{font-family:var(--font-display); font-weight:var(--w-bold); color:var(--s-accent);
+  font-size:30px; letter-spacing:var(--track-snug)}
+.tile p{font-size:var(--body-size); line-height:1.4; color:var(--s-text); text-wrap:pretty}
+.tile.fill{background:var(--s-callout-bg); border-color:var(--s-card-border);
+  border-left:var(--bw-callout) solid var(--coral); border-radius:0 var(--radius-lg) var(--radius-lg) 0}
+
+.kcard{background:var(--s-callout-bg); color:var(--s-text); border:var(--bw) solid var(--s-card-border);
+  border-left:var(--bw-callout) solid var(--coral); border-radius:0 var(--radius-xl) var(--radius-xl) 0;
+  padding:40px 44px; position:relative; overflow:hidden}
+.slide.dark .kcard{box-shadow:var(--ring-accent-dark)}
+.kcard .big{font-family:var(--font-display); font-weight:var(--w-bold); color:var(--s-accent);
+  font-size:56px; line-height:1.02; letter-spacing:var(--track-snug)}
+.kcard p{font-size:var(--body-size); line-height:1.42; margin-top:14px; max-width:50ch; color:var(--s-text)}
+
+.split{display:grid; grid-template-columns:1fr 1fr; gap:var(--space-8); align-items:center; min-height:0}
+
+/* ── TABLES ──────────────────────────────────────────────────────── */
+table.tbl{width:100%; border-collapse:collapse; font-size:var(--body-size)}
+table.tbl th,table.tbl td{text-align:left; padding:16px 20px; border-bottom:var(--bw-hair) solid var(--s-line)}
+table.tbl th{font-family:var(--font-mono); color:var(--s-accent); font-weight:var(--w-semibold);
+  font-size:var(--small-size); letter-spacing:var(--track-label); text-transform:uppercase}
+table.tbl td{color:var(--s-text)}
+table.tbl td b{color:var(--s-text); font-weight:var(--w-semibold)}
+table.tbl tr:last-child td{border-bottom:none}
+
+/* ── CHIPS ───────────────────────────────────────────────────────── */
+.extag{display:inline-block; font-family:var(--font-mono); font-size:var(--small-size); color:var(--s-accent);
+  background:var(--s-callout-bg); border:var(--bw-hair) solid var(--s-card-border);
+  padding:4px 14px; border-radius:var(--radius-sm); margin-bottom:12px; letter-spacing:var(--track-label);
+  text-transform:uppercase}
+.pills{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px}
+.pill{font-family:var(--font-mono); border:var(--bw-hair) solid var(--coral); color:var(--s-accent);
+  border-radius:var(--radius-pill); padding:4px 16px; font-size:var(--small-size);
+  font-weight:var(--w-semibold); letter-spacing:var(--track-label); white-space:nowrap}
+.pill.live{background:var(--coral); color:var(--ink); border-color:var(--coral)}
+
+/* ── CODE ────────────────────────────────────────────────────────── */
+.code{background:var(--code-bg); border:var(--bw) solid var(--s-line); border-left:3px solid var(--coral);
+  border-radius:var(--radius-lg); padding:24px 28px; font-family:var(--font-mono);
+  font-size:var(--code-size); line-height:var(--lh-mono); overflow:hidden; color:var(--code-text);
+  white-space:pre-wrap}
+.code .c{color:var(--code-comment)}
+.code .o{color:var(--code-keyword)}
+.code .g{color:var(--code-string)}
+.code .b{color:var(--code-number)}
+.code .d{color:var(--code-keyword)}
+
+/* ── SECTION DIVIDER ─────────────────────────────────────────────── */
+.divider .slide-content{align-items:flex-start; justify-content:center; text-align:left}
+.divider .dnum{font:var(--w-bold) var(--fs-mega)/var(--lh-tight) var(--font-display);
+  color:var(--coral); letter-spacing:var(--track-tight); margin-bottom:10px}
+.divider h2{font-size:var(--fs-h1)}
+.divider h2::after{content:""; display:block; width:var(--accent-bar-w); height:var(--bw-accent);
+  background:var(--coral); border-radius:var(--radius-bar); margin:.45em 0 .1em}
+.divider .dsub{color:var(--s-muted); font-size:var(--fs-body-lg); max-width:42ch;
+  margin-top:18px; line-height:var(--lh-body)}
+.divider .dsub b{color:var(--s-text); font-weight:var(--w-semibold)}
+
+/* ── GLOSSARY / USES ─────────────────────────────────────────────── */
+.gloss{display:grid; grid-template-columns:1fr 1fr; gap:4px 44px}
+.gloss .row{display:flex; gap:18px; align-items:baseline; padding:12px 0;
+  border-bottom:var(--bw-hair) solid var(--s-line)}
+.gloss .term{font-family:var(--font-display); font-weight:var(--w-semibold); color:var(--s-accent);
+  font-size:var(--body-size); min-width:6.2em; flex-shrink:0; letter-spacing:var(--track-snug)}
+.gloss .def{font-size:var(--body-size); color:var(--s-text); line-height:1.35}
+.uses{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-5)}
+
+/* ── DIAGRAMS (pure HTML/CSS boxes — no video assets in this deck) ── */
+.diagram{width:100%; display:flex; justify-content:center; align-items:center; margin-top:8px; min-height:0}
+.diagram svg{width:100%; height:auto; max-height:var(--diag-h)}
+.dg-box{fill:var(--s-card-bg); stroke:var(--s-card-border); stroke-width:1.5}
+.dg-box.hot{fill:var(--coral); stroke:var(--coral)}
+.dg-box.outer{fill:var(--s-outer-fill); stroke:var(--coral); stroke-dasharray:6 5}
+.dg-box.mid{fill:var(--s-box-mid); stroke:var(--s-card-border)}
+.dg-t{fill:var(--s-text); font-family:var(--font-body); font-weight:var(--w-semibold)}
+.dg-t.on{fill:var(--ink)}
+.dg-t.mut{fill:var(--s-muted); font-weight:var(--w-medium)}
+.dg-t.acc{fill:var(--s-accent); font-family:var(--font-mono); font-weight:var(--w-semibold)}
+.dg-line{stroke:var(--s-accent); stroke-width:2.5; fill:none}
+.dg-line.dim{stroke:var(--s-line-strong); stroke-width:1.5}
+.dg-cap{text-align:center; font-size:var(--small-size); color:var(--s-muted); margin-top:10px}
+.dg-cap b{color:var(--s-text)}
+.diagram marker path{fill:var(--s-accent)}
+
+/* flow: HTML/CSS step chain used instead of video diagrams */
+.flow{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+.flow .step{border:var(--bw) solid var(--s-card-border); background:var(--s-card-bg); border-radius:var(--radius-md);
+  padding:16px 20px; font-family:var(--font-mono); font-size:var(--small-size); color:var(--s-text); text-align:center; min-width:120px}
+.flow .step.hot{background:var(--s-callout-bg); border-color:var(--coral); color:var(--s-accent); font-weight:var(--w-semibold)}
+.flow .arrow{color:var(--s-faint); font-size:22px}
+
+/* ── DEMO / FALLBACK ─────────────────────────────────────────────── */
+.demo-badge{display:inline-flex; align-items:center; gap:8px; font-family:var(--font-mono); font-weight:var(--w-bold);
+  font-size:var(--small-size); letter-spacing:var(--track-label); text-transform:uppercase; color:var(--coral);
+  border:var(--bw) solid var(--coral); border-radius:var(--radius-pill); padding:6px 18px 6px 14px; margin-bottom:16px}
+.demo-badge::before{content:"\1F534"; font-size:.85em}
+.fallback-box{border:2px dashed var(--s-card-border); border-radius:var(--radius-lg); background:var(--s-card-bg);
+  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; padding:40px; min-height:0}
+.fallback-box .fb-icon{font-family:var(--font-mono); font-size:64px; color:var(--s-faint)}
+.fallback-box .fb-caption{font-family:var(--font-mono); font-size:var(--small-size); color:var(--s-muted); text-align:center; max-width:48ch}
+
+/* ── WIP badge (title slide) ─────────────────────────────────────── */
+.wip-badge{display:inline-flex; align-items:center; gap:10px; font-family:var(--font-mono); font-weight:700;
+  font-size:16px; letter-spacing:.14em; text-transform:uppercase; color:var(--coral);
+  border:1.5px solid var(--coral); border-radius:var(--radius-pill); padding:6px 18px; margin-bottom:20px}
+
+/* ── TITLE SLIDE ─────────────────────────────────────────────────── */
+.title-slide{display:flex; flex-direction:column; justify-content:space-between; background:var(--ink);
+  padding:88px 96px 0}
+.ts-top{display:flex; justify-content:space-between; align-items:baseline; font:600 var(--fs-eyebrow) var(--font-mono);
+  letter-spacing:var(--track-eyebrow); text-transform:uppercase}
+.ts-top .k{color:var(--coral)}
+.ts-top .meta{color:var(--on-dark-faint); font-weight:500}
+.ts-hero h1{font-family:var(--font-display); font-weight:var(--w-bold); letter-spacing:-.035em; line-height:.94;
+  color:var(--on-dark); font-size:132px}
+.ts-hero h1 .dot{color:var(--coral)}
+.ts-sub{font-size:34px; color:var(--on-dark-muted); margin-top:36px; font-weight:400; max-width:34ch}
+.ts-sub b{color:var(--on-dark); font-weight:600}
+.ts-foot{border-top:var(--bw-hair) solid var(--line-dark); margin:0 -96px; padding:34px 96px 40px;
+  display:flex; justify-content:space-between; align-items:center}
+.ts-author{font-size:26px; color:var(--on-dark-muted)}
+.ts-author a{color:inherit;text-decoration:none;border-bottom:1px solid transparent;transition:border-color .15s}
+.ts-author a:hover{border-color:currentColor}
+.ts-author b{color:var(--coral); font-weight:var(--w-semibold)}
+.ts-loopline{font:500 24px var(--font-mono); letter-spacing:.04em; color:var(--on-dark-faint)}
+.ts-loopline .a{color:var(--coral)}
+.ts-loopline .w{color:var(--on-dark-muted)}
+
+/* ── CLOSING ─────────────────────────────────────────────────────── */
+.thanks{font-family:var(--font-display); font-weight:var(--w-bold); font-size:104px; line-height:.98;
+  letter-spacing:var(--track-tight); color:var(--s-text)}
+.thanks .o{color:var(--s-accent)}
+.links{display:grid; grid-template-columns:1fr 1fr; gap:var(--space-7)}
+.linkcol h3{color:var(--s-accent); font-family:var(--font-display); font-weight:var(--w-semibold);
+  margin-bottom:12px; font-size:26px; letter-spacing:var(--track-snug)}
+.linkcol a{display:block; color:var(--s-text); text-decoration:none; font-size:19px; line-height:1.3;
+  padding:6px 0; border-bottom:var(--bw-hair) solid var(--s-line)}
+.linkcol a:hover{color:var(--s-accent)}
+.linkcol a .u{display:block; color:var(--s-muted); font-family:var(--font-mono); font-size:.8em; margin-top:.08em}
+
+/* ── ENTRANCE MOTION ─────────────────────────────────────────────── */
+@keyframes ae-rise{from{opacity:0; transform:translateY(22px)} to{opacity:1; transform:none}}
+@media (prefers-reduced-motion:no-preference){
+  [data-deck-active] .reveal{animation:ae-rise .5s var(--ease) both}
+  [data-deck-active] .reveal:nth-child(2){animation-delay:.07s}
+  [data-deck-active] .reveal:nth-child(3){animation-delay:.14s}
+  [data-deck-active] .reveal:nth-child(4){animation-delay:.21s}
+  [data-deck-active] .reveal:nth-child(n+5){animation-delay:.27s}
+  [data-deck-active] .title-slide>*{animation:ae-rise .8s var(--ease) both}
+  [data-deck-active] .title-slide>.ts-hero{animation-delay:.15s}
+  [data-deck-active] .title-slide>.ts-foot{animation-delay:.3s}
+}
+</style>
+</head>
+<body>
+
+<!--
+  ============================================================
+  Measuring What Works — deck 07 in the series. A ~30-minute
+  deep dive for engineers already running Claude Code daily.
+  Three parts: 01 evals & traces (the most important part for
+  every engineer), 02 alternative harnesses/models/APIs,
+  03 day-to-day tips & close. The spine: measure first, then
+  use the numbers to route across models and harnesses, then
+  the daily habits that compound.
+  Companion decks: 05 Cost & Context (cost-and-context.html),
+  06 Orchestrating Agents (orchestrating-agents.html).
+  All pricing/product claims sourced from deck05-facts.md
+  (July 2026 research pass) — see the closing Sources slide.
+  Status: WIP / DRAFT — flagged on the title slide.
+  Runs on the Ember deck-stage component: ←/→, Space, Home/End,
+  number keys; R resets; speaker notes live on each section.
+  ============================================================
+-->
+
+<deck-stage width="1920" height="1080">
+
+  <!-- TITLE -->
+  <section class="slide dark title-slide" data-label="Title"
+    data-speaker-notes="Open with the spine and say it out loud: measure, route, habits. Make the promise concrete — evals and traces turn 'this feels better' into a number, and that number is what tells you which model or harness to reach for. Flag that this is a work-in-progress deck and you want pushback on the demos as much as the content.">
+    <div class="ts-top"><span class="k">Deep dive · advanced topics · ~30 min</span><span class="meta">Internal talk · July 2026</span></div>
+    <div class="ts-hero">
+      <div class="wip-badge">WIP — draft</div>
+      <h1>Measuring<br>What Works<span class="dot">.</span></h1>
+      <p class="ts-sub"><b>Evals and traces</b> turn vibes into numbers — then use them to <b>route</b> across models and harnesses, and the <b>daily habits</b> that compound.</p>
+    </div>
+    <div class="ts-foot">
+      <div class="ts-author"><a href="https://davidbudac.cz" target="_blank" rel="noopener">David&nbsp;Budáč</a></div>
+      <div class="ts-loopline"><span class="w">measure</span> <span class="a">→</span> <span class="w">route</span> <span class="a">→</span> <span class="w">habits</span></div>
+    </div>
+  </section>
+
+  <!-- AGENDA -->
+  <section class="slide light" data-label="Agenda"
+    data-speaker-notes="Keep this short — three parts, half an hour, one live demo in each. Call out that part 01 is the one flagged as most important for every engineer, because evals are the skill the rest of the deck depends on. Mention each demo has a runbook and a fallback slide behind it.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">2</span><div class="crumb"><b>Agenda</b></div></div>
+      <h2 class="reveal">Three parts, <span class="o">~30 minutes</span></h2>
+      <table class="tbl reveal">
+        <thead><tr><th>Part</th><th>Topic</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td><b>01</b></td><td>Measuring what works: evals & traces</td><td><b>most important for every engineer</b> · live demo</td></tr>
+          <tr><td><b>02</b></td><td>Alternative harnesses, models & APIs</td><td>live demo</td></tr>
+          <tr><td><b>03</b></td><td>Day-to-day tips & close</td><td>live demo</td></tr>
+        </tbody>
+      </table>
+      <p class="note reveal">All pricing and product claims are date-stamped <b>July 2026</b> and sourced — see the closing Sources slide.</p>
+    </div>
+  </section>
+
+  <!-- ============ PART 01 — MEASURING WHAT WORKS ============ -->
+  <section class="slide dark divider" data-label="01 Measuring what works: evals & traces"
+    data-speaker-notes="Say plainly this is the most important part for every engineer, not just for leads. Vibes don't scale past one person's intuition — evals are how a team makes changes to CLAUDE.md, prompts, or models without arguing from anecdotes. The live demo closes the part by actually running a small eval on stage.">
+    <div class="slide-content">
+      <div class="dnum reveal">01</div>
+      <h2 class="reveal">Measuring what works: <span class="o">evals & traces</span></h2>
+      <p class="dsub reveal">The <b>most important part for every engineer</b> in this room — evals are the core skill, not a nice-to-have.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Why vibes don't scale"
+    data-speaker-notes="Make the case directly: 'this feels better' does not survive a team of ten people all tweaking the same CLAUDE.md or prompt independently. Evals turn a feeling into a number two people can agree on without a meeting. Position evals as the core AI skill for an engineer in 2026, on par with writing tests.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">3</span><div class="crumb"><b>Evals</b> · why vibes don't scale</div></div>
+      <h2 class="reveal">"Feels better" <span class="o">doesn't scale</span></h2>
+      <ul class="bul reveal">
+        <li>One person's intuition about a prompt or CLAUDE.md change doesn't survive a team of ten making changes independently.</li>
+        <li>An eval turns a feeling into a <b>number two people can agree on</b> without a meeting.</li>
+        <li>This is the core AI skill for an engineer in 2026 — on par with writing tests.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Eval type: task-completion suites"
+    data-speaker-notes="The most direct eval type: a fixed set of real tasks with a pass/fail or scored check, run against whatever variant you're testing. Cheap to build once you have five or ten representative tasks from actual work, not synthetic toy problems.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">4</span><div class="crumb"><b>Evals</b> · eval types</div></div>
+      <h2 class="reveal">Task-completion <span class="o">suites</span></h2>
+      <ul class="bul reveal">
+        <li>A fixed set of real tasks, each with a pass/fail or scored check.</li>
+        <li>Build it from <b>actual past work</b> — five to ten representative tasks beat fifty synthetic ones.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Eval type: LLM-as-judge"
+    data-speaker-notes="For tasks without a clean pass/fail — writing quality, code style, explanation clarity — use a second model as judge against a written rubric. Warn about the known failure mode: a judge model tends to prefer its own outputs, so rotate judges or use a different model family than the one being evaluated.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">5</span><div class="crumb"><b>Evals</b> · eval types</div></div>
+      <h2 class="reveal"><span class="o">LLM-as-judge</span></h2>
+      <ul class="bul reveal">
+        <li>For tasks with no clean pass/fail — writing quality, code style, clarity — score output against a written rubric using a second model.</li>
+        <li>Known failure mode: a judge tends to prefer its own family's outputs. Use a different model as judge than the one being evaluated.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Eval type: pass@k"
+    data-speaker-notes="Pass@k runs the same task k times and checks whether at least one attempt succeeds — useful for agentic work where variance run-to-run is real and a single run can mislead. On a fixed repo task set, it's the honest way to compare two configurations when either one occasionally fails by chance.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">6</span><div class="crumb"><b>Evals</b> · eval types</div></div>
+      <h2 class="reveal"><span class="o">Pass@k</span> on a fixed repo task set</h2>
+      <ul class="bul reveal">
+        <li>Run the same task <b>k times</b>; check whether at least one attempt succeeds.</li>
+        <li>Accounts for run-to-run variance in agentic work — a single run can mislead either direction.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Traces: capturing transcripts"
+    data-speaker-notes="A trace is the full agent transcript — every tool call, every token of reasoning, every turn. Capturing it is the raw material for the next slide's analysis, and it's also what makes a failed run debuggable after the fact instead of just 'it didn't work.'">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">7</span><div class="crumb"><b>Evals</b> · traces</div></div>
+      <h2 class="reveal">Traces: capture the <span class="o">full transcript</span></h2>
+      <ul class="bul reveal">
+        <li>Every tool call, every turn, every reasoning block — the raw material for analysis.</li>
+        <li>Also what turns a failed run from "it didn't work" into something debuggable.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Traces: reading for waste"
+    data-speaker-notes="The skill is reading a trace looking specifically for wasted turns — a file read twice, a plan restated three times, a tool call that failed silently and got retried blind. This is where deck 05, Cost &amp; Context's cost anatomy and context hygiene become directly actionable on a real session.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">8</span><div class="crumb"><b>Evals</b> · traces</div></div>
+      <h2 class="reveal">Reading traces for <span class="o">wasted turns</span></h2>
+      <ul class="bul reveal">
+        <li>Look for: a file read twice, a plan restated repeatedly, a failed tool call retried blind.</li>
+        <li>This is where <b>deck 05, Cost & Context</b>'s cost anatomy and context hygiene become <b>actionable on a real session.</b></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Trace tooling"
+    data-speaker-notes="Name the tooling category without over-selling any one vendor: OTel-based observability stacks capture agent traces the same way they'd capture microservice traces, and most model providers now ship their own usage/trace dashboards. Point people at whichever their org already has before reaching for a new tool.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">9</span><div class="crumb"><b>Evals</b> · tooling</div></div>
+      <h2 class="reveal">Tools: <span class="o">OTel & provider dashboards</span></h2>
+      <ul class="bul reveal">
+        <li><b>OTel-based observability:</b> capture agent traces the same way you'd capture microservice traces.</li>
+        <li><b>Provider dashboards:</b> most model providers now ship usage/trace views out of the box — check what your org already has before adding a new tool.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="A minimal eval loop"
+    data-speaker-notes="Give the version any team can start this week with zero new tooling: a handful of fixed prompts representative of real work, a short written rubric, and a spreadsheet to score runs against it. This is deliberately unglamorous — the point is that the bar to start is nearly zero, and the demo shows exactly this.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">10</span><div class="crumb"><b>Evals</b> · the minimal loop</div></div>
+      <h2 class="reveal">A minimal eval loop, <span class="o">this week</span></h2>
+      <div class="flow reveal">
+        <div class="step">fixed prompts</div><div class="arrow">→</div>
+        <div class="step">written rubric</div><div class="arrow">→</div>
+        <div class="step hot">score in a spreadsheet</div><div class="arrow">→</div>
+        <div class="step">compare variants</div>
+      </div>
+      <p class="note reveal">Deliberately unglamorous — the bar to start is nearly zero, no new tooling required.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Live demo: mini eval"
+    data-speaker-notes="RUNBOOK: use a small fixed task set (3–5 tasks; e.g. the two CLAUDE.md variants from deck 05, or two models on the identical prompt) and run it against two variants live. Score each run against the pre-written rubric on screen, tally in a spreadsheet, and show the final comparison number. Keep total run time under five minutes by having tasks that finish fast; cut to fallback if a run hangs.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">11</span><div class="crumb"><b>Evals</b> · live demo</div></div>
+      <div class="demo-badge reveal">Live</div>
+      <h2 class="reveal">Run a small eval, <span class="o">live</span></h2>
+      <ul class="bul reveal">
+        <li>A small fixed task set (3–5 tasks), two variants — e.g. the two <b>CLAUDE.md variants from deck 05</b>, or two models on the identical prompt.</li>
+        <li>Score each run against a written rubric, tally in a spreadsheet on screen.</li>
+      </ul>
+      <p class="note reveal"><span class="pill live">Live</span> Same method as the minimal loop — no special tooling, just discipline.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Fallback: eval demo"
+    data-speaker-notes="Use if a live run hangs or takes too long to score on stage. Narrate from the prepared spreadsheet screenshot: the two variants, the rubric scores, and which one won and why.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">12</span><div class="crumb"><b>Evals</b> · fallback</div></div>
+      <h2 class="reveal">Fallback: <span class="o">recorded run</span></h2>
+      <div class="fallback-box reveal">
+        <div class="fb-icon">▢</div>
+        <div class="fb-caption">Placeholder — screenshot of the scored spreadsheet comparing two variants goes here.</div>
+      </div>
+      <p class="note reveal">Use only if a live run stalls or scoring runs long. Narrate the rubric scores and the winning variant from rehearsal.</p>
+    </div>
+  </section>
+
+  <!-- ============ PART 02 — ALTERNATIVE HARNESSES, MODELS & APIs ============ -->
+  <section class="slide dark divider" data-label="02 Alternative harnesses, models & APIs"
+    data-speaker-notes="Reprise the presenter's own model-picking table from deck 05, Cost &amp; Context: routing tasks by cost, intelligence, and taste is the same discipline whether you're picking a Claude model or a harness or an open-weight model. This part covers Cursor as a harness, OpenRouter and Pi, the open-model landscape, and closes with a live demo running local models on modest hardware.">
+    <div class="slide-content">
+      <div class="dnum reveal">02</div>
+      <h2 class="reveal">Alternative <span class="o">harnesses, models & APIs</span></h2>
+      <p class="dsub reveal">Why not monoculture: route by cost, intelligence, and taste — the same discipline at every layer.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Why not monoculture"
+    data-speaker-notes="State the thesis plainly: no single model or harness wins on cost, intelligence, and taste simultaneously, so routing by task is the same discipline as the presenter's own model-picking table — cheap and fast for bulk work, smarter for unsupervised hard problems, highest-taste only where UI/copy quality is the bottleneck.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">13</span><div class="crumb"><b>Alt. harnesses</b> · why not monoculture</div></div>
+      <h2 class="reveal">Route by <span class="o">cost, intelligence, taste</span></h2>
+      <ul class="bul reveal">
+        <li>No single model or harness wins on all three axes at once.</li>
+        <li>Cheap and fast for bulk, mechanical work; smarter models for hard unsupervised problems; highest-taste models only where UI/copy quality is the actual bottleneck.</li>
+      </ul>
+      <p class="note reveal">This is the same discipline at every layer — model choice, harness choice, even open-vs-hosted choice.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Cursor as a harness"
+    data-speaker-notes="Cursor is worth its own slide as a harness, not just a pricing model (deck 05, Cost &amp; Context): its IDE-native integration and Auto/Router model selection make it a genuine alternative to a terminal agent for engineers who live in an editor. It earns its place when routing quality matters more than terminal-native workflows like git worktrees.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">14</span><div class="crumb"><b>Alt. harnesses</b> · Cursor</div></div>
+      <h2 class="reveal">Cursor as a <span class="o">harness</span></h2>
+      <ul class="bul reveal">
+        <li>IDE-native, not terminal-native — strongest for engineers who live in an editor rather than a terminal.</li>
+        <li>Auto mode and Cursor Router (deck 05, <i>Cost & Context</i>) route per-request across models automatically.</li>
+        <li>Beats a terminal agent when routing quality and IDE integration matter more than terminal-native workflows.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="OpenRouter"
+    data-speaker-notes="OpenRouter is one API key over 315-plus models from every major vendor, with a roughly 5.5% fee on credit purchases rather than a heavy per-token markup — use that framing over the inconsistent '30-60% markup' figure some trackers cite. Flag the real caveat: failover is a feature, but it also means a request can silently land on a different provider than you expected.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">15</span><div class="crumb"><b>Alt. harnesses</b> · OpenRouter</div></div>
+      <h2 class="reveal">OpenRouter: <span class="o">one API, many models</span></h2>
+      <ul class="bul reveal">
+        <li><b>315+ models</b> from Anthropic, OpenAI, Google, DeepSeek, Meta, Mistral, xAI, and others — one key, one bill.</li>
+        <li>Pay-per-token; roughly a <b>5.5% fee on credit purchases</b> rather than a heavy per-token markup on most models.</li>
+        <li>Caveat: failover is a feature, but it means a request can silently route to a different provider than expected.</li>
+      </ul>
+      <p class="note reveal">Some trackers cite a "30-60% markup in some cases" — that figure is inconsistent across sources; the 5.5% credit-fee framing is the more defensible one.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Pi"
+    data-speaker-notes="Pi is Mario Zechner's minimal terminal harness — under a thousand tokens of system prompt, now under Earendil Inc, supporting 15-plus providers including local models via Ollama. The tradeoff to flag: running Claude models through Pi bills at raw API rates, so someone already on Claude Max is effectively paying twice — the payoff is a lighter harness and broader model choice.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">16</span><div class="crumb"><b>Alt. harnesses</b> · Pi</div></div>
+      <h2 class="reveal">Pi: a <span class="o">minimal</span> harness</h2>
+      <ul class="bul reveal">
+        <li>Terminal coding-agent harness by Mario Zechner (now Earendil Inc) — system prompt under ~1,000 tokens.</li>
+        <li>Supports 15+ providers/hundreds of models, plus local models via Ollama for zero-cost inference.</li>
+        <li>Tradeoff: using Claude models through Pi bills at <b>raw API rates</b> — a Claude Max subscriber effectively pays twice.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="State of open-source models"
+    data-speaker-notes="Frame the headline claim carefully: the frontier gap for coding tasks is closing, not closed. The next several slides give specific, verified evidence — Gemma 4, Qwen 3.6, GLM-5.2 — rather than asserting the trend in the abstract.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">17</span><div class="crumb"><b>Alt. harnesses</b> · open models, July 2026</div></div>
+      <h2 class="reveal">The frontier gap is <span class="o">closing</span> — for coding</h2>
+      <ul class="bul reveal">
+        <li>Several open-weight releases in 2026 close in on frontier coding-benchmark scores at a fraction of the parameter count or cost.</li>
+        <li>Closing, not closed — the next slides give specific, verified examples rather than the trend in the abstract.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Gemma 4"
+    data-speaker-notes="Gemma 4 arrived around March 2026 in five sizes from 2B up to 31B dense; the 12B unified multimodal variant, added June 2026, runs comfortably on a 16GB laptop at Q4_0 quantization and nearly matches the 26B model's benchmarks at less than half the memory. This is real evidence that local, laptop-class inference is viable, not aspirational.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">18</span><div class="crumb"><b>Alt. harnesses</b> · Gemma 4</div></div>
+      <h2 class="reveal">Gemma 4: <span class="o">laptop-viable</span></h2>
+      <ul class="bul reveal">
+        <li>Google, arrived ~March 2026. Sizes: E2B, E4B, a 12B unified multimodal (June 2026), a 26B MoE (3.8B active), a 31B dense.</li>
+        <li>The <b>12B model runs on a 16GB laptop</b> (e.g. 16GB MacBook Air) at Q4_0 quantization — nearly matching the 26B model at under half the memory.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Qwen 3.6"
+    data-speaker-notes="Qwen 3.6 is Alibaba's Apache-2.0 family, with two April 2026 flagship releases: a 27B dense model and a 35B-A3B mixture-of-experts model with only 3B active parameters per token. The MoE variant's low active-parameter count is the realistic local-laptop pick; exact RAM requirements weren't independently verified in the fact-check pass, so say that out loud rather than guessing a number.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">19</span><div class="crumb"><b>Alt. harnesses</b> · Qwen 3.6</div></div>
+      <h2 class="reveal">Qwen 3.6: <span class="o">dense and MoE flagships</span></h2>
+      <ul class="bul reveal">
+        <li>Alibaba, Apache 2.0. Two April 2026 flagships: <b>27B dense</b> and <b>35B-A3B MoE</b> (only 3B active params/token).</li>
+        <li>Native 256K context, extensible to ~1M via YaRN; reportedly outperforms a 397B MoE model on agentic coding benchmarks.</li>
+        <li>The 35B-A3B MoE is the realistic local-laptop pick given its low active-parameter count. <span class="muted">[exact laptop RAM requirements not independently verified]</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Live demo: local models on small hardware"
+    data-speaker-notes="RUNBOOK: on the presenter's own laptop, run Gemma 4 (12B) or Qwen 3.6 (35B-A3B) locally via Ollama, feed it a real coding task from this team's repo, and let it run to completion on screen. The message is 'absolutely viable even on modest hardware,' not 'as good as the frontier' — don't oversell it. If local inference is too slow to finish live, narrate progress and cut to the fallback recording rather than waiting out a slow generation.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>Alt. harnesses</b> · live demo</div></div>
+      <div class="demo-badge reveal">Live</div>
+      <h2 class="reveal">Local models, <span class="o">small hardware</span></h2>
+      <ul class="bul reveal">
+        <li>Gemma 4 (12B) or Qwen 3.6 (35B-A3B) running locally on the presenter's own laptop via Ollama.</li>
+        <li>A real coding task from this team's repo, run to completion on screen.</li>
+      </ul>
+      <p class="note reveal"><span class="pill live">Live</span> Message: <b>absolutely viable</b> even on modest hardware — not "as good as the frontier."</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Fallback: local model demo"
+    data-speaker-notes="Use if local generation is too slow to finish live. Narrate from the recording: which model, which task, how long it took, and the final result — keep the honest framing that it's slower than a hosted frontier model but genuinely usable.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">21</span><div class="crumb"><b>Alt. harnesses</b> · fallback</div></div>
+      <h2 class="reveal">Fallback: <span class="o">recorded run</span></h2>
+      <div class="fallback-box reveal">
+        <div class="fb-icon">▢</div>
+        <div class="fb-caption">Placeholder — screenshot or recording of a local Gemma 4 / Qwen 3.6 run completing a real coding task goes here.</div>
+      </div>
+      <p class="note reveal">Use only if the live run is too slow to finish on stage. Keep the honest framing: slower than hosted, genuinely usable.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Colibri for GLM-5.2"
+    data-speaker-notes="GLM-5.2 is Z.ai's open-weight MoE coding model at roughly 753 billion total parameters — sources disagree slightly, some say 744B, treat the exact figure as approximate. Colibri is the piece that makes it runnable on ordinary hardware with no GPU: a ~2,400-line pure-C inference engine that keeps the dense parameters in RAM and streams routed experts from disk, running the full model on about 25GB of RAM. Be upfront that speed is very slow, roughly 0.05 to 1 token per second — the value is running it at all, not running it fast.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">22</span><div class="crumb"><b>Alt. harnesses</b> · Colibri + GLM-5.2</div></div>
+      <h2 class="reveal">Colibri: GLM-5.2 <span class="o">without a GPU</span></h2>
+      <ul class="bul reveal">
+        <li><b>GLM-5.2</b> (Z.ai): open-weight MoE, ~753B total params (~40B active), 1M context. Reportedly matches/beats GPT-5.5 on several long-horizon coding tasks. <span class="muted">[total param count varies 744B–753B across sources]</span></li>
+        <li><b>Colibri</b>: a ~2,400-line pure-C inference engine — keeps ~17B dense params in RAM (int4), streams routed experts from disk via an LRU cache.</li>
+        <li>Runs on ordinary hardware, <b>no GPU</b>, about <b>25GB RAM.</b> Speed: ~0.05–1 tokens/sec — value is running it at all, not fast.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="When local makes sense"
+    data-speaker-notes="Close the open-model thread with a balanced decision: local makes sense for privacy-sensitive or air-gapped environments, for driving marginal cost toward zero, and where latency requirements are loose enough to tolerate it. It doesn't make sense when you need frontier quality or fast turnaround, or when the hardware/ops overhead outweighs the savings.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">23</span><div class="crumb"><b>Alt. harnesses</b> · when local makes sense</div></div>
+      <h2 class="reveal">When local makes sense — <span class="o">and when it doesn't</span></h2>
+      <div class="cards c2 reveal">
+        <div class="tile fill"><span class="k">Makes sense</span><p>Privacy-sensitive or air-gapped work, driving marginal cost toward zero, latency requirements loose enough to tolerate it.</p></div>
+        <div class="tile"><span class="k">Doesn't</span><p>Need frontier quality or fast turnaround; hardware/ops overhead outweighs the savings.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PART 03 — DAY-TO-DAY TIPS & CLOSING ============ -->
+  <section class="slide dark divider" data-label="03 Day-to-day tips & closing"
+    data-speaker-notes="Land the plane with the most immediately actionable part: voice mode, daily habits, then the three-word recap ladder from the title slide, then sources. Keep the pace brisk — this part is meant to send people out with concrete next actions, not new concepts.">
+    <div class="slide-content">
+      <div class="dnum reveal">03</div>
+      <h2 class="reveal">Day-to-day tips & <span class="o">closing</span></h2>
+      <p class="dsub reveal">The habits that compound daily — then the recap, then the sources.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Voice mode"
+    data-speaker-notes="Claude Code's native /voice dictation shipped around March 3rd 2026 and is confirmed real: Hold and Tap modes, tuned for coding vocabulary. Be explicit and careful about 'Hlas' — it could not be verified as a real named product in the fact-check pass; it may be a generic reference to Czech-language dictation rather than a specific tool. Ask the presenter to confirm the exact name/spelling before using it live, or cut the reference. The live demo should showcase Claude Code's own /voice command, which is solidly verified, regardless of how the Hlas question resolves.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">24</span><div class="crumb"><b>Day-to-day</b> · voice mode</div></div>
+      <div class="demo-badge reveal">Live</div>
+      <h2 class="reveal">Voice mode: <span class="o">dictate, don't type</span></h2>
+      <ul class="bul reveal">
+        <li>Claude Code shipped native <code>/voice</code> dictation ~March 2026 — <b>Hold</b> (default) and <b>Tap</b> modes, tuned for coding vocabulary (regex, OAuth, JSON, localhost).</li>
+        <li>Hands-free review: dictate a prompt, keep typing while speaking, review output without touching the keyboard.</li>
+      </ul>
+      <p class="note reveal"><span class="pill live">Live</span> "Hlas" (Czech voice tooling per earlier notes) <span class="muted">[TODO: verify tool name — could not confirm as a real product; may be a generic reference]</span>. Demo Claude Code's own <code>/voice</code> command instead, which is solidly verified.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Fallback: voice demo"
+    data-speaker-notes="Use if live dictation is unreliable on the venue's microphone setup. Narrate from the recording: the /voice command, Hold vs Tap, and a real prompt dictated and executed.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">25</span><div class="crumb"><b>Day-to-day</b> · fallback</div></div>
+      <h2 class="reveal">Fallback: <span class="o">recorded run</span></h2>
+      <div class="fallback-box reveal">
+        <div class="fb-icon">▢</div>
+        <div class="fb-caption">Placeholder — screenshot or recording of Claude Code's /voice command dictating and executing a real prompt goes here.</div>
+      </div>
+      <p class="note reveal">Use only if the venue's microphone makes live dictation unreliable.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Grab-bag of daily habits"
+    data-speaker-notes="Quick list of habits that compound: keyboard-first navigation instead of reaching for the mouse, running several sessions in parallel on unrelated tasks, kicking off background/async tasks and checking back later, and checkpointing progress with small git commits so an agent's mid-task state is never the only copy.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>Day-to-day</b> · habits</div></div>
+      <h2 class="reveal">Habits that <span class="o">compound daily</span></h2>
+      <ul class="bul reveal">
+        <li><b>Keyboard-first</b> — fewer context switches to the mouse.</li>
+        <li><b>Parallel sessions</b> on unrelated tasks instead of waiting serially.</li>
+        <li><b>Background/async tasks</b> — kick off, check back later.</li>
+        <li><b>Checkpoint with git</b> — small commits so an agent's mid-task state is never the only copy.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Recap ladder"
+    data-speaker-notes="Close the content with the same three words from the title slide: measure, route, habits. Say it slowly and connect each word to the part that covered it — and be explicit that measuring is the one to act on first, because without evals the routing decisions in part 02 are just another set of vibes.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">27</span><div class="crumb"><b>Day-to-day</b> · recap</div></div>
+      <h2 class="reveal">Measure → route → <span class="o">habits</span></h2>
+      <div class="flow reveal">
+        <div class="step hot">01 measure</div><div class="arrow">→</div>
+        <div class="step">02 route</div><div class="arrow">→</div>
+        <div class="step">03 habits</div>
+      </div>
+      <p class="note reveal">Act on <b>measurement</b> (part 01) first — without evals, the routing choices in part 02 are just a more expensive set of vibes.</p>
+    </div>
+  </section>
+
+  <!-- SOURCES -->
+  <section class="slide light dense" data-label="Sources"
+    data-speaker-notes="Close on sources, matching series convention: all pricing and product claims are date-stamped July 2026 and come from the fact-check pass. Point at the one explicitly unverified item — 'Hlas' as a named product — one more time so nobody repeats it as confirmed. Mention the full per-claim list lives in the internal research doc if anyone wants to dig.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">28</span><div class="crumb"><b>Close</b> · sources</div></div>
+      <h2 class="reveal"><span class="o">Sources</span> — all claims dated July 2026</h2>
+      <div class="links reveal">
+        <div class="linkcol">
+          <h3>Harnesses & pricing</h3>
+          <a href="https://www.nxcode.io/resources/news/cursor-ai-pricing-plans-guide-2026" target="_blank" rel="noopener">Cursor pricing guide 2026<span class="u">nxcode.io</span></a>
+        </div>
+        <div class="linkcol">
+          <h3>Models</h3>
+          <a href="https://github.com/QwenLM/Qwen3.6" target="_blank" rel="noopener">Qwen 3.6<span class="u">github.com/QwenLM/Qwen3.6</span></a>
+          <a href="https://www.nist.gov/news-events/news/2026/07/caisi-assessment-zais-glm-52" target="_blank" rel="noopener">NIST CAISI assessment of GLM-5.2<span class="u">nist.gov</span></a>
+        </div>
+      </div>
+      <p class="note reveal">Full source list with per-claim citations: <span class="muted">deck05-facts.md</span> (internal research doc). One item flagged unverified: <b>"Hlas"</b> as a named product.</p>
+    </div>
+  </section>
+
+</deck-stage>
+
+<script src="ember_design_system/deck-stage.js"></script>
+<script>
+  /* Re-trigger .reveal animations + restart any <video> on slide change */
+  document.addEventListener('DOMContentLoaded', function () {
+    var ds = document.querySelector('deck-stage');
+    if (!ds) return;
+    ds.addEventListener('slidechange', function (e) {
+      var s = e.detail && e.detail.slide;
+      if (!s) return;
+      s.querySelectorAll('.reveal').forEach(function (el) {
+        el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
+      });
+      var v = s.querySelector('video');
+      if (v) { v.currentTime = 0; var p = v.play(); if (p && p.catch) p.catch(function(){}); }
+    });
+  });
+</script>
+
+<style id="presenter-ui-css">
+  /* ─── Presenter aids (outside <deck-stage>: siblings paint above it) ─── */
+  .pui-controls{
+    position:fixed; right:18px; bottom:18px; z-index:40;
+    display:flex; gap:8px;
+    opacity:0; transition:opacity .25s; pointer-events:none;
+  }
+  body.pui-mouse .pui-controls,
+  .pui-controls:hover,
+  .pui-controls:focus-within{ opacity:1; pointer-events:auto; }
+  .pui-controls button{
+    font:var(--w-semibold) 12px/1 var(--font-mono); letter-spacing:.08em;
+    color:var(--on-dark-muted); background:var(--ink-2);
+    border:1px solid var(--line-dark); border-radius:var(--radius-pill);
+    padding:9px 14px; cursor:pointer;
+  }
+  .pui-controls button:hover{ color:var(--paper); border-color:var(--coral); }
+  .pui-controls kbd{ color:var(--coral); font:inherit; margin-left:6px; }
+  .pui-notes{
+    position:fixed; left:0; right:0; bottom:0; z-index:39;
+    background:var(--ink-2); color:var(--on-dark);
+    border-top:2px solid var(--coral);
+    padding:20px 34px 24px; max-height:38vh; overflow:auto;
+    font:var(--w-regular) clamp(15px,1.6vw,21px)/1.55 var(--font-b, var(--font-body));
+    display:none;
+  }
+  .pui-notes.open{ display:block; }
+  .pui-notes .pui-nhead{
+    font:var(--w-semibold) 12px/1 var(--font-mono); letter-spacing:.12em;
+    text-transform:uppercase; color:var(--coral); margin-bottom:12px;
+  }
+  @media print{ .pui-controls, .pui-notes{ display:none !important; } }
+</style>
+<div class="pui-controls">
+  <button type="button" data-pui="notes">NOTES<kbd>N</kbd></button>
+  <button type="button" data-pui="present">PRESENT<kbd>P</kbd></button>
+  <button type="button" data-pui="fullscreen">FULLSCREEN<kbd>F</kbd></button>
+</div>
+<div class="pui-notes" role="note" aria-live="polite">
+  <div class="pui-nhead"></div>
+  <div class="pui-nbody"></div>
+</div>
+
+<script>
+/* ─── Presenter aids: notes overlay (N), fullscreen (F), presenter window (P) ─── */
+(function(){
+  if (window.self !== window.top) return; /* skip when embedded by a host/viewer */
+  var ds = document.querySelector('deck-stage');
+  var notesEl = document.querySelector('.pui-notes');
+  var nHead = notesEl.querySelector('.pui-nhead');
+  var nBody = notesEl.querySelector('.pui-nbody');
+  var current = 0, presenter = null, mouseT = null;
+
+  function slides(){ return Array.prototype.slice.call(ds.querySelectorAll(':scope > section')); }
+  function noteOf(s){ return s.getAttribute('data-speaker-notes') || 'No notes for this slide.'; }
+  function labelOf(s){ return s.getAttribute('data-label') || ''; }
+
+  /* controls fade in on mouse activity, like the component's own overlay */
+  document.addEventListener('mousemove', function(){
+    document.body.classList.add('pui-mouse');
+    clearTimeout(mouseT);
+    mouseT = setTimeout(function(){ document.body.classList.remove('pui-mouse'); }, 1800);
+  });
+
+  function syncNotes(){
+    var all = slides(), s = all[current];
+    if (!s) return;
+    nHead.textContent = 'Notes · ' + labelOf(s) + ' · ' + (current + 1) + ' / ' + all.length;
+    nBody.textContent = noteOf(s);
+  }
+  function toggleNotes(){ notesEl.classList.toggle('open'); if (notesEl.classList.contains('open')) syncNotes(); }
+
+  function toggleFullscreen(){
+    if (document.fullscreenElement) { document.exitFullscreen(); }
+    else { document.documentElement.requestFullscreen().catch(function(){}); }
+  }
+  /* fullscreen = clean presenting surface: hide the thumbnail rail while in it */
+  var railWasOff = false;
+  document.addEventListener('fullscreenchange', function(){
+    if (document.fullscreenElement) {
+      railWasOff = ds.hasAttribute('no-rail');
+      ds.setAttribute('no-rail', '');
+    } else if (!railWasOff) {
+      ds.removeAttribute('no-rail');
+    }
+  });
+
+  /* ── presenter window: current + next previews, notes, timer, clock ── */
+  function openPresenter(){
+    if (presenter && !presenter.closed) { presenter.focus(); return; }
+    presenter = window.open('', 'deck-presenter', 'width=1200,height=760');
+    if (!presenter) {
+      nHead.textContent = 'Presenter window';
+      nBody.textContent = 'The browser blocked the pop-up — allow pop-ups for this page and press P again.';
+      notesEl.classList.add('open');
+      return;
+    }
+    var pd = presenter.document;
+    pd.open();
+    pd.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Presenter — ' + document.title.replace(/</g,'&lt;') + '</title><base href="' + document.baseURI + '"></head><body></body></html>');
+    pd.close();
+    /* carry the deck's stylesheets + tokens over so slide clones render 1:1 */
+    document.head.querySelectorAll('link[rel="stylesheet"], link[rel="preconnect"], style').forEach(function(el){
+      var c = pd.importNode(el, true);
+      if (el.tagName === 'LINK' && el.href) c.setAttribute('href', el.href);
+      pd.head.appendChild(c);
+    });
+    var st = pd.createElement('style');
+    st.textContent =
+      '*,*::before,*::after{animation:none !important;transition:none !important}' +
+      'html,body{margin:0;height:100%;background:#0e0c08;color:var(--on-dark);font-family:var(--font-m,monospace);overflow:hidden}' +
+      '.pw{display:grid;grid-template-rows:52px 1fr;height:100%}' +
+      '.pw-bar{display:flex;align-items:center;gap:22px;padding:0 20px;border-bottom:1px solid var(--line-dark);font-size:13px;letter-spacing:.06em;color:var(--on-dark-muted)}' +
+      '.pw-bar .cnt{color:var(--coral);font-weight:700;font-size:16px}' +
+      '.pw-bar .lbl{color:var(--paper);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}' +
+      '.pw-bar .tmr{cursor:pointer}.pw-bar .tmr b{color:var(--paper)}' +
+      '.pw-bar button{font:inherit;color:var(--on-dark-muted);background:none;border:1px solid var(--line-dark);border-radius:6px;padding:5px 12px;cursor:pointer}' +
+      '.pw-bar button:hover{color:var(--paper);border-color:var(--coral)}' +
+      '.pw-main{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:14px;padding:14px;min-height:0}' +
+      '.pw-col{display:grid;grid-template-rows:auto 1fr;min-height:0;gap:8px}' +
+      '.pw-col.right{grid-template-rows:auto auto auto minmax(0,1fr)}' +
+      '.pw-cap{font-size:11px;letter-spacing:.14em;color:var(--on-dark-faint);text-transform:uppercase}' +
+      '.pw-box{position:relative;min-height:0;overflow:hidden;border:1px solid var(--line-dark);border-radius:8px;background:#000}' +
+      '.pw-canvas{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;background:var(--paper)}' +
+      '.pw-canvas > section{width:1920px;height:1080px;position:relative;overflow:hidden}' +
+      '.pw-notes{overflow:auto;font-family:var(--font-b,sans-serif);font-size:19px;line-height:1.55;color:var(--on-dark);padding-right:6px}';
+    pd.head.appendChild(st);
+    pd.body.innerHTML =
+      '<div class="pw">' +
+        '<div class="pw-bar">' +
+          '<span class="cnt"></span><span class="lbl"></span>' +
+          '<span class="tmr" title="click to reset">elapsed <b class="el">00:00</b></span>' +
+          '<span>clock <b class="ck"></b></span>' +
+          '<button data-nav="-1">‹ prev</button><button data-nav="1">next ›</button>' +
+        '</div>' +
+        '<div class="pw-main">' +
+          '<div class="pw-col"><div class="pw-cap">Current</div><div class="pw-box" id="pwCur"><div class="pw-canvas"></div></div></div>' +
+          '<div class="pw-col right"><div class="pw-cap">Next</div><div class="pw-box" id="pwNext" style="aspect-ratio:16/9;min-height:120px"><div class="pw-canvas"></div></div>' +
+          '<div class="pw-cap" style="margin-top:6px">Notes</div><div class="pw-notes"></div></div>' +
+        '</div>' +
+      '</div>';
+
+    var t0 = Date.now();
+    function two(n){ return (n < 10 ? '0' : '') + n; }
+    function tick(){
+      if (presenter.closed) return;
+      var el = Math.floor((Date.now() - t0) / 1000);
+      pd.querySelector('.el').textContent = two(Math.floor(el / 60)) + ':' + two(el % 60);
+      var d = new Date();
+      pd.querySelector('.ck').textContent = two(d.getHours()) + ':' + two(d.getMinutes());
+      presenter.setTimeout(tick, 1000);
+    }
+    tick();
+    pd.querySelector('.tmr').addEventListener('click', function(){ t0 = Date.now(); });
+
+    function fit(boxId){
+      var box = pd.getElementById(boxId), cv = box.querySelector('.pw-canvas');
+      var k = Math.min(box.clientWidth / 1920, box.clientHeight / 1080);
+      cv.style.transform = 'scale(' + k + ')';
+      cv.style.left = ((box.clientWidth - 1920 * k) / 2) + 'px';
+      cv.style.top = ((box.clientHeight - 1080 * k) / 2) + 'px';
+    }
+    function fill(boxId, slide){
+      var cv = pd.getElementById(boxId).querySelector('.pw-canvas');
+      cv.textContent = '';
+      if (slide) {
+        var c = pd.importNode(slide, true);
+        c.setAttribute('data-deck-active', '');
+        cv.appendChild(c);
+      }
+      fit(boxId);
+    }
+    presenter.__update = function(i){
+      var all = slides(), s = all[i];
+      if (!s) return;
+      var next = i + 1;
+      while (next < all.length && all[next].hasAttribute('data-deck-skip')) next++;
+      fill('pwCur', s);
+      fill('pwNext', all[next] || null);
+      pd.querySelector('.cnt').textContent = (i + 1) + ' / ' + all.length;
+      pd.querySelector('.lbl').textContent = labelOf(s) + (all[next] ? '   →   next: ' + labelOf(all[next]) : '   ·   last slide');
+      pd.querySelector('.pw-notes').textContent = noteOf(s);
+    };
+    presenter.addEventListener('resize', function(){ fit('pwCur'); fit('pwNext'); });
+    pd.addEventListener('keydown', function(e){
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); ds.next(); }
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); ds.prev(); }
+      else if (e.key === 'Home') { ds.goTo(0); }
+      else if (e.key === 'End') { ds.goTo(slides().length - 1); }
+    });
+    pd.querySelectorAll('[data-nav]').forEach(function(b){
+      b.addEventListener('click', function(){ this.dataset.nav === '1' ? ds.next() : ds.prev(); });
+    });
+    presenter.__update(current);
+  }
+
+  ds.addEventListener('slidechange', function(e){
+    current = e.detail.index;
+    if (notesEl.classList.contains('open')) syncNotes();
+    if (presenter && !presenter.closed && presenter.__update) presenter.__update(current);
+  });
+
+  document.addEventListener('keydown', function(e){
+    var t = e.target;
+    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = e.key.toLowerCase();
+    if (k === 'n') { toggleNotes(); }
+    else if (k === 'f') { toggleFullscreen(); }
+    else if (k === 'p') { openPresenter(); }
+  });
+  document.querySelector('[data-pui="notes"]').addEventListener('click', toggleNotes);
+  document.querySelector('[data-pui="fullscreen"]').addEventListener('click', toggleFullscreen);
+  document.querySelector('[data-pui="present"]').addEventListener('click', openPresenter);
+})();
+</script>
+</body>
+</html>
