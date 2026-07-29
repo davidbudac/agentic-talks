@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cost &amp; Context — what agents really cost, and how to spend the window</title>
+
+<!-- Fonts: Space Grotesk (display) + IBM Plex Sans (body) + IBM Plex Mono (mono) — Ember design system -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+
+<link rel="stylesheet" href="ember_design_system/styles.css">
+<style>deck-stage:not(:defined){visibility:hidden}</style>
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   Working Smarter with Agents — Ember design system, token-driven.
+   Fixed 1920×1080 canvas: sizes are px, colours/spacing are tokens.
+   ═══════════════════════════════════════════════════════════════════ */
+:root{
+  --ease:cubic-bezier(.16,1,.3,1);
+  --font-d:var(--font-display); --font-b:var(--font-body); --font-m:var(--font-mono);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--ink);color:var(--text-strong);font-family:var(--font-body)}
+
+/* ── SLIDE FRAME + local type scale ──────────────────────────────── */
+.slide{
+  display:flex; flex-direction:column; overflow:hidden;
+  font-family:var(--font-body); -webkit-font-smoothing:antialiased;
+  --pad-x:var(--slide-pad-x); --pad-t:var(--slide-pad-top); --pad-b:var(--slide-pad-bottom);
+  --h2-size:var(--fs-h2); --h3-size:34px; --lead-size:34px;
+  --body-size:26px; --small-size:20px; --code-size:20px;
+  --gap:28px; --content-gap:var(--gap); --diag-h:440px;
+}
+.slide.dense{
+  --pad-x:88px; --pad-t:var(--slide-pad-top-dense); --pad-b:var(--slide-pad-bottom-dense);
+  --h2-size:var(--fs-h2-sm); --h3-size:30px; --lead-size:30px;
+  --body-size:23px; --small-size:18px; --code-size:18px; --gap:20px; --diag-h:400px;
+}
+.slide.tight{
+  --pad-x:76px; --pad-t:60px; --pad-b:52px;
+  --h2-size:46px; --h3-size:27px; --lead-size:27px;
+  --body-size:21px; --small-size:16px; --code-size:16px; --gap:14px; --diag-h:340px;
+}
+.slide-content{
+  flex:1; min-height:0; display:flex; flex-direction:column; justify-content:center;
+  padding:var(--pad-t) var(--pad-x) var(--pad-b); overflow:hidden; position:relative; z-index:1;
+}
+
+/* ── SCHEMES — Ember light/dark rhythm. Every component reads --s-*. ─ */
+.slide,.slide.light{
+  --s-bg:var(--paper); --s-text:var(--text-strong); --s-muted:var(--text-muted); --s-faint:var(--text-faint);
+  --s-line:var(--line-light-2); --s-line-strong:var(--line-light);
+  --s-card-bg:var(--paper-2); --s-card-border:var(--line-card); --s-box-mid:var(--paper-3);
+  --s-outer-fill:var(--coral-soft); --s-callout-bg:var(--coral-soft);
+  --s-accent:var(--coral-ink); --s-bar:var(--bar);
+  background:var(--s-bg); color:var(--s-text);
+}
+.slide.dark{
+  --s-bg:var(--ink); --s-text:var(--on-dark); --s-muted:var(--on-dark-muted); --s-faint:var(--on-dark-faint);
+  --s-line:var(--line-dark-2); --s-line-strong:var(--line-dark);
+  --s-card-bg:var(--ink-2); --s-card-border:var(--line-dark); --s-box-mid:var(--ink-2);
+  --s-outer-fill:rgba(255,92,53,.10); --s-callout-bg:rgba(255,92,53,.10);
+  --s-accent:var(--coral); --s-bar:var(--bar-dark);
+  background:var(--s-bg); color:var(--s-text);
+}
+
+/* ── HEADER ──────────────────────────────────────────────────────── */
+.slide-head{
+  display:flex; align-items:baseline; justify-content:space-between; gap:var(--space-5);
+  margin-bottom:var(--gap); border-bottom:var(--bw-hair) solid var(--s-line); padding-bottom:18px;
+}
+.snum{font:var(--w-bold) 48px/1 var(--font-display); color:var(--s-accent); letter-spacing:var(--track-snug)}
+.crumb{font:var(--w-medium) var(--small-size)/1.2 var(--font-mono); letter-spacing:var(--track-eyebrow);
+  text-transform:uppercase; color:var(--s-muted); text-align:right}
+.crumb b{color:var(--s-accent); font-weight:var(--w-semibold)}
+
+/* ── TYPE ────────────────────────────────────────────────────────── */
+h2{font-family:var(--font-display); font-weight:var(--w-bold); font-size:var(--h2-size);
+  line-height:var(--lh-snug); letter-spacing:var(--track-snug); margin-bottom:22px; color:var(--s-text); text-wrap:balance}
+h2 .o{color:var(--s-accent)}
+h3{font-family:var(--font-display); font-weight:var(--w-bold); font-size:var(--h3-size);
+  line-height:var(--lh-snug); letter-spacing:var(--track-snug); color:var(--s-text)}
+.lead{font-size:var(--lead-size); line-height:1.45; max-width:48ch; color:var(--s-text); text-wrap:pretty}
+.lead b{color:var(--s-accent)}
+.muted{color:var(--s-muted)}
+strong,b{font-weight:var(--w-semibold)}
+
+ul.bul{list-style:none; display:flex; flex-direction:column; gap:20px; max-width:68ch}
+ul.bul li{font-size:var(--body-size); line-height:1.45; padding-left:1.55em; position:relative;
+  color:var(--s-text); text-wrap:pretty}
+ul.bul li::before{content:""; position:absolute; left:0; top:.44em; width:.6em; height:.6em;
+  background:var(--s-accent); clip-path:polygon(0 0,100% 50%,0 100%)}
+ul.bul li b{color:var(--s-text); font-weight:var(--w-semibold)}
+
+.note{font-size:var(--small-size); color:var(--s-muted); margin-top:20px; line-height:1.45; text-wrap:pretty}
+.note b{color:var(--s-text); font-weight:var(--w-semibold)}
+
+/* ── CARDS / TILES ───────────────────────────────────────────────── */
+.cards{display:grid; gap:var(--space-5)}
+.cards.c3{grid-template-columns:repeat(3,1fr)}
+.cards.c2,.cards.c4{grid-template-columns:repeat(2,1fr)}
+.tile{border:var(--bw) solid var(--s-card-border); border-radius:var(--radius-lg);
+  padding:30px 32px; background:var(--s-card-bg); display:flex; flex-direction:column; gap:10px}
+.tile .k{font-family:var(--font-display); font-weight:var(--w-bold); color:var(--s-accent);
+  font-size:30px; letter-spacing:var(--track-snug)}
+.tile p{font-size:var(--body-size); line-height:1.4; color:var(--s-text); text-wrap:pretty}
+.tile.fill{background:var(--s-callout-bg); border-color:var(--s-card-border);
+  border-left:var(--bw-callout) solid var(--coral); border-radius:0 var(--radius-lg) var(--radius-lg) 0}
+
+.kcard{background:var(--s-callout-bg); color:var(--s-text); border:var(--bw) solid var(--s-card-border);
+  border-left:var(--bw-callout) solid var(--coral); border-radius:0 var(--radius-xl) var(--radius-xl) 0;
+  padding:40px 44px; position:relative; overflow:hidden}
+.slide.dark .kcard{box-shadow:var(--ring-accent-dark)}
+.kcard .big{font-family:var(--font-display); font-weight:var(--w-bold); color:var(--s-accent);
+  font-size:56px; line-height:1.02; letter-spacing:var(--track-snug)}
+.kcard p{font-size:var(--body-size); line-height:1.42; margin-top:14px; max-width:50ch; color:var(--s-text)}
+
+.split{display:grid; grid-template-columns:1fr 1fr; gap:var(--space-8); align-items:center; min-height:0}
+
+/* ── TABLES ──────────────────────────────────────────────────────── */
+table.tbl{width:100%; border-collapse:collapse; font-size:var(--body-size)}
+table.tbl th,table.tbl td{text-align:left; padding:16px 20px; border-bottom:var(--bw-hair) solid var(--s-line)}
+table.tbl th{font-family:var(--font-mono); color:var(--s-accent); font-weight:var(--w-semibold);
+  font-size:var(--small-size); letter-spacing:var(--track-label); text-transform:uppercase}
+table.tbl td{color:var(--s-text)}
+table.tbl td b{color:var(--s-text); font-weight:var(--w-semibold)}
+table.tbl tr:last-child td{border-bottom:none}
+
+/* ── CHIPS ───────────────────────────────────────────────────────── */
+.extag{display:inline-block; font-family:var(--font-mono); font-size:var(--small-size); color:var(--s-accent);
+  background:var(--s-callout-bg); border:var(--bw-hair) solid var(--s-card-border);
+  padding:4px 14px; border-radius:var(--radius-sm); margin-bottom:12px; letter-spacing:var(--track-label);
+  text-transform:uppercase}
+.pills{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px}
+.pill{font-family:var(--font-mono); border:var(--bw-hair) solid var(--coral); color:var(--s-accent);
+  border-radius:var(--radius-pill); padding:4px 16px; font-size:var(--small-size);
+  font-weight:var(--w-semibold); letter-spacing:var(--track-label); white-space:nowrap}
+.pill.live{background:var(--coral); color:var(--ink); border-color:var(--coral)}
+
+/* ── CODE ────────────────────────────────────────────────────────── */
+.code{background:var(--code-bg); border:var(--bw) solid var(--s-line); border-left:3px solid var(--coral);
+  border-radius:var(--radius-lg); padding:24px 28px; font-family:var(--font-mono);
+  font-size:var(--code-size); line-height:var(--lh-mono); overflow:hidden; color:var(--code-text);
+  white-space:pre-wrap}
+.code .c{color:var(--code-comment)}
+.code .o{color:var(--code-keyword)}
+.code .g{color:var(--code-string)}
+.code .b{color:var(--code-number)}
+.code .d{color:var(--code-keyword)}
+
+/* ── SECTION DIVIDER ─────────────────────────────────────────────── */
+.divider .slide-content{align-items:flex-start; justify-content:center; text-align:left}
+.divider .dnum{font:var(--w-bold) var(--fs-mega)/var(--lh-tight) var(--font-display);
+  color:var(--coral); letter-spacing:var(--track-tight); margin-bottom:10px}
+.divider h2{font-size:var(--fs-h1)}
+.divider h2::after{content:""; display:block; width:var(--accent-bar-w); height:var(--bw-accent);
+  background:var(--coral); border-radius:var(--radius-bar); margin:.45em 0 .1em}
+.divider .dsub{color:var(--s-muted); font-size:var(--fs-body-lg); max-width:42ch;
+  margin-top:18px; line-height:var(--lh-body)}
+.divider .dsub b{color:var(--s-text); font-weight:var(--w-semibold)}
+
+/* ── GLOSSARY / USES ─────────────────────────────────────────────── */
+.gloss{display:grid; grid-template-columns:1fr 1fr; gap:4px 44px}
+.gloss .row{display:flex; gap:18px; align-items:baseline; padding:12px 0;
+  border-bottom:var(--bw-hair) solid var(--s-line)}
+.gloss .term{font-family:var(--font-display); font-weight:var(--w-semibold); color:var(--s-accent);
+  font-size:var(--body-size); min-width:6.2em; flex-shrink:0; letter-spacing:var(--track-snug)}
+.gloss .def{font-size:var(--body-size); color:var(--s-text); line-height:1.35}
+.uses{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-5)}
+
+/* ── DIAGRAMS (pure HTML/CSS boxes — no video assets in this deck) ── */
+.diagram{width:100%; display:flex; justify-content:center; align-items:center; margin-top:8px; min-height:0}
+.diagram svg{width:100%; height:auto; max-height:var(--diag-h)}
+.dg-box{fill:var(--s-card-bg); stroke:var(--s-card-border); stroke-width:1.5}
+.dg-box.hot{fill:var(--coral); stroke:var(--coral)}
+.dg-box.outer{fill:var(--s-outer-fill); stroke:var(--coral); stroke-dasharray:6 5}
+.dg-box.mid{fill:var(--s-box-mid); stroke:var(--s-card-border)}
+.dg-t{fill:var(--s-text); font-family:var(--font-body); font-weight:var(--w-semibold)}
+.dg-t.on{fill:var(--ink)}
+.dg-t.mut{fill:var(--s-muted); font-weight:var(--w-medium)}
+.dg-t.acc{fill:var(--s-accent); font-family:var(--font-mono); font-weight:var(--w-semibold)}
+.dg-line{stroke:var(--s-accent); stroke-width:2.5; fill:none}
+.dg-line.dim{stroke:var(--s-line-strong); stroke-width:1.5}
+.dg-cap{text-align:center; font-size:var(--small-size); color:var(--s-muted); margin-top:10px}
+.dg-cap b{color:var(--s-text)}
+.diagram marker path{fill:var(--s-accent)}
+
+/* flow: HTML/CSS step chain used instead of video diagrams */
+.flow{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+.flow .step{border:var(--bw) solid var(--s-card-border); background:var(--s-card-bg); border-radius:var(--radius-md);
+  padding:16px 20px; font-family:var(--font-mono); font-size:var(--small-size); color:var(--s-text); text-align:center; min-width:120px}
+.flow .step.hot{background:var(--s-callout-bg); border-color:var(--coral); color:var(--s-accent); font-weight:var(--w-semibold)}
+.flow .arrow{color:var(--s-faint); font-size:22px}
+
+/* ── DEMO / FALLBACK ─────────────────────────────────────────────── */
+.demo-badge{display:inline-flex; align-items:center; gap:8px; font-family:var(--font-mono); font-weight:var(--w-bold);
+  font-size:var(--small-size); letter-spacing:var(--track-label); text-transform:uppercase; color:var(--coral);
+  border:var(--bw) solid var(--coral); border-radius:var(--radius-pill); padding:6px 18px 6px 14px; margin-bottom:16px}
+.demo-badge::before{content:"\1F534"; font-size:.85em}
+.fallback-box{border:2px dashed var(--s-card-border); border-radius:var(--radius-lg); background:var(--s-card-bg);
+  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; padding:40px; min-height:0}
+.fallback-box .fb-icon{font-family:var(--font-mono); font-size:64px; color:var(--s-faint)}
+.fallback-box .fb-caption{font-family:var(--font-mono); font-size:var(--small-size); color:var(--s-muted); text-align:center; max-width:48ch}
+
+/* ── WIP badge (title slide) ─────────────────────────────────────── */
+.wip-badge{display:inline-flex; align-items:center; gap:10px; font-family:var(--font-mono); font-weight:700;
+  font-size:16px; letter-spacing:.14em; text-transform:uppercase; color:var(--coral);
+  border:1.5px solid var(--coral); border-radius:var(--radius-pill); padding:6px 18px; margin-bottom:20px}
+
+/* ── TITLE SLIDE ─────────────────────────────────────────────────── */
+.title-slide{display:flex; flex-direction:column; justify-content:space-between; background:var(--ink);
+  padding:88px 96px 0}
+.ts-top{display:flex; justify-content:space-between; align-items:baseline; font:600 var(--fs-eyebrow) var(--font-mono);
+  letter-spacing:var(--track-eyebrow); text-transform:uppercase}
+.ts-top .k{color:var(--coral)}
+.ts-top .meta{color:var(--on-dark-faint); font-weight:500}
+.ts-hero h1{font-family:var(--font-display); font-weight:var(--w-bold); letter-spacing:-.035em; line-height:.94;
+  color:var(--on-dark); font-size:132px}
+.ts-hero h1 .dot{color:var(--coral)}
+.ts-sub{font-size:34px; color:var(--on-dark-muted); margin-top:36px; font-weight:400; max-width:34ch}
+.ts-sub b{color:var(--on-dark); font-weight:600}
+.ts-foot{border-top:var(--bw-hair) solid var(--line-dark); margin:0 -96px; padding:34px 96px 40px;
+  display:flex; justify-content:space-between; align-items:center}
+.ts-author{font-size:26px; color:var(--on-dark-muted)}
+.ts-author a{color:inherit;text-decoration:none;border-bottom:1px solid transparent;transition:border-color .15s}
+.ts-author a:hover{border-color:currentColor}
+.ts-author b{color:var(--coral); font-weight:var(--w-semibold)}
+.ts-loopline{font:500 24px var(--font-mono); letter-spacing:.04em; color:var(--on-dark-faint)}
+.ts-loopline .a{color:var(--coral)}
+.ts-loopline .w{color:var(--on-dark-muted)}
+
+/* ── CLOSING ─────────────────────────────────────────────────────── */
+.thanks{font-family:var(--font-display); font-weight:var(--w-bold); font-size:104px; line-height:.98;
+  letter-spacing:var(--track-tight); color:var(--s-text)}
+.thanks .o{color:var(--s-accent)}
+.links{display:grid; grid-template-columns:1fr 1fr; gap:var(--space-7)}
+.linkcol h3{color:var(--s-accent); font-family:var(--font-display); font-weight:var(--w-semibold);
+  margin-bottom:12px; font-size:26px; letter-spacing:var(--track-snug)}
+.linkcol a{display:block; color:var(--s-text); text-decoration:none; font-size:19px; line-height:1.3;
+  padding:6px 0; border-bottom:var(--bw-hair) solid var(--s-line)}
+.linkcol a:hover{color:var(--s-accent)}
+.linkcol a .u{display:block; color:var(--s-muted); font-family:var(--font-mono); font-size:.8em; margin-top:.08em}
+
+/* ── ENTRANCE MOTION ─────────────────────────────────────────────── */
+@keyframes ae-rise{from{opacity:0; transform:translateY(22px)} to{opacity:1; transform:none}}
+@media (prefers-reduced-motion:no-preference){
+  [data-deck-active] .reveal{animation:ae-rise .5s var(--ease) both}
+  [data-deck-active] .reveal:nth-child(2){animation-delay:.07s}
+  [data-deck-active] .reveal:nth-child(3){animation-delay:.14s}
+  [data-deck-active] .reveal:nth-child(4){animation-delay:.21s}
+  [data-deck-active] .reveal:nth-child(n+5){animation-delay:.27s}
+  [data-deck-active] .title-slide>*{animation:ae-rise .8s var(--ease) both}
+  [data-deck-active] .title-slide>.ts-hero{animation-delay:.15s}
+  [data-deck-active] .title-slide>.ts-foot{animation-delay:.3s}
+}
+</style>
+</head>
+<body>
+
+<!--
+  ============================================================
+  Cost & Context — a ~30-minute deep dive, deck 05 in the
+  series. Pulled out of the half-day "Working Smarter with
+  Agents" workshop as a standalone talk for engineers already
+  running Claude Code daily. Two parts:
+  01 what agents really cost (subscriptions, API, Bedrock,
+  Cursor's credit pool), 02 efficient work with context — the
+  most important part, with a live bloated-vs-lean CLAUDE.md
+  demo and a fallback slide behind it.
+  All pricing/product claims sourced from deck05-facts.md
+  (July 2026 research pass) — see the closing Sources slide.
+  Status: WIP / DRAFT — flagged on the title slide.
+  Runs on the Ember deck-stage component: ←/→, Space, Home/End,
+  number keys; R resets; speaker notes live on each section.
+  ============================================================
+-->
+
+<deck-stage width="1920" height="1080">
+
+  <!-- TITLE -->
+  <section class="slide dark title-slide" data-label="Title"
+    data-speaker-notes="Open by naming the two words this deck lives on: cost, then context. Say plainly that this is a deep dive lifted out of the half-day workshop — everyone here already runs Claude Code, so there's no warm-up. Flag that it's a work-in-progress deck and you want pushback on the demo as much as on the content.">
+    <div class="ts-top"><span class="k">Deep dive · advanced topics · ~30 min</span><span class="meta">Internal talk · July 2026</span></div>
+    <div class="ts-hero">
+      <div class="wip-badge">WIP — draft</div>
+      <h1>Cost &amp; Context<span class="dot">.</span></h1>
+      <p class="ts-sub">What agents really <b>cost</b> — and how to spend the <b>context window</b> like the scarce resource it is.</p>
+    </div>
+    <div class="ts-foot">
+      <div class="ts-author"><a href="https://davidbudac.cz" target="_blank" rel="noopener">David&nbsp;Budáč</a></div>
+      <div class="ts-loopline"><span class="w">cost</span> <span class="a">→</span> <span class="w">context</span></div>
+    </div>
+  </section>
+
+  <!-- AGENDA -->
+  <section class="slide light" data-label="Agenda"
+    data-speaker-notes="Keep this to fifteen seconds: two parts, about half an hour, with a live CLAUDE.md comparison landing at the end. Say out loud that part 02 is the one to remember — part 01 exists mostly to make part 02 land with numbers behind it. Point at the date stamp so nobody quotes a price externally without checking.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">2</span><div class="crumb"><b>Agenda</b></div></div>
+      <h2 class="reveal">Two parts, <span class="o">half an hour</span></h2>
+      <table class="tbl reveal">
+        <thead><tr><th>Part</th><th>Topic</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td><b>01</b></td><td>What agents really cost</td><td>subscriptions, API, Bedrock</td></tr>
+          <tr><td><b>02</b></td><td>Efficient work with context</td><td><b>most important part</b> · live demo</td></tr>
+        </tbody>
+      </table>
+      <p class="note reveal">All pricing and product claims are date-stamped <b>July 2026</b> and sourced — see the closing Sources slide.</p>
+    </div>
+  </section>
+
+  <!-- ============ PART 01 — WHAT AGENTS REALLY COST ============ -->
+  <section class="slide dark divider" data-label="01 What agents really cost"
+    data-speaker-notes="Set up the part as plumbing, not sales: most engineers in this room have never looked at what a session actually bills. Promise a real traced session, the current subscription and API landscape, and a decision table at the end for which plan fits which team. Two sentences and move on.">
+    <div class="slide-content">
+      <div class="dnum reveal">01</div>
+      <h2 class="reveal">What agents <span class="o">really cost</span></h2>
+      <p class="dsub reveal">Tokens, priced. One real session's bill, traced line by line. Then: <b>which plan for which team.</b></p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Tokens 101, priced"
+    data-speaker-notes="Quick refresher but priced this time: input, output, and cached input are three different meters. Point at the facts table and be explicit that these are July 2026 numbers from third-party trackers, not the pricing page itself — tell the room to spot-check before quoting exact figures externally.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">3</span><div class="crumb"><b>Cost</b> · tokens, priced</div></div>
+      <h2 class="reveal">Three meters, <span class="o">not one</span></h2>
+      <div class="cards c3 reveal">
+        <div class="tile"><span class="k">Input</span><p>Everything sent with the request — prompt, files, tool results, history. Cheapest per-token meter.</p></div>
+        <div class="tile"><span class="k">Output</span><p>Everything the model generates — including thinking tokens. The priciest meter, often 5× input.</p></div>
+        <div class="tile fill"><span class="k">Cached input</span><p>Repeated context (system prompt, CLAUDE.md, tool schemas) served from cache — up to <b>~90% cheaper</b>.</p></div>
+      </div>
+      <p class="note reveal">July 2026 rates, e.g. Sonnet 5: <b>$3/M input · $15/M output</b> (introductory $2/$10 through Aug 31, 2026). Spot-check <span class="muted">platform.claude.com/docs/en/pricing</span> before quoting externally.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Why output dominates"
+    data-speaker-notes="The point that surprises people: output tokens are the ones you don't see coming, because thinking tokens are output too. A verbose agent that re-explains its plan five times is burning the expensive meter, not the cheap one. Tie it back to the effort dial from deck 03 — xhigh reasoning is real spend, not free.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">4</span><div class="crumb"><b>Cost</b> · output dominates</div></div>
+      <h2 class="reveal">Why <span class="o">output</span> tokens dominate</h2>
+      <ul class="bul reveal">
+        <li><b>Thinking tokens are output tokens.</b> The effort dial (deck 03) trades quality for real, billed spend — xhigh is not free.</li>
+        <li>Output is typically <b>5× the price</b> of input per token — a verbose agent that narrates every step pays a premium for it.</li>
+        <li>Latency follows the same meter: output tokens are generated <b>one at a time</b>; input is processed in parallel. Long output = slow turn.</li>
+        <li>Practical lever: shorter, more decisive final answers and tighter thinking budgets cut both cost and wait time together.</li>
+      </ul>
+      <p class="note reveal">Cost and latency are the <b>same lever</b> here — trimming output tokens helps both at once.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Anatomy of a session's bill"
+    data-speaker-notes="Walk this as a real trace, not a hypothetical: system prompt and tool schemas load once and get cached, every file read adds input tokens, every re-read of the same file (because context was lost) pays again. The punchline is that re-reads are the single biggest avoidable line item in most sessions — that is exactly what part two is about.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">5</span><div class="crumb"><b>Cost</b> · one session's bill</div></div>
+      <h2 class="reveal">Anatomy of a <span class="o">session's bill</span></h2>
+      <div class="code reveal"><span class="c"># a real agentic session, traced turn by turn</span>
+  <span class="o">system prompt + tool schemas ›</span> <span class="g">cached after turn 1</span>
+  <span class="o">CLAUDE.md ›</span>                  <span class="g">cached, resent every turn</span>
+  <span class="o">file reads (×12) ›</span>          <span class="b">input — the biggest line item</span>
+  <span class="o">re-reads of same file (×4) ›</span> <span class="c">avoidable — context got dropped</span>
+  <span class="o">thinking + final answer ›</span>   <span class="b">output — priciest per token</span></div>
+      <p class="note reveal">The single biggest avoidable cost in most sessions is <b>re-reading the same file</b> because context was already lost or cleared badly — part 02's whole subject.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Subscriptions today"
+    data-speaker-notes="Give the current landscape plainly: Pro at twenty a month, Max at two tiers of five and twenty times the usage. Explicitly say you found no confirmed announcement of a new subscription direction beyond this — don't let anyone repeat a rumor as fact.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">6</span><div class="crumb"><b>Cost</b> · subscriptions today</div></div>
+      <h2 class="reveal">Pro, Max — <span class="o">and no confirmed "next"</span></h2>
+      <table class="tbl reveal">
+        <thead><tr><th>Plan</th><th>Price</th><th>Usage</th></tr></thead>
+        <tbody>
+          <tr><td><b>Pro</b></td><td>$20/mo (~$17/mo annual)</td><td>baseline</td></tr>
+          <tr><td><b>Max 5×</b></td><td>$100/mo</td><td>5× Pro's limits</td></tr>
+          <tr><td><b>Max 20×</b></td><td>$200/mo</td><td>20× Pro's limits, extended context, priority support</td></tr>
+        </tbody>
+      </table>
+      <p class="note reveal">No confirmed statement of a new subscription "direction" beyond Pro/Max/Team/Enterprise as of July 2026 — treat any such claim as <b>unconfirmed</b>. Pricing moves periodically; verify at claude.com/pricing before presenting exact numbers.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="API pricing across the family"
+    data-speaker-notes="This is the table people photograph, so give it room. Read the per-million rates and be explicit about the Sonnet introductory pricing expiry on August 31st, 2026 — that date matters for anyone budgeting past summer. Mention prompt caching's roughly ninety percent discount and the batch API's flat fifty percent, since both change the real number a lot.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">7</span><div class="crumb"><b>Cost</b> · API pricing, family-wide</div></div>
+      <h2 class="reveal">API pricing across the <span class="o">model family</span></h2>
+      <table class="tbl reveal">
+        <thead><tr><th>Model</th><th>Input /M</th><th>Output /M</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td><b>Fable 5</b></td><td>$10</td><td>$50</td><td>highest-cost self-serve tier</td></tr>
+          <tr><td><b>Opus 5</b></td><td>$5</td><td>$25</td><td>complex agentic coding, enterprise</td></tr>
+          <tr><td><b>Sonnet 5</b></td><td>$3</td><td>$15</td><td>$2/$10 intro through Aug 31, 2026</td></tr>
+          <tr><td><b>Haiku 4.5</b></td><td>$1</td><td>$5</td><td>classification, extraction, routing</td></tr>
+        </tbody>
+      </table>
+      <p class="note reveal">Prompt caching: up to <b>~90% off</b> cached input. Batch API: flat <b>50% off</b>. Third-party trackers agree here, but spot-check the Anthropic pricing page directly before quoting on stage.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Subscription vs API"
+    data-speaker-notes="Give the room a rule of thumb rather than a spreadsheet: steady daily coding use inside the usage caps favors a subscription, bursty or programmatic use — CI, batch, evals — favors raw API. The Cursor-style credit-pool model is a hybrid worth naming since it comes back in deck 07, Measuring What Works.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">8</span><div class="crumb"><b>Cost</b> · subscription vs API</div></div>
+      <h2 class="reveal">When a subscription <span class="o">beats API</span> — and vice versa</h2>
+      <div class="split">
+        <div class="tile fill"><span class="k">Subscription wins</span><p>Steady daily interactive coding, one person, usage inside the plan's cap. Predictable monthly bill.</p></div>
+        <div class="tile"><span class="k">API wins</span><p>Bursty or programmatic use — CI runs, batch jobs, evals, multi-agent fleets. Pay exactly for what runs.</p></div>
+      </div>
+      <p class="note reveal">Hybrid credit-pool models (Cursor's Auto mode — deck 07, <i>Measuring What Works</i>) sit in between: subscription price, usage-aware routing underneath.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Teams & Enterprise"
+    data-speaker-notes="Walk the admin surface quickly: Team gives SSO and central controls, Enterprise stacks SCIM, fine-grained roles, IP allowlisting, audit logs, and spend limits on top, and it's annual-only at twenty per seat plus API-rate usage. This is the slide procurement people in the room actually need.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">9</span><div class="crumb"><b>Cost</b> · Team & Enterprise</div></div>
+      <h2 class="reveal">Team → <span class="o">Enterprise</span></h2>
+      <div class="split">
+        <ul class="bul reveal">
+          <li><b>Team:</b> SSO plus central admin controls for connectors and desktop deployment.</li>
+          <li><b>Enterprise:</b> $20/seat/month + usage billed at API rates, annual only.</li>
+        </ul>
+        <ul class="bul reveal">
+          <li>Adds on top of Team: SAML 2.0/OIDC SSO with domain capture, SCIM provisioning, fine-grained roles, IP allowlisting, audit logs, custom retention, org/user spend limits.</li>
+        </ul>
+      </div>
+      <p class="note reveal">Verified SSO paths: Okta, Microsoft Entra ID, Google Workspace.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Why Bedrock"
+    data-speaker-notes="Explain Bedrock as a procurement and governance answer, not a different product: same models, but data stays inside AWS, regional inference profiles cover residency requirements, and an existing AWS spend commitment can retire against it. Flag the ten percent premium on single-region endpoints so nobody is surprised by the invoice.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">10</span><div class="crumb"><b>Cost</b> · Claude on AWS Bedrock</div></div>
+      <h2 class="reveal">Why an org reaches for <span class="o">Bedrock</span></h2>
+      <ul class="bul reveal">
+        <li>Data stays inside AWS infrastructure — not shared with Anthropic or third parties; regional inference profiles cover US/EU/JP/AU residency.</li>
+        <li>Single AWS bill, existing IAM/CloudTrail, and the ability to retire committed AWS spend (Enterprise Discount Program) against Claude usage.</li>
+        <li><b>Regional (single-region) endpoints carry a 10% pricing premium</b> over global endpoints.</li>
+        <li>Reach for it when: AWS data-boundary requirements, Guardrails/Knowledge Bases, strict regional residency, unified AWS governance.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Cursor pricing & routing"
+    data-speaker-notes="Cursor is worth a slide here because its pricing model is philosophically different: a credit pool for premium models plus an Auto mode that routes for free and doesn't touch the pool. Preview Cursor Router briefly — it's new as of July 22nd — and flag the sixty percent savings figure explicitly as Cursor's own marketing claim, not independently verified. Full harness comparison comes back in deck 07, Measuring What Works.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">11</span><div class="crumb"><b>Cost</b> · Cursor's model</div></div>
+      <h2 class="reveal">Cursor: <span class="o">credit pool + Auto routing</span></h2>
+      <ul class="bul reveal">
+        <li>Four tiers: <b>Hobby</b> (free), <b>Pro</b> ($20/mo, $20 credit pool), <b>Pro+</b> ($60/mo), <b>Ultra</b> ($200/mo).</li>
+        <li><b>Auto mode:</b> Cursor picks the model per request; unlimited on paid plans, doesn't draw from the credit pool.</li>
+        <li><b>Cursor Router</b> (Teams/Enterprise, launched Jul 22, 2026): a decision layer that picks per-request which model runs — not a new model itself.</li>
+      </ul>
+      <p class="note reveal">Cursor claims up to <b>60% cost savings</b> vs. running everything on Opus — that number is <b>Cursor's own marketing claim</b>, not independently verified.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Which plan, which team"
+    data-speaker-notes="Close the part with the decision table people actually came for. Walk each row: a solo daily coder wants a subscription, a CI pipeline wants raw API with batch discounts where possible, a regulated team wants Bedrock, a team wanting model diversity per task wants Cursor or OpenRouter (deck 07). Keep it a reference slide, don't over-narrate.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">12</span><div class="crumb"><b>Cost</b> · takeaway</div></div>
+      <h2 class="reveal">Which plan or channel — <span class="o">for which team</span></h2>
+      <table class="tbl reveal">
+        <thead><tr><th>Team shape</th><th>Reach for</th></tr></thead>
+        <tbody>
+          <tr><td>Solo engineer, daily interactive coding</td><td>Pro or Max, by usage volume</td></tr>
+          <tr><td>CI, batch jobs, scheduled evals</td><td>raw API + batch discount (50% off)</td></tr>
+          <tr><td>Regulated data / AWS-committed org</td><td>Claude on Bedrock (regional endpoint)</td></tr>
+          <tr><td>Team needing SSO/audit/spend limits</td><td>Team or Enterprise</td></tr>
+          <tr><td>Wants routing across model vendors</td><td>Cursor Router or OpenRouter (deck 07)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ PART 02 — EFFICIENT WORK WITH CONTEXT ============ -->
+  <section class="slide dark divider" data-label="02 Efficient work with context"
+    data-speaker-notes="This is the part to slow down for — say out loud that if this deck is remembered for one thing, this is it. Context is the scarce resource: it degrades as it fills, it costs on every turn, and careless clearing invalidates the cache you just paid for. The live demo at the end makes this concrete with numbers, not just vibes.">
+    <div class="slide-content">
+      <div class="dnum reveal">02</div>
+      <h2 class="reveal">Efficient work <span class="o">with context</span></h2>
+      <p class="dsub reveal">The <b>most important part</b> of today. Context is the scarce resource — spend it like one.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Context is the scarce resource"
+    data-speaker-notes="Frame the three failure modes together: quality degrades as the window fills even before the hard limit, every turn re-sends (and re-bills) most of what's there, and any edit near the start of the conversation invalidates the prefix cache for everything after it. This is the thesis slide for the whole part.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">13</span><div class="crumb"><b>Context</b> · the scarce resource</div></div>
+      <h2 class="reveal">Context is <span class="o">scarce</span> — spend it like it</h2>
+      <ul class="bul reveal">
+        <li><b>Degrades with fill.</b> Quality starts slipping well before the hard token limit — a full window is not a healthy window.</li>
+        <li><b>Costs on every turn.</b> Most of what's in the window gets resent (and mostly re-billed) each time you send a message.</li>
+        <li><b>Cache invalidation.</b> Edit anything near the start of the conversation and the prefix cache for everything after it is gone.</li>
+      </ul>
+      <p class="note reveal">Three separate failure modes, one fix: be deliberate about what stays in the window.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="The context lifecycle"
+    data-speaker-notes="Walk the flow left to right: system prompt loads once, CLAUDE.md loads once and is resent every turn, tool schemas load once, then the conversation itself grows unbounded. Point out that only the conversation portion is genuinely dynamic — everything before it is fixed overhead you pay repeatedly.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">14</span><div class="crumb"><b>Context</b> · the lifecycle</div></div>
+      <h2 class="reveal">The context lifecycle of a <span class="o">session</span></h2>
+      <div class="flow reveal">
+        <div class="step">system prompt</div><div class="arrow">→</div>
+        <div class="step">CLAUDE.md</div><div class="arrow">→</div>
+        <div class="step">tool schemas</div><div class="arrow">→</div>
+        <div class="step hot">conversation (grows every turn)</div>
+      </div>
+      <p class="note reveal">Everything left of "conversation" is fixed overhead, resent and re-billed every turn (cached, but not free). Only the conversation genuinely grows — and it's the part you control least by default.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="What's resent every turn"
+    data-speaker-notes="Make this concrete with a number: a session with a bloated CLAUDE.md and a dozen tool schemas can be paying several thousand tokens of fixed overhead before the user has typed a single word. Cached, so cheaper than raw input — but not zero, and it compounds across every message in a long session.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">15</span><div class="crumb"><b>Context</b> · what's resent</div></div>
+      <h2 class="reveal">What gets <span class="o">resent every turn</span></h2>
+      <div class="code reveal"><span class="c"># turn N of a real session — before the user has typed anything:</span>
+  <span class="o">system prompt ›</span>   <span class="b">~1–2K tokens</span>  <span class="c">(cached)</span>
+  <span class="o">CLAUDE.md ›</span>       <span class="b">variable</span>     <span class="c">(cached — but size still matters, see next slides)</span>
+  <span class="o">tool schemas ›</span>   <span class="b">~1–5K tokens</span> <span class="c">(cached, scales with tool/MCP count)</span>
+  <span class="o">conversation ›</span>   <span class="b">grows every turn</span> <span class="c">(the part you actually control turn-to-turn)</span></div>
+      <p class="note reveal">Caching makes this cheaper, not free — and a cache miss (from any upstream edit) means the <b>full</b> price, every time.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="CLAUDE.md: what belongs"
+    data-speaker-notes="Give a positive checklist: constraints the repo can't express on its own, the exact commands to run, and conventions that would otherwise need to be re-explained every session. The test is 'could this live as a comment or a README instead' — if yes, it usually shouldn't be in CLAUDE.md.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">16</span><div class="crumb"><b>Context</b> · CLAUDE.md, what belongs</div></div>
+      <h2 class="reveal">CLAUDE.md: what <span class="o">belongs</span></h2>
+      <ul class="bul reveal">
+        <li><b>Constraints the repo can't express:</b> "never touch the payments schema without a migration review."</li>
+        <li><b>Commands the agent needs every session:</b> exact test runner, lint command, deploy steps.</li>
+        <li><b>Conventions that aren't derivable from code:</b> naming rules, review process, who owns what.</li>
+      </ul>
+      <p class="note reveal">Test: could this live as a code comment or README instead? If yes, it usually shouldn't be here.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="CLAUDE.md: what doesn't"
+    data-speaker-notes="Give the negative list just as directly: anything the agent can already derive by reading the code, one-off notes from a single incident, and long essays explaining rationale nobody needs turn to turn. Every line in CLAUDE.md is paid for on every single turn of every session forever — say that sentence slowly.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">17</span><div class="crumb"><b>Context</b> · CLAUDE.md, what doesn't</div></div>
+      <h2 class="reveal">CLAUDE.md: what <span class="o">doesn't belong</span></h2>
+      <ul class="bul reveal">
+        <li><b>Anything derivable from the code.</b> The agent can read the file; don't pre-digest it for every session, forever.</li>
+        <li><b>One-off notes.</b> "Fixed the flaky test on Tuesday" belongs in a commit message, not a file resent every turn.</li>
+        <li><b>Essays.</b> Rationale nobody needs turn-to-turn is a cost with no ongoing return.</li>
+      </ul>
+      <p class="note reveal">Every line in CLAUDE.md is paid for <b>on every turn, of every session, forever.</b> Treat additions like you'd treat a hot-path dependency.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Measuring CLAUDE.md changes"
+    data-speaker-notes="This bridges into deck 07, Measuring What Works: don't just eyeball a CLAUDE.md diff, measure it. Token overhead per session is a direct number from the API response. Set up the demo: you're about to run the same task twice, once with each version, and compare turns, tokens, and outcome live.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">18</span><div class="crumb"><b>Context</b> · measuring changes</div></div>
+      <h2 class="reveal">Measure the effect — <span class="o">don't guess it</span></h2>
+      <ul class="bul reveal">
+        <li><b>Token overhead per session:</b> read it straight off the API usage response — before/after a CLAUDE.md change.</li>
+        <li><b>Behavioral spot-checks:</b> does the agent still follow the constraint you kept, and stop repeating the one you cut?</li>
+        <li><b>Before/after evals on a fixed task set:</b> the rigorous version — same tasks, same rubric, two CLAUDE.md variants (full method in deck 07, <i>Measuring What Works</i>).</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="/clear vs /compact"
+    data-speaker-notes="Give the practical rule: /clear when the task is genuinely done and you're starting something unrelated — full reset, no baggage. /compact when you're mid-task and the window is filling but you still need the thread — it summarizes and keeps going. Using the wrong one either loses context you needed or drags dead weight into a new task.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">19</span><div class="crumb"><b>Context</b> · hygiene</div></div>
+      <h2 class="reveal"><span class="o">/clear</span> vs <span class="o">/compact</span></h2>
+      <div class="cards c2 reveal">
+        <div class="tile"><span class="k">/clear</span><p>Full reset. Use when the task is genuinely done and the next one is unrelated — don't drag dead context into a fresh task.</p></div>
+        <div class="tile fill"><span class="k">/compact</span><p>Summarize and continue. Use mid-task when the window is filling but you still need the thread.</p></div>
+      </div>
+      <p class="note reveal">Wrong choice either direction costs you: <b>/clear</b> too early loses context you needed; <b>/compact</b> too rarely drags a bloated window into every remaining turn.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Subagents as context firewalls"
+    data-speaker-notes="Link back to deck 04 explicitly rather than re-teaching it: a subagent does its exploration in its own window and returns only a distilled report, so the parent session's context never absorbs the raw search noise. That's the mechanism, not just a feature — it's context hygiene applied at the architecture level.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>Context</b> · subagents as firewalls</div></div>
+      <h2 class="reveal">Subagents as <span class="o">context firewalls</span></h2>
+      <ul class="bul reveal">
+        <li>A subagent explores, searches, or reads in its <b>own context window</b> — the parent session never absorbs the raw noise.</li>
+        <li>Only the <b>distilled report</b> comes back. Ten files read in a subagent cost the parent session one summary.</li>
+        <li>Full mechanics: deck 04, <i>Subagents & Prompt Caching</i>.</li>
+      </ul>
+      <p class="note reveal">This is context hygiene applied at the architecture level, not just a discipline you have to remember mid-session.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Reading selectively"
+    data-speaker-notes="Simple habit slide: grep or search for the relevant span before reading a whole file, use line ranges on large files, and let subagents do broad exploration. The alternative — reading entire files 'just in case' — is exactly the re-read pattern that showed up as the biggest line item on the cost-anatomy slide.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">21</span><div class="crumb"><b>Context</b> · reading selectively</div></div>
+      <h2 class="reveal">Read <span class="o">selectively</span></h2>
+      <ul class="bul reveal">
+        <li>Grep or search for the relevant span <b>before</b> reading a whole file.</li>
+        <li>Use line ranges on large files instead of loading them whole.</li>
+        <li>Push broad, exploratory reading into a subagent (previous slide) rather than the main thread.</li>
+      </ul>
+      <p class="note reveal">"Read the whole file just in case" is exactly the re-read pattern that was the biggest avoidable cost line item back in part 01.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Live demo: bloated vs lean CLAUDE.md"
+    data-speaker-notes="RUNBOOK: two terminal panes side by side, same repo, same task prompt. Left pane has today's actual bloated CLAUDE.md; right pane has a trimmed version prepared in advance (same constraints, no essays, no derivable content). Run the identical task in both, live. Call out turn count, total tokens from each session's usage summary, and whether the outcome differs. If either session runs long, narrate the delta so far and cut to the fallback screenshot rather than waiting it out.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">22</span><div class="crumb"><b>Context</b> · live demo</div></div>
+      <div class="demo-badge reveal">Live</div>
+      <h2 class="reveal">Same task, <span class="o">two CLAUDE.md files</span></h2>
+      <ul class="bul reveal">
+        <li>Left: today's <b>bloated</b> CLAUDE.md. Right: a <b>lean</b> rewrite — same constraints, none of the derivable or one-off content.</li>
+        <li>Identical prompt, run live in both. Compare <b>turns, total tokens, and outcome.</b></li>
+      </ul>
+      <p class="note reveal"><span class="pill live">Live</span> Watch the token counters, not just the transcripts — the difference is usually bigger than it feels.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Fallback: CLAUDE.md demo"
+    data-speaker-notes="Use only if the live run stalls, the network drops, or time runs short. Narrate from the prepared screenshot/recording: describe the turn-count and token-count delta you captured in rehearsal, and the qualitative outcome difference. Keep it brief and move on to the recap.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">23</span><div class="crumb"><b>Context</b> · fallback</div></div>
+      <h2 class="reveal">Fallback: <span class="o">recorded run</span></h2>
+      <div class="fallback-box reveal">
+        <div class="fb-icon">▢</div>
+        <div class="fb-caption">Placeholder — screenshot or recording of the bloated-vs-lean CLAUDE.md comparison (turn count, token totals, outcome) goes here.</div>
+      </div>
+      <p class="note reveal">Use only if the live run stalls. Narrate the captured turn/token delta from rehearsal, then move on.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Context hygiene checklist"
+    data-speaker-notes="Close the part with a checklist people can screenshot: trim CLAUDE.md to what can't be derived, clear or compact deliberately rather than by habit, push broad exploration into subagents, and read selectively. Say the thesis one more time before the recap — this is the highest-leverage change most of the room can make this week.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">24</span><div class="crumb"><b>Context</b> · recap</div></div>
+      <h2 class="reveal">Context hygiene: <span class="o">the checklist</span></h2>
+      <ul class="bul reveal">
+        <li>Trim CLAUDE.md to what the repo genuinely can't express.</li>
+        <li>Choose <b>/clear</b> or <b>/compact</b> deliberately, not by habit.</li>
+        <li>Push broad exploration into subagents — keep the parent thread distilled.</li>
+        <li>Read selectively; grep before you load a whole file.</li>
+      </ul>
+      <p class="note reveal">If this deck changes one habit, make it this one — it's the highest-leverage change available to most engineers this week.</p>
+    </div>
+  </section>
+
+  <!-- RECAP -->
+  <section class="slide dark" data-label="Recap: cost → context"
+    data-speaker-notes="Close on the two-word spine from the title slide: cost, then context. Say each word once and connect it to its part — three meters with output dominating, and a window that degrades, re-bills, and re-caches as you fill it. If the room acts on one thing this week, it's trimming CLAUDE.md.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">25</span><div class="crumb"><b>Close</b> · recap</div></div>
+      <h2 class="reveal">Cost → <span class="o">context</span></h2>
+      <div class="flow reveal">
+        <div class="step">01 cost</div><div class="arrow">→</div>
+        <div class="step hot">02 context</div>
+      </div>
+      <div class="cards c2 reveal">
+        <div class="tile"><span class="k">01 Cost</span><p>Three meters, not one — and <b>output</b> (thinking included) is the expensive one. Pick the channel by team shape, not by habit.</p></div>
+        <div class="tile fill"><span class="k">02 Context</span><p>The window degrades as it fills, re-bills every turn, and re-caches badly. <b>Trim CLAUDE.md, clear deliberately, read selectively.</b></p></div>
+      </div>
+      <p class="note reveal">Of the two, <b>context</b> is the one to act on first — it's the highest-leverage habit change available this week.</p>
+    </div>
+  </section>
+
+  <!-- SOURCES -->
+  <section class="slide light dense" data-label="Sources"
+    data-speaker-notes="Close on sources, matching series convention: every pricing and product claim in this deck is date-stamped July 2026 and traceable to the fact-check pass. Point out the one explicitly unverified item — any claim of a new announced subscription direction beyond Pro/Max/Team/Enterprise — so nobody repeats it as confirmed.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>Close</b> · sources</div></div>
+      <h2 class="reveal"><span class="o">Sources</span> — all claims dated July 2026</h2>
+      <div class="links reveal">
+        <div class="linkcol">
+          <h3>Pricing &amp; plans</h3>
+          <a href="https://claude.com/pricing" target="_blank" rel="noopener">Claude pricing<span class="u">claude.com/pricing</span></a>
+          <a href="https://platform.claude.com/docs/en/pricing" target="_blank" rel="noopener">Claude API pricing docs<span class="u">platform.claude.com/docs/en/pricing</span></a>
+        </div>
+        <div class="linkcol">
+          <h3>Channels</h3>
+          <a href="https://aws.amazon.com/claude-platform/" target="_blank" rel="noopener">Claude on AWS Bedrock<span class="u">aws.amazon.com/claude-platform</span></a>
+          <a href="https://www.nxcode.io/resources/news/cursor-ai-pricing-plans-guide-2026" target="_blank" rel="noopener">Cursor pricing guide 2026<span class="u">nxcode.io</span></a>
+        </div>
+      </div>
+      <p class="note reveal">Full source list with per-claim citations: <span class="muted">deck05-facts.md</span> (internal research doc). One item flagged unverified: any claim of a <b>new announced subscription direction</b> beyond Pro/Max/Team/Enterprise.</p>
+    </div>
+  </section>
+
+</deck-stage>
+
+<script src="ember_design_system/deck-stage.js"></script>
+<script>
+  /* Re-trigger .reveal animations + restart any <video> on slide change */
+  document.addEventListener('DOMContentLoaded', function () {
+    var ds = document.querySelector('deck-stage');
+    if (!ds) return;
+    ds.addEventListener('slidechange', function (e) {
+      var s = e.detail && e.detail.slide;
+      if (!s) return;
+      s.querySelectorAll('.reveal').forEach(function (el) {
+        el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
+      });
+      var v = s.querySelector('video');
+      if (v) { v.currentTime = 0; var p = v.play(); if (p && p.catch) p.catch(function(){}); }
+    });
+  });
+</script>
+
+<style id="presenter-ui-css">
+  /* ─── Presenter aids (outside <deck-stage>: siblings paint above it) ─── */
+  .pui-controls{
+    position:fixed; right:18px; bottom:18px; z-index:40;
+    display:flex; gap:8px;
+    opacity:0; transition:opacity .25s; pointer-events:none;
+  }
+  body.pui-mouse .pui-controls,
+  .pui-controls:hover,
+  .pui-controls:focus-within{ opacity:1; pointer-events:auto; }
+  .pui-controls button{
+    font:var(--w-semibold) 12px/1 var(--font-mono); letter-spacing:.08em;
+    color:var(--on-dark-muted); background:var(--ink-2);
+    border:1px solid var(--line-dark); border-radius:var(--radius-pill);
+    padding:9px 14px; cursor:pointer;
+  }
+  .pui-controls button:hover{ color:var(--paper); border-color:var(--coral); }
+  .pui-controls kbd{ color:var(--coral); font:inherit; margin-left:6px; }
+  .pui-notes{
+    position:fixed; left:0; right:0; bottom:0; z-index:39;
+    background:var(--ink-2); color:var(--on-dark);
+    border-top:2px solid var(--coral);
+    padding:20px 34px 24px; max-height:38vh; overflow:auto;
+    font:var(--w-regular) clamp(15px,1.6vw,21px)/1.55 var(--font-b, var(--font-body));
+    display:none;
+  }
+  .pui-notes.open{ display:block; }
+  .pui-notes .pui-nhead{
+    font:var(--w-semibold) 12px/1 var(--font-mono); letter-spacing:.12em;
+    text-transform:uppercase; color:var(--coral); margin-bottom:12px;
+  }
+  @media print{ .pui-controls, .pui-notes{ display:none !important; } }
+</style>
+<div class="pui-controls">
+  <button type="button" data-pui="notes">NOTES<kbd>N</kbd></button>
+  <button type="button" data-pui="present">PRESENT<kbd>P</kbd></button>
+  <button type="button" data-pui="fullscreen">FULLSCREEN<kbd>F</kbd></button>
+</div>
+<div class="pui-notes" role="note" aria-live="polite">
+  <div class="pui-nhead"></div>
+  <div class="pui-nbody"></div>
+</div>
+
+<script>
+/* ─── Presenter aids: notes overlay (N), fullscreen (F), presenter window (P) ─── */
+(function(){
+  if (window.self !== window.top) return; /* skip when embedded by a host/viewer */
+  var ds = document.querySelector('deck-stage');
+  var notesEl = document.querySelector('.pui-notes');
+  var nHead = notesEl.querySelector('.pui-nhead');
+  var nBody = notesEl.querySelector('.pui-nbody');
+  var current = 0, presenter = null, mouseT = null;
+
+  function slides(){ return Array.prototype.slice.call(ds.querySelectorAll(':scope > section')); }
+  function noteOf(s){ return s.getAttribute('data-speaker-notes') || 'No notes for this slide.'; }
+  function labelOf(s){ return s.getAttribute('data-label') || ''; }
+
+  /* controls fade in on mouse activity, like the component's own overlay */
+  document.addEventListener('mousemove', function(){
+    document.body.classList.add('pui-mouse');
+    clearTimeout(mouseT);
+    mouseT = setTimeout(function(){ document.body.classList.remove('pui-mouse'); }, 1800);
+  });
+
+  function syncNotes(){
+    var all = slides(), s = all[current];
+    if (!s) return;
+    nHead.textContent = 'Notes · ' + labelOf(s) + ' · ' + (current + 1) + ' / ' + all.length;
+    nBody.textContent = noteOf(s);
+  }
+  function toggleNotes(){ notesEl.classList.toggle('open'); if (notesEl.classList.contains('open')) syncNotes(); }
+
+  function toggleFullscreen(){
+    if (document.fullscreenElement) { document.exitFullscreen(); }
+    else { document.documentElement.requestFullscreen().catch(function(){}); }
+  }
+  /* fullscreen = clean presenting surface: hide the thumbnail rail while in it */
+  var railWasOff = false;
+  document.addEventListener('fullscreenchange', function(){
+    if (document.fullscreenElement) {
+      railWasOff = ds.hasAttribute('no-rail');
+      ds.setAttribute('no-rail', '');
+    } else if (!railWasOff) {
+      ds.removeAttribute('no-rail');
+    }
+  });
+
+  /* ── presenter window: current + next previews, notes, timer, clock ── */
+  function openPresenter(){
+    if (presenter && !presenter.closed) { presenter.focus(); return; }
+    presenter = window.open('', 'deck-presenter', 'width=1200,height=760');
+    if (!presenter) {
+      nHead.textContent = 'Presenter window';
+      nBody.textContent = 'The browser blocked the pop-up — allow pop-ups for this page and press P again.';
+      notesEl.classList.add('open');
+      return;
+    }
+    var pd = presenter.document;
+    pd.open();
+    pd.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Presenter — ' + document.title.replace(/</g,'&lt;') + '</title><base href="' + document.baseURI + '"></head><body></body></html>');
+    pd.close();
+    /* carry the deck's stylesheets + tokens over so slide clones render 1:1 */
+    document.head.querySelectorAll('link[rel="stylesheet"], link[rel="preconnect"], style').forEach(function(el){
+      var c = pd.importNode(el, true);
+      if (el.tagName === 'LINK' && el.href) c.setAttribute('href', el.href);
+      pd.head.appendChild(c);
+    });
+    var st = pd.createElement('style');
+    st.textContent =
+      '*,*::before,*::after{animation:none !important;transition:none !important}' +
+      'html,body{margin:0;height:100%;background:#0e0c08;color:var(--on-dark);font-family:var(--font-m,monospace);overflow:hidden}' +
+      '.pw{display:grid;grid-template-rows:52px 1fr;height:100%}' +
+      '.pw-bar{display:flex;align-items:center;gap:22px;padding:0 20px;border-bottom:1px solid var(--line-dark);font-size:13px;letter-spacing:.06em;color:var(--on-dark-muted)}' +
+      '.pw-bar .cnt{color:var(--coral);font-weight:700;font-size:16px}' +
+      '.pw-bar .lbl{color:var(--paper);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}' +
+      '.pw-bar .tmr{cursor:pointer}.pw-bar .tmr b{color:var(--paper)}' +
+      '.pw-bar button{font:inherit;color:var(--on-dark-muted);background:none;border:1px solid var(--line-dark);border-radius:6px;padding:5px 12px;cursor:pointer}' +
+      '.pw-bar button:hover{color:var(--paper);border-color:var(--coral)}' +
+      '.pw-main{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:14px;padding:14px;min-height:0}' +
+      '.pw-col{display:grid;grid-template-rows:auto 1fr;min-height:0;gap:8px}' +
+      '.pw-col.right{grid-template-rows:auto auto auto minmax(0,1fr)}' +
+      '.pw-cap{font-size:11px;letter-spacing:.14em;color:var(--on-dark-faint);text-transform:uppercase}' +
+      '.pw-box{position:relative;min-height:0;overflow:hidden;border:1px solid var(--line-dark);border-radius:8px;background:#000}' +
+      '.pw-canvas{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;background:var(--paper)}' +
+      '.pw-canvas > section{width:1920px;height:1080px;position:relative;overflow:hidden}' +
+      '.pw-notes{overflow:auto;font-family:var(--font-b,sans-serif);font-size:19px;line-height:1.55;color:var(--on-dark);padding-right:6px}';
+    pd.head.appendChild(st);
+    pd.body.innerHTML =
+      '<div class="pw">' +
+        '<div class="pw-bar">' +
+          '<span class="cnt"></span><span class="lbl"></span>' +
+          '<span class="tmr" title="click to reset">elapsed <b class="el">00:00</b></span>' +
+          '<span>clock <b class="ck"></b></span>' +
+          '<button data-nav="-1">‹ prev</button><button data-nav="1">next ›</button>' +
+        '</div>' +
+        '<div class="pw-main">' +
+          '<div class="pw-col"><div class="pw-cap">Current</div><div class="pw-box" id="pwCur"><div class="pw-canvas"></div></div></div>' +
+          '<div class="pw-col right"><div class="pw-cap">Next</div><div class="pw-box" id="pwNext" style="aspect-ratio:16/9;min-height:120px"><div class="pw-canvas"></div></div>' +
+          '<div class="pw-cap" style="margin-top:6px">Notes</div><div class="pw-notes"></div></div>' +
+        '</div>' +
+      '</div>';
+
+    var t0 = Date.now();
+    function two(n){ return (n < 10 ? '0' : '') + n; }
+    function tick(){
+      if (presenter.closed) return;
+      var el = Math.floor((Date.now() - t0) / 1000);
+      pd.querySelector('.el').textContent = two(Math.floor(el / 60)) + ':' + two(el % 60);
+      var d = new Date();
+      pd.querySelector('.ck').textContent = two(d.getHours()) + ':' + two(d.getMinutes());
+      presenter.setTimeout(tick, 1000);
+    }
+    tick();
+    pd.querySelector('.tmr').addEventListener('click', function(){ t0 = Date.now(); });
+
+    function fit(boxId){
+      var box = pd.getElementById(boxId), cv = box.querySelector('.pw-canvas');
+      var k = Math.min(box.clientWidth / 1920, box.clientHeight / 1080);
+      cv.style.transform = 'scale(' + k + ')';
+      cv.style.left = ((box.clientWidth - 1920 * k) / 2) + 'px';
+      cv.style.top = ((box.clientHeight - 1080 * k) / 2) + 'px';
+    }
+    function fill(boxId, slide){
+      var cv = pd.getElementById(boxId).querySelector('.pw-canvas');
+      cv.textContent = '';
+      if (slide) {
+        var c = pd.importNode(slide, true);
+        c.setAttribute('data-deck-active', '');
+        cv.appendChild(c);
+      }
+      fit(boxId);
+    }
+    presenter.__update = function(i){
+      var all = slides(), s = all[i];
+      if (!s) return;
+      var next = i + 1;
+      while (next < all.length && all[next].hasAttribute('data-deck-skip')) next++;
+      fill('pwCur', s);
+      fill('pwNext', all[next] || null);
+      pd.querySelector('.cnt').textContent = (i + 1) + ' / ' + all.length;
+      pd.querySelector('.lbl').textContent = labelOf(s) + (all[next] ? '   →   next: ' + labelOf(all[next]) : '   ·   last slide');
+      pd.querySelector('.pw-notes').textContent = noteOf(s);
+    };
+    presenter.addEventListener('resize', function(){ fit('pwCur'); fit('pwNext'); });
+    pd.addEventListener('keydown', function(e){
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); ds.next(); }
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); ds.prev(); }
+      else if (e.key === 'Home') { ds.goTo(0); }
+      else if (e.key === 'End') { ds.goTo(slides().length - 1); }
+    });
+    pd.querySelectorAll('[data-nav]').forEach(function(b){
+      b.addEventListener('click', function(){ this.dataset.nav === '1' ? ds.next() : ds.prev(); });
+    });
+    presenter.__update(current);
+  }
+
+  ds.addEventListener('slidechange', function(e){
+    current = e.detail.index;
+    if (notesEl.classList.contains('open')) syncNotes();
+    if (presenter && !presenter.closed && presenter.__update) presenter.__update(current);
+  });
+
+  document.addEventListener('keydown', function(e){
+    var t = e.target;
+    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = e.key.toLowerCase();
+    if (k === 'n') { toggleNotes(); }
+    else if (k === 'f') { toggleFullscreen(); }
+    else if (k === 'p') { openPresenter(); }
+  });
+  document.querySelector('[data-pui="notes"]').addEventListener('click', toggleNotes);
+  document.querySelector('[data-pui="fullscreen"]').addEventListener('click', toggleFullscreen);
+  document.querySelector('[data-pui="present"]').addEventListener('click', openPresenter);
+})();
+</script>
+</body>
+</html>
