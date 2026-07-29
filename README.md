@@ -1,8 +1,9 @@
 # Agentic talks
 
-Five zero-build HTML slide decks — a general-audience tool landscape, a beginner
-intro to agentic AI, a developer follow-up, an engineering deep dive, and a
-workshop on working smarter with agents. Same template, same aesthetic. The
+Zero-build HTML slide decks — a general-audience tool landscape, a beginner
+intro to agentic AI, a developer follow-up, engineering deep dives, a workshop
+on working smarter with agents, and a Claude Design product tour. Same
+template, same aesthetic. The
 key concepts are illustrated by short looping animations rendered with
 [Remotion](https://www.remotion.dev/) (in `assets/anim/`, sources in `remotion/`),
 so keep those folders next to the `.html` files.
@@ -34,6 +35,14 @@ Author: **David Budáč** · English
   Claude Code who want to level up). What agents really cost (tokens,
   subscriptions, Bedrock) → efficient context work (CLAUDE.md, evals, traces) →
   orchestration, local open-source models & alternative harnesses. ~85 slides.
+- **[`claude-design.html`](claude-design.html)** — *Claude Design* (WIP,
+  ~30-min product deep dive, no code or design background needed — any paid
+  Claude plan). The full tour behind deck 01's two teaser slides: the
+  chat-and-canvas interface, four starting points, the design-system/brand
+  feature (`/design-sync`), plans & shared usage → the craft (the iteration
+  loop, briefing, the three refinement channels, example briefs to steal, a
+  live five-minute build, pitfalls) → sharing, exports, and the Claude Code
+  handoff round trip. 25 slides. **Live demo included.**
 
 ## View it
 
@@ -41,7 +50,8 @@ Author: **David Budáč** · English
   `open index.html` opens the chooser). `index.html` routes the reader to the
   right deck by audience — non-technical (01) → developers new to agents (02) →
   developers going deeper (03) → devs & IT admins on internals (04) → devs
-  levelling up on cost & orchestration (05, WIP) — with
+  levelling up on cost, orchestration & measurement (05–07, WIP) → anyone
+  making visual work with Claude Design (08, WIP) — with
   self-identification bullets per deck and a
   one-question fallback for the undecided.
 - **Online:** if GitHub Pages is enabled, the repo's Pages root serves the chooser.
@@ -88,6 +98,14 @@ A single **context** thread ties the sections together (🧵 markers throughout)
 subscriptions, Bedrock) · efficient context work (CLAUDE.md, evals, traces) ·
 orchestration, local open-source models & alternative harnesses.
 
+**Claude Design** *(WIP)* — what it is (Anthropic Labs, April 2026, beta) ·
+chat left / canvas right · four starting points (text, DOCX/PPTX/XLSX, web
+capture, codebase) · the design-system feature & `/design-sync` · plans &
+shared usage · the craft: iterate (judge iteration 4, not 1), brief like a
+creative director, chat vs inline comments vs direct editing, briefs to steal
+· pitfalls · sharing, exports (PPTX/PDF/HTML/Canva/zip) & the Claude Code
+handoff round trip. Facts verified July 2026.
+
 ## Live demo (agentic-ai deck, optional; the WIP workshop deck also has live demos)
 
 The *Intro to Agentic AI* deck is built to run alongside a live agent. There's a **🔴 LIVE** anchor
@@ -114,7 +132,9 @@ rendered MP4s as muted loops that restart whenever you land on their slide:
 | `next-token` | next-token prediction with sampled probabilities | eng s4 |
 | `quality` | quality vs. context fill — context rot / the dumb zone | intro s22 · eng s28 |
 | `kv-cache` | KV caching: cached prefix + fresh tail, append-only | eng s26 |
-| `subagents` | delegation: messy work inside, tiny summary back | intro s25 · eng s29 |
+| `subagents` | delegation: messy work inside, tiny summary back | intro s25 · eng s29 · cost s20 |
+| `context-lifecycle` | fixed overhead stamped into every turn; only the conversation grows | cost s14 |
+| `progressive-disclosure` | a skill's how-to loads on trigger; CLAUDE.md is paid every turn | orch s16 |
 
 To tweak or re-render: `cd remotion && npm i`, then `npx remotion studio` to
 preview or `npx remotion render <composition-id> ../assets/anim/<id>.mp4` to
@@ -142,6 +162,7 @@ animations read the same palette from `remotion/src/theme.ts`.
 | `agentic-engineering.html` | *Agentic Engineering* deck — developers (no live demo). |
 | `subagents-prompt-caching.html` | *Subagents & Prompt Caching* deck — engineering deep dive (no live demo). |
 | `working-smarter.html` | *Working Smarter with Agents* deck — half-day workshop on cost, context efficiency & orchestration (WIP, live demos). |
+| `claude-design.html` | *Claude Design* deck — ~30-min product deep dive on Anthropic's visual-creation tool (WIP, live demo, no code needed). |
 | `index.html` | Landing page routing readers to the right deck by audience (GitHub Pages root). |
 | `assets/anim/` | Rendered concept animations (MP4 loops) embedded by the decks. |
 | `remotion/` | Remotion project — sources for the animations. |

@@ -6,6 +6,8 @@ import { NextToken } from "./NextToken";
 import { QualityCurve } from "./QualityCurve";
 import { KvCache } from "./KvCache";
 import { Subagents } from "./Subagents";
+import { ContextLifecycle } from "./ContextLifecycle";
+import { ProgressiveDisclosure } from "./ProgressiveDisclosure";
 import "./index.css";
 
 const FPS = 30;
@@ -90,6 +92,36 @@ export const RemotionRoot: React.FC = () => {
         width={1176}
         height={756}
         defaultProps={{ theme: "light" as const }}
+      />
+      {/* deck 5 · "Subagents as context firewalls" (dark) */}
+      <Composition
+        id="subagents-dark"
+        component={Subagents}
+        durationInFrames={270}
+        fps={FPS}
+        width={1176}
+        height={756}
+        defaultProps={{ theme: "dark" as const }}
+      />
+      {/* deck 5 · "The context lifecycle" (dark) */}
+      <Composition
+        id="context-lifecycle-dark"
+        component={ContextLifecycle}
+        durationInFrames={300}
+        fps={FPS}
+        width={1176}
+        height={700}
+        defaultProps={{ theme: "dark" as const }}
+      />
+      {/* deck 6 · "Progressive disclosure vs CLAUDE.md" (dark) */}
+      <Composition
+        id="progressive-disclosure-dark"
+        component={ProgressiveDisclosure}
+        durationInFrames={290}
+        fps={FPS}
+        width={1176}
+        height={700}
+        defaultProps={{ theme: "dark" as const }}
       />
     </>
   );

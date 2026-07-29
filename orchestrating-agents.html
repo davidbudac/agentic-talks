@@ -169,9 +169,11 @@ table.tbl tr:last-child td{border-bottom:none}
 .gloss .def{font-size:var(--body-size); color:var(--s-text); line-height:1.35}
 .uses{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-5)}
 
-/* ── DIAGRAMS (pure HTML/CSS boxes — no video assets in this deck) ── */
+/* ── DIAGRAMS (inline SVG + explainer video) ─────────────────────── */
 .diagram{width:100%; display:flex; justify-content:center; align-items:center; margin-top:8px; min-height:0}
 .diagram svg{width:100%; height:auto; max-height:var(--diag-h)}
+.diagram video{width:auto; height:auto; max-width:100%; max-height:var(--diag-h);
+  display:block; background:transparent; border-radius:var(--radius-md)}
 .dg-box{fill:var(--s-card-bg); stroke:var(--s-card-border); stroke-width:1.5}
 .dg-box.hot{fill:var(--coral); stroke:var(--coral)}
 .dg-box.outer{fill:var(--s-outer-fill); stroke:var(--coral); stroke-dasharray:6 5}
@@ -182,6 +184,7 @@ table.tbl tr:last-child td{border-bottom:none}
 .dg-t.acc{fill:var(--s-accent); font-family:var(--font-mono); font-weight:var(--w-semibold)}
 .dg-line{stroke:var(--s-accent); stroke-width:2.5; fill:none}
 .dg-line.dim{stroke:var(--s-line-strong); stroke-width:1.5}
+.dg-fill-g{fill:var(--positive)} .dg-fill-a{fill:var(--warning)} .dg-fill-r{fill:var(--coral)}
 .dg-cap{text-align:center; font-size:var(--small-size); color:var(--s-muted); margin-top:10px}
 .dg-cap b{color:var(--s-text)}
 .diagram marker path{fill:var(--s-accent)}
@@ -328,6 +331,40 @@ table.tbl tr:last-child td{border-bottom:none}
         <div class="tile"><span class="k">Orchestrator</span><p>Coordinates multiple agent instances at once — multiplexers, parallel worktree dashboards, backlog-driven fleets.</p></div>
         <div class="tile fill"><span class="k">Sandbox</span><p>Isolates what an agent can touch — filesystem, network, git branch — so autonomy doesn't mean risk.</p></div>
       </div>
+      <div class="diagram reveal" style="--diag-h:300px">
+        <svg viewBox="0 0 800 200" role="img" aria-label="Progression: one agent in one terminal, then an orchestrator coordinating three agents, then the same agents each inside a sandbox boundary">
+          <defs><marker id="em1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+          <!-- 1: single agent -->
+          <text class="dg-t mut" x="110" y="30" font-size="12" text-anchor="middle">you, turn by turn</text>
+          <rect class="dg-box" x="50" y="80" width="120" height="48" rx="8"/>
+          <text class="dg-t" x="110" y="109" font-size="14" text-anchor="middle">agent</text>
+          <path class="dg-line" d="M188 104 L 240 104" marker-end="url(#em1)"/>
+          <!-- 2: orchestrator fanning out -->
+          <rect class="dg-box hot" x="322" y="36" width="136" height="40" rx="8"/>
+          <text class="dg-t on" x="390" y="61" font-size="13" text-anchor="middle">orchestrator</text>
+          <path class="dg-line dim" d="M362 78 L 318 118"/>
+          <path class="dg-line dim" d="M390 78 L 390 118"/>
+          <path class="dg-line dim" d="M418 78 L 462 118"/>
+          <rect class="dg-box" x="288" y="120" width="60" height="40" rx="7"/>
+          <rect class="dg-box" x="360" y="120" width="60" height="40" rx="7"/>
+          <rect class="dg-box" x="432" y="120" width="60" height="40" rx="7"/>
+          <text class="dg-t mut" x="318" y="145" font-size="12" text-anchor="middle">agent</text>
+          <text class="dg-t mut" x="390" y="145" font-size="12" text-anchor="middle">agent</text>
+          <text class="dg-t mut" x="462" y="145" font-size="12" text-anchor="middle">agent</text>
+          <path class="dg-line" d="M512 104 L 564 104" marker-end="url(#em1)"/>
+          <!-- 3: each agent inside a sandbox -->
+          <rect class="dg-box outer" x="582" y="64" width="64" height="78" rx="9"/>
+          <rect class="dg-box outer" x="656" y="64" width="64" height="78" rx="9"/>
+          <rect class="dg-box outer" x="730" y="64" width="64" height="78" rx="9"/>
+          <rect class="dg-box" x="590" y="88" width="48" height="32" rx="6"/>
+          <rect class="dg-box" x="664" y="88" width="48" height="32" rx="6"/>
+          <rect class="dg-box" x="738" y="88" width="48" height="32" rx="6"/>
+          <text class="dg-t mut" x="614" y="108" font-size="11" text-anchor="middle">agent</text>
+          <text class="dg-t mut" x="688" y="108" font-size="11" text-anchor="middle">agent</text>
+          <text class="dg-t mut" x="762" y="108" font-size="11" text-anchor="middle">agent</text>
+          <text class="dg-t acc" x="688" y="170" font-size="12" text-anchor="middle">fs · network · git — contained</text>
+        </svg>
+      </div>
     </div>
   </section>
 
@@ -408,11 +445,36 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">9</span><div class="crumb"><b>Orchestration</b> · why sandbox</div></div>
       <h2 class="reveal">Untrusted autonomy needs <span class="o">isolation</span></h2>
-      <ul class="bul reveal">
-        <li>An agent that picks up tickets and opens PRs unattended is, by definition, running with <b>untrusted autonomy.</b></li>
-        <li>Isolation means containing what it can touch: filesystem, network, and which git history/branches it can affect.</li>
-        <li>The goal isn't distrust of the model — it's bounding the blast radius of a bad tool call or a runaway loop.</li>
-      </ul>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>An agent that picks up tickets and opens PRs unattended is, by definition, running with <b>untrusted autonomy.</b></li>
+          <li>Isolation means containing what it can touch: filesystem, network, and which git history/branches it can affect.</li>
+          <li>The goal isn't distrust of the model — it's bounding the blast radius of a bad tool call or a runaway loop.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 440 300" role="img" aria-label="An agent inside a dashed sandbox boundary: reaches toward the full filesystem, the open network and the main git history stop at the wall">
+            <rect class="dg-box outer" x="120" y="70" width="200" height="160" rx="12"/>
+            <text class="dg-t acc" x="220" y="95" font-size="12" text-anchor="middle">sandbox</text>
+            <rect class="dg-box hot" x="175" y="128" width="90" height="44" rx="8"/>
+            <text class="dg-t on" x="220" y="155" font-size="13" text-anchor="middle">agent</text>
+            <!-- attempted reaches stop at the wall -->
+            <path class="dg-line dim" d="M173 150 L 126 150"/>
+            <text class="dg-t acc" x="120" y="155" font-size="15" text-anchor="middle">✕</text>
+            <text class="dg-t mut" x="104" y="140" font-size="11" text-anchor="end">full</text>
+            <text class="dg-t mut" x="104" y="156" font-size="11" text-anchor="end">filesystem</text>
+            <path class="dg-line dim" d="M267 150 L 314 150"/>
+            <text class="dg-t acc" x="320" y="155" font-size="15" text-anchor="middle">✕</text>
+            <text class="dg-t mut" x="336" y="140" font-size="11">open</text>
+            <text class="dg-t mut" x="336" y="156" font-size="11">network</text>
+            <path class="dg-line dim" d="M220 174 L 220 224"/>
+            <text class="dg-t acc" x="220" y="238" font-size="15" text-anchor="middle">✕</text>
+            <text class="dg-t mut" x="220" y="258" font-size="11" text-anchor="middle">main branch &amp; history</text>
+            <!-- what it does get -->
+            <text class="dg-t mut" x="220" y="205" font-size="9.5" text-anchor="middle">own worktree · scoped fs · allowlist</text>
+            <text class="dg-t acc" x="220" y="288" font-size="12.5" text-anchor="middle">a bad tool call stops at the wall</text>
+          </svg>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -428,7 +490,7 @@ table.tbl tr:last-child td{border-bottom:none}
     agent: <span class="g">"claude-code"</span>,
     branch: <span class="g">"auto"</span>       <span class="c">// worktree + branch strategy managed for you</span>
   });</div>
-      <p class="note reveal">Manages sandbox provider, git branch/worktree strategy, and merges commits back automatically. What's isolated: filesystem and process. What escapes: anything the provider itself exposes (e.g. a mounted network).</p>
+      <p class="note reveal">Manages sandbox provider, git branch/worktree strategy, and merges commits back automatically. What's isolated: filesystem and process. What escapes: anything the provider itself exposes — mounted volumes, open network egress.</p>
     </div>
   </section>
 
@@ -461,10 +523,47 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">13</span><div class="crumb"><b>Orchestration</b> · failure modes</div></div>
       <h2 class="reveal">Failure mode: <span class="o">review bottlenecks</span></h2>
-      <ul class="bul reveal">
-        <li>Orchestration multiplies <b>PRs</b>, not <b>reviewers.</b></li>
-        <li>Without review capacity scaling too, the backlog just moves from "unwritten code" to "unreviewed PRs" — no net gain.</li>
-      </ul>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>Orchestration multiplies <b>PRs</b>, not <b>reviewers.</b></li>
+          <li>Without review capacity scaling too, the backlog just moves from "unwritten code" to "unreviewed PRs" — no net gain.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 440 300" role="img" aria-label="Three agents each produce pull requests that pile up in a review queue in front of a single human reviewer">
+            <defs><marker id="rb1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <!-- agents -->
+            <rect class="dg-box" x="16" y="48" width="84" height="40" rx="8"/>
+            <rect class="dg-box" x="16" y="124" width="84" height="40" rx="8"/>
+            <rect class="dg-box" x="16" y="200" width="84" height="40" rx="8"/>
+            <text class="dg-t" x="58" y="73" font-size="13" text-anchor="middle">agent</text>
+            <text class="dg-t" x="58" y="149" font-size="13" text-anchor="middle">agent</text>
+            <text class="dg-t" x="58" y="225" font-size="13" text-anchor="middle">agent</text>
+            <path class="dg-line dim" d="M104 68 C 130 68, 138 100, 160 116"/>
+            <path class="dg-line dim" d="M104 144 L 160 144"/>
+            <path class="dg-line dim" d="M104 220 C 130 220, 138 188, 160 172"/>
+            <!-- the pile -->
+            <text class="dg-t mut" x="219" y="38" font-size="11" text-anchor="middle">unreviewed — the new backlog</text>
+            <rect class="dg-box outer" x="168" y="48" width="102" height="212" rx="10"/>
+            <rect class="dg-fill-a" x="180" y="62" width="36" height="24" rx="5" opacity="0.9"/>
+            <rect class="dg-fill-a" x="224" y="62" width="36" height="24" rx="5" opacity="0.9"/>
+            <rect class="dg-fill-a" x="180" y="94" width="36" height="24" rx="5" opacity="0.9"/>
+            <rect class="dg-fill-a" x="224" y="94" width="36" height="24" rx="5" opacity="0.9"/>
+            <rect class="dg-fill-a" x="180" y="126" width="36" height="24" rx="5" opacity="0.9"/>
+            <rect class="dg-fill-a" x="224" y="126" width="36" height="24" rx="5" opacity="0.9"/>
+            <rect class="dg-fill-a" x="180" y="158" width="36" height="24" rx="5" opacity="0.9"/>
+            <rect class="dg-fill-a" x="224" y="158" width="36" height="24" rx="5" opacity="0.9"/>
+            <rect class="dg-fill-a" x="180" y="190" width="36" height="24" rx="5" opacity="0.9"/>
+            <rect class="dg-fill-a" x="224" y="190" width="36" height="24" rx="5" opacity="0.9"/>
+            <text class="dg-t mut" x="219" y="240" font-size="11" text-anchor="middle">PR × 10 …</text>
+            <!-- one reviewer -->
+            <path class="dg-line" d="M274 154 L 322 154" marker-end="url(#rb1)"/>
+            <rect class="dg-box" x="330" y="126" width="94" height="56" rx="9"/>
+            <text class="dg-t" x="377" y="151" font-size="13" text-anchor="middle">reviewer</text>
+            <text class="dg-t acc" x="377" y="170" font-size="12" text-anchor="middle">× 1</text>
+            <text class="dg-t acc" x="240" y="290" font-size="12.5" text-anchor="middle">throughput moved the queue — it didn't remove it</text>
+          </svg>
+        </div>
+      </div>
       <p class="note reveal">Orchestration is a throughput tool for writing code, not a substitute for review capacity.</p>
     </div>
   </section>
@@ -507,13 +606,19 @@ table.tbl tr:last-child td{border-bottom:none}
   </section>
 
   <section class="slide dark" data-label="Progressive disclosure vs CLAUDE.md"
-    data-speaker-notes="This is the direct payoff of deck 05, Cost &amp; Context's argument: a CLAUDE.md line is paid on every turn forever, but a skill's full instructions are paid only when the skill actually fires. Anything that's needed occasionally but verbosely is a skill candidate, not a CLAUDE.md candidate.">
+    data-speaker-notes="This is the direct payoff of deck 05, Cost &amp; Context's argument: a CLAUDE.md line is paid on every turn forever, but a skill's full instructions are paid only when the skill actually fires. Let the animation run one cycle — the top lane pays the full block four times, the bottom lane keeps a one-line description and loads the full how-to exactly once, on the turn that triggers it. Anything that's needed occasionally but verbosely is a skill candidate, not a CLAUDE.md candidate.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">16</span><div class="crumb"><b>Skills</b> · progressive disclosure</div></div>
       <h2 class="reveal">Progressive disclosure <span class="o">vs stuffing CLAUDE.md</span></h2>
-      <div class="cards c2 reveal">
-        <div class="tile"><span class="k">CLAUDE.md</span><p>Paid on <b>every turn, every session</b> — regardless of whether it's relevant right now.</p></div>
-        <div class="tile fill"><span class="k">Skill</span><p>Description always present; full instructions load <b>only when triggered.</b></p></div>
+      <div class="split">
+        <div class="cards reveal">
+          <div class="tile"><span class="k">CLAUDE.md</span><p>Paid on <b>every turn, every session</b> — regardless of whether it's relevant right now.</p></div>
+          <div class="tile fill"><span class="k">Skill</span><p>Description always present; full instructions load <b>only when triggered.</b></p></div>
+        </div>
+        <div class="diagram reveal">
+          <!-- Remotion animation (remotion/src/ProgressiveDisclosure.tsx) -->
+          <video src="assets/anim/progressive-disclosure-dark.mp4" width="1176" height="700" autoplay muted loop playsinline aria-label="Across four turns, the CLAUDE.md lane re-sends its full text every turn while the skill lane carries only a one-line description and loads the full instructions once, on the turn that triggers it"></video>
+        </div>
       </div>
       <p class="note reveal">Occasional-but-verbose knowledge belongs in a skill, not CLAUDE.md — this is <b>deck 05, Cost &amp; Context</b>'s argument applied directly.</p>
     </div>
@@ -523,7 +628,7 @@ table.tbl tr:last-child td{border-bottom:none}
     data-speaker-notes="Give a decision heuristic: a CLAUDE.md line for something needed every turn regardless of task, a skill for packaged know-how triggered by topic, an MCP server for a capability that needs auth, real state, or a typed API surface. Part 03 of this deck goes deeper on MCP specifically.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">17</span><div class="crumb"><b>Skills</b> · decision heuristic</div></div>
-      <h2 class="reveal">Skill beats CLAUDE.md beats <span class="o">MCP server</span> — when?</h2>
+      <h2 class="reveal">Skill, CLAUDE.md, or <span class="o">MCP server</span> — which, when?</h2>
       <table class="tbl reveal">
         <thead><tr><th>Need</th><th>Reach for</th></tr></thead>
         <tbody>
@@ -632,7 +737,7 @@ table.tbl tr:last-child td{border-bottom:none}
   </section>
 
   <section class="slide dark" data-label="Token cost of tool definitions"
-    data-speaker-notes="This ties MCP vs CLI directly to deck 05's economics: every MCP tool schema loaded into a session is fixed input-token overhead paid on every turn, same as CLAUDE.md. A handful of MCP servers with verbose schemas can add up to real per-session cost before a single tool call happens.">
+    data-speaker-notes="This ties MCP vs CLI directly to deck 05's economics: every MCP tool schema loaded into a session is fixed input-token overhead paid on every turn, same as CLAUDE.md. A handful of MCP servers with verbose schemas can add up to real per-session cost before a single tool call happens. Close with the mitigation: deferred loading / tool search keeps schemas out of context until a tool is needed — the tradeoff is shrinking, but the default still favors lean CLIs.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">25</span><div class="crumb"><b>MCP vs CLI</b> · token cost</div></div>
       <h2 class="reveal">Token cost of <span class="o">tool definitions</span></h2>
@@ -640,7 +745,18 @@ table.tbl tr:last-child td{border-bottom:none}
         <li>Every MCP tool schema loaded into a session is <b>fixed input-token overhead</b>, paid every turn — same mechanism as CLAUDE.md (<b>deck 05, Cost &amp; Context</b>).</li>
         <li>A handful of MCP servers with verbose schemas adds up before a single tool call happens.</li>
         <li>A CLI's equivalent "definition" is often just a one-line description plus <code>--help</code> on demand — much cheaper by default.</li>
+        <li><b>Mitigation exists:</b> deferred tool loading (Claude Code's tool search; the API's tool-search tool) keeps schemas out of context until a tool is actually needed — it narrows the gap, but it's opt-in, not the default everywhere.</li>
       </ul>
+      <div class="diagram reveal" style="--diag-h:200px">
+        <svg viewBox="0 0 800 130" role="img" aria-label="In-context overhead before the first tool call: several MCP servers load all their schemas up front on every turn, while the same tools as CLIs cost a one-line description each, with help text loaded on demand">
+          <text class="dg-t" x="182" y="40" font-size="13" text-anchor="end">a few MCP servers</text>
+          <rect class="dg-fill-r" x="194" y="20" width="430" height="30" rx="6"/>
+          <text class="dg-t on" x="409" y="40" font-size="12" text-anchor="middle">every schema, up front, every turn</text>
+          <text class="dg-t" x="182" y="100" font-size="13" text-anchor="end">same tools as CLIs</text>
+          <rect class="dg-fill-g" x="194" y="80" width="62" height="30" rx="6"/>
+          <text class="dg-t mut" x="268" y="100" font-size="12">one-line descriptions — <tspan font-family="var(--font-mono)">--help</tspan> only when called</text>
+        </svg>
+      </div>
     </div>
   </section>
 
@@ -702,6 +818,7 @@ table.tbl tr:last-child td{border-bottom:none}
         <div class="linkcol">
           <h3>Tools</h3>
           <a href="https://herdr.org/" target="_blank" rel="noopener">Herdr<span class="u">herdr.org</span></a>
+          <a href="https://conductor.build" target="_blank" rel="noopener">Conductor<span class="u">conductor.build</span></a>
           <a href="https://github.com/mattpocock/sandcastle" target="_blank" rel="noopener">Sandcastle<span class="u">github.com/mattpocock/sandcastle</span></a>
         </div>
       </div>
