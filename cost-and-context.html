@@ -696,8 +696,27 @@ table.tbl tr:last-child td{border-bottom:none}
         <li>Choose <b>/clear</b> or <b>/compact</b> deliberately, not by habit.</li>
         <li>Push broad exploration into subagents — keep the parent thread distilled.</li>
         <li>Read selectively; grep before you load a whole file.</li>
+        <li>Then let <b>/doctor</b> audit the lot for you — next slide.</li>
       </ul>
       <p class="note reveal">If this deck changes one habit, make it this one — it's the highest-leverage change available to most engineers this week.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="/doctor"
+    data-speaker-notes="This is the checklist you just gave, as one command — and it's the slide people will actually act on, so slow down here. /doctor (alias /checkup) reads the repo and the config and reports: duplicate CLAUDE.md content between the local and checked-in files, sections it could derive from the codebase itself, always-loaded guidance that would be cheaper as a skill or a nested CLAUDE.md, and installed skills, MCP servers and plugins you never actually use, priced against the overhead from slide 15. It also covers setup health — leftover installs, PATH, unparseable settings, slow hooks, a newer version on your channel. Stress the trim rule, because it's the same rule as slides 16 and 17: it cuts directory layouts, dependency lists and architecture overviews, and keeps pitfalls, rationale and conventions that differ from the tool defaults. Two caveats worth saying out loud: it reports before it changes anything and asks for confirmation, so it's safe to run on a repo you care about; and it will also offer to make auto mode your default and pre-approve read-only commands you keep denying — a permissions decision, not a context one, so read that prompt rather than reflex-accepting it. Tell them to run /context before and after, so the trim is measured rather than trusted.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">25</span><div class="crumb"><b>Context</b> · automate it</div></div>
+      <h2 class="reveal"><span class="o">/doctor</span> — the checklist, as one command</h2>
+      <div class="code reveal"><span class="c"># /doctor (alias /checkup) — reports first, changes nothing without you</span>
+  <span class="o">CLAUDE.md ›</span>              <span class="b">dedupe + trim</span>     <span class="c">(local vs checked-in; cut what it reads off the code)</span>
+  <span class="o">CLAUDE.md ›</span>              <span class="b">migrate the rest</span>  <span class="c">(→ skills + nested files that load on demand)</span>
+  <span class="o">skills · MCP · plugins ›</span> <span class="b">unused vs cost</span>    <span class="c">(the schema overhead from slide 15)</span>
+  <span class="o">hooks · install ›</span>        <span class="b">slow hooks, duplicate installs, PATH, version</span></div>
+      <ul class="bul reveal">
+        <li>Same trim rule as slides 16–17: <b>cuts</b> layouts, dependency lists, architecture tours — <b>keeps</b> pitfalls, rationale, conventions that differ from defaults.</li>
+        <li><b>Reports first, asks before changing anything</b> — including its offer to change <b>permission</b> defaults, which is a different decision from context hygiene.</li>
+      </ul>
+      <p class="note reveal">Run <b>/context</b> before and after: the trim is only worth what the numbers say it's worth.</p>
     </div>
   </section>
 
@@ -705,7 +724,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide dark" data-label="Recap: cost → context"
     data-speaker-notes="Close on the two-word spine from the title slide: cost, then context. Say each word once and connect it to its part — three meters with output dominating, and a window that degrades, re-bills, and re-caches as you fill it. If the room acts on one thing this week, it's trimming CLAUDE.md.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">25</span><div class="crumb"><b>Close</b> · recap</div></div>
+      <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>Close</b> · recap</div></div>
       <h2 class="reveal">Cost → <span class="o">context</span></h2>
       <div class="flow reveal">
         <div class="step">01 cost</div><div class="arrow">→</div>
@@ -723,13 +742,17 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide light dense" data-label="Sources"
     data-speaker-notes="Close on sources, matching series convention: every pricing and product claim in this deck is date-stamped July 2026 and traceable to the fact-check pass. Point out the one explicitly unverified item — any claim of a new announced subscription direction beyond Pro/Max/Team/Enterprise — so nobody repeats it as confirmed.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>Close</b> · sources</div></div>
+      <div class="slide-head reveal"><span class="snum">27</span><div class="crumb"><b>Close</b> · sources</div></div>
       <h2 class="reveal"><span class="o">Sources</span> — all claims dated July 2026</h2>
       <div class="links reveal">
         <div class="linkcol">
           <h3>Pricing &amp; plans</h3>
           <a href="https://claude.com/pricing" target="_blank" rel="noopener">Claude pricing<span class="u">claude.com/pricing</span></a>
           <a href="https://platform.claude.com/docs/en/pricing" target="_blank" rel="noopener">Claude API pricing docs<span class="u">platform.claude.com/docs/en/pricing</span></a>
+        </div>
+        <div class="linkcol">
+          <h3>Context &amp; commands</h3>
+          <a href="https://code.claude.com/docs/en/commands" target="_blank" rel="noopener">Claude Code commands reference (<code>/context</code>, <code>/compact</code>, <code>/doctor</code>)<span class="u">code.claude.com/docs/en/commands</span></a>
         </div>
         <div class="linkcol">
           <h3>Channels</h3>
