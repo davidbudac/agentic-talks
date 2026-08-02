@@ -606,7 +606,7 @@ table.tbl tr:last-child td{border-bottom:none}
   </section>
 
   <section class="slide dark" data-label="Progressive disclosure vs CLAUDE.md"
-    data-speaker-notes="This is the direct payoff of deck 05, Cost &amp; Context's argument: a CLAUDE.md line is paid on every turn forever, but a skill's full instructions are paid only when the skill actually fires. Let the animation run one cycle — the top lane pays the full block four times, the bottom lane keeps a one-line description and loads the full how-to exactly once, on the turn that triggers it. Anything that's needed occasionally but verbosely is a skill candidate, not a CLAUDE.md candidate.">
+    data-speaker-notes="This is the direct payoff of deck 05, Cost &amp; Context's argument: a CLAUDE.md line is paid on every turn forever, but a skill's full instructions are paid only when the skill actually fires. Let the animation run one cycle — the top lane pays the full block four times, the bottom lane keeps a one-line description and loads the full how-to exactly once, on the turn that triggers it. Anything that's needed occasionally but verbosely is a skill candidate, not a CLAUDE.md candidate. Mention that /doctor automates exactly this move: it migrates always-loaded CLAUDE.md guidance into skills and nested files that load on demand, and reports before it changes anything.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">16</span><div class="crumb"><b>Skills</b> · progressive disclosure</div></div>
       <h2 class="reveal">Progressive disclosure <span class="o">vs stuffing CLAUDE.md</span></h2>
@@ -620,7 +620,7 @@ table.tbl tr:last-child td{border-bottom:none}
           <video src="assets/anim/progressive-disclosure-dark.mp4" width="1176" height="700" autoplay muted loop playsinline aria-label="Across four turns, the CLAUDE.md lane re-sends its full text every turn while the skill lane carries only a one-line description and loads the full instructions once, on the turn that triggers it"></video>
         </div>
       </div>
-      <p class="note reveal">Occasional-but-verbose knowledge belongs in a skill, not CLAUDE.md — this is <b>deck 05, Cost &amp; Context</b>'s argument applied directly.</p>
+      <p class="note reveal">Occasional-but-verbose knowledge belongs in a skill, not CLAUDE.md — this is <b>deck 05, Cost &amp; Context</b>'s argument applied directly. <code>/doctor</code> will do the migration for you: it moves always-loaded guidance out of CLAUDE.md into skills and nested files that load on demand.</p>
     </div>
   </section>
 
@@ -761,7 +761,7 @@ table.tbl tr:last-child td{border-bottom:none}
   </section>
 
   <section class="slide light" data-label="Decision heuristic"
-    data-speaker-notes="Give the rule of thumb directly: interactive, authenticated, or remote capabilities lean MCP; local, scriptable, chainable capabilities lean CLI. Most teams end up with both, and that's fine — the point is choosing deliberately per capability instead of defaulting to whichever pattern the team learned first.">
+    data-speaker-notes="Give the rule of thumb directly: interactive, authenticated, or remote capabilities lean MCP; local, scriptable, chainable capabilities lean CLI. Most teams end up with both, and that's fine — the point is choosing deliberately per capability instead of defaulting to whichever pattern the team learned first. Land the second note as the practical follow-up: /doctor prices the skills, MCP servers and plugins you already have against their context cost and names the ones nobody actually uses — that is usually where the surprise is.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>MCP vs CLI</b> · heuristic</div></div>
       <h2 class="reveal">The <span class="o">decision heuristic</span></h2>
@@ -773,6 +773,7 @@ table.tbl tr:last-child td{border-bottom:none}
         </tbody>
       </table>
       <p class="note reveal">Most teams end up with both — choose deliberately per capability, not by habit.</p>
+      <p class="note reveal">Then re-check periodically: <code>/doctor</code> prices your installed skills, MCP servers and plugins against their context cost and flags the ones nobody actually uses.</p>
     </div>
   </section>
 
