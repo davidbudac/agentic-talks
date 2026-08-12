@@ -17,7 +17,7 @@ Author: **David Budáč** · English
   the wider tool landscape by category (app builders, video, HyperFrames, avatars,
   voice, music, images, decks, copy, research, automation) → five real-world stories →
   plugging AI into Excel / PowerPoint & co. (connectors, MCP). Pricing runs through
-  every tool slide (July 2026 snapshot). 57 slides. **No live demos.**
+  every tool slide (July 2026 snapshot). 59 slides. **No live demos.**
 - **[`agentic-ai.html`](agentic-ai.html)** — *Intro to Agentic AI* (Claude Code for
   beginners). Model / harness / agent, the loop, context, permissions, memory & MCP. 43 slides.
 - **[`agentic-engineering.html`](agentic-engineering.html)** — *Agentic Engineering*
@@ -62,7 +62,7 @@ Author: **David Budáč** · English
   graph, GNN → the honest GraphRAG scoreboard (where it wins, where plain RAG
   wins, the null-query collapse) → graph memory vs markdown → code graphs vs
   agentic grep → subagents, hooks & workflows as a graph runtime → a decision
-  table. 32 slides.
+  table. 33 slides.
 
 ## View it
 
@@ -158,11 +158,14 @@ rendered MP4s as muted loops that restart whenever you land on their slide:
 | `subagents` | delegation: messy work inside, tiny summary back | intro s25 · eng s29 · cost s20 |
 | `context-lifecycle` | fixed overhead stamped into every turn; only the conversation grows | cost s14 |
 | `progressive-disclosure` | a skill's how-to loads on trigger; CLAUDE.md is paid every turn | orch s16 |
+| `graph-hops` | vector top-k pulls look-alikes; graph traversal walks edges to the answer | graph s6 |
 
 To tweak or re-render: `cd remotion && npm i`, then `npx remotion studio` to
 preview or `npx remotion render <composition-id> ../assets/anim/<id>.mp4` to
 re-export (composition ids are listed in `remotion/src/Root.tsx`; each exists
-in the deck's light/dark theme variant as needed).
+in the deck's light/dark theme variant as needed). The fonts are bundled
+locally in `remotion/public/fonts` (OFL latin subsets), so renders work
+offline — no Google Fonts fetch at render time.
 
 ## Customize
 
