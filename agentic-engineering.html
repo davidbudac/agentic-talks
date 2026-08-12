@@ -188,7 +188,7 @@ table.tbl tr:last-child td{border-bottom:none}
 .dg-cap{text-align:center; font-size:var(--small-size); color:var(--s-muted); margin-top:10px}
 .dg-cap b{color:var(--s-text)}
 .diagram marker path{fill:var(--s-accent)}
-#sq2 path,#ad2 path{fill:var(--s-faint)}
+#sq2 path,#ad2 path,#mh2 path{fill:var(--s-faint)}
 
 /* ── TITLE SLIDE ─────────────────────────────────────────────────── */
 .title-slide{display:flex; flex-direction:column; justify-content:space-between; background:var(--ink);
@@ -229,8 +229,10 @@ table.tbl tr:last-child td{border-bottom:none}
    the active slide and only when motion is welcome. Print + reduced
    motion therefore always show the finished slide. ─────────────────── */
 @keyframes ae-rise{from{opacity:0; transform:translateY(22px)} to{opacity:1; transform:none}}
+@keyframes ae-dash{to{stroke-dashoffset:-26}}
 @media (prefers-reduced-motion:no-preference){
   [data-deck-active] .reveal{animation:ae-rise .5s var(--ease) both}
+  [data-deck-active] .ae-dash{animation:ae-dash 1.4s linear infinite}
   [data-deck-active] .reveal:nth-child(2){animation-delay:.07s}
   [data-deck-active] .reveal:nth-child(3){animation-delay:.14s}
   [data-deck-active] .reveal:nth-child(4){animation-delay:.21s}
@@ -590,14 +592,45 @@ table.tbl tr:last-child td{border-bottom:none}
 
   <!-- MACHINE PARTS -->
   <section class="slide light" data-label="Model, harness, client"
-    data-speaker-notes="Three parts people constantly conflate: the model you rent, the harness that loops around it, and the client where you meet it. Name one example of each from the tiles. The line to land is that the model only emits tokens and the harness is the program that gives them hands.">
+    data-speaker-notes="Three parts people constantly conflate: the model you rent, the harness that loops around it, and the client where you meet it. Name one example of each from the list, then trace the diagram: you meet the client, the harness loops inside it on your machine, and only tokens cross the wire to the rented model. The line to land is that the model only emits tokens and the harness is the program that gives them hands.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">11</span><div class="crumb"><b>Hands</b> · the three parts</div></div>
       <h2 class="reveal">Model · harness · <span class="o">client</span></h2>
-      <div class="cards c3 reveal">
-        <div class="tile"><span class="k">Model</span><p>The brain — an API you rent. <b>Fable · Opus · Sonnet</b> (Anthropic) · <b>GPT‑5.6 Sol</b> (OpenAI) · <b>Gemini 3.1 Pro</b> (Google).</p></div>
-        <div class="tile"><span class="k">Harness</span><p>The loop around the model: assembles context, runs tools, manages permissions. <b>Claude Code · Codex CLI · Gemini CLI · Jules</b> (async).</p></div>
-        <div class="tile fill"><span class="k">Client</span><p>Where you meet the harness: <b>terminal · IDE extension</b> (VS Code, JetBrains, Antigravity) <b>· desktop · web · CI</b>.</p></div>
+      <div class="split">
+        <ul class="bul reveal">
+          <li><b>Model</b> — the brain, an API you rent: <b>Fable · Opus · Sonnet</b> (Anthropic) · <b>GPT‑5.6 Sol</b> (OpenAI) · <b>Gemini 3.1 Pro</b> (Google).</li>
+          <li><b>Harness</b> — the loop around the model: assembles context, runs tools, manages permissions. <b>Claude Code · Codex CLI · Gemini CLI · Jules</b> (async).</li>
+          <li><b>Client</b> — where you meet the harness: <b>terminal · IDE extension</b> (VS Code, JetBrains, Antigravity) <b>· desktop · web · CI</b>.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 420 270" role="img" aria-label="Nested architecture: you talk to a client, which hosts the harness — the loop that assembles context and runs tools under your permissions on your machine — and the harness POSTs context to a rented model API that only ever returns tokens">
+            <defs>
+              <marker id="mh1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--coral)"/></marker>
+              <marker id="mh2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--s-faint)"/></marker>
+            </defs>
+            <rect class="dg-box" x="14" y="14" width="64" height="30" rx="8"/><text class="dg-t" x="46" y="34" font-size="12" text-anchor="middle">you</text>
+            <path class="dg-line" d="M46 44 L 46 64" marker-end="url(#mh1)"/>
+            <!-- client (outer) -->
+            <rect class="dg-box outer" x="14" y="68" width="240" height="188" rx="12"/>
+            <text class="dg-t acc" x="30" y="92" font-size="12">CLIENT</text>
+            <text class="dg-t mut" x="30" y="108" font-size="10">terminal · IDE · desktop · web · CI</text>
+            <!-- harness (inner) -->
+            <rect class="dg-box" x="30" y="120" width="208" height="120" rx="10"/>
+            <text class="dg-t" x="46" y="142" font-size="12">HARNESS — the loop</text>
+            <rect class="dg-box mid" x="46" y="154" width="176" height="24" rx="6"/><text class="dg-t mut" x="134" y="170" font-size="10.5" text-anchor="middle">assemble context</text>
+            <rect class="dg-box mid" x="46" y="184" width="176" height="24" rx="6"/><text class="dg-t mut" x="134" y="200" font-size="10.5" text-anchor="middle">run tools · your permissions</text>
+            <text class="dg-t mut" x="134" y="228" font-size="10" text-anchor="middle">runs on your machine</text>
+            <!-- model (remote) -->
+            <rect class="dg-box hot" x="300" y="120" width="106" height="72" rx="10"/>
+            <text class="dg-t on" x="353" y="148" font-size="12" text-anchor="middle">MODEL</text>
+            <text class="dg-t on" x="353" y="166" font-size="9.5" text-anchor="middle">rented API —</text>
+            <text class="dg-t on" x="353" y="179" font-size="9.5" text-anchor="middle">emits tokens only</text>
+            <path class="dg-line" d="M238 142 C 268 142, 268 138, 297 138" marker-end="url(#mh1)"/>
+            <text class="dg-t acc" x="270" y="128" font-size="9.5" text-anchor="middle">POST context</text>
+            <path class="dg-line dim" d="M300 174 C 270 174, 270 178, 241 178" marker-end="url(#mh2)"/>
+            <text class="dg-t mut" x="272" y="198" font-size="9.5" text-anchor="middle">tokens back</text>
+          </svg>
+        </div>
       </div>
       <p class="note reveal">The model only emits tokens — the <b>harness</b> is the program that gives them hands. Rent the model, run the harness, pick the client; most models work in most harnesses.</p>
     </div>
@@ -816,9 +849,38 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>The loop</b> · failure modes</div></div>
       <h2 class="reveal">Two ways loops go <span class="o">wrong</span></h2>
-      <div class="cards c2 reveal">
-        <div class="tile"><span class="k">Spiralling</span><p>Never recognises completion — each lap piles <b>new code on broken code</b>. Burns tokens, gets worse.</p></div>
-        <div class="tile fill"><span class="k">Cheating</span><p>Reward hacking: <b>test.skip</b>, hardcoded expected values, <b>deleting tests</b>, appending <b>|| true</b>. The verifier goes green; the work is fake.</p></div>
+      <div class="split">
+        <div class="cards reveal" style="grid-template-columns:1fr">
+          <div class="tile"><span class="k">Spiralling</span><p>Never recognises completion — each lap piles <b>new code on broken code</b>. Burns tokens, gets worse.</p></div>
+          <div class="tile fill"><span class="k">Cheating</span><p>Reward hacking: <b>test.skip</b>, hardcoded expected values, <b>deleting tests</b>, appending <b>|| true</b>. The verifier goes green; the work is fake.</p></div>
+        </div>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 420 250" role="img" aria-label="Two failure loops. Spiralling: with no verifier there is no done, so the loop keeps writing code on top of broken code while the context piles up. Cheating: the loop exits green by attacking the check itself — test.skip, or-or-true — so the verifier passes while the work stays fake">
+            <defs><marker id="lw1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--coral)"/></marker></defs>
+            <text class="dg-t acc" x="105" y="26" font-size="12" text-anchor="middle">SPIRALLING</text>
+            <text class="dg-t acc" x="315" y="26" font-size="12" text-anchor="middle">CHEATING</text>
+            <line class="dg-line dim" x1="210" y1="16" x2="210" y2="234"/>
+            <!-- left: a loop with no exit -->
+            <path class="dg-line ae-dash" stroke-dasharray="7 6" d="M105 56 A46 46 0 1 1 65 79" marker-end="url(#lw1)"/>
+            <text class="dg-t" x="105" y="98" font-size="11" text-anchor="middle">no verifier</text>
+            <text class="dg-t mut" x="105" y="113" font-size="10" text-anchor="middle">→ no "done"</text>
+            <rect class="dg-fill-r" x="55" y="164" width="32" height="8" rx="2"/>
+            <rect class="dg-fill-r" x="55" y="178" width="62" height="8" rx="2"/>
+            <rect class="dg-fill-r" x="55" y="192" width="96" height="8" rx="2"/>
+            <text class="dg-t mut" x="105" y="218" font-size="9.5" text-anchor="middle">each lap piles on — context grows,</text>
+            <text class="dg-t mut" x="105" y="231" font-size="9.5" text-anchor="middle">the work gets worse</text>
+            <!-- right: a loop that attacks the check -->
+            <rect class="dg-box" x="270" y="40" width="90" height="30" rx="8"/><text class="dg-t" x="315" y="60" font-size="12" text-anchor="middle">agent</text>
+            <path class="dg-line" d="M315 70 L 315 114" marker-end="url(#lw1)"/>
+            <text class="dg-t mut" x="322" y="88" font-size="9.5">instead of fixing —</text>
+            <text class="dg-t acc" x="322" y="102" font-size="9.5">test.skip · || true</text>
+            <rect class="dg-box" x="250" y="118" width="130" height="34" rx="8"/>
+            <text class="dg-t" x="315" y="140" font-size="11" text-anchor="middle">verifier goes <tspan fill="var(--positive)">green ✓</tspan></text>
+            <text class="dg-t mut" x="315" y="172" font-size="9.5" text-anchor="middle">loop exits happily</text>
+            <rect x="250" y="184" width="130" height="34" rx="8" fill="none" stroke="var(--s-line-strong)" stroke-width="1.5" stroke-dasharray="4 4"/>
+            <text class="dg-t" x="315" y="206" font-size="11" text-anchor="middle">the work — <tspan fill="var(--coral)">fake ✗</tspan></text>
+          </svg>
+        </div>
       </div>
       <p class="note reveal">Both are <b>spec bugs, not model bugs.</b> The loop optimises exactly what you wrote down; if "pass" is gameable, it gets gamed.</p>
     </div>
@@ -1208,12 +1270,42 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">34</span><div class="crumb"><b>Split the work</b> · routing heuristics</div></div>
       <h2 class="reveal">Three rules for <span class="o">routing</span></h2>
-      <div class="cards c3 reveal">
-        <div class="tile"><span class="k">Crank effort first</span><p>Before you reach for a bigger model, turn the <b>effort</b> up. <b>opus·high</b> is the workhorse; <b>xhigh</b> for long-horizon runs.</p></div>
-        <div class="tile"><span class="k">Cheapest that works</span><p>Route to the <b>smallest model that clears the bar</b> — measured. Escalate on <b>failure</b>, not vibes.</p></div>
-        <div class="tile fill"><span class="k">A new tier resets the curve</span><p><b>low</b> effort on a new model often beats <b>xhigh</b> on the old one — a cheaper floor, not just a higher ceiling.</p></div>
+      <div class="split">
+        <ul class="bul reveal">
+          <li><b>Crank effort first</b> — before you reach for a bigger model, turn the <b>effort</b> up. <b>opus·high</b> is the workhorse; <b>xhigh</b> for long-horizon runs.</li>
+          <li><b>Cheapest that works</b> — route to the <b>smallest model that clears the bar</b>, measured. Escalate on <b>failure</b>, not vibes.</li>
+          <li><b>A new tier resets the curve</b> — <b>low</b> effort on a new model often beats <b>xhigh</b> on the old one: a cheaper floor, not just a higher ceiling.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 420 260" role="img" aria-label="The escalation ladder: start with the cheapest model that clears the bar; when something actually fails, first give the same model more effort, then a bigger model, then Opus 5 at max, and only then Fable for judgement work — noting that every model hop busts the cache">
+            <defs><marker id="rt1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--coral)"/></marker></defs>
+            <rect class="dg-box mid" x="14" y="182" width="94" height="52" rx="8"/>
+            <text class="dg-t" x="61" y="203" font-size="11" text-anchor="middle">more effort</text>
+            <text class="dg-t mut" x="61" y="219" font-size="9.5" text-anchor="middle">same model</text>
+            <rect class="dg-box mid" x="116" y="140" width="94" height="52" rx="8"/>
+            <text class="dg-t" x="163" y="161" font-size="11" text-anchor="middle">bigger model</text>
+            <text class="dg-t mut" x="163" y="177" font-size="9.5" text-anchor="middle">next tier up</text>
+            <rect class="dg-box" x="218" y="98" width="94" height="52" rx="8"/>
+            <text class="dg-t" x="265" y="119" font-size="11" text-anchor="middle">Opus 5 · max</text>
+            <text class="dg-t mut" x="265" y="135" font-size="9.5" text-anchor="middle">the ceiling first</text>
+            <rect class="dg-box hot" x="320" y="56" width="94" height="52" rx="8"/>
+            <text class="dg-t on" x="367" y="77" font-size="11" text-anchor="middle">Fable</text>
+            <text class="dg-t on" x="367" y="93" font-size="9.5" text-anchor="middle">judgement work</text>
+            <!-- escalation arrows, gated on failure -->
+            <path class="dg-line" d="M110 194 L 128 178" marker-end="url(#rt1)"/>
+            <path class="dg-line" d="M212 152 L 230 136" marker-end="url(#rt1)"/>
+            <path class="dg-line" d="M314 110 L 332 94" marker-end="url(#rt1)"/>
+            <text class="dg-t acc" x="112" y="166" font-size="9.5" text-anchor="end">still fails?</text>
+            <text class="dg-t acc" x="214" y="124" font-size="9.5" text-anchor="end">still fails?</text>
+            <text class="dg-t acc" x="316" y="82" font-size="9.5" text-anchor="end">still fails?</text>
+            <text class="dg-t mut" x="14" y="134" font-size="10">start: cheapest that</text>
+            <text class="dg-t mut" x="14" y="148" font-size="10">clears the bar</text>
+            <line class="dg-line dim" x1="14" y1="248" x2="414" y2="248"/>
+            <text class="dg-t mut" x="214" y="240" font-size="10" text-anchor="middle">move up only on real failure — every model hop busts your cache</text>
+          </svg>
+        </div>
       </div>
-      <p class="note reveal">The escalation ladder: same model, more effort → bigger model → <b>Opus 5 at max</b> → Fable (for judgement work — two slides on). Move up only when something <b>actually fails</b>. (Switching models also busts your cache — one more reason not to hop on vibes.) And re-run the sweep after a model launch: <b>Opus 5's low/medium are strong enough that inherited settings are usually wrong.</b></p>
+      <p class="note reveal">Fable is for <b>judgement work</b> — two slides on. And re-run the sweep after a model launch: <b>Opus 5's low/medium are strong enough that inherited settings are usually wrong.</b></p>
     </div>
   </section>
 
@@ -1507,14 +1599,44 @@ table.tbl tr:last-child td{border-bottom:none}
 
   <!-- WHY SKILLS AT ALL -->
   <section class="slide dark" data-label="Why skills"
-    data-speaker-notes="Three tiles, one argument. The model knows the world but not your workflow, so you re-explain it every session; pasting it all into CLAUDE.md means paying for it on every turn; skills are a one-line description that is always present with a body that loads only on a match. The cost of an index entry, the power of a manual.">
+    data-speaker-notes="Three beats, one argument. The model knows the world but not your workflow, so you re-explain it every session; pasting it all into CLAUDE.md means paying for it on every turn; skills are a one-line description that is always present with a body that loads only on a match. Point at the diagram: the index rides in context, the manuals wait on disk, and one sentence from you pulls exactly one body across. The cost of an index entry, the power of a manual.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">44</span><div class="crumb"><b>Make it stick</b> · why skills</div></div>
       <h2 class="reveal">Why skills? Every session starts <span class="o">blank</span></h2>
-      <div class="cards c3 reveal">
-        <div class="tile"><span class="k">Groundhog Day</span><p>The model knows the world, <b>not your workflow.</b> Release-notes format, review checklist, deploy steps — re-explained <b>every single session.</b></p></div>
-        <div class="tile"><span class="k">The naive fix bloats</span><p>Paste it all into <b>CLAUDE.md</b> and it rides along in <b>every turn's context</b> — paid every turn, relevant almost never, crowding out the actual work.</p></div>
-        <div class="tile fill"><span class="k">Skills = lazy-loaded context</span><p>A one-line <b>description</b> that's always present; the full recipe loads <b>only when the task matches.</b> The cost of an index entry, the power of a manual.</p></div>
+      <div class="split">
+        <ul class="bul reveal">
+          <li><b>Groundhog Day:</b> the model knows the world, <b>not your workflow.</b> Release-notes format, review checklist, deploy steps — re-explained <b>every single session.</b></li>
+          <li><b>The naive fix bloats:</b> paste it all into <b>CLAUDE.md</b> and it rides in <b>every turn's context</b> — paid every turn, relevant almost never.</li>
+          <li><b>Skills = lazy-loaded context:</b> a one-line <b>description</b> that's always present; the full recipe loads <b>only when the task matches.</b> The cost of an index entry, the power of a manual.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 420 270" role="img" aria-label="Progressive disclosure: one-line skill descriptions ride in every turn's context as a tiny index while the full SKILL.md recipes wait on disk costing nothing; when your message matches a description, only that skill's body is loaded into the context">
+            <defs><marker id="sk1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--coral)"/></marker></defs>
+            <text class="dg-t acc" x="14" y="24" font-size="11.5" font-family="var(--font-m)">you › "prep the release notes"</text>
+            <path class="dg-line" d="M120 32 C 120 48, 110 52, 106 70" marker-end="url(#sk1)"/>
+            <text class="dg-t mut" x="132" y="40" font-size="9.5">matches a description</text>
+            <!-- context window: the index -->
+            <rect class="dg-box mid" x="14" y="46" width="190" height="212" rx="10"/>
+            <text class="dg-t" x="28" y="68" font-size="11">CONTEXT — every turn</text>
+            <rect class="dg-box" style="stroke:var(--coral)" x="28" y="78" width="162" height="22" rx="5"/><text class="dg-t acc" x="109" y="93" font-size="9.5" text-anchor="middle">release-notes · 1 line</text>
+            <rect class="dg-box" x="28" y="106" width="162" height="22" rx="5"/><text class="dg-t mut" x="109" y="121" font-size="9.5" text-anchor="middle">code-review · 1 line</text>
+            <rect class="dg-box" x="28" y="134" width="162" height="22" rx="5"/><text class="dg-t mut" x="109" y="149" font-size="9.5" text-anchor="middle">deploy · 1 line</text>
+            <text class="dg-t mut" x="109" y="178" font-size="9.5" text-anchor="middle">the index — always present, tiny</text>
+            <rect x="28" y="192" width="162" height="52" rx="6" fill="none" stroke="var(--s-line-strong)" stroke-width="1.5" stroke-dasharray="4 4"/>
+            <rect class="dg-box hot" x="34" y="199" width="150" height="38" rx="5"/>
+            <text class="dg-t on" x="109" y="215" font-size="9.5" text-anchor="middle">release-notes body</text>
+            <text class="dg-t on" x="109" y="229" font-size="9.5" text-anchor="middle">full recipe — loaded now</text>
+            <!-- on disk: the manuals -->
+            <rect class="dg-box outer" x="254" y="60" width="152" height="128" rx="10"/>
+            <text class="dg-t mut" x="330" y="82" font-size="10" text-anchor="middle">ON DISK — costs nothing</text>
+            <rect class="dg-box" x="268" y="94" width="124" height="24" rx="5"/><text class="dg-t acc" x="330" y="110" font-size="9" text-anchor="middle">release-notes/SKILL.md</text>
+            <rect class="dg-box" x="268" y="124" width="124" height="24" rx="5"/><text class="dg-t mut" x="330" y="140" font-size="9" text-anchor="middle">code-review/SKILL.md</text>
+            <rect class="dg-box" x="268" y="154" width="124" height="24" rx="5"/><text class="dg-t mut" x="330" y="170" font-size="9" text-anchor="middle">deploy/SKILL.md</text>
+            <path class="dg-line ae-dash" stroke-dasharray="7 6" d="M300 192 C 280 226, 240 218, 198 218" marker-end="url(#sk1)"/>
+            <text class="dg-t acc" x="306" y="222" font-size="10">only the matched</text>
+            <text class="dg-t acc" x="306" y="236" font-size="10">body loads</text>
+          </svg>
+        </div>
       </div>
       <p class="note reveal"><span class="pill">● CONTEXT</span> Skills answer one question: how do I teach the agent my job <b>without paying for the lesson on every turn?</b></p>
     </div>
@@ -1568,9 +1690,35 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">47</span><div class="crumb"><b>Make it stick</b> · skills at scale</div></div>
       <h2 class="reveal">From one skill to a <span class="o">system</span></h2>
-      <div class="cards c2 reveal">
-        <div class="tile"><span class="k">Composable sets</span><p>Matt Pocock's approach: <b>dozens of tiny skills</b> — conventions, testing style, PR etiquette — each triggering on its own cue.</p></div>
-        <div class="tile fill"><span class="k">Compound Engineering</span><p>A whole method as a skill system: <b>brainstorm → plan → work → review → compound.</b> Every solved problem becomes a <b>new doc or skill.</b></p></div>
+      <div class="split">
+        <div class="cards reveal" style="grid-template-columns:1fr">
+          <div class="tile"><span class="k">Composable sets</span><p>Matt Pocock's approach: <b>dozens of tiny skills</b> — conventions, testing style, PR etiquette — each triggering on its own cue.</p></div>
+          <div class="tile fill"><span class="k">Compound Engineering</span><p>A whole method as a skill system: <b>brainstorm → plan → work → review → compound.</b> Every solved problem becomes a <b>new doc or skill.</b></p></div>
+        </div>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 400 262" role="img" aria-label="The compounding loop: brainstorm, plan, work and review run in sequence; the compound step writes the lesson to docs slash solutions, and that store is read back into context before the next run starts — so each unit of work makes the next one cheaper">
+            <defs><marker id="ce1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--coral)"/></marker></defs>
+            <rect class="dg-box mid" x="40" y="18" width="120" height="26" rx="6"/><text class="dg-t" x="100" y="35" font-size="11" text-anchor="middle">brainstorm</text>
+            <rect class="dg-box mid" x="40" y="66" width="120" height="26" rx="6"/><text class="dg-t" x="100" y="83" font-size="11" text-anchor="middle">plan</text>
+            <rect class="dg-box mid" x="40" y="114" width="120" height="26" rx="6"/><text class="dg-t" x="100" y="131" font-size="11" text-anchor="middle">work</text>
+            <rect class="dg-box mid" x="40" y="162" width="120" height="26" rx="6"/><text class="dg-t" x="100" y="179" font-size="11" text-anchor="middle">review</text>
+            <rect class="dg-box hot" x="40" y="210" width="120" height="26" rx="6"/><text class="dg-t on" x="100" y="227" font-size="11" text-anchor="middle">compound</text>
+            <path class="dg-line" d="M100 44 L 100 64" marker-end="url(#ce1)"/>
+            <path class="dg-line" d="M100 92 L 100 112" marker-end="url(#ce1)"/>
+            <path class="dg-line" d="M100 140 L 100 160" marker-end="url(#ce1)"/>
+            <path class="dg-line" d="M100 188 L 100 208" marker-end="url(#ce1)"/>
+            <!-- the store -->
+            <rect class="dg-box outer" x="240" y="100" width="146" height="66" rx="10"/>
+            <text class="dg-t acc" x="313" y="128" font-size="11.5" text-anchor="middle">docs/solutions/</text>
+            <text class="dg-t mut" x="313" y="146" font-size="9.5" text-anchor="middle">the lesson, written down</text>
+            <path class="dg-line" d="M162 223 C 313 223, 313 200, 313 170" marker-end="url(#ce1)"/>
+            <text class="dg-t mut" x="256" y="212" font-size="9.5">write the lesson</text>
+            <path class="dg-line ae-dash" stroke-dasharray="7 6" d="M350 96 C 350 28, 262 28, 166 31" marker-end="url(#ce1)"/>
+            <text class="dg-t acc" x="230" y="52" font-size="10">read before the</text>
+            <text class="dg-t acc" x="230" y="66" font-size="10">next run starts</text>
+            <text class="dg-t mut" x="224" y="88" font-size="9.5">each loop starts smarter</text>
+          </svg>
+        </div>
       </div>
       <p class="note reveal">A skill system is an <b>engineering culture the agent can read</b> — two worked examples on the next slides.</p>
     </div>

@@ -186,6 +186,12 @@ table.tbl tr:last-child td{border-bottom:none}
 .dg-cap{text-align:center; font-size:var(--small-size); color:var(--s-muted); margin-top:10px}
 .dg-cap b{color:var(--s-text)}
 .diagram marker path{fill:var(--s-accent)}
+/* mw-: animated dash flow, this deck only — loop + flywheel diagrams */
+.mw-flow{stroke-dasharray:7 7}
+@keyframes mw-dash{to{stroke-dashoffset:-28}}
+@media (prefers-reduced-motion:no-preference){
+  [data-deck-active] .mw-flow{animation:mw-dash 1.2s linear infinite}
+}
 
 /* flow: HTML/CSS step chain used instead of video diagrams */
 .flow{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
@@ -328,11 +334,45 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">3</span><div class="crumb"><b>Evals</b> · why vibes don't scale</div></div>
       <h2 class="reveal">"Feels better" <span class="o">doesn't scale</span></h2>
-      <ul class="bul reveal">
-        <li>One person's intuition about a prompt or CLAUDE.md change doesn't survive a team of ten making changes independently.</li>
-        <li>An eval turns a feeling into a <b>number two people can agree on</b> without a meeting.</li>
-        <li>This is the core AI skill for an engineer in 2026 — on par with writing tests.</li>
-      </ul>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>One person's intuition about a prompt or CLAUDE.md change doesn't survive a team of ten making changes independently.</li>
+          <li>An eval turns a feeling into a <b>number two people can agree on</b> without a meeting.</li>
+          <li>This is the core AI skill for an engineer in 2026 — on par with writing tests.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 440 300" role="img" aria-label="The same change judged two ways: three conflicting gut feelings converge into a meeting that settles nothing, while a fixed task set run on both variants produces one number">
+            <defs><marker id="vb1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <text class="dg-t mut" x="220" y="22" font-size="12" text-anchor="middle">the same CLAUDE.md change, judged two ways</text>
+            <!-- vibes lane -->
+            <rect class="dg-box" x="20" y="38" width="120" height="34" rx="7"/>
+            <text class="dg-t mut" x="80" y="60" font-size="12" text-anchor="middle">"feels better"</text>
+            <rect class="dg-box" x="160" y="38" width="120" height="34" rx="7"/>
+            <text class="dg-t mut" x="220" y="60" font-size="12" text-anchor="middle">"feels worse"</text>
+            <rect class="dg-box" x="300" y="38" width="120" height="34" rx="7"/>
+            <text class="dg-t mut" x="360" y="60" font-size="12" text-anchor="middle">"can't tell"</text>
+            <path class="dg-line dim" d="M85 76 L 195 106" marker-end="url(#vb1)"/>
+            <path class="dg-line dim" d="M220 76 L 220 106" marker-end="url(#vb1)"/>
+            <path class="dg-line dim" d="M355 76 L 245 106" marker-end="url(#vb1)"/>
+            <rect class="dg-box mid" x="104" y="114" width="232" height="38" rx="7"/>
+            <text class="dg-t mut" x="220" y="138" font-size="12.5" text-anchor="middle">✕ a meeting — no way to settle it</text>
+            <line class="dg-line dim" x1="20" y1="172" x2="420" y2="172"/>
+            <!-- eval lane -->
+            <rect class="dg-box" x="20" y="192" width="122" height="48" rx="7"/>
+            <text class="dg-t" x="81" y="212" font-size="12.5" text-anchor="middle">fixed task set</text>
+            <text class="dg-t mut" x="81" y="230" font-size="10.5" text-anchor="middle">real past work</text>
+            <path class="dg-line" d="M150 216 L 178 216" marker-end="url(#vb1)"/>
+            <rect class="dg-box" x="188" y="192" width="112" height="48" rx="7"/>
+            <text class="dg-t" x="244" y="212" font-size="12.5" text-anchor="middle">run both</text>
+            <text class="dg-t mut" x="244" y="230" font-size="10.5" text-anchor="middle">before / after</text>
+            <path class="dg-line" d="M308 216 L 336 216" marker-end="url(#vb1)"/>
+            <rect class="dg-box hot" x="346" y="192" width="74" height="48" rx="7"/>
+            <text class="dg-t on" x="383" y="212" font-size="12.5" text-anchor="middle">one</text>
+            <text class="dg-t on" x="383" y="230" font-size="12.5" text-anchor="middle">number</text>
+            <text class="dg-t acc" x="220" y="284" font-size="12.5" text-anchor="middle">a number settles what opinions can't — no meeting required</text>
+          </svg>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -353,10 +393,37 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">5</span><div class="crumb"><b>Evals</b> · eval types</div></div>
       <h2 class="reveal"><span class="o">LLM-as-judge</span></h2>
-      <ul class="bul reveal">
-        <li>For tasks with no clean pass/fail — writing quality, code style, clarity — score output against a written rubric using a second model.</li>
-        <li>Known failure mode: a judge tends to prefer its own family's outputs. Use a different model as judge than the one being evaluated.</li>
-      </ul>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>For tasks with no clean pass/fail — writing quality, code style, clarity — score output against a written rubric using a second model.</li>
+          <li>Known failure mode: a judge tends to prefer its own family's outputs. Use a different model as judge than the one being evaluated.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 440 290" role="img" aria-label="The output under test and a written rubric both feed a judge model from a different family, which emits a score between zero and one; a dashed self-loop marks the self-preference failure mode of a judge grading its own family">
+            <defs><marker id="jd1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <text class="dg-t mut" x="220" y="20" font-size="12" text-anchor="middle">scoring when there is no clean pass/fail</text>
+            <rect class="dg-box" x="20" y="42" width="164" height="50" rx="8"/>
+            <text class="dg-t" x="102" y="63" font-size="12.5" text-anchor="middle">output under test</text>
+            <text class="dg-t mut" x="102" y="81" font-size="10.5" text-anchor="middle">prose · code style · clarity</text>
+            <rect class="dg-box" x="20" y="116" width="164" height="50" rx="8"/>
+            <text class="dg-t" x="102" y="137" font-size="12.5" text-anchor="middle">written rubric</text>
+            <text class="dg-t mut" x="102" y="155" font-size="10.5" text-anchor="middle">the criteria, in prose</text>
+            <path class="dg-line" d="M192 67 L 238 92" marker-end="url(#jd1)"/>
+            <path class="dg-line" d="M192 141 L 238 116" marker-end="url(#jd1)"/>
+            <rect class="dg-box hot" x="248" y="76" width="172" height="56" rx="9"/>
+            <text class="dg-t on" x="334" y="99" font-size="13" text-anchor="middle">judge model</text>
+            <text class="dg-t on" x="334" y="117" font-size="11" text-anchor="middle">a different model family</text>
+            <path class="dg-line" d="M334 140 L 334 172" marker-end="url(#jd1)"/>
+            <rect class="dg-box" x="272" y="182" width="124" height="42" rx="8"/>
+            <text class="dg-t acc" x="334" y="208" font-size="13" text-anchor="middle">score 0–1</text>
+            <!-- failure mode: judging its own family -->
+            <path class="dg-line dim" d="M420 84 C 448 68, 448 124, 420 116" stroke-dasharray="5 5"/>
+            <text class="dg-t mut" x="428" y="148" font-size="10.5" text-anchor="end">✕ grading its</text>
+            <text class="dg-t mut" x="428" y="162" font-size="10.5" text-anchor="end">own outputs</text>
+            <text class="dg-t acc" x="220" y="272" font-size="12.5" text-anchor="middle">⚑ judges prefer their own family — never let a model grade itself</text>
+          </svg>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -463,11 +530,43 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">9</span><div class="crumb"><b>Evals</b> · tooling</div></div>
       <h2 class="reveal">Tools: <span class="o">OTel & provider dashboards</span></h2>
-      <ul class="bul reveal">
-        <li><b>OTel-based observability:</b> capture agent traces the same way you'd capture microservice traces.</li>
-        <li><b>Claude Code ships OTel support</b> out of the box — token, cost, and tool-usage metrics via standard exporters. Zero new vendors to start.</li>
-        <li><b>Provider dashboards:</b> most model providers now ship usage/trace views out of the box — check what your org already has before adding a new tool.</li>
-      </ul>
+      <div class="split">
+        <ul class="bul reveal">
+          <li><b>OTel-based observability:</b> capture agent traces the same way you'd capture microservice traces.</li>
+          <li><b>Claude Code ships OTel support</b> out of the box — token, cost, and tool-usage metrics via standard exporters. Zero new vendors to start.</li>
+          <li><b>Provider dashboards:</b> most model providers now ship usage/trace views out of the box — check what your org already has before adding a new tool.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 440 300" role="img" aria-label="Two paths into tooling you already run: Claude Code's built-in OTel exporter feeds an existing Grafana, Datadog or Kibana stack, and the model provider's own usage dashboard ships out of the box">
+            <defs><marker id="ot1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <text class="dg-t mut" x="220" y="20" font-size="12" text-anchor="middle">agent traces land in tooling you already run</text>
+            <!-- lane 1: Claude Code → OTel → existing stack -->
+            <rect class="dg-box hot" x="20" y="46" width="152" height="64" rx="9"/>
+            <text class="dg-t on" x="96" y="73" font-size="13" text-anchor="middle">Claude Code</text>
+            <text class="dg-t on" x="96" y="92" font-size="10.5" text-anchor="middle">tokens · cost · tool usage</text>
+            <path class="dg-line" d="M180 78 L 246 78" marker-end="url(#ot1)"/>
+            <text class="dg-t acc" x="213" y="62" font-size="9.5" text-anchor="middle">OTel exporter</text>
+            <text class="dg-t mut" x="213" y="98" font-size="10" text-anchor="middle">built in</text>
+            <rect class="dg-box outer" x="256" y="30" width="164" height="136" rx="12"/>
+            <text class="dg-t acc" x="338" y="52" font-size="12" text-anchor="middle">your existing stack</text>
+            <rect class="dg-box" x="272" y="62" width="132" height="26" rx="6"/>
+            <text class="dg-t" x="338" y="80" font-size="11.5" text-anchor="middle">Grafana</text>
+            <rect class="dg-box" x="272" y="96" width="132" height="26" rx="6"/>
+            <text class="dg-t" x="338" y="114" font-size="11.5" text-anchor="middle">Datadog</text>
+            <rect class="dg-box" x="272" y="130" width="132" height="26" rx="6"/>
+            <text class="dg-t" x="338" y="148" font-size="11.5" text-anchor="middle">Kibana / Elastic</text>
+            <!-- lane 2: provider dashboard -->
+            <rect class="dg-box" x="20" y="200" width="152" height="56" rx="9"/>
+            <text class="dg-t" x="96" y="223" font-size="12.5" text-anchor="middle">model provider</text>
+            <text class="dg-t mut" x="96" y="241" font-size="10.5" text-anchor="middle">hosted API</text>
+            <path class="dg-line dim" d="M180 228 L 246 228" marker-end="url(#ot1)"/>
+            <rect class="dg-box" x="256" y="200" width="164" height="56" rx="9"/>
+            <text class="dg-t" x="338" y="223" font-size="12.5" text-anchor="middle">usage dashboard</text>
+            <text class="dg-t mut" x="338" y="241" font-size="10.5" text-anchor="middle">ships out of the box</text>
+            <text class="dg-t acc" x="220" y="290" font-size="12.5" text-anchor="middle">zero new vendors to start — check what your org already has</text>
+          </svg>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -523,11 +622,34 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">11</span><div class="crumb"><b>Evals</b> · the minimal loop</div></div>
       <h2 class="reveal">A minimal eval loop, <span class="o">this week</span></h2>
-      <div class="flow reveal">
-        <div class="step">fixed prompts</div><div class="arrow">→</div>
-        <div class="step">written rubric</div><div class="arrow">→</div>
-        <div class="step hot">score in a spreadsheet</div><div class="arrow">→</div>
-        <div class="step">compare variants</div>
+      <div class="diagram reveal" style="--diag-h:480px">
+        <svg viewBox="0 0 860 280" role="img" aria-label="A closed loop: a fixed set of prompts is run per variant, scored against a written rubric, compared in a spreadsheet, then one thing is changed and the loop returns to the run step">
+          <defs><marker id="lp1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+          <!-- forward chain -->
+          <rect class="dg-box" x="30" y="50" width="160" height="60" rx="9"/>
+          <text class="dg-t" x="110" y="75" font-size="14" text-anchor="middle">fixed prompts</text>
+          <text class="dg-t mut" x="110" y="95" font-size="11.5" text-anchor="middle">5–10 real tasks</text>
+          <path class="dg-line" d="M198 80 L 240 80" marker-end="url(#lp1)"/>
+          <rect class="dg-box" x="250" y="50" width="130" height="60" rx="9"/>
+          <text class="dg-t" x="315" y="75" font-size="14" text-anchor="middle">run</text>
+          <text class="dg-t mut" x="315" y="95" font-size="11.5" text-anchor="middle">each variant</text>
+          <path class="dg-line" d="M388 80 L 430 80" marker-end="url(#lp1)"/>
+          <rect class="dg-box" x="440" y="50" width="150" height="60" rx="9"/>
+          <text class="dg-t" x="515" y="75" font-size="14" text-anchor="middle">score</text>
+          <text class="dg-t mut" x="515" y="95" font-size="11.5" text-anchor="middle">against a written rubric</text>
+          <path class="dg-line" d="M598 80 L 640 80" marker-end="url(#lp1)"/>
+          <rect class="dg-box" x="650" y="50" width="170" height="60" rx="9"/>
+          <text class="dg-t" x="735" y="75" font-size="14" text-anchor="middle">compare</text>
+          <text class="dg-t mut" x="735" y="95" font-size="11.5" text-anchor="middle">in a spreadsheet</text>
+          <!-- the loop back -->
+          <path class="dg-line mw-flow" d="M735 114 L 735 216 L 608 216" marker-end="url(#lp1)"/>
+          <rect class="dg-box hot" x="336" y="190" width="264" height="52" rx="10"/>
+          <text class="dg-t on" x="468" y="212" font-size="14" text-anchor="middle">change ONE thing</text>
+          <text class="dg-t on" x="468" y="231" font-size="10.5" text-anchor="middle">prompt, CLAUDE.md, or model — not two</text>
+          <path class="dg-line mw-flow" d="M328 216 L 315 216 L 315 120" marker-end="url(#lp1)"/>
+          <text class="dg-t mut" x="290" y="170" font-size="11.5" text-anchor="end">next cycle</text>
+          <text class="dg-t acc" x="430" y="272" font-size="13" text-anchor="middle">one variable per cycle — otherwise the number can't tell you what mattered</text>
+        </svg>
       </div>
       <p class="note reveal">Deliberately unglamorous — the bar to start is nearly zero, no new tooling required.</p>
     </div>
@@ -753,11 +875,50 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>Alt. harnesses</b> · OpenRouter</div></div>
       <h2 class="reveal">OpenRouter: <span class="o">one API, many models</span></h2>
-      <ul class="bul reveal">
-        <li><b>315+ models</b> from Anthropic, OpenAI, Google, DeepSeek, Meta, Mistral, xAI, and others — one key, one bill.</li>
-        <li>Pay-per-token; roughly a <b>5.5% fee on credit purchases</b> rather than a heavy per-token markup on most models.</li>
-        <li>Caveat: failover is a feature, but it means a request can silently route to a different provider than expected.</li>
-      </ul>
+      <div class="split">
+        <ul class="bul reveal">
+          <li><b>315+ models</b> from Anthropic, OpenAI, Google, DeepSeek, Meta, Mistral, xAI, and others — one key, one bill.</li>
+          <li>Pay-per-token; roughly a <b>5.5% fee on credit purchases</b> rather than a heavy per-token markup on most models.</li>
+          <li>Caveat: failover is a feature, but it means a request can silently route to a different provider than expected.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 460 310" role="img" aria-label="Your app holds one key into OpenRouter, which fans out to Anthropic, OpenAI, Google, DeepSeek, Meta and Mistral; a dashed arrow marks failover silently rerouting a request to a different provider">
+            <defs><marker id="or1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <!-- app -->
+            <rect class="dg-box" x="16" y="118" width="122" height="64" rx="9"/>
+            <text class="dg-t" x="77" y="145" font-size="13" text-anchor="middle">your app</text>
+            <text class="dg-t mut" x="77" y="164" font-size="10.5" text-anchor="middle">one key · one bill</text>
+            <path class="dg-line" d="M146 150 L 186 150" marker-end="url(#or1)"/>
+            <!-- openrouter -->
+            <rect class="dg-box hot" x="196" y="112" width="124" height="76" rx="10"/>
+            <text class="dg-t on" x="258" y="145" font-size="13.5" text-anchor="middle">OpenRouter</text>
+            <text class="dg-t on" x="258" y="166" font-size="11" text-anchor="middle">315+ models</text>
+            <text class="dg-t mut" x="230" y="212" font-size="10.5" text-anchor="middle">≈5.5% fee on credit purchases,</text>
+            <text class="dg-t mut" x="230" y="227" font-size="10.5" text-anchor="middle">not a heavy per-token markup</text>
+            <!-- provider fan-out -->
+            <rect class="dg-box" x="342" y="18" width="102" height="30" rx="7"/>
+            <text class="dg-t" x="393" y="38" font-size="11.5" text-anchor="middle">Anthropic</text>
+            <rect class="dg-box" x="342" y="60" width="102" height="30" rx="7"/>
+            <text class="dg-t" x="393" y="80" font-size="11.5" text-anchor="middle">OpenAI</text>
+            <rect class="dg-box" x="342" y="102" width="102" height="30" rx="7"/>
+            <text class="dg-t" x="393" y="122" font-size="11.5" text-anchor="middle">Google</text>
+            <rect class="dg-box" x="342" y="144" width="102" height="30" rx="7"/>
+            <text class="dg-t" x="393" y="164" font-size="11.5" text-anchor="middle">DeepSeek</text>
+            <rect class="dg-box" x="342" y="186" width="102" height="30" rx="7"/>
+            <text class="dg-t" x="393" y="206" font-size="11.5" text-anchor="middle">Meta</text>
+            <rect class="dg-box" x="342" y="228" width="102" height="30" rx="7"/>
+            <text class="dg-t" x="393" y="248" font-size="11.5" text-anchor="middle">Mistral · xAI · …</text>
+            <path class="dg-line dim" d="M326 126 L 334 45" marker-end="url(#or1)"/>
+            <path class="dg-line dim" d="M328 134 L 334 80" marker-end="url(#or1)"/>
+            <path class="dg-line" d="M328 146 L 334 118" marker-end="url(#or1)"/>
+            <path class="dg-line dim" d="M328 158 L 334 159" marker-end="url(#or1)"/>
+            <path class="dg-line dim" d="M328 168 L 334 198" marker-end="url(#or1)"/>
+            <!-- failover -->
+            <path class="dg-line" d="M326 180 C 336 218, 336 232, 334 240" stroke-dasharray="5 5" marker-end="url(#or1)"/>
+            <text class="dg-t acc" x="230" y="290" font-size="12" text-anchor="middle">⚑ failover can silently land a request on a different provider</text>
+          </svg>
+        </div>
+      </div>
       <p class="note reveal">Some trackers cite a "30-60% markup in some cases" — that figure is inconsistent across sources; the 5.5% credit-fee framing is the more defensible one.</p>
     </div>
   </section>
@@ -792,10 +953,40 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">23</span><div class="crumb"><b>Alt. harnesses</b> · Gemma 4</div></div>
       <h2 class="reveal">Gemma 4: <span class="o">laptop-viable</span></h2>
-      <ul class="bul reveal">
-        <li>Google, arrived ~March 2026. Sizes: E2B, E4B, a 12B unified multimodal (June 2026), a 26B MoE (3.8B active), a 31B dense.</li>
-        <li>The <b>12B model runs on a 16GB laptop</b> (e.g. 16GB MacBook Air) at Q4_0 quantization — nearly matching the 26B model at under half the memory.</li>
-      </ul>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>Google, arrived ~March 2026. Sizes: E2B, E4B, a 12B unified multimodal (June 2026), a 26B MoE (3.8B active), a 31B dense.</li>
+          <li>The <b>12B model runs on a 16GB laptop</b> (e.g. 16GB MacBook Air) at Q4_0 quantization — nearly matching the 26B model at under half the memory.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 440 300" role="img" aria-label="Five bars sized by Gemma 4 parameter counts from E2B to 31B; the 12B bar is highlighted as fitting under a dashed 16GB-laptop line, with a bracket noting it nearly matches the 26B model's benchmarks at under half the memory">
+            <text class="dg-t mut" x="220" y="20" font-size="12" text-anchor="middle">the Gemma 4 family — bar height = total params</text>
+            <!-- bars: 5.6px per B, baseline 232 -->
+            <rect class="dg-box mid" x="30" y="221" width="56" height="11" rx="3"/>
+            <rect class="dg-box mid" x="108" y="210" width="56" height="22" rx="3"/>
+            <rect class="dg-box hot" x="186" y="165" width="56" height="67" rx="3"/>
+            <rect class="dg-box mid" x="264" y="86" width="56" height="146" rx="3"/>
+            <rect class="dg-box mid" x="342" y="58" width="56" height="174" rx="3"/>
+            <!-- 16GB laptop line: everything at or below the 12B bar fits -->
+            <line class="dg-line" x1="20" y1="156" x2="420" y2="156" stroke-dasharray="6 5"/>
+            <text class="dg-t acc" x="24" y="146" font-size="11">fits a 16GB laptop @ Q4_0</text>
+            <!-- 12B ≈ 26B benchmarks -->
+            <path class="dg-line dim" d="M216 158 C 232 104, 258 92, 286 84" stroke-dasharray="4 4"/>
+            <text class="dg-t" x="236" y="118" font-size="11">≈ same benchmarks,</text>
+            <text class="dg-t mut" x="236" y="133" font-size="10.5">under half the memory</text>
+            <!-- labels -->
+            <text class="dg-t" x="58" y="252" font-size="12.5" text-anchor="middle">E2B</text>
+            <text class="dg-t" x="136" y="252" font-size="12.5" text-anchor="middle">E4B</text>
+            <text class="dg-t acc" x="214" y="252" font-size="12.5" text-anchor="middle">12B</text>
+            <text class="dg-t" x="292" y="252" font-size="12.5" text-anchor="middle">26B</text>
+            <text class="dg-t" x="370" y="252" font-size="12.5" text-anchor="middle">31B</text>
+            <text class="dg-t mut" x="214" y="268" font-size="10.5" text-anchor="middle">multimodal</text>
+            <text class="dg-t mut" x="292" y="268" font-size="10.5" text-anchor="middle">MoE · 3.8B active</text>
+            <text class="dg-t mut" x="370" y="268" font-size="10.5" text-anchor="middle">dense</text>
+            <text class="dg-t acc" x="220" y="294" font-size="12.5" text-anchor="middle">the coral bar is the laptop pick — local inference, not aspirational</text>
+          </svg>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -804,11 +995,38 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">24</span><div class="crumb"><b>Alt. harnesses</b> · Qwen 3.6</div></div>
       <h2 class="reveal">Qwen 3.6: <span class="o">dense and MoE flagships</span></h2>
-      <ul class="bul reveal">
-        <li>Alibaba, Apache 2.0. Two April 2026 flagships: <b>27B dense</b> and <b>35B-A3B MoE</b> (only 3B active params/token).</li>
-        <li>Native 256K context, extensible to ~1M via YaRN; reportedly outperforms a 397B MoE model on agentic coding benchmarks.</li>
-        <li>The 35B-A3B MoE is the realistic local-laptop pick given its low active-parameter count. <span class="muted">[exact laptop RAM requirements not independently verified]</span></li>
-      </ul>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>Alibaba, Apache 2.0. Two April 2026 flagships: <b>27B dense</b> and <b>35B-A3B MoE</b> (only 3B active params/token).</li>
+          <li>Native 256K context, extensible to ~1M via YaRN; reportedly outperforms a 397B MoE model on agentic coding benchmarks.</li>
+          <li>The 35B-A3B MoE is the realistic local-laptop pick given its low active-parameter count. <span class="muted">[exact laptop RAM requirements not independently verified]</span></li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 440 300" role="img" aria-label="Two panels compare the 27B dense model, where every parameter is active per token, with the 35B-A3B mixture-of-experts model, where only a thin 3B slice is active; below, a context bar shows 256K native extending to about 1M via YaRN">
+            <text class="dg-t mut" x="220" y="20" font-size="12" text-anchor="middle">what one token pays for, per flagship</text>
+            <!-- dense panel -->
+            <text class="dg-t" x="115" y="48" font-size="13" text-anchor="middle">27B dense</text>
+            <rect class="dg-box" x="30" y="60" width="170" height="96" rx="8"/>
+            <rect class="dg-fill-r" x="33" y="63" width="164" height="90" rx="6" opacity="0.9"/>
+            <text class="dg-t on" x="115" y="112" font-size="12.5" text-anchor="middle">all 27B active</text>
+            <text class="dg-t mut" x="115" y="176" font-size="10.5" text-anchor="middle">every token pays full compute</text>
+            <!-- MoE panel -->
+            <text class="dg-t" x="325" y="48" font-size="13" text-anchor="middle">35B-A3B MoE</text>
+            <rect class="dg-box" x="240" y="60" width="170" height="96" rx="8"/>
+            <rect class="dg-fill-r" x="243" y="63" width="15" height="90" opacity="0.9"/>
+            <text class="dg-t acc" x="266" y="98" font-size="11.5">← 3B active / token</text>
+            <text class="dg-t mut" x="266" y="118" font-size="10.5">the other 32B sit parked</text>
+            <text class="dg-t mut" x="325" y="176" font-size="10.5" text-anchor="middle">RAM for 35B, compute for 3B</text>
+            <!-- context bar -->
+            <text class="dg-t" x="30" y="212" font-size="12">context window</text>
+            <rect class="dg-fill-r" x="30" y="222" width="97" height="24" rx="4" opacity="0.9"/>
+            <text class="dg-t on" x="78" y="238" font-size="11" text-anchor="middle">256K</text>
+            <rect class="dg-box outer" x="127" y="222" width="283" height="24" rx="4"/>
+            <text class="dg-t mut" x="268" y="238" font-size="11" text-anchor="middle">extensible to ~1M via YaRN</text>
+            <text class="dg-t acc" x="220" y="288" font-size="12.5" text-anchor="middle">low active params make the A3B the realistic local-laptop pick</text>
+          </svg>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -929,12 +1147,37 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">31</span><div class="crumb"><b>Day-to-day</b> · habits</div></div>
       <h2 class="reveal">Habits that <span class="o">compound daily</span></h2>
-      <ul class="bul reveal">
-        <li><b>Keyboard-first</b> — fewer context switches to the mouse.</li>
-        <li><b>Parallel sessions</b> on unrelated tasks instead of waiting serially.</li>
-        <li><b>Background/async tasks</b> — kick off, check back later.</li>
-        <li><b>Checkpoint with git</b> — small commits so an agent's mid-task state is never the only copy.</li>
-      </ul>
+      <div class="split">
+        <ul class="bul reveal">
+          <li><b>Keyboard-first</b> — fewer context switches to the mouse.</li>
+          <li><b>Parallel sessions</b> on unrelated tasks instead of waiting serially.</li>
+          <li><b>Background/async tasks</b> — kick off, check back later.</li>
+          <li><b>Checkpoint with git</b> — small commits so an agent's mid-task state is never the only copy.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 440 320" role="img" aria-label="A flywheel of four daily habits — keyboard-first, parallel sessions, background tasks and git checkpoints — cycling around the words 'small wins, every day'">
+            <defs><marker id="fw1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <!-- flywheel arcs (clockwise) -->
+            <path class="dg-line mw-flow" d="M262 69 A100 100 0 0 1 311 118" marker-end="url(#fw1)"/>
+            <path class="dg-line mw-flow" d="M311 202 A100 100 0 0 1 262 251" marker-end="url(#fw1)"/>
+            <path class="dg-line mw-flow" d="M178 251 A100 100 0 0 1 129 202" marker-end="url(#fw1)"/>
+            <path class="dg-line mw-flow" d="M129 118 A100 100 0 0 1 178 69" marker-end="url(#fw1)"/>
+            <!-- hub -->
+            <text class="dg-t acc" x="220" y="155" font-size="13" text-anchor="middle">small wins</text>
+            <text class="dg-t acc" x="220" y="174" font-size="13" text-anchor="middle">× every day</text>
+            <!-- habit nodes -->
+            <rect class="dg-box" x="150" y="20" width="140" height="40" rx="8"/>
+            <text class="dg-t" x="220" y="45" font-size="12.5" text-anchor="middle">keyboard-first</text>
+            <rect class="dg-box" x="300" y="140" width="136" height="40" rx="8"/>
+            <text class="dg-t" x="368" y="165" font-size="12.5" text-anchor="middle">parallel sessions</text>
+            <rect class="dg-box" x="150" y="260" width="140" height="40" rx="8"/>
+            <text class="dg-t" x="220" y="285" font-size="12.5" text-anchor="middle">background tasks</text>
+            <rect class="dg-box" x="4" y="140" width="136" height="40" rx="8"/>
+            <text class="dg-t" x="72" y="165" font-size="12.5" text-anchor="middle">git checkpoints</text>
+            <text class="dg-t mut" x="220" y="316" font-size="11.5" text-anchor="middle">each habit buys time the next one spends — the wheel spins faster</text>
+          </svg>
+        </div>
+      </div>
     </div>
   </section>
 
