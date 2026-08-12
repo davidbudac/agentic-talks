@@ -189,6 +189,12 @@ table.tbl tr:last-child td{border-bottom:none}
 .dg-cap b{color:var(--s-text)}
 .diagram marker path{fill:var(--s-accent)}
 
+/* oa- : deck-scoped diagram motion (runaway-loop slide) */
+@keyframes oa-loop-spin{to{stroke-dashoffset:-72}}
+@media (prefers-reduced-motion:no-preference){
+  [data-deck-active] .oa-spin{stroke-dasharray:10 8; animation:oa-loop-spin 2.4s linear infinite}
+}
+
 /* flow: HTML/CSS step chain used instead of video diagrams */
 .flow{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
 .flow .step{border:var(--bw) solid var(--s-card-border); background:var(--s-card-bg); border-radius:var(--radius-md);
@@ -373,11 +379,36 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">4</span><div class="crumb"><b>Orchestration</b> · Herdr</div></div>
       <h2 class="reveal">Herdr: an <span class="o">agent multiplexer</span></h2>
-      <ul class="bul reveal">
-        <li>Terminal-native, Rust, single binary, runs fully <b>local</b> — no cloud component.</li>
-        <li>Spawns and monitors multiple coding agents (Claude Code, Codex, Gemini CLI, and others) in one terminal.</li>
-        <li>Auto-detects each agent's state — blocked / working / done / idle — plus a local socket API for agent-to-agent handoff.</li>
-      </ul>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>Terminal-native, Rust, single binary, runs fully <b>local</b> — no cloud component.</li>
+          <li>Spawns and monitors multiple coding agents (Claude Code, Codex, Gemini CLI, and others) in one terminal.</li>
+          <li>Auto-detects each agent's state — blocked / working / done / idle — plus a local socket API for agent-to-agent handoff.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 440 300" role="img" aria-label="Herdr dashboard: three coding agents running in one terminal, each with an auto-detected state — working, blocked, done — and a local socket path for agent-to-agent handoff">
+            <defs><marker id="hd1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <rect class="dg-box mid" x="20" y="28" width="400" height="244" rx="12"/>
+            <text class="dg-t acc" x="220" y="54" font-size="12" text-anchor="middle">herdr — one terminal, one dashboard</text>
+            <!-- agent rows with auto-detected states -->
+            <rect class="dg-box" x="52" y="74" width="170" height="44" rx="8"/>
+            <text class="dg-t" x="137" y="101" font-size="13" text-anchor="middle">claude code</text>
+            <circle class="dg-fill-g" cx="252" cy="96" r="6"/>
+            <text class="dg-t mut" x="268" y="101" font-size="12">working</text>
+            <rect class="dg-box" x="52" y="132" width="170" height="44" rx="8"/>
+            <text class="dg-t" x="137" y="159" font-size="13" text-anchor="middle">codex</text>
+            <circle class="dg-fill-a" cx="252" cy="154" r="6"/>
+            <text class="dg-t mut" x="268" y="159" font-size="12">blocked — needs you</text>
+            <rect class="dg-box" x="52" y="190" width="170" height="44" rx="8"/>
+            <text class="dg-t" x="137" y="217" font-size="13" text-anchor="middle">gemini cli</text>
+            <circle class="dg-fill-r" cx="252" cy="212" r="6"/>
+            <text class="dg-t mut" x="268" y="217" font-size="12">done</text>
+            <!-- local socket handoff between agents -->
+            <path class="dg-line dim" d="M50 212 C 32 212, 32 96, 48 96" marker-end="url(#hd1)"/>
+            <text class="dg-t acc" x="220" y="258" font-size="11.5" text-anchor="middle">agent → agent handoff over a local socket API</text>
+          </svg>
+        </div>
+      </div>
       <p class="note reveal">Earns its place when you're already running three terminal tabs of agents and want one dashboard instead of three.</p>
     </div>
   </section>
@@ -387,11 +418,46 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">5</span><div class="crumb"><b>Orchestration</b> · Conductor</div></div>
       <h2 class="reveal">Conductor: <span class="o">parallel worktrees</span>, one dashboard</h2>
-      <ul class="bul reveal">
-        <li>Native macOS app (Melty Labs) — runs multiple Claude Code / Codex agents in parallel, each in its own <b>isolated git worktree</b>.</li>
-        <li>Dashboard for monitoring, <b>diff-first review</b>, and PR shipping.</li>
-        <li>Free app; bring your own Claude/Codex subscription.</li>
-      </ul>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>Native macOS app (Melty Labs) — runs multiple Claude Code / Codex agents in parallel, each in its own <b>isolated git worktree</b>.</li>
+          <li>Dashboard for monitoring, <b>diff-first review</b>, and PR shipping.</li>
+          <li>Free app; bring your own Claude/Codex subscription.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 460 300" role="img" aria-label="One shared git repository fans out into three isolated worktrees, one agent per worktree; all three feed a dashboard for diff-first review, which ships a PR">
+            <defs><marker id="cw1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <!-- shared repo -->
+            <rect class="dg-box mid" x="14" y="106" width="98" height="68" rx="10"/>
+            <text class="dg-t" x="63" y="136" font-size="13" text-anchor="middle">repo</text>
+            <text class="dg-t mut" x="63" y="156" font-size="10.5" text-anchor="middle">one .git history</text>
+            <!-- three isolated worktrees -->
+            <path class="dg-line dim" d="M112 128 C 132 110, 132 72, 148 60"/>
+            <path class="dg-line dim" d="M112 140 L 148 140"/>
+            <path class="dg-line dim" d="M112 152 C 132 170, 132 208, 148 220"/>
+            <rect class="dg-box outer" x="150" y="32" width="140" height="56" rx="9"/>
+            <text class="dg-t" x="220" y="55" font-size="12" text-anchor="middle">worktree a</text>
+            <text class="dg-t mut" x="220" y="74" font-size="10.5" text-anchor="middle">agent · own branch</text>
+            <rect class="dg-box outer" x="150" y="112" width="140" height="56" rx="9"/>
+            <text class="dg-t" x="220" y="135" font-size="12" text-anchor="middle">worktree b</text>
+            <text class="dg-t mut" x="220" y="154" font-size="10.5" text-anchor="middle">agent · own branch</text>
+            <rect class="dg-box outer" x="150" y="192" width="140" height="56" rx="9"/>
+            <text class="dg-t" x="220" y="215" font-size="12" text-anchor="middle">worktree c</text>
+            <text class="dg-t mut" x="220" y="234" font-size="10.5" text-anchor="middle">agent · own branch</text>
+            <!-- dashboard: diff-first review, then PR -->
+            <path class="dg-line dim" d="M290 60 C 316 72, 316 110, 334 122"/>
+            <path class="dg-line dim" d="M290 140 L 334 140"/>
+            <path class="dg-line dim" d="M290 220 C 316 208, 316 170, 334 158"/>
+            <rect class="dg-box hot" x="336" y="108" width="110" height="64" rx="10"/>
+            <text class="dg-t on" x="391" y="134" font-size="13" text-anchor="middle">dashboard</text>
+            <text class="dg-t on" x="391" y="153" font-size="10.5" text-anchor="middle">diff-first review</text>
+            <path class="dg-line" d="M391 174 L 391 204" marker-end="url(#cw1)"/>
+            <rect class="dg-box" x="351" y="210" width="80" height="42" rx="8"/>
+            <text class="dg-t" x="391" y="236" font-size="13" text-anchor="middle">PR</text>
+            <text class="dg-t acc" x="230" y="288" font-size="12" text-anchor="middle">one shared history — three isolated working copies</text>
+          </svg>
+        </div>
+      </div>
       <p class="note reveal">Earns its place when review quality matters more than terminal muscle memory — the diff-first flow is the differentiator.</p>
     </div>
   </section>
@@ -483,13 +549,34 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">10</span><div class="crumb"><b>Orchestration</b> · Sandcastle</div></div>
       <h2 class="reveal">Sandcastle: <span class="o">one call, isolated run</span></h2>
-      <div class="code reveal"><span class="c">// TypeScript SDK — MIT license</span>
+      <div class="split">
+        <div class="code reveal"><span class="c">// TypeScript SDK — MIT license</span>
   <span class="o">import</span> { sandcastle } <span class="o">from</span> <span class="g">"sandcastle"</span>;
   <span class="o">await</span> sandcastle.run({
     provider: <span class="g">"docker"</span>,  <span class="c">// or podman, vercel, custom</span>
     agent: <span class="g">"claude-code"</span>,
     branch: <span class="g">"auto"</span>       <span class="c">// worktree + branch strategy managed for you</span>
   });</div>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 440 300" role="img" aria-label="sandcastle.run spawns an agent inside a provider container with its own worktree and branch; commits are merged back to the repo automatically, while anything the provider exposes — mounted volumes, network egress — is not isolated">
+            <defs><marker id="sc1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <rect class="dg-box" x="145" y="14" width="150" height="34" rx="8"/>
+            <text class="dg-t acc" x="220" y="36" font-size="13" text-anchor="middle">sandcastle.run()</text>
+            <path class="dg-line" d="M220 48 L 220 66" marker-end="url(#sc1)"/>
+            <!-- provider container -->
+            <rect class="dg-box outer" x="70" y="72" width="300" height="142" rx="12"/>
+            <text class="dg-t acc" x="220" y="94" font-size="11" text-anchor="middle">provider — docker/podman/vercel/custom</text>
+            <rect class="dg-box mid" x="100" y="106" width="240" height="92" rx="10"/>
+            <text class="dg-t mut" x="220" y="126" font-size="11" text-anchor="middle">own worktree · own branch</text>
+            <rect class="dg-box hot" x="170" y="138" width="100" height="44" rx="8"/>
+            <text class="dg-t on" x="220" y="165" font-size="13" text-anchor="middle">agent</text>
+            <!-- merge-back -->
+            <path class="dg-line" d="M220 214 L 220 240" marker-end="url(#sc1)"/>
+            <text class="dg-t" x="220" y="262" font-size="12.5" text-anchor="middle">commits merged back automatically</text>
+            <text class="dg-t mut" x="220" y="288" font-size="10.5" text-anchor="middle">not isolated: mounted volumes · open network egress</text>
+          </svg>
+        </div>
+      </div>
       <p class="note reveal">Manages sandbox provider, git branch/worktree strategy, and merges commits back automatically. What's isolated: filesystem and process. What escapes: anything the provider itself exposes — mounted volumes, open network egress.</p>
     </div>
   </section>
@@ -499,10 +586,30 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">11</span><div class="crumb"><b>Orchestration</b> · failure modes</div></div>
       <h2 class="reveal">Failure mode: <span class="o">runaway loops</span></h2>
-      <ul class="bul reveal">
-        <li>An agent keeps retrying a failing approach without escalating — tokens and time burn with nothing to show.</li>
-        <li>Fix: a hard turn or token budget per task, enforced by the <b>orchestrator</b>, not left to the agent's own judgment.</li>
-      </ul>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>An agent keeps retrying a failing approach without escalating — tokens and time burn with nothing to show.</li>
+          <li>Fix: a hard turn or token budget per task, enforced by the <b>orchestrator</b>, not left to the agent's own judgment.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 440 300" role="img" aria-label="An agent circles through try, fail, retry, burning tokens each lap, until a hard turn-or-token budget enforced by the orchestrator stops the loop and escalates to a human">
+            <defs><marker id="rl1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <!-- the loop -->
+            <circle class="dg-line oa-spin" cx="145" cy="140" r="62"/>
+            <text class="dg-t" x="145" y="135" font-size="13" text-anchor="middle">try → fail</text>
+            <text class="dg-t mut" x="145" y="155" font-size="11" text-anchor="middle">→ retry, same approach</text>
+            <text class="dg-t mut" x="145" y="232" font-size="11" text-anchor="middle">tokens burn every lap</text>
+            <!-- the budget wall -->
+            <path class="dg-line dim" d="M212 140 L 296 140" marker-end="url(#rl1)"/>
+            <path class="dg-line" d="M310 56 L 310 224"/>
+            <text class="dg-t acc" x="310" y="42" font-size="12" text-anchor="middle">hard budget</text>
+            <text class="dg-t mut" x="310" y="244" font-size="10.5" text-anchor="middle">max turns / max tokens</text>
+            <text class="dg-t" x="378" y="132" font-size="12.5" text-anchor="middle">stop &amp;</text>
+            <text class="dg-t" x="378" y="150" font-size="12.5" text-anchor="middle">escalate</text>
+            <text class="dg-t acc" x="220" y="288" font-size="12" text-anchor="middle">the orchestrator enforces the wall — not the agent</text>
+          </svg>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -511,10 +618,34 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">12</span><div class="crumb"><b>Orchestration</b> · failure modes</div></div>
       <h2 class="reveal">Failure mode: <span class="o">merge conflicts between agents</span></h2>
-      <ul class="bul reveal">
-        <li>Parallel agents on overlapping files produce conflicting diffs — nobody notices until merge time.</li>
-        <li>Isolated worktrees reduce this but don't eliminate it when tasks genuinely overlap — that still needs a human to sequence the work.</li>
-      </ul>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>Parallel agents on overlapping files produce conflicting diffs — nobody notices until merge time.</li>
+          <li>Isolated worktrees reduce this but don't eliminate it when tasks genuinely overlap — that still needs a human to sequence the work.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 440 300" role="img" aria-label="Two agent branches diverge from main, both edit the same file auth.ts in isolation, and collide in a merge conflict only when they rejoin main">
+            <!-- main -->
+            <path class="dg-line dim" d="M20 150 L 420 150"/>
+            <text class="dg-t mut" x="26" y="136" font-size="11">main</text>
+            <!-- branch A (agent a) -->
+            <path class="dg-line dim" d="M90 150 C 112 150, 112 78, 140 78 L 280 78 C 314 78, 314 146, 336 149"/>
+            <text class="dg-t mut" x="210" y="36" font-size="11" text-anchor="middle">agent a — own worktree</text>
+            <rect class="dg-box" x="172" y="56" width="76" height="30" rx="7"/>
+            <text class="dg-t acc" x="210" y="76" font-size="11.5" text-anchor="middle">auth.ts</text>
+            <!-- branch B (agent b) -->
+            <path class="dg-line dim" d="M90 150 C 112 150, 112 222, 140 222 L 280 222 C 314 222, 314 154, 336 151"/>
+            <text class="dg-t mut" x="210" y="262" font-size="11" text-anchor="middle">agent b — own worktree</text>
+            <rect class="dg-box" x="172" y="214" width="76" height="30" rx="7"/>
+            <text class="dg-t acc" x="210" y="234" font-size="11.5" text-anchor="middle">auth.ts</text>
+            <!-- collision at merge time -->
+            <rect class="dg-fill-r" x="332" y="142" width="16" height="16" transform="rotate(45 340 150)"/>
+            <text class="dg-t" x="384" y="126" font-size="12.5" text-anchor="middle">conflict —</text>
+            <text class="dg-t mut" x="384" y="144" font-size="11" text-anchor="middle">seen only here</text>
+            <text class="dg-t acc" x="220" y="292" font-size="12" text-anchor="middle">same file, two diffs — a human still sequences overlapping work</text>
+          </svg>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -645,10 +776,45 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">18</span><div class="crumb"><b>Skills</b> · plugins</div></div>
       <h2 class="reveal">Plugins: <span class="o">bundle it for a team</span></h2>
-      <ul class="bul reveal">
-        <li>A plugin packages <b>skills + subagents + hooks + MCP configs</b> into one distributable unit.</li>
-        <li>Install once — everyone on the team gets the same toolkit and conventions, not a folder of individually copy-pasted skills.</li>
-      </ul>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>A plugin packages <b>skills + subagents + hooks + MCP configs</b> into one distributable unit.</li>
+          <li>Install once — everyone on the team gets the same toolkit and conventions, not a folder of individually copy-pasted skills.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 440 300" role="img" aria-label="A plugin bundles skills, subagents, hooks and MCP configs into one unit; one install gives every teammate the same toolkit">
+            <defs><marker id="pg1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <!-- the bundle -->
+            <rect class="dg-box outer" x="20" y="52" width="180" height="196" rx="12"/>
+            <text class="dg-t acc" x="110" y="78" font-size="12" text-anchor="middle">plugin — one unit</text>
+            <rect class="dg-box" x="38" y="94" width="70" height="44" rx="7"/>
+            <text class="dg-t" x="73" y="121" font-size="11" text-anchor="middle">skills</text>
+            <rect class="dg-box" x="114" y="94" width="70" height="44" rx="7"/>
+            <text class="dg-t" x="149" y="121" font-size="11" text-anchor="middle">subagents</text>
+            <rect class="dg-box" x="38" y="146" width="70" height="44" rx="7"/>
+            <text class="dg-t" x="73" y="173" font-size="11" text-anchor="middle">hooks</text>
+            <rect class="dg-box" x="114" y="146" width="70" height="44" rx="7"/>
+            <text class="dg-t" x="149" y="173" font-size="11" text-anchor="middle">MCP configs</text>
+            <text class="dg-t mut" x="110" y="226" font-size="10.5" text-anchor="middle">versioned together</text>
+            <!-- install once → whole team -->
+            <path class="dg-line" d="M204 150 L 248 150" marker-end="url(#pg1)"/>
+            <text class="dg-t mut" x="227" y="136" font-size="10.5" text-anchor="middle">install</text>
+            <path class="dg-line dim" d="M252 150 C 264 150, 264 74, 276 74"/>
+            <path class="dg-line dim" d="M252 150 L 276 150"/>
+            <path class="dg-line dim" d="M252 150 C 264 150, 264 226, 276 226"/>
+            <rect class="dg-box" x="278" y="48" width="144" height="52" rx="9"/>
+            <text class="dg-t" x="350" y="70" font-size="12" text-anchor="middle">teammate</text>
+            <text class="dg-t mut" x="350" y="88" font-size="10.5" text-anchor="middle">same toolkit</text>
+            <rect class="dg-box" x="278" y="124" width="144" height="52" rx="9"/>
+            <text class="dg-t" x="350" y="146" font-size="12" text-anchor="middle">teammate</text>
+            <text class="dg-t mut" x="350" y="164" font-size="10.5" text-anchor="middle">same toolkit</text>
+            <rect class="dg-box" x="278" y="200" width="144" height="52" rx="9"/>
+            <text class="dg-t" x="350" y="222" font-size="12" text-anchor="middle">teammate</text>
+            <text class="dg-t mut" x="350" y="240" font-size="10.5" text-anchor="middle">same toolkit</text>
+            <text class="dg-t acc" x="220" y="288" font-size="12" text-anchor="middle">one install — same conventions everywhere</text>
+          </svg>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -657,10 +823,41 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">19</span><div class="crumb"><b>Skills</b> · distribution</div></div>
       <h2 class="reveal">Distribution <span class="o">inside an org</span></h2>
-      <ul class="bul reveal">
-        <li>A plugin lives in a repo the team pulls from — versioned like any other shared config.</li>
-        <li>Updates propagate the same way a shared lint config would: pull, don't copy-paste.</li>
-      </ul>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>A plugin lives in a repo the team pulls from — versioned like any other shared config.</li>
+          <li>Updates propagate the same way a shared lint config would: pull, don't copy-paste.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 440 300" role="img" aria-label="A plugin repo moves from version 1.3 to 1.4 and three developers each pull the update from the same repo, rather than copy-pasting files to each other">
+            <defs><marker id="dv1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <!-- the single source -->
+            <rect class="dg-box hot" x="26" y="108" width="150" height="80" rx="11"/>
+            <text class="dg-t on" x="101" y="141" font-size="13" text-anchor="middle">plugin repo</text>
+            <text class="dg-t on" x="101" y="164" font-size="11.5" text-anchor="middle">v1.3 → v1.4</text>
+            <!-- pulls -->
+            <path class="dg-line" d="M180 132 C 216 116, 228 78, 264 68" marker-end="url(#dv1)"/>
+            <path class="dg-line" d="M180 148 L 264 148" marker-end="url(#dv1)"/>
+            <path class="dg-line" d="M180 164 C 216 180, 228 218, 264 228" marker-end="url(#dv1)"/>
+            <text class="dg-t acc" x="222" y="52" font-size="11" text-anchor="middle">pull</text>
+            <text class="dg-t acc" x="222" y="136" font-size="11" text-anchor="middle">pull</text>
+            <text class="dg-t acc" x="216" y="230" font-size="11" text-anchor="middle">pull</text>
+            <!-- the team -->
+            <rect class="dg-box" x="274" y="42" width="146" height="52" rx="9"/>
+            <text class="dg-t" x="347" y="64" font-size="12" text-anchor="middle">dev laptop</text>
+            <text class="dg-t mut" x="347" y="82" font-size="10.5" text-anchor="middle">on v1.4</text>
+            <rect class="dg-box" x="274" y="122" width="146" height="52" rx="9"/>
+            <text class="dg-t" x="347" y="144" font-size="12" text-anchor="middle">dev laptop</text>
+            <text class="dg-t mut" x="347" y="162" font-size="10.5" text-anchor="middle">on v1.4</text>
+            <rect class="dg-box" x="274" y="202" width="146" height="52" rx="9"/>
+            <text class="dg-t" x="347" y="224" font-size="12" text-anchor="middle">dev laptop</text>
+            <text class="dg-t mut" x="347" y="242" font-size="10.5" text-anchor="middle">on v1.4</text>
+            <text class="dg-t mut" x="101" y="222" font-size="11" text-anchor="middle">versioned like a</text>
+            <text class="dg-t mut" x="101" y="238" font-size="11" text-anchor="middle">shared lint config</text>
+            <text class="dg-t acc" x="220" y="288" font-size="12" text-anchor="middle">pull, don't copy-paste — updates propagate on their own</text>
+          </svg>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -706,6 +903,31 @@ table.tbl tr:last-child td{border-bottom:none}
       <div class="cards c2 reveal">
         <div class="tile"><span class="k">MCP server</span><p>Typed, authenticated tools exposed over a protocol. Works in shell and non-shell surfaces alike.</p></div>
         <div class="tile fill"><span class="k">CLI + docs</span><p>Plain command-line tools the agent already knows how to compose, with documentation in context.</p></div>
+      </div>
+      <div class="diagram reveal" style="--diag-h:280px">
+        <svg viewBox="0 0 800 210" role="img" aria-label="Two paths from the same agent to a capability: over a protocol to a typed, authenticated MCP server, or through the shell to a plain CLI tool with docs on demand">
+          <defs><marker id="tw1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+          <rect class="dg-box hot" x="30" y="80" width="110" height="50" rx="9"/>
+          <text class="dg-t on" x="85" y="110" font-size="14" text-anchor="middle">agent</text>
+          <!-- path 1: MCP -->
+          <path class="dg-line" d="M140 92 C 220 70, 240 52, 316 52" marker-end="url(#tw1)"/>
+          <text class="dg-t mut" x="228" y="38" font-size="11.5" text-anchor="middle">protocol · typed schemas · auth</text>
+          <rect class="dg-box" x="324" y="30" width="150" height="44" rx="9"/>
+          <text class="dg-t" x="399" y="57" font-size="13" text-anchor="middle">MCP server</text>
+          <path class="dg-line dim" d="M474 52 L 570 52" marker-end="url(#tw1)"/>
+          <rect class="dg-box mid" x="578" y="30" width="180" height="44" rx="9"/>
+          <text class="dg-t mut" x="668" y="57" font-size="12" text-anchor="middle">remote service / API</text>
+          <text class="dg-t acc" x="668" y="94" font-size="11" text-anchor="middle">works without a shell</text>
+          <!-- path 2: CLI -->
+          <path class="dg-line" d="M140 118 C 220 140, 240 158, 316 158" marker-end="url(#tw1)"/>
+          <text class="dg-t mut" x="228" y="186" font-size="11.5" text-anchor="middle">shell · pipes · unix idioms</text>
+          <rect class="dg-box" x="324" y="136" width="150" height="44" rx="9"/>
+          <text class="dg-t" x="399" y="163" font-size="13" text-anchor="middle">bash</text>
+          <path class="dg-line dim" d="M474 158 L 570 158" marker-end="url(#tw1)"/>
+          <rect class="dg-box mid" x="578" y="136" width="180" height="44" rx="9"/>
+          <text class="dg-t mut" x="668" y="163" font-size="12" text-anchor="middle">CLI tool + docs</text>
+          <text class="dg-t acc" x="668" y="200" font-size="11" text-anchor="middle">--help loaded on demand</text>
+        </svg>
       </div>
     </div>
   </section>
@@ -765,14 +987,46 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>MCP vs CLI</b> · heuristic</div></div>
       <h2 class="reveal">The <span class="o">decision heuristic</span></h2>
-      <table class="tbl reveal">
-        <thead><tr><th>Capability is…</th><th>Reach for</th></tr></thead>
-        <tbody>
-          <tr><td>Interactive, authenticated, or remote</td><td>MCP</td></tr>
-          <tr><td>Local, scriptable, chainable</td><td>CLI</td></tr>
-        </tbody>
-      </table>
-      <p class="note reveal">Most teams end up with both — choose deliberately per capability, not by habit.</p>
+      <div class="split">
+        <div>
+          <table class="tbl reveal">
+            <thead><tr><th>Capability is…</th><th>Reach for</th></tr></thead>
+            <tbody>
+              <tr><td>Interactive, authenticated, or remote</td><td>MCP</td></tr>
+              <tr><td>Local, scriptable, chainable</td><td>CLI</td></tr>
+            </tbody>
+          </table>
+          <p class="note reveal">Most teams end up with both — choose deliberately per capability, not by habit.</p>
+        </div>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 460 300" role="img" aria-label="Decision flow: for each new capability, if it is interactive, authenticated or remote, reach for MCP; otherwise, if it is local, scriptable and chainable, reach for CLI — decided per capability, not by habit">
+            <defs><marker id="dh1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <rect class="dg-box" x="140" y="14" width="160" height="40" rx="9"/>
+            <text class="dg-t" x="220" y="39" font-size="13" text-anchor="middle">new capability</text>
+            <path class="dg-line" d="M220 54 L 220 78" marker-end="url(#dh1)"/>
+            <!-- Q1 -->
+            <rect class="dg-box mid" x="90" y="84" width="260" height="56" rx="10"/>
+            <text class="dg-t" x="220" y="107" font-size="12" text-anchor="middle">interactive, authenticated,</text>
+            <text class="dg-t" x="220" y="126" font-size="12" text-anchor="middle">or remote?</text>
+            <path class="dg-line" d="M350 112 L 380 112" marker-end="url(#dh1)"/>
+            <text class="dg-t mut" x="364" y="100" font-size="10.5" text-anchor="middle">yes</text>
+            <rect class="dg-box hot" x="384" y="90" width="64" height="44" rx="9"/>
+            <text class="dg-t on" x="416" y="117" font-size="14" text-anchor="middle">MCP</text>
+            <!-- Q2 -->
+            <path class="dg-line" d="M220 140 L 220 170" marker-end="url(#dh1)"/>
+            <text class="dg-t mut" x="204" y="158" font-size="10.5" text-anchor="end">no</text>
+            <rect class="dg-box mid" x="90" y="176" width="260" height="56" rx="10"/>
+            <text class="dg-t" x="220" y="199" font-size="12" text-anchor="middle">local, scriptable,</text>
+            <text class="dg-t" x="220" y="218" font-size="12" text-anchor="middle">chainable?</text>
+            <path class="dg-line" d="M350 204 L 380 204" marker-end="url(#dh1)"/>
+            <text class="dg-t mut" x="364" y="192" font-size="10.5" text-anchor="middle">yes</text>
+            <rect class="dg-box hot" x="384" y="182" width="64" height="44" rx="9"/>
+            <text class="dg-t on" x="416" y="209" font-size="14" text-anchor="middle">CLI</text>
+            <text class="dg-t mut" x="220" y="262" font-size="11" text-anchor="middle">decided per capability — most teams keep both</text>
+            <text class="dg-t acc" x="220" y="288" font-size="12" text-anchor="middle">re-check with /doctor: it prices what you installed</text>
+          </svg>
+        </div>
+      </div>
       <p class="note reveal">Then re-check periodically: <code>/doctor</code> prices your installed skills, MCP servers and plugins against their context cost and flags the ones nobody actually uses.</p>
     </div>
   </section>
