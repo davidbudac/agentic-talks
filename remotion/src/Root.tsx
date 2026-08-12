@@ -8,6 +8,7 @@ import { KvCache } from "./KvCache";
 import { Subagents } from "./Subagents";
 import { ContextLifecycle } from "./ContextLifecycle";
 import { ProgressiveDisclosure } from "./ProgressiveDisclosure";
+import { GraphHops } from "./GraphHops";
 import "./index.css";
 
 const FPS = 30;
@@ -122,6 +123,16 @@ export const RemotionRoot: React.FC = () => {
         width={1176}
         height={700}
         defaultProps={{ theme: "dark" as const }}
+      />
+      {/* deck 9 · "Where vector RAG runs out" (light) */}
+      <Composition
+        id="graph-hops-light"
+        component={GraphHops}
+        durationInFrames={280}
+        fps={FPS}
+        width={1160}
+        height={500}
+        defaultProps={{ theme: "light" as const }}
       />
     </>
   );
