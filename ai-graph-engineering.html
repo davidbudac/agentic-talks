@@ -444,11 +444,15 @@ table.tbl tr:last-child td{border-bottom:none}
     </div>
   </section>
 
-  <section class="slide light" data-label="Where vector RAG runs out"
-    data-speaker-notes="Three shapes of question where plain embeddings stop working, each with a number. Emphasise the temporal one — it's the biggest documented gap and the one most teams never test for. Close with the rule: if the answer sits in one chunk, vectors are fine and much cheaper.">
+  <section class="slide light dense" data-label="Where vector RAG runs out"
+    data-speaker-notes="Let the animation carry the mechanism: vector search pulls the chunks that LOOK like the question, the graph walks the edges that CONNECT to the answer — that's where the recall numbers below come from. Three shapes of question where plain embeddings stop working, each with a number. Emphasise the temporal one — it's the biggest documented gap and the one most teams never test for. Close with the rule: if the answer sits in one chunk, vectors are fine and much cheaper.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">6</span><div class="crumb"><b>Evidence</b> · where vectors run out</div></div>
       <h2 class="reveal">Where vector RAG <span class="o">runs out</span></h2>
+      <div class="diagram reveal" style="--diag-h:400px">
+        <!-- Remotion animation (remotion/src/GraphHops.tsx) -->
+        <video src="assets/anim/graph-hops-light.mp4" width="1160" height="500" autoplay muted loop playsinline aria-label="Two panels over the same dots: vector top-k shoots similarity rays at look-alike chunks and never reaches the answer node; graph traversal matches an entity and walks edge to edge — hop 1, hop 2 — straight to it"></video>
+      </div>
       <div class="cards c3 reveal">
         <div class="tile"><span class="k">Multi-hop</span><p>Recall@5 averages <b>73.4% → 87.8%</b> with graph-guided retrieval, across MuSiQue, HotpotQA and 2Wiki.</p></div>
         <div class="tile fill"><span class="k">Temporal</span><p><b>49–59% vs 30.7%</b> on time-scoped questions (MultiHop-RAG). The biggest documented graph advantage.</p></div>
