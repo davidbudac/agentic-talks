@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Graph Engineering — knowledge graphs, agent graphs, and when either is worth it</title>
+
+<!-- Fonts: Space Grotesk (display) + IBM Plex Sans (body) + IBM Plex Mono (mono) — Ember design system -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+
+<link rel="stylesheet" href="ember_design_system/styles.css">
+<style>deck-stage:not(:defined){visibility:hidden}</style>
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   Working Smarter with Agents — Ember design system, token-driven.
+   Fixed 1920×1080 canvas: sizes are px, colours/spacing are tokens.
+   ═══════════════════════════════════════════════════════════════════ */
+:root{
+  --ease:cubic-bezier(.16,1,.3,1);
+  --font-d:var(--font-display); --font-b:var(--font-body); --font-m:var(--font-mono);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--ink);color:var(--text-strong);font-family:var(--font-body)}
+
+/* ── SLIDE FRAME + local type scale ──────────────────────────────── */
+.slide{
+  display:flex; flex-direction:column; overflow:hidden;
+  font-family:var(--font-body); -webkit-font-smoothing:antialiased;
+  --pad-x:var(--slide-pad-x); --pad-t:var(--slide-pad-top); --pad-b:var(--slide-pad-bottom);
+  --h2-size:var(--fs-h2); --h3-size:34px; --lead-size:34px;
+  --body-size:26px; --small-size:20px; --code-size:20px;
+  --gap:28px; --content-gap:var(--gap); --diag-h:440px;
+}
+.slide.dense{
+  --pad-x:88px; --pad-t:var(--slide-pad-top-dense); --pad-b:var(--slide-pad-bottom-dense);
+  --h2-size:var(--fs-h2-sm); --h3-size:30px; --lead-size:30px;
+  --body-size:23px; --small-size:18px; --code-size:18px; --gap:20px; --diag-h:400px;
+}
+.slide.tight{
+  --pad-x:76px; --pad-t:60px; --pad-b:52px;
+  --h2-size:46px; --h3-size:27px; --lead-size:27px;
+  --body-size:21px; --small-size:16px; --code-size:16px; --gap:14px; --diag-h:340px;
+}
+.slide-content{
+  flex:1; min-height:0; display:flex; flex-direction:column; justify-content:center;
+  padding:var(--pad-t) var(--pad-x) var(--pad-b); overflow:hidden; position:relative; z-index:1;
+}
+
+/* ── SCHEMES — Ember light/dark rhythm. Every component reads --s-*. ─ */
+.slide,.slide.light{
+  --s-bg:var(--paper); --s-text:var(--text-strong); --s-muted:var(--text-muted); --s-faint:var(--text-faint);
+  --s-line:var(--line-light-2); --s-line-strong:var(--line-light);
+  --s-card-bg:var(--paper-2); --s-card-border:var(--line-card); --s-box-mid:var(--paper-3);
+  --s-outer-fill:var(--coral-soft); --s-callout-bg:var(--coral-soft);
+  --s-accent:var(--coral-ink); --s-bar:var(--bar);
+  background:var(--s-bg); color:var(--s-text);
+}
+.slide.dark{
+  --s-bg:var(--ink); --s-text:var(--on-dark); --s-muted:var(--on-dark-muted); --s-faint:var(--on-dark-faint);
+  --s-line:var(--line-dark-2); --s-line-strong:var(--line-dark);
+  --s-card-bg:var(--ink-2); --s-card-border:var(--line-dark); --s-box-mid:var(--ink-2);
+  --s-outer-fill:rgba(255,92,53,.10); --s-callout-bg:rgba(255,92,53,.10);
+  --s-accent:var(--coral); --s-bar:var(--bar-dark);
+  background:var(--s-bg); color:var(--s-text);
+}
+
+/* ── HEADER ──────────────────────────────────────────────────────── */
+.slide-head{
+  display:flex; align-items:baseline; justify-content:space-between; gap:var(--space-5);
+  margin-bottom:var(--gap); border-bottom:var(--bw-hair) solid var(--s-line); padding-bottom:18px;
+}
+.snum{font:var(--w-bold) 48px/1 var(--font-display); color:var(--s-accent); letter-spacing:var(--track-snug)}
+.crumb{font:var(--w-medium) var(--small-size)/1.2 var(--font-mono); letter-spacing:var(--track-eyebrow);
+  text-transform:uppercase; color:var(--s-muted); text-align:right}
+.crumb b{color:var(--s-accent); font-weight:var(--w-semibold)}
+
+/* ── TYPE ────────────────────────────────────────────────────────── */
+h2{font-family:var(--font-display); font-weight:var(--w-bold); font-size:var(--h2-size);
+  line-height:var(--lh-snug); letter-spacing:var(--track-snug); margin-bottom:22px; color:var(--s-text); text-wrap:balance}
+h2 .o{color:var(--s-accent)}
+h3{font-family:var(--font-display); font-weight:var(--w-bold); font-size:var(--h3-size);
+  line-height:var(--lh-snug); letter-spacing:var(--track-snug); color:var(--s-text)}
+.lead{font-size:var(--lead-size); line-height:1.45; max-width:48ch; color:var(--s-text); text-wrap:pretty}
+.lead b{color:var(--s-accent)}
+.muted{color:var(--s-muted)}
+strong,b{font-weight:var(--w-semibold)}
+
+ul.bul{list-style:none; display:flex; flex-direction:column; gap:20px; max-width:68ch}
+ul.bul li{font-size:var(--body-size); line-height:1.45; padding-left:1.55em; position:relative;
+  color:var(--s-text); text-wrap:pretty}
+ul.bul li::before{content:""; position:absolute; left:0; top:.44em; width:.6em; height:.6em;
+  background:var(--s-accent); clip-path:polygon(0 0,100% 50%,0 100%)}
+ul.bul li b{color:var(--s-text); font-weight:var(--w-semibold)}
+
+.note{font-size:var(--small-size); color:var(--s-muted); margin-top:20px; line-height:1.45; text-wrap:pretty}
+.note b{color:var(--s-text); font-weight:var(--w-semibold)}
+
+/* ── CARDS / TILES ───────────────────────────────────────────────── */
+.cards{display:grid; gap:var(--space-5)}
+.cards.c3{grid-template-columns:repeat(3,1fr)}
+.cards.c2,.cards.c4{grid-template-columns:repeat(2,1fr)}
+.tile{border:var(--bw) solid var(--s-card-border); border-radius:var(--radius-lg);
+  padding:30px 32px; background:var(--s-card-bg); display:flex; flex-direction:column; gap:10px}
+.tile .k{font-family:var(--font-display); font-weight:var(--w-bold); color:var(--s-accent);
+  font-size:30px; letter-spacing:var(--track-snug)}
+.tile p{font-size:var(--body-size); line-height:1.4; color:var(--s-text); text-wrap:pretty}
+.tile.fill{background:var(--s-callout-bg); border-color:var(--s-card-border);
+  border-left:var(--bw-callout) solid var(--coral); border-radius:0 var(--radius-lg) var(--radius-lg) 0}
+
+.kcard{background:var(--s-callout-bg); color:var(--s-text); border:var(--bw) solid var(--s-card-border);
+  border-left:var(--bw-callout) solid var(--coral); border-radius:0 var(--radius-xl) var(--radius-xl) 0;
+  padding:40px 44px; position:relative; overflow:hidden}
+.slide.dark .kcard{box-shadow:var(--ring-accent-dark)}
+.kcard .big{font-family:var(--font-display); font-weight:var(--w-bold); color:var(--s-accent);
+  font-size:56px; line-height:1.02; letter-spacing:var(--track-snug)}
+.kcard p{font-size:var(--body-size); line-height:1.42; margin-top:14px; max-width:50ch; color:var(--s-text)}
+
+.split{display:grid; grid-template-columns:1fr 1fr; gap:var(--space-8); align-items:center; min-height:0}
+
+/* ── TABLES ──────────────────────────────────────────────────────── */
+table.tbl{width:100%; border-collapse:collapse; font-size:var(--body-size)}
+table.tbl th,table.tbl td{text-align:left; padding:16px 20px; border-bottom:var(--bw-hair) solid var(--s-line)}
+table.tbl th{font-family:var(--font-mono); color:var(--s-accent); font-weight:var(--w-semibold);
+  font-size:var(--small-size); letter-spacing:var(--track-label); text-transform:uppercase}
+table.tbl td{color:var(--s-text)}
+table.tbl td b{color:var(--s-text); font-weight:var(--w-semibold)}
+table.tbl tr:last-child td{border-bottom:none}
+
+/* ── CHIPS ───────────────────────────────────────────────────────── */
+.extag{display:inline-block; font-family:var(--font-mono); font-size:var(--small-size); color:var(--s-accent);
+  background:var(--s-callout-bg); border:var(--bw-hair) solid var(--s-card-border);
+  padding:4px 14px; border-radius:var(--radius-sm); margin-bottom:12px; letter-spacing:var(--track-label);
+  text-transform:uppercase}
+.pills{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px}
+.pill{font-family:var(--font-mono); border:var(--bw-hair) solid var(--coral); color:var(--s-accent);
+  border-radius:var(--radius-pill); padding:4px 16px; font-size:var(--small-size);
+  font-weight:var(--w-semibold); letter-spacing:var(--track-label); white-space:nowrap}
+.pill.live{background:var(--coral); color:var(--ink); border-color:var(--coral)}
+
+/* ── CODE ────────────────────────────────────────────────────────── */
+.code{background:var(--code-bg); border:var(--bw) solid var(--s-line); border-left:3px solid var(--coral);
+  border-radius:var(--radius-lg); padding:24px 28px; font-family:var(--font-mono);
+  font-size:var(--code-size); line-height:var(--lh-mono); overflow:hidden; color:var(--code-text);
+  white-space:pre-wrap}
+.code .c{color:var(--code-comment)}
+.code .o{color:var(--code-keyword)}
+.code .g{color:var(--code-string)}
+.code .b{color:var(--code-number)}
+.code .d{color:var(--code-keyword)}
+
+/* ── SECTION DIVIDER ─────────────────────────────────────────────── */
+.divider .slide-content{align-items:flex-start; justify-content:center; text-align:left}
+.divider .dnum{font:var(--w-bold) var(--fs-mega)/var(--lh-tight) var(--font-display);
+  color:var(--coral); letter-spacing:var(--track-tight); margin-bottom:10px}
+.divider h2{font-size:var(--fs-h1)}
+.divider h2::after{content:""; display:block; width:var(--accent-bar-w); height:var(--bw-accent);
+  background:var(--coral); border-radius:var(--radius-bar); margin:.45em 0 .1em}
+.divider .dsub{color:var(--s-muted); font-size:var(--fs-body-lg); max-width:42ch;
+  margin-top:18px; line-height:var(--lh-body)}
+.divider .dsub b{color:var(--s-text); font-weight:var(--w-semibold)}
+
+/* ── GLOSSARY / USES ─────────────────────────────────────────────── */
+.gloss{display:grid; grid-template-columns:1fr 1fr; gap:4px 44px}
+.gloss .row{display:flex; gap:18px; align-items:baseline; padding:12px 0;
+  border-bottom:var(--bw-hair) solid var(--s-line)}
+.gloss .term{font-family:var(--font-display); font-weight:var(--w-semibold); color:var(--s-accent);
+  font-size:var(--body-size); min-width:6.2em; flex-shrink:0; letter-spacing:var(--track-snug)}
+.gloss .def{font-size:var(--body-size); color:var(--s-text); line-height:1.35}
+.uses{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-5)}
+
+/* ── DIAGRAMS (inline SVG + explainer video) ─────────────────────── */
+.diagram{width:100%; display:flex; justify-content:center; align-items:center; margin-top:8px; min-height:0}
+.diagram svg{width:100%; height:auto; max-height:var(--diag-h)}
+.diagram video{width:auto; height:auto; max-width:100%; max-height:var(--diag-h);
+  display:block; background:transparent; border-radius:var(--radius-md)}
+.dg-box{fill:var(--s-card-bg); stroke:var(--s-card-border); stroke-width:1.5}
+.dg-box.hot{fill:var(--coral); stroke:var(--coral)}
+.dg-box.outer{fill:var(--s-outer-fill); stroke:var(--coral); stroke-dasharray:6 5}
+.dg-box.mid{fill:var(--s-box-mid); stroke:var(--s-card-border)}
+.dg-t{fill:var(--s-text); font-family:var(--font-body); font-weight:var(--w-semibold)}
+.dg-t.on{fill:var(--ink)}
+.dg-t.mut{fill:var(--s-muted); font-weight:var(--w-medium)}
+.dg-t.acc{fill:var(--s-accent); font-family:var(--font-mono); font-weight:var(--w-semibold)}
+.dg-line{stroke:var(--s-accent); stroke-width:2.5; fill:none}
+.dg-line.dim{stroke:var(--s-line-strong); stroke-width:1.5}
+.dg-fill-g{fill:var(--positive)} .dg-fill-a{fill:var(--warning)} .dg-fill-r{fill:var(--coral)}
+.dg-cap{text-align:center; font-size:var(--small-size); color:var(--s-muted); margin-top:10px}
+.dg-cap b{color:var(--s-text)}
+.diagram marker path{fill:var(--s-accent)}
+
+/* flow: HTML/CSS step chain used instead of video diagrams */
+.flow{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+.flow .step{border:var(--bw) solid var(--s-card-border); background:var(--s-card-bg); border-radius:var(--radius-md);
+  padding:16px 20px; font-family:var(--font-mono); font-size:var(--small-size); color:var(--s-text); text-align:center; min-width:120px}
+.flow .step.hot{background:var(--s-callout-bg); border-color:var(--coral); color:var(--s-accent); font-weight:var(--w-semibold)}
+.flow .arrow{color:var(--s-faint); font-size:22px}
+
+/* ── DEMO / FALLBACK ─────────────────────────────────────────────── */
+.demo-badge{display:inline-flex; align-items:center; gap:8px; font-family:var(--font-mono); font-weight:var(--w-bold);
+  font-size:var(--small-size); letter-spacing:var(--track-label); text-transform:uppercase; color:var(--coral);
+  border:var(--bw) solid var(--coral); border-radius:var(--radius-pill); padding:6px 18px 6px 14px; margin-bottom:16px}
+.demo-badge::before{content:"\1F534"; font-size:.85em}
+.fallback-box{border:2px dashed var(--s-card-border); border-radius:var(--radius-lg); background:var(--s-card-bg);
+  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; padding:40px; min-height:0}
+.fallback-box .fb-icon{font-family:var(--font-mono); font-size:64px; color:var(--s-faint)}
+.fallback-box .fb-caption{font-family:var(--font-mono); font-size:var(--small-size); color:var(--s-muted); text-align:center; max-width:48ch}
+
+/* ── WIP badge (title slide) ─────────────────────────────────────── */
+.wip-badge{display:inline-flex; align-items:center; gap:10px; font-family:var(--font-mono); font-weight:700;
+  font-size:16px; letter-spacing:.14em; text-transform:uppercase; color:var(--coral);
+  border:1.5px solid var(--coral); border-radius:var(--radius-pill); padding:6px 18px; margin-bottom:20px}
+
+/* ── TITLE SLIDE ─────────────────────────────────────────────────── */
+.title-slide{display:flex; flex-direction:column; justify-content:space-between; background:var(--ink);
+  padding:88px 96px 0}
+.ts-top{display:flex; justify-content:space-between; align-items:baseline; font:600 var(--fs-eyebrow) var(--font-mono);
+  letter-spacing:var(--track-eyebrow); text-transform:uppercase}
+.ts-top .k{color:var(--coral)}
+.ts-top .meta{color:var(--on-dark-faint); font-weight:500}
+.ts-hero h1{font-family:var(--font-display); font-weight:var(--w-bold); letter-spacing:-.035em; line-height:.94;
+  color:var(--on-dark); font-size:132px}
+.ts-hero h1 .dot{color:var(--coral)}
+.ts-sub{font-size:34px; color:var(--on-dark-muted); margin-top:36px; font-weight:400; max-width:34ch}
+.ts-sub b{color:var(--on-dark); font-weight:600}
+.ts-foot{border-top:var(--bw-hair) solid var(--line-dark); margin:0 -96px; padding:34px 96px 40px;
+  display:flex; justify-content:space-between; align-items:center}
+.ts-author{font-size:26px; color:var(--on-dark-muted)}
+.ts-author a{color:inherit;text-decoration:none;border-bottom:1px solid transparent;transition:border-color .15s}
+.ts-author a:hover{border-color:currentColor}
+.ts-author b{color:var(--coral); font-weight:var(--w-semibold)}
+.ts-loopline{font:500 24px var(--font-mono); letter-spacing:.04em; color:var(--on-dark-faint)}
+.ts-loopline .a{color:var(--coral)}
+.ts-loopline .w{color:var(--on-dark-muted)}
+
+/* ── CLOSING ─────────────────────────────────────────────────────── */
+.thanks{font-family:var(--font-display); font-weight:var(--w-bold); font-size:104px; line-height:.98;
+  letter-spacing:var(--track-tight); color:var(--s-text)}
+.thanks .o{color:var(--s-accent)}
+.links{display:grid; grid-template-columns:1fr 1fr; gap:var(--space-7)}
+.linkcol h3{color:var(--s-accent); font-family:var(--font-display); font-weight:var(--w-semibold);
+  margin-bottom:12px; font-size:26px; letter-spacing:var(--track-snug)}
+.linkcol a{display:block; color:var(--s-text); text-decoration:none; font-size:19px; line-height:1.3;
+  padding:6px 0; border-bottom:var(--bw-hair) solid var(--s-line)}
+.linkcol a:hover{color:var(--s-accent)}
+.linkcol a .u{display:block; color:var(--s-muted); font-family:var(--font-mono); font-size:.8em; margin-top:.08em}
+
+/* ── ENTRANCE MOTION ─────────────────────────────────────────────── */
+@keyframes ae-rise{from{opacity:0; transform:translateY(22px)} to{opacity:1; transform:none}}
+@media (prefers-reduced-motion:no-preference){
+  [data-deck-active] .reveal{animation:ae-rise .5s var(--ease) both}
+  [data-deck-active] .reveal:nth-child(2){animation-delay:.07s}
+  [data-deck-active] .reveal:nth-child(3){animation-delay:.14s}
+  [data-deck-active] .reveal:nth-child(4){animation-delay:.21s}
+  [data-deck-active] .reveal:nth-child(n+5){animation-delay:.27s}
+  [data-deck-active] .title-slide>*{animation:ae-rise .8s var(--ease) both}
+  [data-deck-active] .title-slide>.ts-hero{animation-delay:.15s}
+  [data-deck-active] .title-slide>.ts-foot{animation-delay:.3s}
+}
+</style>
+</head>
+<body>
+
+<!--
+  ============================================================
+  AI Graph Engineering — a ~30-minute deep dive, deck 09 in the
+  series. For engineers who already run Claude Code daily and
+  have heard "graph engineering" pitched at them since July
+  2026. Three parts: 01 what the graphs actually buy you (the
+  honest evidence, including where graphs lose), 02 wiring
+  those patterns into Claude Code — the most important part —
+  and 03 when a graph earns its keep, via one worked example,
+  the per-hop failure math, and a decision table.
+  All claims sourced and date-stamped August 2026 in
+  deck09-facts.md; single-source and vendor claims are marked
+  with a warning sign on the slide itself, series convention.
+  Status: WIP / DRAFT — flagged on the title slide.
+  Runs on the Ember deck-stage component: ←/→, Space, Home/End,
+  number keys; R resets; speaker notes live on each section.
+  ============================================================
+-->
+
+<deck-stage width="1920" height="1080">
+
+  <!-- TITLE -->
+  <section class="slide dark title-slide" data-label="Title"
+    data-speaker-notes="Open by admitting the word is a buzzword — it went viral in July 2026 and nobody agreed on what it meant. Say plainly that this deck exists to separate the evidence from the hype, and that the middle part is the one that changes what they do on Monday. Flag it as a draft and ask for pushback on the numbers, not just the opinions.">
+    <div class="ts-top"><span class="k">Deep dive · advanced topics · ~30 min</span><span class="meta">Internal talk · August 2026</span></div>
+    <div class="ts-hero">
+      <div class="wip-badge">WIP — draft</div>
+      <h1>AI Graph Engineering<span class="dot">.</span></h1>
+      <p class="ts-sub">Knowledge graphs, agent graphs — and when either is <b>worth it</b>.</p>
+    </div>
+    <div class="ts-foot">
+      <div class="ts-author"><a href="https://davidbudac.cz" target="_blank" rel="noopener">David&nbsp;Budáč</a></div>
+      <div class="ts-loopline"><span class="w">knowledge</span> <span class="a">→</span> <span class="w">retrieval</span> <span class="a">→</span> <span class="w">workflow</span></div>
+    </div>
+  </section>
+
+  <!-- AGENDA -->
+  <section class="slide light" data-label="Agenda"
+    data-speaker-notes="Fifteen seconds: three parts, half an hour. Say out loud that part 02 is the one to remember — part 01 only exists so part 02 lands with numbers behind it. Point at the date stamp: every claim here is August 2026 and sourced, and a few are deliberately flagged as shaky.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">2</span><div class="crumb"><b>Agenda</b></div></div>
+      <h2 class="reveal">Three parts, <span class="o">half an hour</span></h2>
+      <table class="tbl reveal">
+        <thead><tr><th>Part</th><th>Topic</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td><b>01</b></td><td>What graphs buy you</td><td>the evidence, including where graphs lose</td></tr>
+          <tr><td><b>02</b></td><td>Implementing it in Claude Code</td><td><b>most important part</b></td></tr>
+          <tr><td><b>03</b></td><td>When a graph earns it</td><td>worked example + decision rules</td></tr>
+        </tbody>
+      </table>
+      <p class="note reveal">Every claim is date-stamped <b>August 2026</b> and sourced — see the closing Sources slide, and <span class="muted">deck09-facts.md</span> for per-claim citations.</p>
+    </div>
+  </section>
+
+  <!-- ============ PART 01 SETUP ============ -->
+  <section class="slide dark" data-label="The third buzzword"
+    data-speaker-notes="Tell the origin story straight and let the room laugh at it. The punchline is the fabricated study with the non-existent Stanford grant — within two days of a single tweet, the discourse had invented its own evidence. Then say the line that sets up the rest: this deck is the version that checks the receipts, and the shaky numbers stay labelled shaky.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">3</span><div class="crumb"><b>Buzzword</b> · where this came from</div></div>
+      <h2 class="reveal">The third buzzword in <span class="o">three years</span></h2>
+      <div class="flow reveal" style="margin-bottom:16px">
+        <div class="step">prompt engineering<br>2023</div><div class="arrow">→</div>
+        <div class="step">context engineering<br>mid-2025</div><div class="arrow">→</div>
+        <div class="step">loop engineering<br>June 2026</div><div class="arrow">→</div>
+        <div class="step hot">graph engineering<br>July 2026</div>
+      </div>
+      <ul class="bul reveal">
+        <li><b>July 18, 2026.</b> Peter Steinberger: "Are we still talking loops or did we shift to graphs yet?" — <b>2.9M views</b>.</li>
+        <li>Within 48 hours: three competing definitions, copycat posts, and a <b>fabricated study citing a non-existent $3.1M Stanford grant</b>.</li>
+        <li>Four days later LangChain's rebuttal: "loops are just simple graphs." The practice is three years old. The word is three weeks old.</li>
+      </ul>
+      <p class="note reveal">The fake grant is the cautionary tale. This is the version that <b>checks the receipts</b> — sources on every claim, warning labels on the single-source ones.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Which graph do you mean?"
+    data-speaker-notes="This table is the map of the whole talk — give it room and read all four rows. The most useful thing anyone can take from this deck is the reflex: when someone says 'graph engineering', ask which graph they mean. Say that a mature system uses the first three together and never touches the fourth.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">4</span><div class="crumb"><b>Buzzword</b> · which graph?</div></div>
+      <h2 class="reveal">Which graph do you <span class="o">mean?</span></h2>
+      <table class="tbl reveal">
+        <thead><tr><th>Kind</th><th>Nodes → edges</th><th>What it's for</th></tr></thead>
+        <tbody>
+          <tr><td><b>Knowledge graph</b></td><td>entities → typed real-world relationships</td><td>what the system <b>knows</b></td></tr>
+          <tr><td><b>Retrieval graph</b> (GraphRAG)</td><td>entities, passages, communities → search links</td><td>how the LLM <b>finds evidence</b></td></tr>
+          <tr><td><b>Workflow graph</b></td><td>agents, tools, gates → allowed transitions</td><td>what the app <b>does</b></td></tr>
+          <tr><td><b>GNN</b></td><td>data items → learned aggregation</td><td>a model that <b>learns</b> from graph data</td></tr>
+        </tbody>
+      </table>
+      <p class="note reveal">GNNs are research-stage outside one relational-prediction niche, so they're out of scope today. The other three turn up in a single system all the time. Safest response to "graph engineering": <b>ask which graph</b>.</p>
+    </div>
+  </section>
+
+  <!-- ============ PART 01 — WHAT THE GRAPHS BUY YOU ============ -->
+  <section class="slide dark divider" data-label="01 What the graphs buy you"
+    data-speaker-notes="Two sentences of setup. Promise the honest version: the benchmarks where graphs clearly win, and the two where they lose badly enough that you'd cancel the project. Say that everything in this part is peer-reviewed or explicitly labelled otherwise.">
+    <div class="slide-content">
+      <div class="dnum reveal">01</div>
+      <h2 class="reveal">What the graphs <span class="o">buy you</span></h2>
+      <p class="dsub reveal">The honest evidence — where graphs beat vectors and loops, and <b>where they quietly fail.</b></p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Where vector RAG runs out"
+    data-speaker-notes="Three shapes of question where plain embeddings stop working, each with a number. Emphasise the temporal one — it's the biggest documented gap and the one most teams never test for. Close with the rule: if the answer sits in one chunk, vectors are fine and much cheaper.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">6</span><div class="crumb"><b>Evidence</b> · where vectors run out</div></div>
+      <h2 class="reveal">Where vector RAG <span class="o">runs out</span></h2>
+      <div class="cards c3 reveal">
+        <div class="tile"><span class="k">Multi-hop</span><p>Recall@5 averages <b>73.4% → 87.8%</b> with graph-guided retrieval, across MuSiQue, HotpotQA and 2Wiki.</p></div>
+        <div class="tile fill"><span class="k">Temporal</span><p><b>49–59% vs 30.7%</b> on time-scoped questions (MultiHop-RAG). The biggest documented graph advantage.</p></div>
+        <div class="tile"><span class="k">Global</span><p>Contextual summarization <b>64.4 vs 51.3</b> — 13 points, when the answer is smeared across the corpus.</p></div>
+      </div>
+      <p class="note reveal">If the answer sits in a single chunk, vectors are fine and far cheaper. The graph only starts paying <b>past the first hop</b>.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Anatomy of GraphRAG"
+    data-speaker-notes="Walk the pipeline left to right and stop on the extraction box: four to six LLM calls per chunk, and by Microsoft's own estimate about 75% of indexing cost. Then the three query modes — local for detail, global for themes, DRIFT for both. The point to land: the graph locates and organises evidence, it does not let the model reason magically over structure.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">7</span><div class="crumb"><b>Evidence</b> · GraphRAG anatomy</div></div>
+      <h2 class="reveal">Anatomy of <span class="o">GraphRAG</span></h2>
+      <div class="diagram reveal" style="--diag-h:560px">
+        <svg viewBox="0 0 1000 420" role="img" aria-label="GraphRAG indexing pipeline: documents become chunks, an LLM extracts entities and relations, Leiden clustering nests them into communities, and an LLM writes a summary per community. At query time, local search walks the entity neighbourhood, global search map-reduces across community summaries, and DRIFT combines both.">
+          <defs><marker id="gr1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+          <rect class="dg-box" x="0" y="8" width="166" height="78" rx="10"/>
+          <text class="dg-t" x="83" y="42" font-size="20" text-anchor="middle">documents</text>
+          <text class="dg-t mut" x="83" y="66" font-size="15" text-anchor="middle">raw corpus</text>
+          <path class="dg-line" d="M172 47 L 200 47" marker-end="url(#gr1)"/>
+          <rect class="dg-box" x="208" y="8" width="166" height="78" rx="10"/>
+          <text class="dg-t" x="291" y="42" font-size="20" text-anchor="middle">chunks</text>
+          <text class="dg-t mut" x="291" y="66" font-size="15" text-anchor="middle">split + embed</text>
+          <path class="dg-line" d="M380 47 L 408 47" marker-end="url(#gr1)"/>
+          <rect class="dg-box mid" x="416" y="8" width="166" height="78" rx="10"/>
+          <text class="dg-t" x="499" y="42" font-size="19" text-anchor="middle">LLM extraction</text>
+          <text class="dg-t mut" x="499" y="66" font-size="14" text-anchor="middle">entities · relations</text>
+          <path class="dg-line" d="M588 47 L 616 47" marker-end="url(#gr1)"/>
+          <rect class="dg-box" x="624" y="8" width="166" height="78" rx="10"/>
+          <text class="dg-t" x="707" y="42" font-size="20" text-anchor="middle">Leiden</text>
+          <text class="dg-t mut" x="707" y="66" font-size="14" text-anchor="middle">communities, nested</text>
+          <path class="dg-line" d="M796 47 L 824 47" marker-end="url(#gr1)"/>
+          <rect class="dg-box" x="832" y="8" width="166" height="78" rx="10"/>
+          <text class="dg-t" x="915" y="42" font-size="20" text-anchor="middle">summaries</text>
+          <text class="dg-t mut" x="915" y="66" font-size="14" text-anchor="middle">one per community</text>
+          <text class="dg-t acc" x="499" y="114" font-size="16" text-anchor="middle">~4–6 LLM calls per chunk · ≈75% of indexing cost</text>
+          <line class="dg-line dim" x1="0" y1="150" x2="1000" y2="150"/>
+          <text class="dg-t acc" x="0" y="142" font-size="15">AT QUERY TIME</text>
+          <rect class="dg-box" x="0" y="176" width="150" height="58" rx="10"/>
+          <text class="dg-t acc" x="75" y="212" font-size="20" text-anchor="middle">local</text>
+          <path class="dg-line" d="M158 205 L 196 205" marker-end="url(#gr1)"/>
+          <text class="dg-t" x="212" y="199" font-size="19">match entities, then walk their neighbourhood</text>
+          <text class="dg-t mut" x="212" y="224" font-size="15">detail questions about specific things</text>
+          <rect class="dg-box" x="0" y="252" width="150" height="58" rx="10"/>
+          <text class="dg-t acc" x="75" y="288" font-size="20" text-anchor="middle">global</text>
+          <path class="dg-line" d="M158 281 L 196 281" marker-end="url(#gr1)"/>
+          <text class="dg-t" x="212" y="275" font-size="19">map-reduce across every community summary</text>
+          <text class="dg-t mut" x="212" y="300" font-size="15">corpus-level themes — and the expensive one</text>
+          <rect class="dg-box hot" x="0" y="328" width="150" height="58" rx="10"/>
+          <text class="dg-t on" x="75" y="364" font-size="20" text-anchor="middle" font-family="var(--font-mono)">DRIFT</text>
+          <path class="dg-line" d="M158 357 L 196 357" marker-end="url(#gr1)"/>
+          <text class="dg-t" x="212" y="351" font-size="19">global entry point, then local refinement</text>
+          <text class="dg-t mut" x="212" y="376" font-size="15">both, in one query</text>
+        </svg>
+      </div>
+      <p class="note reveal">Indexing runs <b>20–100×</b> an embedding-only pipeline. The graph locates and organises evidence — the selected evidence still gets serialised into a finite context window.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="The bill"
+    data-speaker-notes="Big number, then immediately caveat it: the thousand-fold collapse comes from one practitioner write-up, so quote it as a story, not a statistic. The Microsoft LazyGraphRAG numbers are the ones to repeat externally. The mechanism is worth stating: LazyGraphRAG defers every LLM summarization to query time, so you only pay for the parts of the corpus someone actually asks about.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">8</span><div class="crumb"><b>Evidence</b> · the bill</div></div>
+      <h2 class="reveal">The bill, <span class="o">eighteen months apart</span></h2>
+      <div class="kcard reveal">
+        <div class="big">$33,000 → $33</div>
+        <p>Indexing one ~5GB corpus: early 2024 versus mid-2025. Roughly <b>1000×</b>, driven by LazyGraphRAG deferring all LLM summarization to query time.</p>
+      </div>
+      <ul class="bul reveal">
+        <li>LazyGraphRAG index cost = <b>0.1% of full GraphRAG</b> — roughly what plain vector RAG costs. Index-time work is noun-phrase extraction plus co-occurrence stats.</li>
+        <li>At a mid query budget it <b>outperforms Global Search at 4% of its query cost</b>; at a low budget, comparable quality at <b>700× lower</b> query cost.</li>
+      </ul>
+      <p class="note reveal">⚠ The <b>$33,000 → $33</b> figure is a single practitioner write-up. The 99.9% index-cost reduction is <b>Microsoft's own published number</b> — quote that one, caveat the first.</p>
+    </div>
+  </section>
+
+  <section class="slide dark dense" data-label="Honest scoreboard"
+    data-speaker-notes="Read the winner column out loud, row by row, and slow down on the null-query line: community summaries make GraphRAG-Global invent an answer roughly four times out of five when no answer exists. That single row disqualifies global search for anything customer-facing without an abstention gate. Then note the latency column — eight times slower is a product decision, not a footnote.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">9</span><div class="crumb"><b>Evidence</b> · the honest scoreboard</div></div>
+      <h2 class="reveal">The honest <span class="o">scoreboard</span></h2>
+      <table class="tbl reveal">
+        <thead><tr><th>Query shape</th><th>Winner</th><th>Numbers</th></tr></thead>
+        <tbody>
+          <tr><td>Simple fact lookup</td><td><b>tie</b></td><td>60.9 chunk vs 60.1 graph</td></tr>
+          <tr><td>Complex reasoning, up to ~2 hops</td><td>graph</td><td>53.4 vs 42.9</td></tr>
+          <tr><td>Temporal / time-scoped</td><td>graph</td><td>49–59% vs 30.7%</td></tr>
+          <tr><td>Contextual summarization</td><td>graph</td><td>64.4 vs 51.3</td></tr>
+          <tr><td><b>Null query — no answer exists</b></td><td><b>vectors, by a mile</b></td><td>plain RAG abstains <b>96%</b>; GraphRAG-Global <b>19.27%</b></td></tr>
+          <tr><td>Retrieval latency</td><td>vectors</td><td>graph ~<b>8× slower</b> (14,434s vs 1,724s)</td></tr>
+        </tbody>
+      </table>
+      <p class="note reveal">Past roughly <b>2 hops</b> the advantage fades — the paths stop landing in the retrieved subgraph. ⚠ An ICLR 2026 lead (arXiv:2506.05690) goes further: "GraphRAG frequently underperforms vanilla RAG on many real-world tasks."</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Memory graphs: facts don't die"
+    data-speaker-notes="This is the strongest honest case for a graph, so make it concrete. A vector store returns whatever is similar, which is a different question from what is true right now. Bi-temporal edges close a validity window instead of deleting a fact, so the same store answers 'what's true now' and 'what was true in March' — and stays auditable, which is the part a bank actually cares about.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">10</span><div class="crumb"><b>Evidence</b> · memory graphs</div></div>
+      <h2 class="reveal">Memory graphs: <span class="o">facts don't die</span></h2>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>A vector store returns what is <b>similar</b>, not what is <b>true now</b>. Both questions land in the same query and only one gets answered.</li>
+          <li>Graphiti / Zep edges carry <b>four timestamps</b>: t_created and t_expired for system time, t_valid and t_invalid for event time.</li>
+          <li>A contradiction <b>closes</b> the old edge's validity window. Nothing is deleted, so the history stays queryable and auditable.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 560 320" role="img" aria-label="A bi-temporal edge timeline: the edge Alice works_at Acme is valid from March to July and then closed by a contradiction; a new edge Alice works_at Globex is valid from July to now. Both edges stay in the graph.">
+            <text class="dg-t mut" x="20" y="30" font-size="14">window closed, not deleted</text>
+            <rect class="dg-box mid" x="20" y="40" width="250" height="76" rx="10"/>
+            <text class="dg-t" x="145" y="72" font-size="17" text-anchor="middle">Alice —works_at→ Acme</text>
+            <text class="dg-t mut" x="145" y="98" font-size="14" text-anchor="middle">t_valid Mar · t_invalid Jul</text>
+            <text class="dg-t acc" x="280" y="16" font-size="13" text-anchor="middle">contradiction</text>
+            <line class="dg-line" x1="280" y1="24" x2="280" y2="264" stroke-dasharray="5 5"/>
+            <text class="dg-t mut" x="290" y="140" font-size="14">open — true now</text>
+            <rect class="dg-box hot" x="290" y="150" width="250" height="76" rx="10"/>
+            <text class="dg-t on" x="415" y="182" font-size="16" text-anchor="middle">Alice —works_at→ Globex</text>
+            <text class="dg-t on" x="415" y="208" font-size="14" text-anchor="middle" opacity="0.8">t_valid Jul · t_invalid —</text>
+            <line class="dg-line dim" x1="20" y1="270" x2="540" y2="270"/>
+            <line class="dg-line dim" x1="20" y1="264" x2="20" y2="276"/>
+            <line class="dg-line dim" x1="540" y1="264" x2="540" y2="276"/>
+            <text class="dg-t mut" x="20" y="294" font-size="14">Mar</text>
+            <text class="dg-t mut" x="280" y="294" font-size="14" text-anchor="middle">Jul</text>
+            <text class="dg-t mut" x="540" y="294" font-size="14" text-anchor="end">now</text>
+            <text class="dg-t acc" x="280" y="316" font-size="14" text-anchor="middle">one graph, two questions: "now" and "in March"</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide dark dense" data-label="Benchmark theatre"
+    data-speaker-notes="Tell this as a farce, because it is one, and then make it useful. Two vendors traded SOTA claims, one of them had an arithmetic error in its own rebuttal, and then a research lab beat both with grep. Land the ending: 6.4% of the answer key is simply wrong, so every delta in that fight was noise measured on a broken ruler. Say explicitly that this deck's own numbers deserve the same suspicion.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">11</span><div class="crumb"><b>Evidence</b> · benchmark theatre</div></div>
+      <h2 class="reveal">Benchmark <span class="o">theatre</span></h2>
+      <ul class="bul reveal">
+        <li><b>Apr 2025</b> — Mem0's paper claims SOTA over Zep on LoCoMo.</li>
+        <li><b>May 2025</b> — Zep's rebuttal, "Lies, Damn Lies, &amp; Statistics", claims 84%. An arithmetic error is found; Zep corrects to <b>75.14%</b>. Mem0 then re-runs Zep's fixed pipeline: <b>58.44%</b> — below Mem0's own score.</li>
+        <li><b>Aug 2025</b> — Letta runs GPT-4o-mini with plain filesystem tools (grep, open, search): <b>74.0%</b>. It beats both specialised memory systems.</li>
+        <li><b>2026 audits</b> — <b>6.4% of LoCoMo's answer key is wrong</b> (99 of 1,540, Penfield Labs). The LLM judge accepts <b>62.8%</b> of intentionally wrong answers.</li>
+      </ul>
+      <p class="note reveal">⚠ MemPalace claimed 100% on LoCoMo, collected 5,400 GitHub stars in 24 hours, and was caught tuning on the dev set within 48. Tsinghua's MemoryBench (20k cases): "none of the advanced memory systems consistently outperform RAG baselines using full task context." <b>Distrust every vendor benchmark slide — including this one.</b></p>
+    </div>
+  </section>
+
+  <section class="slide light dense" data-label="Workflow graphs and the debate"
+    data-speaker-notes="Give the LangGraph anatomy in one breath — state, nodes, conditional edges, checkpoints, plus Send for fan-out — then let the three quotes argue. Don't take a side on stage; give the decision rule instead. Control, repeatability or compliance means an explicit graph; an ill-defined problem where the path doesn't matter means a loop.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">12</span><div class="crumb"><b>Evidence</b> · workflow graphs</div></div>
+      <h2 class="reveal">Workflow graphs — and the <span class="o">argument about them</span></h2>
+      <div class="flow reveal" style="margin-bottom:16px">
+        <div class="step">state</div><div class="arrow">→</div>
+        <div class="step">node</div><div class="arrow">→</div>
+        <div class="step hot">conditional edge</div><div class="arrow">→</div>
+        <div class="step">checkpoint</div><div class="arrow">+</div>
+        <div class="step">Send fan-out</div>
+      </div>
+      <div class="cards c3 reveal">
+        <div class="tile"><span class="k">LangChain</span><p>"Loops are just simple graphs." Production agents need cycles, not DAGs. <span class="muted">Jul 2026</span></p></div>
+        <div class="tile fill"><span class="k">CrewAI</span><p>"Graph-based systems become debugging nightmares in production." DocuSign switched off one: <b>14× less code</b>, 75% faster lead time.</p></div>
+        <div class="tile"><span class="k">Anthropic</span><p>"Find the simplest solution possible, and only increase complexity when needed." <span class="muted">Building Effective Agents</span></p></div>
+      </div>
+      <p class="note reveal">The convergent rule: <b>control, repeatability or compliance → explicit graph. Ill-defined problem where the path doesn't matter → autonomous loop.</b></p>
+    </div>
+  </section>
+
+  <section class="slide dark dense" data-label="Receipts"
+    data-speaker-notes="Lead with the one result that survives scrutiny: LinkedIn's KG-RAG support system, peer-reviewed at SIGIR, six months in production, with retrieval quality and human resolution time both moving. Then run the vendor table fast and say the quiet part — those are blog posts, useful for direction and worthless as proof. If someone quotes Klarna at you in a design review, that's the answer.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">13</span><div class="crumb"><b>Evidence</b> · receipts</div></div>
+      <h2 class="reveal">The <span class="o">receipts</span></h2>
+      <div class="kcard reveal">
+        <div class="big">40h → 15h</div>
+        <p><b>LinkedIn customer-service KG-RAG</b>, six months in production (SIGIR 2024): mean resolution time 40h → 15h, p90 87h → 47h, median −28.6%, retrieval MRR 0.522 → 0.927.</p>
+      </div>
+      <table class="tbl reveal">
+        <thead><tr><th>Vendor-claimed</th><th>Claim</th></tr></thead>
+        <tbody>
+          <tr><td>Klarna</td><td>80% cut in resolution time</td></tr>
+          <tr><td>Uber</td><td>~21,000 developer-hours saved</td></tr>
+          <tr><td>Anthropic multi-agent research</td><td>+90.2% over single-agent Opus 4 on an internal eval, at ~15× token cost</td></tr>
+        </tbody>
+      </table>
+      <p class="note reveal">⚠ Only the LinkedIn result is <b>peer-reviewed</b>. Everything in the lower table is a vendor blog post — directionally useful, not proof.</p>
+    </div>
+  </section>
+
+  <!-- ============ PART 02 — IMPLEMENTING IT IN CLAUDE CODE ============ -->
+  <section class="slide dark divider" data-label="02 Implementing it in Claude Code"
+    data-speaker-notes="Slow down here and say it plainly: if the deck is remembered for one part, this is it. Everything from part 01 has a wiring diagram inside the tool they already run daily — no new framework required for most of it. Promise concrete commands, not architecture opinions.">
+    <div class="slide-content">
+      <div class="dnum reveal">02</div>
+      <h2 class="reveal">Implementing it in <span class="o">Claude Code</span></h2>
+      <p class="dsub reveal">The <b>most important part</b>. Every pattern from part 01, wired into the tool you already run daily.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="A graph DB in one command"
+    data-speaker-notes="Run the command on the slide, don't paraphrase it — the read-only flag is the whole lesson. Three tools is the point: the server is small, so the token tax is small. Use Kuzu's archiving as the vendor-risk story: an embedded graph DB that a lot of people had standardised on went read-only overnight, and the community had forks within days.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">15</span><div class="crumb"><b>Claude Code</b> · graph DB via MCP</div></div>
+      <h2 class="reveal">A graph DB in <span class="o">one command</span></h2>
+      <div class="code reveal"><span class="c"># Neo4j's official MCP server — three tools, nothing else</span>
+<span class="o">claude mcp add</span> --transport stdio \
+  -e <span class="b">NEO4J_URI</span>=<span class="g">bolt://127.0.0.1:7687</span> \
+  -e <span class="b">NEO4J_USERNAME</span>=<span class="g">neo4j</span> -e <span class="b">NEO4J_PASSWORD</span>=<span class="g">…</span> \
+  -e <span class="b">NEO4J_READ_ONLY</span>=<span class="g">true</span> \
+  -- neo4j-mcp neo4j-mcp
+
+<span class="c"># exposes: get-schema · read-cypher · write-cypher</span></div>
+      <ul class="bul reveal">
+        <li>Memgraph ships <b>run_query + get_schema</b>; FalkorDB ships <code>@falkordb/mcpserver</code> with its own read-only mode.</li>
+        <li><b>Kuzu was archived Oct 10, 2025</b> — the embedded graph DB a lot of people had standardised on, frozen at v1.4.1. Community forks (Bighorn, Ladybug) appeared within days. Pick your graph vendor like you pick a database.</li>
+      </ul>
+      <p class="note reveal">Start read-only. The best model on CypherBench executes correct Cypher <b>61.58%</b> of the time; sub-10B models are under 20%. Use <b>Cypher templates</b>, not free-form generation, and don't hand write access to a text-to-Cypher loop on day one.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Claude Code as the graph builder"
+    data-speaker-notes="Correct the expectation first: nobody sensible runs microsoft/graphrag by hand. The realistic pattern is Claude Code driving a library that already has an entity-resolution stage, with a human reviewing the ontology. Then land the production truth — extraction is the demo, entity resolution is the thing that rots. If there's time, this is the live-demo beat: have Claude propose a schema for a repo's docs and render the Mermaid.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">16</span><div class="crumb"><b>Claude Code</b> · building the graph</div></div>
+      <h2 class="reveal">Claude Code as the <span class="o">graph builder</span></h2>
+      <ul class="bul reveal">
+        <li>Realistic pattern: Claude Code <b>drives</b> <code>neo4j-graphrag-python</code> (its pipeline has an explicit entity-resolution stage) or LightRAG. You review the ontology, it writes the plumbing.</li>
+        <li>The separate <b>Data-Modeling MCP</b> validates an LLM-proposed model and renders it as a Mermaid schema diagram <b>before any data flows</b>.</li>
+        <li><b>Entity resolution, not extraction, is where production graphs rot.</b> payments-prod, PAY-SVC and a CMDB id are one service. The test service sharing the prefix is not.</li>
+        <li>Start schema-free to explore; fold the discoveries into a canonical ontology once you can define what "precise" means for the domain.</li>
+      </ul>
+      <p class="note reveal">An extraction audit found <b>2.4% anomalous triples</b> of 6,014, 0.65% pure hallucination — and downstream LLMs <b>trust graph output over the source prose</b> that contradicts it.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="The MCP token tax"
+    data-speaker-notes="Connect this straight back to deck 05's fixed-overhead lesson: tool schemas used to load every turn, so a fat graph server was a per-turn tax even on turns that never touched the graph. Deferred tool loading fixes it by default from 2.1.220 onward, and alwaysLoad opts a server back out when you genuinely need it hot. Tell them to check their version before they trust this.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">17</span><div class="crumb"><b>Claude Code</b> · the MCP token tax</div></div>
+      <h2 class="reveal">The MCP <span class="o">token tax</span></h2>
+      <div class="code reveal"><span class="c"># historically — every server, every turn</span>
+<span class="o">tool schemas (all servers) ›</span>  <span class="b">loaded into context each turn</span>
+                              <span class="c">graph server idle? you paid anyway</span>
+
+<span class="c"># v2.1.220+ — deferred tool loading, on by default</span>
+<span class="o">tool names only ›</span>             <span class="b">schemas fetched when a tool is needed</span>
+<span class="o">"alwaysLoad": true ›</span>          <span class="g">opts one server back out</span></div>
+      <ul class="bul reveal">
+        <li>This is deck 05's fixed-overhead lesson applied to graphs: a chatty graph server used to cost you on every turn, including the turns that never touched it.</li>
+      </ul>
+      <p class="note reveal">Version-gated — check <b>claude --version</b>. Older than 2.1.220, count your MCP servers before adding another one.</p>
+    </div>
+  </section>
+
+  <section class="slide dark dense" data-label="The memory spectrum"
+    data-speaker-notes="Walk left to right and make the trade explicit at each step: every move right buys capability and costs complexity plus a second bill. The jump that matters is from the official memory MCP to Graphiti — that's where you get time, and time is what makes contradiction survivable. Tell them to pick the leftmost thing that answers their actual failure mode, not the most impressive one.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">18</span><div class="crumb"><b>Claude Code</b> · memory spectrum</div></div>
+      <h2 class="reveal">The memory <span class="o">spectrum</span></h2>
+      <div class="flow reveal" style="margin-bottom:16px">
+        <div class="step">CLAUDE.md</div><div class="arrow">→</div>
+        <div class="step">auto memory</div><div class="arrow">→</div>
+        <div class="step">memory MCP</div><div class="arrow">→</div>
+        <div class="step hot">Graphiti MCP</div><div class="arrow">→</div>
+        <div class="step">Cognee plugin</div>
+      </div>
+      <div class="gloss reveal">
+        <div class="row"><span class="term">CLAUDE.md</span><span class="def">Static, cache-friendly, paid every turn.</span></div>
+        <div class="row"><span class="term">Auto memory</span><span class="def">MEMORY.md index (first 200 lines / 25KB), topic files loaded on demand.</span></div>
+        <div class="row"><span class="term">Memory MCP</span><span class="def">Entities, relations and observations in a JSONL file; 8 tools; string search only — no time, no semantics.</span></div>
+        <div class="row"><span class="term">Graphiti MCP</span><span class="def">Temporal edges, <code>search_memory_facts</code> with time filters; FalkorDB or Neo4j behind it.</span></div>
+        <div class="row"><span class="term">Cognee</span><span class="def">Full pipeline — graph plus vector store — built from lifecycle hooks while you work.</span></div>
+      </div>
+      <p class="note reveal">Each step buys capability with complexity <b>and a second bill</b>. Pick the leftmost thing that answers your actual failure mode.</p>
+    </div>
+  </section>
+
+  <section class="slide light dense" data-label="Hooks as graph edges"
+    data-speaker-notes="This is the nicest idea in the part: the hook events are edges, and the graph builds itself as a side effect of you working. Walk the five lifecycle points on the diagram and say what each contributes. Then the honest caveat — Cognee's own extraction and embedding calls bill against whatever provider it's configured with, so this is not free just because it's automatic.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">19</span><div class="crumb"><b>Claude Code</b> · hooks as edges</div></div>
+      <h2 class="reveal">Hooks are <span class="o">edges</span></h2>
+      <div class="diagram reveal" style="--diag-h:430px">
+        <svg viewBox="0 0 1000 340" role="img" aria-label="A session lifecycle line with five hook points — SessionStart, UserPromptSubmit, PostToolUse, Stop and SessionEnd — each feeding an arrow down into one knowledge graph box that is built while you work.">
+          <defs><marker id="hk1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+          <text class="dg-t mut" x="8" y="22" font-size="15">session lifecycle</text>
+          <line class="dg-line dim" x1="8" y1="58" x2="980" y2="58"/>
+          <rect class="dg-box" x="8" y="36" width="160" height="44" rx="8"/>
+          <text class="dg-t acc" x="88" y="64" font-size="15" text-anchor="middle">SessionStart</text>
+          <rect class="dg-box" x="208" y="36" width="160" height="44" rx="8"/>
+          <text class="dg-t acc" x="288" y="64" font-size="14" text-anchor="middle">UserPromptSubmit</text>
+          <rect class="dg-box" x="410" y="36" width="160" height="44" rx="8"/>
+          <text class="dg-t acc" x="490" y="64" font-size="15" text-anchor="middle">PostToolUse</text>
+          <rect class="dg-box" x="612" y="36" width="160" height="44" rx="8"/>
+          <text class="dg-t acc" x="692" y="64" font-size="15" text-anchor="middle">Stop</text>
+          <rect class="dg-box" x="820" y="36" width="160" height="44" rx="8"/>
+          <text class="dg-t acc" x="900" y="64" font-size="15" text-anchor="middle">SessionEnd</text>
+          <path class="dg-line" d="M88 84 L 88 232" marker-end="url(#hk1)"/>
+          <text class="dg-t mut" x="98" y="164" font-size="14">what we know</text>
+          <path class="dg-line" d="M288 84 L 288 232" marker-end="url(#hk1)"/>
+          <text class="dg-t mut" x="298" y="164" font-size="14">the ask</text>
+          <path class="dg-line" d="M490 84 L 490 232" marker-end="url(#hk1)"/>
+          <text class="dg-t mut" x="500" y="164" font-size="14">tool results</text>
+          <path class="dg-line" d="M692 84 L 692 232" marker-end="url(#hk1)"/>
+          <text class="dg-t mut" x="702" y="164" font-size="14">turn result</text>
+          <path class="dg-line" d="M900 84 L 900 232" marker-end="url(#hk1)"/>
+          <text class="dg-t mut" x="888" y="164" font-size="14" text-anchor="end">distil + flush</text>
+          <rect class="dg-box outer" x="8" y="240" width="984" height="86" rx="14"/>
+          <text class="dg-t" x="500" y="278" font-size="22" text-anchor="middle">knowledge graph</text>
+          <text class="dg-t mut" x="500" y="306" font-size="16" text-anchor="middle">entities · relations · temporal edges — built while you work</text>
+        </svg>
+      </div>
+      <ul class="bul reveal">
+        <li><code>claude plugin install cognee-memory@cognee</code> — three verbs (remember / recall / forget) plus <b>five lifecycle hooks</b>. Auto-distils every <b>150 tool calls or 60s idle</b>, with per-client dataset isolation.</li>
+      </ul>
+      <p class="note reveal">⚠ The hidden cost: Cognee's extraction and embedding calls bill against <b>its own configured provider</b>, separate from your Claude plan.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="When markdown wins"
+    data-speaker-notes="Give the four-word test and repeat it: many, entity-shaped, contradicting, time-dependent. If none of those is true, a markdown file wins on every axis that matters. Bring back Letta's grep result as the null hypothesis — beat the filesystem before you buy a graph. Tie it to deck 05: markdown bills every turn, a graph bills per query; neither is free, they're billed differently.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>Claude Code</b> · when markdown wins</div></div>
+      <h2 class="reveal">When <span class="o">markdown wins</span></h2>
+      <ul class="bul reveal">
+        <li>Small, stable facts belong in <b>CLAUDE.md or auto memory</b>. Cache-friendly, zero latency, no second bill, no extra service to run.</li>
+        <li>Graph memory earns it when facts are <b>many, entity-shaped, contradicting, or time-dependent</b>. Those four words are the whole test.</li>
+        <li>Letta's result is the null hypothesis: GPT-4o-mini plus grep scored <b>74.0%</b> on LoCoMo. <b>Beat the filesystem before you buy a graph.</b></li>
+      </ul>
+      <p class="note reveal">Deck 05's lesson, inverted: every line of CLAUDE.md is paid <b>every turn</b>; a graph flips that to <b>pay-per-query</b>. Neither is free — they're billed differently, and you should know which shape your workload has.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Code graphs: the house line"
+    data-speaker-notes="Read the Cherny quote as written and let it sit. The detail people miss is that Claude Code shipped RAG with a local vector DB early on and pulled it out, not because indexing was hard but because agentic search won outright. Frame this as the default you have to beat, then promise the counter-evidence on the next slide so nobody thinks you're selling a position.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">21</span><div class="crumb"><b>Claude Code</b> · code graphs, house line</div></div>
+      <h2 class="reveal">Code graphs: the <span class="o">house line</span></h2>
+      <div class="kcard reveal">
+        <div class="big" style="font-size:36px; line-height:1.2">"Agentic search generally works better. It is also simpler and doesn't have the same issues around security, privacy, staleness, and reliability."</div>
+        <p>Boris Cherny, Claude Code. Early versions shipped RAG with a local vector DB; it was ripped out. His elaboration: <b>"it outperformed everything. By a lot."</b></p>
+      </div>
+      <ul class="bul reveal">
+        <li>Formalised as <b>just-in-time context</b> (Anthropic engineering, Sept 29, 2025): glob → grep → read, at the moment of need.</li>
+        <li>No index to go stale, no second copy of your source to leak, no re-index on every commit.</li>
+      </ul>
+      <p class="note reveal">Treat this as the <b>default you have to beat</b>, not a position you have to hold. The counter-evidence is on the next slide.</p>
+    </div>
+  </section>
+
+  <section class="slide dark dense" data-label="Code graphs: the counter-evidence"
+    data-speaker-notes="Read the Express row out loud — the graph lost, and the author published it anyway, which is why the rest of the table is worth reading. Then the rigorous head-to-head: ten times fewer tokens but 83% versus 92% on quality, so the graph is cheaper and slightly dumber on holistic questions. Both things are true — grep wins small, graphs win monorepos, and everybody shipping at scale runs a hybrid.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">22</span><div class="crumb"><b>Claude Code</b> · code graphs, counter-evidence</div></div>
+      <h2 class="reveal">Code graphs: the <span class="o">counter-evidence</span></h2>
+      <table class="tbl reveal">
+        <thead><tr><th>Repo / study</th><th>Result</th><th>Factor</th></tr></thead>
+        <tbody>
+          <tr><td>Next.js monorepo</td><td>739,352 → 15,049 tokens</td><td><b>49×</b></td></tr>
+          <tr><td>FastAPI</td><td>token reduction on the same task set</td><td>3.7×</td></tr>
+          <tr><td><b>Express.js</b></td><td><b>graph overhead lost to plain reading</b></td><td><b>&lt;1×</b></td></tr>
+          <tr><td>Six-repo average</td><td>tree-sitter + SQLite code-graph MCP</td><td>8.2×</td></tr>
+          <tr><td>Head-to-head (arXiv:2603.27277)</td><td>~1,000 vs ~10,000 tokens/query — but quality <b>83% vs 92%</b></td><td>10×</td></tr>
+        </tbody>
+      </table>
+      <ul class="bul reveal">
+        <li>Break-even lands around <b>500+ files</b>. Hybrid is what actually ships: Sourcegraph (SCIP graph + embeddings + text), Cursor (semantic + lexical lifts agent evals up to <b>23.5%</b> over grep alone), aider's repo map (tree-sitter + PageRank).</li>
+      </ul>
+      <p class="note reveal">⚠ The per-repo numbers are one author's benchmarks — unusually honest ones, since they include the repo where the graph lost. Both things are true: grep wins small, graphs win monorepos, and the graph is slightly dumber on holistic questions.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Control flow: the mapping"
+    data-speaker-notes="This is the slide to photograph. Read each mapping and let the realisation land: they already own a graph runtime and have been calling it Claude Code. Spend the most time on hooks-as-gates, because PreToolUse blocking and Stop refusing a turn end are exactly the deterministic invariants a graph framework is usually bought for.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">23</span><div class="crumb"><b>Claude Code</b> · control flow mapping</div></div>
+      <h2 class="reveal">You already own a <span class="o">graph runtime</span></h2>
+      <div class="gloss reveal">
+        <div class="row"><span class="term">Nodes</span><span class="def">Subagents — <code>.claude/agents/*.md</code>, with name / description / model / tools frontmatter.</span></div>
+        <div class="row"><span class="term">Gates</span><span class="def">Hooks — PreToolUse can block or rewrite a call, Stop can refuse to end the turn. 12 events.</span></div>
+        <div class="row"><span class="term">Edges</span><span class="def">The orchestrator's own routing prompt is your conditional edge.</span></div>
+        <div class="row"><span class="term">DAG nodes</span><span class="def"><code>claude -p --output-format json</code>, composed by a script; <code>--resume &lt;id&gt;</code> to continue one.</span></div>
+        <div class="row"><span class="term">Checkpoints</span><span class="def">Sessions plus <code>/rewind</code> — file snapshots per prompt, last 100. SDK <code>forkSession: true</code> is time travel.</span></div>
+      </div>
+      <p class="note reveal">Name the parts and the graph is already there. You've just been calling it <b>Claude Code</b>.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Workflows: a scripted graph"
+    data-speaker-notes="Show that a workflow script reads as a graph without any graph vocabulary: pipeline fans out, agent() is a node, and the conditional edges are plain if/else. The resumability detail is the one to stress — an unchanged prefix of agent() calls returns cached results, so a failed run doesn't cost you the whole DAG again. Cross-reference deck 03's dynamic workflows section.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">24</span><div class="crumb"><b>Claude Code</b> · workflows</div></div>
+      <h2 class="reveal">Workflows: a <span class="o">scripted graph</span></h2>
+      <div class="code reveal"><span class="c">// workflows (v2.1.154+) — a graph that reads as a script</span>
+<span class="o">const</span> findings = <span class="o">await</span> pipeline(
+  files,                                  <span class="c">// fan out, no barrier</span>
+  f =&gt; agent(<span class="g">`review ${f}`</span>),              <span class="c">// node: a subagent</span>
+  r =&gt; agent(<span class="g">`verify: ${r}`</span>)              <span class="c">// node: the next stage</span>
+);
+<span class="c">// max 16 concurrent · resumable: an unchanged agent() prefix</span>
+<span class="c">// returns cached results instead of re-running the node</span></div>
+      <ul class="bul reveal">
+        <li><code>parallel()</code> adds a barrier when you need one. <code>pipeline()</code> deliberately doesn't.</li>
+        <li>Conditional edges are plain <code>if</code> / <code>else</code>. That's the feature, not a shortcut — the routing logic is code you can read, diff and test.</li>
+      </ul>
+      <p class="note reveal">The closest native thing to a scripted LangGraph. Full treatment in deck 03, <i>Agentic Engineering</i> — dynamic workflows.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="When you outgrow it"
+    data-speaker-notes="Say the design decision out loud: the Agent SDK ships no graph engine, and that's a choice, not a gap. If you genuinely need durable typed state, interrupt-style human gates and time travel across a fork, the 2026 consensus is LangGraph outside and SDK agents inside the nodes. Then tell them not to reach here first — the previous two slides cover most real needs, and CrewAI's debugging-nightmare quote was about exactly this layer.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">25</span><div class="crumb"><b>Claude Code</b> · when you outgrow it</div></div>
+      <h2 class="reveal">When you outgrow it: <span class="o">SDK + LangGraph</span></h2>
+      <ul class="bul reveal">
+        <li>The Claude Agent SDK ships <b>no graph engine, by design</b>. That's a decision, not a gap.</li>
+        <li>Need durable typed state, human-in-the-loop interrupts, or time travel across a fork? The 2026 consensus hybrid: <b>LangGraph as the outer state machine, Agent SDK agents inside the nodes.</b></li>
+        <li>Day-long jobs wrap Temporal around both. LangGraph 1.0 went GA Oct 22, 2025; ⚠ adoption figure of ~400 companies on LangGraph Platform is the vendor's own.</li>
+      </ul>
+      <p class="note reveal">Don't reach here first. Slides 23–24 cover most real needs — and CrewAI's "debugging nightmares" line was about exactly this layer.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="The cheaper alternative first"
+    data-speaker-notes="This is the whole deck's pattern in one number pair: 84% fewer tokens and 39% better performance, from a memory tool and automatic context editing, with no graph anywhere. Tell them to run this before standing up a graph memory server, because if it solves the problem they've saved themselves an operational dependency. Flag the Rakuten number as a vendor claim before anyone writes it down.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>Claude Code</b> · the cheaper alternative</div></div>
+      <h2 class="reveal">Try the <span class="o">boring thing</span> first</h2>
+      <div class="kcard reveal">
+        <div class="big">84% / 39%</div>
+        <p>Token savings and performance improvement from the API <b>memory tool</b> plus <b>context editing</b>, on Anthropic's 100-turn benchmark. No graph involved.</p>
+      </div>
+      <ul class="bul reveal">
+        <li>The memory tool is client-side file operations (GA). Context editing clears stale tool results out of the window automatically.</li>
+        <li>Managed Agents memory (public beta, Apr 2026) adds audit trails and rollback. ⚠ Rakuten's 97% error-rate reduction is a vendor claim.</li>
+      </ul>
+      <p class="note reveal">The pattern of this whole deck: <b>the boring alternative is the baseline your graph has to beat.</b></p>
+    </div>
+  </section>
+
+  <!-- ============ PART 03 — WHEN A GRAPH EARNS IT ============ -->
+  <section class="slide dark divider" data-label="03 When a graph earns it"
+    data-speaker-notes="Short setup. One worked example that uses three of the four graphs at once, the arithmetic that kills long chains, and a table they can hold a design review against. Say the last part is the one to screenshot.">
+    <div class="slide-content">
+      <div class="dnum reveal">03</div>
+      <h2 class="reveal">When a graph <span class="o">earns it</span></h2>
+      <p class="dsub reveal">One worked example, the failure math, and a table you can <b>hold a design review against.</b></p>
+    </div>
+  </section>
+
+  <section class="slide light dense" data-label="Worked example: incident copilot"
+    data-speaker-notes="Walk the diagram as a story: the question arrives, entities get identified, the knowledge graph traversal and the similar-incidents vector search run in parallel, results are joined and ranked, and then a deterministic check on provenance, access and freshness either loops back or lets the draft through to a human. Point at the approval gate and say it is deliberate, not decorative. The reason this system is auditable is that the paths are explicit — and you evaluate each layer separately so a fluent answer can't hide a bad graph.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">28</span><div class="crumb"><b>Decide</b> · worked example</div></div>
+      <h2 class="reveal">Worked example: an <span class="o">incident copilot</span></h2>
+      <div class="diagram reveal" style="--diag-h:440px">
+        <svg viewBox="0 0 1000 360" role="img" aria-label="Incident copilot workflow: a question leads to entity identification, which fans out to a knowledge-graph traversal and a vector search for similar past incidents; results are joined and ranked, then checked for provenance, access and depth caps. Insufficient evidence loops back to identification; sufficient evidence goes to a draft, a human approval gate, and finally publication.">
+          <defs><marker id="wf1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+          <rect class="dg-box" x="4" y="38" width="110" height="54" rx="9"/>
+          <text class="dg-t" x="59" y="71" font-size="17" text-anchor="middle">question</text>
+          <path class="dg-line" d="M118 65 L 140 65" marker-end="url(#wf1)"/>
+          <rect class="dg-box" x="146" y="38" width="180" height="54" rx="9"/>
+          <text class="dg-t" x="236" y="71" font-size="17" text-anchor="middle">identify entities</text>
+          <path class="dg-line" d="M330 58 L 358 36" marker-end="url(#wf1)"/>
+          <path class="dg-line" d="M330 78 L 358 100" marker-end="url(#wf1)"/>
+          <rect class="dg-box" x="364" y="0" width="236" height="54" rx="9"/>
+          <text class="dg-t" x="482" y="33" font-size="17" text-anchor="middle">traverse knowledge graph</text>
+          <rect class="dg-box" x="364" y="76" width="236" height="54" rx="9"/>
+          <text class="dg-t" x="482" y="109" font-size="17" text-anchor="middle">similar past incidents</text>
+          <path class="dg-line" d="M604 32 L 634 56" marker-end="url(#wf1)"/>
+          <path class="dg-line" d="M604 102 L 634 80" marker-end="url(#wf1)"/>
+          <rect class="dg-box" x="640" y="38" width="150" height="54" rx="9"/>
+          <text class="dg-t" x="715" y="71" font-size="17" text-anchor="middle">join &amp; rank</text>
+          <path class="dg-line" d="M794 65 L 820 65" marker-end="url(#wf1)"/>
+          <rect class="dg-box mid" x="826" y="30" width="170" height="70" rx="9"/>
+          <text class="dg-t" x="911" y="58" font-size="16" text-anchor="middle">provenance ·</text>
+          <text class="dg-t" x="911" y="82" font-size="16" text-anchor="middle">access · depth cap</text>
+          <path class="dg-line dim" d="M860 100 L 860 175 L 240 175 L 240 98" marker-end="url(#wf1)"/>
+          <text class="dg-t mut" x="550" y="167" font-size="15" text-anchor="middle">insufficient evidence — go again</text>
+          <path class="dg-line" d="M960 100 L 960 215 L 60 215 L 60 301 L 140 301" marker-end="url(#wf1)"/>
+          <text class="dg-t acc" x="950" y="130" font-size="15" text-anchor="end">sufficient</text>
+          <rect class="dg-box" x="146" y="274" width="180" height="54" rx="9"/>
+          <text class="dg-t" x="236" y="307" font-size="17" text-anchor="middle">draft diagnosis</text>
+          <path class="dg-line" d="M330 301 L 374 301" marker-end="url(#wf1)"/>
+          <rect class="dg-box hot" x="380" y="274" width="230" height="54" rx="9"/>
+          <text class="dg-t on" x="495" y="307" font-size="17" text-anchor="middle">human approval gate</text>
+          <path class="dg-line" d="M614 301 L 670 301" marker-end="url(#wf1)"/>
+          <rect class="dg-box" x="676" y="274" width="190" height="54" rx="9"/>
+          <text class="dg-t" x="771" y="307" font-size="17" text-anchor="middle">publish / execute</text>
+          <path class="dg-line dim" d="M460 272 C 460 240, 236 240, 236 268" marker-end="url(#wf1)"/>
+          <text class="dg-t mut" x="348" y="238" font-size="14" text-anchor="middle">revise</text>
+        </svg>
+      </div>
+      <div class="gloss reveal">
+        <div class="row"><span class="term">Knowledge</span><span class="def">Service / Database / Deployment / Incident / Runbook nodes; DEPENDS_ON, AFFECTS, OWNED_BY edges with provenance and time validity.</span></div>
+        <div class="row"><span class="term">Retrieval</span><span class="def">Bounded, typed traversal from matched entities, plus a vector search for similar past incidents.</span></div>
+        <div class="row"><span class="term">Control</span><span class="def">Deterministic code owns access control, depth caps and stop rules. The LLM extracts, interprets and drafts.</span></div>
+      </div>
+      <p class="note reveal">Three of the four graphs in one system. It's auditable because the <b>paths are explicit</b> — and you evaluate each layer separately, so a fluent answer can't hide a bad graph.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="The failure math"
+    data-speaker-notes="Do the arithmetic on stage — 0.85 to the fifth is 44%, so a five-hop chain at 85% per hop is wrong more often than right. Say that structure is not free reliability, and that this cuts both ways: retrieval hops and agent hand-offs decay identically. Land the quote and then the instruction — make each node strong before you add another edge.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">29</span><div class="crumb"><b>Decide</b> · the failure math</div></div>
+      <h2 class="reveal">The failure <span class="o">math</span></h2>
+      <div class="kcard reveal">
+        <div class="big">0.85⁵ ≈ 44%</div>
+        <p>At 85% accuracy per hop, a five-hop chain is wrong more often than it's right. <b>Structure is not free reliability.</b></p>
+      </div>
+      <ul class="bul reveal">
+        <li>"A graph of weak nodes is just slop produced in parallel."</li>
+        <li>The same decay hits <b>retrieval hops and agent hand-offs</b> alike — which is exactly why graphs stop helping past ~2 hops on the benchmarks in part 01.</li>
+      </ul>
+      <p class="note reveal">Make each node strong before you add another edge. More topology cannot rescue an unreliable step.</p>
+    </div>
+  </section>
+
+  <section class="slide light dense" data-label="The decision table"
+    data-speaker-notes="This is the reference slide people came for, so read the rows and don't over-narrate. The last row is the twist: Amazon reached 94.5% of RAG faithfulness with agentic keyword search and no vector store at all. Close on the framing shift — graphs are turning into one tool an agent picks per query, not the backbone the whole system is built on.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">30</span><div class="crumb"><b>Decide</b> · the table</div></div>
+      <h2 class="reveal">The decision <span class="o">table</span></h2>
+      <table class="tbl reveal">
+        <thead><tr><th>Situation</th><th>Reach for</th></tr></thead>
+        <tbody>
+          <tr><td>Q&amp;A over docs, single-hop</td><td>vector or hybrid RAG. <b>No graph.</b></td></tr>
+          <tr><td>Multi-hop, entity-centric, temporal, auditable</td><td>knowledge graph + hybrid retrieval</td></tr>
+          <tr><td>Cross-session agent memory</td><td>files first; a graph when facts contradict or age</td></tr>
+          <tr><td>Repo context</td><td>agentic grep; a code-graph MCP past ~500 files</td></tr>
+          <tr><td>Agent control flow</td><td>loop first; explicit graph for compliance or repeatability</td></tr>
+          <tr><td>Everything else</td><td>"Keyword search is all you need" — Amazon hit <b>94.5%</b> of RAG faithfulness with <b>zero vector store</b> (AAAI 2026)</td></tr>
+        </tbody>
+      </table>
+      <p class="note reveal">Graphs are becoming <b>one tool the agent picks per query</b>, not the retrieval backbone. Durable niches: multi-hop relationship reasoning, temporal and audit requirements, entity-centric domains — fraud, dependencies, org structures, support.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Recap"
+    data-speaker-notes="Close on the three-part spine and one sentence they can repeat in a design review: ask which graph, then make it beat grep. Name the two things the evidence is unambiguous about — graphs win multi-hop and temporal, and they lose on cost, latency and null queries. Then remind them that the primitives are already installed on their laptop.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">31</span><div class="crumb"><b>Close</b> · recap</div></div>
+      <h2 class="reveal">Which graph — and <span class="o">does it beat grep?</span></h2>
+      <div class="flow reveal" style="margin-bottom:16px">
+        <div class="step">01 evidence</div><div class="arrow">→</div>
+        <div class="step hot">02 Claude Code</div><div class="arrow">→</div>
+        <div class="step">03 decision</div>
+      </div>
+      <div class="cards c3 reveal">
+        <div class="tile"><span class="k">01 Evidence</span><p>Graphs win exactly where you'd predict — <b>multi-hop, temporal, audit</b>. They lose on cost, latency and null queries.</p></div>
+        <div class="tile fill"><span class="k">02 Claude Code</span><p>You already own the primitives: <b>MCP servers, hooks, subagents, workflows.</b> No new framework required for most of it.</p></div>
+        <div class="tile"><span class="k">03 Decision</span><p>Beat the boring baseline first: <b>grep, markdown, the memory tool.</b> Then buy the graph, for the query shape that needs it.</p></div>
+      </div>
+      <p class="note reveal">One sentence to take into a design review: <b>ask which graph, then make it beat grep.</b></p>
+    </div>
+  </section>
+
+  <!-- SOURCES -->
+  <section class="slide light dense" data-label="Sources"
+    data-speaker-notes="Close on sources, series convention: every claim here is date-stamped August 2026 and traceable. Name the flagged ones out loud — the $33,000 cost cliff, the per-repo code-graph numbers, LangGraph's adoption figure, and the Klarna, Uber and Rakuten claims. Point at the skeptics column and say you read those first, deliberately.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">32</span><div class="crumb"><b>Close</b> · sources</div></div>
+      <h2 class="reveal"><span class="o">Sources</span> — all claims dated August 2026</h2>
+      <div class="links reveal" style="grid-template-columns:repeat(4,1fr); gap:var(--space-6)">
+        <div class="linkcol">
+          <h3>Papers</h3>
+          <a href="https://arxiv.org/abs/2404.16130" target="_blank" rel="noopener">From Local to Global: a GraphRAG approach<span class="u">arXiv:2404.16130</span></a>
+          <a href="https://arxiv.org/abs/2502.11371" target="_blank" rel="noopener">RAG vs. GraphRAG: a systematic evaluation<span class="u">arXiv:2502.11371</span></a>
+          <a href="https://arxiv.org/abs/2501.13956" target="_blank" rel="noopener">Zep / Graphiti: a temporal knowledge graph<span class="u">arXiv:2501.13956</span></a>
+          <a href="https://arxiv.org/abs/2404.17723" target="_blank" rel="noopener">LinkedIn customer-service KG-RAG (SIGIR 2024)<span class="u">arXiv:2404.17723</span></a>
+        </div>
+        <div class="linkcol">
+          <h3>Engineering blogs</h3>
+          <a href="https://www.microsoft.com/en-us/research/blog/lazygraphrag-setting-a-new-standard-for-quality-and-cost/" target="_blank" rel="noopener">Microsoft Research — LazyGraphRAG<span class="u">microsoft.com/en-us/research</span></a>
+          <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">Anthropic — effective context engineering<span class="u">anthropic.com/engineering</span></a>
+          <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">Anthropic — building effective agents<span class="u">anthropic.com/engineering</span></a>
+          <a href="https://www.langchain.com/blog/3-years-of-graph-engineering-with-langgraph" target="_blank" rel="noopener">LangChain — 3 years of graph engineering<span class="u">langchain.com/blog</span></a>
+          <a href="https://aider.chat/2023/10/22/repomap.html" target="_blank" rel="noopener">aider — repo map with tree-sitter + PageRank<span class="u">aider.chat</span></a>
+        </div>
+        <div class="linkcol">
+          <h3>Claude Code docs</h3>
+          <a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">MCP servers<span class="u">code.claude.com/docs/en/mcp</span></a>
+          <a href="https://code.claude.com/docs/en/sub-agents" target="_blank" rel="noopener">Sub-agents<span class="u">code.claude.com/docs/en/sub-agents</span></a>
+          <a href="https://code.claude.com/docs/en/workflows" target="_blank" rel="noopener">Workflows<span class="u">code.claude.com/docs/en/workflows</span></a>
+          <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">Memory<span class="u">code.claude.com/docs/en/memory</span></a>
+          <a href="https://code.claude.com/docs/en/checkpointing" target="_blank" rel="noopener">Checkpointing &amp; /rewind<span class="u">code.claude.com/docs/en/checkpointing</span></a>
+        </div>
+        <div class="linkcol">
+          <h3>Skeptics</h3>
+          <a href="https://www.letta.com/blog/benchmarking-ai-agent-memory" target="_blank" rel="noopener">Letta — filesystem memory beats both on LoCoMo<span class="u">letta.com/blog</span></a>
+          <a href="https://essays.bloo-mind.ai/posts/2026-05-20-mem-eval/" target="_blank" rel="noopener">bloo-mind — memory benchmark theatre<span class="u">essays.bloo-mind.ai</span></a>
+          <a href="https://medium.com/graph-praxis" target="_blank" rel="noopener">Graph Praxis — the GraphRAG cost cliff<span class="u">medium.com/graph-praxis</span></a>
+          <a href="https://www.amazon.science/" target="_blank" rel="noopener">Amazon — keyword search is all you need (AAAI 2026)<span class="u">arXiv:2602.23368</span></a>
+        </div>
+      </div>
+      <p class="note reveal">Per-claim citations: <span class="muted">deck09-facts.md</span> (internal research doc, 9 Aug 2026). Flagged ⚠ single-source or vendor-sourced: the <b>$33,000 → $33</b> cost cliff, the per-repo code-graph numbers, LangGraph's ~400-company adoption figure, and the Klarna / Uber / Rakuten claims.</p>
+    </div>
+  </section>
+
+</deck-stage>
+
+<script src="ember_design_system/deck-stage.js"></script>
+<script>
+  /* Re-trigger .reveal animations + restart any <video> on slide change */
+  document.addEventListener('DOMContentLoaded', function () {
+    var ds = document.querySelector('deck-stage');
+    if (!ds) return;
+    ds.addEventListener('slidechange', function (e) {
+      var s = e.detail && e.detail.slide;
+      if (!s) return;
+      s.querySelectorAll('.reveal').forEach(function (el) {
+        el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
+      });
+      var v = s.querySelector('video');
+      if (v) { v.currentTime = 0; var p = v.play(); if (p && p.catch) p.catch(function(){}); }
+    });
+  });
+</script>
+
+<style id="presenter-ui-css">
+  /* ─── Presenter aids (outside <deck-stage>: siblings paint above it) ─── */
+  .pui-controls{
+    position:fixed; right:18px; bottom:18px; z-index:40;
+    display:flex; gap:8px;
+    opacity:0; transition:opacity .25s; pointer-events:none;
+  }
+  body.pui-mouse .pui-controls,
+  .pui-controls:hover,
+  .pui-controls:focus-within{ opacity:1; pointer-events:auto; }
+  .pui-controls button{
+    font:var(--w-semibold) 12px/1 var(--font-mono); letter-spacing:.08em;
+    color:var(--on-dark-muted); background:var(--ink-2);
+    border:1px solid var(--line-dark); border-radius:var(--radius-pill);
+    padding:9px 14px; cursor:pointer;
+  }
+  .pui-controls button:hover{ color:var(--paper); border-color:var(--coral); }
+  .pui-controls kbd{ color:var(--coral); font:inherit; margin-left:6px; }
+  .pui-notes{
+    position:fixed; left:0; right:0; bottom:0; z-index:39;
+    background:var(--ink-2); color:var(--on-dark);
+    border-top:2px solid var(--coral);
+    padding:20px 34px 24px; max-height:38vh; overflow:auto;
+    font:var(--w-regular) clamp(15px,1.6vw,21px)/1.55 var(--font-b, var(--font-body));
+    display:none;
+  }
+  .pui-notes.open{ display:block; }
+  .pui-notes .pui-nhead{
+    font:var(--w-semibold) 12px/1 var(--font-mono); letter-spacing:.12em;
+    text-transform:uppercase; color:var(--coral); margin-bottom:12px;
+  }
+  @media print{ .pui-controls, .pui-notes{ display:none !important; } }
+</style>
+<div class="pui-controls">
+  <button type="button" data-pui="notes">NOTES<kbd>N</kbd></button>
+  <button type="button" data-pui="present">PRESENT<kbd>P</kbd></button>
+  <button type="button" data-pui="fullscreen">FULLSCREEN<kbd>F</kbd></button>
+</div>
+<div class="pui-notes" role="note" aria-live="polite">
+  <div class="pui-nhead"></div>
+  <div class="pui-nbody"></div>
+</div>
+
+<script>
+/* ─── Presenter aids: notes overlay (N), fullscreen (F), presenter window (P) ─── */
+(function(){
+  if (window.self !== window.top) return; /* skip when embedded by a host/viewer */
+  var ds = document.querySelector('deck-stage');
+  var notesEl = document.querySelector('.pui-notes');
+  var nHead = notesEl.querySelector('.pui-nhead');
+  var nBody = notesEl.querySelector('.pui-nbody');
+  var current = 0, presenter = null, mouseT = null;
+
+  function slides(){ return Array.prototype.slice.call(ds.querySelectorAll(':scope > section')); }
+  function noteOf(s){ return s.getAttribute('data-speaker-notes') || 'No notes for this slide.'; }
+  function labelOf(s){ return s.getAttribute('data-label') || ''; }
+
+  /* controls fade in on mouse activity, like the component's own overlay */
+  document.addEventListener('mousemove', function(){
+    document.body.classList.add('pui-mouse');
+    clearTimeout(mouseT);
+    mouseT = setTimeout(function(){ document.body.classList.remove('pui-mouse'); }, 1800);
+  });
+
+  function syncNotes(){
+    var all = slides(), s = all[current];
+    if (!s) return;
+    nHead.textContent = 'Notes · ' + labelOf(s) + ' · ' + (current + 1) + ' / ' + all.length;
+    nBody.textContent = noteOf(s);
+  }
+  function toggleNotes(){ notesEl.classList.toggle('open'); if (notesEl.classList.contains('open')) syncNotes(); }
+
+  function toggleFullscreen(){
+    if (document.fullscreenElement) { document.exitFullscreen(); }
+    else { document.documentElement.requestFullscreen().catch(function(){}); }
+  }
+  /* fullscreen = clean presenting surface: hide the thumbnail rail while in it */
+  var railWasOff = false;
+  document.addEventListener('fullscreenchange', function(){
+    if (document.fullscreenElement) {
+      railWasOff = ds.hasAttribute('no-rail');
+      ds.setAttribute('no-rail', '');
+    } else if (!railWasOff) {
+      ds.removeAttribute('no-rail');
+    }
+  });
+
+  /* ── presenter window: current + next previews, notes, timer, clock ── */
+  function openPresenter(){
+    if (presenter && !presenter.closed) { presenter.focus(); return; }
+    presenter = window.open('', 'deck-presenter', 'width=1200,height=760');
+    if (!presenter) {
+      nHead.textContent = 'Presenter window';
+      nBody.textContent = 'The browser blocked the pop-up — allow pop-ups for this page and press P again.';
+      notesEl.classList.add('open');
+      return;
+    }
+    var pd = presenter.document;
+    pd.open();
+    pd.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Presenter — ' + document.title.replace(/</g,'&lt;') + '</title><base href="' + document.baseURI + '"></head><body></body></html>');
+    pd.close();
+    /* carry the deck's stylesheets + tokens over so slide clones render 1:1 */
+    document.head.querySelectorAll('link[rel="stylesheet"], link[rel="preconnect"], style').forEach(function(el){
+      var c = pd.importNode(el, true);
+      if (el.tagName === 'LINK' && el.href) c.setAttribute('href', el.href);
+      pd.head.appendChild(c);
+    });
+    var st = pd.createElement('style');
+    st.textContent =
+      '*,*::before,*::after{animation:none !important;transition:none !important}' +
+      'html,body{margin:0;height:100%;background:#0e0c08;color:var(--on-dark);font-family:var(--font-m,monospace);overflow:hidden}' +
+      '.pw{display:grid;grid-template-rows:52px 1fr;height:100%}' +
+      '.pw-bar{display:flex;align-items:center;gap:22px;padding:0 20px;border-bottom:1px solid var(--line-dark);font-size:13px;letter-spacing:.06em;color:var(--on-dark-muted)}' +
+      '.pw-bar .cnt{color:var(--coral);font-weight:700;font-size:16px}' +
+      '.pw-bar .lbl{color:var(--paper);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}' +
+      '.pw-bar .tmr{cursor:pointer}.pw-bar .tmr b{color:var(--paper)}' +
+      '.pw-bar button{font:inherit;color:var(--on-dark-muted);background:none;border:1px solid var(--line-dark);border-radius:6px;padding:5px 12px;cursor:pointer}' +
+      '.pw-bar button:hover{color:var(--paper);border-color:var(--coral)}' +
+      '.pw-main{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:14px;padding:14px;min-height:0}' +
+      '.pw-col{display:grid;grid-template-rows:auto 1fr;min-height:0;gap:8px}' +
+      '.pw-col.right{grid-template-rows:auto auto auto minmax(0,1fr)}' +
+      '.pw-cap{font-size:11px;letter-spacing:.14em;color:var(--on-dark-faint);text-transform:uppercase}' +
+      '.pw-box{position:relative;min-height:0;overflow:hidden;border:1px solid var(--line-dark);border-radius:8px;background:#000}' +
+      '.pw-canvas{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;background:var(--paper)}' +
+      '.pw-canvas > section{width:1920px;height:1080px;position:relative;overflow:hidden}' +
+      '.pw-notes{overflow:auto;font-family:var(--font-b,sans-serif);font-size:19px;line-height:1.55;color:var(--on-dark);padding-right:6px}';
+    pd.head.appendChild(st);
+    pd.body.innerHTML =
+      '<div class="pw">' +
+        '<div class="pw-bar">' +
+          '<span class="cnt"></span><span class="lbl"></span>' +
+          '<span class="tmr" title="click to reset">elapsed <b class="el">00:00</b></span>' +
+          '<span>clock <b class="ck"></b></span>' +
+          '<button data-nav="-1">‹ prev</button><button data-nav="1">next ›</button>' +
+        '</div>' +
+        '<div class="pw-main">' +
+          '<div class="pw-col"><div class="pw-cap">Current</div><div class="pw-box" id="pwCur"><div class="pw-canvas"></div></div></div>' +
+          '<div class="pw-col right"><div class="pw-cap">Next</div><div class="pw-box" id="pwNext" style="aspect-ratio:16/9;min-height:120px"><div class="pw-canvas"></div></div>' +
+          '<div class="pw-cap" style="margin-top:6px">Notes</div><div class="pw-notes"></div></div>' +
+        '</div>' +
+      '</div>';
+
+    var t0 = Date.now();
+    function two(n){ return (n < 10 ? '0' : '') + n; }
+    function tick(){
+      if (presenter.closed) return;
+      var el = Math.floor((Date.now() - t0) / 1000);
+      pd.querySelector('.el').textContent = two(Math.floor(el / 60)) + ':' + two(el % 60);
+      var d = new Date();
+      pd.querySelector('.ck').textContent = two(d.getHours()) + ':' + two(d.getMinutes());
+      presenter.setTimeout(tick, 1000);
+    }
+    tick();
+    pd.querySelector('.tmr').addEventListener('click', function(){ t0 = Date.now(); });
+
+    function fit(boxId){
+      var box = pd.getElementById(boxId), cv = box.querySelector('.pw-canvas');
+      var k = Math.min(box.clientWidth / 1920, box.clientHeight / 1080);
+      cv.style.transform = 'scale(' + k + ')';
+      cv.style.left = ((box.clientWidth - 1920 * k) / 2) + 'px';
+      cv.style.top = ((box.clientHeight - 1080 * k) / 2) + 'px';
+    }
+    function fill(boxId, slide){
+      var cv = pd.getElementById(boxId).querySelector('.pw-canvas');
+      cv.textContent = '';
+      if (slide) {
+        var c = pd.importNode(slide, true);
+        c.setAttribute('data-deck-active', '');
+        cv.appendChild(c);
+      }
+      fit(boxId);
+    }
+    presenter.__update = function(i){
+      var all = slides(), s = all[i];
+      if (!s) return;
+      var next = i + 1;
+      while (next < all.length && all[next].hasAttribute('data-deck-skip')) next++;
+      fill('pwCur', s);
+      fill('pwNext', all[next] || null);
+      pd.querySelector('.cnt').textContent = (i + 1) + ' / ' + all.length;
+      pd.querySelector('.lbl').textContent = labelOf(s) + (all[next] ? '   →   next: ' + labelOf(all[next]) : '   ·   last slide');
+      pd.querySelector('.pw-notes').textContent = noteOf(s);
+    };
+    presenter.addEventListener('resize', function(){ fit('pwCur'); fit('pwNext'); });
+    pd.addEventListener('keydown', function(e){
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); ds.next(); }
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); ds.prev(); }
+      else if (e.key === 'Home') { ds.goTo(0); }
+      else if (e.key === 'End') { ds.goTo(slides().length - 1); }
+    });
+    pd.querySelectorAll('[data-nav]').forEach(function(b){
+      b.addEventListener('click', function(){ this.dataset.nav === '1' ? ds.next() : ds.prev(); });
+    });
+    presenter.__update(current);
+  }
+
+  ds.addEventListener('slidechange', function(e){
+    current = e.detail.index;
+    if (notesEl.classList.contains('open')) syncNotes();
+    if (presenter && !presenter.closed && presenter.__update) presenter.__update(current);
+  });
+
+  document.addEventListener('keydown', function(e){
+    var t = e.target;
+    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = e.key.toLowerCase();
+    if (k === 'n') { toggleNotes(); }
+    else if (k === 'f') { toggleFullscreen(); }
+    else if (k === 'p') { openPresenter(); }
+  });
+  document.querySelector('[data-pui="notes"]').addEventListener('click', toggleNotes);
+  document.querySelector('[data-pui="fullscreen"]').addEventListener('click', toggleFullscreen);
+  document.querySelector('[data-pui="present"]').addEventListener('click', openPresenter);
+})();
+</script>
+</body>
+</html>

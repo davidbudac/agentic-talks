@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Claude Design — describe it, see it, ship it</title>
+
+<!-- Fonts: Space Grotesk (display) + IBM Plex Sans (body) + IBM Plex Mono (mono) — Ember design system -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+
+<link rel="stylesheet" href="ember_design_system/styles.css">
+<style>deck-stage:not(:defined){visibility:hidden}</style>
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   Claude Design (deck 08) — Ember design system, token-driven.
+   Fixed 1920×1080 canvas: sizes are px, colours/spacing are tokens.
+   ═══════════════════════════════════════════════════════════════════ */
+:root{
+  --ease:cubic-bezier(.16,1,.3,1);
+  --font-d:var(--font-display); --font-b:var(--font-body); --font-m:var(--font-mono);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--ink);color:var(--text-strong);font-family:var(--font-body)}
+
+/* ── SLIDE FRAME + local type scale ──────────────────────────────── */
+.slide{
+  display:flex; flex-direction:column; overflow:hidden;
+  font-family:var(--font-body); -webkit-font-smoothing:antialiased;
+  --pad-x:var(--slide-pad-x); --pad-t:var(--slide-pad-top); --pad-b:var(--slide-pad-bottom);
+  --h2-size:var(--fs-h2); --h3-size:34px; --lead-size:34px;
+  --body-size:26px; --small-size:20px; --code-size:20px;
+  --gap:28px; --content-gap:var(--gap); --diag-h:440px;
+}
+.slide.dense{
+  --pad-x:88px; --pad-t:var(--slide-pad-top-dense); --pad-b:var(--slide-pad-bottom-dense);
+  --h2-size:var(--fs-h2-sm); --h3-size:30px; --lead-size:30px;
+  --body-size:23px; --small-size:18px; --code-size:18px; --gap:20px; --diag-h:400px;
+}
+.slide.tight{
+  --pad-x:76px; --pad-t:60px; --pad-b:52px;
+  --h2-size:46px; --h3-size:27px; --lead-size:27px;
+  --body-size:21px; --small-size:16px; --code-size:16px; --gap:14px; --diag-h:340px;
+}
+.slide-content{
+  flex:1; min-height:0; display:flex; flex-direction:column; justify-content:center;
+  padding:var(--pad-t) var(--pad-x) var(--pad-b); overflow:hidden; position:relative; z-index:1;
+}
+
+/* ── SCHEMES — Ember light/dark rhythm. Every component reads --s-*. ─ */
+.slide,.slide.light{
+  --s-bg:var(--paper); --s-text:var(--text-strong); --s-muted:var(--text-muted); --s-faint:var(--text-faint);
+  --s-line:var(--line-light-2); --s-line-strong:var(--line-light);
+  --s-card-bg:var(--paper-2); --s-card-border:var(--line-card); --s-box-mid:var(--paper-3);
+  --s-outer-fill:var(--coral-soft); --s-callout-bg:var(--coral-soft);
+  --s-accent:var(--coral-ink); --s-bar:var(--bar);
+  background:var(--s-bg); color:var(--s-text);
+}
+.slide.dark{
+  --s-bg:var(--ink); --s-text:var(--on-dark); --s-muted:var(--on-dark-muted); --s-faint:var(--on-dark-faint);
+  --s-line:var(--line-dark-2); --s-line-strong:var(--line-dark);
+  --s-card-bg:var(--ink-2); --s-card-border:var(--line-dark); --s-box-mid:var(--ink-2);
+  --s-outer-fill:rgba(255,92,53,.10); --s-callout-bg:rgba(255,92,53,.10);
+  --s-accent:var(--coral); --s-bar:var(--bar-dark);
+  background:var(--s-bg); color:var(--s-text);
+}
+
+/* ── HEADER ──────────────────────────────────────────────────────── */
+.slide-head{
+  display:flex; align-items:baseline; justify-content:space-between; gap:var(--space-5);
+  margin-bottom:var(--gap); border-bottom:var(--bw-hair) solid var(--s-line); padding-bottom:18px;
+}
+.snum{font:var(--w-bold) 48px/1 var(--font-display); color:var(--s-accent); letter-spacing:var(--track-snug)}
+.crumb{font:var(--w-medium) var(--small-size)/1.2 var(--font-mono); letter-spacing:var(--track-eyebrow);
+  text-transform:uppercase; color:var(--s-muted); text-align:right}
+.crumb b{color:var(--s-accent); font-weight:var(--w-semibold)}
+
+/* ── TYPE ────────────────────────────────────────────────────────── */
+h2{font-family:var(--font-display); font-weight:var(--w-bold); font-size:var(--h2-size);
+  line-height:var(--lh-snug); letter-spacing:var(--track-snug); margin-bottom:22px; color:var(--s-text); text-wrap:balance}
+h2 .o{color:var(--s-accent)}
+h3{font-family:var(--font-display); font-weight:var(--w-bold); font-size:var(--h3-size);
+  line-height:var(--lh-snug); letter-spacing:var(--track-snug); color:var(--s-text)}
+.lead{font-size:var(--lead-size); line-height:1.45; max-width:48ch; color:var(--s-text); text-wrap:pretty}
+.lead b{color:var(--s-accent)}
+.muted{color:var(--s-muted)}
+strong,b{font-weight:var(--w-semibold)}
+
+ul.bul{list-style:none; display:flex; flex-direction:column; gap:20px; max-width:68ch}
+ul.bul li{font-size:var(--body-size); line-height:1.45; padding-left:1.55em; position:relative;
+  color:var(--s-text); text-wrap:pretty}
+ul.bul li::before{content:""; position:absolute; left:0; top:.44em; width:.6em; height:.6em;
+  background:var(--s-accent); clip-path:polygon(0 0,100% 50%,0 100%)}
+ul.bul li b{color:var(--s-text); font-weight:var(--w-semibold)}
+
+.note{font-size:var(--small-size); color:var(--s-muted); margin-top:20px; line-height:1.45; text-wrap:pretty}
+.note b{color:var(--s-text); font-weight:var(--w-semibold)}
+
+/* ── CARDS / TILES ───────────────────────────────────────────────── */
+.cards{display:grid; gap:var(--space-5)}
+.cards.c3{grid-template-columns:repeat(3,1fr)}
+.cards.c2,.cards.c4{grid-template-columns:repeat(2,1fr)}
+.tile{border:var(--bw) solid var(--s-card-border); border-radius:var(--radius-lg);
+  padding:30px 32px; background:var(--s-card-bg); display:flex; flex-direction:column; gap:10px}
+.tile .k{font-family:var(--font-display); font-weight:var(--w-bold); color:var(--s-accent);
+  font-size:30px; letter-spacing:var(--track-snug)}
+.tile p{font-size:var(--body-size); line-height:1.4; color:var(--s-text); text-wrap:pretty}
+.tile.fill{background:var(--s-callout-bg); border-color:var(--s-card-border);
+  border-left:var(--bw-callout) solid var(--coral); border-radius:0 var(--radius-lg) var(--radius-lg) 0}
+
+.kcard{background:var(--s-callout-bg); color:var(--s-text); border:var(--bw) solid var(--s-card-border);
+  border-left:var(--bw-callout) solid var(--coral); border-radius:0 var(--radius-xl) var(--radius-xl) 0;
+  padding:40px 44px; position:relative; overflow:hidden}
+.slide.dark .kcard{box-shadow:var(--ring-accent-dark)}
+.kcard .big{font-family:var(--font-display); font-weight:var(--w-bold); color:var(--s-accent);
+  font-size:56px; line-height:1.02; letter-spacing:var(--track-snug)}
+.kcard p{font-size:var(--body-size); line-height:1.42; margin-top:14px; max-width:50ch; color:var(--s-text)}
+
+.split{display:grid; grid-template-columns:1fr 1fr; gap:var(--space-8); align-items:center; min-height:0}
+
+/* ── TABLES ──────────────────────────────────────────────────────── */
+table.tbl{width:100%; border-collapse:collapse; font-size:var(--body-size)}
+table.tbl th,table.tbl td{text-align:left; padding:16px 20px; border-bottom:var(--bw-hair) solid var(--s-line)}
+table.tbl th{font-family:var(--font-mono); color:var(--s-accent); font-weight:var(--w-semibold);
+  font-size:var(--small-size); letter-spacing:var(--track-label); text-transform:uppercase}
+table.tbl td{color:var(--s-text)}
+table.tbl td b{color:var(--s-text); font-weight:var(--w-semibold)}
+table.tbl tr:last-child td{border-bottom:none}
+
+/* ── CHIPS ───────────────────────────────────────────────────────── */
+.extag{display:inline-block; font-family:var(--font-mono); font-size:var(--small-size); color:var(--s-accent);
+  background:var(--s-callout-bg); border:var(--bw-hair) solid var(--s-card-border);
+  padding:4px 14px; border-radius:var(--radius-sm); margin-bottom:12px; letter-spacing:var(--track-label);
+  text-transform:uppercase}
+.pills{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px}
+.pill{font-family:var(--font-mono); border:var(--bw-hair) solid var(--coral); color:var(--s-accent);
+  border-radius:var(--radius-pill); padding:4px 16px; font-size:var(--small-size);
+  font-weight:var(--w-semibold); letter-spacing:var(--track-label); white-space:nowrap}
+.pill.live{background:var(--coral); color:var(--ink); border-color:var(--coral)}
+
+/* ── CODE ────────────────────────────────────────────────────────── */
+.code{background:var(--code-bg); border:var(--bw) solid var(--s-line); border-left:3px solid var(--coral);
+  border-radius:var(--radius-lg); padding:24px 28px; font-family:var(--font-mono);
+  font-size:var(--code-size); line-height:var(--lh-mono); overflow:hidden; color:var(--code-text);
+  white-space:pre-wrap}
+.code .c{color:var(--code-comment)}
+.code .o{color:var(--code-keyword)}
+.code .g{color:var(--code-string)}
+.code .b{color:var(--code-number)}
+.code .d{color:var(--code-keyword)}
+
+/* ── SECTION DIVIDER ─────────────────────────────────────────────── */
+.divider .slide-content{align-items:flex-start; justify-content:center; text-align:left}
+.divider .dnum{font:var(--w-bold) var(--fs-mega)/var(--lh-tight) var(--font-display);
+  color:var(--coral); letter-spacing:var(--track-tight); margin-bottom:10px}
+.divider h2{font-size:var(--fs-h1)}
+.divider h2::after{content:""; display:block; width:var(--accent-bar-w); height:var(--bw-accent);
+  background:var(--coral); border-radius:var(--radius-bar); margin:.45em 0 .1em}
+.divider .dsub{color:var(--s-muted); font-size:var(--fs-body-lg); max-width:42ch;
+  margin-top:18px; line-height:var(--lh-body)}
+.divider .dsub b{color:var(--s-text); font-weight:var(--w-semibold)}
+
+/* ── GLOSSARY / USES ─────────────────────────────────────────────── */
+.gloss{display:grid; grid-template-columns:1fr 1fr; gap:4px 44px}
+.gloss .row{display:flex; gap:18px; align-items:baseline; padding:12px 0;
+  border-bottom:var(--bw-hair) solid var(--s-line)}
+.gloss .term{font-family:var(--font-display); font-weight:var(--w-semibold); color:var(--s-accent);
+  font-size:var(--body-size); min-width:6.2em; flex-shrink:0; letter-spacing:var(--track-snug)}
+.gloss .def{font-size:var(--body-size); color:var(--s-text); line-height:1.35}
+.uses{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-5)}
+
+/* ── DIAGRAMS (pure HTML/CSS boxes — no video assets in this deck) ── */
+.diagram{width:100%; display:flex; justify-content:center; align-items:center; margin-top:8px; min-height:0}
+.diagram svg{width:100%; height:auto; max-height:var(--diag-h)}
+.dg-box{fill:var(--s-card-bg); stroke:var(--s-card-border); stroke-width:1.5}
+.dg-box.hot{fill:var(--coral); stroke:var(--coral)}
+.dg-box.outer{fill:var(--s-outer-fill); stroke:var(--coral); stroke-dasharray:6 5}
+.dg-box.mid{fill:var(--s-box-mid); stroke:var(--s-card-border)}
+.dg-t{fill:var(--s-text); font-family:var(--font-body); font-weight:var(--w-semibold)}
+.dg-t.on{fill:var(--ink)}
+.dg-t.mut{fill:var(--s-muted); font-weight:var(--w-medium)}
+.dg-t.acc{fill:var(--s-accent); font-family:var(--font-mono); font-weight:var(--w-semibold)}
+.dg-line{stroke:var(--s-accent); stroke-width:2.5; fill:none}
+.dg-line.dim{stroke:var(--s-line-strong); stroke-width:1.5}
+.dg-cap{text-align:center; font-size:var(--small-size); color:var(--s-muted); margin-top:10px}
+.dg-cap b{color:var(--s-text)}
+.diagram marker path{fill:var(--s-accent)}
+
+/* flow: HTML/CSS step chain used instead of video diagrams */
+.flow{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+.flow .step{border:var(--bw) solid var(--s-card-border); background:var(--s-card-bg); border-radius:var(--radius-md);
+  padding:16px 20px; font-family:var(--font-mono); font-size:var(--small-size); color:var(--s-text); text-align:center; min-width:120px}
+.flow .step.hot{background:var(--s-callout-bg); border-color:var(--coral); color:var(--s-accent); font-weight:var(--w-semibold)}
+.flow .arrow{color:var(--s-faint); font-size:22px}
+
+/* ── DEMO / FALLBACK ─────────────────────────────────────────────── */
+.demo-badge{display:inline-flex; align-items:center; gap:8px; font-family:var(--font-mono); font-weight:var(--w-bold);
+  font-size:var(--small-size); letter-spacing:var(--track-label); text-transform:uppercase; color:var(--coral);
+  border:var(--bw) solid var(--coral); border-radius:var(--radius-pill); padding:6px 18px 6px 14px; margin-bottom:16px}
+.demo-badge::before{content:"\1F534"; font-size:.85em}
+.fallback-box{border:2px dashed var(--s-card-border); border-radius:var(--radius-lg); background:var(--s-card-bg);
+  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; padding:40px; min-height:0}
+.fallback-box .fb-icon{font-family:var(--font-mono); font-size:64px; color:var(--s-faint)}
+.fallback-box .fb-caption{font-family:var(--font-mono); font-size:var(--small-size); color:var(--s-muted); text-align:center; max-width:48ch}
+
+/* ── WIP badge (title slide) ─────────────────────────────────────── */
+.wip-badge{display:inline-flex; align-items:center; gap:10px; font-family:var(--font-mono); font-weight:700;
+  font-size:16px; letter-spacing:.14em; text-transform:uppercase; color:var(--coral);
+  border:1.5px solid var(--coral); border-radius:var(--radius-pill); padding:6px 18px; margin-bottom:20px}
+
+/* ── TITLE SLIDE ─────────────────────────────────────────────────── */
+.title-slide{display:flex; flex-direction:column; justify-content:space-between; background:var(--ink);
+  padding:88px 96px 0}
+.ts-top{display:flex; justify-content:space-between; align-items:baseline; font:600 var(--fs-eyebrow) var(--font-mono);
+  letter-spacing:var(--track-eyebrow); text-transform:uppercase}
+.ts-top .k{color:var(--coral)}
+.ts-top .meta{color:var(--on-dark-faint); font-weight:500}
+.ts-hero h1{font-family:var(--font-display); font-weight:var(--w-bold); letter-spacing:-.035em; line-height:.94;
+  color:var(--on-dark); font-size:132px}
+.ts-hero h1 .dot{color:var(--coral)}
+.ts-sub{font-size:34px; color:var(--on-dark-muted); margin-top:36px; font-weight:400; max-width:34ch}
+.ts-sub b{color:var(--on-dark); font-weight:600}
+.ts-foot{border-top:var(--bw-hair) solid var(--line-dark); margin:0 -96px; padding:34px 96px 40px;
+  display:flex; justify-content:space-between; align-items:center}
+.ts-author{font-size:26px; color:var(--on-dark-muted)}
+.ts-author a{color:inherit;text-decoration:none;border-bottom:1px solid transparent;transition:border-color .15s}
+.ts-author a:hover{border-color:currentColor}
+.ts-author b{color:var(--coral); font-weight:var(--w-semibold)}
+.ts-loopline{font:500 24px var(--font-mono); letter-spacing:.04em; color:var(--on-dark-faint)}
+.ts-loopline .a{color:var(--coral)}
+.ts-loopline .w{color:var(--on-dark-muted)}
+
+/* ── CLOSING ─────────────────────────────────────────────────────── */
+.thanks{font-family:var(--font-display); font-weight:var(--w-bold); font-size:104px; line-height:.98;
+  letter-spacing:var(--track-tight); color:var(--s-text)}
+.thanks .o{color:var(--s-accent)}
+.links{display:grid; grid-template-columns:1fr 1fr; gap:var(--space-7)}
+.linkcol h3{color:var(--s-accent); font-family:var(--font-display); font-weight:var(--w-semibold);
+  margin-bottom:12px; font-size:26px; letter-spacing:var(--track-snug)}
+.linkcol a{display:block; color:var(--s-text); text-decoration:none; font-size:19px; line-height:1.3;
+  padding:6px 0; border-bottom:var(--bw-hair) solid var(--s-line)}
+.linkcol a:hover{color:var(--s-accent)}
+.linkcol a .u{display:block; color:var(--s-muted); font-family:var(--font-mono); font-size:.8em; margin-top:.08em}
+
+/* ── ENTRANCE MOTION ─────────────────────────────────────────────── */
+@keyframes ae-rise{from{opacity:0; transform:translateY(22px)} to{opacity:1; transform:none}}
+@media (prefers-reduced-motion:no-preference){
+  [data-deck-active] .reveal{animation:ae-rise .5s var(--ease) both}
+  [data-deck-active] .reveal:nth-child(2){animation-delay:.07s}
+  [data-deck-active] .reveal:nth-child(3){animation-delay:.14s}
+  [data-deck-active] .reveal:nth-child(4){animation-delay:.21s}
+  [data-deck-active] .reveal:nth-child(n+5){animation-delay:.27s}
+  [data-deck-active] .title-slide>*{animation:ae-rise .8s var(--ease) both}
+  [data-deck-active] .title-slide>.ts-hero{animation-delay:.15s}
+  [data-deck-active] .title-slide>.ts-foot{animation-delay:.3s}
+}
+</style>
+</head>
+<body>
+
+<!--
+  ============================================================
+  Claude Design — a ~30-minute product deep dive, deck 08 in
+  the series. The full tour of Anthropic Labs' visual-creation
+  tool, teased in two slides of The AI Toolbox (deck 01).
+  No coding or design background assumed — any paid Claude
+  plan. Three parts:
+  01 what it is (the map: interface, starting points, the
+  design-system feature, plans & usage), 02 how to work it
+  (the craft: the loop, briefing, the three refinement
+  channels, example briefs, a live demo, pitfalls),
+  03 from canvas to shipped (sharing, exports, the Claude
+  Code handoff round trip).
+  Facts verified July 2026 against the Anthropic announcement,
+  the product page and the Claude Help Center — see the
+  closing Sources slide.
+  Status: WIP / DRAFT — flagged on the title slide.
+  Runs on the Ember deck-stage component: ←/→, Space, Home/End,
+  number keys; R resets; speaker notes live on each section.
+  ============================================================
+-->
+
+<deck-stage width="1920" height="1080">
+
+  <!-- TITLE -->
+  <section class="slide dark title-slide" data-label="Title"
+    data-speaker-notes="Open with the promise: by the end of this half hour everyone in the room can open Claude Design and get something on-brand out of it. Name the audience explicitly — no design background, no code, any paid Claude plan. If they saw The AI Toolbox, this is the full tour behind those two teaser slides. Flag the WIP badge and ask for pushback on the examples especially.">
+    <div class="ts-top"><span class="k">Deep dive · product tour · ~30 min</span><span class="meta">Internal talk · July 2026</span></div>
+    <div class="ts-hero">
+      <div class="wip-badge">WIP — draft</div>
+      <h1>Claude Design<span class="dot">.</span></h1>
+      <p class="ts-sub">Describe it, <b>see it</b>, ship it — and how to make everything it makes look like <b>your brand</b>, not like AI.</p>
+    </div>
+    <div class="ts-foot">
+      <div class="ts-author"><a href="https://davidbudac.cz" target="_blank" rel="noopener">David&nbsp;Budáč</a></div>
+      <div class="ts-loopline"><span class="w">describe</span> <span class="a">→</span> <span class="w">refine</span> <span class="a">→</span> <span class="w">ship</span></div>
+    </div>
+  </section>
+
+  <!-- AGENDA -->
+  <section class="slide light" data-label="Agenda"
+    data-speaker-notes="Fifteen seconds: three parts. The map — what it is and where the brand feature fits. The craft — how to actually drive it, with example briefs you can steal and a live build. Then shipping — sharing, exports, and the handoff to Claude Code. Say that part 02 is the reason this deck exists: everyone has seen a demo, few have seen a method. Point at the July 2026 date stamp — it's a beta, details move.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">2</span><div class="crumb"><b>Agenda</b></div></div>
+      <h2 class="reveal">Three parts, <span class="o">half an hour</span></h2>
+      <table class="tbl reveal">
+        <thead><tr><th>Part</th><th>Topic</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td><b>01</b></td><td>What it is</td><td>the map — interface, inputs, the brand feature</td></tr>
+          <tr><td><b>02</b></td><td>How to work it</td><td><b>the craft</b> · example briefs · live demo</td></tr>
+          <tr><td><b>03</b></td><td>From canvas to shipped</td><td>sharing, exports, Claude Code handoff</td></tr>
+        </tbody>
+      </table>
+      <p class="note reveal">Claude Design is a <b>beta</b> — all product claims are date-stamped <b>July 2026</b> and sourced on the closing slide.</p>
+    </div>
+  </section>
+
+  <!-- ============ PART 01 — WHAT IT IS ============ -->
+  <section class="slide dark divider" data-label="01 What it is"
+    data-speaker-notes="Set up the part in one breath: before the craft, the map. Four questions — what is it, what does it make, what can you feed it, and what does it cost you. Plus the one feature that separates it from every deck generator on the market: it learns your brand.">
+    <div class="slide-content">
+      <div class="dnum reveal">01</div>
+      <h2 class="reveal">What <span class="o">it is</span></h2>
+      <p class="dsub reveal">The map before the craft: the canvas, what it makes, what you can feed it — and the <b>brand feature</b> that sets it apart.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Claude Design in one slide"
+    data-speaker-notes="The elevator version. You describe what you want, Claude builds a working first version on a canvas, and you refine it by talking, commenting or editing directly. From Anthropic Labs — same stable as Cowork — launched April 17, 2026, a million users in the first week, still a beta. Under the hood it runs a frontier Claude model building real HTML, which is exactly why the outputs can be interactive and why the Claude Code handoff later works. Mention it launched on Opus 4.7 — the model behind it upgrades over time.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">3</span><div class="crumb"><b>What it is</b> · in one slide</div></div>
+      <h2 class="reveal">Describe it — <span class="o">see it</span></h2>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>Describe what you want → Claude builds a <b>working first version</b> → refine by <b>chatting, commenting, or editing directly</b>.</li>
+          <li>From <b>Anthropic Labs</b> — launched <b>April 17, 2026</b>, <b>1M+ users in week one</b>, still officially a <b>beta</b>.</li>
+          <li>Built for people <b>without</b> a design background — the model does the layout, typography and color work.</li>
+          <li>Lives at <b>claude.ai/design</b> (web &amp; desktop app — no mobile yet).</li>
+        </ul>
+        <div class="kcard reveal">
+          <div class="big">It builds<br>real HTML</div>
+          <p>Under the canvas, a frontier Claude model (Opus 4.7 at launch) writes <b>actual working code</b> — which is why outputs can be interactive, and why the <b>Claude Code handoff</b> in part 03 works.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="The interface"
+    data-speaker-notes="One picture: chat on the left, canvas on the right. You talk on the left; the artifact lives on the right and you can reach into it — click an element to leave an inline comment, or grab it and edit directly. That two-pane split is the whole mental model: conversation drives structure, the canvas takes the detail work. Everything in part 02 is about choosing which pane to use when.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">4</span><div class="crumb"><b>What it is</b> · the interface</div></div>
+      <h2 class="reveal">Chat left, <span class="o">canvas right</span></h2>
+      <div class="diagram reveal">
+        <svg viewBox="0 0 1300 430" xmlns="http://www.w3.org/2000/svg">
+          <defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
+          <!-- chat pane -->
+          <rect class="dg-box" x="40" y="40" width="420" height="350" rx="14"/>
+          <text class="dg-t acc" x="250" y="86" text-anchor="middle" font-size="24">CHAT</text>
+          <text class="dg-t" x="250" y="150" text-anchor="middle" font-size="24">"Build a one-pager</text>
+          <text class="dg-t" x="250" y="184" text-anchor="middle" font-size="24">for the Q3 launch…"</text>
+          <text class="dg-t mut" x="250" y="260" text-anchor="middle" font-size="22">briefs · structural changes</text>
+          <text class="dg-t mut" x="250" y="294" text-anchor="middle" font-size="22">"try a different approach"</text>
+          <!-- arrows -->
+          <path class="dg-line" d="M475 160 H575" marker-end="url(#arr)"/>
+          <path class="dg-line" d="M575 280 H475" marker-end="url(#arr)"/>
+          <text class="dg-t acc" x="525" y="140" text-anchor="middle" font-size="20">build</text>
+          <text class="dg-t acc" x="525" y="320" text-anchor="middle" font-size="20">refine</text>
+          <!-- canvas pane -->
+          <rect class="dg-box outer" x="590" y="40" width="670" height="350" rx="14"/>
+          <text class="dg-t acc" x="925" y="86" text-anchor="middle" font-size="24">CANVAS — the working design</text>
+          <rect class="dg-box mid" x="630" y="115" width="590" height="90" rx="10"/>
+          <text class="dg-t" x="925" y="168" text-anchor="middle" font-size="23">click an element → inline comment</text>
+          <rect class="dg-box mid" x="630" y="225" width="285" height="130" rx="10"/>
+          <text class="dg-t" x="772" y="285" text-anchor="middle" font-size="23">drag, resize,</text>
+          <text class="dg-t" x="772" y="318" text-anchor="middle" font-size="23">edit text directly</text>
+          <rect class="dg-box hot" x="935" y="225" width="285" height="130" rx="10"/>
+          <text class="dg-t on" x="1077" y="285" text-anchor="middle" font-size="23">sliders &amp; controls</text>
+          <text class="dg-t on" x="1077" y="318" text-anchor="middle" font-size="23">spacing · color · layout</text>
+        </svg>
+      </div>
+      <p class="dg-cap reveal"><b>Two panes, one rule:</b> the conversation drives structure, the canvas takes the detail work.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="What it makes"
+    data-speaker-notes="The range, with the surprise saved for the callout. The expected list: decks, one-pagers, landing pages, marketing collateral. The less expected: product wireframes, mockups and genuinely interactive prototypes — clickable flows a stakeholder can drive. And because it writes real code, prototypes can carry voice, video, shaders and 3D — things no slide tool produces. Design explorations deserve a mention: ask for four directions and compare, instead of committing to the first idea.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">5</span><div class="crumb"><b>What it is</b> · what it makes</div></div>
+      <h2 class="reveal">Decks to <span class="o">working prototypes</span></h2>
+      <div class="cards c3 reveal">
+        <div class="tile"><span class="k">Decks &amp; one-pagers</span><p>Pitch decks, presentations, briefs — the classic "I need slides by Thursday."</p></div>
+        <div class="tile"><span class="k">Pages &amp; collateral</span><p>Landing pages, social assets, campaign material — marketing without the queue.</p></div>
+        <div class="tile"><span class="k">Wireframes &amp; mockups</span><p>Product screens to react to — before engineering spends a sprint on them.</p></div>
+        <div class="tile"><span class="k">Interactive prototypes</span><p><b>Clickable</b> flows without writing code — stakeholders drive it, not squint at it.</p></div>
+        <div class="tile"><span class="k">Design explorations</span><p>"Show me four directions" — compare side by side instead of marrying idea #1.</p></div>
+        <div class="tile fill"><span class="k">Beyond slideware</span><p>Because it writes real code: prototypes with <b>voice, video, shaders &amp; 3D</b>.</p></div>
+      </div>
+      <p class="note reveal">One tool, one skill to learn — the same <b>describe → refine</b> loop drives every output type.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Four ways to start"
+    data-speaker-notes="You rarely start from a blank page. Four entry points: describe it in text; upload the Word, PowerPoint or Excel file you already have — the ugly quarterly deck goes in, a designed one comes out; capture a website — yours for a brand baseline or a competitor's for reference; or point it at a codebase, which is where product teams start for production-shaped prototypes. The note is the practical warning from early users: attach the relevant subdirectory, not the whole monorepo — giant repos make it lag.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">6</span><div class="crumb"><b>What it is</b> · starting points</div></div>
+      <h2 class="reveal">Four ways to <span class="o">start</span></h2>
+      <div class="cards c4 reveal">
+        <div class="tile"><span class="k">Describe it</span><p>A text brief in chat — the blank-page start. Part 02 shows how to write a good one.</p></div>
+        <div class="tile"><span class="k">Upload a file</span><p><b>DOCX, PPTX, XLSX</b> — the existing ugly deck or doc goes in, a designed version comes out.</p></div>
+        <div class="tile"><span class="k">Capture a website</span><p>Point the web tool at a site — your own as a brand baseline, or a competitor's as reference.</p></div>
+        <div class="tile"><span class="k">Point at a codebase</span><p>Claude reads your components &amp; patterns — prototypes come out <b>production-shaped</b>.</p></div>
+      </div>
+      <p class="note reveal">Codebase tip from early users: attach the <b>relevant subdirectory</b>, not the whole monorepo — very large repos cause lag.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="It knows your brand"
+    data-speaker-notes="The differentiator slide — spend time here. The universal complaint about AI visuals is that they look like AI. Claude Design's answer: projects automatically inherit your organisation's design system — colors, fonts, components — with nothing to configure per project. Where does the design system come from? Setup reads your codebase and design files; or you push one explicitly with the /design-sync command in Claude Code, from a GitHub repo, design files or a local checkout. And the detail that makes it stick: Claude checks its own output against the design system and corrects deviations before you ever see them. It's not a filter, it's a reviewer.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">7</span><div class="crumb"><b>What it is</b> · the headline feature</div></div>
+      <h2 class="reveal">It knows <span class="o">your brand</span></h2>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>Every project <b>automatically inherits your organisation's design system</b> — colors, typography, components. Nothing to configure per project.</li>
+          <li>Feed it from a <b>GitHub repo, design files, or a local codebase</b> — the <b>/design-sync</b> command in Claude Code pushes it in.</li>
+          <li>One org can hold <b>several design systems</b> — product brand, marketing brand, sub-brands.</li>
+          <li>Answers the classic complaint: <i>"AI output never looks like us."</i></li>
+        </ul>
+        <div class="kcard reveal">
+          <div class="big">It checks<br>its own work</div>
+          <p>Claude builds with your <b>real components</b>, then reviews its output against the design system and <b>corrects deviations before you see them</b> — a reviewer, not a filter.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Plans & usage"
+    data-speaker-notes="The money slide, kept honest. Included in every paid plan from Pro at twenty dollars — no separate license, no credit packs. The catch worth saying twice: it draws from the same usage pool as chat and Claude Code, and there is no separate design allowance. A heavy design session eats the same budget your coding sessions use, and big-codebase projects burn noticeably more. Enterprise orgs need an admin to switch it on. Web and desktop only for now.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">8</span><div class="crumb"><b>What it is</b> · plans &amp; usage</div></div>
+      <h2 class="reveal">Included — but it <span class="o">shares your budget</span></h2>
+      <table class="tbl reveal">
+        <thead><tr><th>Question</th><th>Answer — July 2026</th></tr></thead>
+        <tbody>
+          <tr><td class="muted">Which plans?</td><td><b>Pro, Max, Team, Enterprise</b> — included, from ~$20/mo. No separate license.</td></tr>
+          <tr><td class="muted">What does it burn?</td><td>The <b>same usage pool</b> as chat &amp; Claude Code — <b>no separate design allowance</b>; optional extra usage.</td></tr>
+          <tr><td class="muted">What burns most?</td><td>Complex projects on <b>large codebases</b> — attach less, spend less.</td></tr>
+          <tr><td class="muted">Enterprise?</td><td>Admin must <b>enable it</b> in org settings first.</td></tr>
+          <tr><td class="muted">Where does it run?</td><td><b>Web &amp; desktop</b> app only — no mobile yet.</td></tr>
+        </tbody>
+      </table>
+      <p class="note reveal">Budget mindset: a design session spends the <b>same tokens</b> your coding sessions do — plan heavy design days like heavy coding days.</p>
+    </div>
+  </section>
+
+  <!-- ============ PART 02 — HOW TO WORK IT ============ -->
+  <section class="slide dark divider" data-label="02 How to work it"
+    data-speaker-notes="The core of the talk. Everyone has seen a Claude Design demo; almost nobody has seen a method. This part is the method: the iteration loop, how to brief it, which of the three refinement channels to use when, example briefs to steal, a live build, and the pitfalls early users keep hitting.">
+    <div class="slide-content">
+      <div class="dnum reveal">02</div>
+      <h2 class="reveal">How to <span class="o">work it</span></h2>
+      <p class="dsub reveal">The craft: the loop, the brief, the <b>three refinement channels</b> — with example prompts to steal, and a live build.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="The loop"
+    data-speaker-notes="The single most important habit change on this slide: do not judge the first generation. The first version is a conversation opener, not the deliverable — the real value shows up in iterations two to four. So the loop is describe, review, refine, repeat — and 'start simple, then layer' is the strategy: core layout and content first, then interactions, edge cases and polish as separate rounds. People who dump a ten-requirement brief and expect a finished artifact walk away disappointed; people who iterate walk away with something shippable.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">9</span><div class="crumb"><b>Craft</b> · the loop</div></div>
+      <h2 class="reveal">Judge iteration 4, <span class="o">not iteration 1</span></h2>
+      <div class="flow reveal">
+        <div class="step">describe</div><div class="arrow">→</div>
+        <div class="step">review</div><div class="arrow">→</div>
+        <div class="step hot">refine</div><div class="arrow">→</div>
+        <div class="step">repeat ×2–4</div>
+      </div>
+      <ul class="bul reveal" style="margin-top:28px">
+        <li>The first generation is a <b>conversation opener</b>, not the deliverable — real value shows up in <b>iterations 2–4</b>.</li>
+        <li><b>Start simple, then layer:</b> core layout &amp; content first; interactions, edge cases and polish as separate rounds.</li>
+        <li>Claude responds well to <b>incremental requests</b> — ten small asks beat one ten-part brief.</li>
+      </ul>
+      <p class="note reveal">If you remember one thing from this part: <b>don't judge generation one.</b></p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Brief like a creative director"
+    data-speaker-notes="The example slide — read both briefs aloud. The weak one is what most people type; the strong one names the audience, the components and the content. The difference in output is dramatic: the weak brief produces a generic template, the strong one produces something reviewable in one shot. The formula at the bottom is the takeaway: who it's for, what sections it has, what goes in each. You're not designing — you're briefing, exactly like you would a human designer or agency.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">10</span><div class="crumb"><b>Craft</b> · the brief</div></div>
+      <h2 class="reveal">Brief it like a <span class="o">creative director</span></h2>
+      <div class="cards c2 reveal">
+        <div class="tile"><span class="k">✗ Weak</span><p style="font-family:var(--font-mono); font-size:var(--small-size)">"Make me a landing page for our new API."</p><p class="muted">→ a generic template with placeholder everything.</p></div>
+        <div class="tile fill"><span class="k">✓ Strong</span><p style="font-family:var(--font-mono); font-size:var(--small-size)">"Build a landing page for our new <b>Payments API</b>, aimed at <b>backend developers</b>. Hero with a one-line tagline and a <b>curl snippet</b>, three <b>feature cards</b> with icons, a pricing section with <b>two tiers</b>."</p><p class="muted">→ reviewable in one shot.</p></div>
+      </div>
+      <p class="note reveal">The formula: <b>who it's for · which sections · what goes in each.</b> You're not designing — you're briefing, like you would an agency.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Three refinement channels"
+    data-speaker-notes="Once there's something on the canvas, you have three channels — and picking the right one is most of the craft. Chat for structural change: rearrange, add a section, try another direction. Inline comments for targeted tweaks: click the element, say what's wrong with it, in place. Direct editing for what's fastest by hand: drag, resize, align, fix a typo — plus the adjustment controls and the custom sliders Claude builds for the things you keep tweaking. The mistake to name: doing structural work through twenty inline comments, or asking chat to nudge one button. Next slide gives phrasing for the first two.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">11</span><div class="crumb"><b>Craft</b> · refinement channels</div></div>
+      <h2 class="reveal">Three channels — <span class="o">pick the right one</span></h2>
+      <table class="tbl reveal">
+        <thead><tr><th>Channel</th><th>Use it for</th><th>Feels like</th></tr></thead>
+        <tbody>
+          <tr><td><b>Chat</b></td><td><b>Structural</b> change — rearrange, add a section, new direction</td><td>talking to the designer</td></tr>
+          <tr><td><b>Inline comments</b></td><td><b>Targeted</b> tweaks — click the element, say what's wrong</td><td>markup on a proof</td></tr>
+          <tr><td><b>Direct editing</b></td><td>What's <b>fastest by hand</b> — drag, resize, align, fix a typo; sliders for spacing · color · layout</td><td>a slide editor</td></tr>
+        </tbody>
+      </table>
+      <p class="note reveal">The classic mistake: <b>structural work via twenty inline comments</b> — or asking chat to nudge one button. Match the channel to the size of the change.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Say it so it lands"
+    data-speaker-notes="Concrete phrasing, because vague feedback is the number-one failure mode. 'This doesn't look right' gives the model nothing. 'Tighten the spacing between form fields to 8px' — instantly actionable. Left column: chat-sized structural asks. Right column: comment-sized targeted asks. Two habits to call out: mention components by name, and put numbers on things when you have them. You don't need design vocabulary — 'less cramped', 'more contrast', 'calmer' all work — but specifics always beat adjectives.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">12</span><div class="crumb"><b>Craft</b> · feedback that works</div></div>
+      <h2 class="reveal">Say it so it <span class="o">lands</span></h2>
+      <div class="cards c2 reveal">
+        <div class="tile"><span class="k">In chat — structural</span><p style="font-family:var(--font-mono); font-size:var(--small-size)">"Rearrange the dashboard: metrics in the top row, the chart below."<br><br>"Turn this one-pager into a 6-slide deck — one section per slide."</p></div>
+        <div class="tile"><span class="k">In a comment — targeted</span><p style="font-family:var(--font-mono); font-size:var(--small-size)">"Tighten the spacing between form fields to 8px."<br><br>"Use the primary brand color here."<br><br>"Change this to a dropdown instead of radio buttons."</p></div>
+      </div>
+      <p class="note reveal">Vague feedback is the #1 failure mode — <i>"this doesn't look right"</i> gives the model nothing. <b>Name the component, give a number</b> when you have one.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Explore without losing work"
+    data-speaker-notes="Two power moves that separate fluent users from frustrated ones. First, the save-and-branch phrase: 'Save what we have and try a completely different approach' — you explore without destroying the version you liked. Second, ask for variations up front: four visual directions as a set, compare, then commit. And two things to raise early rather than late: responsiveness — say up front if it must work on mobile — and accessibility, where Claude is a genuinely good reviewer if you ask it to check contrast and hierarchy.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">13</span><div class="crumb"><b>Craft</b> · exploring safely</div></div>
+      <h2 class="reveal">Explore <span class="o">without losing work</span></h2>
+      <ul class="bul reveal">
+        <li>The branch phrase: <b>"Save what we have and try a completely different approach."</b> Explore freely — the version you liked survives.</li>
+        <li>Ask for <b>variations up front</b>: "give me four visual directions" → compare side by side, then commit to one.</li>
+        <li>Say <b>early</b> if it must work on mobile — responsiveness is a brief-time requirement, not a final-polish fix.</li>
+        <li>Use Claude as an <b>accessibility reviewer</b>: "check contrast, font sizes and hierarchy" — it's genuinely good at this.</li>
+      </ul>
+      <p class="note reveal">Treat the canvas like a cheap sketchbook, not a precious file — <b>branching costs one sentence.</b></p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Example briefs to steal"
+    data-speaker-notes="The steal-this slide — four briefs that reliably produce something reviewable in one generation, across the main output types. Read one or two aloud, not all four. Each follows the part-02 formula: audience, sections, content per section, and a constraint. Tell the room the deck will be shared — these are meant to be copied verbatim and adapted.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">14</span><div class="crumb"><b>Craft</b> · briefs to steal</div></div>
+      <h2 class="reveal">Four briefs to <span class="o">steal</span></h2>
+      <div class="cards c2 reveal">
+        <div class="tile"><span class="k">Deck</span><p style="font-family:var(--font-mono); font-size:var(--small-size)">"A 8-slide pitch deck for [product] for non-technical execs: problem, solution, demo screenshot, market, pricing, roadmap, team, ask."</p></div>
+        <div class="tile"><span class="k">Dashboard</span><p style="font-family:var(--font-mono); font-size:var(--small-size)">"An analytics dashboard: revenue, active users &amp; churn as top-row metric cards, a monthly trend chart below, filterable by region and plan."</p></div>
+        <div class="tile"><span class="k">Onboarding flow</span><p style="font-family:var(--font-mono); font-size:var(--small-size)">"A 4-screen mobile onboarding flow: welcome, permissions, profile setup, first-run tips — clickable, with a progress indicator."</p></div>
+        <div class="tile"><span class="k">Internal tool</span><p style="font-family:var(--font-mono); font-size:var(--small-size)">"A request-intake form for the legal team: requester info, request type dropdown, conditional fields per type, urgency, file upload."</p></div>
+      </div>
+      <p class="note reveal">Same formula every time: <b>audience · sections · content per section · one constraint.</b> Copy, adapt, iterate.</p>
+    </div>
+  </section>
+
+  <!-- LIVE DEMO -->
+  <section class="slide dark" data-label="Live: one-pager in five minutes"
+    data-speaker-notes="The live build. Use the deck brief or the dashboard brief from the previous slide — something the room just saw as text. Narrate the channels as you use them: the brief in chat, one structural change in chat, one inline comment, one direct edit, one slider. Resist polishing — the point is the method, not a perfect artifact. Five minutes, hard stop; the fallback slide is behind this one if the network or the beta misbehaves.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">15</span><div class="crumb"><b>Craft</b> · live demo</div></div>
+      <div class="demo-badge reveal">Live demo</div>
+      <h2 class="reveal">One-pager in <span class="o">five minutes</span></h2>
+      <ul class="bul reveal">
+        <li>Brief from the previous slide, pasted verbatim → <b>first generation</b>.</li>
+        <li>One <b>structural change</b> in chat · one <b>inline comment</b> · one <b>direct edit</b> · one <b>slider</b>.</li>
+        <li>Watch the design system do its work — everything lands <b>on-brand without asking</b>.</li>
+      </ul>
+      <p class="note reveal"><span class="pill live">Live</span> The point is the <b>method</b>, not a finished artifact — five minutes, hard stop.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Fallback: recorded run"
+    data-speaker-notes="Use only if the live build stalls — beta hiccup, network, or time. Narrate from the prepared screenshots or recording: the brief, the first generation, and the after-state of each refinement channel. Keep it under two minutes and move to the pitfalls.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">16</span><div class="crumb"><b>Craft</b> · fallback</div></div>
+      <h2 class="reveal">Fallback: <span class="o">recorded run</span></h2>
+      <div class="fallback-box reveal">
+        <div class="fb-icon">▢</div>
+        <div class="fb-caption">Placeholder — screenshots or recording of the five-minute build: the brief, generation one, and one example of each refinement channel (chat · comment · direct edit · slider).</div>
+      </div>
+      <p class="note reveal">Use only if the live build stalls. Narrate the captured before/after per channel, then move on.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Pitfalls"
+    data-speaker-notes="The honest slide — this is a beta and early users keep hitting the same six things. Vague feedback and judging generation one are self-inflicted; the fix is upstream in this deck. Pixel-perfection is a scoping error: get to ninety percent here, export to Canva for the last mile. Whole monorepos cause lag — attach the subdirectory. Two genuine beta bugs to know about: inline comments occasionally vanish, in which case paste the text into chat instead; and multi-person simultaneous editing is basic — treat it as single-driver with commenters, not Figma.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">17</span><div class="crumb"><b>Craft</b> · pitfalls</div></div>
+      <h2 class="reveal">Six pitfalls <span class="o">early users hit</span></h2>
+      <div class="gloss reveal" style="grid-template-columns:1fr">
+        <div class="row"><span class="term">Vague feedback</span><span class="def">"Doesn't look right" goes nowhere — name the component, give a number.</span></div>
+        <div class="row"><span class="term">Judging gen 1</span><span class="def">The first version is an opener — the value is in iterations 2–4.</span></div>
+        <div class="row"><span class="term">Pixel-perfecting</span><span class="def">Don't chase the last 10% here — <b>export to Canva</b> for final polish.</span></div>
+        <div class="row"><span class="term">Whole monorepos</span><span class="def">Large repos lag — attach the relevant subdirectory instead.</span></div>
+        <div class="row"><span class="term">Vanishing comments</span><span class="def">Beta bug: inline comments occasionally disappear — paste the text into chat.</span></div>
+        <div class="row"><span class="term">Co-editing</span><span class="def">Simultaneous editing is basic — treat it as <b>one driver + commenters</b>, not Figma.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PART 03 — FROM CANVAS TO SHIPPED ============ -->
+  <section class="slide dark divider" data-label="03 From canvas to shipped"
+    data-speaker-notes="Last part, short and practical: a design on a canvas is worth nothing until it's in front of stakeholders or in a repo. Three moves — share it for feedback, export it in the right format, or hand it to Claude Code for implementation.">
+    <div class="slide-content">
+      <div class="dnum reveal">03</div>
+      <h2 class="reveal">From canvas <span class="o">to shipped</span></h2>
+      <p class="dsub reveal">Share it, export it, or hand it to <b>Claude Code</b> — pick by where the design needs to end up.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Share & collaborate"
+    data-speaker-notes="Sharing is organisation-scoped with the levels you'd expect: private by default, then view-only, comment, or edit access via a link. The workflow that works today: share with comment access, let stakeholders leave inline notes exactly where they mean them, resolve the notes in one pass. Repeat the co-editing caveat from the pitfalls: one driver, many commenters — simultaneous editing is not Figma yet.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">18</span><div class="crumb"><b>Ship</b> · share &amp; collaborate</div></div>
+      <h2 class="reveal">Share for <span class="o">feedback</span></h2>
+      <ul class="bul reveal">
+        <li><b>Org-scoped sharing</b>: private by default → <b>view-only</b>, <b>comment</b>, or <b>edit</b> access via link.</li>
+        <li>The workflow that works: share with <b>comment access</b> — stakeholders leave inline notes <b>exactly where they mean them</b>.</li>
+        <li>Resolve comments in one pass — each note is a targeted refinement Claude can act on directly.</li>
+        <li>Co-editing caveat (beta): <b>one driver, many commenters</b> — simultaneous editing isn't Figma yet.</li>
+      </ul>
+      <p class="note reveal">Stakeholder comments become <b>refinement input</b> — the review round and the iteration round are the same round.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Export formats"
+    data-speaker-notes="Pick the export by destination, walk the rows: PPTX or PDF when it must land in a meeting; standalone HTML when you want the clickable prototype to travel as a file; the org URL when you want feedback rather than a file; Canva when marketing wants to finish it in their own tool; zip when you want the raw files; and the handoff bundle when it's headed for a repo — which gets its own slide next.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">19</span><div class="crumb"><b>Ship</b> · exports</div></div>
+      <h2 class="reveal">Export by <span class="o">destination</span></h2>
+      <table class="tbl reveal">
+        <thead><tr><th>Destination</th><th>Export</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td class="muted">A meeting</td><td><b>PPTX · PDF</b></td><td>lands in the deck culture you already have</td></tr>
+          <tr><td class="muted">A clickable prototype</td><td><b>Standalone HTML</b></td><td>interactive, travels as one file</td></tr>
+          <tr><td class="muted">Stakeholder feedback</td><td><b>Org URL</b></td><td>view/comment/edit access, no file at all</td></tr>
+          <tr><td class="muted">Marketing polish</td><td><b>Canva</b></td><td>the last 10%, in their tool</td></tr>
+          <tr><td class="muted">Raw files</td><td><b>.zip</b></td><td>take the HTML/assets anywhere</td></tr>
+          <tr><td class="muted">A repository</td><td><b>Claude Code handoff</b></td><td>next slide</td></tr>
+        </tbody>
+      </table>
+      <p class="note reveal">Export button, upper right. Rule of thumb: <b>URL for feedback, file for meetings, handoff for engineers.</b></p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="The Claude Code round trip"
+    data-speaker-notes="The slide for anyone sitting next to a developer. Two directions make a loop. Inbound: /design-sync in Claude Code pushes your design system — from the repo, design files or a local checkout — so Design builds with your real components. Outbound: the handoff bundle carries the finished design to Claude Code for implementation against the actual codebase — and because Design was building real HTML with your components all along, the handoff is a translation, not a rewrite. Design explores, Code ships, the design system keeps both honest.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>Ship</b> · Claude Code handoff</div></div>
+      <h2 class="reveal">The Claude Code <span class="o">round trip</span></h2>
+      <div class="flow reveal">
+        <div class="step">repo / design files</div><div class="arrow">→</div>
+        <div class="step hot">/design-sync</div><div class="arrow">→</div>
+        <div class="step">Claude Design</div><div class="arrow">→</div>
+        <div class="step hot">handoff bundle</div><div class="arrow">→</div>
+        <div class="step">Claude Code → your repo</div>
+      </div>
+      <ul class="bul reveal" style="margin-top:28px">
+        <li><b>In:</b> <b>/design-sync</b> (in Claude Code) pushes your design system from a GitHub repo, design files, or a local codebase.</li>
+        <li><b>Out:</b> the <b>handoff bundle</b> carries the finished design to Claude Code for implementation against the real repo.</li>
+        <li>Because Design built <b>real HTML with your components</b> all along, handoff is a <b>translation, not a rewrite</b>.</li>
+      </ul>
+      <p class="note reveal"><b>Design explores, Code ships</b> — and the shared design system keeps both honest.</p>
+    </div>
+  </section>
+
+  <!-- RECAP -->
+  <section class="slide dark" data-label="Recap"
+    data-speaker-notes="Close on the three-beat spine from the title: describe, refine, ship. One sentence per beat — brief it like a creative director, refine through the right channel and never judge generation one, then ship by destination with the Claude Code round trip for anything headed to a repo. The homework is deliberately small: steal one brief from slide 14 and run it on a real task this week.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">21</span><div class="crumb"><b>Close</b> · recap</div></div>
+      <h2 class="reveal">Describe → refine → <span class="o">ship</span></h2>
+      <div class="cards c3 reveal">
+        <div class="tile"><span class="k">01 Describe</span><p>Brief like a creative director: <b>audience · sections · content · one constraint.</b> Start from text, a file, a site, or a codebase.</p></div>
+        <div class="tile fill"><span class="k">02 Refine</span><p>Chat for structure, <b>comments for tweaks</b>, hands for the rest. Judge iteration 4, not 1 — and branch with one sentence.</p></div>
+        <div class="tile"><span class="k">03 Ship</span><p>URL for feedback, <b>file for meetings, handoff for engineers</b> — the design system rides along everywhere.</p></div>
+      </div>
+      <p class="note reveal">Homework: steal <b>one brief</b> from slide 14 and run it on a real task this week — on your plan, it's already included.</p>
+    </div>
+  </section>
+
+  <!-- SOURCES -->
+  <section class="slide light dense" data-label="Sources"
+    data-speaker-notes="Series convention: every product claim is date-stamped July 2026 and traceable. The three primary sources — the launch announcement, the product page, and the Help Center getting-started guide — plus the hands-on community write-ups behind the craft tips. Remind the room it's a beta: features and limits on these slides move, check before quoting externally.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">22</span><div class="crumb"><b>Close</b> · sources</div></div>
+      <h2 class="reveal"><span class="o">Sources</span> — all claims dated July 2026</h2>
+      <div class="links reveal">
+        <div class="linkcol">
+          <h3>Primary — Anthropic</h3>
+          <a href="https://www.anthropic.com/news/claude-design-anthropic-labs" target="_blank" rel="noopener">Claude Design — launch announcement<span class="u">anthropic.com/news · claude-design-anthropic-labs</span></a>
+          <a href="https://claude.com/product/design" target="_blank" rel="noopener">Product page<span class="u">claude.com/product/design</span></a>
+          <a href="https://support.claude.com/en/articles/14604416-get-started-with-claude-design" target="_blank" rel="noopener">Get started with Claude Design — Help Center<span class="u">support.claude.com · article 14604416</span></a>
+        </div>
+        <div class="linkcol">
+          <h3>Hands-on write-ups (craft tips)</h3>
+          <a href="https://aifordevelopers.substack.com/p/how-to-actually-use-claude-design" target="_blank" rel="noopener">How to actually use Claude Design<span class="u">aifordevelopers.substack.com</span></a>
+        </div>
+      </div>
+      <p class="note reveal">Claude Design is a <b>beta</b> — features, limits and plan details move. Re-check the Help Center before quoting externally. The 1M-users-in-week-one figure follows the series fact pass for deck 01 (July 2026).</p>
+    </div>
+  </section>
+
+</deck-stage>
+
+<script src="ember_design_system/deck-stage.js"></script>
+<script>
+  /* Re-trigger .reveal animations + restart any <video> on slide change */
+  document.addEventListener('DOMContentLoaded', function () {
+    var ds = document.querySelector('deck-stage');
+    if (!ds) return;
+    ds.addEventListener('slidechange', function (e) {
+      var s = e.detail && e.detail.slide;
+      if (!s) return;
+      s.querySelectorAll('.reveal').forEach(function (el) {
+        el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
+      });
+      var v = s.querySelector('video');
+      if (v) { v.currentTime = 0; var p = v.play(); if (p && p.catch) p.catch(function(){}); }
+    });
+  });
+</script>
+
+<style id="presenter-ui-css">
+  /* ─── Presenter aids (outside <deck-stage>: siblings paint above it) ─── */
+  .pui-controls{
+    position:fixed; right:18px; bottom:18px; z-index:40;
+    display:flex; gap:8px;
+    opacity:0; transition:opacity .25s; pointer-events:none;
+  }
+  body.pui-mouse .pui-controls,
+  .pui-controls:hover,
+  .pui-controls:focus-within{ opacity:1; pointer-events:auto; }
+  .pui-controls button{
+    font:var(--w-semibold) 12px/1 var(--font-mono); letter-spacing:.08em;
+    color:var(--on-dark-muted); background:var(--ink-2);
+    border:1px solid var(--line-dark); border-radius:var(--radius-pill);
+    padding:9px 14px; cursor:pointer;
+  }
+  .pui-controls button:hover{ color:var(--paper); border-color:var(--coral); }
+  .pui-controls kbd{ color:var(--coral); font:inherit; margin-left:6px; }
+  .pui-notes{
+    position:fixed; left:0; right:0; bottom:0; z-index:39;
+    background:var(--ink-2); color:var(--on-dark);
+    border-top:2px solid var(--coral);
+    padding:20px 34px 24px; max-height:38vh; overflow:auto;
+    font:var(--w-regular) clamp(15px,1.6vw,21px)/1.55 var(--font-b, var(--font-body));
+    display:none;
+  }
+  .pui-notes.open{ display:block; }
+  .pui-notes .pui-nhead{
+    font:var(--w-semibold) 12px/1 var(--font-mono); letter-spacing:.12em;
+    text-transform:uppercase; color:var(--coral); margin-bottom:12px;
+  }
+  @media print{ .pui-controls, .pui-notes{ display:none !important; } }
+</style>
+<div class="pui-controls">
+  <button type="button" data-pui="notes">NOTES<kbd>N</kbd></button>
+  <button type="button" data-pui="present">PRESENT<kbd>P</kbd></button>
+  <button type="button" data-pui="fullscreen">FULLSCREEN<kbd>F</kbd></button>
+</div>
+<div class="pui-notes" role="note" aria-live="polite">
+  <div class="pui-nhead"></div>
+  <div class="pui-nbody"></div>
+</div>
+
+<script>
+/* ─── Presenter aids: notes overlay (N), fullscreen (F), presenter window (P) ─── */
+(function(){
+  if (window.self !== window.top) return; /* skip when embedded by a host/viewer */
+  var ds = document.querySelector('deck-stage');
+  var notesEl = document.querySelector('.pui-notes');
+  var nHead = notesEl.querySelector('.pui-nhead');
+  var nBody = notesEl.querySelector('.pui-nbody');
+  var current = 0, presenter = null, mouseT = null;
+
+  function slides(){ return Array.prototype.slice.call(ds.querySelectorAll(':scope > section')); }
+  function noteOf(s){ return s.getAttribute('data-speaker-notes') || 'No notes for this slide.'; }
+  function labelOf(s){ return s.getAttribute('data-label') || ''; }
+
+  /* controls fade in on mouse activity, like the component's own overlay */
+  document.addEventListener('mousemove', function(){
+    document.body.classList.add('pui-mouse');
+    clearTimeout(mouseT);
+    mouseT = setTimeout(function(){ document.body.classList.remove('pui-mouse'); }, 1800);
+  });
+
+  function syncNotes(){
+    var all = slides(), s = all[current];
+    if (!s) return;
+    nHead.textContent = 'Notes · ' + labelOf(s) + ' · ' + (current + 1) + ' / ' + all.length;
+    nBody.textContent = noteOf(s);
+  }
+  function toggleNotes(){ notesEl.classList.toggle('open'); if (notesEl.classList.contains('open')) syncNotes(); }
+
+  function toggleFullscreen(){
+    if (document.fullscreenElement) { document.exitFullscreen(); }
+    else { document.documentElement.requestFullscreen().catch(function(){}); }
+  }
+  /* fullscreen = clean presenting surface: hide the thumbnail rail while in it */
+  var railWasOff = false;
+  document.addEventListener('fullscreenchange', function(){
+    if (document.fullscreenElement) {
+      railWasOff = ds.hasAttribute('no-rail');
+      ds.setAttribute('no-rail', '');
+    } else if (!railWasOff) {
+      ds.removeAttribute('no-rail');
+    }
+  });
+
+  /* ── presenter window: current + next previews, notes, timer, clock ── */
+  function openPresenter(){
+    if (presenter && !presenter.closed) { presenter.focus(); return; }
+    presenter = window.open('', 'deck-presenter', 'width=1200,height=760');
+    if (!presenter) {
+      nHead.textContent = 'Presenter window';
+      nBody.textContent = 'The browser blocked the pop-up — allow pop-ups for this page and press P again.';
+      notesEl.classList.add('open');
+      return;
+    }
+    var pd = presenter.document;
+    pd.open();
+    pd.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Presenter — ' + document.title.replace(/</g,'&lt;') + '</title><base href="' + document.baseURI + '"></head><body></body></html>');
+    pd.close();
+    /* carry the deck's stylesheets + tokens over so slide clones render 1:1 */
+    document.head.querySelectorAll('link[rel="stylesheet"], link[rel="preconnect"], style').forEach(function(el){
+      var c = pd.importNode(el, true);
+      if (el.tagName === 'LINK' && el.href) c.setAttribute('href', el.href);
+      pd.head.appendChild(c);
+    });
+    var st = pd.createElement('style');
+    st.textContent =
+      '*,*::before,*::after{animation:none !important;transition:none !important}' +
+      'html,body{margin:0;height:100%;background:#0e0c08;color:var(--on-dark);font-family:var(--font-m,monospace);overflow:hidden}' +
+      '.pw{display:grid;grid-template-rows:52px 1fr;height:100%}' +
+      '.pw-bar{display:flex;align-items:center;gap:22px;padding:0 20px;border-bottom:1px solid var(--line-dark);font-size:13px;letter-spacing:.06em;color:var(--on-dark-muted)}' +
+      '.pw-bar .cnt{color:var(--coral);font-weight:700;font-size:16px}' +
+      '.pw-bar .lbl{color:var(--paper);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}' +
+      '.pw-bar .tmr{cursor:pointer}.pw-bar .tmr b{color:var(--paper)}' +
+      '.pw-bar button{font:inherit;color:var(--on-dark-muted);background:none;border:1px solid var(--line-dark);border-radius:6px;padding:5px 12px;cursor:pointer}' +
+      '.pw-bar button:hover{color:var(--paper);border-color:var(--coral)}' +
+      '.pw-main{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:14px;padding:14px;min-height:0}' +
+      '.pw-col{display:grid;grid-template-rows:auto 1fr;min-height:0;gap:8px}' +
+      '.pw-col.right{grid-template-rows:auto auto auto minmax(0,1fr)}' +
+      '.pw-cap{font-size:11px;letter-spacing:.14em;color:var(--on-dark-faint);text-transform:uppercase}' +
+      '.pw-box{position:relative;min-height:0;overflow:hidden;border:1px solid var(--line-dark);border-radius:8px;background:#000}' +
+      '.pw-canvas{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;background:var(--paper)}' +
+      '.pw-canvas > section{width:1920px;height:1080px;position:relative;overflow:hidden}' +
+      '.pw-notes{overflow:auto;font-family:var(--font-b,sans-serif);font-size:19px;line-height:1.55;color:var(--on-dark);padding-right:6px}';
+    pd.head.appendChild(st);
+    pd.body.innerHTML =
+      '<div class="pw">' +
+        '<div class="pw-bar">' +
+          '<span class="cnt"></span><span class="lbl"></span>' +
+          '<span class="tmr" title="click to reset">elapsed <b class="el">00:00</b></span>' +
+          '<span>clock <b class="ck"></b></span>' +
+          '<button data-nav="-1">‹ prev</button><button data-nav="1">next ›</button>' +
+        '</div>' +
+        '<div class="pw-main">' +
+          '<div class="pw-col"><div class="pw-cap">Current</div><div class="pw-box" id="pwCur"><div class="pw-canvas"></div></div></div>' +
+          '<div class="pw-col right"><div class="pw-cap">Next</div><div class="pw-box" id="pwNext" style="aspect-ratio:16/9;min-height:120px"><div class="pw-canvas"></div></div>' +
+          '<div class="pw-cap" style="margin-top:6px">Notes</div><div class="pw-notes"></div></div>' +
+        '</div>' +
+      '</div>';
+
+    var t0 = Date.now();
+    function two(n){ return (n < 10 ? '0' : '') + n; }
+    function tick(){
+      if (presenter.closed) return;
+      var el = Math.floor((Date.now() - t0) / 1000);
+      pd.querySelector('.el').textContent = two(Math.floor(el / 60)) + ':' + two(el % 60);
+      var d = new Date();
+      pd.querySelector('.ck').textContent = two(d.getHours()) + ':' + two(d.getMinutes());
+      presenter.setTimeout(tick, 1000);
+    }
+    tick();
+    pd.querySelector('.tmr').addEventListener('click', function(){ t0 = Date.now(); });
+
+    function fit(boxId){
+      var box = pd.getElementById(boxId), cv = box.querySelector('.pw-canvas');
+      var k = Math.min(box.clientWidth / 1920, box.clientHeight / 1080);
+      cv.style.transform = 'scale(' + k + ')';
+      cv.style.left = ((box.clientWidth - 1920 * k) / 2) + 'px';
+      cv.style.top = ((box.clientHeight - 1080 * k) / 2) + 'px';
+    }
+    function fill(boxId, slide){
+      var cv = pd.getElementById(boxId).querySelector('.pw-canvas');
+      cv.textContent = '';
+      if (slide) {
+        var c = pd.importNode(slide, true);
+        c.setAttribute('data-deck-active', '');
+        cv.appendChild(c);
+      }
+      fit(boxId);
+    }
+    presenter.__update = function(i){
+      var all = slides(), s = all[i];
+      if (!s) return;
+      var next = i + 1;
+      while (next < all.length && all[next].hasAttribute('data-deck-skip')) next++;
+      fill('pwCur', s);
+      fill('pwNext', all[next] || null);
+      pd.querySelector('.cnt').textContent = (i + 1) + ' / ' + all.length;
+      pd.querySelector('.lbl').textContent = labelOf(s) + (all[next] ? '   →   next: ' + labelOf(all[next]) : '   ·   last slide');
+      pd.querySelector('.pw-notes').textContent = noteOf(s);
+    };
+    presenter.addEventListener('resize', function(){ fit('pwCur'); fit('pwNext'); });
+    pd.addEventListener('keydown', function(e){
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); ds.next(); }
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); ds.prev(); }
+      else if (e.key === 'Home') { ds.goTo(0); }
+      else if (e.key === 'End') { ds.goTo(slides().length - 1); }
+    });
+    pd.querySelectorAll('[data-nav]').forEach(function(b){
+      b.addEventListener('click', function(){ this.dataset.nav === '1' ? ds.next() : ds.prev(); });
+    });
+    presenter.__update(current);
+  }
+
+  ds.addEventListener('slidechange', function(e){
+    current = e.detail.index;
+    if (notesEl.classList.contains('open')) syncNotes();
+    if (presenter && !presenter.closed && presenter.__update) presenter.__update(current);
+  });
+
+  document.addEventListener('keydown', function(e){
+    var t = e.target;
+    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = e.key.toLowerCase();
+    if (k === 'n') { toggleNotes(); }
+    else if (k === 'f') { toggleFullscreen(); }
+    else if (k === 'p') { openPresenter(); }
+  });
+  document.querySelector('[data-pui="notes"]').addEventListener('click', toggleNotes);
+  document.querySelector('[data-pui="fullscreen"]').addEventListener('click', toggleFullscreen);
+  document.querySelector('[data-pui="present"]').addEventListener('click', openPresenter);
+})();
+</script>
+</body>
+</html>

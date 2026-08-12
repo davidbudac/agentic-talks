@@ -2,7 +2,8 @@
 
 Zero-build HTML slide decks — a general-audience tool landscape, a beginner
 intro to agentic AI, a developer follow-up, engineering deep dives, a workshop
-on working smarter with agents, and a Claude Design product tour. Same
+on working smarter with agents, a Claude Design product tour, and a graph
+engineering deep dive. Same
 template, same aesthetic. The
 key concepts are illustrated by short looping animations rendered with
 [Remotion](https://www.remotion.dev/) (in `assets/anim/`, sources in `remotion/`),
@@ -43,6 +44,13 @@ Author: **David Budáč** · English
   loop, briefing, the three refinement channels, example briefs to steal, a
   live five-minute build, pitfalls) → sharing, exports, and the Claude Code
   handoff round trip. 25 slides. **Live demo included.**
+- **[`ai-graph-engineering.html`](ai-graph-engineering.html)** — *AI Graph
+  Engineering* (WIP, ~30-min deep dive, for experienced devs). Which graph
+  people actually mean — knowledge graph, retrieval graph (GraphRAG), workflow
+  graph, GNN → the honest GraphRAG scoreboard (where it wins, where plain RAG
+  wins, the null-query collapse) → graph memory vs markdown → code graphs vs
+  agentic grep → subagents, hooks & workflows as a graph runtime → a decision
+  table. 32 slides.
 
 ## View it
 
@@ -51,7 +59,8 @@ Author: **David Budáč** · English
   right deck by audience — non-technical (01) → developers new to agents (02) →
   developers going deeper (03) → devs & IT admins on internals (04) → devs
   levelling up on cost, orchestration & measurement (05–07, WIP) → anyone
-  making visual work with Claude Design (08, WIP) — with
+  making visual work with Claude Design (08, WIP) → devs weighing up graphs
+  (09, WIP) — with
   self-identification bullets per deck and a
   one-question fallback for the undecided.
 - **Online:** if GitHub Pages is enabled, the repo's Pages root serves the chooser.
@@ -162,7 +171,12 @@ animations read the same palette from `remotion/src/theme.ts`.
 | `agentic-engineering.html` | *Agentic Engineering* deck — developers (no live demo). |
 | `subagents-prompt-caching.html` | *Subagents & Prompt Caching* deck — engineering deep dive (no live demo). |
 | `working-smarter.html` | *Working Smarter with Agents* deck — half-day workshop on cost, context efficiency & orchestration (WIP, live demos). |
+| `cost-and-context.html` | *Cost & Context* deck — what agents really cost and how to spend context well (WIP). |
+| `orchestrating-agents.html` | *Orchestrating Agents* deck — subagents, workflows & alternative harnesses (WIP). |
+| `measuring-what-works.html` | *Measuring What Works* deck — evals, traces & judging changes by evidence (WIP). |
 | `claude-design.html` | *Claude Design* deck — ~30-min product deep dive on Anthropic's visual-creation tool (WIP, live demo, no code needed). |
+| `ai-graph-engineering.html` | *AI Graph Engineering* deck — knowledge/retrieval/workflow graphs and when either pays (WIP). |
+| `graph-engineering-ai-llms.md`, `deck09-facts.md` | Research note and sourced fact sheet behind deck 09. |
 | `index.html` | Landing page routing readers to the right deck by audience (GitHub Pages root). |
 | `assets/anim/` | Rendered concept animations (MP4 loops) embedded by the decks. |
 | `remotion/` | Remotion project — sources for the animations. |
