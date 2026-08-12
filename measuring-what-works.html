@@ -471,10 +471,57 @@ table.tbl tr:last-child td{border-bottom:none}
     </div>
   </section>
 
+  <section class="slide dark" data-label="Anatomy of an agent trace"
+    data-speaker-notes="Make the OTel story concrete with a worked example: Elastic's Agent Builder emits a full OTel trace for every conversation turn by default — 'a receipt for a single conversation turn' — and it follows the OpenTelemetry GenAI semantic conventions, which are worth knowing regardless of vendor because they're becoming the lingua franca. Walk the waterfall top-down: a parent invoke_agent span wraps the whole turn; inside it, each chat span is one LLM request carrying gen_ai.usage.input_tokens and output_tokens, and each execute_tool span records which tool ran, with what arguments, and how long it took. Because spans are just structured data in the store, the payoff is ordinary observability work: token-spend dashboards, latency waterfalls to find the slow tool, and budget alerts like 'fire when a single conversation exceeds 256k tokens.' The wasted-turns reading from two slides ago becomes queryable — a re-read file or a blind retry is visible as repeated spans, and you can alert on it instead of eyeballing transcripts. Source: Elastic Search Labs post on OTel tracing in Agent Builder, linked on the Sources slide.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">10</span><div class="crumb"><b>Evals</b> · traces · anatomy</div></div>
+      <h2 class="reveal">Anatomy of an agent trace: <span class="o">gen_ai.* spans</span></h2>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>OTel <b>GenAI semantic conventions</b> — the emerging vendor-neutral standard for agent traces.</li>
+          <li>Every turn = one trace: <code>invoke_agent</code> wraps <code>chat</code> spans (LLM calls, token counts) and <code>execute_tool</code> spans (args, duration).</li>
+          <li>Spans are just data → <b>token-spend dashboards, latency waterfalls, budget alerts</b> ("fire above 256k tokens per conversation").</li>
+          <li>The wasted-turns reading becomes <b>queryable</b>: repeated spans = a re-read or blind retry you can alert on.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 460 290" role="img" aria-label="Trace waterfall of one agent turn: a parent invoke_agent span contains alternating chat spans carrying token counts and execute_tool spans carrying tool names and durations">
+            <text class="dg-t mut" x="230" y="20" font-size="12" text-anchor="middle">one conversation turn — the trace waterfall</text>
+            <!-- parent span -->
+            <rect class="dg-box outer" x="20" y="34" width="420" height="34" rx="7"/>
+            <text class="dg-t acc" x="34" y="56" font-size="12.5" font-family="var(--font-mono)">invoke_agent</text>
+            <text class="dg-t mut" x="428" y="56" font-size="11" text-anchor="end">the whole turn</text>
+            <!-- chat 1 -->
+            <rect class="dg-fill-r" x="48" y="80" width="180" height="30" rx="6" opacity="0.9"/>
+            <text class="dg-t on" x="60" y="100" font-size="11.5" font-family="var(--font-mono)">chat (LLM)</text>
+            <text class="dg-t mut" x="240" y="100" font-size="10.5">gen_ai.usage.input_tokens: 8 214</text>
+            <!-- tool 1 -->
+            <rect class="dg-box" x="76" y="118" width="220" height="30" rx="6"/>
+            <text class="dg-t" x="88" y="138" font-size="11.5" font-family="var(--font-mono)">execute_tool · search</text>
+            <text class="dg-t mut" x="308" y="138" font-size="10.5">args + result · 412 ms</text>
+            <!-- chat 2 -->
+            <rect class="dg-fill-r" x="48" y="156" width="230" height="30" rx="6" opacity="0.9"/>
+            <text class="dg-t on" x="60" y="176" font-size="11.5" font-family="var(--font-mono)">chat (LLM)</text>
+            <text class="dg-t mut" x="290" y="176" font-size="10.5">output_tokens: 1 102</text>
+            <!-- tool 2 -->
+            <rect class="dg-box" x="76" y="194" width="150" height="30" rx="6"/>
+            <text class="dg-t" x="88" y="214" font-size="11.5" font-family="var(--font-mono)">execute_tool · edit</text>
+            <text class="dg-t mut" x="238" y="214" font-size="10.5">96 ms</text>
+            <!-- chat 3 -->
+            <rect class="dg-fill-r" x="48" y="232" width="120" height="30" rx="6" opacity="0.9"/>
+            <text class="dg-t on" x="60" y="252" font-size="11.5" font-family="var(--font-mono)">chat (LLM)</text>
+            <text class="dg-t mut" x="180" y="252" font-size="10.5">final answer</text>
+            <text class="dg-t acc" x="230" y="284" font-size="12" text-anchor="middle">width = time · every span carries gen_ai.* attributes</text>
+          </svg>
+        </div>
+      </div>
+      <p class="note reveal">Worked example: <b>Elastic Agent Builder</b> emits this per turn by default — "a receipt for a single conversation turn" — queryable, dashboardable, alertable in Kibana.</p>
+    </div>
+  </section>
+
   <section class="slide dark" data-label="A minimal eval loop"
     data-speaker-notes="Give the version any team can start this week with zero new tooling: a handful of fixed prompts representative of real work, a short written rubric, and a spreadsheet to score runs against it. This is deliberately unglamorous — the point is that the bar to start is nearly zero, and the demo shows exactly this.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">10</span><div class="crumb"><b>Evals</b> · the minimal loop</div></div>
+      <div class="slide-head reveal"><span class="snum">11</span><div class="crumb"><b>Evals</b> · the minimal loop</div></div>
       <h2 class="reveal">A minimal eval loop, <span class="o">this week</span></h2>
       <div class="flow reveal">
         <div class="step">fixed prompts</div><div class="arrow">→</div>
@@ -486,10 +533,134 @@ table.tbl tr:last-child td{border-bottom:none}
     </div>
   </section>
 
+  <section class="slide light" data-label="smevals: an eval framework"
+    data-speaker-notes="When the spreadsheet loop starts to hurt — more tasks, more variants, more people — smevals is the graduation step: an open-source Python framework (github.com/prime-radiant-inc/smevals) that keeps the same shape but makes it repeatable. Walk the vocabulary left to right: an Eval is a collection of Tasks; a Config says which model and settings attempt them; each execution is an immutable Run; a Grader is a sequence of Checks that turns Runs into scores. The Runner is any executable — so the thing being evaluated can be a plain model call or a full agent harness like Claude Code. One subtle design point worth saying aloud: a Runner that exits non-zero is a harness failure, not evidence about the model — infrastructure errors don't pollute your numbers.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">12</span><div class="crumb"><b>Evals</b> · smevals</div></div>
+      <h2 class="reveal">smevals: the spreadsheet, <span class="o">grown up</span></h2>
+      <p class="lead reveal" style="margin-bottom:24px">Open-source Python framework — same loop as the spreadsheet, but <b>repeatable and shareable</b>.</p>
+      <div class="gloss reveal">
+        <div class="row"><span class="term">Eval</span><span class="def">a collection of Tasks measuring one capability</span></div>
+        <div class="row"><span class="term">Config</span><span class="def">which model, parameters, prompts, tools</span></div>
+        <div class="row"><span class="term">Task</span><span class="def">one exercise the model must complete</span></div>
+        <div class="row"><span class="term">Run</span><span class="def">immutable record of one Task × one Config</span></div>
+        <div class="row"><span class="term">Grader</span><span class="def">a sequence of Checks combined into a score</span></div>
+        <div class="row"><span class="term">Runner</span><span class="def">any executable — a model call <i>or</i> a full agent harness</span></div>
+      </div>
+      <p class="note reveal">Design detail worth stealing: a Runner that exits non-zero is a <b>harness failure, not model evidence</b> — infrastructure errors never pollute the scores. <span class="muted">github.com/prime-radiant-inc/smevals</span></p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="smevals: the workflow"
+    data-speaker-notes="Show how little ceremony there is: tasks, configs, and graders are small YAML files; checkers are plain executables you write in anything. Then three commands — run, grade, report — and 'smevals serve' gives a live web dashboard comparing models. The -n flag repeats each task n times, which is exactly the pass@k / pass^k discipline from a few slides back, now automated. Point out this maps one-to-one onto the minimal loop: fixed prompts become task YAMLs, the written rubric becomes a grader, the spreadsheet becomes the report.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">13</span><div class="crumb"><b>Evals</b> · smevals</div></div>
+      <h2 class="reveal">Three YAML files, <span class="o">three commands</span></h2>
+      <div class="split">
+        <div class="code reveal"><span class="c"># tasks/pelicans.yaml</span>
+<span class="o">name:</span> pelicans
+<span class="o">prompt:</span> <span class="g">Write a haiku about pelicans.</span>
+
+<span class="c"># graders/default.yaml</span>
+<span class="o">checks:</span>
+  - <span class="o">checker:</span> ../checkers/three-lines
+    <span class="o">required:</span> <span class="b">true</span></div>
+        <div class="code reveal"><span class="c"># repeat each task 5× → pass@5 / pass^5</span>
+<span class="d">$</span> smevals run my-eval -m claude-sonnet-5 <span class="b">-n 5</span>
+<span class="d">$</span> smevals grade my-eval
+<span class="d">$</span> smevals report my-eval <span class="c"># or: serve → live dashboard</span></div>
+      </div>
+      <ul class="bul reveal" style="margin-top:24px">
+        <li>Maps 1:1 onto the minimal loop — fixed prompts → task YAMLs, written rubric → grader, spreadsheet → report.</li>
+        <li>Checkers are <b>plain executables</b> — write domain-specific validators in anything.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="smevals: how a run works"
+    data-speaker-notes="Walk the diagram left to right — this is the whole mechanic. A Runner is any executable; it gets no command-line arguments, everything arrives as environment variables: SMEVALS_MODEL, SMEVALS_TASK, SMEVALS_PROMPT, plus every scalar key of the task uppercased as SMEVALS_TASK_&lt;KEY&gt;. Its stdout becomes output.txt, stderr becomes stderr.txt, and any file it writes into the working directory is preserved as an artifact — rendered images, extracted documents, whatever. Each execution lands in an immutable directory runs/task/config/model/timestamp; run.yaml is written last, so its presence marks a complete run. Stress the exit-code contract again because it's the clever part: exit 0 whenever the output is a real model response you want judged, however bad — non-zero means the harness broke, and those runs are never graded and excluded from every report. And because a Runner is just an executable, the thing under test can be a curl to a model API or a full Claude Code session in a sandbox.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">14</span><div class="crumb"><b>Evals</b> · smevals · how a run works</div></div>
+      <h2 class="reveal">How a run works: <span class="o">env vars in, files out</span></h2>
+      <div class="diagram reveal" style="--diag-h:520px">
+        <svg viewBox="0 0 860 300" role="img" aria-label="A smevals run: task and config feed environment variables into a runner executable; its stdout, stderr and artifacts land in an immutable timestamped run directory, and the exit code decides whether the run counts as model evidence or a harness failure">
+          <defs><marker id="sm1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+          <!-- inputs -->
+          <rect class="dg-box" x="20" y="30" width="170" height="52" rx="8"/>
+          <text class="dg-t" x="105" y="52" font-size="13" text-anchor="middle">Task (YAML)</text>
+          <text class="dg-t mut" x="105" y="70" font-size="11" text-anchor="middle">prompt + custom keys</text>
+          <rect class="dg-box" x="20" y="100" width="170" height="52" rx="8"/>
+          <text class="dg-t" x="105" y="122" font-size="13" text-anchor="middle">Config (YAML)</text>
+          <text class="dg-t mut" x="105" y="140" font-size="11" text-anchor="middle">model, params, runner</text>
+          <!-- env arrow -->
+          <path class="dg-line" d="M198 91 L 268 91" marker-end="url(#sm1)"/>
+          <text class="dg-t acc" x="233" y="76" font-size="10.5" text-anchor="middle">env vars only</text>
+          <text class="dg-t acc" x="233" y="110" font-size="9.5" text-anchor="middle">SMEVALS_MODEL</text>
+          <text class="dg-t acc" x="233" y="124" font-size="9.5" text-anchor="middle">SMEVALS_PROMPT…</text>
+          <!-- runner -->
+          <rect class="dg-box hot" x="278" y="55" width="180" height="72" rx="10"/>
+          <text class="dg-t on" x="368" y="85" font-size="14" text-anchor="middle">Runner</text>
+          <text class="dg-t on" x="368" y="105" font-size="11.5" text-anchor="middle">any executable — curl,</text>
+          <text class="dg-t on" x="368" y="119" font-size="11.5" text-anchor="middle">script, or a full agent</text>
+          <!-- outputs arrow -->
+          <path class="dg-line" d="M466 91 L 536 91" marker-end="url(#sm1)"/>
+          <text class="dg-t acc" x="501" y="76" font-size="10.5" text-anchor="middle">files out</text>
+          <!-- run dir -->
+          <rect class="dg-box outer" x="546" y="20" width="294" height="180" rx="12"/>
+          <text class="dg-t acc" x="693" y="44" font-size="12" text-anchor="middle">runs/&lt;task&gt;/&lt;config&gt;/&lt;model&gt;/&lt;timestamp&gt;/</text>
+          <rect class="dg-box" x="564" y="56" width="258" height="30" rx="6"/>
+          <text class="dg-t" x="578" y="76" font-size="11.5" font-family="var(--font-mono)">output.txt <tspan class="dg-t mut">← runner stdout</tspan></text>
+          <rect class="dg-box" x="564" y="92" width="258" height="30" rx="6"/>
+          <text class="dg-t" x="578" y="112" font-size="11.5" font-family="var(--font-mono)">artifacts <tspan class="dg-t mut">← any file it writes</tspan></text>
+          <rect class="dg-box" x="564" y="128" width="258" height="30" rx="6"/>
+          <text class="dg-t" x="578" y="148" font-size="11.5" font-family="var(--font-mono)">run.yaml <tspan class="dg-t mut">← written last = complete</tspan></text>
+          <text class="dg-t mut" x="693" y="186" font-size="11" text-anchor="middle">immutable — never edited by hand</text>
+          <!-- exit code fork -->
+          <path class="dg-line" d="M368 135 L 368 205" marker-end="url(#sm1)"/>
+          <text class="dg-t acc" x="382" y="175" font-size="11">exit code</text>
+          <rect class="dg-box" x="120" y="215" width="250" height="58" rx="8"/>
+          <text class="dg-t" x="245" y="238" font-size="12.5" text-anchor="middle"><tspan style="fill:var(--positive)" font-weight="700">0</tspan> — a real model response, however bad</text>
+          <text class="dg-t mut" x="245" y="258" font-size="11.5" text-anchor="middle">→ gets graded, counts as evidence</text>
+          <rect class="dg-box" x="400" y="215" width="290" height="58" rx="8"/>
+          <text class="dg-t" x="545" y="238" font-size="12.5" text-anchor="middle"><tspan class="dg-t acc" font-weight="700">non-zero</tspan> — harness broke (network, crash)</text>
+          <text class="dg-t mut" x="545" y="258" font-size="11.5" text-anchor="middle">→ never graded, excluded from every report</text>
+        </svg>
+      </div>
+      <p class="note reveal">No SDK to integrate — the contract is <b>env vars in, files out, exit code as the verdict</b>. That's why the thing under test can be a one-line curl or an entire Claude Code session.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="smevals: grading and reporting"
+    data-speaker-notes="Grading is a second pass over the stored runs — you can re-grade old runs with a new rubric without re-running anything, because runs are immutable. A Grader runs its Checks in sequence; each Checker is again just an executable that reads $SMEVALS_RUN_DIR/output.txt, exits 0 or non-zero for pass/fail, and can print JSON with a score from 0 to 1, metrics, tags and notes. Three rules do all the work: 'required: true' halts the sequence on failure so you don't pay for an expensive LLM-judge check when the output isn't even valid; 'creates:' fails a check that didn't produce its promised file; and the grade's score is the LAST score any check emitted — so you order checks cheap-to-expensive, gates first, judgment last. Reporting: -n N tops each task/model pair up to N successful runs, executing only the shortfall — that's pass@k discipline built in — and the leaderboard shows mean ± standard error per config × model, which is the honest way to compare. smevals serve gives a live dashboard that re-reads disk on every poll, so you can watch runs land during — say — a live demo.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">15</span><div class="crumb"><b>Evals</b> · smevals · grading &amp; reporting</div></div>
+      <h2 class="reveal">Grading: <span class="o">cheap gates first, judgment last</span></h2>
+      <div class="split">
+        <div class="code reveal"><span class="c"># graders/default.yaml — checks run in sequence</span>
+<span class="o">checks:</span>
+  - <span class="o">checker:</span> contains        <span class="c"># cheap gate</span>
+    <span class="o">value:</span> <span class="g">"&lt;svg"</span>
+    <span class="o">required:</span> <span class="b">true</span>       <span class="c"># fail → halt, skip the rest</span>
+  - <span class="o">checker:</span> ../checkers/render-svg
+    <span class="o">creates:</span> render.png  <span class="c"># no file → check fails</span>
+  - <span class="o">checker:</span> ../checkers/llm-judge
+                          <span class="c"># expensive — runs last;</span>
+<span class="o">scoring:</span>                  <span class="c"># its score becomes THE score</span>
+  <span class="o">pass_threshold:</span> <span class="b">0.5</span></div>
+        <ul class="bul reveal">
+          <li>A Checker reads <code>$SMEVALS_RUN_DIR/output.txt</code>, exits 0/non-zero, optionally prints JSON: <b>score 0–1, metrics, tags, notes</b>.</li>
+          <li>Runs are immutable → <b>re-grade old runs with a new rubric</b>, no re-running.</li>
+          <li><code>-n 5</code> tops each task × model up to 5 successful runs — pass@k built in. Leaderboard: <b>mean ± stderr</b> per config × model.</li>
+          <li><code>smevals serve</code> — live dashboard, re-reads disk on every poll; watch runs land in real time.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
   <section class="slide light" data-label="Live demo: mini eval"
     data-speaker-notes="RUNBOOK: use a small fixed task set (3–5 tasks; e.g. the two CLAUDE.md variants from deck 05, or two models on the identical prompt) and run it against two variants live. Score each run against the pre-written rubric on screen, tally in a spreadsheet, and show the final comparison number. Keep total run time under five minutes by having tasks that finish fast; cut to fallback if a run hangs.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">11</span><div class="crumb"><b>Evals</b> · live demo</div></div>
+      <div class="slide-head reveal"><span class="snum">16</span><div class="crumb"><b>Evals</b> · live demo</div></div>
       <div class="demo-badge reveal">Live</div>
       <h2 class="reveal">Run a small eval, <span class="o">live</span></h2>
       <ul class="bul reveal">
@@ -503,7 +674,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide dark" data-label="Fallback: eval demo"
     data-speaker-notes="Use if a live run hangs or takes too long to score on stage. Narrate from the prepared spreadsheet screenshot: the two variants, the rubric scores, and which one won and why.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">12</span><div class="crumb"><b>Evals</b> · fallback</div></div>
+      <div class="slide-head reveal"><span class="snum">17</span><div class="crumb"><b>Evals</b> · fallback</div></div>
       <h2 class="reveal">Fallback: <span class="o">recorded run</span></h2>
       <div class="fallback-box reveal">
         <div class="fb-icon">▢</div>
@@ -526,7 +697,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide light" data-label="Why not monoculture"
     data-speaker-notes="State the thesis plainly: no single model or harness wins on cost, intelligence, and taste simultaneously, so routing by task is the same discipline as the presenter's own model-picking table — cheap and fast for bulk work, smarter for unsupervised hard problems, highest-taste only where UI/copy quality is the bottleneck.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">13</span><div class="crumb"><b>Alt. harnesses</b> · why not monoculture</div></div>
+      <div class="slide-head reveal"><span class="snum">18</span><div class="crumb"><b>Alt. harnesses</b> · why not monoculture</div></div>
       <h2 class="reveal">Route by <span class="o">cost, intelligence, taste</span></h2>
       <ul class="bul reveal">
         <li>No single model or harness wins on all three axes at once.</li>
@@ -567,7 +738,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide dark" data-label="Cursor as a harness"
     data-speaker-notes="Cursor is worth its own slide as a harness, not just a pricing model (deck 05, Cost &amp; Context): its IDE-native integration and Auto/Router model selection make it a genuine alternative to a terminal agent for engineers who live in an editor. It earns its place when routing quality matters more than terminal-native workflows like git worktrees.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">14</span><div class="crumb"><b>Alt. harnesses</b> · Cursor</div></div>
+      <div class="slide-head reveal"><span class="snum">19</span><div class="crumb"><b>Alt. harnesses</b> · Cursor</div></div>
       <h2 class="reveal">Cursor as a <span class="o">harness</span></h2>
       <ul class="bul reveal">
         <li>IDE-native, not terminal-native — strongest for engineers who live in an editor rather than a terminal.</li>
@@ -580,7 +751,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide light" data-label="OpenRouter"
     data-speaker-notes="OpenRouter is one API key over 315-plus models from every major vendor, with a roughly 5.5% fee on credit purchases rather than a heavy per-token markup — use that framing over the inconsistent '30-60% markup' figure some trackers cite. Flag the real caveat: failover is a feature, but it also means a request can silently land on a different provider than you expected.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">15</span><div class="crumb"><b>Alt. harnesses</b> · OpenRouter</div></div>
+      <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>Alt. harnesses</b> · OpenRouter</div></div>
       <h2 class="reveal">OpenRouter: <span class="o">one API, many models</span></h2>
       <ul class="bul reveal">
         <li><b>315+ models</b> from Anthropic, OpenAI, Google, DeepSeek, Meta, Mistral, xAI, and others — one key, one bill.</li>
@@ -594,7 +765,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide dark" data-label="Pi"
     data-speaker-notes="Pi is Mario Zechner's minimal terminal harness — under a thousand tokens of system prompt, now under Earendil Inc, supporting 15-plus providers including local models via Ollama. The tradeoff to flag: running Claude models through Pi bills at raw API rates, so someone already on Claude Max is effectively paying twice — the payoff is a lighter harness and broader model choice.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">16</span><div class="crumb"><b>Alt. harnesses</b> · Pi</div></div>
+      <div class="slide-head reveal"><span class="snum">21</span><div class="crumb"><b>Alt. harnesses</b> · Pi</div></div>
       <h2 class="reveal">Pi: a <span class="o">minimal</span> harness</h2>
       <ul class="bul reveal">
         <li>Terminal coding-agent harness by Mario Zechner (now Earendil Inc) — system prompt under ~1,000 tokens.</li>
@@ -607,7 +778,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide light" data-label="State of open-source models"
     data-speaker-notes="Frame the headline claim carefully: the frontier gap for coding tasks is closing, not closed. The next several slides give specific, verified evidence — Gemma 4, Qwen 3.6, GLM-5.2 — rather than asserting the trend in the abstract.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">17</span><div class="crumb"><b>Alt. harnesses</b> · open models, July 2026</div></div>
+      <div class="slide-head reveal"><span class="snum">22</span><div class="crumb"><b>Alt. harnesses</b> · open models, July 2026</div></div>
       <h2 class="reveal">The frontier gap is <span class="o">closing</span> — for coding</h2>
       <ul class="bul reveal">
         <li>Several open-weight releases in 2026 close in on frontier coding-benchmark scores at a fraction of the parameter count or cost.</li>
@@ -619,7 +790,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide dark" data-label="Gemma 4"
     data-speaker-notes="Gemma 4 arrived around March 2026 in five sizes from 2B up to 31B dense; the 12B unified multimodal variant, added June 2026, runs comfortably on a 16GB laptop at Q4_0 quantization and nearly matches the 26B model's benchmarks at less than half the memory. This is real evidence that local, laptop-class inference is viable, not aspirational.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">18</span><div class="crumb"><b>Alt. harnesses</b> · Gemma 4</div></div>
+      <div class="slide-head reveal"><span class="snum">23</span><div class="crumb"><b>Alt. harnesses</b> · Gemma 4</div></div>
       <h2 class="reveal">Gemma 4: <span class="o">laptop-viable</span></h2>
       <ul class="bul reveal">
         <li>Google, arrived ~March 2026. Sizes: E2B, E4B, a 12B unified multimodal (June 2026), a 26B MoE (3.8B active), a 31B dense.</li>
@@ -631,7 +802,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide light" data-label="Qwen 3.6"
     data-speaker-notes="Qwen 3.6 is Alibaba's Apache-2.0 family, with two April 2026 flagship releases: a 27B dense model and a 35B-A3B mixture-of-experts model with only 3B active parameters per token. The MoE variant's low active-parameter count is the realistic local-laptop pick; exact RAM requirements weren't independently verified in the fact-check pass, so say that out loud rather than guessing a number.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">19</span><div class="crumb"><b>Alt. harnesses</b> · Qwen 3.6</div></div>
+      <div class="slide-head reveal"><span class="snum">24</span><div class="crumb"><b>Alt. harnesses</b> · Qwen 3.6</div></div>
       <h2 class="reveal">Qwen 3.6: <span class="o">dense and MoE flagships</span></h2>
       <ul class="bul reveal">
         <li>Alibaba, Apache 2.0. Two April 2026 flagships: <b>27B dense</b> and <b>35B-A3B MoE</b> (only 3B active params/token).</li>
@@ -644,7 +815,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide dark" data-label="Live demo: local models on small hardware"
     data-speaker-notes="RUNBOOK: on the presenter's own laptop, run Gemma 4 (12B) or Qwen 3.6 (35B-A3B) locally via Ollama, feed it a real coding task from this team's repo, and let it run to completion on screen. The message is 'absolutely viable even on modest hardware,' not 'as good as the frontier' — don't oversell it. If local inference is too slow to finish live, narrate progress and cut to the fallback recording rather than waiting out a slow generation.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>Alt. harnesses</b> · live demo</div></div>
+      <div class="slide-head reveal"><span class="snum">25</span><div class="crumb"><b>Alt. harnesses</b> · live demo</div></div>
       <div class="demo-badge reveal">Live</div>
       <h2 class="reveal">Local models, <span class="o">small hardware</span></h2>
       <ul class="bul reveal">
@@ -658,7 +829,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide light" data-label="Fallback: local model demo"
     data-speaker-notes="Use if local generation is too slow to finish live. Narrate from the recording: which model, which task, how long it took, and the final result — keep the honest framing that it's slower than a hosted frontier model but genuinely usable.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">21</span><div class="crumb"><b>Alt. harnesses</b> · fallback</div></div>
+      <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>Alt. harnesses</b> · fallback</div></div>
       <h2 class="reveal">Fallback: <span class="o">recorded run</span></h2>
       <div class="fallback-box reveal">
         <div class="fb-icon">▢</div>
@@ -671,7 +842,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide dark" data-label="Colibri for GLM-5.2"
     data-speaker-notes="GLM-5.2 is Z.ai's open-weight MoE coding model at roughly 753 billion total parameters — sources disagree slightly, some say 744B, treat the exact figure as approximate. Colibri is the piece that makes it runnable on ordinary hardware with no GPU: a ~2,400-line pure-C inference engine that keeps the dense parameters in RAM and streams routed experts from disk, running the full model on about 25GB of RAM. Be upfront that speed is very slow, roughly 0.05 to 1 token per second — the value is running it at all, not running it fast.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">22</span><div class="crumb"><b>Alt. harnesses</b> · Colibri + GLM-5.2</div></div>
+      <div class="slide-head reveal"><span class="snum">27</span><div class="crumb"><b>Alt. harnesses</b> · Colibri + GLM-5.2</div></div>
       <h2 class="reveal">Colibri: GLM-5.2 <span class="o">without a GPU</span></h2>
       <ul class="bul reveal">
         <li><b>GLM-5.2</b> (Z.ai): open-weight MoE, ~753B total params (~40B active), 1M context. Reportedly matches/beats GPT-5.5 on several long-horizon coding tasks. <span class="muted">[total param count varies 744B–753B across sources]</span></li>
@@ -707,7 +878,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide light" data-label="When local makes sense"
     data-speaker-notes="Close the open-model thread with a balanced decision: local makes sense for privacy-sensitive or air-gapped environments, for driving marginal cost toward zero, and where latency requirements are loose enough to tolerate it. It doesn't make sense when you need frontier quality or fast turnaround, or when the hardware/ops overhead outweighs the savings.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">23</span><div class="crumb"><b>Alt. harnesses</b> · when local makes sense</div></div>
+      <div class="slide-head reveal"><span class="snum">28</span><div class="crumb"><b>Alt. harnesses</b> · when local makes sense</div></div>
       <h2 class="reveal">When local makes sense — <span class="o">and when it doesn't</span></h2>
       <div class="cards c2 reveal">
         <div class="tile fill"><span class="k">Makes sense</span><p>Privacy-sensitive or air-gapped work, driving marginal cost toward zero, latency requirements loose enough to tolerate it.</p></div>
@@ -729,7 +900,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide light" data-label="Voice mode"
     data-speaker-notes="Claude Code's native /voice dictation shipped around March 3rd 2026 and is confirmed real: Hold and Tap modes, tuned for coding vocabulary. Be explicit and careful about 'Hlas' — it could not be verified as a real named product in the fact-check pass; it may be a generic reference to Czech-language dictation rather than a specific tool. Ask the presenter to confirm the exact name/spelling before using it live, or cut the reference. The live demo should showcase Claude Code's own /voice command, which is solidly verified, regardless of how the Hlas question resolves.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">24</span><div class="crumb"><b>Day-to-day</b> · voice mode</div></div>
+      <div class="slide-head reveal"><span class="snum">29</span><div class="crumb"><b>Day-to-day</b> · voice mode</div></div>
       <div class="demo-badge reveal">Live</div>
       <h2 class="reveal">Voice mode: <span class="o">dictate, don't type</span></h2>
       <ul class="bul reveal">
@@ -743,7 +914,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide dark" data-label="Fallback: voice demo"
     data-speaker-notes="Use if live dictation is unreliable on the venue's microphone setup. Narrate from the recording: the /voice command, Hold vs Tap, and a real prompt dictated and executed.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">25</span><div class="crumb"><b>Day-to-day</b> · fallback</div></div>
+      <div class="slide-head reveal"><span class="snum">30</span><div class="crumb"><b>Day-to-day</b> · fallback</div></div>
       <h2 class="reveal">Fallback: <span class="o">recorded run</span></h2>
       <div class="fallback-box reveal">
         <div class="fb-icon">▢</div>
@@ -756,7 +927,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide light" data-label="Grab-bag of daily habits"
     data-speaker-notes="Quick list of habits that compound: keyboard-first navigation instead of reaching for the mouse, running several sessions in parallel on unrelated tasks, kicking off background/async tasks and checking back later, and checkpointing progress with small git commits so an agent's mid-task state is never the only copy.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>Day-to-day</b> · habits</div></div>
+      <div class="slide-head reveal"><span class="snum">31</span><div class="crumb"><b>Day-to-day</b> · habits</div></div>
       <h2 class="reveal">Habits that <span class="o">compound daily</span></h2>
       <ul class="bul reveal">
         <li><b>Keyboard-first</b> — fewer context switches to the mouse.</li>
@@ -770,7 +941,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide dark" data-label="Recap ladder"
     data-speaker-notes="Close the content with the same three words from the title slide: measure, route, habits. Say it slowly and connect each word to the part that covered it — and be explicit that measuring is the one to act on first, because without evals the routing decisions in part 02 are just another set of vibes.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">27</span><div class="crumb"><b>Day-to-day</b> · recap</div></div>
+      <div class="slide-head reveal"><span class="snum">32</span><div class="crumb"><b>Day-to-day</b> · recap</div></div>
       <h2 class="reveal">Measure → route → <span class="o">habits</span></h2>
       <div class="flow reveal">
         <div class="step hot">01 measure</div><div class="arrow">→</div>
@@ -790,9 +961,14 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide light dense" data-label="Sources"
     data-speaker-notes="Close on sources, matching series convention: all pricing and product claims are date-stamped July 2026 and come from the fact-check pass. Point at the one explicitly unverified item — 'Hlas' as a named product — one more time so nobody repeats it as confirmed. Mention the full per-claim list lives in the internal research doc if anyone wants to dig.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">28</span><div class="crumb"><b>Close</b> · sources</div></div>
+      <div class="slide-head reveal"><span class="snum">33</span><div class="crumb"><b>Close</b> · sources</div></div>
       <h2 class="reveal"><span class="o">Sources</span> — all claims dated July 2026</h2>
-      <div class="links reveal">
+      <div class="links reveal" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="linkcol">
+          <h3>Evals &amp; tracing</h3>
+          <a href="https://github.com/prime-radiant-inc/smevals" target="_blank" rel="noopener">smevals — eval framework<span class="u">github.com/prime-radiant-inc/smevals</span></a>
+          <a href="https://www.elastic.co/search-labs/blog/opentelemetry-tracing-agent-builder" target="_blank" rel="noopener">OTel tracing for AI agents (Elastic)<span class="u">elastic.co/search-labs</span></a>
+        </div>
         <div class="linkcol">
           <h3>Harnesses &amp; routing</h3>
           <a href="https://www.nxcode.io/resources/news/cursor-ai-pricing-plans-guide-2026" target="_blank" rel="noopener">Cursor pricing guide 2026<span class="u">nxcode.io</span></a>
