@@ -31,11 +31,23 @@ Author: **David Budáč** · English
   constraint → the caching mechanism (exact-match prefixes, breakpoints, TTL & eviction)
   and its economics → where the two reinforce each other → what's allowed under a
   subscription vs an API key. 39 slides, ~30 min. **No live demos.**
-- **[`working-smarter.html`](working-smarter.html)** — *Working Smarter with
-  Agents* (WIP, half-day workshop with live demos, for engineers already using
-  Claude Code who want to level up). What agents really cost (tokens,
-  subscriptions, Bedrock) → efficient context work (CLAUDE.md, evals, traces) →
-  orchestration, local open-source models & alternative harnesses. ~85 slides.
+- **[`cost-and-context.html`](cost-and-context.html)** — *Cost & Context* (WIP,
+  ~30-min deep dive, for engineers already running Claude Code daily). What
+  agents really cost — three pricing meters, subscriptions vs API vs Bedrock,
+  a which-plan-for-which-team table → efficient work with context: the context
+  lifecycle, CLAUDE.md hygiene, `/doctor`, `/clear` vs `/compact`. 29 slides.
+  **Live bloated-vs-lean demo.**
+- **[`orchestrating-agents.html`](orchestrating-agents.html)** — *Orchestrating
+  Agents* (WIP, ~30-min deep dive, for experienced devs). A map of the
+  orchestration ecosystem (dashboards, worktrees, backlog-driven fleets) → the
+  three failure modes of parallel agents → sandboxing before unattended runs →
+  skills & plugins for teams and a per-capability MCP-vs-CLI heuristic. 32 slides.
+- **[`measuring-what-works.html`](measuring-what-works.html)** — *Measuring What
+  Works* (WIP, ~30-min deep dive, for experienced devs). A minimal eval loop you
+  can start this week → reading traces for wasted turns and real cost, with the
+  OTel GenAI span anatomy → the July-2026 open-model landscape (Gemma 4,
+  Qwen 3.6, GLM-5.2), local inference & alternative harnesses → habits that
+  compound. 36 slides.
 - **[`claude-design.html`](claude-design.html)** — *Claude Design* (WIP,
   ~30-min product deep dive, no code or design background needed — any paid
   Claude plan). The full tour behind deck 01's two teaser slides: the
@@ -103,9 +115,11 @@ and Fable techniques (advisor & orchestrator patterns) · the agentic ladder · 
 verifiers (spiralling, reward-hacking) · dynamic workflows · skills & plugins.
 A single **context** thread ties the sections together (🧵 markers throughout).
 
-**Working Smarter with Agents** *(WIP)* — what agents really cost (tokens,
-subscriptions, Bedrock) · efficient context work (CLAUDE.md, evals, traces) ·
-orchestration, local open-source models & alternative harnesses.
+**Cost & Context · Orchestrating Agents · Measuring What Works** *(decks 05–07,
+WIP)* — what agents really cost (tokens, subscriptions, Bedrock) · efficient
+context work (CLAUDE.md, `/doctor`, `/clear` vs `/compact`) · orchestration,
+sandboxing, skills & plugins, MCP vs CLI · evals, traces, local open-source
+models & alternative harnesses.
 
 **Claude Design** *(WIP)* — what it is (Anthropic Labs, April 2026, beta) ·
 chat left / canvas right · four starting points (text, DOCX/PPTX/XLSX, web
@@ -115,7 +129,7 @@ creative director, chat vs inline comments vs direct editing, briefs to steal
 · pitfalls · sharing, exports (PPTX/PDF/HTML/Canva/zip) & the Claude Code
 handoff round trip. Facts verified July 2026.
 
-## Live demo (agentic-ai deck, optional; the WIP workshop deck also has live demos)
+## Live demo (agentic-ai deck, optional; decks 05 and 08 also have live demos)
 
 The *Intro to Agentic AI* deck is built to run alongside a live agent. There's a **🔴 LIVE** anchor
 slide right after the hook, and **🔴 LIVE** callback markers on the loop,
@@ -170,7 +184,6 @@ animations read the same palette from `remotion/src/theme.ts`.
 | `agentic-ai.html` | *Intro to Agentic AI* deck — beginners. |
 | `agentic-engineering.html` | *Agentic Engineering* deck — developers (no live demo). |
 | `subagents-prompt-caching.html` | *Subagents & Prompt Caching* deck — engineering deep dive (no live demo). |
-| `working-smarter.html` | *Working Smarter with Agents* deck — half-day workshop on cost, context efficiency & orchestration (WIP, live demos). |
 | `cost-and-context.html` | *Cost & Context* deck — what agents really cost and how to spend context well (WIP). |
 | `orchestrating-agents.html` | *Orchestrating Agents* deck — subagents, workflows & alternative harnesses (WIP). |
 | `measuring-what-works.html` | *Measuring What Works* deck — evals, traces & judging changes by evidence (WIP). |
