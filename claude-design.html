@@ -186,6 +186,13 @@ table.tbl tr:last-child td{border-bottom:none}
 .dg-cap b{color:var(--s-text)}
 .diagram marker path{fill:var(--s-accent)}
 
+/* cd-orbit: slow dashed orbit on the iteration-loop diagram (slide 9) */
+.cd-orbit{stroke:var(--s-accent); stroke-width:2; fill:none; opacity:.35; stroke-dasharray:10 14}
+@media (prefers-reduced-motion:no-preference){
+  [data-deck-active] .cd-orbit{animation:cd-orbit 14s linear infinite}
+}
+@keyframes cd-orbit{to{stroke-dashoffset:-240}}
+
 /* flow: HTML/CSS step chain used instead of video diagrams */
 .flow{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
 .flow .step{border:var(--bw) solid var(--s-card-border); background:var(--s-card-bg); border-radius:var(--radius-md);
@@ -351,7 +358,7 @@ table.tbl tr:last-child td{border-bottom:none}
       <div class="slide-head reveal"><span class="snum">4</span><div class="crumb"><b>What it is</b> · the interface</div></div>
       <h2 class="reveal">Chat left, <span class="o">canvas right</span></h2>
       <div class="diagram reveal">
-        <svg viewBox="0 0 1300 430" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 1300 430" role="img" aria-label="Two-pane interface: a chat pane on the left sends build and refine messages to the canvas on the right, where elements take inline comments, direct edits, and slider controls" xmlns="http://www.w3.org/2000/svg">
           <defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
           <!-- chat pane -->
           <rect class="dg-box" x="40" y="40" width="420" height="350" rx="14"/>
@@ -404,11 +411,34 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">6</span><div class="crumb"><b>What it is</b> · starting points</div></div>
       <h2 class="reveal">Four ways to <span class="o">start</span></h2>
-      <div class="cards c4 reveal">
-        <div class="tile"><span class="k">Describe it</span><p>A text brief in chat — the blank-page start. Part 02 shows how to write a good one.</p></div>
-        <div class="tile"><span class="k">Upload a file</span><p><b>DOCX, PPTX, XLSX</b> — the existing ugly deck or doc goes in, a designed version comes out.</p></div>
-        <div class="tile"><span class="k">Capture a website</span><p>Point the web tool at a site — your own as a brand baseline, or a competitor's as reference.</p></div>
-        <div class="tile"><span class="k">Point at a codebase</span><p>Claude reads your components &amp; patterns — prototypes come out <b>production-shaped</b>.</p></div>
+      <div class="diagram reveal">
+        <svg viewBox="0 0 1300 470" role="img" aria-label="Four starting points — a text brief, an uploaded DOCX, PPTX or XLSX file, a website capture, and a codebase — all fan into the same canvas and the same describe-refine loop" xmlns="http://www.w3.org/2000/svg">
+          <defs><marker id="cdm6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
+          <!-- four inputs -->
+          <rect class="dg-box" x="40" y="25" width="450" height="88" rx="12"/>
+          <text class="dg-t" x="70" y="62" font-size="23">Describe it</text>
+          <text class="dg-t mut" x="70" y="93" font-size="20">a text brief in chat — the blank-page start</text>
+          <rect class="dg-box" x="40" y="133" width="450" height="88" rx="12"/>
+          <text class="dg-t" x="70" y="170" font-size="23">Upload a file</text>
+          <text class="dg-t acc" x="70" y="201" font-size="19">DOCX · PPTX · XLSX — ugly deck in, designed out</text>
+          <rect class="dg-box" x="40" y="241" width="450" height="88" rx="12"/>
+          <text class="dg-t" x="70" y="278" font-size="23">Capture a website</text>
+          <text class="dg-t mut" x="70" y="309" font-size="20">yours as brand baseline · a competitor's as reference</text>
+          <rect class="dg-box" x="40" y="349" width="450" height="88" rx="12"/>
+          <text class="dg-t" x="70" y="386" font-size="23">Point at a codebase</text>
+          <text class="dg-t mut" x="70" y="417" font-size="20">reads your components → production-shaped</text>
+          <!-- fan-in -->
+          <path class="dg-line" d="M495 69 C 650 69 700 185 815 213" marker-end="url(#cdm6)"/>
+          <path class="dg-line" d="M495 177 C 630 177 700 208 815 225" marker-end="url(#cdm6)"/>
+          <path class="dg-line" d="M495 285 C 630 285 700 254 815 237" marker-end="url(#cdm6)"/>
+          <path class="dg-line" d="M495 393 C 650 393 700 277 815 249" marker-end="url(#cdm6)"/>
+          <!-- one canvas -->
+          <rect class="dg-box outer" x="835" y="115" width="425" height="230" rx="14"/>
+          <text class="dg-t acc" x="1047" y="165" text-anchor="middle" font-size="22">ONE CANVAS</text>
+          <rect class="dg-box mid" x="875" y="192" width="345" height="64" rx="10"/>
+          <text class="dg-t" x="1047" y="232" text-anchor="middle" font-size="21">working first version</text>
+          <text class="dg-t mut" x="1047" y="303" text-anchor="middle" font-size="20">same describe → refine loop</text>
+        </svg>
       </div>
       <p class="note reveal">Codebase tip from early users: attach the <b>relevant subdirectory</b>, not the whole monorepo — very large repos cause lag.</p>
     </div>
@@ -424,11 +454,39 @@ table.tbl tr:last-child td{border-bottom:none}
           <li>Every project <b>automatically inherits your organisation's design system</b> — colors, typography, components. Nothing to configure per project.</li>
           <li>Feed it from a <b>GitHub repo, design files, or a local codebase</b> — the <b>/design-sync</b> command in Claude Code pushes it in.</li>
           <li>One org can hold <b>several design systems</b> — product brand, marketing brand, sub-brands.</li>
+          <li><b>It checks its own work</b> — builds with your real components, then reviews the output against the system and <b>corrects deviations before you see them</b>.</li>
           <li>Answers the classic complaint: <i>"AI output never looks like us."</i></li>
         </ul>
-        <div class="kcard reveal">
-          <div class="big">It checks<br>its own work</div>
-          <p>Claude builds with your <b>real components</b>, then reviews its output against the design system and <b>corrects deviations before you see them</b> — a reviewer, not a filter.</p>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 660 500" role="img" aria-label="A GitHub repo, design files or a local codebase feed the org design system through the /design-sync command; every project inherits it automatically, and Claude self-checks its output against the system" xmlns="http://www.w3.org/2000/svg">
+            <defs><marker id="cdm7" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
+            <!-- sources -->
+            <rect class="dg-box" x="20" y="20" width="190" height="62" rx="10"/>
+            <text class="dg-t" x="115" y="58" text-anchor="middle" font-size="20">GitHub repo</text>
+            <rect class="dg-box" x="225" y="20" width="190" height="62" rx="10"/>
+            <text class="dg-t" x="320" y="58" text-anchor="middle" font-size="20">design files</text>
+            <rect class="dg-box" x="430" y="20" width="190" height="62" rx="10"/>
+            <text class="dg-t" x="525" y="58" text-anchor="middle" font-size="20">local codebase</text>
+            <!-- converge -->
+            <path class="dg-line dim" d="M115 82 V112 H305"/>
+            <path class="dg-line dim" d="M525 82 V112 H335"/>
+            <path class="dg-line" d="M320 82 V140" marker-end="url(#cdm7)"/>
+            <!-- /design-sync -->
+            <rect class="dg-box hot" x="212" y="148" width="216" height="56" rx="28"/>
+            <text class="dg-t on" x="320" y="184" text-anchor="middle" font-size="21">/design-sync</text>
+            <path class="dg-line" d="M320 204 V248" marker-end="url(#cdm7)"/>
+            <!-- design system -->
+            <rect class="dg-box outer" x="85" y="256" width="470" height="92" rx="12"/>
+            <text class="dg-t" x="320" y="294" text-anchor="middle" font-size="22">Org design system</text>
+            <text class="dg-t mut" x="320" y="326" text-anchor="middle" font-size="19">colors · typography · components</text>
+            <path class="dg-line" d="M320 348 V392" marker-end="url(#cdm7)"/>
+            <!-- projects + self-check -->
+            <rect class="dg-box mid" x="125" y="400" width="390" height="76" rx="12"/>
+            <text class="dg-t" x="320" y="432" text-anchor="middle" font-size="21">every project inherits it</text>
+            <text class="dg-t mut" x="320" y="461" text-anchor="middle" font-size="18">nothing to configure</text>
+            <path class="dg-line" d="M515 428 C 615 410 620 330 560 306" marker-end="url(#cdm7)"/>
+            <text class="dg-t acc" x="605" y="378" text-anchor="middle" font-size="17">self-check</text>
+          </svg>
         </div>
       </div>
     </div>
@@ -468,18 +526,49 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">9</span><div class="crumb"><b>Craft</b> · the loop</div></div>
       <h2 class="reveal">Judge iteration 4, <span class="o">not iteration 1</span></h2>
-      <div class="flow reveal">
-        <div class="step">describe</div><div class="arrow">→</div>
-        <div class="step">review</div><div class="arrow">→</div>
-        <div class="step hot">refine</div><div class="arrow">→</div>
-        <div class="step">repeat ×2–4</div>
+      <div class="split">
+        <div>
+          <ul class="bul reveal">
+            <li>The first generation is a <b>conversation opener</b>, not the deliverable — real value shows up in <b>iterations 2–4</b>.</li>
+            <li><b>Start simple, then layer:</b> core layout &amp; content first; interactions, edge cases and polish as separate rounds.</li>
+            <li>Claude responds well to <b>incremental requests</b> — ten small asks beat one ten-part brief.</li>
+          </ul>
+          <p class="note reveal">If you remember one thing from this part: <b>don't judge generation one.</b></p>
+        </div>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 620 560" role="img" aria-label="A circular loop of describe, review and refine, repeated two to four times; on the iteration scale below, iteration 1 is marked as the opener and iteration 4 as the one to judge" xmlns="http://www.w3.org/2000/svg">
+            <defs><marker id="cdm9" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
+            <!-- ambient orbit (animated) -->
+            <circle class="cd-orbit" cx="310" cy="205" r="142"/>
+            <!-- the three steps -->
+            <rect class="dg-box" x="218" y="32" width="184" height="56" rx="12"/>
+            <text class="dg-t" x="310" y="68" text-anchor="middle" font-size="22">describe</text>
+            <rect class="dg-box" x="358" y="272" width="184" height="56" rx="12"/>
+            <text class="dg-t" x="450" y="308" text-anchor="middle" font-size="22">review</text>
+            <rect class="dg-box hot" x="78" y="272" width="184" height="56" rx="12"/>
+            <text class="dg-t on" x="170" y="308" text-anchor="middle" font-size="22">refine</text>
+            <!-- clockwise arrows -->
+            <path class="dg-line" d="M404 80 C 488 100 474 186 454 266" marker-end="url(#cdm9)"/>
+            <path class="dg-line" d="M346 334 C 312 386 308 386 274 334" marker-end="url(#cdm9)"/>
+            <path class="dg-line" d="M166 266 C 148 172 158 104 212 78" marker-end="url(#cdm9)"/>
+            <!-- hub -->
+            <text class="dg-t acc" x="310" y="198" text-anchor="middle" font-size="20">repeat</text>
+            <text class="dg-t mut" x="310" y="228" text-anchor="middle" font-size="19">×2–4</text>
+            <!-- iteration scale -->
+            <path class="dg-line dim" d="M164 480 H461"/>
+            <circle class="dg-box" cx="140" cy="480" r="24"/>
+            <text class="dg-t mut" x="140" y="488" text-anchor="middle" font-size="20">1</text>
+            <circle class="dg-box mid" cx="255" cy="480" r="24"/>
+            <text class="dg-t" x="255" y="488" text-anchor="middle" font-size="20">2</text>
+            <circle class="dg-box mid" cx="370" cy="480" r="24"/>
+            <text class="dg-t" x="370" y="488" text-anchor="middle" font-size="20">3</text>
+            <circle class="dg-box hot" cx="485" cy="480" r="24"/>
+            <text class="dg-t on" x="485" y="488" text-anchor="middle" font-size="20">4</text>
+            <text class="dg-t mut" x="140" y="537" text-anchor="middle" font-size="17">opener</text>
+            <text class="dg-t acc" x="485" y="537" text-anchor="middle" font-size="18">judge here</text>
+          </svg>
+        </div>
       </div>
-      <ul class="bul reveal" style="margin-top:28px">
-        <li>The first generation is a <b>conversation opener</b>, not the deliverable — real value shows up in <b>iterations 2–4</b>.</li>
-        <li><b>Start simple, then layer:</b> core layout &amp; content first; interactions, edge cases and polish as separate rounds.</li>
-        <li>Claude responds well to <b>incremental requests</b> — ten small asks beat one ten-part brief.</li>
-      </ul>
-      <p class="note reveal">If you remember one thing from this part: <b>don't judge generation one.</b></p>
     </div>
   </section>
 
@@ -501,14 +590,44 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">11</span><div class="crumb"><b>Craft</b> · refinement channels</div></div>
       <h2 class="reveal">Three channels — <span class="o">pick the right one</span></h2>
-      <table class="tbl reveal">
-        <thead><tr><th>Channel</th><th>Use it for</th><th>Feels like</th></tr></thead>
-        <tbody>
-          <tr><td><b>Chat</b></td><td><b>Structural</b> change — rearrange, add a section, new direction</td><td>talking to the designer</td></tr>
-          <tr><td><b>Inline comments</b></td><td><b>Targeted</b> tweaks — click the element, say what's wrong</td><td>markup on a proof</td></tr>
-          <tr><td><b>Direct editing</b></td><td>What's <b>fastest by hand</b> — drag, resize, align, fix a typo; sliders for spacing · color · layout</td><td>a slide editor</td></tr>
-        </tbody>
-      </table>
+      <div class="diagram reveal">
+        <svg viewBox="0 0 1300 440" role="img" aria-label="Three refinement channels aimed at one canvas: chat redraws the whole design, an inline comment targets one element, and direct editing adjusts one detail by hand" xmlns="http://www.w3.org/2000/svg">
+          <defs><marker id="cdm11" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
+          <!-- channels -->
+          <rect class="dg-box" x="40" y="25" width="420" height="110" rx="12"/>
+          <text class="dg-t" x="70" y="65" font-size="23">Chat — structural</text>
+          <text class="dg-t mut" x="70" y="97" font-size="20">rearrange · add a section · new direction</text>
+          <text class="dg-t mut" x="70" y="123" font-size="18">feels like: talking to the designer</text>
+          <rect class="dg-box" x="40" y="160" width="420" height="110" rx="12"/>
+          <text class="dg-t" x="70" y="200" font-size="23">Inline comment — targeted</text>
+          <text class="dg-t mut" x="70" y="232" font-size="20">click the element, say what's wrong</text>
+          <text class="dg-t mut" x="70" y="258" font-size="18">feels like: markup on a proof</text>
+          <rect class="dg-box" x="40" y="295" width="420" height="110" rx="12"/>
+          <text class="dg-t" x="70" y="335" font-size="23">Direct edit — by hand</text>
+          <text class="dg-t mut" x="70" y="367" font-size="20">drag · resize · fix a typo · sliders</text>
+          <text class="dg-t mut" x="70" y="393" font-size="18">feels like: a slide editor</text>
+          <!-- arrows, sized by scope -->
+          <path class="dg-line" style="stroke-width:5" d="M465 80 H745" marker-end="url(#cdm11)"/>
+          <text class="dg-t acc" x="605" y="60" text-anchor="middle" font-size="19">the whole design</text>
+          <path class="dg-line" d="M465 215 C 600 215 680 246 815 250" marker-end="url(#cdm11)"/>
+          <text class="dg-t acc" x="608" y="196" text-anchor="middle" font-size="19">one element</text>
+          <path class="dg-line" style="stroke-width:1.75" d="M465 350 C 600 350 680 336 812 330" marker-end="url(#cdm11)"/>
+          <text class="dg-t acc" x="608" y="386" text-anchor="middle" font-size="19">one detail</text>
+          <!-- canvas wireframe -->
+          <rect class="dg-box outer" x="760" y="30" width="500" height="380" rx="14"/>
+          <text class="dg-t acc" x="1010" y="72" text-anchor="middle" font-size="21">CANVAS</text>
+          <rect class="dg-box mid" x="795" y="95" width="430" height="80" rx="10"/>
+          <text class="dg-t mut" x="1010" y="143" text-anchor="middle" font-size="19">hero section</text>
+          <rect class="dg-box mid" x="795" y="195" width="205" height="110" rx="10"/>
+          <text class="dg-t" x="897" y="243" text-anchor="middle" font-size="19">💬 "brand color</text>
+          <text class="dg-t" x="897" y="270" text-anchor="middle" font-size="19">here"</text>
+          <rect class="dg-box mid" x="1020" y="195" width="205" height="110" rx="10"/>
+          <text class="dg-t mut" x="1122" y="256" text-anchor="middle" font-size="19">card</text>
+          <rect class="dg-box mid" x="795" y="325" width="150" height="56" rx="10"/>
+          <text class="dg-t mut" x="870" y="360" text-anchor="middle" font-size="19">button</text>
+          <rect class="dg-box hot" x="936" y="317" width="16" height="16" rx="3"/>
+        </svg>
+      </div>
       <p class="note reveal">The classic mistake: <b>structural work via twenty inline comments</b> — or asking chat to nudge one button. Match the channel to the size of the change.</p>
     </div>
   </section>
@@ -531,13 +650,48 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">13</span><div class="crumb"><b>Craft</b> · exploring safely</div></div>
       <h2 class="reveal">Explore <span class="o">without losing work</span></h2>
-      <ul class="bul reveal">
-        <li>The branch phrase: <b>"Save what we have and try a completely different approach."</b> Explore freely — the version you liked survives.</li>
-        <li>Ask for <b>variations up front</b>: "give me four visual directions" → compare side by side, then commit to one.</li>
-        <li>Say <b>early</b> if it must work on mobile — responsiveness is a brief-time requirement, not a final-polish fix.</li>
-        <li>Use Claude as an <b>accessibility reviewer</b>: "check contrast, font sizes and hierarchy" — it's genuinely good at this.</li>
-      </ul>
-      <p class="note reveal">Treat the canvas like a cheap sketchbook, not a precious file — <b>branching costs one sentence.</b></p>
+      <div class="split">
+        <div>
+          <ul class="bul reveal">
+            <li>The branch phrase: <b>"Save what we have and try a completely different approach."</b> Explore freely — the version you liked survives.</li>
+            <li>Ask for <b>variations up front</b>: "give me four visual directions" → compare side by side, then commit to one.</li>
+            <li>Say <b>early</b> if it must work on mobile — responsiveness is a brief-time requirement, not a final-polish fix.</li>
+            <li>Use Claude as an <b>accessibility reviewer</b>: "check contrast, font sizes and hierarchy" — it's genuinely good at this.</li>
+          </ul>
+          <p class="note reveal">Treat the canvas like a cheap sketchbook, not a precious file — <b>branching costs one sentence.</b></p>
+        </div>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 640 430" role="img" aria-label="An iteration line reaches a version worth keeping, which is saved; from there a branch tries a completely different approach and fans out into four directions to compare side by side" xmlns="http://www.w3.org/2000/svg">
+            <defs><marker id="cdm13" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
+            <!-- trunk -->
+            <rect class="dg-box" x="20" y="30" width="130" height="60" rx="10"/>
+            <text class="dg-t mut" x="85" y="67" text-anchor="middle" font-size="20">gen 1</text>
+            <path class="dg-line dim" d="M155 60 H188" marker-end="url(#cdm13)"/>
+            <rect class="dg-box" x="195" y="30" width="130" height="60" rx="10"/>
+            <text class="dg-t" x="260" y="67" text-anchor="middle" font-size="20">gen 2</text>
+            <path class="dg-line dim" d="M330 60 H363" marker-end="url(#cdm13)"/>
+            <rect class="dg-box outer" x="370" y="18" width="250" height="84" rx="12"/>
+            <text class="dg-t" x="495" y="53" text-anchor="middle" font-size="20">the one you liked</text>
+            <text class="dg-t acc" x="495" y="83" text-anchor="middle" font-size="19">✓ saved — survives</text>
+            <!-- branch -->
+            <path class="dg-line" d="M260 94 V164" marker-end="url(#cdm13)"/>
+            <text class="dg-t acc" x="280" y="140" font-size="18">branch — one sentence</text>
+            <rect class="dg-box hot" x="70" y="172" width="380" height="64" rx="12"/>
+            <text class="dg-t on" x="260" y="211" text-anchor="middle" font-size="18">"try a completely different approach"</text>
+            <path class="dg-line" d="M260 236 V286" marker-end="url(#cdm13)"/>
+            <!-- variations -->
+            <rect class="dg-box mid" x="40" y="294" width="120" height="56" rx="10"/>
+            <text class="dg-t mut" x="100" y="329" text-anchor="middle" font-size="19">dir A</text>
+            <rect class="dg-box mid" x="180" y="294" width="120" height="56" rx="10"/>
+            <text class="dg-t mut" x="240" y="329" text-anchor="middle" font-size="19">dir B</text>
+            <rect class="dg-box mid" x="320" y="294" width="120" height="56" rx="10"/>
+            <text class="dg-t mut" x="380" y="329" text-anchor="middle" font-size="19">dir C</text>
+            <rect class="dg-box mid" x="460" y="294" width="120" height="56" rx="10"/>
+            <text class="dg-t mut" x="520" y="329" text-anchor="middle" font-size="19">dir D</text>
+            <text class="dg-t mut" x="310" y="402" text-anchor="middle" font-size="18">four directions — compare side by side, then commit</text>
+          </svg>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -616,13 +770,43 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">18</span><div class="crumb"><b>Ship</b> · share &amp; collaborate</div></div>
       <h2 class="reveal">Share for <span class="o">feedback</span></h2>
-      <ul class="bul reveal">
-        <li><b>Org-scoped sharing</b>: private by default → <b>view-only</b>, <b>comment</b>, or <b>edit</b> access via link.</li>
-        <li>The workflow that works: share with <b>comment access</b> — stakeholders leave inline notes <b>exactly where they mean them</b>.</li>
-        <li>Resolve comments in one pass — each note is a targeted refinement Claude can act on directly.</li>
-        <li>Co-editing caveat (beta): <b>one driver, many commenters</b> — simultaneous editing isn't Figma yet.</li>
-      </ul>
-      <p class="note reveal">Stakeholder comments become <b>refinement input</b> — the review round and the iteration round are the same round.</p>
+      <div class="split">
+        <div>
+          <ul class="bul reveal">
+            <li><b>Org-scoped sharing</b>: private by default → <b>view-only</b>, <b>comment</b>, or <b>edit</b> access via link.</li>
+            <li>The workflow that works: share with <b>comment access</b> — stakeholders leave inline notes <b>exactly where they mean them</b>.</li>
+            <li>Resolve comments in one pass — each note is a targeted refinement Claude can act on directly.</li>
+            <li>Co-editing caveat (beta): <b>one driver, many commenters</b> — simultaneous editing isn't Figma yet.</li>
+          </ul>
+          <p class="note reveal">Stakeholder comments become <b>refinement input</b> — the review round and the iteration round are the same round.</p>
+        </div>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 640 470" role="img" aria-label="A private design is shared via link with view-only, comment or edit access; the comment path collects inline notes from stakeholders, which loop back into the design as refinement input" xmlns="http://www.w3.org/2000/svg">
+            <defs><marker id="cdm18" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
+            <!-- the design -->
+            <rect class="dg-box outer" x="110" y="20" width="420" height="64" rx="12"/>
+            <text class="dg-t" x="320" y="59" text-anchor="middle" font-size="20">Your design — private by default</text>
+            <path class="dg-line" d="M320 84 V128" marker-end="url(#cdm18)"/>
+            <text class="dg-t acc" x="345" y="115" font-size="18">share a link</text>
+            <!-- access levels -->
+            <rect class="dg-box" x="40" y="136" width="170" height="56" rx="10"/>
+            <text class="dg-t mut" x="125" y="171" text-anchor="middle" font-size="19">view-only</text>
+            <rect class="dg-box hot" x="235" y="136" width="170" height="56" rx="10"/>
+            <text class="dg-t on" x="320" y="171" text-anchor="middle" font-size="19">comment</text>
+            <rect class="dg-box" x="430" y="136" width="170" height="56" rx="10"/>
+            <text class="dg-t mut" x="515" y="171" text-anchor="middle" font-size="19">edit</text>
+            <!-- comment workflow -->
+            <path class="dg-line" d="M320 192 V236" marker-end="url(#cdm18)"/>
+            <rect class="dg-box mid" x="135" y="244" width="370" height="80" rx="12"/>
+            <text class="dg-t" x="320" y="279" text-anchor="middle" font-size="19">💬 stakeholders leave inline notes</text>
+            <text class="dg-t mut" x="320" y="307" text-anchor="middle" font-size="17">exactly where they mean them</text>
+            <!-- loop back -->
+            <path class="dg-line" d="M130 296 C 40 300 22 130 102 54" marker-end="url(#cdm18)"/>
+            <text class="dg-t acc" x="320" y="368" text-anchor="middle" font-size="18">each note = a refinement Claude acts on</text>
+            <text class="dg-t mut" x="320" y="428" text-anchor="middle" font-size="17">beta: one driver, many commenters — not Figma yet</text>
+          </svg>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -631,17 +815,41 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">19</span><div class="crumb"><b>Ship</b> · exports</div></div>
       <h2 class="reveal">Export by <span class="o">destination</span></h2>
-      <table class="tbl reveal">
-        <thead><tr><th>Destination</th><th>Export</th><th>Why</th></tr></thead>
-        <tbody>
-          <tr><td class="muted">A meeting</td><td><b>PPTX · PDF</b></td><td>lands in the deck culture you already have</td></tr>
-          <tr><td class="muted">A clickable prototype</td><td><b>Standalone HTML</b></td><td>interactive, travels as one file</td></tr>
-          <tr><td class="muted">Stakeholder feedback</td><td><b>Org URL</b></td><td>view/comment/edit access, no file at all</td></tr>
-          <tr><td class="muted">Marketing polish</td><td><b>Canva</b></td><td>the last 10%, in their tool</td></tr>
-          <tr><td class="muted">Raw files</td><td><b>.zip</b></td><td>take the HTML/assets anywhere</td></tr>
-          <tr><td class="muted">A repository</td><td><b>Claude Code handoff</b></td><td>next slide</td></tr>
-        </tbody>
-      </table>
+      <div class="diagram reveal">
+        <svg viewBox="0 0 1300 480" role="img" aria-label="One canvas fans out to six exports: PPTX or PDF for a meeting, standalone HTML for a clickable prototype, an org URL for feedback, Canva for marketing polish, a zip of raw files, and the Claude Code handoff for a repository" xmlns="http://www.w3.org/2000/svg">
+          <defs><marker id="cdm19" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
+          <!-- canvas -->
+          <rect class="dg-box outer" x="40" y="155" width="340" height="170" rx="14"/>
+          <text class="dg-t" x="210" y="230" text-anchor="middle" font-size="24">Your canvas</text>
+          <text class="dg-t mut" x="210" y="268" text-anchor="middle" font-size="19">Export ↗ — button upper right</text>
+          <!-- fan-out -->
+          <path class="dg-line" d="M385 205 C 540 140 580 70 715 52" marker-end="url(#cdm19)"/>
+          <path class="dg-line" d="M385 220 C 540 185 580 145 715 127" marker-end="url(#cdm19)"/>
+          <path class="dg-line" d="M385 235 C 540 228 580 208 715 202" marker-end="url(#cdm19)"/>
+          <path class="dg-line" d="M385 250 C 540 255 580 270 715 276" marker-end="url(#cdm19)"/>
+          <path class="dg-line" d="M385 265 C 540 297 580 337 715 351" marker-end="url(#cdm19)"/>
+          <path class="dg-line" d="M385 280 C 540 342 580 410 715 426" marker-end="url(#cdm19)"/>
+          <!-- destinations -->
+          <rect class="dg-box" x="720" y="20" width="540" height="62" rx="10"/>
+          <text class="dg-t" x="750" y="59" font-size="21">PPTX · PDF</text>
+          <text class="dg-t mut" x="1235" y="59" text-anchor="end" font-size="18">a meeting — your deck culture</text>
+          <rect class="dg-box" x="720" y="95" width="540" height="62" rx="10"/>
+          <text class="dg-t" x="750" y="134" font-size="21">Standalone HTML</text>
+          <text class="dg-t mut" x="1235" y="134" text-anchor="end" font-size="18">clickable prototype, one file</text>
+          <rect class="dg-box" x="720" y="170" width="540" height="62" rx="10"/>
+          <text class="dg-t" x="750" y="209" font-size="21">Org URL</text>
+          <text class="dg-t mut" x="1235" y="209" text-anchor="end" font-size="18">feedback — view · comment · edit</text>
+          <rect class="dg-box" x="720" y="245" width="540" height="62" rx="10"/>
+          <text class="dg-t" x="750" y="284" font-size="21">Canva</text>
+          <text class="dg-t mut" x="1235" y="284" text-anchor="end" font-size="18">the last 10%, in marketing's tool</text>
+          <rect class="dg-box" x="720" y="320" width="540" height="62" rx="10"/>
+          <text class="dg-t" x="750" y="359" font-size="21">.zip</text>
+          <text class="dg-t mut" x="1235" y="359" text-anchor="end" font-size="18">raw HTML &amp; assets, anywhere</text>
+          <rect class="dg-box hot" x="720" y="395" width="540" height="62" rx="10"/>
+          <text class="dg-t on" x="750" y="434" font-size="21">Claude Code handoff</text>
+          <text class="dg-t on" x="1235" y="434" text-anchor="end" font-size="18">a repository — next slide</text>
+        </svg>
+      </div>
       <p class="note reveal">Export button, upper right. Rule of thumb: <b>URL for feedback, file for meetings, handoff for engineers.</b></p>
     </div>
   </section>
@@ -651,12 +859,29 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>Ship</b> · Claude Code handoff</div></div>
       <h2 class="reveal">The Claude Code <span class="o">round trip</span></h2>
-      <div class="flow reveal">
-        <div class="step">repo / design files</div><div class="arrow">→</div>
-        <div class="step hot">/design-sync</div><div class="arrow">→</div>
-        <div class="step">Claude Design</div><div class="arrow">→</div>
-        <div class="step hot">handoff bundle</div><div class="arrow">→</div>
-        <div class="step">Claude Code → your repo</div>
+      <div class="diagram reveal">
+        <svg viewBox="0 0 1300 340" style="max-height:320px" role="img" aria-label="Round trip between your repo and Claude Design: /design-sync carries the design system in, and the handoff bundle carries the finished design back out through Claude Code into the repo" xmlns="http://www.w3.org/2000/svg">
+          <defs><marker id="cdm20" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
+          <!-- endpoints -->
+          <rect class="dg-box" x="40" y="105" width="360" height="130" rx="14"/>
+          <text class="dg-t" x="220" y="163" text-anchor="middle" font-size="24">Your repo</text>
+          <text class="dg-t mut" x="220" y="201" text-anchor="middle" font-size="19">components · design files</text>
+          <rect class="dg-box outer" x="900" y="105" width="360" height="130" rx="14"/>
+          <text class="dg-t" x="1080" y="163" text-anchor="middle" font-size="24">Claude Design</text>
+          <text class="dg-t mut" x="1080" y="201" text-anchor="middle" font-size="19">the canvas</text>
+          <!-- in: /design-sync -->
+          <path class="dg-line" d="M405 130 C 480 130 470 52 532 52" marker-end="url(#cdm20)"/>
+          <rect class="dg-box hot" x="540" y="25" width="220" height="54" rx="27"/>
+          <text class="dg-t on" x="650" y="59" text-anchor="middle" font-size="21">/design-sync</text>
+          <path class="dg-line" d="M760 52 C 822 52 815 130 893 130" marker-end="url(#cdm20)"/>
+          <text class="dg-t acc" x="650" y="112" text-anchor="middle" font-size="18">IN — your design system</text>
+          <!-- out: handoff bundle -->
+          <path class="dg-line" d="M895 233 C 890 287 880 287 838 287" marker-end="url(#cdm20)"/>
+          <rect class="dg-box hot" x="470" y="260" width="360" height="54" rx="27"/>
+          <text class="dg-t on" x="650" y="294" text-anchor="middle" font-size="20">handoff bundle → Claude Code</text>
+          <path class="dg-line" d="M462 287 C 418 287 415 250 406 232" marker-end="url(#cdm20)"/>
+          <text class="dg-t acc" x="650" y="248" text-anchor="middle" font-size="18">OUT — implementation against the real repo</text>
+        </svg>
       </div>
       <ul class="bul reveal" style="margin-top:28px">
         <li><b>In:</b> <b>/design-sync</b> (in Claude Code) pushes your design system from a GitHub repo, design files, or a local codebase.</li>
