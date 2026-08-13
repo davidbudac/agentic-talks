@@ -257,6 +257,15 @@ table.tbl tr:last-child td{border-bottom:none}
   [data-deck-active] .title-slide>.ts-hero{animation-delay:.15s}
   [data-deck-active] .title-slide>.ts-foot{animation-delay:.3s}
 }
+
+/* ── cx: diagram micro-animations (this deck only) ───────────────── */
+@keyframes cx-grow{from{transform:scaleX(0)} to{transform:scaleX(1)}}
+@media (prefers-reduced-motion:no-preference){
+  [data-deck-active] .cx-bar{transform-box:fill-box; transform-origin:left center;
+    animation:cx-grow .8s var(--ease) both; animation-delay:.4s}
+  [data-deck-active] .cx-bar.b2{animation-delay:.55s}
+  [data-deck-active] .cx-bar.b3{animation-delay:.7s}
+}
 </style>
 </head>
 <body>
@@ -356,12 +365,38 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">4</span><div class="crumb"><b>Cost</b> · output dominates</div></div>
       <h2 class="reveal">Why <span class="o">output</span> tokens dominate</h2>
-      <ul class="bul reveal">
-        <li><b>Thinking tokens are output tokens.</b> The effort dial (deck 03) trades quality for real, billed spend — xhigh is not free.</li>
-        <li>Output is typically <b>5× the price</b> of input per token — a verbose agent that narrates every step pays a premium for it.</li>
-        <li>Latency follows the same meter: output tokens are generated <b>one at a time</b>; input is processed in parallel. Long output = slow turn.</li>
-        <li>Practical lever: shorter, more decisive final answers and tighter thinking budgets cut both cost and wait time together.</li>
-      </ul>
+      <div class="split">
+        <ul class="bul reveal">
+          <li><b>Thinking tokens are output tokens.</b> The effort dial (deck 03) trades quality for real, billed spend — xhigh is not free.</li>
+          <li>Output is typically <b>5× the price</b> of input per token — a verbose agent that narrates every step pays a premium for it.</li>
+          <li>Latency follows the same meter: output is generated <b>one token at a time</b>; input is processed in parallel. Long output = slow turn.</li>
+          <li>Practical lever: shorter, more decisive answers and tighter thinking budgets cut cost and wait time together.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 520 310" role="img" aria-label="Input arrives as one block processed in parallel at base price; output — thinking tokens and final answer alike — is generated one token at a time on the meter that costs five times more">
+            <defs><marker id="od1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <text class="dg-t mut" x="16" y="26" font-size="12">input — processed in parallel, one pass</text>
+            <rect class="dg-box mid" x="16" y="40" width="392" height="48" rx="8"/>
+            <text class="dg-t" x="212" y="69" font-size="13" text-anchor="middle">prompt · files · tool results · history</text>
+            <text class="dg-t acc" x="428" y="69" font-size="14">1×</text>
+            <line class="dg-line dim" x1="16" y1="120" x2="504" y2="120" stroke-dasharray="4 5" opacity="0.6"/>
+            <text class="dg-t mut" x="16" y="152" font-size="12">output — generated one token at a time</text>
+            <rect class="dg-box outer" x="16" y="168" width="44" height="40" rx="7"/>
+            <rect class="dg-box outer" x="70" y="168" width="44" height="40" rx="7"/>
+            <rect class="dg-box outer" x="124" y="168" width="44" height="40" rx="7"/>
+            <rect class="dg-box outer" x="178" y="168" width="44" height="40" rx="7"/>
+            <rect class="dg-box hot" x="248" y="168" width="44" height="40" rx="7"/>
+            <rect class="dg-box hot" x="302" y="168" width="44" height="40" rx="7"/>
+            <rect class="dg-box hot" x="356" y="168" width="44" height="40" rx="7"/>
+            <path class="dg-line" d="M406 188 L 420 188" marker-end="url(#od1)"/>
+            <text class="dg-t acc" x="432" y="193" font-size="14">5×</text>
+            <text class="dg-t mut" x="119" y="230" font-size="11" text-anchor="middle">thinking tokens</text>
+            <text class="dg-t mut" x="324" y="230" font-size="11" text-anchor="middle">final answer</text>
+            <text class="dg-t acc" x="16" y="268" font-size="12">both billed on the same 5× meter…</text>
+            <text class="dg-t mut" x="16" y="292" font-size="11">…and each token waits for the last — cost and latency move together</text>
+          </svg>
+        </div>
+      </div>
       <p class="note reveal">Cost and latency are the <b>same lever</b> here — trimming output tokens helps both at once.</p>
     </div>
   </section>
@@ -377,11 +412,26 @@ table.tbl tr:last-child td{border-bottom:none}
   <span class="o">file reads (×12) ›</span>          <span class="b">input — the biggest line item</span>
   <span class="o">re-reads of same file (×4) ›</span> <span class="c">avoidable — context got dropped</span>
   <span class="o">thinking + final answer ›</span>   <span class="b">output — priciest per token</span></div>
+      <div class="diagram reveal" style="--diag-h:185px">
+        <svg viewBox="0 0 800 150" role="img" aria-label="The session's bill drawn as one bar: a thin cached prefix, file reads as the biggest span, the avoidable re-reads highlighted, then output — proportions illustrative, not measured">
+          <text class="dg-t mut" x="20" y="22" font-size="12">the same trace, as one bill</text>
+          <rect class="dg-fill-g" x="20" y="36" width="54" height="42" rx="6"/>
+          <rect class="dg-box mid" x="78" y="36" width="330" height="42" rx="6"/>
+          <rect class="dg-fill-a" x="412" y="36" width="142" height="42" rx="6"/>
+          <rect class="dg-fill-r" x="558" y="36" width="222" height="42" rx="6"/>
+          <text class="dg-t mut" x="47" y="98" font-size="11" text-anchor="middle">cached prefix</text>
+          <text class="dg-t" x="243" y="98" font-size="12" text-anchor="middle">file reads ×12 — biggest line item</text>
+          <text class="dg-t" x="483" y="98" font-size="12" text-anchor="middle">re-reads ×4</text>
+          <text class="dg-t" x="669" y="98" font-size="12" text-anchor="middle">thinking + answer</text>
+          <text class="dg-t acc" x="483" y="120" font-size="11" text-anchor="middle">avoidable — part 02's subject</text>
+          <text class="dg-t mut" x="669" y="120" font-size="11" text-anchor="middle">priciest per token</text>
+        </svg>
+      </div>
       <p class="note reveal">The single biggest avoidable cost in most sessions is <b>re-reading the same file</b> because context was already lost or cleared badly — part 02's whole subject.</p>
     </div>
   </section>
 
-  <section class="slide dark" data-label="Subscriptions today"
+  <section class="slide dark dense" data-label="Subscriptions today"
     data-speaker-notes="Give the current landscape plainly: Pro at twenty a month, Max at two tiers of five and twenty times the usage. Explicitly say you found no confirmed announcement of a new subscription direction beyond this — don't let anyone repeat a rumor as fact.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">6</span><div class="crumb"><b>Cost</b> · subscriptions today</div></div>
@@ -394,6 +444,19 @@ table.tbl tr:last-child td{border-bottom:none}
           <tr><td><b>Max 20×</b></td><td>$200/mo</td><td>20× Pro's limits, extended context, priority support</td></tr>
         </tbody>
       </table>
+      <div class="diagram reveal" style="--diag-h:215px">
+        <svg viewBox="0 0 800 190" role="img" aria-label="The three plans' usage limits drawn to scale: Pro is the 20 dollar baseline, Max 5x is five times that bar at 100 dollars, Max 20x is twenty times it at 200 dollars">
+          <text class="dg-t" x="118" y="47" font-size="13" text-anchor="end">Pro</text>
+          <rect class="dg-fill-r cx-bar" x="132" y="28" width="31" height="28" rx="5"/>
+          <text class="dg-t mut" x="176" y="47" font-size="12">1× · $20/mo</text>
+          <text class="dg-t" x="118" y="107" font-size="13" text-anchor="end">Max 5×</text>
+          <rect class="dg-fill-r cx-bar b2" x="132" y="88" width="155" height="28" rx="5"/>
+          <text class="dg-t mut" x="300" y="107" font-size="12">5× Pro's limits · $100/mo</text>
+          <text class="dg-t" x="118" y="167" font-size="13" text-anchor="end">Max 20×</text>
+          <rect class="dg-fill-r cx-bar b3" x="132" y="148" width="620" height="28" rx="5"/>
+          <text class="dg-t on" x="738" y="167" font-size="12" text-anchor="end">20× Pro's limits · $200/mo</text>
+        </svg>
+      </div>
       <p class="note reveal">No confirmed statement of a new subscription "direction" beyond Pro/Max/Team/Enterprise as of July 2026 — treat any such claim as <b>unconfirmed</b>. Pricing moves periodically; verify at claude.com/pricing before presenting exact numbers.</p>
     </div>
   </section>
@@ -425,6 +488,33 @@ table.tbl tr:last-child td{border-bottom:none}
         <div class="tile fill"><span class="k">Subscription wins</span><p>Steady daily interactive coding, one person, usage inside the plan's cap. Predictable monthly bill.</p></div>
         <div class="tile"><span class="k">API wins</span><p>Bursty or programmatic use — CI runs, batch jobs, evals, multi-agent fleets. Pay exactly for what runs.</p></div>
       </div>
+      <div class="diagram reveal" style="--diag-h:235px">
+        <svg viewBox="0 0 800 200" role="img" aria-label="Two usage shapes over time: steady daily bars sitting under a subscription's cap for one flat monthly bill, versus irregular bursts and idle days where the API bills exactly what runs">
+          <text class="dg-t mut" x="24" y="26" font-size="12">steady daily use — subscription</text>
+          <line class="dg-line dim" x1="24" y1="64" x2="368" y2="64" stroke-dasharray="5 5"/>
+          <text class="dg-t acc" x="368" y="52" font-size="11" text-anchor="end">plan cap</text>
+          <rect class="dg-fill-r" x="24"  y="86" width="30" height="76" rx="4"/>
+          <rect class="dg-fill-r" x="66"  y="80" width="30" height="82" rx="4"/>
+          <rect class="dg-fill-r" x="108" y="84" width="30" height="78" rx="4"/>
+          <rect class="dg-fill-r" x="150" y="78" width="30" height="84" rx="4"/>
+          <rect class="dg-fill-r" x="192" y="82" width="30" height="80" rx="4"/>
+          <rect class="dg-fill-r" x="234" y="79" width="30" height="83" rx="4"/>
+          <rect class="dg-fill-r" x="276" y="85" width="30" height="77" rx="4"/>
+          <rect class="dg-fill-r" x="318" y="81" width="30" height="81" rx="4"/>
+          <text class="dg-t mut" x="24" y="188" font-size="11">predictable flat bill, inside the cap</text>
+          <line class="dg-line dim" x1="400" y1="18" x2="400" y2="192"/>
+          <text class="dg-t mut" x="432" y="26" font-size="12">bursty · CI · batch — API</text>
+          <rect class="dg-fill-r" x="432" y="140" width="30" height="22" rx="4"/>
+          <rect class="dg-fill-r" x="474" y="52"  width="30" height="110" rx="4"/>
+          <rect class="dg-fill-r" x="516" y="152" width="30" height="10" rx="4"/>
+          <rect class="dg-fill-r" x="600" y="40"  width="30" height="122" rx="4"/>
+          <rect class="dg-fill-r" x="642" y="146" width="30" height="16" rx="4"/>
+          <rect class="dg-fill-r" x="726" y="76"  width="30" height="86" rx="4"/>
+          <text class="dg-t mut" x="573" y="156" font-size="11" text-anchor="middle">$0</text>
+          <text class="dg-t mut" x="699" y="156" font-size="11" text-anchor="middle">$0</text>
+          <text class="dg-t mut" x="432" y="188" font-size="11">pay exactly for what runs — idle days cost nothing</text>
+        </svg>
+      </div>
       <p class="note reveal">Hybrid credit-pool models (Cursor's Auto mode — deck 07, <i>Measuring What Works</i>) sit in between: subscription price, usage-aware routing underneath.</p>
     </div>
   </section>
@@ -452,12 +542,38 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">10</span><div class="crumb"><b>Cost</b> · Claude on AWS Bedrock</div></div>
       <h2 class="reveal">Why an org reaches for <span class="o">Bedrock</span></h2>
-      <ul class="bul reveal">
-        <li>Data stays inside AWS infrastructure — not shared with Anthropic or third parties; regional inference profiles cover US/EU/JP/AU residency.</li>
-        <li>Single AWS bill, existing IAM/CloudTrail, and the ability to retire committed AWS spend (Enterprise Discount Program) against Claude usage.</li>
-        <li><b>Regional (single-region) endpoints carry a 10% pricing premium</b> over global endpoints.</li>
-        <li>Reach for it when: AWS data-boundary requirements, Guardrails/Knowledge Bases, strict regional residency, unified AWS governance.</li>
-      </ul>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>Data stays inside AWS infrastructure — not shared with Anthropic or third parties; regional inference profiles cover US/EU/JP/AU residency.</li>
+          <li>Single AWS bill, existing IAM/CloudTrail, and the ability to retire committed AWS spend (Enterprise Discount Program) against Claude usage.</li>
+          <li><b>Regional (single-region) endpoints carry a 10% pricing premium</b> over global endpoints.</li>
+          <li>Reach for it when: AWS data-boundary requirements, Guardrails/Knowledge Bases, strict regional residency, unified AWS governance.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 520 320" role="img" aria-label="Your app calls Claude inside the AWS boundary, next to IAM, CloudTrail, Guardrails and Knowledge Bases; nothing crosses out to Anthropic or third parties, and a single-region endpoint carries a 10 percent premium">
+            <defs><marker id="bd1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <rect class="dg-box outer" x="14" y="26" width="392" height="262" rx="12"/>
+            <text class="dg-t acc" x="32" y="54" font-size="12">AWS boundary — one bill, one governance plane</text>
+            <rect class="dg-box" x="34" y="78" width="130" height="52" rx="8"/>
+            <text class="dg-t" x="99" y="109" font-size="13" text-anchor="middle">your app</text>
+            <path class="dg-line" d="M164 104 L 226 104" marker-end="url(#bd1)"/>
+            <rect class="dg-box hot" x="232" y="78" width="152" height="52" rx="8"/>
+            <text class="dg-t on" x="308" y="103" font-size="13" text-anchor="middle">Claude models</text>
+            <text class="dg-t on" x="308" y="120" font-size="10" text-anchor="middle">on Bedrock</text>
+            <rect class="dg-box mid" x="34" y="160" width="168" height="46" rx="8"/>
+            <text class="dg-t" x="118" y="188" font-size="12" text-anchor="middle">IAM · CloudTrail</text>
+            <rect class="dg-box mid" x="216" y="160" width="168" height="46" rx="8"/>
+            <text class="dg-t" x="300" y="188" font-size="12" text-anchor="middle">Guardrails · KBs</text>
+            <text class="dg-t mut" x="34" y="242" font-size="11">regional profiles: US · EU · JP · AU</text>
+            <text class="dg-t acc" x="34" y="266" font-size="11">single-region endpoint: +10% premium</text>
+            <path class="dg-line dim" d="M406 104 L 470 104" stroke-dasharray="5 5"/>
+            <text class="dg-t acc" x="438" y="96" font-size="16" text-anchor="middle">✕</text>
+            <text class="dg-t mut" x="462" y="132" font-size="11" text-anchor="middle">not shared</text>
+            <text class="dg-t mut" x="462" y="148" font-size="11" text-anchor="middle">with Anthropic</text>
+            <text class="dg-t mut" x="462" y="164" font-size="11" text-anchor="middle">or 3rd parties</text>
+          </svg>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -508,11 +624,35 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">13</span><div class="crumb"><b>Context</b> · the scarce resource</div></div>
       <h2 class="reveal">Context is <span class="o">scarce</span> — spend it that way</h2>
-      <ul class="bul reveal">
-        <li><b>Degrades with fill.</b> Quality starts slipping well before the hard token limit — a full window is not a healthy window.</li>
-        <li><b>Costs on every turn.</b> Most of what's in the window gets resent (and mostly re-billed) each time you send a message.</li>
-        <li><b>Cache invalidation.</b> Edit anything near the start of the conversation and the prefix cache for everything after it is gone.</li>
-      </ul>
+      <div class="split">
+        <ul class="bul reveal">
+          <li><b>Degrades with fill.</b> Quality starts slipping well before the hard token limit — a full window is not a healthy window.</li>
+          <li><b>Costs on every turn.</b> Most of what's in the window gets resent (and mostly re-billed) each time you send a message.</li>
+          <li><b>Cache invalidation.</b> Edit anything near the start of the conversation and the prefix cache for everything after it is gone.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 520 330" role="img" aria-label="The three failure modes: a window filling toward its hard limit with quality slipping before it gets there; the same prefix re-sent on every turn as the conversation grows; and one upstream edit invalidating the prefix cache for everything after it">
+            <text class="dg-t mut" x="14" y="24" font-size="11">1 · degrades as it fills</text>
+            <rect class="dg-box" x="14" y="36" width="310" height="30" rx="6"/>
+            <rect class="dg-fill-r" x="18" y="40" width="262" height="22" rx="4" opacity="0.85"/>
+            <line class="dg-line dim" x1="324" y1="30" x2="324" y2="72" stroke-dasharray="4 4"/>
+            <text class="dg-t mut" x="332" y="36" font-size="10">hard limit</text>
+            <text class="dg-t acc" x="332" y="58" font-size="12">quality slips first</text>
+            <text class="dg-t mut" x="14" y="118" font-size="11">2 · re-sent (and mostly re-billed) every turn</text>
+            <rect class="dg-box mid" x="14" y="130" width="96" height="20" rx="4"/><rect class="dg-fill-r" x="114" y="130" width="46" height="20" rx="4" opacity="0.85"/><text class="dg-t mut" x="170" y="145" font-size="10">turn 1</text>
+            <rect class="dg-box mid" x="14" y="156" width="96" height="20" rx="4"/><rect class="dg-fill-r" x="114" y="156" width="96" height="20" rx="4" opacity="0.85"/><text class="dg-t mut" x="220" y="171" font-size="10">turn 2</text>
+            <rect class="dg-box mid" x="14" y="182" width="96" height="20" rx="4"/><rect class="dg-fill-r" x="114" y="182" width="150" height="20" rx="4" opacity="0.85"/><text class="dg-t mut" x="274" y="197" font-size="10">turn 3</text>
+            <text class="dg-t acc" x="332" y="171" font-size="12">same prefix, again</text>
+            <text class="dg-t mut" x="14" y="248" font-size="11">3 · one upstream edit kills the prefix cache</text>
+            <rect class="dg-box mid" x="14" y="260" width="52" height="30" rx="6"/>
+            <rect class="dg-box hot" x="70" y="260" width="42" height="30" rx="6"/>
+            <text class="dg-t on" x="91" y="279" font-size="10" text-anchor="middle">edit</text>
+            <rect class="dg-fill-a" x="116" y="260" width="208" height="30" rx="6"/>
+            <text class="dg-t on" x="220" y="279" font-size="11" text-anchor="middle">cache gone — full price</text>
+            <text class="dg-t mut" x="14" y="316" font-size="10">everything after the edit is re-processed from scratch</text>
+          </svg>
+        </div>
+      </div>
       <p class="note reveal">Three separate failure modes, one fix: be deliberate about what stays in the window.</p>
     </div>
   </section>
@@ -564,11 +704,38 @@ table.tbl tr:last-child td{border-bottom:none}
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">17</span><div class="crumb"><b>Context</b> · CLAUDE.md, what doesn't</div></div>
       <h2 class="reveal">CLAUDE.md: what <span class="o">doesn't belong</span></h2>
-      <ul class="bul reveal">
-        <li><b>Anything derivable from the code.</b> The agent can read the file; don't pre-digest it for every session, forever.</li>
-        <li><b>One-off notes.</b> "Fixed the flaky test on Tuesday" belongs in a commit message, not a file resent every turn.</li>
-        <li><b>Essays.</b> Rationale nobody needs turn-to-turn is a cost with no ongoing return.</li>
-      </ul>
+      <div class="split">
+        <ul class="bul reveal">
+          <li><b>Anything derivable from the code.</b> The agent can read the file; don't pre-digest it for every session, forever.</li>
+          <li><b>One-off notes.</b> "Fixed the flaky test on Tuesday" belongs in a commit message, not a file resent every turn.</li>
+          <li><b>Essays.</b> Rationale nobody needs turn-to-turn is a cost with no ongoing return.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 520 320" role="img" aria-label="One line added to CLAUDE.md gets stamped into every turn of every session from now on — the cost of a single line multiplies across turns, sessions, and time">
+            <defs><marker id="st1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <rect class="dg-box" x="14" y="86" width="150" height="130" rx="10"/>
+            <text class="dg-t acc" x="89" y="112" font-size="12" text-anchor="middle">CLAUDE.md</text>
+            <line class="dg-line dim" x1="32" y1="130" x2="146" y2="130"/>
+            <line class="dg-line dim" x1="32" y1="148" x2="146" y2="148"/>
+            <rect class="dg-fill-r" x="30" y="160" width="118" height="12" rx="3"/>
+            <line class="dg-line dim" x1="32" y1="188" x2="146" y2="188"/>
+            <text class="dg-t mut" x="89" y="240" font-size="11" text-anchor="middle">one added line</text>
+            <path class="dg-line" d="M170 166 C 210 166, 220 76, 252 68" marker-end="url(#st1)"/>
+            <path class="dg-line" d="M170 166 L 252 166" marker-end="url(#st1)"/>
+            <path class="dg-line" d="M170 166 C 210 166, 220 256, 252 264" marker-end="url(#st1)"/>
+            <text class="dg-t mut" x="262" y="42" font-size="11">session A</text>
+            <rect class="dg-box mid" x="262" y="52" width="140" height="22" rx="4"/><rect class="dg-fill-r" x="286" y="57" width="26" height="12" rx="3"/><text class="dg-t mut" x="412" y="68" font-size="10">turn 1</text>
+            <rect class="dg-box mid" x="262" y="80" width="170" height="22" rx="4"/><rect class="dg-fill-r" x="286" y="85" width="26" height="12" rx="3"/><text class="dg-t mut" x="442" y="96" font-size="10">turn 2</text>
+            <rect class="dg-box mid" x="262" y="108" width="200" height="22" rx="4"/><rect class="dg-fill-r" x="286" y="113" width="26" height="12" rx="3"/><text class="dg-t mut" x="472" y="124" font-size="10">turn 3</text>
+            <text class="dg-t mut" x="262" y="154" font-size="11">session B</text>
+            <rect class="dg-box mid" x="262" y="162" width="140" height="22" rx="4"/><rect class="dg-fill-r" x="286" y="167" width="26" height="12" rx="3"/><text class="dg-t mut" x="412" y="178" font-size="10">turn 1</text>
+            <rect class="dg-box mid" x="262" y="190" width="180" height="22" rx="4"/><rect class="dg-fill-r" x="286" y="195" width="26" height="12" rx="3"/><text class="dg-t mut" x="452" y="206" font-size="10">turn 2</text>
+            <text class="dg-t mut" x="262" y="252" font-size="11">…every future session</text>
+            <rect class="dg-box mid" x="262" y="260" width="150" height="22" rx="4" stroke-dasharray="5 4"/><rect class="dg-fill-r" x="286" y="265" width="26" height="12" rx="3"/>
+            <text class="dg-t acc" x="262" y="312" font-size="12">every line × every turn × every session</text>
+          </svg>
+        </div>
+      </div>
       <p class="note reveal">Every line in CLAUDE.md is paid for <b>on every turn, of every session, forever.</b> Treat additions like you'd treat a hot-path dependency.</p>
     </div>
   </section>
