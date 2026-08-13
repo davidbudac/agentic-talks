@@ -257,6 +257,17 @@ table.tbl tr:last-child td{border-bottom:none}
   [data-deck-active] .title-slide>.ts-hero{animation-delay:.15s}
   [data-deck-active] .title-slide>.ts-foot{animation-delay:.3s}
 }
+
+/* ── failure-math diagram: hops land one at a time ───────────────── */
+@keyframes gfm-hop-in{from{opacity:0} to{opacity:1}}
+@media (prefers-reduced-motion:no-preference){
+  [data-deck-active] .gfm-h{animation:gfm-hop-in .45s var(--ease) both}
+  [data-deck-active] .gfm-d1{animation-delay:.35s}
+  [data-deck-active] .gfm-d2{animation-delay:.75s}
+  [data-deck-active] .gfm-d3{animation-delay:1.15s}
+  [data-deck-active] .gfm-d4{animation-delay:1.55s}
+  [data-deck-active] .gfm-d5{animation-delay:1.95s}
+}
 </style>
 </head>
 <body>
@@ -336,20 +347,89 @@ table.tbl tr:last-child td{border-bottom:none}
     </div>
   </section>
 
-  <section class="slide light" data-label="Which graph do you mean?"
-    data-speaker-notes="This table is the map of the whole talk — give it room and read all four rows. The most useful thing anyone can take from this deck is the reflex: when someone says 'graph engineering', ask which graph they mean. Say that a mature system uses the first three together and never touches the fourth.">
+  <section class="slide light dense" data-label="Which graph do you mean?"
+    data-speaker-notes="This grid is the map of the whole talk — give it room and walk all four quadrants, each drawn as the graph it actually is. The most useful thing anyone can take from this deck is the reflex: when someone says 'graph engineering', ask which graph they mean. Say that a mature system uses the first three together and never touches the fourth — the GNN quadrant is deliberately drawn faded.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">4</span><div class="crumb"><b>Buzzword</b> · which graph?</div></div>
       <h2 class="reveal">Which graph do you <span class="o">mean?</span></h2>
-      <table class="tbl reveal">
-        <thead><tr><th>Kind</th><th>Nodes → edges</th><th>What it's for</th></tr></thead>
-        <tbody>
-          <tr><td><b>Knowledge graph</b></td><td>entities → typed real-world relationships</td><td>what the system <b>knows</b></td></tr>
-          <tr><td><b>Retrieval graph</b> (GraphRAG)</td><td>entities, passages, communities → search links</td><td>how the LLM <b>finds evidence</b></td></tr>
-          <tr><td><b>Workflow graph</b></td><td>agents, tools, gates → allowed transitions</td><td>what the app <b>does</b></td></tr>
-          <tr><td><b>GNN</b></td><td>data items → learned aggregation</td><td>a model that <b>learns</b> from graph data</td></tr>
-        </tbody>
-      </table>
+      <div class="cards c4 reveal">
+        <div class="tile">
+          <span class="k" style="font-size:26px">Knowledge graph</span>
+          <svg viewBox="0 0 640 148" style="width:100%;height:auto;max-height:138px" role="img" aria-label="A tiny knowledge graph: a service node with a typed DEPENDS_ON edge to a database node and a typed OWNED_BY edge to a team node.">
+            <defs><marker id="m4k" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <circle class="dg-box hot" cx="130" cy="52" r="34"/>
+            <text class="dg-t on" x="130" y="57" font-size="13" text-anchor="middle">service</text>
+            <circle class="dg-box" cx="500" cy="52" r="34"/>
+            <text class="dg-t" x="500" y="57" font-size="13" text-anchor="middle">database</text>
+            <circle class="dg-box" cx="320" cy="112" r="30"/>
+            <text class="dg-t" x="320" y="117" font-size="13" text-anchor="middle">team</text>
+            <path class="dg-line" d="M168 47 L 460 47" marker-end="url(#m4k)"/>
+            <text class="dg-t acc" x="314" y="36" font-size="12" text-anchor="middle">DEPENDS_ON</text>
+            <path class="dg-line" d="M156 75 L 288 102" marker-end="url(#m4k)"/>
+            <text class="dg-t acc" x="192" y="106" font-size="12">OWNED_BY</text>
+          </svg>
+          <p style="font-size:19px">entities → typed real-world relationships. What the system <b>knows</b>.</p>
+        </div>
+        <div class="tile">
+          <span class="k" style="font-size:26px">Retrieval graph <span class="muted" style="font-size:18px">(GraphRAG)</span></span>
+          <svg viewBox="0 0 640 148" style="width:100%;height:auto;max-height:138px" role="img" aria-label="A tiny retrieval graph: three entity nodes inside a dashed community boundary, linked out to two source-passage boxes.">
+            <defs><marker id="m4r" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <rect class="dg-box outer" x="24" y="14" width="300" height="122" rx="16"/>
+            <text class="dg-t acc" x="44" y="128" font-size="12">community</text>
+            <circle class="dg-box" cx="96" cy="56" r="24"/>
+            <circle class="dg-box" cx="212" cy="44" r="24"/>
+            <circle class="dg-box" cx="168" cy="102" r="24"/>
+            <path class="dg-line dim" d="M120 52 L 188 46"/>
+            <path class="dg-line dim" d="M106 78 L 152 86"/>
+            <path class="dg-line dim" d="M206 66 L 180 82"/>
+            <path class="dg-line" d="M236 44 L 388 44" marker-end="url(#m4r)"/>
+            <path class="dg-line" d="M192 102 L 388 110" marker-end="url(#m4r)"/>
+            <rect class="dg-box mid" x="396" y="24" width="210" height="40" rx="8"/>
+            <text class="dg-t mut" x="501" y="49" font-size="13" text-anchor="middle">passage · doc 12</text>
+            <rect class="dg-box mid" x="396" y="90" width="210" height="40" rx="8"/>
+            <text class="dg-t mut" x="501" y="115" font-size="13" text-anchor="middle">passage · doc 47</text>
+          </svg>
+          <p style="font-size:19px">entities, passages, communities → search links. How the LLM <b>finds evidence</b>.</p>
+        </div>
+        <div class="tile">
+          <span class="k" style="font-size:26px">Workflow graph</span>
+          <svg viewBox="0 0 640 148" style="width:100%;height:auto;max-height:138px" role="img" aria-label="A tiny workflow graph: an agent node flows into a gate that routes to either a tool node or a retry edge looping back.">
+            <defs><marker id="m4w" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <rect class="dg-box" x="24" y="46" width="130" height="48" rx="9"/>
+            <text class="dg-t" x="89" y="75" font-size="13" text-anchor="middle">agent</text>
+            <path class="dg-line" d="M158 70 L 228 70" marker-end="url(#m4w)"/>
+            <polygon class="dg-box hot" points="300,34 366,70 300,106 234,70"/>
+            <text class="dg-t on" x="300" y="75" font-size="13" text-anchor="middle">gate</text>
+            <path class="dg-line" d="M370 70 L 460 70" marker-end="url(#m4w)"/>
+            <text class="dg-t acc" x="384" y="58" font-size="12">pass</text>
+            <rect class="dg-box" x="466" y="46" width="130" height="48" rx="9"/>
+            <text class="dg-t" x="531" y="75" font-size="13" text-anchor="middle">tool</text>
+            <path class="dg-line dim" d="M300 110 L 300 132 L 89 132 L 89 98" marker-end="url(#m4w)"/>
+            <text class="dg-t mut" x="196" y="126" font-size="12" text-anchor="middle">retry</text>
+          </svg>
+          <p style="font-size:19px">agents, tools, gates → allowed transitions. What the app <b>does</b>.</p>
+        </div>
+        <div class="tile" style="opacity:.62">
+          <span class="k" style="font-size:26px">GNN</span>
+          <svg viewBox="0 0 640 148" style="width:100%;height:auto;max-height:138px" role="img" aria-label="A tiny graph neural network sketch: four neighbour nodes with edges aggregating into one centre node, labelled learned aggregation.">
+            <defs><marker id="m4g" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <circle class="dg-box" cx="150" cy="30" r="20"/>
+            <circle class="dg-box" cx="120" cy="112" r="20"/>
+            <circle class="dg-box" cx="260" cy="128" r="20"/>
+            <circle class="dg-box" cx="300" cy="22" r="20"/>
+            <circle class="dg-box mid" cx="230" cy="74" r="30"/>
+            <path class="dg-line dim" d="M166 42 L 204 62" marker-end="url(#m4g)"/>
+            <path class="dg-line dim" d="M138 106 L 200 84" marker-end="url(#m4g)"/>
+            <path class="dg-line dim" d="M254 110 L 240 102" marker-end="url(#m4g)"/>
+            <path class="dg-line dim" d="M290 40 L 250 58" marker-end="url(#m4g)"/>
+            <path class="dg-line" d="M264 74 L 420 74" marker-end="url(#m4g)"/>
+            <rect class="dg-box mid" x="428" y="50" width="188" height="48" rx="9"/>
+            <text class="dg-t mut" x="522" y="70" font-size="13" text-anchor="middle">learned</text>
+            <text class="dg-t mut" x="522" y="88" font-size="13" text-anchor="middle">aggregation</text>
+          </svg>
+          <p style="font-size:19px">data items → learned aggregation. A model that <b>learns</b> from graph data — out of scope today.</p>
+        </div>
+      </div>
       <p class="note reveal">GNNs are research-stage outside one relational-prediction niche, so they're out of scope today. The other three turn up in a single system all the time. Safest response to "graph engineering": <b>ask which graph</b>.</p>
     </div>
   </section>
@@ -364,11 +444,15 @@ table.tbl tr:last-child td{border-bottom:none}
     </div>
   </section>
 
-  <section class="slide light" data-label="Where vector RAG runs out"
-    data-speaker-notes="Three shapes of question where plain embeddings stop working, each with a number. Emphasise the temporal one — it's the biggest documented gap and the one most teams never test for. Close with the rule: if the answer sits in one chunk, vectors are fine and much cheaper.">
+  <section class="slide light dense" data-label="Where vector RAG runs out"
+    data-speaker-notes="Let the animation carry the mechanism: vector search pulls the chunks that LOOK like the question, the graph walks the edges that CONNECT to the answer — that's where the recall numbers below come from. Three shapes of question where plain embeddings stop working, each with a number. Emphasise the temporal one — it's the biggest documented gap and the one most teams never test for. Close with the rule: if the answer sits in one chunk, vectors are fine and much cheaper.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">6</span><div class="crumb"><b>Evidence</b> · where vectors run out</div></div>
       <h2 class="reveal">Where vector RAG <span class="o">runs out</span></h2>
+      <div class="diagram reveal" style="--diag-h:400px">
+        <!-- Remotion animation (remotion/src/GraphHops.tsx) -->
+        <video src="assets/anim/graph-hops-light.mp4" width="1160" height="500" autoplay muted loop playsinline aria-label="Two panels over the same dots: vector top-k shoots similarity rays at look-alike chunks and never reaches the answer node; graph traversal matches an entity and walks edge to edge — hop 1, hop 2 — straight to it"></video>
+      </div>
       <div class="cards c3 reveal">
         <div class="tile"><span class="k">Multi-hop</span><p>Recall@5 averages <b>73.4% → 87.8%</b> with graph-guided retrieval, across MuSiQue, HotpotQA and 2Wiki.</p></div>
         <div class="tile fill"><span class="k">Temporal</span><p><b>49–59% vs 30.7%</b> on time-scoped questions (MultiHop-RAG). The biggest documented graph advantage.</p></div>
@@ -466,10 +550,50 @@ table.tbl tr:last-child td{border-bottom:none}
     </div>
   </section>
 
+  <section class="slide light" data-label="The null-query collapse"
+    data-speaker-notes="Give the scoreboard's worst row its own minute, because it's the failure production teams never test for. Walk the two lanes: a vector store returns weak matches on a question with no answer, and the model can see they're weak, so it abstains 96% of the time. Global search map-reduces over community summaries, and the communities always produce material — so the model synthesizes a fluent, confident, wrong answer roughly four times out of five. Land the operational rule: no GraphRAG global search anywhere customer-facing without an abstention gate in front of it.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">10</span><div class="crumb"><b>Evidence</b> · null queries</div></div>
+      <h2 class="reveal">Null queries: the fluent <span class="o">wrong answer</span></h2>
+      <div class="diagram reveal" style="--diag-h:600px">
+        <svg viewBox="0 0 1000 420" role="img" aria-label="A question with no answer in the corpus takes two paths. Vector RAG retrieves top-k chunks, the matches are visibly weak, and it abstains 96% of the time. GraphRAG global search map-reduces over community summaries, which always return material, and it produces a fluent wrong answer — abstaining only 19.27% of the time.">
+          <defs><marker id="nq1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+          <rect class="dg-box outer" x="330" y="8" width="340" height="64" rx="10"/>
+          <text class="dg-t" x="500" y="35" font-size="14" text-anchor="middle">question with no answer in the corpus</text>
+          <text class="dg-t mut" x="500" y="57" font-size="12" text-anchor="middle">the case nobody benchmarks</text>
+          <path class="dg-line" d="M400 76 L 250 128" marker-end="url(#nq1)"/>
+          <path class="dg-line" d="M600 76 L 750 128" marker-end="url(#nq1)"/>
+          <text class="dg-t acc" x="180" y="120" font-size="13" text-anchor="middle">vector RAG</text>
+          <rect class="dg-box" x="120" y="136" width="260" height="60" rx="10"/>
+          <text class="dg-t" x="250" y="162" font-size="14" text-anchor="middle">top-k nearest chunks</text>
+          <text class="dg-t mut" x="250" y="184" font-size="12" text-anchor="middle">similarity scores come back weak</text>
+          <path class="dg-line" d="M250 200 L 250 246" marker-end="url(#nq1)"/>
+          <text class="dg-t mut" x="264" y="228" font-size="12">weak evidence is visible</text>
+          <rect class="dg-box" x="120" y="252" width="260" height="72" rx="10"/>
+          <text class="dg-t" x="250" y="282" font-size="15" text-anchor="middle">&#8220;I can&#8217;t find this.&#8221;</text>
+          <text class="dg-t acc" x="250" y="308" font-size="13" text-anchor="middle">abstains 96%</text>
+          <text class="dg-t acc" x="820" y="120" font-size="13" text-anchor="middle">GraphRAG global</text>
+          <rect class="dg-box mid" x="620" y="136" width="260" height="60" rx="10"/>
+          <text class="dg-t" x="750" y="162" font-size="14" text-anchor="middle">map-reduce over community summaries</text>
+          <text class="dg-t mut" x="750" y="184" font-size="12" text-anchor="middle">summaries always return material</text>
+          <path class="dg-line" d="M750 200 L 750 246" marker-end="url(#nq1)"/>
+          <text class="dg-t mut" x="764" y="228" font-size="12">something to synthesize, always</text>
+          <rect class="dg-box hot" x="620" y="252" width="260" height="72" rx="10"/>
+          <text class="dg-t on" x="750" y="282" font-size="15" text-anchor="middle">fluent, confident — wrong</text>
+          <text class="dg-t on" x="750" y="308" font-size="13" text-anchor="middle" opacity="0.85">abstains 19.27%</text>
+          <text class="dg-t mut" x="750" y="352" font-size="12" text-anchor="middle">invents an answer ~4 times out of 5</text>
+          <line class="dg-line dim" x1="120" y1="382" x2="880" y2="382"/>
+          <text class="dg-t acc" x="500" y="412" font-size="13" text-anchor="middle">same question · opposite failure modes — the graph&#8217;s pipeline has no &#8220;nothing here&#8221; path</text>
+        </svg>
+      </div>
+      <p class="note reveal">Numbers from the scoreboard (arXiv:2502.11371): plain RAG abstains <b>96%</b>, Community-GraphRAG Global <b>19.27%</b>. Without an <b>abstention gate</b>, that single row disqualifies global search for anything customer-facing.</p>
+    </div>
+  </section>
+
   <section class="slide light" data-label="Memory graphs: facts don't die"
     data-speaker-notes="This is the strongest honest case for a graph, so make it concrete. A vector store returns whatever is similar, which is a different question from what is true right now. Bi-temporal edges close a validity window instead of deleting a fact, so the same store answers 'what's true now' and 'what was true in March' — and stays auditable, which is the part a bank actually cares about.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">10</span><div class="crumb"><b>Evidence</b> · memory graphs</div></div>
+      <div class="slide-head reveal"><span class="snum">11</span><div class="crumb"><b>Evidence</b> · memory graphs</div></div>
       <h2 class="reveal">Memory graphs: <span class="o">facts don't die</span></h2>
       <div class="split">
         <ul class="bul reveal">
@@ -505,7 +629,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide dark dense" data-label="Benchmark theatre"
     data-speaker-notes="Tell this as a farce, because it is one, and then make it useful. Two vendors traded SOTA claims, one of them had an arithmetic error in its own rebuttal, and then a research lab beat both with grep. Land the ending: 6.4% of the answer key is simply wrong, so every delta in that fight was noise measured on a broken ruler. Say explicitly that this deck's own numbers deserve the same suspicion.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">11</span><div class="crumb"><b>Evidence</b> · benchmark theatre</div></div>
+      <div class="slide-head reveal"><span class="snum">12</span><div class="crumb"><b>Evidence</b> · benchmark theatre</div></div>
       <h2 class="reveal">Benchmark <span class="o">theatre</span></h2>
       <ul class="bul reveal">
         <li><b>Apr 2025</b> — Mem0's paper claims SOTA over Zep on LoCoMo.</li>
@@ -520,7 +644,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide light dense" data-label="Workflow graphs and the debate"
     data-speaker-notes="Give the LangGraph anatomy in one breath — state, nodes, conditional edges, checkpoints, plus Send for fan-out — then let the three quotes argue. Don't take a side on stage; give the decision rule instead. Control, repeatability or compliance means an explicit graph; an ill-defined problem where the path doesn't matter means a loop.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">12</span><div class="crumb"><b>Evidence</b> · workflow graphs</div></div>
+      <div class="slide-head reveal"><span class="snum">13</span><div class="crumb"><b>Evidence</b> · workflow graphs</div></div>
       <h2 class="reveal">Workflow graphs — and the <span class="o">argument about them</span></h2>
       <div class="flow reveal" style="margin-bottom:16px">
         <div class="step">state</div><div class="arrow">→</div>
@@ -541,7 +665,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide dark dense" data-label="Receipts"
     data-speaker-notes="Lead with the one result that survives scrutiny: LinkedIn's KG-RAG support system, peer-reviewed at SIGIR, six months in production, with retrieval quality and human resolution time both moving. Then run the vendor table fast and say the quiet part — those are blog posts, useful for direction and worthless as proof. If someone quotes Klarna at you in a design review, that's the answer.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">13</span><div class="crumb"><b>Evidence</b> · receipts</div></div>
+      <div class="slide-head reveal"><span class="snum">14</span><div class="crumb"><b>Evidence</b> · receipts</div></div>
       <h2 class="reveal">The <span class="o">receipts</span></h2>
       <div class="kcard reveal">
         <div class="big">40h → 15h</div>
@@ -572,7 +696,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide light" data-label="A graph DB in one command"
     data-speaker-notes="Run the command on the slide, don't paraphrase it — the read-only flag is the whole lesson. Three tools is the point: the server is small, so the token tax is small. Use Kuzu's archiving as the vendor-risk story: an embedded graph DB that a lot of people had standardised on went read-only overnight, and the community had forks within days.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">15</span><div class="crumb"><b>Claude Code</b> · graph DB via MCP</div></div>
+      <div class="slide-head reveal"><span class="snum">16</span><div class="crumb"><b>Claude Code</b> · graph DB via MCP</div></div>
       <h2 class="reveal">A graph DB in <span class="o">one command</span></h2>
       <div class="code reveal"><span class="c"># Neo4j's official MCP server — three tools, nothing else</span>
 <span class="o">claude mcp add</span> --transport stdio \
@@ -590,17 +714,47 @@ table.tbl tr:last-child td{border-bottom:none}
     </div>
   </section>
 
-  <section class="slide dark" data-label="Claude Code as the graph builder"
+  <section class="slide dark dense" data-label="Claude Code as the graph builder"
     data-speaker-notes="Correct the expectation first: nobody sensible runs microsoft/graphrag by hand. The realistic pattern is Claude Code driving a library that already has an entity-resolution stage, with a human reviewing the ontology. Then land the production truth — extraction is the demo, entity resolution is the thing that rots. If there's time, this is the live-demo beat: have Claude propose a schema for a repo's docs and render the Mermaid.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">16</span><div class="crumb"><b>Claude Code</b> · building the graph</div></div>
+      <div class="slide-head reveal"><span class="snum">17</span><div class="crumb"><b>Claude Code</b> · building the graph</div></div>
       <h2 class="reveal">Claude Code as the <span class="o">graph builder</span></h2>
-      <ul class="bul reveal">
-        <li>Realistic pattern: Claude Code <b>drives</b> <code>neo4j-graphrag-python</code> (its pipeline has an explicit entity-resolution stage) or LightRAG. You review the ontology, it writes the plumbing.</li>
-        <li>The separate <b>Data-Modeling MCP</b> validates an LLM-proposed model and renders it as a Mermaid schema diagram <b>before any data flows</b>.</li>
-        <li><b>Entity resolution, not extraction, is where production graphs rot.</b> payments-prod, PAY-SVC and a CMDB id are one service. The test service sharing the prefix is not.</li>
-        <li>Start schema-free to explore; fold the discoveries into a canonical ontology once you can define what "precise" means for the domain.</li>
-      </ul>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>Realistic pattern: Claude Code <b>drives</b> <code>neo4j-graphrag-python</code> (its pipeline has an explicit entity-resolution stage) or LightRAG. You review the ontology, it writes the plumbing.</li>
+          <li>The separate <b>Data-Modeling MCP</b> validates an LLM-proposed model and renders it as a Mermaid schema diagram <b>before any data flows</b>.</li>
+          <li><b>Entity resolution, not extraction, is where production graphs rot</b> — the merge decisions on the right are the actual hard part.</li>
+          <li>Start schema-free to explore; fold the discoveries into a canonical ontology once you can define what "precise" means for the domain.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 560 400" role="img" aria-label="Entity resolution: three source records — payments-prod from logs, PAY-SVC from monitoring, and CMDB record 4711 — merge into one canonical payments-service node, while the lookalike payments-test, which shares the name prefix, is correctly kept out.">
+            <defs><marker id="er1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <rect class="dg-box" x="8" y="16" width="196" height="56" rx="9"/>
+            <text class="dg-t" x="106" y="40" font-size="14" text-anchor="middle">payments-prod</text>
+            <text class="dg-t mut" x="106" y="60" font-size="12" text-anchor="middle">logs</text>
+            <rect class="dg-box" x="8" y="96" width="196" height="56" rx="9"/>
+            <text class="dg-t" x="106" y="120" font-size="14" text-anchor="middle">PAY-SVC</text>
+            <text class="dg-t mut" x="106" y="140" font-size="12" text-anchor="middle">monitoring</text>
+            <rect class="dg-box" x="8" y="176" width="196" height="56" rx="9"/>
+            <text class="dg-t" x="106" y="200" font-size="14" text-anchor="middle">CMDB #4711</text>
+            <text class="dg-t mut" x="106" y="220" font-size="12" text-anchor="middle">inventory</text>
+            <path class="dg-line" d="M208 44 C 300 44, 320 90, 372 112" marker-end="url(#er1)"/>
+            <path class="dg-line" d="M208 124 L 366 124" marker-end="url(#er1)"/>
+            <path class="dg-line" d="M208 204 C 300 204, 320 158, 372 136" marker-end="url(#er1)"/>
+            <text class="dg-t acc" x="270" y="103" font-size="12" text-anchor="middle">merge: one entity</text>
+            <circle class="dg-box hot" cx="452" cy="124" r="62"/>
+            <text class="dg-t on" x="452" y="120" font-size="14" text-anchor="middle">payments</text>
+            <text class="dg-t on" x="452" y="140" font-size="14" text-anchor="middle">service</text>
+            <rect class="dg-box mid" x="8" y="300" width="196" height="56" rx="9"/>
+            <text class="dg-t mut" x="106" y="324" font-size="14" text-anchor="middle">payments-test</text>
+            <text class="dg-t mut" x="106" y="344" font-size="12" text-anchor="middle">same prefix, different thing</text>
+            <path class="dg-line dim" d="M208 328 C 320 328, 380 240, 424 182" stroke-dasharray="6 5"/>
+            <text class="dg-t acc" x="330" y="292" font-size="16" text-anchor="middle">✕</text>
+            <text class="dg-t mut" x="330" y="314" font-size="12" text-anchor="middle">not merged</text>
+            <text class="dg-t mut" x="280" y="392" font-size="12" text-anchor="middle">extraction is the demo — resolution is what rots</text>
+          </svg>
+        </div>
+      </div>
       <p class="note reveal">An extraction audit found <b>2.4% anomalous triples</b> of 6,014, 0.65% pure hallucination — and downstream LLMs <b>trust graph output over the source prose</b> that contradicts it.</p>
     </div>
   </section>
@@ -608,7 +762,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide light" data-label="The MCP token tax"
     data-speaker-notes="Connect this straight back to deck 05's fixed-overhead lesson: tool schemas used to load every turn, so a fat graph server was a per-turn tax even on turns that never touched the graph. Deferred tool loading fixes it by default from 2.1.220 onward, and alwaysLoad opts a server back out when you genuinely need it hot. Tell them to check their version before they trust this.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">17</span><div class="crumb"><b>Claude Code</b> · the MCP token tax</div></div>
+      <div class="slide-head reveal"><span class="snum">18</span><div class="crumb"><b>Claude Code</b> · the MCP token tax</div></div>
       <h2 class="reveal">The MCP <span class="o">token tax</span></h2>
       <div class="code reveal"><span class="c"># historically — every server, every turn</span>
 <span class="o">tool schemas (all servers) ›</span>  <span class="b">loaded into context each turn</span>
@@ -627,7 +781,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide dark dense" data-label="The memory spectrum"
     data-speaker-notes="Walk left to right and make the trade explicit at each step: every move right buys capability and costs complexity plus a second bill. The jump that matters is from the official memory MCP to Graphiti — that's where you get time, and time is what makes contradiction survivable. Tell them to pick the leftmost thing that answers their actual failure mode, not the most impressive one.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">18</span><div class="crumb"><b>Claude Code</b> · memory spectrum</div></div>
+      <div class="slide-head reveal"><span class="snum">19</span><div class="crumb"><b>Claude Code</b> · memory spectrum</div></div>
       <h2 class="reveal">The memory <span class="o">spectrum</span></h2>
       <div class="flow reveal" style="margin-bottom:16px">
         <div class="step">CLAUDE.md</div><div class="arrow">→</div>
@@ -650,7 +804,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide light dense" data-label="Hooks as graph edges"
     data-speaker-notes="This is the nicest idea in the part: the hook events are edges, and the graph builds itself as a side effect of you working. Walk the five lifecycle points on the diagram and say what each contributes. Then the honest caveat — Cognee's own extraction and embedding calls bill against whatever provider it's configured with, so this is not free just because it's automatic.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">19</span><div class="crumb"><b>Claude Code</b> · hooks as edges</div></div>
+      <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>Claude Code</b> · hooks as edges</div></div>
       <h2 class="reveal">Hooks are <span class="o">edges</span></h2>
       <div class="diagram reveal" style="--diag-h:430px">
         <svg viewBox="0 0 1000 340" role="img" aria-label="A session lifecycle line with five hook points — SessionStart, UserPromptSubmit, PostToolUse, Stop and SessionEnd — each feeding an arrow down into one knowledge graph box that is built while you work.">
@@ -692,13 +846,50 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide dark" data-label="When markdown wins"
     data-speaker-notes="Give the four-word test and repeat it: many, entity-shaped, contradicting, time-dependent. If none of those is true, a markdown file wins on every axis that matters. Bring back Letta's grep result as the null hypothesis — beat the filesystem before you buy a graph. Tie it to deck 05: markdown bills every turn, a graph bills per query; neither is free, they're billed differently.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>Claude Code</b> · when markdown wins</div></div>
+      <div class="slide-head reveal"><span class="snum">21</span><div class="crumb"><b>Claude Code</b> · when markdown wins</div></div>
       <h2 class="reveal">When <span class="o">markdown wins</span></h2>
-      <ul class="bul reveal">
-        <li>Small, stable facts belong in <b>CLAUDE.md or auto memory</b>. Cache-friendly, zero latency, no second bill, no extra service to run.</li>
-        <li>Graph memory earns it when facts are <b>many, entity-shaped, contradicting, or time-dependent</b>. Those four words are the whole test.</li>
-        <li>Letta's result is the null hypothesis: GPT-4o-mini plus grep scored <b>74.0%</b> on LoCoMo. <b>Beat the filesystem before you buy a graph.</b></li>
-      </ul>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>Small, stable facts belong in <b>CLAUDE.md or auto memory</b>. Cache-friendly, zero latency, no second bill, no extra service to run.</li>
+          <li>Graph memory earns it when facts are <b>many, entity-shaped, contradicting, or time-dependent</b>. Those four words are the whole test.</li>
+          <li>Letta's result is the null hypothesis: GPT-4o-mini plus grep scored <b>74.0%</b> on LoCoMo. <b>Beat the filesystem before you buy a graph.</b></li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 560 360" role="img" aria-label="Two memory shapes side by side: a CLAUDE.md markdown file whose every line is loaded into context on every turn, versus a graph of entity nodes and edges that is queried per question. Caption: same facts, billed differently.">
+            <defs><marker id="mm1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <rect class="dg-box" x="16" y="20" width="220" height="190" rx="10"/>
+            <text class="dg-t acc" x="126" y="48" font-size="13" text-anchor="middle">CLAUDE.md</text>
+            <line class="dg-line dim" x1="40" y1="72" x2="212" y2="72"/>
+            <line class="dg-line dim" x1="40" y1="96" x2="196" y2="96"/>
+            <line class="dg-line dim" x1="40" y1="120" x2="212" y2="120"/>
+            <line class="dg-line dim" x1="40" y1="144" x2="180" y2="144"/>
+            <line class="dg-line dim" x1="40" y1="168" x2="206" y2="168"/>
+            <line class="dg-line dim" x1="40" y1="188" x2="160" y2="188"/>
+            <path class="dg-line" d="M126 214 L 126 254" marker-end="url(#mm1)"/>
+            <rect class="dg-box mid" x="16" y="260" width="220" height="52" rx="9"/>
+            <text class="dg-t" x="126" y="282" font-size="13" text-anchor="middle">the whole file, every turn</text>
+            <text class="dg-t mut" x="126" y="302" font-size="12" text-anchor="middle">cache-friendly · zero ops</text>
+            <text class="dg-t mut" x="280" y="170" font-size="14" text-anchor="middle">vs</text>
+            <circle class="dg-box hot" cx="400" cy="60" r="28"/>
+            <text class="dg-t on" x="400" y="65" font-size="12" text-anchor="middle">Alice</text>
+            <circle class="dg-box" cx="330" cy="150" r="28"/>
+            <text class="dg-t" x="330" y="155" font-size="12" text-anchor="middle">Acme</text>
+            <circle class="dg-box" cx="480" cy="150" r="28"/>
+            <text class="dg-t" x="480" y="155" font-size="12" text-anchor="middle">Globex</text>
+            <circle class="dg-box" cx="404" cy="196" r="24"/>
+            <text class="dg-t" x="404" y="201" font-size="12" text-anchor="middle">Q3</text>
+            <path class="dg-line dim" d="M382 82 L 348 126" stroke-dasharray="5 4"/>
+            <text class="dg-t mut" x="336" y="98" font-size="11" text-anchor="end">closed Jul</text>
+            <path class="dg-line" d="M418 82 L 462 128"/>
+            <path class="dg-line dim" d="M456 168 L 424 184"/>
+            <path class="dg-line" d="M404 232 L 404 254" marker-end="url(#mm1)"/>
+            <rect class="dg-box mid" x="304" y="260" width="220" height="52" rx="9"/>
+            <text class="dg-t" x="414" y="282" font-size="13" text-anchor="middle">only what the query touches</text>
+            <text class="dg-t mut" x="414" y="302" font-size="12" text-anchor="middle">pay-per-query · a second bill</text>
+            <text class="dg-t acc" x="280" y="348" font-size="13" text-anchor="middle">same facts, billed differently</text>
+          </svg>
+        </div>
+      </div>
       <p class="note reveal">Deck 05's lesson, inverted: every line of CLAUDE.md is paid <b>every turn</b>; a graph flips that to <b>pay-per-query</b>. Neither is free — they're billed differently, and you should know which shape your workload has.</p>
     </div>
   </section>
@@ -706,7 +897,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide light" data-label="Code graphs: the house line"
     data-speaker-notes="Read the Cherny quote as written and let it sit. The detail people miss is that Claude Code shipped RAG with a local vector DB early on and pulled it out, not because indexing was hard but because agentic search won outright. Frame this as the default you have to beat, then promise the counter-evidence on the next slide so nobody thinks you're selling a position.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">21</span><div class="crumb"><b>Claude Code</b> · code graphs, house line</div></div>
+      <div class="slide-head reveal"><span class="snum">22</span><div class="crumb"><b>Claude Code</b> · code graphs, house line</div></div>
       <h2 class="reveal">Code graphs: the <span class="o">house line</span></h2>
       <div class="kcard reveal">
         <div class="big" style="font-size:36px; line-height:1.2">"Agentic search generally works better. It is also simpler and doesn't have the same issues around security, privacy, staleness, and reliability."</div>
@@ -723,7 +914,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide dark dense" data-label="Code graphs: the counter-evidence"
     data-speaker-notes="Read the Express row out loud — the graph lost, and the author published it anyway, which is why the rest of the table is worth reading. Then the rigorous head-to-head: ten times fewer tokens but 83% versus 92% on quality, so the graph is cheaper and slightly dumber on holistic questions. Both things are true — grep wins small, graphs win monorepos, and everybody shipping at scale runs a hybrid.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">22</span><div class="crumb"><b>Claude Code</b> · code graphs, counter-evidence</div></div>
+      <div class="slide-head reveal"><span class="snum">23</span><div class="crumb"><b>Claude Code</b> · code graphs, counter-evidence</div></div>
       <h2 class="reveal">Code graphs: the <span class="o">counter-evidence</span></h2>
       <table class="tbl reveal">
         <thead><tr><th>Repo / study</th><th>Result</th><th>Factor</th></tr></thead>
@@ -745,14 +936,54 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide light" data-label="Control flow: the mapping"
     data-speaker-notes="This is the slide to photograph. Read each mapping and let the realisation land: they already own a graph runtime and have been calling it Claude Code. Spend the most time on hooks-as-gates, because PreToolUse blocking and Stop refusing a turn end are exactly the deterministic invariants a graph framework is usually bought for.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">23</span><div class="crumb"><b>Claude Code</b> · control flow mapping</div></div>
+      <div class="slide-head reveal"><span class="snum">24</span><div class="crumb"><b>Claude Code</b> · control flow mapping</div></div>
       <h2 class="reveal">You already own a <span class="o">graph runtime</span></h2>
-      <div class="gloss reveal">
-        <div class="row"><span class="term">Nodes</span><span class="def">Subagents — <code>.claude/agents/*.md</code>, with name / description / model / tools frontmatter.</span></div>
-        <div class="row"><span class="term">Gates</span><span class="def">Hooks — PreToolUse can block or rewrite a call, Stop can refuse to end the turn. 12 events.</span></div>
-        <div class="row"><span class="term">Edges</span><span class="def">The orchestrator's own routing prompt is your conditional edge.</span></div>
-        <div class="row"><span class="term">DAG nodes</span><span class="def"><code>claude -p --output-format json</code>, composed by a script; <code>--resume &lt;id&gt;</code> to continue one.</span></div>
-        <div class="row"><span class="term">Checkpoints</span><span class="def">Sessions plus <code>/rewind</code> — file snapshots per prompt, last 100. SDK <code>forkSession: true</code> is time travel.</span></div>
+      <div class="split">
+        <div class="gloss reveal" style="grid-template-columns:1fr">
+          <div class="row"><span class="term">Nodes</span><span class="def">Subagents — <code>.claude/agents/*.md</code>, with name / description / model / tools frontmatter.</span></div>
+          <div class="row"><span class="term">Gates</span><span class="def">Hooks — PreToolUse can block or rewrite a call, Stop can refuse to end the turn. 12 events.</span></div>
+          <div class="row"><span class="term">Edges</span><span class="def">The orchestrator's own routing prompt is your conditional edge.</span></div>
+          <div class="row"><span class="term">DAG nodes</span><span class="def"><code>claude -p --output-format json</code>, composed by a script; <code>--resume &lt;id&gt;</code> to continue one.</span></div>
+          <div class="row"><span class="term">Checkpoints</span><span class="def">Sessions plus <code>/rewind</code> — file snapshots per prompt, last 100. SDK <code>forkSession: true</code> is time travel.</span></div>
+        </div>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 560 430" role="img" aria-label="Claude Code drawn as the graph runtime it already is: an orchestrator whose routing prompt forms conditional edges to three subagent nodes; a PreToolUse hook gates one edge, a Stop hook gates the exit, and a row of checkpoint dots along the bottom marks per-prompt snapshots reachable with /rewind.">
+            <defs><marker id="rt1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <rect class="dg-box hot" x="160" y="8" width="240" height="54" rx="10"/>
+            <text class="dg-t on" x="280" y="41" font-size="14" text-anchor="middle">orchestrator</text>
+            <text class="dg-t acc" x="280" y="86" font-size="12" text-anchor="middle">routing prompt = conditional edges</text>
+            <path class="dg-line" d="M172 62 C 112 92, 86 116, 78 148" marker-end="url(#rt1)"/>
+            <path class="dg-line" d="M280 96 L 280 128" marker-end="url(#rt1)"/>
+            <path class="dg-line" d="M388 62 C 448 92, 474 116, 482 148" marker-end="url(#rt1)"/>
+            <polygon class="dg-box mid" points="280,132 322,164 280,196 238,164"/>
+            <text class="dg-t acc" x="280" y="169" font-size="11" text-anchor="middle">hook</text>
+            <text class="dg-t mut" x="332" y="150" font-size="11">PreToolUse:</text>
+            <text class="dg-t mut" x="330" y="166" font-size="11">block/rewrite</text>
+            <rect class="dg-box" x="8" y="154" width="140" height="52" rx="9"/>
+            <text class="dg-t" x="78" y="185" font-size="13" text-anchor="middle">subagent A</text>
+            <path class="dg-line" d="M280 200 L 280 222" marker-end="url(#rt1)"/>
+            <rect class="dg-box" x="210" y="228" width="140" height="52" rx="9"/>
+            <text class="dg-t" x="280" y="259" font-size="13" text-anchor="middle">subagent B</text>
+            <rect class="dg-box" x="412" y="154" width="140" height="52" rx="9"/>
+            <text class="dg-t" x="482" y="185" font-size="13" text-anchor="middle">subagent C</text>
+            <path class="dg-line" d="M78 210 C 90 292, 180 316, 234 324" marker-end="url(#rt1)"/>
+            <path class="dg-line" d="M280 284 L 280 306" marker-end="url(#rt1)"/>
+            <path class="dg-line" d="M482 210 C 470 292, 380 316, 326 324" marker-end="url(#rt1)"/>
+            <polygon class="dg-box mid" points="280,308 318,338 280,368 242,338"/>
+            <text class="dg-t acc" x="280" y="343" font-size="11" text-anchor="middle">Stop</text>
+            <text class="dg-t mut" x="328" y="334" font-size="11">can refuse</text>
+            <text class="dg-t mut" x="328" y="350" font-size="11">to end the turn</text>
+            <path class="dg-line dim" d="M242 338 C 160 338, 130 120, 216 44" marker-end="url(#rt1)"/>
+            <text class="dg-t mut" x="126" y="248" font-size="11" text-anchor="middle">not done</text>
+            <text class="dg-t mut" x="126" y="264" font-size="11" text-anchor="middle">— loop</text>
+            <line class="dg-line dim" x1="30" y1="404" x2="530" y2="404"/>
+            <circle class="dg-fill-r" cx="110" cy="404" r="6"/>
+            <circle class="dg-fill-r" cx="230" cy="404" r="6"/>
+            <circle class="dg-fill-r" cx="350" cy="404" r="6"/>
+            <circle class="dg-fill-r" cx="470" cy="404" r="6"/>
+            <text class="dg-t mut" x="280" y="428" font-size="12" text-anchor="middle">checkpoints — one per prompt · /rewind · forkSession = time travel</text>
+          </svg>
+        </div>
       </div>
       <p class="note reveal">Name the parts and the graph is already there. You've just been calling it <b>Claude Code</b>.</p>
     </div>
@@ -761,20 +992,58 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide dark" data-label="Workflows: a scripted graph"
     data-speaker-notes="Show that a workflow script reads as a graph without any graph vocabulary: pipeline fans out, agent() is a node, and the conditional edges are plain if/else. The resumability detail is the one to stress — an unchanged prefix of agent() calls returns cached results, so a failed run doesn't cost you the whole DAG again. Cross-reference deck 03's dynamic workflows section.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">24</span><div class="crumb"><b>Claude Code</b> · workflows</div></div>
+      <div class="slide-head reveal"><span class="snum">25</span><div class="crumb"><b>Claude Code</b> · workflows</div></div>
       <h2 class="reveal">Workflows: a <span class="o">scripted graph</span></h2>
-      <div class="code reveal"><span class="c">// workflows (v2.1.154+) — a graph that reads as a script</span>
+      <div class="split">
+        <div>
+          <div class="code reveal"><span class="c">// workflows (v2.1.154+) —
+// a graph that reads as a script</span>
 <span class="o">const</span> findings = <span class="o">await</span> pipeline(
-  files,                                  <span class="c">// fan out, no barrier</span>
-  f =&gt; agent(<span class="g">`review ${f}`</span>),              <span class="c">// node: a subagent</span>
-  r =&gt; agent(<span class="g">`verify: ${r}`</span>)              <span class="c">// node: the next stage</span>
-);
-<span class="c">// max 16 concurrent · resumable: an unchanged agent() prefix</span>
-<span class="c">// returns cached results instead of re-running the node</span></div>
-      <ul class="bul reveal">
-        <li><code>parallel()</code> adds a barrier when you need one. <code>pipeline()</code> deliberately doesn't.</li>
-        <li>Conditional edges are plain <code>if</code> / <code>else</code>. That's the feature, not a shortcut — the routing logic is code you can read, diff and test.</li>
-      </ul>
+  files,                <span class="c">// fan out, no barrier</span>
+  f =&gt; agent(<span class="g">`review ${f}`</span>),  <span class="c">// node</span>
+  r =&gt; agent(<span class="g">`verify: ${r}`</span>)  <span class="c">// next stage</span>
+);</div>
+          <ul class="bul reveal" style="margin-top:24px">
+            <li><code>parallel()</code> adds a barrier when you need one. <code>pipeline()</code> deliberately doesn't.</li>
+            <li>Conditional edges are plain <code>if</code> / <code>else</code> — routing logic you can read, diff and test.</li>
+          </ul>
+        </div>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 560 380" role="img" aria-label="The DAG that pipeline() call builds: a files array fans out to three review subagent nodes, each flowing into its own verify subagent node with no barrier between lanes, converging into findings. The first lane is marked as returning cached results on resume; a label notes at most 16 nodes run concurrently.">
+            <defs><marker id="sg1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <rect class="dg-box" x="210" y="8" width="140" height="50" rx="9"/>
+            <text class="dg-t" x="280" y="38" font-size="14" text-anchor="middle">files[]</text>
+            <path class="dg-line" d="M232 62 L 106 108" marker-end="url(#sg1)"/>
+            <path class="dg-line" d="M280 62 L 280 108" marker-end="url(#sg1)"/>
+            <path class="dg-line" d="M328 62 L 454 108" marker-end="url(#sg1)"/>
+            <text class="dg-t acc" x="416" y="86" font-size="12">fan out · no barrier</text>
+            <rect class="dg-box outer" x="14" y="100" width="176" height="214" rx="12"/>
+            <rect class="dg-box" x="34" y="114" width="136" height="50" rx="9"/>
+            <text class="dg-t" x="102" y="144" font-size="13" text-anchor="middle">agent: review f1</text>
+            <path class="dg-line" d="M102 168 L 102 208" marker-end="url(#sg1)"/>
+            <rect class="dg-box" x="34" y="214" width="136" height="50" rx="9"/>
+            <text class="dg-t" x="102" y="244" font-size="13" text-anchor="middle">agent: verify r1</text>
+            <text class="dg-t acc" x="102" y="284" font-size="11" text-anchor="middle">unchanged prefix →</text>
+            <rect class="dg-box" x="212" y="114" width="136" height="50" rx="9"/>
+            <text class="dg-t" x="280" y="144" font-size="13" text-anchor="middle">agent: review f2</text>
+            <path class="dg-line" d="M280 168 L 280 208" marker-end="url(#sg1)"/>
+            <rect class="dg-box" x="212" y="214" width="136" height="50" rx="9"/>
+            <text class="dg-t" x="280" y="244" font-size="13" text-anchor="middle">agent: verify r2</text>
+            <rect class="dg-box" x="390" y="114" width="136" height="50" rx="9"/>
+            <text class="dg-t" x="458" y="144" font-size="13" text-anchor="middle">agent: review f3</text>
+            <path class="dg-line" d="M458 168 L 458 208" marker-end="url(#sg1)"/>
+            <rect class="dg-box" x="390" y="214" width="136" height="50" rx="9"/>
+            <text class="dg-t" x="458" y="244" font-size="13" text-anchor="middle">agent: verify r3</text>
+            <text class="dg-t acc" x="102" y="302" font-size="11" text-anchor="middle">cached on resume</text>
+            <path class="dg-line" d="M102 314 C 102 338, 180 332, 226 330" marker-end="url(#sg1)"/>
+            <path class="dg-line" d="M280 268 L 280 306" marker-end="url(#sg1)"/>
+            <path class="dg-line" d="M458 268 C 458 316, 380 326, 334 330" marker-end="url(#sg1)"/>
+            <rect class="dg-box hot" x="210" y="312" width="140" height="50" rx="9"/>
+            <text class="dg-t on" x="280" y="342" font-size="14" text-anchor="middle">findings</text>
+            <text class="dg-t mut" x="458" y="352" font-size="12" text-anchor="middle">≤ 16 concurrent</text>
+          </svg>
+        </div>
+      </div>
       <p class="note reveal">The closest native thing to a scripted LangGraph. Full treatment in deck 03, <i>Agentic Engineering</i> — dynamic workflows.</p>
     </div>
   </section>
@@ -782,21 +1051,51 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide light" data-label="When you outgrow it"
     data-speaker-notes="Say the design decision out loud: the Agent SDK ships no graph engine, and that's a choice, not a gap. If you genuinely need durable typed state, interrupt-style human gates and time travel across a fork, the 2026 consensus is LangGraph outside and SDK agents inside the nodes. Then tell them not to reach here first — the previous two slides cover most real needs, and CrewAI's debugging-nightmare quote was about exactly this layer.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">25</span><div class="crumb"><b>Claude Code</b> · when you outgrow it</div></div>
+      <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>Claude Code</b> · when you outgrow it</div></div>
       <h2 class="reveal">When you outgrow it: <span class="o">SDK + LangGraph</span></h2>
-      <ul class="bul reveal">
-        <li>The Claude Agent SDK ships <b>no graph engine, by design</b>. That's a decision, not a gap.</li>
-        <li>Need durable typed state, human-in-the-loop interrupts, or time travel across a fork? The 2026 consensus hybrid: <b>LangGraph as the outer state machine, Agent SDK agents inside the nodes.</b></li>
-        <li>Day-long jobs wrap Temporal around both. LangGraph 1.0 went GA Oct 22, 2025; ⚠ adoption figure of ~400 companies on LangGraph Platform is the vendor's own.</li>
-      </ul>
-      <p class="note reveal">Don't reach here first. Slides 23–24 cover most real needs — and CrewAI's "debugging nightmares" line was about exactly this layer.</p>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>The Claude Agent SDK ships <b>no graph engine, by design</b>. That's a decision, not a gap.</li>
+          <li>Need durable typed state, human-in-the-loop interrupts, or time travel across a fork? The 2026 consensus hybrid: <b>LangGraph as the outer state machine, Agent SDK agents inside the nodes.</b></li>
+          <li>Day-long jobs wrap Temporal around both. LangGraph 1.0 went GA Oct 22, 2025; ⚠ adoption figure of ~400 companies on LangGraph Platform is the vendor's own.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 560 400" role="img" aria-label="The 2026 consensus hybrid as nested boxes: an outer dashed Temporal boundary for day-long jobs, inside it a LangGraph state machine owning durable typed state, checkpoints and time travel, and inside each of its nodes an Agent SDK agent doing the work. An interrupt gate between nodes marks the human-in-the-loop pause.">
+            <defs><marker id="lg1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <rect class="dg-box outer" x="6" y="6" width="548" height="388" rx="16"/>
+            <text class="dg-t acc" x="26" y="34" font-size="12">Temporal — when jobs run for days</text>
+            <rect class="dg-box mid" x="30" y="52" width="500" height="316" rx="12"/>
+            <text class="dg-t" x="50" y="82" font-size="13">LangGraph — outer state machine</text>
+            <rect class="dg-box" x="50" y="100" width="460" height="46" rx="9"/>
+            <text class="dg-t mut" x="280" y="128" font-size="12" text-anchor="middle">durable typed state · checkpoint every super-step · time travel via fork</text>
+            <rect class="dg-box" x="50" y="180" width="130" height="88" rx="10"/>
+            <text class="dg-t mut" x="115" y="203" font-size="11" text-anchor="middle">node</text>
+            <rect class="dg-box hot" x="62" y="212" width="106" height="44" rx="8"/>
+            <text class="dg-t on" x="115" y="239" font-size="12" text-anchor="middle">SDK agent</text>
+            <path class="dg-line" d="M184 224 L 212 224" marker-end="url(#lg1)"/>
+            <polygon class="dg-box" points="252,192 288,224 252,256 216,224"/>
+            <text class="dg-t acc" x="252" y="228" font-size="10" text-anchor="middle">interrupt()</text>
+            <text class="dg-t mut" x="252" y="282" font-size="11" text-anchor="middle">human gate</text>
+            <path class="dg-line" d="M292 224 L 320 224" marker-end="url(#lg1)"/>
+            <rect class="dg-box" x="324" y="180" width="130" height="88" rx="10"/>
+            <text class="dg-t mut" x="389" y="203" font-size="11" text-anchor="middle">node</text>
+            <rect class="dg-box hot" x="336" y="212" width="106" height="44" rx="8"/>
+            <text class="dg-t on" x="389" y="239" font-size="12" text-anchor="middle">SDK agent</text>
+            <path class="dg-line dim" d="M389 272 C 389 316, 200 320, 130 280" marker-end="url(#lg1)"/>
+            <text class="dg-t mut" x="280" y="336" font-size="11" text-anchor="middle">conditional edge — router function, may loop</text>
+            <path class="dg-line" d="M458 224 L 496 224" marker-end="url(#lg1)"/>
+            <text class="dg-t mut" x="500" y="212" font-size="11">END</text>
+          </svg>
+        </div>
+      </div>
+      <p class="note reveal">Don't reach here first. Slides 24–25 cover most real needs — and CrewAI's "debugging nightmares" line was about exactly this layer.</p>
     </div>
   </section>
 
   <section class="slide dark" data-label="The cheaper alternative first"
     data-speaker-notes="This is the whole deck's pattern in one number pair: 84% fewer tokens and 39% better performance, from a memory tool and automatic context editing, with no graph anywhere. Tell them to run this before standing up a graph memory server, because if it solves the problem they've saved themselves an operational dependency. Flag the Rakuten number as a vendor claim before anyone writes it down.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>Claude Code</b> · the cheaper alternative</div></div>
+      <div class="slide-head reveal"><span class="snum">27</span><div class="crumb"><b>Claude Code</b> · the cheaper alternative</div></div>
       <h2 class="reveal">Try the <span class="o">boring thing</span> first</h2>
       <div class="kcard reveal">
         <div class="big">84% / 39%</div>
@@ -823,7 +1122,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide light dense" data-label="Worked example: incident copilot"
     data-speaker-notes="Walk the diagram as a story: the question arrives, entities get identified, the knowledge graph traversal and the similar-incidents vector search run in parallel, results are joined and ranked, and then a deterministic check on provenance, access and freshness either loops back or lets the draft through to a human. Point at the approval gate and say it is deliberate, not decorative. The reason this system is auditable is that the paths are explicit — and you evaluate each layer separately so a fluent answer can't hide a bad graph.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">28</span><div class="crumb"><b>Decide</b> · worked example</div></div>
+      <div class="slide-head reveal"><span class="snum">29</span><div class="crumb"><b>Decide</b> · worked example</div></div>
       <h2 class="reveal">Worked example: an <span class="o">incident copilot</span></h2>
       <div class="diagram reveal" style="--diag-h:440px">
         <svg viewBox="0 0 1000 360" role="img" aria-label="Incident copilot workflow: a question leads to entity identification, which fans out to a knowledge-graph traversal and a vector search for similar past incidents; results are joined and ranked, then checked for provenance, access and depth caps. Insufficient evidence loops back to identification; sufficient evidence goes to a draft, a human approval gate, and finally publication.">
@@ -875,16 +1174,64 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide dark" data-label="The failure math"
     data-speaker-notes="Do the arithmetic on stage — 0.85 to the fifth is 44%, so a five-hop chain at 85% per hop is wrong more often than right. Say that structure is not free reliability, and that this cuts both ways: retrieval hops and agent hand-offs decay identically. Land the quote and then the instruction — make each node strong before you add another edge.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">29</span><div class="crumb"><b>Decide</b> · the failure math</div></div>
+      <div class="slide-head reveal"><span class="snum">30</span><div class="crumb"><b>Decide</b> · the failure math</div></div>
       <h2 class="reveal">The failure <span class="o">math</span></h2>
-      <div class="kcard reveal">
-        <div class="big">0.85⁵ ≈ 44%</div>
-        <p>At 85% accuracy per hop, a five-hop chain is wrong more often than it's right. <b>Structure is not free reliability.</b></p>
+      <div class="split">
+        <div>
+          <div class="kcard reveal">
+            <div class="big">0.85⁵ ≈ 44%</div>
+            <p>At 85% accuracy per hop, a five-hop chain is wrong more often than it's right. <b>Structure is not free reliability.</b></p>
+          </div>
+          <ul class="bul reveal" style="margin-top:28px">
+            <li>"A graph of weak nodes is just slop produced in parallel."</li>
+            <li>The same decay hits <b>retrieval hops and agent hand-offs</b> alike — which is exactly why graphs stop helping past ~2 hops on the benchmarks in part 01.</li>
+          </ul>
+        </div>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 560 330" role="img" aria-label="Five chained hops, each 85% accurate. Bars under the chain show the compounding end-to-end accuracy: 85% after one hop, 72%, 61%, 52%, and 44% after five — below a coin flip line drawn at 50%.">
+            <defs><marker id="fm1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <text class="dg-t mut" x="8" y="26" font-size="13">each hop: 85% right</text>
+            <g class="gfm-h gfm-d1">
+              <circle class="dg-box" cx="60" cy="70" r="30"/>
+              <text class="dg-t" x="60" y="75" font-size="13" text-anchor="middle">hop 1</text>
+              <rect class="dg-fill-r" x="38" y="149.5" width="44" height="110.5" rx="4" opacity="0.9"/>
+              <text class="dg-t" x="60" y="290" font-size="13" text-anchor="middle">85%</text>
+            </g>
+            <g class="gfm-h gfm-d2">
+              <path class="dg-line" d="M94 70 L 136 70" marker-end="url(#fm1)"/>
+              <circle class="dg-box" cx="170" cy="70" r="30"/>
+              <text class="dg-t" x="170" y="75" font-size="13" text-anchor="middle">hop 2</text>
+              <rect class="dg-fill-r" x="148" y="166.4" width="44" height="93.6" rx="4" opacity="0.75"/>
+              <text class="dg-t" x="170" y="290" font-size="13" text-anchor="middle">72%</text>
+            </g>
+            <g class="gfm-h gfm-d3">
+              <path class="dg-line" d="M204 70 L 246 70" marker-end="url(#fm1)"/>
+              <circle class="dg-box" cx="280" cy="70" r="30"/>
+              <text class="dg-t" x="280" y="75" font-size="13" text-anchor="middle">hop 3</text>
+              <rect class="dg-fill-r" x="258" y="180.7" width="44" height="79.3" rx="4" opacity="0.6"/>
+              <text class="dg-t" x="280" y="290" font-size="13" text-anchor="middle">61%</text>
+            </g>
+            <g class="gfm-h gfm-d4">
+              <path class="dg-line" d="M314 70 L 356 70" marker-end="url(#fm1)"/>
+              <circle class="dg-box" cx="390" cy="70" r="30"/>
+              <text class="dg-t" x="390" y="75" font-size="13" text-anchor="middle">hop 4</text>
+              <rect class="dg-fill-r" x="368" y="192.4" width="44" height="67.6" rx="4" opacity="0.48"/>
+              <text class="dg-t" x="390" y="290" font-size="13" text-anchor="middle">52%</text>
+            </g>
+            <g class="gfm-h gfm-d5">
+              <path class="dg-line" d="M424 70 L 466 70" marker-end="url(#fm1)"/>
+              <circle class="dg-box hot" cx="500" cy="70" r="30"/>
+              <text class="dg-t on" x="500" y="75" font-size="13" text-anchor="middle">hop 5</text>
+              <rect class="dg-fill-r" x="478" y="202.8" width="44" height="57.2" rx="4" opacity="0.38"/>
+              <text class="dg-t acc" x="500" y="290" font-size="13" text-anchor="middle">44%</text>
+            </g>
+            <line class="dg-line dim" x1="20" y1="260" x2="540" y2="260"/>
+            <line class="dg-line dim" x1="20" y1="195" x2="540" y2="195" stroke-dasharray="6 5"/>
+            <text class="dg-t mut" x="540" y="188" font-size="12" text-anchor="end">50% — a coin flip</text>
+            <text class="dg-t mut" x="280" y="320" font-size="13" text-anchor="middle">end-to-end accuracy, compounding per hop</text>
+          </svg>
+        </div>
       </div>
-      <ul class="bul reveal">
-        <li>"A graph of weak nodes is just slop produced in parallel."</li>
-        <li>The same decay hits <b>retrieval hops and agent hand-offs</b> alike — which is exactly why graphs stop helping past ~2 hops on the benchmarks in part 01.</li>
-      </ul>
       <p class="note reveal">Make each node strong before you add another edge. More topology cannot rescue an unreliable step.</p>
     </div>
   </section>
@@ -892,7 +1239,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide light dense" data-label="The decision table"
     data-speaker-notes="This is the reference slide people came for, so read the rows and don't over-narrate. The last row is the twist: Amazon reached 94.5% of RAG faithfulness with agentic keyword search and no vector store at all. Close on the framing shift — graphs are turning into one tool an agent picks per query, not the backbone the whole system is built on.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">30</span><div class="crumb"><b>Decide</b> · the table</div></div>
+      <div class="slide-head reveal"><span class="snum">31</span><div class="crumb"><b>Decide</b> · the table</div></div>
       <h2 class="reveal">The decision <span class="o">table</span></h2>
       <table class="tbl reveal">
         <thead><tr><th>Situation</th><th>Reach for</th></tr></thead>
@@ -912,7 +1259,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide dark" data-label="Recap"
     data-speaker-notes="Close on the three-part spine and one sentence they can repeat in a design review: ask which graph, then make it beat grep. Name the two things the evidence is unambiguous about — graphs win multi-hop and temporal, and they lose on cost, latency and null queries. Then remind them that the primitives are already installed on their laptop.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">31</span><div class="crumb"><b>Close</b> · recap</div></div>
+      <div class="slide-head reveal"><span class="snum">32</span><div class="crumb"><b>Close</b> · recap</div></div>
       <h2 class="reveal">Which graph — and <span class="o">does it beat grep?</span></h2>
       <div class="flow reveal" style="margin-bottom:16px">
         <div class="step">01 evidence</div><div class="arrow">→</div>
@@ -932,7 +1279,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <section class="slide light dense" data-label="Sources"
     data-speaker-notes="Close on sources, series convention: every claim here is date-stamped August 2026 and traceable. Name the flagged ones out loud — the $33,000 cost cliff, the per-repo code-graph numbers, LangGraph's adoption figure, and the Klarna, Uber and Rakuten claims. Point at the skeptics column and say you read those first, deliberately.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">32</span><div class="crumb"><b>Close</b> · sources</div></div>
+      <div class="slide-head reveal"><span class="snum">33</span><div class="crumb"><b>Close</b> · sources</div></div>
       <h2 class="reveal"><span class="o">Sources</span> — all claims dated August 2026</h2>
       <div class="links reveal" style="grid-template-columns:repeat(4,1fr); gap:var(--space-6)">
         <div class="linkcol">
