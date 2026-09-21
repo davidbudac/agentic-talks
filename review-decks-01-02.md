@@ -4,6 +4,21 @@
 (*Intro to Agentic AI*, 43 slides).
 **Decks dated:** July 2026. **Review date:** 21 September 2026.
 
+## Implementation status
+
+| Scope | Status |
+|---|---|
+| Deck 01 · `ai-toolbox.html` — all Must fix / Should update / Nice to have items below | ✅ Applied (commit "Update The AI Toolbox deck to the September 2026 state") |
+| Deck 02 · `agentic-ai.html` | ⏳ In progress |
+| README | ⏳ Pending |
+| Browser spot-checks (section at the end) | ⬜ Still needed — could not be verified from the sandbox |
+
+Notes on how the deck 01 plan was applied:
+- The churn slide (§20) swapped the NotebookLM-rename tile for an "Agent mode → Work / Custom GPTs retiring" tile; the rename now lives on the Gemini slide (§17) with its exact date.
+- Higgsfield tiers were set to Basic $9 · Pro $29 · Max $79 (the Sep 2026 price list).
+- D‑ID, Ideogram, Magnific and Lindy prices were softened to ranges rather than replaced, pending the browser spot-check.
+- All "July 2026" stamps (title, footers, presenter header comment, speaker notes) now read September 2026.
+
 ## Verdict
 
 Both decks are structurally sound and most core facts held up. The problem is drift:
