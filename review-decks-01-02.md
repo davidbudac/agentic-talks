@@ -11,6 +11,7 @@
 | Deck 01 · `ai-toolbox.html` — all Must fix / Should update / Nice to have items below | ✅ Applied (commit "Update The AI Toolbox deck to the September 2026 state") |
 | Deck 02 · `agentic-ai.html` — all Must fix / Should update / Nice to have items below | ✅ Applied (commit "Update the Intro to Agentic AI deck to the September 2026 state") |
 | README | ✅ Applied (same commit) |
+| Visual check of edited slides (headless Chromium, 1920×1080, reveal animation disabled) | ✅ 19 slides screenshotted; one overflow in the redrawn permissions ladder fixed |
 | Browser spot-checks (section at the end) | ⬜ Still needed — could not be verified from the sandbox |
 
 Notes on how the deck 02 plan was applied:
