@@ -9,9 +9,17 @@
 | Scope | Status |
 |---|---|
 | Deck 01 · `ai-toolbox.html` — all Must fix / Should update / Nice to have items below | ✅ Applied (commit "Update The AI Toolbox deck to the September 2026 state") |
-| Deck 02 · `agentic-ai.html` | ⏳ In progress |
-| README | ⏳ Pending |
+| Deck 02 · `agentic-ai.html` — all Must fix / Should update / Nice to have items below | ✅ Applied (commit "Update the Intro to Agentic AI deck to the September 2026 state") |
+| README | ✅ Applied (same commit) |
 | Browser spot-checks (section at the end) | ⬜ Still needed — could not be verified from the sandbox |
+
+Notes on how the deck 02 plan was applied:
+- The permissions slide (§33) now shows a **four-step ladder** — Manual · Accept edits · Auto · Bypass — with the live-demo marker under Auto; the SVG was redrawn with four boxes. Codex's read-only / auto / full-access names stay.
+- Harness list (§20): Windsurf → Devin Desktop, Aider → OpenCode, Codex on GPT‑6 Astra; the note line names Kiro, Amp, Jules and Antigravity. Front doors (§21): Gemini CLI → Antigravity CLI, "Claude Code app" → "Claude Desktop app".
+- The "~1⁄7 thinking" stat tile (§27) was kept but re-attributed to the customer trading benchmark vs Opus 4.8; the Sonnet 5 tile now names BrowseComp and Opus 4.8.
+- The "40% threshold of stupidity" (§29) is now the 40% "dumb zone" credited to Dex Horthy, with his talk added to Sources 2/2.
+- Sources 1/2 gained the Fable 5.1 what's‑new page, the CNBC GPT‑6 Astra article and the Claude Code permission-modes page; the models-overview link uses the new canonical path.
+- Model-in-the-cloud diagram (§10) and the status-line example (§30) keep `Opus 5`, which remains the current large model.
 
 Notes on how the deck 01 plan was applied:
 - The churn slide (§20) swapped the NotebookLM-rename tile for an "Agent mode → Work / Custom GPTs retiring" tile; the rename now lives on the Gemini slide (§17) with its exact date.

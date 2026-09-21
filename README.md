@@ -17,7 +17,7 @@ Author: **David Budáč** · English
   the wider tool landscape by category (app builders, video, HyperFrames, avatars,
   voice, music, images, decks, copy, research, automation) → five real-world stories →
   plugging AI into Excel / PowerPoint & co. (connectors, MCP). Pricing runs through
-  every tool slide (July 2026 snapshot). 59 slides. **No live demos.**
+  every tool slide (September 2026 snapshot). 59 slides. **No live demos.**
 - **[`agentic-ai.html`](agentic-ai.html)** — *Intro to Agentic AI* (Claude Code for
   beginners). Model / harness / agent, the loop, context, permissions, memory & MCP. 43 slides.
 - **[`agentic-engineering.html`](agentic-engineering.html)** — *Agentic Engineering*
@@ -95,7 +95,7 @@ The deck has a built-in editor (no build step):
 
 **The AI Toolbox** — pricing literacy (subscription / credits / per-seat / API) ·
 chatbot vs agent, the loop, no memory (condensed core) · the big three labs plan by
-plan (Cowork, Claude Design, agent mode, Gemini Notebook, Veo/Flow) · product churn ·
+plan (Cowork, Claude Design, ChatGPT Work, Gemini Notebook, Veo/Flow) · product churn ·
 a week of real tasks · the wider landscape with a leader per category · the fine print
 (licences, public tiers, provenance, credit budgeting) · five documented stories
 (Project Vend, the superbug result, CFA/IMO, the security double, the Super Bowl
@@ -136,9 +136,10 @@ slide right after the hook, and **🔴 LIVE** callback markers on the loop,
 thinking, and context slides. A presenter quick-reference is in an HTML comment
 at the top of `agentic-ai.html`.
 
-- Before the talk, start Claude Code on a real task in **auto / accept-edits**
-  mode (so it won't block on a prompt mid-talk — which also demos the
-  permissions slides).
+- Before the talk, start Claude Code on a real task in **Auto** mode (the
+  default on paid plans since Aug 2026 — a classifier approves routine actions)
+  or **accept-edits** mode, so it won't block on a prompt mid-talk — which also
+  demos the permissions slides.
 - Good tasks (~3–8 min, several tool calls): *"add a `/health` endpoint with a
   test, then run the tests"* or *"find & fix why test X fails."* Avoid anything
   that finishes in ~20s or needs a login.
@@ -175,7 +176,8 @@ animations read the same palette from `remotion/src/theme.ts`.
 
 ## Notes
 
-- Facts (model names, prices) are **verified as of July 2026** and labelled on-slide —
+- Facts (model names, prices) in decks 01 and 02 are **verified as of September 2026**
+  (see `review-decks-01-02.md`); the other decks are labelled July 2026 on-slide —
   this space moves fast, so re-check the primary sources (see the deck's final two
   "Sources" slides) before reusing.
 
@@ -193,6 +195,7 @@ animations read the same palette from `remotion/src/theme.ts`.
 | `claude-design.html` | *Claude Design* deck — ~30-min product deep dive on Anthropic's visual-creation tool (WIP, live demo, no code needed). |
 | `ai-graph-engineering.html` | *AI Graph Engineering* deck — knowledge/retrieval/workflow graphs and when either pays (WIP). |
 | `graph-engineering-ai-llms.md`, `deck09-facts.md` | Research note and sourced fact sheet behind deck 09. |
+| `review-decks-01-02.md` | Fact-check of decks 01 and 02 (Sep 2026) with the per-slide change plan and its status. |
 | `index.html` | Landing page routing readers to the right deck by audience (GitHub Pages root). |
 | `assets/anim/` | Rendered concept animations (MP4 loops) embedded by the decks. |
 | `remotion/` | Remotion project — sources for the animations. |
