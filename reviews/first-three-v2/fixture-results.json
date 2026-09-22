@@ -1,0 +1,10 @@
+{
+  "before": {
+    "exit_code": 1,
+    "output": "test_round_once_half_up (test_invoice.InvoiceTests.test_round_once_half_up) ... FAIL\ntest_supplied_rate (test_invoice.InvoiceTests.test_supplied_rate) ... FAIL\ntest_zero_rate (test_invoice.InvoiceTests.test_zero_rate) ... ok\n\n======================================================================\nFAIL: test_round_once_half_up (test_invoice.InvoiceTests.test_round_once_half_up)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"<repo>/examples/v2/invoice/before/test_invoice.py\", line 14, in test_round_once_half_up\n    self.assertEqual(gross('0.50', '0.21'), Decimal('0.61'))\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Decimal('0.50') != Decimal('0.61')\n\n======================================================================\nFAIL: test_supplied_rate (test_invoice.InvoiceTests.test_supplied_rate)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"<repo>/examples/v2/invoice/before/test_invoice.py\", line 8, in test_supplied_rate\n    self.assertEqual(gross('100', '0.21'), Decimal('121.00'))\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Decimal('100.00') != Decimal('121.00')\n\n----------------------------------------------------------------------\nRan 3 tests in 0.001s\n\nFAILED (failures=2)\n"
+  },
+  "after": {
+    "exit_code": 0,
+    "output": "test_empty_input_still_has_header (test_export.ExportTests.test_empty_input_still_has_header) ... ok\ntest_roundtrip_special_characters_and_totals (test_export.ExportTests.test_roundtrip_special_characters_and_totals) ... ok\ntest_round_once_half_up (test_invoice.InvoiceTests.test_round_once_half_up) ... ok\ntest_supplied_rate (test_invoice.InvoiceTests.test_supplied_rate) ... ok\ntest_zero_rate (test_invoice.InvoiceTests.test_zero_rate) ... ok\n\n----------------------------------------------------------------------\nRan 5 tests in 0.000s\n\nOK\n"
+  }
+}

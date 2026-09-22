@@ -1,0 +1,170 @@
+{
+  "results": [
+    {
+      "file": "ai-toolbox-v2.html",
+      "width": 1280,
+      "count": 28,
+      "words": {
+        "min": 15,
+        "max": 50,
+        "average": 33
+      },
+      "issues": [],
+      "errors": [],
+      "cancelledMedia": [
+        "navigation cancelled a media request",
+        "navigation cancelled a media request"
+      ],
+      "navigation": "pass",
+      "notes": "pass",
+      "presenter": "pass",
+      "reducedMotion": "pass",
+      "playPauseButtons": "pass"
+    },
+    {
+      "file": "agentic-ai-v2.html",
+      "width": 1280,
+      "count": 26,
+      "words": {
+        "min": 24,
+        "max": 57,
+        "average": 33
+      },
+      "issues": [],
+      "errors": [],
+      "cancelledMedia": [
+        "navigation cancelled a media request",
+        "navigation cancelled a media request"
+      ],
+      "navigation": "pass",
+      "notes": "pass",
+      "presenter": "pass",
+      "reducedMotion": "pass",
+      "playPauseButtons": "pass"
+    },
+    {
+      "file": "agentic-engineering-v2.html",
+      "width": 1280,
+      "count": 32,
+      "words": {
+        "min": 22,
+        "max": 52,
+        "average": 36
+      },
+      "issues": [],
+      "errors": [],
+      "cancelledMedia": [
+        "navigation cancelled a media request",
+        "navigation cancelled a media request"
+      ],
+      "navigation": "pass",
+      "notes": "pass",
+      "presenter": "pass",
+      "reducedMotion": "pass",
+      "playPauseButtons": "pass"
+    },
+    {
+      "file": "ai-toolbox-v2.html",
+      "width": 1920,
+      "count": 28,
+      "words": {
+        "min": 15,
+        "max": 50,
+        "average": 33
+      },
+      "issues": [],
+      "errors": [],
+      "cancelledMedia": [
+        "navigation cancelled a media request",
+        "navigation cancelled a media request"
+      ],
+      "navigation": "pass",
+      "notes": "pass",
+      "presenter": "pass",
+      "reducedMotion": "pass",
+      "playPauseButtons": "pass"
+    },
+    {
+      "file": "agentic-ai-v2.html",
+      "width": 1920,
+      "count": 26,
+      "words": {
+        "min": 24,
+        "max": 57,
+        "average": 33
+      },
+      "issues": [],
+      "errors": [],
+      "cancelledMedia": [
+        "navigation cancelled a media request",
+        "navigation cancelled a media request"
+      ],
+      "navigation": "pass",
+      "notes": "pass",
+      "presenter": "pass",
+      "reducedMotion": "pass",
+      "playPauseButtons": "pass"
+    },
+    {
+      "file": "agentic-engineering-v2.html",
+      "width": 1920,
+      "count": 32,
+      "words": {
+        "min": 22,
+        "max": 52,
+        "average": 36
+      },
+      "issues": [],
+      "errors": [],
+      "cancelledMedia": [
+        "navigation cancelled a media request",
+        "navigation cancelled a media request"
+      ],
+      "navigation": "pass",
+      "notes": "pass",
+      "presenter": "pass",
+      "reducedMotion": "pass",
+      "playPauseButtons": "pass"
+    }
+  ],
+  "support": [
+    {
+      "file": "first-three-v2.html",
+      "width": 1280,
+      "overflow": "pass"
+    },
+    {
+      "file": "first-three-v2.html",
+      "width": 390,
+      "overflow": "pass"
+    },
+    {
+      "file": "examples/v2/review-report.html",
+      "width": 1280,
+      "overflow": "pass"
+    },
+    {
+      "file": "examples/v2/review-report.html",
+      "width": 390,
+      "overflow": "pass"
+    }
+  ],
+  "offline": [
+    {
+      "file": "ai-toolbox-v2.html",
+      "localLoad": "pass",
+      "fonts": "pass"
+    },
+    {
+      "file": "agentic-ai-v2.html",
+      "localLoad": "pass",
+      "fonts": "pass"
+    },
+    {
+      "file": "agentic-engineering-v2.html",
+      "localLoad": "pass",
+      "fonts": "pass"
+    }
+  ],
+  "media": "active playback and off-slide pause pass"
+}

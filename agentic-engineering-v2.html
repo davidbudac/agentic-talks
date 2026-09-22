@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Agentic Engineering — v2</title>
+
+<!-- Fonts: Space Grotesk (display) + IBM Plex Sans (body) + IBM Plex Mono (mono) — Ember design system -->
+<link rel="stylesheet" href="ember_design_system/tokens/colors.css">
+<link rel="stylesheet" href="ember_design_system/tokens/typography.css">
+<link rel="stylesheet" href="ember_design_system/tokens/spacing.css">
+<link rel="stylesheet" href="ember_design_system/tokens/effects.css">
+<style>deck-stage:not(:defined){visibility:hidden}</style>
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   Agentic Engineering — Ember design system, token-driven.
+   Fixed 1920×1080 canvas: sizes are px, colours/spacing are tokens.
+   ═══════════════════════════════════════════════════════════════════ */
+:root{
+  --ease:cubic-bezier(.16,1,.3,1);
+  /* short aliases the slide markup uses inline */
+  --font-d:var(--font-display); --font-b:var(--font-body); --font-m:var(--font-mono);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--ink);color:var(--text-strong);font-family:var(--font-body)}
+
+/* ── SLIDE FRAME + local type scale ──────────────────────────────── */
+.slide{
+  display:flex; flex-direction:column; overflow:hidden;
+  font-family:var(--font-body); -webkit-font-smoothing:antialiased;
+  --pad-x:var(--slide-pad-x); --pad-t:var(--slide-pad-top); --pad-b:var(--slide-pad-bottom);
+  --h2-size:var(--fs-h2); --h3-size:34px; --lead-size:34px;
+  --body-size:26px; --small-size:20px; --code-size:20px;
+  --gap:28px; --content-gap:var(--gap); --diag-h:440px;
+}
+.slide.dense{
+  --pad-x:88px; --pad-t:var(--slide-pad-top-dense); --pad-b:var(--slide-pad-bottom-dense);
+  --h2-size:var(--fs-h2-sm); --h3-size:30px; --lead-size:30px;
+  --body-size:23px; --small-size:18px; --code-size:18px; --gap:20px; --diag-h:400px;
+}
+.slide.tight{
+  --pad-x:76px; --pad-t:60px; --pad-b:52px;
+  --h2-size:46px; --h3-size:27px; --lead-size:27px;
+  --body-size:21px; --small-size:16px; --code-size:16px; --gap:14px; --diag-h:340px;
+}
+.slide-content{
+  flex:1; min-height:0; display:flex; flex-direction:column; justify-content:center;
+  padding:var(--pad-t) var(--pad-x) var(--pad-b); overflow:hidden; position:relative; z-index:1;
+}
+
+/* ── SCHEMES — Ember light/dark rhythm. Every component reads --s-*. ─ */
+.slide,.slide.light{
+  --s-bg:var(--paper); --s-text:var(--text-strong); --s-muted:var(--text-muted); --s-faint:var(--text-faint);
+  --s-line:var(--line-light-2); --s-line-strong:var(--line-light);
+  --s-card-bg:var(--paper-2); --s-card-border:var(--line-card); --s-box-mid:var(--paper-3);
+  --s-outer-fill:var(--coral-soft); --s-callout-bg:var(--coral-soft);
+  --s-accent:var(--coral-ink); --s-bar:var(--bar);
+  background:var(--s-bg); color:var(--s-text);
+}
+.slide.dark{
+  --s-bg:var(--ink); --s-text:var(--on-dark); --s-muted:var(--on-dark-muted); --s-faint:var(--on-dark-faint);
+  --s-line:var(--line-dark-2); --s-line-strong:var(--line-dark);
+  --s-card-bg:var(--ink-2); --s-card-border:var(--line-dark); --s-box-mid:var(--ink-2);
+  --s-outer-fill:rgba(255,92,53,.10); --s-callout-bg:rgba(255,92,53,.10);
+  --s-accent:var(--coral); --s-bar:var(--bar-dark);
+  background:var(--s-bg); color:var(--s-text);
+}
+
+/* ── HEADER ──────────────────────────────────────────────────────── */
+.slide-head{
+  display:flex; align-items:baseline; justify-content:space-between; gap:var(--space-5);
+  margin-bottom:var(--gap); border-bottom:var(--bw-hair) solid var(--s-line); padding-bottom:18px;
+}
+.snum{font:var(--w-bold) 48px/1 var(--font-display); color:var(--s-accent); letter-spacing:var(--track-snug)}
+.crumb{font:var(--w-medium) var(--small-size)/1.2 var(--font-mono); letter-spacing:var(--track-eyebrow);
+  text-transform:uppercase; color:var(--s-muted); text-align:right}
+.crumb b{color:var(--s-accent); font-weight:var(--w-semibold)}
+
+/* ── TYPE ────────────────────────────────────────────────────────── */
+h2{font-family:var(--font-display); font-weight:var(--w-bold); font-size:var(--h2-size);
+  line-height:var(--lh-snug); letter-spacing:var(--track-snug); margin-bottom:22px; color:var(--s-text); text-wrap:balance}
+h2 .o{color:var(--s-accent)}
+h3{font-family:var(--font-display); font-weight:var(--w-bold); font-size:var(--h3-size);
+  line-height:var(--lh-snug); letter-spacing:var(--track-snug); color:var(--s-text)}
+.lead{font-size:var(--lead-size); line-height:1.45; max-width:48ch; color:var(--s-text); text-wrap:pretty}
+.lead b{color:var(--s-accent)}
+.muted{color:var(--s-muted)}
+strong,b{font-weight:var(--w-semibold)}
+
+ul.bul{list-style:none; display:flex; flex-direction:column; gap:20px; max-width:68ch}
+ul.bul li{font-size:var(--body-size); line-height:1.45; padding-left:1.55em; position:relative;
+  color:var(--s-text); text-wrap:pretty}
+ul.bul li::before{content:""; position:absolute; left:0; top:.44em; width:.6em; height:.6em;
+  background:var(--s-accent); clip-path:polygon(0 0,100% 50%,0 100%)}
+ul.bul li b{color:var(--s-text); font-weight:var(--w-semibold)}
+
+.note{font-size:var(--small-size); color:var(--s-muted); margin-top:20px; line-height:1.45; text-wrap:pretty}
+.note b{color:var(--s-text); font-weight:var(--w-semibold)}
+
+/* ── CARDS / TILES ───────────────────────────────────────────────── */
+.cards{display:grid; gap:var(--space-5)}
+.cards.c3{grid-template-columns:repeat(3,1fr)}
+.cards.c2,.cards.c4{grid-template-columns:repeat(2,1fr)}
+.tile{border:var(--bw) solid var(--s-card-border); border-radius:var(--radius-lg);
+  padding:30px 32px; background:var(--s-card-bg); display:flex; flex-direction:column; gap:10px}
+.tile .k{font-family:var(--font-display); font-weight:var(--w-bold); color:var(--s-accent);
+  font-size:30px; letter-spacing:var(--track-snug)}
+.tile p{font-size:var(--body-size); line-height:1.4; color:var(--s-text); text-wrap:pretty}
+.tile.fill{background:var(--s-callout-bg); border-color:var(--s-card-border);
+  border-left:var(--bw-callout) solid var(--coral); border-radius:0 var(--radius-lg) var(--radius-lg) 0}
+
+.kcard{background:var(--s-callout-bg); color:var(--s-text); border:var(--bw) solid var(--s-card-border);
+  border-left:var(--bw-callout) solid var(--coral); border-radius:0 var(--radius-xl) var(--radius-xl) 0;
+  padding:40px 44px; position:relative; overflow:hidden}
+.slide.dark .kcard{box-shadow:var(--ring-accent-dark)}
+.kcard .big{font-family:var(--font-display); font-weight:var(--w-bold); color:var(--s-accent);
+  font-size:56px; line-height:1.02; letter-spacing:var(--track-snug)}
+.kcard p{font-size:var(--body-size); line-height:1.42; margin-top:14px; max-width:50ch; color:var(--s-text)}
+
+.split{display:grid; grid-template-columns:1fr 1fr; gap:var(--space-8); align-items:center; min-height:0}
+
+/* ── TABLES ──────────────────────────────────────────────────────── */
+table.tbl{width:100%; border-collapse:collapse; font-size:var(--body-size)}
+table.tbl th,table.tbl td{text-align:left; padding:16px 20px; border-bottom:var(--bw-hair) solid var(--s-line)}
+table.tbl th{font-family:var(--font-mono); color:var(--s-accent); font-weight:var(--w-semibold);
+  font-size:var(--small-size); letter-spacing:var(--track-label); text-transform:uppercase}
+table.tbl td{color:var(--s-text)}
+table.tbl td b{color:var(--s-text); font-weight:var(--w-semibold)}
+table.tbl tr:last-child td{border-bottom:none}
+
+/* ── CHIPS ───────────────────────────────────────────────────────── */
+.extag{display:inline-block; font-family:var(--font-mono); font-size:var(--small-size); color:var(--s-accent);
+  background:var(--s-callout-bg); border:var(--bw-hair) solid var(--s-card-border);
+  padding:4px 14px; border-radius:var(--radius-sm); margin-bottom:12px; letter-spacing:var(--track-label);
+  text-transform:uppercase}
+.pills{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px}
+.pill{font-family:var(--font-mono); border:var(--bw-hair) solid var(--coral); color:var(--s-accent);
+  border-radius:var(--radius-pill); padding:4px 16px; font-size:var(--small-size);
+  font-weight:var(--w-semibold); letter-spacing:var(--track-label); white-space:nowrap}
+
+/* ── CODE ────────────────────────────────────────────────────────── */
+.code{background:var(--code-bg); border:var(--bw) solid var(--s-line); border-left:3px solid var(--coral);
+  border-radius:var(--radius-lg); padding:24px 28px; font-family:var(--font-mono);
+  font-size:var(--code-size); line-height:var(--lh-mono); overflow:hidden; color:var(--code-text);
+  white-space:pre-wrap}
+.code .c{color:var(--code-comment)}
+.code .o{color:var(--code-keyword)}
+.code .g{color:var(--code-string)}
+.code .b{color:var(--code-number)}
+.code .d{color:var(--code-keyword)}
+
+/* ── SECTION DIVIDER ─────────────────────────────────────────────── */
+.divider .slide-content{align-items:flex-start; justify-content:center; text-align:left}
+.divider .dnum{font:var(--w-bold) var(--fs-mega)/var(--lh-tight) var(--font-display);
+  color:var(--coral); letter-spacing:var(--track-tight); margin-bottom:10px}
+.divider h2{font-size:var(--fs-h1)}
+.divider h2::after{content:""; display:block; width:var(--accent-bar-w); height:var(--bw-accent);
+  background:var(--coral); border-radius:var(--radius-bar); margin:.45em 0 .1em}
+.divider .dsub{color:var(--s-muted); font-size:var(--fs-body-lg); max-width:42ch;
+  margin-top:18px; line-height:var(--lh-body)}
+.divider .dsub b{color:var(--s-text); font-weight:var(--w-semibold)}
+
+/* ── GLOSSARY / USES ─────────────────────────────────────────────── */
+.gloss{display:grid; grid-template-columns:1fr 1fr; gap:4px 44px}
+.gloss .row{display:flex; gap:18px; align-items:baseline; padding:12px 0;
+  border-bottom:var(--bw-hair) solid var(--s-line)}
+.gloss .term{font-family:var(--font-display); font-weight:var(--w-semibold); color:var(--s-accent);
+  font-size:var(--body-size); min-width:6.2em; flex-shrink:0; letter-spacing:var(--track-snug)}
+.gloss .def{font-size:var(--body-size); color:var(--s-text); line-height:1.35}
+.uses{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-5)}
+
+/* ── DIAGRAMS (inline SVG + explainer video) ─────────────────────── */
+.diagram{width:100%; display:flex; justify-content:center; align-items:center; margin-top:8px; min-height:0}
+.diagram svg{width:100%; height:auto; max-height:var(--diag-h)}
+.diagram video{width:auto; height:auto; max-width:100%; max-height:var(--diag-h);
+  display:block; background:transparent; border-radius:var(--radius-md)}
+.dg-box{fill:var(--s-card-bg); stroke:var(--s-card-border); stroke-width:1.5}
+.dg-box.hot{fill:var(--coral); stroke:var(--coral)}
+.dg-box.outer{fill:var(--s-outer-fill); stroke:var(--coral); stroke-dasharray:6 5}
+.dg-box.mid{fill:var(--s-box-mid); stroke:var(--s-card-border)}
+.dg-t{fill:var(--s-text); font-family:var(--font-body); font-weight:var(--w-semibold)}
+.dg-t.on{fill:var(--ink)}
+.dg-t.mut{fill:var(--s-muted); font-weight:var(--w-medium)}
+.dg-t.acc{fill:var(--s-accent); font-family:var(--font-mono); font-weight:var(--w-semibold)}
+.dg-line{stroke:var(--s-accent); stroke-width:2.5; fill:none}
+.dg-line.dim{stroke:var(--s-line-strong); stroke-width:1.5}
+.dg-fill-g{fill:var(--positive)} .dg-fill-a{fill:var(--warning)} .dg-fill-r{fill:var(--coral)}
+.dg-cap{text-align:center; font-size:var(--small-size); color:var(--s-muted); margin-top:10px}
+.dg-cap b{color:var(--s-text)}
+.diagram marker path{fill:var(--s-accent)}
+#sq2 path,#ad2 path,#mh2 path{fill:var(--s-faint)}
+
+/* ── TITLE SLIDE ─────────────────────────────────────────────────── */
+.title-slide{display:flex; flex-direction:column; justify-content:space-between; background:var(--ink);
+  padding:88px 96px 0}
+.ts-top{display:flex; justify-content:space-between; align-items:baseline; font:600 var(--fs-eyebrow) var(--font-mono);
+  letter-spacing:var(--track-eyebrow); text-transform:uppercase}
+.ts-top .k{color:var(--coral)}
+.ts-top .meta{color:var(--on-dark-faint); font-weight:500}
+.ts-hero h1{font-family:var(--font-display); font-weight:var(--w-bold); letter-spacing:-.035em; line-height:.9;
+  color:var(--on-dark); font-size:186px}
+.ts-hero h1 .dot{color:var(--coral)}
+.ts-sub{font-size:38px; color:var(--on-dark-muted); margin-top:44px; font-weight:400}
+.ts-sub b{color:var(--on-dark); font-weight:600}
+.ts-foot{border-top:var(--bw-hair) solid var(--line-dark); margin:0 -96px; padding:34px 96px 40px;
+  display:flex; justify-content:space-between; align-items:center}
+.ts-author{font-size:26px; color:var(--on-dark-muted)}
+.ts-author a{color:inherit;text-decoration:none;border-bottom:1px solid transparent;transition:border-color .15s}
+.ts-author a:hover{border-color:currentColor}
+.ts-author b{color:var(--coral); font-weight:var(--w-semibold)}
+.ts-loopline{font:500 24px var(--font-mono); letter-spacing:.04em; color:var(--on-dark-faint)}
+.ts-loopline .a{color:var(--coral)}
+.ts-loopline .w{color:var(--on-dark-muted)}
+
+/* ── CLOSING ─────────────────────────────────────────────────────── */
+.thanks{font-family:var(--font-display); font-weight:var(--w-bold); font-size:104px; line-height:.98;
+  letter-spacing:var(--track-tight); color:var(--s-text)}
+.thanks .o{color:var(--s-accent)}
+.links{display:grid; grid-template-columns:1fr 1fr; gap:var(--space-7)}
+.linkcol h3{color:var(--s-accent); font-family:var(--font-display); font-weight:var(--w-semibold);
+  margin-bottom:12px; font-size:26px; letter-spacing:var(--track-snug)}
+.linkcol a{display:block; color:var(--s-text); text-decoration:none; font-size:21px; line-height:1.32;
+  padding:7px 0; border-bottom:var(--bw-hair) solid var(--s-line)}
+.linkcol a:hover{color:var(--s-accent)}
+.linkcol a .u{display:block; color:var(--s-muted); font-family:var(--font-mono); font-size:.82em; margin-top:.08em}
+
+/* ── ENTRANCE MOTION ─────────────────────────────────────────────────
+   Visible end-state is the base style; we animate FROM hidden, only on
+   the active slide and only when motion is welcome. Print + reduced
+   motion therefore always show the finished slide. ─────────────────── */
+@keyframes ae-rise{from{opacity:0; transform:translateY(22px)} to{opacity:1; transform:none}}
+@keyframes ae-dash{to{stroke-dashoffset:-26}}
+@media (prefers-reduced-motion:no-preference){
+  [data-deck-active] .reveal{animation:ae-rise .5s var(--ease) both}
+  [data-deck-active] .ae-dash{animation:ae-dash 1.4s linear infinite}
+  [data-deck-active] .reveal:nth-child(2){animation-delay:.07s}
+  [data-deck-active] .reveal:nth-child(3){animation-delay:.14s}
+  [data-deck-active] .reveal:nth-child(4){animation-delay:.21s}
+  [data-deck-active] .reveal:nth-child(n+5){animation-delay:.27s}
+  [data-deck-active] .title-slide>*{animation:ae-rise .8s var(--ease) both}
+  [data-deck-active] .title-slide>.ts-hero{animation-delay:.15s}
+  [data-deck-active] .title-slide>.ts-foot{animation-delay:.3s}
+}
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+@font-face{font-family:"Space Grotesk";font-weight:400;font-style:normal;font-display:swap;src:url("remotion/public/fonts/space-grotesk-400.woff2") format("woff2")}
+@font-face{font-family:"Space Grotesk";font-weight:500;font-style:normal;font-display:swap;src:url("remotion/public/fonts/space-grotesk-500.woff2") format("woff2")}
+@font-face{font-family:"Space Grotesk";font-weight:600;font-style:normal;font-display:swap;src:url("remotion/public/fonts/space-grotesk-600.woff2") format("woff2")}
+@font-face{font-family:"Space Grotesk";font-weight:700;font-style:normal;font-display:swap;src:url("remotion/public/fonts/space-grotesk-700.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-weight:400;font-style:normal;font-display:swap;src:url("remotion/public/fonts/ibm-plex-sans-400.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-weight:500;font-style:normal;font-display:swap;src:url("remotion/public/fonts/ibm-plex-sans-500.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-weight:600;font-style:normal;font-display:swap;src:url("remotion/public/fonts/ibm-plex-sans-600.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-weight:700;font-style:normal;font-display:swap;src:url("remotion/public/fonts/ibm-plex-sans-700.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:400;font-style:normal;font-display:swap;src:url("remotion/public/fonts/ibm-plex-mono-400.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:500;font-style:normal;font-display:swap;src:url("remotion/public/fonts/ibm-plex-mono-500.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:600;font-style:normal;font-display:swap;src:url("remotion/public/fonts/ibm-plex-mono-600.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:700;font-style:normal;font-display:swap;src:url("remotion/public/fonts/ibm-plex-mono-700.woff2") format("woff2")}
+
+/* V2 content styles. The original deck-stage owns viewport scaling. */
+.v2 { --h2-size:clamp(64px,4.1vw,78px); --body-size:clamp(32px,2vw,38px);
+  --lead-size:clamp(36px,2.4vw,44px); --small-size:clamp(24px,1.4vw,27px);
+  --code-size:clamp(28px,1.7vw,32px); --h3-size:clamp(34px,2vw,38px); }
+.v2 .slide-content {padding:76px 96px 70px; gap:0; max-height:100%;}
+.v2 .slide-head {margin-bottom:34px; padding-bottom:20px;}
+.v2 h2 {margin-bottom:42px; max-width:31ch;}
+.v2 .v2-body {display:flex; flex-direction:column; gap:32px; min-height:0;}
+.v2 .lead {max-width:53ch; line-height:1.4;}
+.v2 .tile {padding:36px; gap:20px;}
+.v2 .tile h3 {color:var(--s-accent);}
+.v2 .cards {gap:28px;}
+.v2 .split {gap:56px;align-items:center;}
+.v2-stack {display:flex; flex-direction:column;gap:28px;min-width:0;}
+.v2 .split .cards {grid-template-columns:1fr;}
+.v2 .kcard {padding:44px;}
+.v2 .kcard .big {font-size:clamp(48px,3.3vw,62px);line-height:1.1;}
+.v2 .kcard p {font-size:var(--body-size);}
+.v2 .code {line-height:1.6; white-space:pre-wrap;overflow-wrap:anywhere;padding:34px 40px;}
+.v2 .code code {font:inherit;}
+.v2 .tbl {font-size:var(--body-size);}
+.v2 .tbl td,.v2 .tbl th {padding:22px 24px;line-height:1.35;}
+.v2 .tbl th {font-size:var(--small-size);}
+.v2 .note {margin-top:32px;line-height:1.4;}
+.v2 a {color:var(--s-accent);text-underline-offset:.18em;}
+.v2 a:focus-visible {outline:3px solid var(--s-accent);outline-offset:8px;}
+.v2-flow {display:flex;list-style:none;gap:26px;}
+.v2-flow li {flex:1;min-width:0;border-top:4px solid var(--s-accent);padding-top:24px;}
+.v2-flow li span {font:500 clamp(24px,1.5vw,28px) var(--font-m);color:var(--s-muted);}
+.v2-flow h3 {margin:22px 0 18px;color:var(--s-accent);}
+.v2-flow p {font-size:var(--body-size);line-height:1.4;}
+.v2-links {display:grid;gap:12px;}
+.v2-links a {display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--s-line);padding:18px 0;font-size:var(--body-size);text-decoration:none;}
+.v2-links a:hover {text-decoration:underline;}
+.v2-media {text-align:center;min-height:0;}
+.v2-media video {display:block;margin:auto;max-width:100%;width:auto;height:440px;border-radius:16px;}
+.v2-play {display:block;margin:12px auto 0;padding:10px 22px;font:500 clamp(22px,1.3vw,25px) var(--font-m);color:var(--s-accent);background:transparent;border:1px solid var(--s-accent);border-radius:8px;cursor:pointer;}
+.v2-play:focus-visible {outline:3px solid var(--s-accent);outline-offset:5px;}
+.v2-media figcaption {font-size:var(--small-size);color:var(--s-muted);margin-top:20px;}
+.v2-report {padding:42px 48px;border:2px solid var(--s-line);background:var(--s-card-bg);border-radius:16px;}
+.v2-report-head {font:500 24px var(--font-m);color:var(--s-accent);display:flex;justify-content:space-between;margin-bottom:34px;}
+.v2-report-head span {color:var(--s-muted);font-size:22px;}
+.v2-report h3 {font-size:44px;margin-bottom:30px;}
+.v2-bars {display:grid;gap:20px;max-width:1200px;margin-bottom:24px;}
+.v2-bars>div {display:grid;grid-template-columns:120px 1fr 160px;align-items:center;gap:24px;font-size:28px;}
+.v2-bars i {display:block;width:var(--bar-width);height:36px;background:var(--s-accent);}
+.v2-bars i.missing {width:100%;height:36px;background:none;border:2px dashed var(--s-muted);}
+.v2-report p {font-size:26px;color:var(--s-muted);}
+.v2-report-flag {font-size:28px;color:var(--s-accent);border-top:1px solid var(--s-line);padding-top:24px;margin-top:24px;}
+.v2.title-slide .ts-hero h1 {font-size:clamp(150px,10vw,184px);line-height:.95;}
+.v2.title-slide .ts-sub {font-size:clamp(36px,2.4vw,44px);max-width:45ch;line-height:1.35;}
+@media (prefers-reduced-motion:reduce) {
+ .v2 *, .v2 *::before, .v2 *::after {animation:none!important;transition:none!important;}
+}
+/* Canvas scaling already handles short screens; hide only optional UI. */
+@media (max-height:700px) {.pui-controls {bottom:8px;}}
+@media (max-height:600px) {.pui-controls button {padding:7px 10px;}}
+@media (max-height:500px) {.pui-notes {max-height:50vh;}}
+
+</style>
+</head>
+<body>
+<!-- Derived from agentic-engineering.html; content source: scripts/build_first_three_v2.py -->
+<deck-stage width="1920" height="1080" no-rail>
+<section class="slide dark title-slide v2" id="slide-1" data-label="Agentic Engineering" data-speaker-notes="Assume the audience knows model, harness, tools and context from talk 02. This talk asks how to make the process repeatable. Keep the original evolution structure, but let each chapter solve an engineering failure.">
+<div class="ts-top"><span class="k">03 · Developers going deeper · v2</span><span class="meta">September 2026</span></div>
+<div class="ts-hero"><h1>Agentic<br>Engineering<span class="dot">.</span></h1><p class="ts-sub">Build a workflow you can verify and recover.</p></div>
+<div class="ts-foot"><div class="ts-author"><a href="https://davidbudac.cz" target="_blank" rel="noopener">David Budáč</a></div><div class="ts-loopline">03 / 03 · Revised edition</div></div></section>
+
+<section class="slide light v2" id="slide-2" data-label="A passing demo is only the beginning" data-speaker-notes="The goal is not maximum autonomy. It is work that can be accepted with evidence and recovered when it fails. Distinguish repeatable workflows from one successful transcript.">
+<div class="slide-content"><div class="slide-head"><span class="snum">02</span><div class="crumb">The problem</div></div>
+<h2>A passing demo is only the beginning</h2><div class="v2-body"><div class="cards c2"><div class="tile"><h3>In the demo</h3><p>One task, a few files and a result you can inspect.</p></div><div class="tile"><h3>In repeated work</h3><p>Changing inputs, partial failures, review time and uncertain outcomes.</p></div></div></div></div></section>
+
+<section class="slide light v2" id="slide-3" data-label="Keep one example throughout" data-speaker-notes="This is an excerpt from the reference CSV. The complete file also exercises a newline in a customer name. Our implementation assumes validated rows; production validation and spreadsheet formula handling are separate requirements.">
+<div class="slide-content"><div class="slide-head"><span class="snum">03</span><div class="crumb">The task</div></div>
+<h2>Keep one example throughout</h2><div class="v2-body"><p class="lead">Add CSV export to the invoice calculation from talk 02.</p><pre class="code"><code>invoice_id,customer,net,tax_rate,gross
+INV-001,&quot;North, Ltd&quot;,100.00,0.21,121.00
+INV-002,&quot;Studio &quot;&quot;A&quot;&quot;&quot;,0.50,0.21,0.61</code></pre></div><p class="note"><a href="examples/v2/invoices.csv" download>Download the reference CSV</a></p></div></section>
+
+<section class="slide light v2" id="slide-4" data-label="Recap: the system you are engineering" data-speaker-notes="Compress the original prediction, thinking, tools and statelessness chapters to this recap. We can change what information the system receives, what actions it may take and how results are checked.">
+<div class="slide-content"><div class="slide-head"><span class="snum">04</span><div class="crumb">The machine</div></div>
+<h2>Recap: the system you are engineering</h2><div class="v2-body"><ol class="v2-flow"><li><span>01</span><h3>Context</h3><p>Task, rules and evidence.</p></li><li><span>02</span><h3>Model</h3><p>Proposes the next step.</p></li><li><span>03</span><h3>Tools</h3><p>Perform permitted actions.</p></li><li><span>04</span><h3>Result</h3><p>Changes what the system knows.</p></li></ol></div></div></section>
+
+<section class="slide dark v2" id="slide-5" data-label="Problem 1 · “Add export” leaves too much open" data-speaker-notes="Ask the audience what they would need to review an export. The missing information is a contract problem before it is a model problem. Do not respond to ambiguity by increasing reasoning effort.">
+<div class="slide-content"><div class="slide-head"><span class="snum">05</span><div class="crumb">Define the work</div></div>
+<h2>Problem 1 · “Add export” leaves too much open</h2><div class="v2-body"><div class="cards c2"><div class="tile"><h3>Unspecified</h3><p>Columns, rounding, quoting and empty input.</p></div><div class="tile"><h3>Consequence</h3><p>A plausible implementation may still miss the requirement.</p></div></div></div></div></section>
+
+<section class="slide light v2" id="slide-6" data-label="Write the acceptance contract first" data-speaker-notes="These are the requirements implemented by the checked-in reference fixture. For the talk, the set is deliberately small and testable. Label omitted production requirements rather than implying this is a complete billing system.">
+<div class="slide-content"><div class="slide-head"><span class="snum">06</span><div class="crumb">Define the work</div></div>
+<h2>Write the acceptance contract first</h2><div class="v2-body"><table class="tbl"><thead><tr><th scope="col">Requirement</th><th scope="col">Observable check</th></tr></thead><tbody><tr><td>Five named columns, input order preserved</td><td>Read the exported rows back</td></tr><tr><td>Use the existing calculation rule</td><td>Check known totals and rounding</td></tr><tr><td>Commas, quotes and newlines survive</td><td>Round-trip special customer names</td></tr><tr><td>Empty input still has a header</td><td>Export an empty collection</td></tr></tbody></table></div></div></section>
+
+<section class="slide light v2" id="slide-7" data-label="Decide how much structure the task needs" data-speaker-notes="This is a design choice, not a maturity ladder. A workflow may contain agent-driven stages. Use the simplest approach that can meet the contract and explain its result.">
+<div class="slide-content"><div class="slide-head"><span class="snum">07</span><div class="crumb">Choose the process</div></div>
+<h2>Decide how much structure the task needs</h2><div class="v2-body"><div class="cards c3"><div class="tile"><h3>Direct change</h3><p>A small, clear edit with a simple check.</p></div><div class="tile"><h3>Workflow</h3><p>Known stages and acceptance gates.</p></div><div class="tile"><h3>Agent exploration</h3><p>The next useful step depends on what it finds.</p></div></div></div></div></section>
+
+<section class="slide light v2" id="slide-8" data-label="Make the stages and ownership visible" data-speaker-notes="This is the workflow for our example. Keep a named owner for integration and acceptance. The next slides show how evidence and recovery change what happens at the gates.">
+<div class="slide-content"><div class="slide-head"><span class="snum">08</span><div class="crumb">The workflow</div></div>
+<h2>Make the stages and ownership visible</h2><div class="v2-body"><ol class="v2-flow"><li><span>01</span><h3>Inspect</h3><p>Locate code and tests.</p></li><li><span>02</span><h3>Plan</h3><p>Resolve the contract.</p></li><li><span>03</span><h3>Build</h3><p>Make the bounded change.</p></li><li><span>04</span><h3>Verify</h3><p>Run independent checks.</p></li><li><span>05</span><h3>Review</h3><p>Accept or send back.</p></li></ol></div></div></section>
+
+<section class="slide dark v2" id="slide-9" data-label="Problem 2 · a green command can mislead" data-speaker-notes="An exit code is an observation. It does not prove the tests cover the contract. The original deck said a goal prompt could not be gamed; replace that guarantee with independent checks and review.">
+<div class="slide-content"><div class="slide-head"><span class="snum">09</span><div class="crumb">Check the evidence</div></div>
+<h2>Problem 2 · a green command can mislead</h2><div class="v2-body"><div class="split"><div class="v2-stack"><pre class="code"><code>exit code: 0</code></pre></div><div class="v2-stack"><p class="lead">It may have run the wrong tests, skipped a case or checked a weaker requirement.</p></div></div></div></div></section>
+
+<section class="slide light v2" id="slide-10" data-label="Give every claim a check" data-speaker-notes="The reference test includes a comma, embedded quotes and a newline. Parsing with the CSV reader tests serialization rather than eyeballing a text file. Formula-like input remains outside this fixture’s contract.">
+<div class="slide-content"><div class="slide-head"><span class="snum">10</span><div class="crumb">Check the evidence</div></div>
+<h2>Give every claim a check</h2><div class="v2-body"><div class="cards c3"><div class="tile"><h3>Claim</h3><p>Customer names survive export.</p></div><div class="tile"><h3>Evidence</h3><p>Parse the CSV and compare the original strings.</p></div><div class="tile"><h3>Boundary</h3><p>This does not check every spreadsheet’s interpretation.</p></div></div></div></div></section>
+
+<section class="slide light v2" id="slide-11" data-label="Keep the calculation outside the guesswork" data-speaker-notes="Use deterministic code for a specified calculation. Let the agent inspect and change the implementation, but verify against the explicit rounding rule. This is the existing calculation from the reference fix, reused by the exporter.">
+<div class="slide-content"><div class="slide-head"><span class="snum">11</span><div class="crumb">Check the evidence</div></div>
+<h2>Keep the calculation outside the guesswork</h2><div class="v2-body"><pre class="code"><code>total = Decimal(net) * (Decimal(&#x27;1&#x27;) + Decimal(tax_rate))
+return total.quantize(
+    Decimal(&#x27;0.01&#x27;), rounding=ROUND_HALF_UP
+)</code></pre></div></div></section>
+
+<section class="slide light v2" id="slide-12" data-label="Inspect both tests and the artifact" data-speaker-notes="Prepared reference result from after/: three invoice tests and two export tests. The CSV is generated with the same implementation and parsed in validation. This is not a benchmark or a captured agent run.">
+<div class="slide-content"><div class="slide-head"><span class="snum">12</span><div class="crumb">Check the evidence</div></div>
+<h2>Inspect both tests and the artifact</h2><div class="v2-body"><div class="split"><div class="v2-stack"><pre class="code"><code>python3 -m unittest -v
+
+Ran 5 tests
+OK</code></pre></div><div class="v2-stack"><p class="lead">Then open the CSV and compare its columns, names and totals with the contract.</p></div></div></div><p class="note">Prepared reference result · five tests</p></div></section>
+
+<section class="slide light v2" id="slide-13" data-label="Keep acceptance separate from implementation" data-speaker-notes="Another model can help review but can share the same blind spots. Protect important acceptance checks outside the implementation’s control when warranted. Human review still owns the decision for this workflow.">
+<div class="slide-content"><div class="slide-head"><span class="snum">13</span><div class="crumb">Check the evidence</div></div>
+<h2>Keep acceptance separate from implementation</h2><div class="v2-body"><div class="cards c2"><div class="tile"><h3>Agent produces</h3><p>The patch, commands run, output and unresolved questions.</p></div><div class="tile"><h3>Reviewer decides</h3><p>Whether the evidence meets the contract and the change is ready.</p></div></div></div></div></section>
+
+<section class="slide dark v2" id="slide-14" data-label="Problem 3 · the useful facts get buried" data-speaker-notes="Preserve the original context thread without treating attention as a simple fixed budget divided equally between tokens. More irrelevant material can harm retrieval and distract the model; exact behaviour varies.">
+<div class="slide-content"><div class="slide-head"><span class="snum">14</span><div class="crumb">Manage context</div></div>
+<h2>Problem 3 · the useful facts get buried</h2><div class="v2-body"><div class="split"><div class="v2-stack"><p class="lead">Exploration accumulates logs, dead ends and outdated assumptions.</p></div><div class="v2-stack"><div class="kcard"><div class="big">Keep the working set useful</div><p>Retain the contract, relevant code and current evidence.</p></div></div></div></div></div></section>
+
+<section class="slide light v2" id="slide-15" data-label="Give each stage the context it needs" data-speaker-notes="The table is our proposed design, not an automatic feature of every harness. Fresh stages must receive enough context to preserve decisions. A short handoff is only useful if it contains the necessary facts.">
+<div class="slide-content"><div class="slide-head"><span class="snum">15</span><div class="crumb">Manage context</div></div>
+<h2>Give each stage the context it needs</h2><div class="v2-body"><table class="tbl"><thead><tr><th scope="col">Stage</th><th scope="col">Useful inputs</th></tr></thead><tbody><tr><td>Inspect</td><td>Entry points, failing case and repository map</td></tr><tr><td>Build</td><td>Contract, target files and project rules</td></tr><tr><td>Verify</td><td>Contract, patch and independent checks</td></tr><tr><td>Review</td><td>Evidence, risks and unresolved questions</td></tr></tbody></table></div></div></section>
+
+<section class="slide light v2" id="slide-16" data-label="Store decisions before restarting" data-speaker-notes="This is a handoff example for the reference fixture. Keep file references and unresolved scope, not pages of tool output. A new session should verify the handoff against the files rather than trusting it blindly.">
+<div class="slide-content"><div class="slide-head"><span class="snum">16</span><div class="crumb">Manage context</div></div>
+<h2>Store decisions before restarting</h2><div class="v2-body"><pre class="code"><code>Task: add invoice CSV export.
+Rule: apply supplied rate; round once, half up.
+Files: invoice.py, export.py, test_export.py.
+Done: quoting and empty-input cases pass.
+Open: production input validation is out of scope.
+Next: inspect the diff and exported sample.</code></pre></div></div></section>
+
+<section class="slide light v2" id="slide-17" data-label="Caching and compaction solve different problems" data-speaker-notes="Billing rules, cache lifetimes and treatment of reasoning vary by provider and model. Avoid the original blanket claims about byte-identical requests, perpetual warm caches or thinking always being retained/stripped. Detailed mechanics belong in talk 04.">
+<div class="slide-content"><div class="slide-head"><span class="snum">17</span><div class="crumb">Manage context</div></div>
+<h2>Caching and compaction solve different problems</h2><div class="v2-body"><div class="cards c2"><div class="tile"><h3>Caching</h3><p>Reuses eligible computation; can reduce cost and latency.</p></div><div class="tile"><h3>Compaction</h3><p>Replaces history with a shorter summary; can lose details.</p></div></div></div></div></section>
+
+<section class="slide dark v2" id="slide-18" data-label="Problem 4 · retries consume the budget" data-speaker-notes="Do not let a retry loop keep editing indefinitely. Distinguish transient tool failure, misunderstanding and an unmet requirement. Each calls for a different response.">
+<div class="slide-content"><div class="slide-head"><span class="snum">18</span><div class="crumb">Recover</div></div>
+<h2>Problem 4 · retries consume the budget</h2><div class="v2-body"><p class="lead">A failed attempt should change the next decision.</p><ol class="v2-flow"><li><span>01</span><h3>Inspect</h3><p>What failed?</p></li><li><span>02</span><h3>Change</h3><p>What new evidence or approach will help?</p></li><li><span>03</span><h3>Stop</h3><p>What limit ends the run?</p></li></ol></div></div></section>
+
+<section class="slide light v2" id="slide-19" data-label="Set a retry policy before the run" data-speaker-notes="This is a policy sketch, not a provider command. Choose numeric limits for the real environment. A stop should preserve useful evidence and never imply the task succeeded.">
+<div class="slide-content"><div class="slide-head"><span class="snum">19</span><div class="crumb">Recover</div></div>
+<h2>Set a retry policy before the run</h2><div class="v2-body"><table class="tbl"><thead><tr><th scope="col">Failure</th><th scope="col">Next step</th></tr></thead><tbody><tr><td>Transient tool error</td><td>Retry within a small explicit limit</td></tr><tr><td>Same failed check again</td><td>Inspect cause; require a changed approach</td></tr><tr><td>Missing access or requirement</td><td>Pause for the owner</td></tr><tr><td>Time or cost budget reached</td><td>Stop and return partial work with evidence</td></tr></tbody></table></div></div></section>
+
+<section class="slide light v2" id="slide-20" data-label="Recovery starts with an inspectable boundary" data-speaker-notes="A branch or worktree isolates edits, not credentials or network access. Use environment isolation separately when needed. Never blindly reset a shared dirty workspace; preserve unrelated changes.">
+<div class="slide-content"><div class="slide-head"><span class="snum">20</span><div class="crumb">Recover</div></div>
+<h2>Recovery starts with an inspectable boundary</h2><div class="v2-body"><ol class="v2-flow"><li><span>01</span><h3>Before</h3><p>Record the baseline and isolate the work.</p></li><li><span>02</span><h3>During</h3><p>Keep edits scoped and checkpoints understandable.</p></li><li><span>03</span><h3>After failure</h3><p>Inspect the partial diff; resume or restore deliberately.</p></li></ol></div></div></section>
+
+<section class="slide dark v2" id="slide-21" data-label="Problem 5 · cheap tokens can buy costly work" data-speaker-notes="Do not claim stronger or smaller models are always cheaper. Compare the total process on representative tasks and hold acceptance criteria constant. Subscription limits and API charges are different meters.">
+<div class="slide-content"><div class="slide-head"><span class="snum">21</span><div class="crumb">Choose the model</div></div>
+<h2>Problem 5 · cheap tokens can buy costly work</h2><div class="v2-body"><div class="cards c2"><div class="tile"><h3>Count the task</h3><p>Attempts, tool use, model charges and review time.</p></div><div class="tile"><h3>Count accepted results</h3><p>How many met the same quality bar?</p></div></div></div></div></section>
+
+<section class="slide light v2" id="slide-22" data-label="Compare accepted work, not headline rates" data-speaker-notes="Hypothetical arithmetic, not measured model performance. Both spend one dollar per accepted task, but B accepts more of the batch and uses less review time. Track failures, latency and human effort separately rather than collapsing them into one misleading number.">
+<div class="slide-content"><div class="slide-head"><span class="snum">22</span><div class="crumb">Choose the model</div></div>
+<h2>Compare accepted work, not headline rates</h2><div class="v2-body"><table class="tbl"><thead><tr><th scope="col">Illustrative trial</th><th scope="col">Setup A</th><th scope="col">Setup B</th></tr></thead><tbody><tr><td>Model + tool cost</td><td>$6</td><td>$10</td></tr><tr><td>Accepted tasks, out of 10</td><td>6</td><td>10</td></tr><tr><td>Cost per accepted task</td><td>$1</td><td>$1</td></tr><tr><td>Review time, total</td><td>40 min</td><td>15 min</td></tr></tbody></table></div><p class="note">Illustrative numbers · not vendor measurements</p></div></section>
+
+<section class="slide light v2" id="slide-23" data-label="Change one dial and measure again" data-speaker-notes="The set should include common tasks and failure-prone cases. Repeat enough to see variability. Re-evaluate after meaningful model, prompt or tool changes; do not teach a permanent ranking of named tiers.">
+<div class="slide-content"><div class="slide-head"><span class="snum">23</span><div class="crumb">Choose the model</div></div>
+<h2>Change one dial and measure again</h2><div class="v2-body"><ol class="v2-flow"><li><span>01</span><h3>Baseline</h3><p>A few representative tasks and fixed checks.</p></li><li><span>02</span><h3>Trial</h3><p>Change model or reasoning effort.</p></li><li><span>03</span><h3>Compare</h3><p>Acceptance, cost, time and review burden.</p></li></ol></div></div></section>
+
+<section class="slide dark v2" id="slide-24" data-label="Problem 6 · one agent carries too much" data-speaker-notes="Delegation may help when investigation is separable or parallelism saves time. It adds coordination, context handoff and cost. It is not required for this small export fixture. The animation’s 80k/200 token counts are illustrative, not measurements of this example.">
+<div class="slide-content"><div class="slide-head"><span class="snum">24</span><div class="crumb">Delegate selectively</div></div>
+<h2>Problem 6 · one agent carries too much</h2><div class="v2-body"><figure class="v2-media"><video muted loop playsinline preload="metadata" poster="assets/v2/subagents-dark.svg" aria-label="Separate investigation → evidence back · token counts in the animation are illustrative."><source src="assets/anim/subagents-dark.mp4" type="video/mp4"></video><button type="button" class="v2-play" data-video-toggle aria-pressed="false">Play animation</button><figcaption>Separate investigation → evidence back · token counts in the animation are illustrative.</figcaption></figure></div></div></section>
+
+<section class="slide light v2" id="slide-25" data-label="Delegate an outcome with a boundary" data-speaker-notes="This is a reviewer brief for the same example, not an instruction to spawn agents during this revision. Findings must be checked before acting. A short conclusion without evidence is not enough.">
+<div class="slide-content"><div class="slide-head"><span class="snum">25</span><div class="crumb">Delegate selectively</div></div>
+<h2>Delegate an outcome with a boundary</h2><div class="v2-body"><pre class="code"><code>Task: review CSV quoting and empty-input behaviour.
+Read: export.py and test_export.py.
+Do not edit files.
+Return: finding, file reference and reproducing input.
+State what you did not check.</code></pre></div></div></section>
+
+<section class="slide light v2" id="slide-26" data-label="Parallel work still needs integration" data-speaker-notes="Independent read-only reviews are easier to combine than concurrent edits to the same files. Use worktrees for independent edits when appropriate; a shared test run on the integrated result still matters.">
+<div class="slide-content"><div class="slide-head"><span class="snum">26</span><div class="crumb">Delegate selectively</div></div>
+<h2>Parallel work still needs integration</h2><div class="v2-body"><div class="cards c3"><div class="tile"><h3>Workers</h3><p>Own separate scopes and return evidence.</p></div><div class="tile"><h3>Integrator</h3><p>Resolves conflicts and checks the combined result.</p></div><div class="tile"><h3>Reviewer</h3><p>Accepts the final change against the contract.</p></div></div></div></div></section>
+
+<section class="slide dark v2" id="slide-27" data-label="Problem 7 · useful lessons disappear" data-speaker-notes="Avoid turning every solved task into permanent context. Retain what will change future behaviour and periodically remove stale instructions. Plugin distribution is a later concern.">
+<div class="slide-content"><div class="slide-head"><span class="snum">27</span><div class="crumb">Make it repeatable</div></div>
+<h2>Problem 7 · useful lessons disappear</h2><div class="v2-body"><div class="cards c3"><div class="tile"><h3>Keep a rule</h3><p>A short constraint needed across tasks.</p></div><div class="tile"><h3>Keep a procedure</h3><p>A skill for a recurring workflow.</p></div><div class="tile"><h3>Keep evidence</h3><p>A decision note linked to the relevant code or test.</p></div></div></div></div></section>
+
+<section class="slide light v2" id="slide-28" data-label="Write one small procedure people can inspect" data-speaker-notes="This is an example skill body rather than a full provider-specific package. Keep the procedure readable and useful before distributing it. It does not itself enforce permissions or guarantee a complete review.">
+<div class="slide-content"><div class="slide-head"><span class="snum">28</span><div class="crumb">Make it repeatable</div></div>
+<h2>Write one small procedure people can inspect</h2><div class="v2-body"><pre class="code"><code># Invoice export review
+1. Read the export contract.
+2. Run invoice and CSV tests.
+3. Inspect the diff and exported sample.
+4. Report evidence and remaining gaps.
+5. Leave acceptance to the reviewer.</code></pre></div></div></section>
+
+<section class="slide light v2" id="slide-29" data-label="The complete workflow has a way back" data-speaker-notes="Trace the invoice export once through the workflow. Return to the relevant stage when new evidence invalidates a decision. On budget exhaustion, preserve a partial result and mark it incomplete. Success is reviewed evidence against a contract.">
+<div class="slide-content"><div class="slide-head"><span class="snum">29</span><div class="crumb">Bring it together</div></div>
+<h2>The complete workflow has a way back</h2><div class="v2-body"><ol class="v2-flow"><li><span>01</span><h3>Contract</h3><p>Agree on the check.</p></li><li><span>02</span><h3>Build</h3><p>Make a scoped change.</p></li><li><span>03</span><h3>Verify</h3><p>Return evidence.</p></li><li><span>04</span><h3>Review</h3><p>Accept or return it.</p></li></ol><p class="lead">Failed check → diagnose within budget. Missing requirement → ask the owner.</p></div></div></section>
+
+<section class="slide dark v2" id="slide-30" data-label="Improve one workflow this week" data-speaker-notes="This is the single closing action. Encourage a small change to an existing workflow before adding fleets of agents or a plugin marketplace.">
+<div class="slide-content"><div class="slide-head"><span class="snum">30</span><div class="crumb">Your next step</div></div>
+<h2>Improve one workflow this week</h2><div class="v2-body"><div class="cards c3"><div class="tile"><h3>Write the contract</h3><p>What must be true when the task is done?</p></div><div class="tile"><h3>Add the evidence</h3><p>Which check can establish it?</p></div><div class="tile"><h3>Add the exit</h3><p>How will you stop and recover when it fails?</p></div></div></div></div></section>
+
+<section class="slide light v2" id="slide-31" data-label="Go deeper where your work needs it" data-speaker-notes="Questions here. The later decks are existing editions, not revised as part of this work. They retain their own date stamps and some are work in progress. Do not imply their product claims were revalidated in this revision.">
+<div class="slide-content"><div class="slide-head"><span class="snum">31</span><div class="crumb">Questions</div></div>
+<h2>Go deeper where your work needs it</h2><div class="v2-body"><div class="v2-links"><a href="subagents-prompt-caching.html" target="_blank" rel="noopener">04 · Subagents & prompt caching<span>↗</span></a><a href="cost-and-context.html" target="_blank" rel="noopener">05 · Cost & context (WIP)<span>↗</span></a><a href="orchestrating-agents.html" target="_blank" rel="noopener">06 · Orchestrating agents (WIP)<span>↗</span></a><a href="measuring-what-works.html" target="_blank" rel="noopener">07 · Measuring what works (WIP)<span>↗</span></a></div></div></div></section>
+
+<section class="slide light v2" id="slide-32" data-label="Reference · workflows and evaluation" data-speaker-notes="These sources support the design distinctions. The workflow, retry table and illustrative comparison are teaching designs, not measured production outcomes. Detailed evidence and validation are recorded with this edition.">
+<div class="slide-content"><div class="slide-head"><span class="snum">32</span><div class="crumb">Reference</div></div>
+<h2>Reference · workflows and evaluation</h2><div class="v2-body"><div class="v2-links"><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">Building effective agents<span>↗</span></a><a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents" target="_blank" rel="noopener">Demystifying evals for AI agents<span>↗</span></a><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">Effective context engineering<span>↗</span></a><a href="examples/v2/invoice/README.md" target="_blank" rel="noopener">Fixture, tests and reference implementation<span>↗</span></a></div></div></div></section>
+</deck-stage>
+<script src="ember_design_system/deck-stage.js"></script>
+
+
+<style id="presenter-ui-css">
+  /* ─── Presenter aids (outside <deck-stage>: siblings paint above it) ─── */
+  .pui-controls{
+    position:fixed; right:18px; bottom:18px; z-index:40;
+    display:flex; gap:8px;
+    opacity:0; transition:opacity .25s; pointer-events:none;
+  }
+  body.pui-mouse .pui-controls,
+  .pui-controls:hover,
+  .pui-controls:focus-within{ opacity:1; pointer-events:auto; }
+  .pui-controls button{
+    font:var(--w-semibold) 12px/1 var(--font-mono); letter-spacing:.08em;
+    color:var(--on-dark-muted); background:var(--ink-2);
+    border:1px solid var(--line-dark); border-radius:var(--radius-pill);
+    padding:9px 14px; cursor:pointer;
+  }
+  .pui-controls button:hover{ color:var(--paper); border-color:var(--coral); }
+  .pui-controls kbd{ color:var(--coral); font:inherit; margin-left:6px; }
+  .pui-notes{
+    position:fixed; left:0; right:0; bottom:0; z-index:39;
+    background:var(--ink-2); color:var(--on-dark);
+    border-top:2px solid var(--coral);
+    padding:20px 34px 24px; max-height:38vh; overflow:auto;
+    font:var(--w-regular) clamp(15px,1.6vw,21px)/1.55 var(--font-b, var(--font-body));
+    display:none;
+  }
+  .pui-notes.open{ display:block; }
+  .pui-notes .pui-nhead{
+    font:var(--w-semibold) 12px/1 var(--font-mono); letter-spacing:.12em;
+    text-transform:uppercase; color:var(--coral); margin-bottom:12px;
+  }
+  @media print{ .pui-controls, .pui-notes{ display:none !important; } }
+</style>
+<div class="pui-controls">
+  <button type="button" data-pui="notes">NOTES<kbd>N</kbd></button>
+  <button type="button" data-pui="present">PRESENT<kbd>P</kbd></button>
+  <button type="button" data-pui="fullscreen">FULLSCREEN<kbd>F</kbd></button>
+</div>
+<div class="pui-notes" role="note" aria-live="polite">
+  <div class="pui-nhead"></div>
+  <div class="pui-nbody"></div>
+</div>
+
+<script>
+/* ─── Presenter aids: notes overlay (N), fullscreen (F), presenter window (P) ─── */
+(function(){
+  if (window.self !== window.top) return; /* skip when embedded by a host/viewer */
+  var ds = document.querySelector('deck-stage');
+  var notesEl = document.querySelector('.pui-notes');
+  var nHead = notesEl.querySelector('.pui-nhead');
+  var nBody = notesEl.querySelector('.pui-nbody');
+  var current = Math.max(0, Array.from(ds.children).findIndex(s => s.hasAttribute('data-deck-active'))), presenter = null, mouseT = null;
+
+  function slides(){ return Array.prototype.slice.call(ds.querySelectorAll(':scope > section')); }
+  function noteOf(s){ return s.getAttribute('data-speaker-notes') || 'No notes for this slide.'; }
+  function labelOf(s){ return s.getAttribute('data-label') || ''; }
+
+  /* controls fade in on mouse activity, like the component's own overlay */
+  document.addEventListener('mousemove', function(){
+    document.body.classList.add('pui-mouse');
+    clearTimeout(mouseT);
+    mouseT = setTimeout(function(){ document.body.classList.remove('pui-mouse'); }, 1800);
+  });
+
+  function syncNotes(){
+    var all = slides(), s = all[current];
+    if (!s) return;
+    nHead.textContent = 'Notes · ' + labelOf(s) + ' · ' + (current + 1) + ' / ' + all.length;
+    nBody.textContent = noteOf(s);
+  }
+  function toggleNotes(){ notesEl.classList.toggle('open'); if (notesEl.classList.contains('open')) syncNotes(); }
+
+  function toggleFullscreen(){
+    if (document.fullscreenElement) { document.exitFullscreen(); }
+    else { document.documentElement.requestFullscreen().catch(function(){}); }
+  }
+  /* fullscreen = clean presenting surface: hide the thumbnail rail while in it */
+  var railWasOff = false;
+  document.addEventListener('fullscreenchange', function(){
+    if (document.fullscreenElement) {
+      railWasOff = ds.hasAttribute('no-rail');
+      ds.setAttribute('no-rail', '');
+    } else if (!railWasOff) {
+      ds.removeAttribute('no-rail');
+    }
+  });
+
+  /* ── presenter window: current + next previews, notes, timer, clock ── */
+  function openPresenter(){
+    if (presenter && !presenter.closed) { presenter.focus(); return; }
+    presenter = window.open('', 'deck-presenter', 'width=1200,height=760');
+    if (!presenter) {
+      nHead.textContent = 'Presenter window';
+      nBody.textContent = 'The browser blocked the pop-up — allow pop-ups for this page and press P again.';
+      notesEl.classList.add('open');
+      return;
+    }
+    var pd = presenter.document;
+    pd.open();
+    pd.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Presenter — ' + document.title.replace(/</g,'&lt;') + '</title><base href="' + document.baseURI + '"></head><body></body></html>');
+    pd.close();
+    /* carry the deck's stylesheets + tokens over so slide clones render 1:1 */
+    document.head.querySelectorAll('link[rel="stylesheet"], link[rel="preconnect"], style').forEach(function(el){
+      var c = pd.importNode(el, true);
+      if (el.tagName === 'LINK' && el.href) c.setAttribute('href', el.href);
+      pd.head.appendChild(c);
+    });
+    var st = pd.createElement('style');
+    st.textContent =
+      '*,*::before,*::after{animation:none !important;transition:none !important}' +
+      'html,body{margin:0;height:100%;background:#0e0c08;color:var(--on-dark);font-family:var(--font-m,monospace);overflow:hidden}' +
+      '.pw{display:grid;grid-template-rows:52px 1fr;height:100%}' +
+      '.pw-bar{display:flex;align-items:center;gap:22px;padding:0 20px;border-bottom:1px solid var(--line-dark);font-size:13px;letter-spacing:.06em;color:var(--on-dark-muted)}' +
+      '.pw-bar .cnt{color:var(--coral);font-weight:700;font-size:16px}' +
+      '.pw-bar .lbl{color:var(--paper);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}' +
+      '.pw-bar .tmr{cursor:pointer}.pw-bar .tmr b{color:var(--paper)}' +
+      '.pw-bar button{font:inherit;color:var(--on-dark-muted);background:none;border:1px solid var(--line-dark);border-radius:6px;padding:5px 12px;cursor:pointer}' +
+      '.pw-bar button:hover{color:var(--paper);border-color:var(--coral)}' +
+      '.pw-main{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:14px;padding:14px;min-height:0}' +
+      '.pw-col{display:grid;grid-template-rows:auto 1fr;min-height:0;gap:8px}' +
+      '.pw-col.right{grid-template-rows:auto auto auto minmax(0,1fr)}' +
+      '.pw-cap{font-size:11px;letter-spacing:.14em;color:var(--on-dark-faint);text-transform:uppercase}' +
+      '.pw-box{position:relative;min-height:0;overflow:hidden;border:1px solid var(--line-dark);border-radius:8px;background:#000}' +
+      '.pw-canvas{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;background:var(--paper)}' +
+      '.pw-canvas > section{width:1920px;height:1080px;position:relative;overflow:hidden}' +
+      '.pw-notes{overflow:auto;font-family:var(--font-b,sans-serif);font-size:19px;line-height:1.55;color:var(--on-dark);padding-right:6px}';
+    pd.head.appendChild(st);
+    pd.body.innerHTML =
+      '<div class="pw">' +
+        '<div class="pw-bar">' +
+          '<span class="cnt"></span><span class="lbl"></span>' +
+          '<span class="tmr" title="click to reset">elapsed <b class="el">00:00</b></span>' +
+          '<span>clock <b class="ck"></b></span>' +
+          '<button data-nav="-1">‹ prev</button><button data-nav="1">next ›</button>' +
+        '</div>' +
+        '<div class="pw-main">' +
+          '<div class="pw-col"><div class="pw-cap">Current</div><div class="pw-box" id="pwCur"><div class="pw-canvas"></div></div></div>' +
+          '<div class="pw-col right"><div class="pw-cap">Next</div><div class="pw-box" id="pwNext" style="aspect-ratio:16/9;min-height:120px"><div class="pw-canvas"></div></div>' +
+          '<div class="pw-cap" style="margin-top:6px">Notes</div><div class="pw-notes"></div></div>' +
+        '</div>' +
+      '</div>';
+
+    var t0 = Date.now();
+    function two(n){ return (n < 10 ? '0' : '') + n; }
+    function tick(){
+      if (presenter.closed) return;
+      var el = Math.floor((Date.now() - t0) / 1000);
+      pd.querySelector('.el').textContent = two(Math.floor(el / 60)) + ':' + two(el % 60);
+      var d = new Date();
+      pd.querySelector('.ck').textContent = two(d.getHours()) + ':' + two(d.getMinutes());
+      presenter.setTimeout(tick, 1000);
+    }
+    tick();
+    pd.querySelector('.tmr').addEventListener('click', function(){ t0 = Date.now(); });
+
+    function fit(boxId){
+      var box = pd.getElementById(boxId), cv = box.querySelector('.pw-canvas');
+      var k = Math.min(box.clientWidth / 1920, box.clientHeight / 1080);
+      cv.style.transform = 'scale(' + k + ')';
+      cv.style.left = ((box.clientWidth - 1920 * k) / 2) + 'px';
+      cv.style.top = ((box.clientHeight - 1080 * k) / 2) + 'px';
+    }
+    function fill(boxId, slide){
+      var cv = pd.getElementById(boxId).querySelector('.pw-canvas');
+      cv.textContent = '';
+      if (slide) {
+        var c = pd.importNode(slide, true);
+        c.setAttribute('data-deck-active', '');
+        cv.appendChild(c);
+      }
+      fit(boxId);
+    }
+    presenter.__update = function(i){
+      var all = slides(), s = all[i];
+      if (!s) return;
+      var next = i + 1;
+      while (next < all.length && all[next].hasAttribute('data-deck-skip')) next++;
+      fill('pwCur', s);
+      fill('pwNext', all[next] || null);
+      pd.querySelector('.cnt').textContent = (i + 1) + ' / ' + all.length;
+      pd.querySelector('.lbl').textContent = labelOf(s) + (all[next] ? '   →   next: ' + labelOf(all[next]) : '   ·   last slide');
+      pd.querySelector('.pw-notes').textContent = noteOf(s);
+    };
+    presenter.addEventListener('resize', function(){ fit('pwCur'); fit('pwNext'); });
+    pd.addEventListener('keydown', function(e){
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); ds.next(); }
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); ds.prev(); }
+      else if (e.key === 'Home') { ds.goTo(0); }
+      else if (e.key === 'End') { ds.goTo(slides().length - 1); }
+    });
+    pd.querySelectorAll('[data-nav]').forEach(function(b){
+      b.addEventListener('click', function(){ this.dataset.nav === '1' ? ds.next() : ds.prev(); });
+    });
+    presenter.__update(current);
+  }
+
+  ds.addEventListener('slidechange', function(e){
+    current = e.detail.index;
+    if (notesEl.classList.contains('open')) syncNotes();
+    if (presenter && !presenter.closed && presenter.__update) presenter.__update(current);
+  });
+
+  document.addEventListener('keydown', function(e){
+    var t = e.target;
+    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = e.key.toLowerCase();
+    if (k === 'n') { toggleNotes(); }
+    else if (k === 'f') { toggleFullscreen(); }
+    else if (k === 'p') { openPresenter(); }
+  });
+  document.querySelector('[data-pui="notes"]').addEventListener('click', toggleNotes);
+  document.querySelector('[data-pui="fullscreen"]').addEventListener('click', toggleFullscreen);
+  document.querySelector('[data-pui="present"]').addEventListener('click', openPresenter);
+})();
+</script>
+
+<script>
+// Play only the active explainer; reduced-motion users start it explicitly.
+(function(){
+ const ds=document.querySelector('deck-stage');
+ const motion=matchMedia('(prefers-reduced-motion: reduce)');
+ ds.querySelectorAll('.v2-media').forEach(figure=>{
+  const v=figure.querySelector('video'),button=figure.querySelector('[data-video-toggle]');
+  function sync(){button.textContent=v.paused?'Play animation':'Pause animation';button.setAttribute('aria-pressed',String(!v.paused));}
+  button.addEventListener('click',()=>{if(v.paused)v.play().catch(()=>{});else v.pause();});
+  v.addEventListener('play',sync);v.addEventListener('pause',sync);sync();
+ });
+ function update(){
+  ds.querySelectorAll('video').forEach(v=>{
+   if(!v.closest('[data-deck-active]') || motion.matches){v.pause();return;}
+   v.currentTime=0;v.play().catch(()=>{});
+  });
+ }
+ ds.addEventListener('slidechange',update);motion.addEventListener('change',update);update();
+})();
+</script>
+
+</body>
+</html>

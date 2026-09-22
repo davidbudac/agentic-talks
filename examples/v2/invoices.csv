@@ -1,0 +1,5 @@
+invoice_id,customer,net,tax_rate,gross
+INV-001,"North, Ltd",100.00,0.21,121.00
+INV-002,"Studio ""A""",0.50,0.21,0.61
+INV-003,"Line
+break",100.00,0,100.00
