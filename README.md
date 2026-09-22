@@ -64,6 +64,28 @@ Author: **David Budáč** · English
   agentic grep → subagents, hooks & workflows as a graph runtime → a decision
   table. 33 slides.
 
+## Revised editions of talks 01–03
+
+Open **[the v2 chooser](first-three-v2.html)** to compare the new decks with the preserved originals.
+
+| Talk | New edition | Focus |
+|---|---|---|
+| 01 · The AI Toolbox | [28 slides](ai-toolbox-v2.html) | Task-based selection, a downloadable report and two sourced stories |
+| 02 · Intro to Agentic AI | [26 slides](agentic-ai-v2.html) | One invoice task, permissions before launch and evidence at four checkpoints |
+| 03 · Agentic Engineering | [32 slides](agentic-engineering-v2.html) | An export contract, verification, recovery and measuring accepted work |
+
+The new editions use the existing Ember stage and locally bundled fonts. Navigate with arrows or Space; **N** shows notes, **P** opens the presenter window, **F** toggles fullscreen. Direct links use `#8` for slide 8. The thumbnail rail is hidden by default to give the slides the full viewport.
+
+- [Detailed review and implementation plans](reviews/first-three-v2/PLAN.md)
+- [Source review](reviews/first-three-v2/SOURCES.md) and [validation results](reviews/first-three-v2/VALIDATION.md)
+- [Toolbox handout](reviews/first-three-v2/TOOLBOX-HANDOUT.md) and [worked report](examples/v2/review-report.html)
+- [Invoice demo, tests and prepared fallback](examples/v2/invoice/README.md)
+- New slide maps and speaker notes: `reviews/first-three-v2/*-v2-map.md` and `*-v2-notes.md`
+
+Regenerate the revised files with `PYTHONDONTWRITEBYTECODE=1 python3 scripts/build_first_three_v2.py`. Slide content is authored in that script; generated HTML remains static. The builder checks the original deck hashes before deriving each new shell. It does not overwrite the original decks.
+
+Browser checks use `scripts/qa_first_three_v2.cjs` with Playwright and installed Chrome. Run it from the repository root; it starts and closes its own temporary localhost server (including byte-range support for video checks). If Playwright is not on Node's module path, set `PLAYWRIGHT_MODULE` to its installed directory. QA screenshots go to `/private/tmp/agentic-talks-v2-qa` by default; set `QA_OUTPUT` to use another directory.
+
 ## View it
 
 - **Locally:** open any `.html` deck in a modern browser (macOS:
