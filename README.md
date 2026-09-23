@@ -57,7 +57,7 @@ Author: **David Budáč** · English
   live five-minute build, pitfalls) → sharing, exports, and the Claude Code
   handoff round trip. 25 slides. **Live demo included.**
 - **[`ai-graph-engineering.html`](ai-graph-engineering.html)** — *AI Graph
-  Engineering* (WIP, ~30-min deep dive, for experienced devs). Which graph
+  Engineering* (~30-min deep dive, for experienced devs). Which graph
   people actually mean — knowledge graph, retrieval graph (GraphRAG), workflow
   graph, GNN → the honest GraphRAG scoreboard (where it wins, where plain RAG
   wins, the null-query collapse) → graph memory vs markdown → code graphs vs
@@ -94,7 +94,7 @@ Browser checks use `scripts/qa_first_three_v2.cjs` with Playwright and installed
   developers going deeper (03) → devs & IT admins on internals (04) → devs
   levelling up on cost, orchestration & measurement (05–07, WIP) → anyone
   making visual work with Claude Design (08, WIP) → devs weighing up graphs
-  (09, WIP) — with
+  (09) — with
   self-identification bullets per deck and a
   one-question fallback for the undecided.
 - **Online:** if GitHub Pages is enabled, the repo's Pages root serves the chooser.
@@ -215,7 +215,7 @@ animations read the same palette from `remotion/src/theme.ts`.
 | `orchestrating-agents.html` | *Orchestrating Agents* deck — orchestration tools and failure modes, skills & plugins, MCP vs CLI (WIP). |
 | `measuring-what-works.html` | *Measuring What Works* deck — evals, traces & judging changes by evidence (WIP). |
 | `claude-design.html` | *Claude Design* deck — ~30-min product deep dive on Anthropic's visual-creation tool (WIP, live demo, no code needed). |
-| `ai-graph-engineering.html` | *AI Graph Engineering* deck — knowledge/retrieval/workflow graphs and when either pays (WIP). |
+| `ai-graph-engineering.html` | *AI Graph Engineering* deck — knowledge/retrieval/workflow graphs and when either pays. |
 | `graph-engineering-ai-llms.md`, `deck09-facts.md` | Research note and sourced fact sheet behind deck 09. |
 | `review-decks-01-02.md` | Fact-check of decks 01 and 02 (Sep 2026) with the per-slide change plan and its status. |
 | `index.html` | Landing page routing readers to the right deck by audience (GitHub Pages root). |
