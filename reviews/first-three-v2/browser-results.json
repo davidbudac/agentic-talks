@@ -5,9 +5,9 @@
       "width": 1280,
       "count": 28,
       "words": {
-        "min": 15,
-        "max": 50,
-        "average": 33
+        "min": 19,
+        "max": 52,
+        "average": 37
       },
       "issues": [],
       "errors": [],
@@ -26,9 +26,9 @@
       "width": 1280,
       "count": 26,
       "words": {
-        "min": 24,
-        "max": 57,
-        "average": 33
+        "min": 26,
+        "max": 64,
+        "average": 38
       },
       "issues": [],
       "errors": [],
@@ -47,9 +47,9 @@
       "width": 1280,
       "count": 32,
       "words": {
-        "min": 22,
-        "max": 52,
-        "average": 36
+        "min": 25,
+        "max": 78,
+        "average": 41
       },
       "issues": [],
       "errors": [],
@@ -68,9 +68,9 @@
       "width": 1920,
       "count": 28,
       "words": {
-        "min": 15,
-        "max": 50,
-        "average": 33
+        "min": 19,
+        "max": 52,
+        "average": 37
       },
       "issues": [],
       "errors": [],
@@ -89,9 +89,9 @@
       "width": 1920,
       "count": 26,
       "words": {
-        "min": 24,
-        "max": 57,
-        "average": 33
+        "min": 26,
+        "max": 64,
+        "average": 38
       },
       "issues": [],
       "errors": [],
@@ -110,9 +110,9 @@
       "width": 1920,
       "count": 32,
       "words": {
-        "min": 22,
-        "max": 52,
-        "average": 36
+        "min": 25,
+        "max": 78,
+        "average": 41
       },
       "issues": [],
       "errors": [],

@@ -6,11 +6,11 @@ All original decks are preserved. The new editions are linked from the series in
 
 | Deck | Original slides | New slides | Original visible words | New visible words | New average per slide |
 |---|---:|---:|---:|---:|---:|
-| ai-toolbox | 59 | 28 | 6523 | 935 | 33 |
-| agentic-ai | 43 | 26 | 4260 | 859 | 33 |
-| agentic-engineering | 60 | 32 | 6202 | 1145 | 36 |
+| ai-toolbox | 59 | 28 | 6523 | 1037 | 37 |
+| agentic-ai | 43 | 26 | 4260 | 998 | 38 |
+| agentic-engineering | 60 | 32 | 6202 | 1324 | 41 |
 
-Counts include visible titles, labels, references and code, but exclude speaker notes and text inside videos. The new maximum is under 60 visible words per slide.
+Counts include visible titles, labels, references, code and diagram labels, but exclude speaker notes and text inside videos. Before the visual pass the totals were 935, 859 and 1145; the increase is diagram labels and wayfinding, not new copy. The new maximum is 78 visible words (the illustrative cost chart).
 
 ## Talk 01
 
@@ -42,3 +42,14 @@ Counts include visible titles, labels, references and code, but exclude speaker 
 - Used the existing local fonts, added reduced-motion-aware media control and static posters, and initialised notes correctly for deep links.
 - Added a reproducible builder, browser QA script, fixture results, source record and visual contact sheets.
 - Preserved unrelated edits in `.claude/launch.json` and `cost-and-context.html`.
+
+## Visual pass (23 September 2026)
+
+Implemented the approved mock-up (`visual-mockups-v2.html`) in the builder. Slide wording, notes, order and count are unchanged.
+
+- Shared helpers now fill the 1920×1080 stage: 88px titles, 34–42px body text, content centred in the full height, fixed pixel sizes instead of viewport units. Cards became tiles with icons; step lists became a station rail; code became terminal and editor windows; link lists became reference rows and link cards.
+- Ported the nine reference designs: failing test, checkpoint route, checkpoint 1, model ⇄ harness, job tiles, claim chain, problem beat, caching vs compaction and the accepted-work chart.
+- Wayfinding: talk 02 checkpoint slides show a four-station rail with the current station lit; talk 03 shows a problem tracker (1–7) on every slide in a problem chapter, all complete on the synthesis slide.
+- Rhythm: all seven talk 03 problem slides use the problem beat (ink, coral edge, giant numeral, drawn visual). Closing slides in each talk have a coral edge.
+- Bespoke drawings: talk 01 — inputs → output, report chart, brief, chat vs agent, loop, context sources, document and media panels, app journey, access scope, stories, first-task grid. Talk 02 — boundaries, sequence of a tool call, code and diff views, context window, crowded context, session handoff, thinking vs evidence, test cards, interruption, rules and skills, repo boundary. Talk 03 — demo vs repeated runs, CSV, system loop, unspecified request, contract, process choices, workflow with send-back, exit code, claim check, test and CSV artifact, two actors, stage inputs, handoff note, retry budget, retry policy, recovery timeline, cost fraction, delegation, fan-in, procedure, workflow way back, series cards.
+- Diagram labels are taken from each slide or its notes. Video posters now match each video's aspect ratio.
