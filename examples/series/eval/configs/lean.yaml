@@ -1,0 +1,4 @@
+# Lean CLAUDE.md (claude-md/lean.md). Model: override with -m on the command line.
+name: lean
+runner: ../run-claude-lean
+model: claude-sonnet-5

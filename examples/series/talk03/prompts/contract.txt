@@ -1,0 +1,10 @@
+Add a CSV export to this invoice module.
+
+Acceptance contract:
+- Add export.py with export_invoices(rows) that returns the CSV as a string (no files, no network).
+- rows is a list of dicts with invoice_id, customer, net and tax_rate (strings).
+- Output exactly these five columns, in this order: invoice_id, customer, net, tax_rate, gross.
+- gross uses the existing invoice.gross() rule unchanged, written with two decimals.
+- Quote commas, quotes and newlines correctly; preserve input order; emit the header even for empty input.
+- Add tests for this in test_export.py. Keep the existing tests. Run python3 -m unittest and make sure everything passes.
+Work only in this directory; do not install, publish or send anything.

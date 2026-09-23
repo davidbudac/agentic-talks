@@ -1,0 +1,8 @@
+name: default
+checks:
+  # Hidden acceptance tests for the task, then the repo's own test suite.
+  # Emits score 1.0/0.0 plus cost, turns and token metrics from the run.
+  - checker: ../checkers/hidden-tests
+    required: true
+scoring:
+  pass_threshold: 1.0

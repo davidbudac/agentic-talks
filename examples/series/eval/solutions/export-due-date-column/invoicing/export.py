@@ -1,0 +1,34 @@
+"""CSV export: the feature talk 03 builds against an acceptance contract.
+
+Contract: keep the calculation rule, output the five named columns, quote
+commas, quotes and newlines, preserve input order and emit a header for empty
+input. No filesystem or network side effects: the caller decides where the
+text goes.
+"""
+import csv
+import io
+
+from .dates import due_date
+from .invoice import row_gross
+
+EXPORT_COLUMNS = ["invoice_id", "customer", "net", "tax_rate", "gross", "due_date"]
+
+
+def _due(row) -> str:
+    if not row.get("issue_date"):
+        return ""
+    return due_date(row["issue_date"], row.get("terms") or "net 30").isoformat()
+
+
+def export_invoices(rows) -> str:
+    """Return a CSV string with a header, including when rows is empty."""
+    output = io.StringIO(newline="")
+    writer = csv.writer(output, lineterminator="\n")
+    writer.writerow(EXPORT_COLUMNS)
+    for row in rows:
+        writer.writerow([
+            row["invoice_id"], row["customer"], row["net"], row["tax_rate"],
+            str(row_gross(row)),
+            _due(row),
+        ])
+    return output.getvalue()

@@ -1,0 +1,6 @@
+name: fix-date-parser
+backlog: 006-dotted-dates-day-first
+prompt: |
+  Fix backlog/006-dotted-dates-day-first.md: parse_date("05.09.2026") returns 9 May
+  instead of 5 September. Dotted dates are always day-first. Add a test.
+  Run python3 -m unittest before you finish.

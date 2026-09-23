@@ -1,0 +1,6 @@
+name: report-sort-accents
+prompt: |
+  The report lists customers in raw code-point order, so "Čapek & syn s.r.o." and
+  "Élodie Durand" appear after "Zeta Analytics". Order the report entries
+  accent- and case-insensitively by customer, then by currency. Add a test.
+  Run python3 -m unittest before you finish.
