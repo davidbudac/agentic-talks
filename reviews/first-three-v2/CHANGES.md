@@ -65,3 +65,13 @@ Edited slide wording and speaker notes in the builder. Slide order, count and vi
 - Talk 03, slide 29: the notes explain that the four-stage rail folds Inspect and Plan into Contract.
 - Talk 01: a specific Copilot and Gemini example on the "existing tools" slide; clearer wording on the Project Vend and animation slides.
 - Regenerated the maps, notes files and contact sheets. Browser QA passes at both resolutions.
+
+## Open items (23 September 2026)
+
+Slide count and order are unchanged. QA passes at both resolutions with 0 issues; contact sheets regenerated.
+
+- Toolbox 14: retitled "An agent wrote this animation as code", with four plain points beside the video (the code draws every frame, it is saved with the slides, change a word and render again, a person still checked it). Remotion is named only in the notes.
+- Toolbox 21: the notes add the December 2025 Project Vend phase two result. The reference slide (28), handout and SOURCES.md link to it.
+- Toolbox 11 and 26: "Gemini Notebook" and notebook.google are still current (Google renamed NotebookLM on 16 July 2026). The slide 11 notes and the handout now mention the old name.
+- Engineering 12: now shows the five test names and the raw CSV, with one total recomputed by hand (0.50 × 1.21 = 0.605 → 0.61, half up). Slide 10 keeps the check that customer names survive the export.
+- Engineering 31: six deck cards (04–09), with WIP badges on 05, 06, 07 and 08. The notes say the later decks were re-checked in September 2026.

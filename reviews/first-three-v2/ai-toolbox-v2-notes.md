@@ -44,7 +44,7 @@ Three general assistants as examples. The right one is usually whichever your or
 
 ## 11. Document work has two different needs
 
-A sourced summary and a designed deck are different outputs. Check where a claim came from before you spend time on its layout. An Audio Overview can contain errors, so use it to get oriented and then go back to the source.
+Some people still know Gemini Notebook as NotebookLM; Google renamed it in July 2026, and the old links still work. A sourced summary and a designed deck are different outputs. Check where a claim came from before you spend time on its layout. An Audio Overview can contain errors, so use it to get oriented and then go back to the source.
 
 ## 12. Check one important claim all the way back
 
@@ -54,9 +54,9 @@ A citation tells you where to look; it does not prove the claim. Read enough aro
 
 Generating new looks and filling a fixed template are different jobs. Check brand colours and text in both. Rendering from code keeps a layout fixed; it cannot tell you the brand rules were followed.
 
-## 14. Our loop animation is rendered from code
+## 14. An agent wrote this animation as code
 
-Play it. This is a real artifact from this repository: Remotion turns code into video, so the layout stays exactly as written. It did not come from a new vendor session. Narration is a separate category, with text-to-speech tools such as ElevenLabs: check the pronunciation and get permission before cloning anyone’s voice.
+Play it. An agent wrote this animation as code, using a tool called Remotion that turns code into video. Because it is code, fixing a label or the timing means editing a line and rendering a fresh copy; nobody redraws it by hand. Writing it did not make it right, so someone still watched it before it went into these slides. Narration is a separate job, with text-to-speech tools such as ElevenLabs: check the pronunciation and get permission before cloning anyone’s voice.
 
 ## 15. An app draft still needs an owner
 
@@ -84,7 +84,7 @@ The same monthly fee buys different things from different suppliers, so ask what
 
 ## 21. A shop agent took real actions and lost money
 
-From the first Project Vend report by Anthropic and Andon Labs, June 2025. The agent also invented payment details. Say it lost money, not that it went bankrupt, and present it as one experiment rather than a picture of every agent deployment.
+From the first Project Vend report by Anthropic and Andon Labs, June 2025. The agent also invented payment details. Say it lost money, not that it went bankrupt, and present it as one experiment rather than a picture of every agent deployment. The second report, in December 2025, found that newer models and better tools largely ended the losing weeks, yet staff could still manipulate the agent into poor decisions, so the lesson holds.
 
 ## 22. Research ideas still need experiments
 
@@ -112,4 +112,4 @@ The handout adds questions to ask when choosing. It leaves prices out on purpose
 
 ## 28. Reference · evidence and access
 
-Sources for the two stories and the access examples. The source log in the repository (SOURCES.md) separates facts from examples and recommendations.
+Sources for the two stories, including the December 2025 follow-up to Project Vend, and the access examples. The source log in the repository (SOURCES.md) separates facts from examples and recommendations.

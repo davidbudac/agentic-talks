@@ -48,7 +48,7 @@ When the calculation is specified, write it as code. The agent can read and chan
 
 ## 12. Inspect the tests and the file they produce
 
-Prepared result from after/: three invoice tests and two export tests. We generated the CSV with the same code and parsed it during validation. It is neither a benchmark nor a recorded agent run.
+Prepared result from after/, trimmed to the test names. Read the names against the contract: the two export tests cover the round trip and the empty file, and the three invoice tests cover the rate and the rounding. Then open the file itself. Check that the header lists the five columns in order, and work out one total by hand: 0.50 at 21% is 0.605, which rounds half up to 0.61. We generated the CSV with the same code; it is neither a benchmark nor a recorded agent run.
 
 ## 13. Keep acceptance separate from implementation
 
@@ -124,7 +124,7 @@ This is the one action to leave with. Push for a small change to a workflow peop
 
 ## 31. Go deeper where your work needs it
 
-Take questions. The later decks have not been revised: they keep their own dates, some are still in progress, and nobody has rechecked their product claims for this edition.
+Take questions. We re-checked all six deep dives against their sources in September 2026. The ones marked WIP are still being written, so expect gaps there.
 
 ## 32. Reference · workflows and evaluation
 

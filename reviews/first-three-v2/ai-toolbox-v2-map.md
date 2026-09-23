@@ -17,7 +17,7 @@
 | 11 | Document work has two different needs | 17, 24, 35, 37 |
 | 12 | Check one important claim all the way back | 24, 37 |
 | 13 | For media, decide what must stay exact | 29–34 |
-| 14 | Our loop animation is rendered from code | 30–32 → actual repository artifact |
+| 14 | An agent wrote this animation as code | 30–32 → actual repository artifact |
 | 15 | An app draft still needs an owner | 28 |
 | 16 | Automate the repeatable part | 38, 54 |
 | 17 | Three ways to give it your work | 47–55 → compressed |

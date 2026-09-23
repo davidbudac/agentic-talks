@@ -1,4 +1,4 @@
-# The AI Toolbox — keep this after the talk
+# The AI Toolbox: keep this after the talk
 
 Start with a task you can judge. Give the tool the relevant sources, an example of a useful result and a clear check. Compare total effort after review and corrections.
 
@@ -7,7 +7,7 @@ These are representative options, not rankings. Check the vendor's current featu
 | Job | Examples | What to check on a trial |
 |---|---|---|
 | Draft from files or analyse a question | [Claude](https://claude.com/product/overview), [ChatGPT](https://chatgpt.com/overview/), [Gemini](https://gemini.google/overview/) | Does it use the supplied sources, expose gaps and return a useful file? |
-| Understand a set of documents | [Gemini Notebook](https://notebook.google/) | Can you trace the claims to the supplied sources? Does the audio summary preserve the important qualifications? |
+| Understand a set of documents | [Gemini Notebook](https://notebook.google/) (formerly NotebookLM) | Can you trace the claims to the supplied sources? Does the audio summary preserve the important qualifications? |
 | Make a presentation | [Gamma](https://gamma.app/), [Canva](https://www.canva.com/canva-ai/) | Are facts correct? Is the deck readable and editable in the format you need? |
 | Explore images and visual formats | [Canva](https://www.canva.com/canva-ai/), image tools within your assistant | Are text, dimensions and brand elements correct? What use rights and data settings apply? |
 | Narrate a script | [ElevenLabs](https://elevenlabs.io/text-to-speech) | Are names and numbers pronounced correctly? Are the voice and intended use authorised? |
@@ -32,7 +32,7 @@ This is a synthetic teaching artifact, not a customer result or a captured produ
 
 ## Two stories to remember
 
-[Project Vend](https://www.anthropic.com/research/project-vend-1) shows why completed actions do not necessarily produce a good business result. [Google's AI co-scientist](https://research.google/blog/accelerating-scientific-breakthroughs-with-an-ai-co-scientist/) shows a role for generated hypotheses alongside researcher evaluation and experiments.
+[Project Vend](https://www.anthropic.com/research/project-vend-1) shows why completed actions do not necessarily produce a good business result. In the [second phase](https://www.anthropic.com/research/project-vend-2), newer models and better tools largely ended the losing weeks, but staff could still manipulate the agent into poor decisions. [Google's AI co-scientist](https://research.google/blog/accelerating-scientific-breakthroughs-with-an-ai-co-scientist/) shows a role for generated hypotheses alongside researcher evaluation and experiments.
 
 ## Your first trial
 
