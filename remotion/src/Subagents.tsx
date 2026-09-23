@@ -87,7 +87,7 @@ export const Subagents: React.FC<{ theme: ThemeName }> = ({ theme }) => {
         </text>
         {/* closing caption */}
         <text x={210} y={262} fontSize={12} textAnchor="middle" fill={t.accent} fontFamily={fontD} fontWeight={700} opacity={prog(frame, 226, 244)}>
-          80k tokens burned inside — a 200-token answer out
+          80k tokens burned inside, a 200-token answer out
         </text>
       </svg>
     </AbsoluteFill>

@@ -205,11 +205,6 @@ table.tbl tr:last-child td{border-bottom:none}
 .fallback-box .fb-icon{font-family:var(--font-mono); font-size:64px; color:var(--s-faint)}
 .fallback-box .fb-caption{font-family:var(--font-mono); font-size:var(--small-size); color:var(--s-muted); text-align:center; max-width:48ch}
 
-/* ── WIP badge (title slide) ─────────────────────────────────────── */
-.wip-badge{display:inline-flex; align-items:center; gap:10px; font-family:var(--font-mono); font-weight:700;
-  font-size:16px; letter-spacing:.14em; text-transform:uppercase; color:var(--coral);
-  border:1.5px solid var(--coral); border-radius:var(--radius-pill); padding:6px 18px; margin-bottom:20px}
-
 /* ── TITLE SLIDE ─────────────────────────────────────────────────── */
 .title-slide{display:flex; flex-direction:column; justify-content:space-between; background:var(--ink);
   padding:88px 96px 0}
@@ -464,7 +459,6 @@ table.tbl tr:last-child td{border-bottom:none}
 .v2.title-slide .ts-top,.v2.title-slide .ts-foot{position:relative;z-index:1}
 .v2.title-slide .ts-author{font-size:30px}
 .v2.title-slide .ts-loopline{font-size:26px}
-.v2.title-slide .wip-badge{font-size:20px;padding:8px 22px;margin-bottom:30px}
 
 @keyframes v2-draw{from{stroke-dashoffset:var(--len,600)}to{stroke-dashoffset:0}}
 @media (prefers-reduced-motion:no-preference){
@@ -475,8 +469,6 @@ table.tbl tr:last-child td{border-bottom:none}
 }
 .v2 .ic.hot{color:var(--ink)}
 .stat > .ic{width:96px;height:96px}
-.vcrop{height:394px;overflow:hidden;border-radius:18px;border:1.5px solid var(--s-card-border);background:var(--paper-2)}
-.vid .vcrop video{height:430px;border:none;border-radius:0}
 .vcap{display:grid;grid-template-columns:1fr 1fr;width:100%;font:500 22px var(--font-mono);color:var(--s-muted);text-align:center;margin-top:-4px}
 .drows{gap:12px}
 .drow{padding:12px 32px 12px 24px}
@@ -493,7 +485,7 @@ table.tbl tr:last-child td{border-bottom:none}
   into Claude Code (the most important part), 03 when a graph earns its keep.
   Claims were researched in August 2026 (deck09-facts.md) and re-checked against
   primary sources in September 2026; single-source and vendor numbers carry a
-  flag on the slide. Status: draft, flagged on the title slide.
+  flag on the slide.
   Visual layer follows the revised talks 01–03 (scripts/build_first_three_v2.py).
   Runs on the Ember deck-stage component: arrows, Space, Home/End; N notes,
   P presenter window, F fullscreen.
@@ -501,11 +493,10 @@ table.tbl tr:last-child td{border-bottom:none}
 
 <deck-stage width="1920" height="1080" no-rail>
   <!-- 01 · Title -->
-<section id="slide-1" data-label="Title" data-speaker-notes="Open by admitting it&#x27;s a buzzword. It went viral in July and nobody agreed on what it meant. This talk separates the evidence from the hype, and part two is the one that changes what you do on Monday. It&#x27;s still a draft, so ask the room to push back on the numbers as well as the opinions." class="slide dark title-slide v2">
+<section id="slide-1" data-label="Title" data-speaker-notes="Open by admitting it&#x27;s a buzzword. It went viral in July and nobody agreed on what it meant. This talk separates the evidence from the hype, and part two is the one that changes what you do on Monday. Ask the room to push back on the numbers as well as the opinions; a challenge from the floor is the fastest way to test them." class="slide dark title-slide v2">
     <div class="ts-top"><span class="k">Talk 09 · Deep dive · ~30 min</span><span class="meta">Internal talk · September 2026</span></div>
     <svg class="ts-graph" viewBox="0 0 660 660" aria-hidden="true"><line x1="80" y1="120" x2="300" y2="60" stroke="var(--line-dark)" stroke-width="3"/><line x1="300" y1="60" x2="520" y2="150" stroke="var(--line-dark)" stroke-width="3"/><line x1="80" y1="120" x2="180" y2="320" stroke="var(--coral)" stroke-width="6"/><line x1="180" y1="320" x2="420" y2="360" stroke="var(--coral)" stroke-width="6"/><line x1="520" y1="150" x2="420" y2="360" stroke="var(--line-dark)" stroke-width="3"/><line x1="420" y1="360" x2="600" y2="420" stroke="var(--coral)" stroke-width="6"/><line x1="180" y1="320" x2="90" y2="540" stroke="var(--line-dark)" stroke-width="3"/><line x1="90" y1="540" x2="300" y2="560" stroke="var(--line-dark)" stroke-width="3"/><line x1="300" y1="560" x2="420" y2="360" stroke="var(--line-dark)" stroke-width="3"/><line x1="300" y1="560" x2="520" y2="600" stroke="var(--line-dark)" stroke-width="3"/><line x1="600" y1="420" x2="520" y2="600" stroke="var(--line-dark)" stroke-width="3"/><line x1="300" y1="60" x2="180" y2="320" stroke="var(--line-dark)" stroke-width="3"/><circle cx="80" cy="120" r="26" fill="var(--coral)" stroke="var(--coral)" stroke-width="3"/><circle cx="300" cy="60" r="20" fill="var(--ink-2)" stroke="var(--line-dark)" stroke-width="3"/><circle cx="520" cy="150" r="30" fill="var(--ink-2)" stroke="var(--line-dark)" stroke-width="3"/><circle cx="180" cy="320" r="34" fill="var(--coral)" stroke="var(--coral)" stroke-width="3"/><circle cx="420" cy="360" r="24" fill="var(--coral)" stroke="var(--coral)" stroke-width="3"/><circle cx="600" cy="420" r="20" fill="var(--coral)" stroke="var(--coral)" stroke-width="3"/><circle cx="90" cy="540" r="22" fill="var(--ink-2)" stroke="var(--line-dark)" stroke-width="3"/><circle cx="300" cy="560" r="28" fill="var(--ink-2)" stroke="var(--line-dark)" stroke-width="3"/><circle cx="520" cy="600" r="22" fill="var(--ink-2)" stroke="var(--line-dark)" stroke-width="3"/></svg>
     <div class="ts-hero">
-      <div class="wip-badge">WIP · draft</div>
       <h1>AI Graph<br>Engineering<span class="dot">.</span></h1>
       <p class="ts-sub">Knowledge graphs, agent graphs, and when either is <b>worth it</b>.</p>
     </div>
@@ -562,7 +553,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <!-- 06 · Where vector RAG runs out -->
 <section id="slide-6" data-label="Where vector RAG runs out" data-speaker-notes="Let the animation show the mechanism. Vector search pulls chunks that look like the question; graph traversal walks edges that connect to the answer. The three numbers are the question shapes where that difference shows up. The multi-hop figure is HippoRAG 2 against a strong dense retriever. Spend a moment on time-scoped questions: that&#x27;s the largest documented gap, and most teams never test for it. Close on the rule: if one chunk holds the answer, stay with vectors." class="slide light v2">
 <div class="slide-content"><div class="slide-head"><span class="snum">06</span><ol class="parts" aria-label="Part 1 of 3: Evidence"><li class="on"><i></i>Evidence</li><li class=""><i></i>Claude Code</li><li class=""><i></i>Decide</li></ol><div class="crumb"><b>Evidence</b> · multi-hop</div></div><h2>Where vector RAG <span class="o">runs out</span></h2><div class="body"><div class="vid">
-      <figure><div class="vcrop"><video src="assets/anim/graph-hops-light.mp4" width="1160" height="500" muted loop playsinline preload="metadata" aria-label="Two panels over the same dots: vector top-k shoots similarity rays at look-alike chunks and never reaches the answer node; graph traversal matches an entity and walks edge to edge, hop 1 then hop 2, straight to it."></video></div>
+      <figure><video src="assets/anim/graph-hops-light.mp4" width="1160" height="500" muted loop playsinline preload="metadata" aria-label="Two panels over the same dots: vector top-k shoots similarity rays at look-alike chunks and never reaches the answer node; graph traversal matches an entity and walks edge to edge, hop 1 then hop 2, straight to it."></video>
       <div class="vcap"><span>top-k pulls look-alike chunks</span><span>traversal walks edges to the answer</span></div>
       <button type="button" class="v2-play" data-video-toggle aria-pressed="false">Play animation</button></figure>
       <div class="stats">
