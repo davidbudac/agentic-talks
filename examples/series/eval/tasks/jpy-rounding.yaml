@@ -1,0 +1,6 @@
+name: jpy-rounding
+backlog: 003-jpy-zero-decimals
+prompt: |
+  Implement backlog/003-jpy-zero-decimals.md: support JPY, which has no minor unit,
+  so amounts round to whole yen. Add tests.
+  Run python3 -m unittest before you finish.

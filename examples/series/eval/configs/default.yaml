@@ -1,0 +1,5 @@
+# Used for the two-model comparison (talk07.sh VARIANT=models): lean CLAUDE.md,
+# models given with -m MODEL_A -m MODEL_B.
+name: default
+runner: ../run-claude-lean
+model: claude-sonnet-5

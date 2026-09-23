@@ -1,0 +1,6 @@
+name: fixtures-bom
+backlog: 005-legacy-export-bom
+prompt: |
+  Fix backlog/005-legacy-export-bom.md: load_invoices() fails on
+  data/legacy-export.csv because the file starts with a UTF-8 byte order mark.
+  Add a test. Run python3 -m unittest before you finish.

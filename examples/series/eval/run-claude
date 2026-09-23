@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# smevals Runner: one headless Claude Code session on a fresh invoice-app copy.
+#
+# Contract (smevals README): no arguments; SMEVALS_MODEL, SMEVALS_PROMPT and
+# SMEVALS_RUN_DIR arrive as environment variables; the working directory is the
+# Run directory; stdout becomes output.txt. Exit 0 whenever Claude produced a
+# result (even a wrong one, or one cut off by --max-turns); exit non-zero only
+# when the harness broke (no result event), so smevals leaves it ungraded.
+#
+# Leaves in the Run directory: repo/ (the edited copy the checker grades),
+# transcript.jsonl (stream-json), metrics.json (cost, turns, tokens),
+# diff.patch and command.sh.
+# CLAUDE_MD_VARIANT=lean|bloated|none picks the CLAUDE.md (see run-claude-lean).
+set -euo pipefail
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$here/../run/lib/common.sh"
+run_dir="${SMEVALS_RUN_DIR:?run this through smevals (talk07.sh)}"
+repo="$run_dir/repo"
+"$RUN_DIR/setup-repo.sh" "$repo" --claude-md "${CLAUDE_MD_VARIANT:-lean}" >/dev/null
+build_claude_cmd "${SMEVALS_PROMPT:?task has no prompt}" "${SMEVALS_MODEL:?no model}"
+printf '#!/usr/bin/env bash\n%s\n' "$(printf '%q ' "${CMD[@]}")" > "$run_dir/command.sh"
+start="$(now_ms)"
+rc=0
+(cd "$repo" && "${CMD[@]}" > "$run_dir/transcript.jsonl" 2> "$run_dir/claude-stderr.txt" < /dev/null) || rc=$?
+end="$(now_ms)"
+printf '{"wall_ms": %s, "exit_code": %s}\n' "$((end - start))" "$rc" > "$run_dir/meta.json"
+[[ -s "$run_dir/claude-stderr.txt" ]] || rm -f "$run_dir/claude-stderr.txt"
+git -C "$repo" add -A >/dev/null 2>&1 && git -C "$repo" diff --cached HEAD > "$run_dir/diff.patch" 2>/dev/null || true
+rm -rf "$repo/.git"
+python3 "$ANALYZE" session "$run_dir/transcript.jsonl" > "$run_dir/metrics.json"
+python3 - "$run_dir/transcript.jsonl" <<'PY'
+import json, sys
+result = None
+for line in open(sys.argv[1], encoding="utf-8", errors="replace"):
+    try:
+        event = json.loads(line)
+    except ValueError:
+        continue
+    if event.get("type") == "result":
+        result = event
+if result is None:
+    print("no result event: Claude Code did not finish (harness error)", file=sys.stderr)
+    sys.exit(3)
+print(result.get("result") or f"[{result.get('subtype')}]")
+PY

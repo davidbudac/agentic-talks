@@ -1,0 +1,6 @@
+name: export-currency-column
+backlog: 001-export-currency-column
+prompt: |
+  Implement backlog/001-export-currency-column.md: add a currency column after gross
+  in the CSV export. Update the tests.
+  Run python3 -m unittest before you finish.

@@ -1,0 +1,2 @@
+Add a CSV export feature for invoices to this module.
+Work only in this directory; do not install, publish or send anything.

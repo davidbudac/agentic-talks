@@ -1,0 +1,5 @@
+name: rename-row-gross
+prompt: |
+  Rename invoicing.invoice.row_gross to gross_for_row across the whole repository
+  (code and tests). Do not keep an alias for the old name.
+  Run python3 -m unittest before you finish.

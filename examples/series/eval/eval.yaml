@@ -1,0 +1,5 @@
+name: invoice-app
+description: >-
+  Six small maintenance tasks on the shared invoice-app repository (talks 03-07).
+  Each run gets a fresh copy of the repo, one headless Claude Code session and a
+  hidden acceptance test. Pass = hidden tests and the repo's own tests pass.
