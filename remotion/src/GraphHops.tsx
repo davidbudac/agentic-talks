@@ -5,15 +5,17 @@ import { fontB, fontD, fontM } from "./fonts";
 import { loopFade, prog, pulse } from "./helpers";
 
 // Multi-hop retrieval: vector search grabs the chunks that LOOK like the
-// question — the graph walks the edges that CONNECT to the answer.
+// question; the graph walks the edges that CONNECT to the answer.
+// No on-screen verdict captions: the embedding slide captions each panel.
 
-// Same node layout in both panels (panel-local coords).
+// Same node layout in both panels (panel-local coords). Spread vertically so
+// the scene fills the 580×250 frame without an empty band at the bottom.
 const N = {
-  A: [104, 148] as const, // entity matched by the query
-  B: [150, 92] as const,
+  A: [104, 164] as const, // entity matched by the query
+  B: [150, 98] as const,
   C: [216, 56] as const, // the answer, two hops away
-  D: [70, 62] as const,
-  E: [160, 158] as const, // look-alikes the query pulls by similarity
+  D: [70, 64] as const,
+  E: [160, 176] as const, // look-alikes the query pulls by similarity
 };
 const EDGES: [keyof typeof N, keyof typeof N][] = [
   ["A", "B"],
@@ -22,7 +24,7 @@ const EDGES: [keyof typeof N, keyof typeof N][] = [
   ["D", "B"],
   ["A", "E"],
 ];
-const QUERY = { x: 8, y: 168, w: 64, h: 30 };
+const QUERY = { x: 8, y: 186, w: 64, h: 30 };
 // rays the vector panel shoots at the top-k look-alikes
 const TOPK: (keyof typeof N)[] = ["E", "B", "D"];
 
@@ -98,10 +100,10 @@ const Panel: React.FC<{
       {/* hop labels */}
       {!vector && (
         <>
-          <text x={140} y={130} fontSize={10.5} fill={t.accent} fontFamily={fontD} fontWeight={700} opacity={hop1}>
+          <text x={140} y={141} fontSize={10.5} fill={t.accent} fontFamily={fontD} fontWeight={700} opacity={hop1}>
             hop 1
           </text>
-          <text x={192} y={82} fontSize={10.5} fill={t.accent} fontFamily={fontD} fontWeight={700} opacity={hop2}>
+          <text x={192} y={85} fontSize={10.5} fill={t.accent} fontFamily={fontD} fontWeight={700} opacity={hop2}>
             hop 2
           </text>
         </>
@@ -168,16 +170,6 @@ const Panel: React.FC<{
             />
           );
         })()}
-      {/* panel verdicts */}
-      {vector ? (
-        <text x={130} y={216} fontSize={11.5} textAnchor="middle" fill={t.muted} fontFamily={fontB} fontWeight={500} opacity={prog(frame, 84, 100)}>
-          similar ≠ connected · Recall@5 ≈ 73%
-        </text>
-      ) : (
-        <text x={130} y={216} fontSize={11.5} textAnchor="middle" fill={t.muted} fontFamily={fontB} fontWeight={500} opacity={prog(frame, 232, 248)}>
-          follows edges, not likeness · ≈ 88%
-        </text>
-      )}
     </g>
   );
 };
@@ -202,7 +194,7 @@ export const GraphHops: React.FC<{ theme: ThemeName }> = ({ theme }) => {
         <g transform="translate(310 26)">
           <Panel t={t} frame={frame} kind="graph" />
         </g>
-        <line x1={290} y1={30} x2={290} y2={240} stroke={t.line} strokeWidth={1} opacity={prog(frame, 6, 20)} />
+        <line x1={290} y1={30} x2={290} y2={244} stroke={t.line} strokeWidth={1} opacity={prog(frame, 6, 20)} />
       </svg>
     </AbsoluteFill>
   );

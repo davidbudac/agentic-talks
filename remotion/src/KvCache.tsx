@@ -6,12 +6,14 @@ import { loopFade, prog } from "./helpers";
 
 // KV caching: turn after turn, everything already sent becomes cached prefix
 // (~10× cheaper); only the appended tail is fresh. Append, never rewrite.
+// The cache expires (5 min default, refreshed on each hit; 1 h optional),
+// so the closing line says "while warm", not "forever".
 
 // Segment layout inside the bar (x from 30, total usable 340).
 const TURNS = [
-  { from: 20, newW: 96, label: "turn 1 — all fresh, full price" },
-  { from: 110, newW: 98, label: "turn 2 — prefix cached ✓ (~10× cheaper)" },
-  { from: 200, newW: 98, label: "turn 3 — cache grows, tail stays small" },
+  { from: 20, newW: 96, label: "turn 1: all fresh, full price" },
+  { from: 110, newW: 98, label: "turn 2: prefix cached ✓ (~10× cheaper)" },
+  { from: 200, newW: 98, label: "turn 3: cache grows, tail stays small" },
 ];
 
 export const KvCache: React.FC<{ theme: ThemeName }> = ({ theme }) => {
@@ -85,7 +87,7 @@ export const KvCache: React.FC<{ theme: ThemeName }> = ({ theme }) => {
         )}
         {/* closing rule */}
         <text x={200} y={182} fontSize={13} textAnchor="middle" fill={t.accent} fontFamily={fontD} fontWeight={700} opacity={prog(frame, 236, 254)}>
-          append, never rewrite — same bytes, cheap forever
+          append, never rewrite: same bytes stay cheap while warm
         </text>
       </svg>
     </AbsoluteFill>

@@ -5,8 +5,10 @@ import { fontB, fontD, fontM } from "./fonts";
 import { loopFade, prog, pulse } from "./helpers";
 
 // Progressive disclosure: a CLAUDE.md line is paid on every turn of every
-// session; a skill keeps only its one-line description in context and loads
-// the full instructions on the turn that actually triggers it.
+// session; a skill keeps only its name + description in context (~100 tokens,
+// always loaded) and loads its body on the turn that triggers it. Once loaded,
+// the body stays in context for the rest of the session
+// (code.claude.com/docs/en/skills).
 
 const COLS = [112, 192, 272, 352]; // turn column centers
 const COL_W = 72;
@@ -67,50 +69,51 @@ export const ProgressiveDisclosure: React.FC<{ theme: ThemeName }> = ({ theme })
           ×4
         </text>
 
-        {/* lane B: description sliver every turn, full load only on trigger */}
+        {/* lane B: description sliver every turn; body loads on trigger, then stays */}
         {COLS.map((cx, i) => {
           const from = TURN_FROM(i);
           const p = prog(frame, from, from + 16);
           if (p === 0) return null;
           const isTrigger = i === TRIGGER_TURN;
-          const loadP = isTrigger ? prog(frame, from + 20, from + 38) : 0;
+          const afterTrigger = i > TRIGGER_TURN; // body already in context
+          const loadP = isTrigger ? prog(frame, from + 20, from + 38) : afterTrigger ? 1 : 0;
           return (
             <g key={i} opacity={p}>
               <rect x={cx - COL_W / 2} y={laneB} width={COL_W} height={BOX_H} rx={7} fill={t.midFill} stroke={isTrigger ? t.coral : t.midStroke} strokeWidth={isTrigger ? 1.6 + pulse(frame, from + 16, from + 44) : 1.2} />
-              {/* one-line description — always present, nearly free */}
+              {/* name + description: always present, ~100 tokens */}
               <rect x={cx - COL_W / 2 + 7} y={laneB + 9} width={COL_W - 14} height={6} rx={3} fill={t.coral} opacity={0.9} />
-              {/* full instructions load only when triggered */}
-              {isTrigger && loadP > 0 ? (
+              {/* body loads when triggered and stays for later turns */}
+              {loadP > 0 ? (
                 <g opacity={loadP}>
                   <rect x={cx - COL_W / 2 + 7} y={laneB + 21} width={COL_W - 14} height={(BOX_H - 30) * loadP} rx={4} fill={t.coral} opacity={0.9} />
                   <text x={cx} y={laneB + BOX_H / 2 + 10} fontSize={8} textAnchor="middle" fill={t.onHot} fontFamily={fontB} fontWeight={600} opacity={loadP > 0.8 ? 1 : 0}>
-                    full how-to
+                    skill body
                   </text>
                 </g>
               ) : null}
             </g>
           );
         })}
-        {/* description callout on the first skill box */}
-        <text x={COLS[0]} y={laneB - 6} fontSize={8.5} textAnchor="middle" fill={t.faint} fontFamily={fontM} fontWeight={500} opacity={prog(frame, TURN_FROM(0) + 14, TURN_FROM(0) + 28)}>
-          description only
+        {/* description callout, left-aligned over the skill lane */}
+        <text x={COLS[0] - COL_W / 2} y={laneB - 6} fontSize={8.5} textAnchor="start" fill={t.faint} fontFamily={fontM} fontWeight={500} opacity={prog(frame, TURN_FROM(0) + 14, TURN_FROM(0) + 28)}>
+          name + description · always loaded · ~100 tokens
         </text>
         {/* trigger callout */}
         <g opacity={prog(frame, TURN_FROM(TRIGGER_TURN) + 18, TURN_FROM(TRIGGER_TURN) + 32)}>
-          <text x={COLS[TRIGGER_TURN]} y={laneB + BOX_H + 17} fontSize={9.5} textAnchor="middle" fill={t.accent} fontFamily={fontM} fontWeight={600}>
-            ▲ triggered — loads now
+          <text x={(COLS[TRIGGER_TURN] + COLS[3]) / 2} y={laneB + BOX_H + 17} fontSize={9.5} textAnchor="middle" fill={t.accent} fontFamily={fontM} fontWeight={600}>
+            ▲ triggered: loads, then stays
           </text>
         </g>
         <text x={COLS[3] + COL_W / 2 + 6} y={laneB + BOX_H / 2 - 2} fontSize={11} fill={t.muted} fontFamily={fontB} fontWeight={600} opacity={prog(frame, TURN_FROM(3) + 16, TURN_FROM(3) + 30)}>
-          paid
+          body
         </text>
         <text x={COLS[3] + COL_W / 2 + 6} y={laneB + BOX_H / 2 + 12} fontSize={11} fill={t.muted} fontFamily={fontB} fontWeight={600} opacity={prog(frame, TURN_FROM(3) + 16, TURN_FROM(3) + 30)}>
-          ×1
+          ×2
         </text>
 
         {/* closing rule */}
         <text x={210} y={246} fontSize={13} textAnchor="middle" fill={t.accent} fontFamily={fontD} fontWeight={700} opacity={prog(frame, 236, 254)}>
-          same knowledge — paid every turn vs. paid on trigger
+          same knowledge: paid every turn vs. from the trigger on
         </text>
       </svg>
     </AbsoluteFill>

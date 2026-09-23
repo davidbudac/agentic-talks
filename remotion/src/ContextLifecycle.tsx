@@ -44,7 +44,7 @@ export const ContextLifecycle: React.FC<{ theme: ThemeName }> = ({ theme }) => {
         <g opacity={prog(frame, 210, 228)}>
           <path d={`M${BAR_X} 46 L${BAR_X} 40 L${BAR_X + FIXED_W} 40 L${BAR_X + FIXED_W} 46`} fill="none" stroke={t.faint} strokeWidth={1.4} />
           <text x={BAR_X + FIXED_W / 2} y={34} fontSize={10} textAnchor="middle" fill={t.muted} fontFamily={fontM} fontWeight={500}>
-            fixed overhead — resent every turn
+            fixed overhead · resent every turn
           </text>
           <path d={`M${BAR_X + FIXED_W + 8} 46 L${BAR_X + FIXED_W + 8} 40 L${BAR_X + FIXED_W + 170} 40 L${BAR_X + FIXED_W + 170} 46`} fill="none" stroke={t.coral} strokeWidth={1.4} />
           <text x={BAR_X + FIXED_W + 89} y={34} fontSize={10} textAnchor="middle" fill={t.accent} fontFamily={fontM} fontWeight={600}>
