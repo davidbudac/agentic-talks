@@ -30,7 +30,7 @@ Author: **David Budáč** · English
   architecture and the four context crossings → parallel fan-out and its integration
   constraint → the caching mechanism (exact-match prefixes, breakpoints, TTL & eviction)
   and its economics → where the two reinforce each other → what's allowed under a
-  subscription vs an API key. 39 slides, ~30 min. **No live demos.**
+  subscription vs an API key. 41 slides, ~30 min. **No live demos.**
 - **[`cost-and-context.html`](cost-and-context.html)** — *Cost & Context* (WIP,
   ~30-min deep dive, for engineers already running Claude Code daily). What
   agents really cost — three pricing meters, subscriptions vs API vs Bedrock,
@@ -45,8 +45,8 @@ Author: **David Budáč** · English
 - **[`measuring-what-works.html`](measuring-what-works.html)** — *Measuring What
   Works* (WIP, ~30-min deep dive, for experienced devs). A minimal eval loop you
   can start this week → reading traces for wasted turns and real cost, with the
-  OTel GenAI span anatomy → the July-2026 open-model landscape (Gemma 4,
-  Qwen 3.6, GLM-5.2), local inference & alternative harnesses → habits that
+  OTel GenAI span anatomy → the September-2026 open-model landscape (Gemma 4,
+  Qwen 3.6/3.8, GLM-5.2/5.3), local inference & alternative harnesses → habits that
   compound. 36 slides.
 - **[`claude-design.html`](claude-design.html)** — *Claude Design* (WIP,
   ~30-min product deep dive, no code or design background needed — any paid
@@ -149,7 +149,7 @@ capture, codebase) · the design-system feature & `/design-sync` · plans &
 shared usage · the craft: iterate (judge iteration 4, not 1), brief like a
 creative director, chat vs inline comments vs direct editing, briefs to steal
 · pitfalls · sharing, exports (PPTX/PDF/HTML/Canva/zip) & the Claude Code
-handoff round trip. Facts verified July 2026.
+handoff round trip. Facts verified September 2026.
 
 ## Live demo (agentic-ai deck, optional; decks 05 and 08 also have live demos)
 
@@ -198,9 +198,9 @@ animations read the same palette from `remotion/src/theme.ts`.
 
 ## Notes
 
-- Facts (model names, prices) in decks 01 and 02 are **verified as of September 2026**
-  (see `review-decks-01-02.md`); the other decks are labelled July 2026 on-slide —
-  this space moves fast, so re-check the primary sources (see the deck's final two
+- Facts (model names, prices) in the revised decks 01–03 and decks 04–09 were
+  **re-checked against primary sources in September 2026** (see `review-decks-01-02.md`
+  and `reviews/first-three-v2/`). This space moves fast, so re-check the primary sources (see the deck's final two
   "Sources" slides) before reusing.
 
 ## Files
@@ -212,7 +212,7 @@ animations read the same palette from `remotion/src/theme.ts`.
 | `agentic-engineering.html` | *Agentic Engineering* deck — developers (no live demo). |
 | `subagents-prompt-caching.html` | *Subagents & Prompt Caching* deck — engineering deep dive (no live demo). |
 | `cost-and-context.html` | *Cost & Context* deck — what agents really cost and how to spend context well (WIP). |
-| `orchestrating-agents.html` | *Orchestrating Agents* deck — subagents, workflows & alternative harnesses (WIP). |
+| `orchestrating-agents.html` | *Orchestrating Agents* deck — orchestration tools and failure modes, skills & plugins, MCP vs CLI (WIP). |
 | `measuring-what-works.html` | *Measuring What Works* deck — evals, traces & judging changes by evidence (WIP). |
 | `claude-design.html` | *Claude Design* deck — ~30-min product deep dive on Anthropic's visual-creation tool (WIP, live demo, no code needed). |
 | `ai-graph-engineering.html` | *AI Graph Engineering* deck — knowledge/retrieval/workflow graphs and when either pays (WIP). |
