@@ -53,3 +53,15 @@ Implemented the approved mock-up (`visual-mockups-v2.html`) in the builder. Slid
 - Rhythm: all seven talk 03 problem slides use the problem beat (ink, coral edge, giant numeral, drawn visual). Closing slides in each talk have a coral edge.
 - Bespoke drawings: talk 01 — inputs → output, report chart, brief, chat vs agent, loop, context sources, document and media panels, app journey, access scope, stories, first-task grid. Talk 02 — boundaries, sequence of a tool call, code and diff views, context window, crowded context, session handoff, thinking vs evidence, test cards, interruption, rules and skills, repo boundary. Talk 03 — demo vs repeated runs, CSV, system loop, unspecified request, contract, process choices, workflow with send-back, exit code, claim check, test and CSV artifact, two actors, stage inputs, handoff note, retry budget, retry policy, recovery timeline, cost fraction, delegation, fan-in, procedure, workflow way back, series cards.
 - Diagram labels are taken from each slide or its notes. Video posters now match each video's aspect ratio.
+
+## Prose pass (23 September 2026)
+
+Edited slide wording and speaker notes in the builder. Slide order, count and visual structure are unchanged; visible word counts stay within 19–78 per slide.
+
+- Headlines: rewrote 20 of 86, mostly the "X, not Y" contrasts and announcements, to state the point directly. Kept "Some tools answer. Others take steps." and "The model chooses; the harness executes", where the contrast is the lesson.
+- Notes: rewrote all 86 for the presenter's voice. Cut editorial instructions that referred to the original decks ("the original deck said", "this replaces the landscape tour") and repeated teaching cues. Kept every qualification and source caveat, in shorter form.
+- Removed all em dashes from slide text, notes, page titles and the presenter pop-up message, and the unicode arrows from two video captions and two workflow labels. Em dashes remain only in HTML and CSS comments inherited from the original shells.
+- Talk 03, slides 21–22: the cost chart now labels its per-task figure as model and tool cost, which matches problem 5 (review time belongs in the total). The notes say that B is cheaper once review time is added.
+- Talk 03, slide 29: the notes explain that the four-stage rail folds Inspect and Plan into Contract.
+- Talk 01: a specific Copilot and Gemini example on the "existing tools" slide; clearer wording on the Project Vend and animation slides.
+- Regenerated the maps, notes files and contact sheets. Browser QA passes at both resolutions.

@@ -1,131 +1,131 @@
-# Agentic Engineering — v2 speaker notes
+# Agentic Engineering · v2 speaker notes
 
 Navigation: arrows / Space; Home / End; N notes; P presenter window; F fullscreen. Direct links use # followed by the physical slide number.
 
 ## 1. Agentic Engineering
 
-Assume the audience knows model, harness, tools and context from talk 02. This talk asks how to make the process repeatable. Keep the original evolution structure, but let each chapter solve an engineering failure.
+The audience knows model, harness, tools and context from talk 02. This talk is about making the process repeatable. Each chapter takes one way the invoice-export workflow fails and fixes it.
 
-## 2. A passing demo is only the beginning
+## 2. Repeated work is harder than the demo
 
-The goal is not maximum autonomy. It is work that can be accepted with evidence and recovered when it fails. Distinguish repeatable workflows from one successful transcript.
+Aim for work you can accept on evidence and recover when it fails. Maximum autonomy is not the goal. One good transcript says little about how the next run will go.
 
-## 3. Keep one example throughout
+## 3. The example: invoice CSV export
 
-This is an excerpt from the reference CSV. The complete file also exercises a newline in a customer name. Our implementation assumes validated rows; production validation and spreadsheet formula handling are separate requirements.
+An excerpt from the reference CSV; the full file also has a customer name with a newline in it. The implementation assumes validated rows. Production validation and spreadsheet formula handling are separate requirements that we leave out.
 
 ## 4. Recap: the system you are engineering
 
-Compress the original prediction, thinking, tools and statelessness chapters to this recap. We can change what information the system receives, what actions it may take and how results are checked.
+Keep this to one slide. You control what information the system receives, what it may do, and how you check the results.
 
 ## 5. Problem 1 · “Add export” leaves too much open
 
-Ask the audience what they would need to review an export. The missing information is a contract problem before it is a model problem. Do not respond to ambiguity by increasing reasoning effort.
+Ask the room what they would need before they could review an export. This is a contract problem before it is a model problem, and more reasoning effort will not settle an ambiguous request.
 
 ## 6. Write the acceptance contract first
 
-These are the requirements implemented by the checked-in reference fixture. For the talk, the set is deliberately small and testable. Label omitted production requirements rather than implying this is a complete billing system.
+These four requirements are the ones the checked-in fixture implements. We kept the set small so every line is testable. Say plainly that production requirements are missing; this is not a billing system.
 
 ## 7. Decide how much structure the task needs
 
-This is a design choice, not a maturity ladder. A workflow may contain agent-driven stages. Use the simplest approach that can meet the contract and explain its result.
+These are options, and nobody has to climb from one to the next. A workflow can contain agent-driven stages. Pick the simplest one that meets the contract and lets you explain the result.
 
 ## 8. Make the stages and ownership visible
 
-This is the workflow for our example. Keep a named owner for integration and acceptance. The next slides show how evidence and recovery change what happens at the gates.
+The workflow for our export. Name one person who owns integration and acceptance. The next slides cover what evidence and recovery look like at each gate.
 
 ## 9. Problem 2 · a green command can mislead
 
-An exit code is an observation. It does not prove the tests cover the contract. The original deck said a goal prompt could not be gamed; replace that guarantee with independent checks and review.
+An exit code tells you the command finished without an error. Whether the tests cover the contract is a separate question. No prompt can stop an agent from satisfying a weaker check; independent checks and review are how you catch it.
 
 ## 10. Give every claim a check
 
-The reference test includes a comma, embedded quotes and a newline. Parsing with the CSV reader tests serialization rather than eyeballing a text file. Formula-like input remains outside this fixture’s contract.
+The reference test uses a comma, embedded quotes and a newline. Parsing the file with Python’s CSV reader tests the serialisation in a way that eyeballing the text cannot. Formula-like input stays outside this fixture’s contract.
 
-## 11. Keep the calculation outside the guesswork
+## 11. Put the calculation in code with an explicit rule
 
-Use deterministic code for a specified calculation. Let the agent inspect and change the implementation, but verify against the explicit rounding rule. This is the existing calculation from the reference fix, reused by the exporter.
+When the calculation is specified, write it as code. The agent can read and change that code; you verify it against the stated rounding rule. This is the reference fix from talk 02, and the exporter reuses it.
 
-## 12. Inspect both tests and the artifact
+## 12. Inspect the tests and the file they produce
 
-Prepared reference result from after/: three invoice tests and two export tests. The CSV is generated with the same implementation and parsed in validation. This is not a benchmark or a captured agent run.
+Prepared result from after/: three invoice tests and two export tests. We generated the CSV with the same code and parsed it during validation. It is neither a benchmark nor a recorded agent run.
 
 ## 13. Keep acceptance separate from implementation
 
-Another model can help review but can share the same blind spots. Protect important acceptance checks outside the implementation’s control when warranted. Human review still owns the decision for this workflow.
+A second model can help review, but it may share the first one’s blind spots. Where it matters, keep acceptance checks where the implementing agent cannot edit them. In this workflow a person makes the call.
 
 ## 14. Problem 3 · the useful facts get buried
 
-Preserve the original context thread without treating attention as a simple fixed budget divided equally between tokens. More irrelevant material can harm retrieval and distract the model; exact behaviour varies.
+Do not describe attention as a fixed budget split equally between tokens. Irrelevant material can make retrieval worse and distract the model; how much depends on the model and the task.
 
 ## 15. Give each stage the context it needs
 
-The table is our proposed design, not an automatic feature of every harness. Fresh stages must receive enough context to preserve decisions. A short handoff is only useful if it contains the necessary facts.
+This split is our design; no harness does it for you. Each fresh stage needs enough context to keep earlier decisions, and a short handoff helps only if it carries the facts that matter.
 
-## 16. Store decisions before restarting
+## 16. Write a handoff note before restarting
 
-This is a handoff example for the reference fixture. Keep file references and unresolved scope, not pages of tool output. A new session should verify the handoff against the files rather than trusting it blindly.
+A handoff note for the reference fixture. It keeps file references and open scope questions and leaves out pages of tool output. The new session should check the note against the files before relying on it.
 
 ## 17. Caching and compaction solve different problems
 
-Billing rules, cache lifetimes and treatment of reasoning vary by provider and model. Avoid the original blanket claims about byte-identical requests, perpetual warm caches or thinking always being retained/stripped. Detailed mechanics belong in talk 04.
+Billing rules, cache lifetimes and the handling of reasoning all vary by provider and model. Do not claim that requests must be byte-identical, that caches stay warm indefinitely, or that thinking is always kept or always stripped. Talk 04 covers the mechanics.
 
 ## 18. Problem 4 · retries consume the budget
 
-Do not let a retry loop keep editing indefinitely. Distinguish transient tool failure, misunderstanding and an unmet requirement. Each calls for a different response.
+Set a limit so a retry loop cannot keep editing forever. A flaky tool, a misunderstanding and an unmet requirement each need a different response.
 
 ## 19. Set a retry policy before the run
 
-This is a policy sketch, not a provider command. Choose numeric limits for the real environment. A stop should preserve useful evidence and never imply the task succeeded.
+A policy sketch, not a setting you switch on. Pick the actual numbers for your environment. When a run stops, it should keep the evidence it gathered and report the task as unfinished.
 
-## 20. Recovery starts with an inspectable boundary
+## 20. Record a baseline you can return to
 
-A branch or worktree isolates edits, not credentials or network access. Use environment isolation separately when needed. Never blindly reset a shared dirty workspace; preserve unrelated changes.
+A branch or worktree isolates edits. It does nothing for credentials or network access, so isolate the environment separately when you need to. Do not reset a shared workspace that has uncommitted changes; you may destroy unrelated work.
 
 ## 21. Problem 5 · cheap tokens can buy costly work
 
-Do not claim stronger or smaller models are always cheaper. Compare the total process on representative tasks and hold acceptance criteria constant. Subscription limits and API charges are different meters.
+Neither bigger nor smaller models are always cheaper. Compare the whole process on representative tasks with the same acceptance criteria. Subscription limits and API charges measure different things.
 
-## 22. Compare accepted work, not headline rates
+## 22. Measure the cost per accepted task
 
-Hypothetical arithmetic, not measured model performance. Both spend one dollar per accepted task, but B accepts more of the batch and uses less review time. Track failures, latency and human effort separately rather than collapsing them into one misleading number.
+The numbers are invented to show the arithmetic; they measure no real model. Both setups spend one dollar of model and tool cost per accepted task. Add review time, as problem 5 says, and B is cheaper: ten accepted tasks for 15 minutes of review against six for 40. Keep failures, latency and review time visible as their own numbers too, so one total cannot hide them.
 
 ## 23. Change one dial and measure again
 
-The set should include common tasks and failure-prone cases. Repeat enough to see variability. Re-evaluate after meaningful model, prompt or tool changes; do not teach a permanent ranking of named tiers.
+Put common tasks and failure-prone cases in the set, and run each enough times to see the variation. Rerun the trial when the model, prompt or tools change. Any ranking of named models you get is temporary.
 
 ## 24. Problem 6 · one agent carries too much
 
-Delegation may help when investigation is separable or parallelism saves time. It adds coordination, context handoff and cost. It is not required for this small export fixture. The animation’s 80k/200 token counts are illustrative, not measurements of this example.
+Delegation helps when an investigation can be split off, or when running work in parallel saves time. It costs coordination, handoffs and money, and this small export does not need it. The 80k and 200 token counts in the animation are illustrative; nobody measured them on this example.
 
 ## 25. Delegate an outcome with a boundary
 
-This is a reviewer brief for the same example, not an instruction to spawn agents during this revision. Findings must be checked before acting. A short conclusion without evidence is not enough.
+A reviewer brief for the same export. Check the reviewer’s findings before you act on them; a short conclusion with no evidence does not count.
 
 ## 26. Parallel work still needs integration
 
-Independent read-only reviews are easier to combine than concurrent edits to the same files. Use worktrees for independent edits when appropriate; a shared test run on the integrated result still matters.
+Read-only reviews combine easily; parallel edits to the same files do not. Give independent edits their own worktrees, then run the tests again on the combined result.
 
 ## 27. Problem 7 · useful lessons disappear
 
-Avoid turning every solved task into permanent context. Retain what will change future behaviour and periodically remove stale instructions. Plugin distribution is a later concern.
+A solved task rarely deserves a permanent note. Keep what will change how the next task goes, and prune stale instructions every so often. Plugin distribution can wait.
 
 ## 28. Write one small procedure people can inspect
 
-This is an example skill body rather than a full provider-specific package. Keep the procedure readable and useful before distributing it. It does not itself enforce permissions or guarantee a complete review.
+An example skill body; a real package would add provider-specific files. Make the procedure readable and useful before you share it. It cannot enforce permissions or guarantee a complete review.
 
 ## 29. The complete workflow has a way back
 
-Trace the invoice export once through the workflow. Return to the relevant stage when new evidence invalidates a decision. On budget exhaustion, preserve a partial result and mark it incomplete. Success is reviewed evidence against a contract.
+Walk the invoice export through once. This rail folds Inspect and Plan from the earlier workflow into Contract. When new evidence overturns a decision, go back to the stage that made it. If the budget runs out, keep the partial result and mark it incomplete. The run succeeds when a reviewer accepts the evidence against the contract.
 
 ## 30. Improve one workflow this week
 
-This is the single closing action. Encourage a small change to an existing workflow before adding fleets of agents or a plugin marketplace.
+This is the one action to leave with. Push for a small change to a workflow people already run, before anyone adds fleets of agents or a plugin marketplace.
 
 ## 31. Go deeper where your work needs it
 
-Questions here. The later decks are existing editions, not revised as part of this work. They retain their own date stamps and some are work in progress. Do not imply their product claims were revalidated in this revision.
+Take questions. The later decks have not been revised: they keep their own dates, some are still in progress, and nobody has rechecked their product claims for this edition.
 
 ## 32. Reference · workflows and evaluation
 
-These sources support the design distinctions. The workflow, retry table and illustrative comparison are teaching designs, not measured production outcomes. Detailed evidence and validation are recorded with this edition.
+Sources for the design distinctions. The workflow, the retry table and the cost comparison are our teaching designs; none is a measured production result. SOURCES.md and VALIDATION.md record the evidence for this edition.

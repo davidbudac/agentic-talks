@@ -1,107 +1,107 @@
-# Agentic AI — v2 speaker notes
+# Agentic AI · v2 speaker notes
 
 Navigation: arrows / Space; Home / End; N notes; P presenter window; F fullscreen. Direct links use # followed by the physical slide number.
 
 ## 1. Agentic AI
 
-This talk assumes the audience recognises files and tests, but has not used a coding agent. The invoice task is intentionally small so we can follow every stage.
+The audience knows files and tests but has not used a coding agent. The invoice task is small on purpose, so you can follow every step in front of them.
 
 ## 2. One failing test, one bounded task
 
-These are the checked-in fixture values. The 21% rate is a supplied teaching input, not advice about tax law. A passing result for this one input is only the first check.
+These values come from the checked-in fixture. The 21% rate is a teaching input, not tax advice. Getting this one input right is only the first check.
 
 ## 3. Set the boundaries before you start
 
-Show the actual workspace and permission settings. Keep approval prompts for anything outside the task. Do not use bypass mode for presentation convenience. A separate folder is convenient scoping; it is not a security sandbox.
+Show the real workspace and permission settings. Leave approval prompts on for anything outside the task, and do not switch to bypass mode to save time on stage. A separate folder keeps the work scoped, but it is not a security sandbox.
 
 ## 4. Give it the outcome and the checks
 
-Use the full prompt in examples/v2/invoice/README.md. Before the talk, copy before/ to a disposable directory. Start the agent here only after showing boundaries. Approve necessary actions deliberately. If a live run is unavailable, use the prepared checkpoints.
+The full prompt is in examples/v2/invoice/README.md. Before the talk, copy before/ to a throwaway directory. Start the agent now, after the boundaries slide, and read each approval request before you accept it. If you cannot run live, use the prepared checkpoints.
 
-## 5. We will inspect four checkpoints
+## 5. Four places to stop and look
 
-These are teaching checkpoints, not a promise that every agent takes the same path. If it finishes early, inspect the completed trace. If it stalls, switch to the prepared fixtures and say so.
+We chose these four stops for teaching; a real agent may take a different path. If it finishes early, walk through the completed trace. If it stalls, switch to the prepared fixtures and tell the audience you have switched.
 
 ## 6. The model chooses; the harness executes
 
-Agent is the combined system when it iterates through a task. The model does not directly execute Python; the harness runs a tool. Harness is a useful term because it explains why the same model behaves differently in different products.
+The agent is the two together, iterating on a task. The model never runs Python itself: it asks, and the harness runs the tool. The word harness earns its place because it explains why the same model behaves differently in different products.
 
 ## 7. The agent repeats that exchange
 
-Checkpoint: show a tool call from the live run, if available. Use the animation to connect the three parts; do not narrate a fictitious live result. Our failure output is the next slide.
+If the live run has made a tool call, show it now. Use the animation to connect model, harness and tool, and describe only what it shows; do not narrate an imagined live result. The failure output comes next.
 
 ## 8. Checkpoint 1 · the failure is evidence
 
-Prepared fallback, validated from before/. The actual output also contains test names and tracebacks; this is an excerpt. Ask what the agent should read next. If live output differs, explain the difference rather than claiming it matches.
+This is the prepared fallback, run from before/. The real output also has test names and tracebacks; the slide shows an excerpt. Ask the room what the agent should read next. If the live output differs, say how, rather than claiming it matches.
 
-## 9. A tool call produces something inspectable
+## 9. A tool call leaves something you can inspect
 
-Show the file-read entry in the live trace or open before/invoice.py. Tool schemas and message formats vary across providers. The key is that the result—not the model’s claim that it read something—is the evidence.
+Show the file-read entry in the live trace, or open before/invoice.py. Providers format tool calls differently. The evidence is the result the harness returned; the model saying it read the file proves nothing.
 
 ## 10. Checkpoint 2 · the code explains the failure
 
-The excerpt omits type annotations and the docstring to keep the slide readable. The full source is in before/invoice.py. The passing zero-rate case is consistent with this bug; the failing nonzero cases distinguish it.
+The excerpt drops the type annotations and docstring; the full source is in before/invoice.py. A zero rate changes nothing, so that test passes even with the bug. The two nonzero cases fail, and that pattern points at the unused tax_rate.
 
 ## 11. Context is what the model can use now
 
-Context is broader than the latest message. A product may retrieve or summarise previous material. Avoid saying every request literally includes every previous token or that the product has no persistent storage.
+Context covers more than the latest message. Products may retrieve or summarise earlier material, so do not say every request resends every previous token, or that the product stores nothing between turns.
 
-## 12. More information is not always more help
+## 12. Too much context hides what matters
 
-Do not teach a universal 40% or 50% threshold. The point at which performance suffers depends on the model, task and content. Missing a necessary file can be as harmful as loading too much irrelevant material.
+There is no universal 40% or 50% threshold. When quality drops depends on the model, the task and the content. Leaving out a file the agent needs can hurt as much as loading material it does not.
 
 ## 13. When a session loses the thread
 
-Explain compaction only as a summary that can omit details. Caching affects reused computation and billing; it does not restore omitted facts. Subagents are an optional advanced technique covered in later talks.
+Describe compaction as a summary that can drop details, and go no further. Caching changes reused computation and billing; it will not bring back a dropped fact. Subagents come up in talks 03 and 04, so skip them here.
 
-## 14. Thinking text is not verification
+## 14. Verify against evidence, whatever the reasoning says
 
-Reasoning can help a model tackle a task, but displayed summaries are not a faithful record of every internal cause. Keep the distinction practical: review evidence instead of accepting a confident explanation.
+Reasoning can help the model with the task, but the text you see is not a faithful record of why it acted; Anthropic’s research on reasoning reports found models leave things out. Keep it practical: review the evidence and do not accept a confident explanation in its place.
 
 ## 15. Checkpoint 3 · inspect the change
 
-This slide isolates the conceptual change. The actual reference implementation names total only in after/. Check the real diff and confirm the rate comes from the argument. It must not simply return 121 or weaken the tests.
+A simplified diff: before/ has no total variable, which only appears in after/invoice.py. Open the real diff and confirm the rate comes from the argument. A fix that hard-codes 121 or weakens the tests fails review.
 
-## 16. Checkpoint 4 · test more than the hook
+## 16. Checkpoint 4 · check more than one case
 
-Prepared result: python3 -m unittest test_invoice -v in after/. These cases verify the stated fixture behaviour, not all production financial requirements. The export tests in talk 03 are separate.
+Prepared result from running python3 -m unittest test_invoice -v in after/. The three cases cover the fixture’s stated behaviour, which falls well short of real billing rules. The export tests belong to talk 03.
 
 ## 17. Passing tests are part of the review
 
-Inspect the actual output from the live agent if present. The agent may report success while skipping a command or changing tests. The human reviewer decides whether the evidence is sufficient.
+If you ran live, open the agent’s real output. An agent can report success after skipping a command or editing a test. You, the reviewer, decide whether the evidence is enough.
 
 ## 18. If it goes wrong, interrupt early
 
-If changes are wrong, inspect a diff and use an understood checkpoint or restore a disposable copy. Do not suggest destructive reset commands that would remove unrelated work. A second identical retry without new evidence is often unhelpful.
+If the changes are wrong, read the diff, then go back to a checkpoint you understand or restore the throwaway copy. Do not reach for a reset command that could wipe unrelated work. Retrying the same prompt with no new information rarely helps.
 
-## 19. Rules can survive a new session
+## 19. Rules in a file load into every session
 
-Use the instruction file your harness reads: CLAUDE.md for Claude Code, AGENTS.md where supported. These are textual instructions, not an access-control boundary. Product memory may also retain notes; inspect what is actually loaded.
+Use the file your harness reads: CLAUDE.md for Claude Code, AGENTS.md for tools that support it. The model reads these instructions, but they do not enforce access. Some products also keep memory notes, so check what gets loaded.
 
 ## 20. Put recurring procedures in a skill
 
-A release checklist is a better skill example than another agent glossary. Describe a skill as instructions and optional supporting files. Exact loading and invocation are harness-specific. Plugin packaging belongs in a later talk.
+A release checklist makes a good example. A skill is a set of instructions, with supporting files if it needs them. How it loads and gets invoked depends on the harness. Leave plugin packaging for a later talk.
 
 ## 21. Tools can reach outside the repo
 
-MCP standardises part of the connection between assistants and external tools/data. It does not eliminate authentication or make arbitrary access safe. Our demo has no reason to connect to another system.
+MCP standardises part of how assistants connect to outside tools and data. You still need authentication, and connecting a system does not make access to it safe. Our demo has no reason to reach outside the repo.
 
 ## 22. Start with one approved agent
 
-This replaces the landscape tour. Model selection can wait until the audience can identify a task and evaluate its result. Tool availability and account features change; point to product documentation for setup.
+Model choice can wait until people can pick a task and judge the result. Availability and account features change, so send people to the product documentation for setup.
 
 ## 23. Your first session, in five steps
 
-Return to the opening task and ask the audience to explain each step. The five-step routine is the takeaway. Do not add another glossary or product comparison after it.
+Go back to the invoice task and ask the room to match each step to what the agent did. This routine is the takeaway; stop teaching after it.
 
 ## 24. Try the fixture, then a task of your own
 
-Questions and optional practice. The fixture is small enough to inspect fully. For a real task, choose work you already understand and can verify.
+Take questions. The fixture is small enough to read end to end. For a first real task, pick work you already understand and can check.
 
 ## 25. Reference · operating an agent
 
-These are provider-specific references, not a claim that every harness behaves identically. Consult current documentation for exact controls.
+These are Claude Code documents; other harnesses differ. Check the current documentation for exact controls.
 
 ## 26. Reference · context and evidence
 
-The sources support the conceptual explanation. The fixture and prepared test results are local evidence, separate from provider claims.
+Sources for the concepts in this talk. The fixture and its test results are our own evidence and say nothing about any provider.

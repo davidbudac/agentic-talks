@@ -1,115 +1,115 @@
-# The AI Toolbox — v2 speaker notes
+# The AI Toolbox · v2 speaker notes
 
 Navigation: arrows / Space; Home / End; N notes; P presenter window; F fullscreen. Direct links use # followed by the physical slide number.
 
 ## 1. The AI Toolbox
 
-Promise a practical selection method, not a tour of everything on the market. The new edition starts with one ordinary task and returns to it throughout.
+Promise a practical way to choose a tool and check what it gives back. There is no market tour. One ordinary review task runs through the whole talk.
 
 ## 2. Start with a task you already do
 
-Ask the audience to think of a recurring task they know well enough to review. Our review task uses synthetic data. Do not claim it is a customer case study or that a particular product produced it.
+Ask everyone to pick a recurring task they know well enough to review; they will come back to it at the end. Our example uses synthetic data. It is not a customer case, and no particular product produced it.
 
-## 3. Here is the output to judge
+## 3. The draft: a number to check and a gap to flag
 
-Show the report before introducing vendors. April has 80 completed orders, May 120, June is missing. The 50% increase is a comparison of two complete months, not a quarterly trend. This is a real downloadable teaching artifact, authored for the talk; it is not a screenshot of a vendor run.
+Show the report before you name any vendor. April has 80 completed orders, May 120, and June is missing. The 50% compares two complete months and says nothing about the quarter. We wrote this report for the talk and anyone can download it; it is not a screenshot of a vendor run.
 
 ## 4. A useful brief names the checks
 
-The brief constrains the output, but does not guarantee compliance. Inspect the result. Open the CSV if useful and point to the blank June value. A good brief is specific about the evidence the reviewer needs.
+A brief shapes the output but cannot make the tool follow it, so you still inspect the result. Point to lines 2 and 3: they ask for the evidence you will check. If there is time, open the CSV and show the blank June value.
 
-## 5. Review the result, not the confidence
+## 5. Check it before you share it
 
-For the report: recompute 120 divided by 80 minus one, confirm June is absent, then decide whether an April–May interim report meets the actual request. A polished chart can still answer the wrong question.
+For our report: recompute 120 divided by 80, minus one. Confirm June is missing. Then decide whether an April–May interim report is what was asked for. A polished chart can still answer the wrong question.
 
 ## 6. Some tools answer. Others take steps.
 
-This is a working distinction, not a rigid classification of every product. Chat interfaces can expose agent features. An agent may still need clarification or approval before it continues.
+Use this as a rough distinction; plenty of products do both. Chat apps can include agent features, and an agent may still stop to ask a question or wait for your approval.
 
-## 7. The loop is simple
+## 7. An agent works in a loop
 
-For the report: read the CSV, calculate a comparison, write the draft, inspect it. The system needs a stopping condition. Not every image or voice generator is an agent; generation can also be a single tool call in a larger workflow.
+For our report, the loop reads the CSV, calculates the comparison, writes the draft and inspects it. It also needs a point where it stops. Many image and voice generators run a single step; an agent might call one as a tool inside a larger task.
 
 ## 8. Your files supply the context
 
-Context means the information available while producing an answer. Avoid the absolute claim that every product resends the entire conversation unchanged. Products may retrieve, summarise or store state differently. Check what the tool can access.
+Context is the information the tool can use while it produces an answer. Products handle earlier conversation differently: some resend it, some summarise it, some retrieve parts of it. So avoid saying they all resend everything. The practical question for the room is what this tool can see.
 
 ## 9. Choose by the job
 
-This is the map for the rest of the talk. Research appears within document work because its output is evidence to inspect. Product examples illustrate categories rather than establish winners.
+The rest of the talk follows these three jobs. Research sits under documents because what it produces is evidence to inspect. The products named are examples of each category; we are not ranking them.
 
 ## 10. Start with an assistant you can use at work
 
-These are representative general assistants. The practical choice depends on your organisation’s approved access, integrations and limits. Do not imply all plans include the same capabilities. Sources and current product links are in the handout.
+Three general assistants as examples. The right one is usually whichever your organisation has approved, with the integrations and limits that come with it. Plans differ in what they include. Current links are in the handout.
 
 ## 11. Document work has two different needs
 
-A sourced summary and a designed presentation are different outputs. Ask where a claim came from before spending time polishing its layout. An Audio Overview can contain errors; use it to orient yourself and return to the source.
+A sourced summary and a designed deck are different outputs. Check where a claim came from before you spend time on its layout. An Audio Overview can contain errors, so use it to get oriented and then go back to the source.
 
 ## 12. Check one important claim all the way back
 
-A citation is a path to evidence, not an accuracy seal. Read enough surrounding material to check scope and date. If the source is missing, inaccessible or does not support the claim, leave the claim unresolved.
+A citation tells you where to look; it does not prove the claim. Read enough around the cited passage to check its scope and date. If the source is missing, will not open or does not support the claim, mark the claim unresolved.
 
 ## 13. For media, decide what must stay exact
 
-Distinguish exploratory generation from a deterministic template. Brand colours and text should be checked in both. Do not promise perfect brand compliance simply because an output was rendered from code.
+Generating new looks and filling a fixed template are different jobs. Check brand colours and text in both. Rendering from code keeps a layout fixed; it cannot tell you the brand rules were followed.
 
-## 14. The animation in this series is an output
+## 14. Our loop animation is rendered from code
 
-Play the animation as an example of an actual artifact. The source is the repository’s Remotion project, not a claim about a new vendor session. For narration, text-to-speech tools such as ElevenLabs are another category; review pronunciation and obtain permission for any cloned voice.
+Play it. This is a real artifact from this repository: Remotion turns code into video, so the layout stays exactly as written. It did not come from a new vendor session. Narration is a separate category, with text-to-speech tools such as ElevenLabs: check the pronunciation and get permission before cloning anyone’s voice.
 
 ## 15. An app draft still needs an owner
 
-An app is executable software, even if a nondeveloper created it. Start with a prototype using synthetic data. A working demo does not establish security, correctness or maintainability.
+An app is software that runs, whoever built it. Build the prototype on synthetic data. A working demo tells you nothing about security, correctness or who will maintain it.
 
 ## 16. Automate the repeatable part
 
-This is an illustrative workflow, not a connected automation we have deployed. Tools such as Zapier can connect the steps. A fixed rule may be sufficient for routing; use AI where interpreting the content adds value.
+An illustrative workflow; we have not deployed it. Tools such as Zapier connect the steps. If a fixed rule can route the report, use the rule and save AI for the step that has to read and interpret the content.
 
-## 17. There are three ways into your work
+## 17. Three ways to give it your work
 
-Return to the review report. You can upload a CSV, connect a source or work in the spreadsheet itself. These routes differ in convenience and access. Choose the smallest scope that covers the task.
+Back to the review report: upload the CSV, connect the source it comes from, or work inside the spreadsheet. Each route gives the assistant a different amount of access. Pick the smallest one that covers the task.
 
 ## 18. A connection grants access
 
-MCP is one standard through which tools and data can be exposed to assistants. It does not itself grant permission to use every connected system. The audience only needs the access decision here; protocol details belong later.
+If someone asks about MCP: it is one standard for connecting assistants to tools and data. Connecting through it does not grant permission to everything on the other side. This audience needs the access decision; leave protocol details to talk 02.
 
 ## 19. Check your existing tools first
 
-Examples include Microsoft 365 Copilot and Gemini in Workspace. Availability varies by licence and administrator settings. Verify the actual account before purchasing another subscription. Do not turn this into a price comparison.
+Microsoft 365 Copilot and Gemini in Workspace are the examples. What you get depends on your licence and your administrator’s settings, so check your own account before anyone buys another subscription. Keep prices out of this slide.
 
 ## 20. Budget for attempts and review
 
-Remove the promise that a fixed monthly price unlocks an equivalent toolbox everywhere. Ask the supplier about the applicable plan. Comparing the cost per usable result is more informative than comparing a headline fee.
+The same monthly fee buys different things from different suppliers, so ask what your plan includes. Compare what one usable result costs, review time included; the headline fee tells you less.
 
-## 21. A shop agent could act—and lose money
+## 21. A shop agent took real actions and lost money
 
-Historical example: Anthropic and Andon Labs, first Project Vend report, June 2025. It also invented payment details. Avoid calling it literal bankruptcy or claiming the experiment represents all agent deployments.
+From the first Project Vend report by Anthropic and Andon Labs, June 2025. The agent also invented payment details. Say it lost money, not that it went bankrupt, and present it as one experiment rather than a picture of every agent deployment.
 
 ## 22. Research ideas still need experiments
 
-Historical example: Google Research, February 2025. The system helped generate and refine hypotheses; laboratory work remained part of validation. Do not equate a quickly proposed hypothesis with replacing years of experiments.
+Google Research, February 2025. The system helped researchers generate and refine hypotheses, and laboratory experiments still did the validating. A hypothesis proposed in days does not replace years of experiments.
 
 ## 23. Some tasks are poor starting points
 
-This is a selection rule for a first trial. Choose a familiar draft task with a human checkpoint. A specialised production system may address these risks, but that is a different adoption decision from trying a general assistant.
+This rule is for a first trial: pick a familiar draft task where a person checks the result. A specialised production system can handle harder cases, but buying one is a separate decision from trying a general assistant.
 
 ## 24. Try one familiar task this week
 
-Invite the audience to choose the task they considered at the beginning. Measure total effort, including review. Stop or change tools if repeated corrections erase the time saved. No need to subscribe to several products.
+Bring back the task everyone picked at the start. Count the whole effort, review included. If corrections eat the time you saved, stop or switch tools. One product is enough to start with.
 
-## 25. Keep the guide; skip the memorisation
+## 25. Take these with you
 
-Pause for questions here. The following slides are a short reference appendix, not another teaching chapter. The expanded handout preserves breadth without filling the talk with product tables.
+Take questions here. The next three slides are reference links for later. The handout covers more tools than the talk had room for.
 
 ## 26. Reference · document tools
 
-Product links are examples, not rankings. Consult the linked pages and your administrator for current features, availability and data settings.
+Examples, in no particular order. For current features, availability and data settings, check the vendor page and ask your administrator.
 
 ## 27. Reference · create and connect
 
-The handout adds selection questions. It deliberately does not reproduce a price list that will age separately from the vendor page.
+The handout adds questions to ask when choosing. It leaves prices out on purpose, because they change faster than the handout will.
 
 ## 28. Reference · evidence and access
 
-These sources support the historical stories and access examples. The editorial source log distinguishes facts, examples and recommendations.
+Sources for the two stories and the access examples. The source log in the repository (SOURCES.md) separates facts from examples and recommendations.
