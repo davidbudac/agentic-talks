@@ -750,17 +750,18 @@ table.tbl tr:last-child td{border-bottom:none}
 .v-claim .cmp .ic{width:54px;height:54px;color:var(--positive)}
 .v-claim .bnd .ic{width:110px;height:110px;color:var(--s-muted)}
 .v-editor.calc .wbody{font-size:46px}
-.v-ta{display:grid;grid-template-columns:1fr 1.2fr;gap:44px;align-items:stretch}
-.v-okterm .wbody{font-size:38px;padding:36px 48px 40px}
-.v-art{background:var(--s-card-bg);border:1.5px solid var(--s-card-border);border-radius:20px;padding:28px 36px}
-.v-art .ah{display:flex;align-items:center;gap:14px;font:500 26px var(--font-mono);color:var(--s-muted);margin-bottom:12px}
-.v-art .ah .ic{width:44px;height:44px}
-.v-art table{width:100%;border-collapse:collapse;font:500 30px var(--font-mono);color:var(--s-text)}
-.v-art th{text-align:left;font:600 22px var(--font-mono);letter-spacing:.06em;color:var(--s-muted);padding:12px 12px;border-bottom:3px solid var(--coral)}
-.v-art th b{display:block;color:var(--s-accent);text-transform:uppercase;letter-spacing:.12em;font-size:20px}
-.v-art td{padding:16px 12px;border-bottom:1px solid var(--s-line)}
-.v-art td:nth-child(2){color:var(--coral-ink)}
-.v-art .cap{font:600 22px var(--font-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--s-accent);margin-top:14px}
+.v-ta{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:stretch}
+.v-ta > div{display:flex;flex-direction:column;gap:22px;min-width:0}
+.v-ta .v-win{flex:1}
+.v-okterm .wbody{font-size:24px;line-height:1.6;padding:30px 36px 34px;overflow-wrap:normal}
+.v-okterm .ok{color:var(--positive-on-dark);font-weight:700}
+.v-okterm .okb{color:var(--positive-on-dark);font-weight:700;font-size:40px}
+.v-csvwin .wbody{font-size:27px;line-height:1.6;padding:30px 36px 34px;overflow-wrap:normal}
+.v-csvwin .hl{background:rgba(255,92,53,.18);box-shadow:0 0 0 6px rgba(255,92,53,.18);border-radius:4px}
+.v-csvwin u{text-decoration:none;border-bottom:4px solid var(--coral)}
+.v-bycheck{display:flex;align-items:center;gap:18px;font:600 32px var(--font-mono);color:var(--s-text)}
+.v-bycheck b{color:var(--s-accent)}
+.v-bycheck .ic{width:52px;height:52px;flex:none;color:var(--positive)}
 .v-actors{display:grid;grid-template-columns:1fr 200px 1fr;align-items:center}
 .v-actors .actor{border-radius:28px;padding:44px 48px;display:flex;flex-direction:column;gap:18px;min-height:480px}
 .v-actors .ag{background:var(--ink);color:var(--on-dark)}
@@ -908,7 +909,11 @@ table.tbl tr:last-child td{border-bottom:none}
 .v-rows.closing .v-row{grid-template-columns:130px 580px 1fr;padding:34px 52px}
 .v-rows.closing h3{font-size:60px}
 .v-decks .no .sep{font-size:0}
-.v-decks .lt{font-size:52px}
+.v-decks .lt{font-size:46px}
+.v-decks .dk{grid-template-columns:130px 1fr;min-height:0;padding:26px 36px}
+.v-decks .no{font-size:92px}
+.v-decks .ld{font-size:22px;margin-top:6px}
+.v-decks .wip{display:inline-block;vertical-align:middle;margin-left:14px;font:600 20px/1 var(--font-mono);letter-spacing:.12em;color:var(--s-muted);border:2px solid var(--s-line-strong);border-radius:8px;padding:6px 10px}
 .v-way .rail{max-height:420px}
 
 .v-legend{display:flex;gap:40px;font:600 24px var(--font-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--s-accent);margin-bottom:-14px}
@@ -989,12 +994,20 @@ INV-002,<span class="hq">&quot;Studio &quot;&quot;A&quot;&quot;&quot;</span>,0.5
     Decimal(<span class="s">&#x27;0.01&#x27;</span>), rounding=<mark>ROUND_HALF_UP</mark>
 )</div></div><div class="v-anno"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M16 62 L46 92 L104 28" stroke-width="12"/></svg><span>explicit rounding rule · verify against it</span></div></div></div></section>
 
-<section class="slide light v2" id="slide-12" data-label="Inspect the tests and the file they produce" data-speaker-notes="Prepared result from after/: three invoice tests and two export tests. We generated the CSV with the same code and parsed it during validation. It is neither a benchmark nor a recorded agent run.">
+<section class="slide light v2" id="slide-12" data-label="Inspect the tests and the file they produce" data-speaker-notes="Prepared result from after/, trimmed to the test names. Read the names against the contract: the two export tests cover the round trip and the empty file, and the three invoice tests cover the rate and the rounding. Then open the file itself. Check that the header lists the five columns in order, and work out one total by hand: 0.50 at 21% is 0.605, which rounds half up to 0.61. We generated the CSV with the same code; it is neither a benchmark nor a recorded agent run.">
 <div class="slide-content"><div class="slide-head"><span class="snum">12</span><ol class="ptrack" role="img" aria-label="Problem 2 of 7"><li class="done"></li><li class="on"></li><li class=""></li><li class=""></li><li class=""></li><li class=""></li><li class=""></li></ol><div class="crumb">Check the evidence</div></div>
-<h2>Inspect the tests and the file they produce</h2><div class="v2-body"><div class="v-ta"><div class="v-win term v-okterm"><div class="tbar"><i class="r"></i><i class="y"></i><i class="g"></i><span>prepared reference result</span></div><div class="wbody"><span class="p">$</span> python3 -m unittest -v
+<h2>Inspect the tests and the file they produce</h2><div class="v2-body"><div class="v-ta"><div><div class="v-win term v-okterm"><div class="tbar"><i class="r"></i><i class="y"></i><i class="g"></i><span>after/ · excerpt</span></div><div class="wbody"><span class="p">$</span> python3 -m unittest -v
+test_empty_input_still_has_header <span class="dim">...</span> <span class="ok">ok</span>
+test_roundtrip_special_characters_and_totals <span class="dim">...</span> <span class="ok">ok</span>
+test_round_once_half_up <span class="dim">...</span> <span class="ok">ok</span>
+test_supplied_rate <span class="dim">...</span> <span class="ok">ok</span>
+test_zero_rate <span class="dim">...</span> <span class="ok">ok</span>
 
-<span class="dim">Ran 5 tests</span>
-<span class="okbig">OK</span></div></div><div class="v-art"><div class="ah"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><rect x="14" y="18" width="92" height="84" rx="8"/><path d="M14 42 H106 M14 66 H106 M44 18 V102"/></svg><span>invoices.csv</span></div><table><thead><tr><th>invoice_id</th><th>customer <b>names</b></th><th>gross <b>totals</b></th></tr></thead><tbody><tr><td>INV-001</td><td>North, Ltd</td><td>121.00</td></tr><tr><td>INV-002</td><td>Studio &quot;A&quot;</td><td>0.61</td></tr><tr><td>INV-003</td><td>Line↵break</td><td>100.00</td></tr></tbody></table><p class="cap">columns · names · totals</p></div></div><p class="lead sm">Then open the CSV and compare its columns, names and totals with the contract.</p></div><p class="note">Prepared reference result · five tests</p></div></section>
+<span class="dim">Ran 5 tests</span>  <span class="okb">OK</span></div></div></div><div class="v-tr"><div class="v-win term v-csvwin"><div class="tbar"><i class="r"></i><i class="y"></i><i class="g"></i><span>invoices.csv</span></div><div class="wbody">invoice_id,customer,net,tax_rate,gross
+INV-001,&quot;North, Ltd&quot;,100.00,0.21,121.00
+<span class="hl">INV-002,"Studio ""A""",<u>0.50</u>,<u>0.21</u>,<u>0.61</u></span>
+INV-003,&quot;Line
+break&quot;,100.00,0,100.00</div></div><div class="v-bycheck"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M16 62 L46 92 L104 28" stroke-width="12"/></svg><span>0.50 × 1.21 = 0.605 → <b>0.61</b> (half up)</span></div></div></div><p class="lead sm">Match each test to a contract line. Then open the file and recompute one total.</p></div><p class="note">Prepared reference result · five tests</p></div></section>
 
 <section class="slide light v2" id="slide-13" data-label="Keep acceptance separate from implementation" data-speaker-notes="A second model can help review, but it may share the first one’s blind spots. Where it matters, keep acceptance checks where the implementing agent cannot edit them. In this workflow a person makes the call.">
 <div class="slide-content"><div class="slide-head"><span class="snum">13</span><ol class="ptrack" role="img" aria-label="Problem 2 of 7"><li class="done"></li><li class="on"></li><li class=""></li><li class=""></li><li class=""></li><li class=""></li><li class=""></li></ol><div class="crumb">Check the evidence</div></div>
@@ -1096,9 +1109,9 @@ INV-002,<span class="hq">&quot;Studio &quot;&quot;A&quot;&quot;&quot;</span>,0.5
 <div class="slide-content"><div class="slide-head"><span class="snum">30</span><div class="crumb">Your next step</div></div>
 <h2>Improve one workflow this week</h2><div class="v2-body"><div class="v-rows closing"><div class="v-row"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M20 26 V108 H70" opacity=".45"/><path d="M32 12 H78 L100 34 V100 H32 Z"/><path d="M78 12 V34 H100"/><path d="M46 52 H86 M46 66 H86 M46 80 H72"/></svg><h3>Write the contract</h3><p>What must be true when the task is done?</p></div><div class="v-row"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M16 62 L46 92 L104 28" stroke-width="12"/></svg><h3>Add the evidence</h3><p>Which check can establish it?</p></div><div class="v-row"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M70 12 H22 V108 H70"/><path d="M48 60 H110 M90 40 L110 60 L90 80"/></svg><h3>Add the exit</h3><p>How will you stop and recover when it fails?</p></div></div></div></div></section>
 
-<section class="slide light v2" id="slide-31" data-label="Go deeper where your work needs it" data-speaker-notes="Take questions. The later decks have not been revised: they keep their own dates, some are still in progress, and nobody has rechecked their product claims for this edition.">
+<section class="slide light v2" id="slide-31" data-label="Go deeper where your work needs it" data-speaker-notes="Take questions. We re-checked all six deep dives against their sources in September 2026. The ones marked WIP are still being written, so expect gaps there.">
 <div class="slide-content"><div class="slide-head"><span class="snum">31</span><div class="crumb">Questions</div></div>
-<h2>Go deeper where your work needs it</h2><div class="v2-body"><div class="v-decks"><a class="dk" href="subagents-prompt-caching.html" target="_blank" rel="noopener"><span class="no">04<span class="sep"> · </span></span><span class="lt">Subagents &amp; prompt caching</span><span class="ld">subagents-prompt-caching.html <b aria-hidden="true">↗</b></span></a><a class="dk" href="cost-and-context.html" target="_blank" rel="noopener"><span class="no">05<span class="sep"> · </span></span><span class="lt">Cost &amp; context (WIP)</span><span class="ld">cost-and-context.html <b aria-hidden="true">↗</b></span></a><a class="dk" href="orchestrating-agents.html" target="_blank" rel="noopener"><span class="no">06<span class="sep"> · </span></span><span class="lt">Orchestrating agents (WIP)</span><span class="ld">orchestrating-agents.html <b aria-hidden="true">↗</b></span></a><a class="dk" href="measuring-what-works.html" target="_blank" rel="noopener"><span class="no">07<span class="sep"> · </span></span><span class="lt">Measuring what works (WIP)</span><span class="ld">measuring-what-works.html <b aria-hidden="true">↗</b></span></a></div></div></div></section>
+<h2>Go deeper where your work needs it</h2><div class="v2-body"><div class="v-decks"><a class="dk" href="subagents-prompt-caching.html" target="_blank" rel="noopener"><span class="no">04<span class="sep"> · </span></span><span class="lt">Subagents &amp; prompt caching</span><span class="ld">subagents-prompt-caching.html <b aria-hidden="true">↗</b></span></a><a class="dk" href="cost-and-context.html" target="_blank" rel="noopener"><span class="no">05<span class="sep"> · </span></span><span class="lt">Cost &amp; context <span class=wip>WIP</span></span><span class="ld">cost-and-context.html <b aria-hidden="true">↗</b></span></a><a class="dk" href="orchestrating-agents.html" target="_blank" rel="noopener"><span class="no">06<span class="sep"> · </span></span><span class="lt">Orchestrating agents <span class=wip>WIP</span></span><span class="ld">orchestrating-agents.html <b aria-hidden="true">↗</b></span></a><a class="dk" href="measuring-what-works.html" target="_blank" rel="noopener"><span class="no">07<span class="sep"> · </span></span><span class="lt">Measuring what works <span class=wip>WIP</span></span><span class="ld">measuring-what-works.html <b aria-hidden="true">↗</b></span></a><a class="dk" href="claude-design.html" target="_blank" rel="noopener"><span class="no">08<span class="sep"> · </span></span><span class="lt">Claude Design <span class=wip>WIP</span></span><span class="ld">claude-design.html <b aria-hidden="true">↗</b></span></a><a class="dk" href="ai-graph-engineering.html" target="_blank" rel="noopener"><span class="no">09<span class="sep"> · </span></span><span class="lt">AI graph engineering</span><span class="ld">ai-graph-engineering.html <b aria-hidden="true">↗</b></span></a></div></div></div></section>
 
 <section class="slide light v2 ref" id="slide-32" data-label="Reference · workflows and evaluation" data-speaker-notes="Sources for the design distinctions. The workflow, the retry table and the cost comparison are our teaching designs; none is a measured production result. SOURCES.md and VALIDATION.md record the evidence for this edition.">
 <div class="slide-content"><div class="slide-head"><span class="snum">32</span><div class="crumb">Reference</div></div>

@@ -6,8 +6,8 @@
       "count": 28,
       "words": {
         "min": 19,
-        "max": 52,
-        "average": 37
+        "max": 65,
+        "average": 39
       },
       "issues": [],
       "errors": [],
@@ -18,8 +18,7 @@
       "navigation": "pass",
       "notes": "pass",
       "presenter": "pass",
-      "reducedMotion": "pass",
-      "playPauseButtons": "pass"
+      "reducedMotion": "pass"
     },
     {
       "file": "agentic-ai-v2.html",
@@ -28,7 +27,7 @@
       "words": {
         "min": 26,
         "max": 64,
-        "average": 38
+        "average": 39
       },
       "issues": [],
       "errors": [],
@@ -39,17 +38,16 @@
       "navigation": "pass",
       "notes": "pass",
       "presenter": "pass",
-      "reducedMotion": "pass",
-      "playPauseButtons": "pass"
+      "reducedMotion": "pass"
     },
     {
       "file": "agentic-engineering-v2.html",
       "width": 1280,
       "count": 32,
       "words": {
-        "min": 25,
-        "max": 78,
-        "average": 41
+        "min": 27,
+        "max": 87,
+        "average": 43
       },
       "issues": [],
       "errors": [],
@@ -60,8 +58,7 @@
       "navigation": "pass",
       "notes": "pass",
       "presenter": "pass",
-      "reducedMotion": "pass",
-      "playPauseButtons": "pass"
+      "reducedMotion": "pass"
     },
     {
       "file": "ai-toolbox-v2.html",
@@ -69,8 +66,8 @@
       "count": 28,
       "words": {
         "min": 19,
-        "max": 52,
-        "average": 37
+        "max": 65,
+        "average": 39
       },
       "issues": [],
       "errors": [],
@@ -81,8 +78,7 @@
       "navigation": "pass",
       "notes": "pass",
       "presenter": "pass",
-      "reducedMotion": "pass",
-      "playPauseButtons": "pass"
+      "reducedMotion": "pass"
     },
     {
       "file": "agentic-ai-v2.html",
@@ -91,7 +87,7 @@
       "words": {
         "min": 26,
         "max": 64,
-        "average": 38
+        "average": 39
       },
       "issues": [],
       "errors": [],
@@ -102,17 +98,16 @@
       "navigation": "pass",
       "notes": "pass",
       "presenter": "pass",
-      "reducedMotion": "pass",
-      "playPauseButtons": "pass"
+      "reducedMotion": "pass"
     },
     {
       "file": "agentic-engineering-v2.html",
       "width": 1920,
       "count": 32,
       "words": {
-        "min": 25,
-        "max": 78,
-        "average": 41
+        "min": 27,
+        "max": 87,
+        "average": 43
       },
       "issues": [],
       "errors": [],
@@ -123,8 +118,7 @@
       "navigation": "pass",
       "notes": "pass",
       "presenter": "pass",
-      "reducedMotion": "pass",
-      "playPauseButtons": "pass"
+      "reducedMotion": "pass"
     }
   ],
   "support": [
