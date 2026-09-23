@@ -2,14 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Claude Design — describe it, see it, ship it</title>
+<title>Claude Design · describe, refine, ship</title>
 
-<!-- Fonts: Space Grotesk (display) + IBM Plex Sans (body) + IBM Plex Mono (mono) — Ember design system -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
-
-<link rel="stylesheet" href="ember_design_system/styles.css">
+<!-- Fonts: Space Grotesk, IBM Plex Sans, IBM Plex Mono (Ember), self-hosted from remotion/public/fonts -->
+<link rel="stylesheet" href="ember_design_system/tokens/colors.css">
+<link rel="stylesheet" href="ember_design_system/tokens/typography.css">
+<link rel="stylesheet" href="ember_design_system/tokens/spacing.css">
+<link rel="stylesheet" href="ember_design_system/tokens/effects.css">
 <style>deck-stage:not(:defined){visibility:hidden}</style>
 <style>
 /* ═══════════════════════════════════════════════════════════════════
@@ -169,7 +168,7 @@ table.tbl tr:last-child td{border-bottom:none}
 .gloss .def{font-size:var(--body-size); color:var(--s-text); line-height:1.35}
 .uses{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-5)}
 
-/* ── DIAGRAMS (pure HTML/CSS boxes — no video assets in this deck) ── */
+/* ── DIAGRAMS (pure HTML/CSS boxes, no video assets in this deck) ── */
 .diagram{width:100%; display:flex; justify-content:center; align-items:center; margin-top:8px; min-height:0}
 .diagram svg{width:100%; height:auto; max-height:var(--diag-h)}
 .dg-box{fill:var(--s-card-bg); stroke:var(--s-card-border); stroke-width:1.5}
@@ -262,672 +261,551 @@ table.tbl tr:last-child td{border-bottom:none}
   [data-deck-active] .title-slide>.ts-foot{animation-delay:.3s}
 }
 </style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+@font-face{font-family:"Space Grotesk";font-weight:400;font-style:normal;font-display:swap;src:url("remotion/public/fonts/space-grotesk-400.woff2") format("woff2")}
+@font-face{font-family:"Space Grotesk";font-weight:500;font-style:normal;font-display:swap;src:url("remotion/public/fonts/space-grotesk-500.woff2") format("woff2")}
+@font-face{font-family:"Space Grotesk";font-weight:600;font-style:normal;font-display:swap;src:url("remotion/public/fonts/space-grotesk-600.woff2") format("woff2")}
+@font-face{font-family:"Space Grotesk";font-weight:700;font-style:normal;font-display:swap;src:url("remotion/public/fonts/space-grotesk-700.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-weight:400;font-style:normal;font-display:swap;src:url("remotion/public/fonts/ibm-plex-sans-400.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-weight:500;font-style:normal;font-display:swap;src:url("remotion/public/fonts/ibm-plex-sans-500.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-weight:600;font-style:normal;font-display:swap;src:url("remotion/public/fonts/ibm-plex-sans-600.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-weight:700;font-style:normal;font-display:swap;src:url("remotion/public/fonts/ibm-plex-sans-700.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:400;font-style:normal;font-display:swap;src:url("remotion/public/fonts/ibm-plex-mono-400.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:500;font-style:normal;font-display:swap;src:url("remotion/public/fonts/ibm-plex-mono-500.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:600;font-style:normal;font-display:swap;src:url("remotion/public/fonts/ibm-plex-mono-600.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:700;font-style:normal;font-display:swap;src:url("remotion/public/fonts/ibm-plex-mono-700.woff2") format("woff2")}
+
+/* ═══ V2 VISUAL LAYER ═══════════════════════════════════════════════
+   deck-stage owns viewport scaling; everything here is fixed 1920×1080 px.
+   Reference: visual-mockups-v2.html. Colours are Ember tokens only. */
+.v2{--h2-size:88px;--h3-size:52px;--lead-size:42px;--body-size:34px;--small-size:26px;--code-size:36px;
+  --icbg:var(--s-card-bg);--v-fail:#ff6b4f}
+.v2 .slide-content{padding:60px 96px 96px;justify-content:flex-start;gap:0}
+.v2 .slide-head{align-items:center;gap:40px;margin-bottom:40px;padding-bottom:22px;border-bottom:1px solid var(--s-line);flex:none}
+.v2 .snum{font-size:52px}
+.v2 .crumb{font-size:26px;letter-spacing:.1em;min-width:220px}
+.v2 h2{font-size:var(--h2-size);line-height:1.02;letter-spacing:-.03em;margin:0;max-width:none;flex:none}
+.v2 .v2-body{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:36px;padding-top:32px}
+.v2 .note{flex:none;margin-top:18px;font:500 24px/1.3 var(--font-mono);letter-spacing:.03em;color:var(--s-muted)}
+.v2 .lead{font-size:var(--lead-size);line-height:1.35;max-width:none;color:var(--s-text)}
+.v2 .lead.sm{font-size:36px}
+.v2 .lead b,.v2 .v-row p b{color:var(--s-accent);font-weight:600}
+.v2 a{color:var(--s-accent);text-underline-offset:.18em}
+.v2 a:focus-visible{outline:3px solid var(--s-accent);outline-offset:8px}
+.v2 svg{overflow:visible}
+.v2 svg text{font-family:var(--font-mono)}
+.v2 .ic{fill:none;stroke:currentColor;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;color:var(--s-accent)}
+.v2 .ic .bg{fill:var(--icbg)}
+.v2 .kk{display:block;font:600 24px/1.2 var(--font-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--s-accent)}
+.v2 .chips{display:flex;flex-wrap:wrap;gap:14px}
+.v2 .chips span{display:inline-flex;align-items:center;gap:12px;font:500 28px var(--font-mono);color:var(--s-text);background:var(--s-bg);border:2px solid var(--s-card-border);border-radius:40px;padding:10px 24px}
+.v2 .chips .ic{width:34px;height:34px}
+.v2-stack{display:flex;flex-direction:column;gap:32px;min-width:0}
+.v2 .split{gap:72px;align-items:center}
+
+/* beats: coral edge for problem and closing slides */
+.v2.beat::before,.v2.pbeat::before{content:"";position:absolute;left:0;top:0;bottom:0;width:16px;background:var(--coral);z-index:2}
+.v2.beat .slide-content{padding-left:120px}
+
+/* svg vocabulary */
+.v2 .mk-a{fill:var(--s-accent)} .v2 .mk-c{fill:var(--coral)} .v2 .mk-t{fill:var(--s-text)} .v2 .mk-m{fill:var(--s-muted)}
+.v2 .ln-c{stroke:var(--coral);stroke-width:6;fill:none}
+.v2 .ln-a{stroke:var(--s-accent);stroke-width:4;fill:none}
+.v2 .ln-t{stroke:var(--s-text);stroke-width:5;fill:none}
+.v2 .ln-m{stroke:var(--s-muted);stroke-width:4;fill:none}
+.v2 .ln-dim{stroke:var(--s-line-strong);stroke-width:3;fill:none}
+.v2 .thick{stroke-width:8} .v2 .xthick{stroke-width:12;stroke-linecap:round}
+.v2 .dash{stroke-dasharray:14 12}
+.v2 .ln-stop{stroke:var(--s-text);stroke-width:6;stroke-dasharray:6 8}
+.v2 .ring{fill:none;stroke:var(--s-line-strong);stroke-width:4;stroke-dasharray:4 12;stroke-linecap:round}
+.v2 .ring-c{fill:none;stroke:var(--coral);stroke-width:5}
+.v2 .nd{fill:var(--ink);stroke:var(--s-bg);stroke-width:8}
+.v2 .nd + .ic{color:var(--paper)}
+.v2 .nd.hot{fill:var(--coral)} .v2 .nd.hot + .ic{color:var(--ink)}
+.v2 .nd.soft{fill:var(--s-card-bg);stroke:var(--s-card-border);stroke-width:3} .v2 .nd.soft + .ic{color:var(--s-accent)}
+.v2.dark .nd{fill:var(--ink-2);stroke:var(--coral);stroke-width:4} .v2.dark .nd + .ic{color:var(--coral)}
+.v2.dark .nd.hot{fill:var(--coral)} .v2.dark .nd.hot + .ic{color:var(--ink)}
+.v2 .f-coral{fill:var(--coral)} .v2 .f-ink{fill:var(--ink)} .v2 .f-ink2{fill:var(--s-text)} .v2 .f-bar{fill:var(--s-bar)}
+.v2 .f-mut{fill:var(--s-muted)} .v2 .f-bg{fill:var(--s-bg)} .v2 .f-soft{fill:var(--coral-soft)} .v2 .f-soft2{fill:var(--coral-tint)}
+.v2.dark .f-ink{fill:var(--ink-3);stroke:var(--line-dark);stroke-width:2}
+.v2 .bx-card{fill:var(--s-card-bg);stroke:var(--s-card-border);stroke-width:2}
+.v2 .bx-mid{fill:var(--s-box-mid);stroke:var(--s-line-strong);stroke-width:2}
+.v2 .bx-dash{fill:none;stroke:var(--s-line-strong);stroke-width:2;stroke-dasharray:8 7}
+.v2 .bx-dash2{fill:none;stroke:var(--s-muted);stroke-width:3;stroke-dasharray:10 9}
+.v2 .bx-hot{stroke:var(--coral);stroke-width:3}
+.v2 .bx-hot.soft{fill:var(--s-callout-bg)}
+.v2 .hl-box{fill:rgba(255,92,53,.18);stroke:var(--coral);stroke-width:2.5}
+.v2 .ch-card rect{fill:var(--s-card-bg);stroke:var(--s-card-border);stroke-width:2}
+.v2 .ok-dot{fill:var(--positive-on-dark)} .v2.light .ok-dot{fill:var(--positive)}
+.v2 .ok-tick{fill:none;stroke:var(--ink);stroke-width:6;stroke-linecap:round;stroke-linejoin:round} .v2 .ok-tick.sm{stroke-width:4} .v2 .ok-tick.lg{stroke-width:11}
+.v2 .gap{fill:none;stroke:var(--coral);stroke-width:3;stroke-dasharray:8 6}
+.v2 .lost{fill:none;stroke:var(--danger);stroke-width:2;stroke-dasharray:6 5;opacity:.75}
+.v2 .xmark path{stroke:var(--coral);stroke-width:5;stroke-linecap:round}
+.v2 .x-inv{stroke:var(--ink);stroke-width:9;stroke-linecap:round}
+.v2 .cp path{fill:var(--s-bg);stroke:var(--s-text);stroke-width:5}
+.v2 .t-cap{font:500 22px var(--font-mono);letter-spacing:.12em;fill:var(--s-faint);text-transform:uppercase}
+.v2 .t-acc{font:600 28px var(--font-mono);fill:var(--s-accent);letter-spacing:.03em}
+.v2 .t-mut{font:500 28px var(--font-mono);fill:var(--s-muted)}
+.v2 .t-faint{font:500 24px var(--font-mono);fill:var(--s-faint)}
+.v2 .t-strong{font:600 32px var(--font-body);fill:var(--s-text)}
+.v2 .t-strong.mono,.v2 text.mono{font-family:var(--font-mono);font-size:28px}
+.v2 .sm{font-size:24px}
+.v2 .t-on{font:700 26px var(--font-mono);fill:var(--ink)} .v2 .t-on.big{font-size:32px}
+.v2 .t-paper{font:600 30px var(--font-mono);fill:var(--paper);letter-spacing:.04em}
+.v2 .t-paper.lg,.v2 .t-strong.lg{font:700 56px var(--font-display);letter-spacing:-.02em}
+.v2 .t-onmut{font:500 28px var(--font-mono);fill:var(--on-dark-muted)}
+.v2 .t-danger{font:600 28px var(--font-mono);fill:var(--danger)}
+.v2 .t-num{font:700 84px var(--font-display);fill:var(--s-text);letter-spacing:-.03em}
+.v2 .t-good{font:700 44px var(--font-display);fill:var(--coral-ink)}
+.v2 .bx-good{fill:var(--coral-soft);stroke:var(--coral);stroke-width:3}
+.v2 .bx-q{stroke:var(--s-line-strong);stroke-width:2}
+
+/* ── tiles ── */
+
+/* ── stations rail ── */
+.v-stn .rail{display:block;width:100%;height:auto}
+.rail .rl-base{stroke:var(--s-line-strong);stroke-width:6;stroke-dasharray:4 14;stroke-linecap:round}
+.rail .rl-on{stroke:var(--coral);stroke-width:12;stroke-linecap:round}
+.rail .rl-c{fill:var(--ink);stroke:var(--s-bg);stroke-width:10}
+.v2.dark .rail .rl-c{fill:var(--ink-2);stroke:var(--coral);stroke-width:5}
+.rail .rl-c.hot,.v2.dark .rail .rl-c.hot{fill:var(--coral);stroke:var(--s-bg);stroke-width:10}
+.rail .ic{color:var(--paper)}
+.v2.dark .rail .ic{color:var(--coral)}
+.rail .ic.hot,.v2.dark .rail .ic.hot{color:var(--ink)}
+.rail .ic.ok,.v2.dark .rail .ic.ok{color:var(--positive-on-dark)}
+.rail .rl-num{font:700 64px var(--font-display);fill:var(--paper)}
+.v2.dark .rail .rl-num{fill:var(--coral)}
+.rail .rl-n{font:500 30px var(--font-mono);fill:var(--s-accent);letter-spacing:.08em}
+.rail .rl-back{fill:none;stroke:var(--coral);stroke-width:5;stroke-dasharray:14 10}
+.rail .rl-bg{fill:var(--s-bg);stroke:var(--coral);stroke-width:2}
+.rail .rl-bl{font:600 26px var(--font-mono);fill:var(--s-accent);letter-spacing:.06em}
+.v-stn .stops{display:grid;text-align:center;margin-top:24px;gap:28px}
+.v-stn.n2 .stops{grid-template-columns:repeat(2,1fr)} .v-stn.n3 .stops{grid-template-columns:repeat(3,1fr)}
+.v-stn.n4 .stops{grid-template-columns:repeat(4,1fr)} .v-stn.n5 .stops{grid-template-columns:repeat(5,1fr)}
+.v-stn .stops h3{font:700 72px/1.02 var(--font-display);letter-spacing:-.025em;color:var(--s-text)}
+.v-stn.n4 .stops h3{font-size:64px}
+.v-stn.n5 .stops h3{font-size:52px}
+.v-stn .stops p{font-size:38px;line-height:1.3;color:var(--s-muted);margin-top:14px}
+.v-stn.n4 .stops p{font-size:36px}
+.v-stn.n5 .stops p{font-size:32px}
+
+/* ── wayfinding ── */
+.mini{list-style:none;display:flex;align-items:center;font:500 24px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--s-faint);margin:0 auto}
+.mini li{display:flex;align-items:center;gap:14px}
+.mini li+li::before{content:"";width:56px;height:3px;background:var(--s-line-strong);margin:0 18px;border-radius:2px}
+.mini li i{width:22px;height:22px;border-radius:50%;border:3px solid var(--s-line-strong);display:block;background:var(--s-bg)}
+.mini li.done{color:var(--s-muted)} .mini li.done i{border-color:var(--coral);background:var(--s-callout-bg)}
+.mini li.on{color:var(--s-accent);font-weight:600}
+.mini li.on i{background:var(--coral);border-color:var(--coral);box-shadow:0 0 0 7px rgba(255,92,53,.18)}
+
+/* ── windows: terminal (evidence) and paper (briefs, notes) ── */
+.v-win{border-radius:20px;overflow:hidden;min-width:0;flex:none}
+.v-win.term{background:var(--term-bg);box-shadow:var(--shadow-terminal);border:1px solid #2a241b;color:var(--code-text)}
+.v2.dark .v-win.term{border-color:var(--line-dark)}
+.v-win .tbar{background:var(--term-bar);height:62px;display:flex;align-items:center;gap:12px;padding:0 26px}
+.v-win .tbar i{width:18px;height:18px;border-radius:50%;display:block}
+.v-win .tbar .r{background:var(--term-dot-red)} .v-win .tbar .y{background:var(--term-dot-yellow)} .v-win .tbar .g{background:var(--term-dot-green)}
+.v-win .tbar span{font:500 22px var(--font-mono);color:var(--on-dark-faint);margin-left:14px;letter-spacing:.06em}
+.v-win .wbody{padding:40px 56px 48px;font:500 38px/1.5 var(--font-mono);white-space:pre-wrap;overflow-wrap:anywhere}
+.v-win.term .k{color:var(--code-keyword)} .v-win.term .s{color:var(--code-string)} .v-win.term .c{color:var(--code-comment)} .v-win.term .n{color:var(--code-number)}
+.v-win.term .p{color:var(--coral)} .v-win.term .dim{color:var(--on-dark-muted)}
+.v-win.term .fail{display:block;margin-top:10px;font:700 70px/1.1 var(--font-mono);color:var(--v-fail);letter-spacing:-.01em}
+.v-win.term .okbig{display:block;margin-top:10px;font:700 110px/1 var(--font-mono);color:var(--positive-on-dark)}
+.v-win.paper{background:var(--paper);border:2px solid var(--line-light);box-shadow:0 18px 50px rgba(0,0,0,.10);color:var(--text-strong)}
+.v2.light .v-win.paper{background:#fbf8f2}
+.v2.dark .v-win.paper{border-color:var(--line-dark)}
+.v-win.paper .tbar{background:var(--paper-3)} .v-win.paper .tbar i{background:var(--line-light)}
+.v-win.paper .tbar span{color:var(--text-muted)}
+
+/* ── mock pair 1: failing test ── */
+
+/* ── mock pair 3: checkpoint 1 ── */
+
+/* ── mock pair 4: model ⇄ harness ── */
+
+/* ── mock pair 6: claim chain ── */
+
+/* ── mock pair 7: problem beat ── */
+.v2.pbeat .slide-content{padding:60px 96px 96px 120px}
+.pb{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 720px;column-gap:96px}
+.pb-L{display:flex;flex-direction:column;justify-content:flex-end;min-width:0}
+.pb-mega{font:700 360px/.8 var(--font-display);letter-spacing:-.05em;color:var(--coral)}
+.pb-kick{display:block;font:600 30px var(--font-mono);letter-spacing:.2em;text-transform:uppercase;color:var(--coral);margin:0 0 22px 10px;line-height:1}
+.v2.pbeat h2{font-size:84px;line-height:1.02;margin-top:40px}
+.pb-lead{font-size:38px;line-height:1.38;color:var(--s-muted);margin-top:30px;max-width:30ch}
+.pb-lead .kk{margin-bottom:10px}
+.pb-R{display:flex;flex-direction:column;justify-content:center;gap:28px;min-width:0}
+.pb-R .keep{font:700 44px/1.1 var(--font-display);letter-spacing:-.02em;color:var(--on-dark)}
+.pb-R .keep span{color:var(--coral)}
+.pb-R .keep small{display:block;font:400 28px/1.35 var(--font-body);letter-spacing:0;color:var(--on-dark-muted);margin-top:12px}
+
+/* ── mock pair 8: caching vs compaction ── */
+
+/* ── mock pair 9: accepted work chart ── */
+
+/* ── panels ── */
+
+/* ── rows ── */
+.v-rows{display:flex;flex-direction:column;gap:22px}
+.v-row{display:grid;grid-template-columns:120px 1fr;grid-template-rows:auto auto;column-gap:36px;align-items:center;background:var(--s-card-bg);border:1.5px solid var(--s-card-border);border-left:10px solid var(--coral);border-radius:6px 22px 22px 6px;padding:30px 40px}
+.v-row .ic{grid-row:1/3;width:110px;height:110px}
+.v-row h3{font:700 54px/1.05 var(--font-display);letter-spacing:-.025em;color:var(--s-text)}
+.v-row p{font-size:34px;line-height:1.35;color:var(--s-muted);margin-top:8px}
+.v-row p .kk{display:inline;font-size:22px;margin-right:10px}
+.v-rows.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px}
+.v-rows.grid2 .v-row{padding:40px 44px;min-height:250px}
+.v-rows.compact{gap:14px}
+.v-rows.compact .v-row{padding:18px 28px;grid-template-columns:72px 1fr;column-gap:24px;background:var(--ink-2)}
+.v-rows.compact .ic{width:64px;height:64px}
+.v-rows.compact h3{font-size:40px} .v-rows.compact p{font-size:30px;margin-top:4px}
+.v-rows.checklist .v-row{grid-template-columns:120px 300px 1fr;grid-template-rows:auto;padding:40px 48px}
+.v-rows.checklist .v-row .ic{grid-row:auto}
+.v-rows.checklist h3{font-size:64px} .v-rows.checklist p{font-size:40px;color:var(--s-text);margin:0}
+.v-rows.keepers .v-row,.v-rows.closing .v-row{background:var(--ink-2)}
+.v-rows.keepers{gap:26px} .v-rows.keepers .v-row{padding:36px 40px}
+.v-rows.closing{gap:30px}
+.v-rows.closing .v-row{grid-template-columns:130px 520px 1fr;grid-template-rows:auto;padding:44px 52px}
+.v-rows.closing .v-row .ic{grid-row:auto;width:120px;height:120px}
+.v-rows.closing h3{font-size:64px} .v-rows.closing p{font-size:42px;color:var(--on-dark);margin:0}
+.v-rows.gates{gap:28px} .v-rows.gates .v-row{padding:36px 40px}
+
+/* ── specific slides ── */
+
+
+.v2 .kcard{padding:44px 52px}
+.v2 .kcard .big{font-size:64px;line-height:1.05;letter-spacing:-.025em}
+.v2 .kcard p{font-size:36px;line-height:1.38;margin-top:20px}
+.v2 .kcard .badges{display:flex;gap:18px;margin-top:28px}
+.v2 .kcard .badges span{display:flex;align-items:center;gap:12px;font:500 26px var(--font-mono);color:var(--s-text);text-transform:uppercase;letter-spacing:.06em;border:2px solid var(--s-card-border);border-radius:14px;padding:12px 18px}
+.v2 .kcard .badges .ic{width:44px;height:44px}
+.v-mx .v-row{padding:34px 36px}
+.v-seq .steps,.v-hand .steps,.v-rec .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:20px}
+.v-seq .steps h3,.v-hand .steps h3,.v-rec .steps h3{font:700 60px/1 var(--font-display);letter-spacing:-.025em;color:var(--s-text);margin:6px 0 10px}
+.v-seq .steps p,.v-hand .steps p,.v-rec .steps p{font-size:36px;line-height:1.3;color:var(--s-muted)}
+.v-hand svg,.v-rec svg{display:block;width:100%;height:auto}
+.v-hand .steps{text-align:left}
+.v2 .ar{width:80px;height:40px}
+.v2 .ar path{fill:none;stroke:var(--coral);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+.v2 .ic.inv{color:var(--coral)}
+.v-refs{display:grid;grid-template-columns:1fr;gap:0}
+.v-refs a{display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;column-gap:30px;align-items:center;padding:26px 8px;border-bottom:2px solid var(--s-line);text-decoration:none;color:var(--s-text)}
+.v-refs a:first-child{border-top:2px solid var(--s-line)}
+.v-refs a:hover .lt{color:var(--s-accent)}
+.v-refs .lt{font:700 50px/1.1 var(--font-display);letter-spacing:-.02em}
+.v-refs .ld{font:500 26px var(--font-mono);color:var(--s-muted);margin-top:8px;grid-column:1}
+.v-refs .la{grid-row:1/3;grid-column:2;font:700 52px var(--font-display);color:var(--s-accent)}
+.v-refs.n5 a{padding:18px 8px} .v-refs.n5 .lt{font-size:46px}
+
+/* ── video ── */
+
+
+/* ── pass 2 sizing ── */
+.v-refs a{padding:34px 8px}
+.v-refs .lt{font-size:56px}
+.v-refs.n5 a{padding:20px 8px} .v-refs.n5 .lt{font-size:50px}
+.v-rows.checklist{gap:28px} .v-rows.checklist .v-row{padding:46px 48px}
+.pb-R .keep{font-size:40px}
+.v-rows.closing .v-row{grid-template-columns:130px 580px 1fr;padding:34px 52px}
+.v-rows.closing h3{font-size:60px}
+
+/* reference slides: calmer title */
+.v2.ref h2{font-size:80px}
+
+.v2.title-slide .ts-hero h1{font-size:184px;line-height:.95}
+.v2.title-slide .ts-sub{font-size:44px;max-width:45ch;line-height:1.35}
+@media (prefers-reduced-motion:reduce){
+ .v2 *,.v2 *::before,.v2 *::after{animation:none!important;transition:none!important}
+}
+/* Canvas scaling already handles short screens; hide only optional UI. */
+@media (max-height:700px){.pui-controls{bottom:8px}}
+@media (max-height:600px){.pui-controls button{padding:7px 10px}}
+@media (max-height:500px){.pui-notes{max-height:50vh}}
+
+/* ═══ DECK 08 LAYER (on top of the v2 visual layer) ═══ */
+.v2 .cd-h{font:700 40px var(--font-display);fill:var(--s-text);letter-spacing:-.02em}
+.v2 .cd-h.xl{font-size:56px} .v2 .cd-h.on{fill:var(--ink)}
+.v2 .cd-num{font:700 52px var(--font-display);fill:var(--paper)} .v2 .cd-num.on{fill:var(--ink)} .v2 .cd-num.soft{fill:var(--s-accent)}
+.v2 .sel{fill:none;stroke:var(--coral);stroke-width:3;stroke-dasharray:8 6}
+.v2 .ln-slide{stroke:var(--on-dark-faint);stroke-width:4;stroke-linecap:round}
+.v2 .ic.inv-ink{color:var(--ink)} .v2 .ic.inv{color:var(--coral)}
+.v2 .t-on.big{font-size:30px}
+.v2 svg.cd-full{display:block;width:100%;height:auto}
+.slide-head .mini{font-size:22px}
+.slide-head .mini li+li::before{width:40px;margin:0 14px}
+/* part dividers */
+.cd-part .pb-R{justify-content:flex-end;padding-bottom:12px}
+.cd-toc{list-style:none;display:flex;flex-direction:column;border-top:2px solid var(--line-dark)}
+.cd-toc li{display:grid;grid-template-columns:80px 1fr;align-items:baseline;padding:16px 0;border-bottom:2px solid var(--line-dark);font:600 38px/1.15 var(--font-display);letter-spacing:-.015em;color:var(--on-dark)}
+.cd-toc li span{font:500 26px var(--font-mono);color:var(--coral);letter-spacing:.06em}
+.cd-part .pb-R .kk{margin-bottom:14px}
+/* slide 4 facts */
+.cd-facts{display:grid;grid-template-columns:repeat(4,1fr);border-top:2px solid var(--s-line);padding-top:26px}
+.cd-facts div{padding-right:24px}
+.cd-facts b{display:block;font:700 38px/1.15 var(--font-display);letter-spacing:-.02em;color:var(--s-text);margin-top:8px}
+.v2 .v-stn.n3 .stops p{font-size:36px}
+/* slide 5 */
+.cd-ui svg{display:block;width:100%;height:auto}
+.cd-legend{display:flex;gap:40px;justify-content:center;font:500 28px var(--font-mono);color:var(--s-text)}
+.cd-legend span{display:flex;align-items:center;gap:14px;white-space:nowrap}
+.cd-legend b{display:inline-flex;width:44px;height:44px;border-radius:50%;background:var(--coral);color:var(--ink);align-items:center;justify-content:center;font:700 24px var(--font-mono)}
+/* slide 6 */
+.cd-six{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.cd-six>div{background:var(--s-card-bg);border:1.5px solid var(--s-card-border);border-top:8px solid var(--coral);border-radius:6px 6px 20px 20px;padding:28px 34px 32px;display:grid;grid-template-columns:96px 1fr;column-gap:26px;align-items:center}
+.cd-six .ic{width:96px;height:96px;grid-row:1/3}
+.cd-six h3{font:700 44px/1.05 var(--font-display);letter-spacing:-.025em;color:var(--s-text)}
+.cd-six p{font-size:30px;line-height:1.3;color:var(--s-muted);margin-top:8px}
+.cd-six .hot{background:var(--s-callout-bg);border-color:var(--coral)}
+/* slide 9 */
+.cd-cells{display:grid;grid-template-columns:repeat(2,1fr);gap:24px 56px;margin-top:6px}
+.cd-cells div{border-top:2px solid var(--s-line);padding-top:18px}
+.cd-cells p{font-size:36px;line-height:1.3;color:var(--s-text);margin-top:8px}
+/* slide 11 */
+.cd-loop{display:grid;grid-template-columns:560px 1fr;gap:80px;align-items:center}
+.cd-loop>svg{width:560px;height:auto}
+.cd-loop .v2-stack svg{width:100%;height:auto}
+.cd-loop .lead .kk{margin-bottom:8px}
+/* slide 12 */
+.cd-bpair{display:grid;grid-template-columns:1fr 1.55fr;gap:40px;align-items:stretch}
+.cd-brief .wbody{white-space:normal;padding:34px 44px 38px;display:flex;flex-direction:column;gap:26px;height:calc(100% - 62px)}
+.cd-bq{font:500 34px/1.5 var(--font-mono);color:var(--text-strong)}
+.cd-brief.dim .cd-bq{color:var(--text-muted)}
+.cd-res{margin-top:auto;display:flex;align-items:center;gap:16px;font:600 28px var(--font-mono);letter-spacing:.04em;text-transform:uppercase}
+.cd-res .ic{width:44px;height:44px;flex:none}
+.cd-res.bad{color:var(--danger)} .cd-res.bad .ic{color:var(--danger)}
+.cd-res.good{color:var(--positive-ink)} .cd-res.good .ic{color:var(--positive)}
+.v2 u{text-decoration:none}
+.v2 u.w{color:var(--coral-ink);font-weight:600;border-bottom:5px solid var(--coral)}
+.v2 u.s{background:var(--coral-tint);box-shadow:0 0 0 4px var(--coral-tint);border-radius:4px}
+.v2 u.c{border-bottom:4px dotted var(--coral-ink)}
+.cd-key{display:flex;gap:48px;justify-content:center;font:500 30px var(--font-mono);color:var(--on-dark)}
+.cd-key u.w,.cd-key u.c{color:var(--coral)} .cd-key u.s{background:var(--coral-tint);color:var(--ink);box-shadow:0 0 0 4px var(--coral-tint)}
+/* slide 13 */
+.cd-chan{display:flex;flex-direction:column;gap:16px}
+.cd-chan .row{display:grid;grid-template-columns:110px 1fr 380px;column-gap:40px;align-items:center;background:var(--s-card-bg);border:1.5px solid var(--s-card-border);border-left:10px solid var(--coral);border-radius:6px 22px 22px 6px;padding:12px 32px 12px 36px}
+.cd-chan .ic{width:100px;height:100px}
+.cd-chan h3{font:700 54px/1.05 var(--font-display);letter-spacing:-.025em;color:var(--s-text)}
+.cd-chan p{font-size:32px;line-height:1.3;color:var(--s-muted);margin-top:6px}
+.cd-chan .sc{display:flex;flex-direction:column;align-items:center;gap:6px}
+.cd-chan .sc svg{width:230px;height:auto}
+.cd-chan .sc .kk{font-size:22px}
+/* slide 14 */
+.cd-fb{display:grid;grid-template-columns:1fr 1.75fr;gap:40px;align-items:stretch}
+.cd-vague{border:3px dashed var(--line-dark);border-radius:24px;padding:40px 44px;display:flex;flex-direction:column;gap:18px}
+.cd-vague p{font:700 60px/1.08 var(--font-display);letter-spacing:-.025em;color:var(--on-dark-muted);text-decoration:line-through;text-decoration-color:var(--coral);text-decoration-thickness:5px}
+.cd-vague .ic{width:88px;height:88px;color:var(--coral);margin-top:auto}
+.cd-vague small{font:500 28px/1.3 var(--font-mono);color:var(--on-dark-muted)}
+.cd-spec .wbody{white-space:normal;padding:16px 40px 20px}
+.cd-spec .ln{display:flex;justify-content:space-between;align-items:center;gap:24px;padding:18px 0;font:500 32px/1.3 var(--font-mono);color:var(--text-strong)}
+.cd-spec .ln+.ln{border-top:1px solid var(--line-light-2)}
+.cd-spec .ln b{flex:none;font:600 22px var(--font-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--coral-ink);border:2px solid var(--coral);border-radius:20px;padding:4px 14px}
+/* slide 15 */
+.cd-chips{justify-content:center}
+.cd-chips span{font-size:30px}
+/* slide 16 */
+.cd-briefs{display:grid;grid-template-columns:1fr 1fr;gap:30px}
+.cd-briefs .wbody{white-space:normal;padding:26px 38px 30px}
+.cd-briefs p{font:500 30px/1.45 var(--font-mono);color:var(--text-strong)}
+.cd-briefs .tbar{height:52px}
+.cd-briefs .tbar span{font-size:22px;text-transform:uppercase;letter-spacing:.12em;color:var(--coral-ink);font-weight:600}
+/* slide 17 */
+.demo-badge{align-self:flex-start;font-size:24px;padding:8px 22px 8px 18px;margin:-10px 0 18px}
+.demo-badge::before{content:"";width:14px;height:14px;border-radius:50%;background:var(--coral)}
+@media (prefers-reduced-motion:no-preference){[data-deck-active] .demo-badge::before{animation:cd-pulse 1.6s ease-in-out infinite}}
+@keyframes cd-pulse{50%{opacity:.25}}
+/* slide 18 */
+.cd-story svg{display:block;width:100%;height:auto}
+.cd-story .stops{display:grid;grid-template-columns:repeat(5,1fr);gap:37px;margin-top:22px}
+.cd-story h3{font:700 44px/1.05 var(--font-display);letter-spacing:-.025em;color:var(--s-text);margin-top:4px}
+.cd-story p{font-size:30px;line-height:1.3;color:var(--s-muted);margin-top:8px}
+/* slide 19 */
+.cd-pits.v-rows.grid2 .v-row{min-height:0;padding:28px 36px;grid-template-columns:96px 1fr;column-gap:28px}
+.cd-pits .v-row .ic{width:88px;height:88px}
+.cd-pits h3{font-size:46px} .cd-pits p{font-size:32px}
+/* slide 23 */
+.cd-rt .steps{margin-top:10px}
+.cd-rt .steps h3{font-size:52px;color:var(--s-accent)}
+.cd-rt .steps p{font-size:32px}
+/* slide 24 */
+.v-rows.closing .v-row{grid-template-columns:130px 360px 1fr}
+/* sources */
+.v2.ref .v-refs.n5 a{padding:14px 8px} .v2.ref .v-refs.n5 .lt{font-size:44px} .v2.ref .v-refs .ld{margin-top:4px}
+/* loop orbit keeps its original motion */
+.v2 .cd-orbit{stroke:var(--coral);opacity:.5}
+
+</style>
 </head>
 <body>
-
 <!--
-  ============================================================
-  Claude Design — a ~30-minute product deep dive, deck 08 in
-  the series. The full tour of Anthropic Labs' visual-creation
-  tool, teased in two slides of The AI Toolbox (deck 01).
-  No coding or design background assumed — any paid Claude
-  plan. Three parts:
-  01 what it is (the map: interface, starting points, the
-  design-system feature, plans & usage), 02 how to work it
-  (the craft: the loop, briefing, the three refinement
-  channels, example briefs, a live demo, pitfalls),
-  03 from canvas to shipped (sharing, exports, the Claude
-  Code handoff round trip).
-  Facts verified July 2026 against the Anthropic announcement,
-  the product page and the Claude Help Center — see the
-  closing Sources slide.
-  Status: WIP / DRAFT — flagged on the title slide.
-  Runs on the Ember deck-stage component: ←/→, Space, Home/End,
-  number keys; R resets; speaker notes live on each section.
-  ============================================================
+  Claude Design: a ~30-minute product deep dive, deck 08 in the series.
+  The full tour of Anthropic Labs' visual-creation tool, teased in The AI Toolbox (deck 01).
+  No coding or design background assumed; any paid Claude plan.
+  Parts: 01 what it is (slides 3-9), 02 how to work it (10-19), 03 canvas to shipped (20-23).
+  Facts re-verified 23 September 2026 against the Anthropic announcement, the product page
+  and the Claude Help Center (see the Sources slide). Status: WIP / draft; slide 18 still
+  uses drawn frames in place of screenshots from a rehearsal run.
+  Visual layer follows the v2 decks (scripts/build_first_three_v2.py, visual-mockups-v2.html).
+  Runs on the Ember deck-stage component: arrows, Space, Home/End; N notes, P presenter, F fullscreen.
 -->
+<deck-stage width="1920" height="1080" no-rail>
 
-<deck-stage width="1920" height="1080">
+<section class="slide dark title-slide v2" id="slide-1" data-label="Claude Design" data-speaker-notes="Open with the promise: by the end of this half hour, everyone in the room can open Claude Design and get something on-brand out of it. You need no design background, no code and any paid Claude plan. If people saw The AI Toolbox, this is the full tour behind its two teaser slides. The deck is still a draft, so ask for pushback, especially on the example briefs.">
+<div class="ts-top"><span class="k">08 · Product deep dive · ~30 min</span><span class="meta">September 2026</span></div>
+<div class="ts-hero"><div class="wip-badge">WIP · draft</div><h1>Claude Design<span class="dot">.</span></h1><p class="ts-sub">Describe a design, refine it on a canvas and ship it <b>in your own brand</b>.</p></div>
+<div class="ts-foot"><div class="ts-author"><a href="https://davidbudac.cz" target="_blank" rel="noopener">David&nbsp;Budáč</a></div><div class="ts-loopline"><span class="w">describe</span> <span class="a">→</span> <span class="w">refine</span> <span class="a">→</span> <span class="w">ship</span></div></div></section>
 
-  <!-- TITLE -->
-  <section class="slide dark title-slide" data-label="Title"
-    data-speaker-notes="Open with the promise: by the end of this half hour everyone in the room can open Claude Design and get something on-brand out of it. Name the audience explicitly — no design background, no code, any paid Claude plan. If they saw The AI Toolbox, this is the full tour behind those two teaser slides. Flag the WIP badge and ask for pushback on the examples especially.">
-    <div class="ts-top"><span class="k">Deep dive · product tour · ~30 min</span><span class="meta">Internal talk · July 2026</span></div>
-    <div class="ts-hero">
-      <div class="wip-badge">WIP — draft</div>
-      <h1>Claude Design<span class="dot">.</span></h1>
-      <p class="ts-sub">Describe it, <b>see it</b>, ship it — and how to make everything it makes look like <b>your brand</b>, not like AI.</p>
-    </div>
-    <div class="ts-foot">
-      <div class="ts-author"><a href="https://davidbudac.cz" target="_blank" rel="noopener">David&nbsp;Budáč</a></div>
-      <div class="ts-loopline"><span class="w">describe</span> <span class="a">→</span> <span class="w">refine</span> <span class="a">→</span> <span class="w">ship</span></div>
-    </div>
-  </section>
+<section class="slide light v2" id="slide-2" data-label="Three parts in half an hour" data-speaker-notes="Keep this to fifteen seconds. Part one is the map: what it is and where the brand feature fits. Part two is the craft: how to drive it, with briefs you can steal and a live build. Part three covers sharing, exports and the handoff to Claude Code. Tell the room that part two is why this talk exists. Most people have seen a demo; few have seen a method. Everything product-related was checked in September 2026, and it&#x27;s a beta, so details move.">
+<div class="slide-content"><div class="slide-head reveal"><span class="snum">02</span><div class="crumb">Agenda</div></div>
+<h2 class="reveal">Three parts in half an hour</h2><div class="v2-body reveal"><div class="v-stn n3"><svg class="rail" viewBox="0 0 1728 304" role="img" aria-label="Three parts: what it is, how to work it, from canvas to shipped"><line class="rl-base" x1="4" y1="180" x2="1724" y2="180"/><line class="rl-on" x1="288" y1="180" x2="1440" y2="180"/><text class="rl-n" x="288" y="40" text-anchor="middle">01</text><text class="rl-n" x="864" y="40" text-anchor="middle">02</text><text class="rl-n" x="1440" y="40" text-anchor="middle">03</text><circle class="rl-c" cx="288" cy="180" r="116"/><svg x="231.16" y="123.16" width="113.68" height="113.68" viewBox="0 0 120 120" class="ic "><rect x="8" y="16" width="104" height="88" rx="8"/><path d="M8 38 H112"/><path d="M20 27 H22 M30 27 H32" stroke-width="7"/><path d="M26 60 H72 M26 78 H58"/></svg><circle class="rl-c hot" cx="864" cy="180" r="116"/><svg x="807.16" y="123.16" width="113.68" height="113.68" viewBox="0 0 120 120" class="ic hot"><path d="M18 102 L26 74 L84 16 L104 36 L46 94 Z"/><path d="M72 28 L92 48"/></svg><circle class="rl-c" cx="1440" cy="180" r="116"/><svg x="1383.16" y="123.16" width="113.68" height="113.68" viewBox="0 0 120 120" class="ic "><path d="M70 12 H22 V108 H70"/><path d="M48 60 H110 M90 40 L110 60 L90 80"/></svg></svg><div class="stops"><div><h3>What it is</h3><p>The canvas, what you feed it, your brand.</p></div><div><h3>How to work it</h3><p>The loop, the brief, a live build.</p></div><div><h3>Canvas to shipped</h3><p>Share, export, hand off to Claude Code.</p></div></div></div></div><p class="note reveal">Beta product. Facts checked September 2026; sources on the last slide.</p></div></section>
 
-  <!-- AGENDA -->
-  <section class="slide light" data-label="Agenda"
-    data-speaker-notes="Fifteen seconds: three parts. The map — what it is and where the brand feature fits. The craft — how to actually drive it, with example briefs you can steal and a live build. Then shipping — sharing, exports, and the handoff to Claude Code. Say that part 02 is the reason this deck exists: everyone has seen a demo, few have seen a method. Point at the July 2026 date stamp — it's a beta, details move.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">2</span><div class="crumb"><b>Agenda</b></div></div>
-      <h2 class="reveal">Three parts, <span class="o">half an hour</span></h2>
-      <table class="tbl reveal">
-        <thead><tr><th>Part</th><th>Topic</th><th>Note</th></tr></thead>
-        <tbody>
-          <tr><td><b>01</b></td><td>What it is</td><td>the map — interface, inputs, the brand feature</td></tr>
-          <tr><td><b>02</b></td><td>How to work it</td><td><b>the craft</b> · example briefs · live demo</td></tr>
-          <tr><td><b>03</b></td><td>From canvas to shipped</td><td>sharing, exports, Claude Code handoff</td></tr>
-        </tbody>
-      </table>
-      <p class="note reveal">Claude Design is a <b>beta</b> — all product claims are date-stamped <b>July 2026</b> and sourced on the closing slide.</p>
-    </div>
-  </section>
+<section class="slide dark v2 pbeat cd-part" id="slide-3" data-label="Part 01 · What it is" data-speaker-notes="Set up the part in one breath. Before the craft, the map: what it is, what it makes, what you can feed it and what it costs. Then the one feature that sets it apart from other deck generators: it builds in your brand.">
+<div class="slide-content"><div class="slide-head reveal"><span class="snum">03</span><ol class="mini" aria-label="Part 1 of 3: Map"><li class="on"><i></i>Map</li><li class=""><i></i>Craft</li><li class=""><i></i>Ship</li></ol><div class="crumb">Part 01</div></div><div class="pb reveal"><div class="pb-L"><div class="pb-mega"><span class="pb-kick">Part</span>01</div>
+<h2>What it is</h2><p class="pb-lead">The map before the craft.</p></div><div class="pb-R"><span class="kk">In this part</span><ol class="cd-toc"><li><span>04</span>Describe it and Claude builds it</li><li><span>05</span>Chat and canvas</li><li><span>06</span>What it makes</li><li><span>07</span>Four ways to start</li><li><span>08</span>Your brand</li><li><span>09</span>Plans and usage</li></ol></div></div></div></section>
 
-  <!-- ============ PART 01 — WHAT IT IS ============ -->
-  <section class="slide dark divider" data-label="01 What it is"
-    data-speaker-notes="Set up the part in one breath: before the craft, the map. Four questions — what is it, what does it make, what can you feed it, and what does it cost you. Plus the one feature that separates it from every deck generator on the market: it learns your brand.">
-    <div class="slide-content">
-      <div class="dnum reveal">01</div>
-      <h2 class="reveal">What <span class="o">it is</span></h2>
-      <p class="dsub reveal">The map before the craft: the canvas, what it makes, what you can feed it — and the <b>brand feature</b> that sets it apart.</p>
-    </div>
-  </section>
+<section class="slide light v2" id="slide-4" data-label="Describe it and Claude builds it" data-speaker-notes="The elevator version. You describe what you want, Claude builds a working first version on a canvas, and you refine it by chatting, commenting or editing directly. It comes from Anthropic Labs and launched on 17 April 2026; the Help Center still calls it a beta, and the launch post called it a research preview. Under the hood a Claude model writes real HTML. That&#x27;s why outputs can be interactive and why the Claude Code handoff in part three works. It launched on Opus 4.7; I haven&#x27;t re-confirmed which model runs it today, so don&#x27;t quote one. The deck used to claim a million users in week one. I couldn&#x27;t find a primary source for that, so it&#x27;s gone.">
+<div class="slide-content"><div class="slide-head reveal"><span class="snum">04</span><ol class="mini" aria-label="Part 1 of 3: Map"><li class="on"><i></i>Map</li><li class=""><i></i>Craft</li><li class=""><i></i>Ship</li></ol><div class="crumb">In one slide</div></div>
+<h2 class="reveal">Describe it and Claude builds it</h2><div class="v2-body reveal"><div class="v-stn n3"><svg class="rail" viewBox="0 0 1728 304" role="img" aria-label="Describe, Claude builds, you refine"><line class="rl-base" x1="4" y1="180" x2="1724" y2="180"/><line class="rl-on" x1="288" y1="180" x2="1440" y2="180"/><text class="rl-n" x="288" y="40" text-anchor="middle">01</text><text class="rl-n" x="864" y="40" text-anchor="middle">02</text><text class="rl-n" x="1440" y="40" text-anchor="middle">03</text><circle class="rl-c" cx="288" cy="180" r="116"/><svg x="231.16" y="123.16" width="113.68" height="113.68" viewBox="0 0 120 120" class="ic "><path d="M14 20 H106 V80 H54 L32 102 V80 H14 Z"/><path d="M34 42 H86 M34 58 H70"/></svg><circle class="rl-c hot" cx="864" cy="180" r="116"/><svg x="807.16" y="123.16" width="113.68" height="113.68" viewBox="0 0 120 120" class="ic hot"><path d="M60 10 C64 44 76 56 110 60 C76 64 64 76 60 110 C56 76 44 64 10 60 C44 56 56 44 60 10 Z"/></svg><circle class="rl-c" cx="1440" cy="180" r="116"/><svg x="1383.16" y="123.16" width="113.68" height="113.68" viewBox="0 0 120 120" class="ic "><path d="M18 102 L26 74 L84 16 L104 36 L46 94 Z"/><path d="M72 28 L92 48"/></svg></svg><div class="stops"><div><h3>Describe</h3><p>Type a brief or upload what you have.</p></div><div><h3>Claude builds</h3><p>A working first version in HTML.</p></div><div><h3>You refine</h3><p>Chat, comment or edit on the canvas.</p></div></div></div><div class="cd-facts"><div><span class="kk">From</span><b>Anthropic Labs</b></div><div><span class="kk">Launched</span><b>17 April 2026</b></div><div><span class="kk">Status</span><b>Beta, paid plans</b></div><div><span class="kk">Where</span><b>claude.ai/design</b></div></div></div></div></section>
 
-  <section class="slide light" data-label="Claude Design in one slide"
-    data-speaker-notes="The elevator version. You describe what you want, Claude builds a working first version on a canvas, and you refine it by talking, commenting or editing directly. From Anthropic Labs — same stable as Cowork — launched April 17, 2026, a million users in the first week, still a beta. Under the hood it runs a frontier Claude model building real HTML, which is exactly why the outputs can be interactive and why the Claude Code handoff later works. Mention it launched on Opus 4.7 — the model behind it upgrades over time.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">3</span><div class="crumb"><b>What it is</b> · in one slide</div></div>
-      <h2 class="reveal">Describe it — <span class="o">see it</span></h2>
-      <div class="split">
-        <ul class="bul reveal">
-          <li>Describe what you want → Claude builds a <b>working first version</b> → refine by <b>chatting, commenting, or editing directly</b>.</li>
-          <li>From <b>Anthropic Labs</b> — launched <b>April 17, 2026</b>, <b>1M+ users in week one</b>, still officially a <b>beta</b>.</li>
-          <li>Built for people <b>without</b> a design background — the model does the layout, typography and color work.</li>
-          <li>Lives at <b>claude.ai/design</b> (web &amp; desktop app — no mobile yet).</li>
-        </ul>
-        <div class="kcard reveal">
-          <div class="big">It builds<br>real HTML</div>
-          <p>Under the canvas, a frontier Claude model (Opus 4.7 at launch) writes <b>actual working code</b> — which is why outputs can be interactive, and why the <b>Claude Code handoff</b> in part 03 works.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+<section class="slide light v2" id="slide-5" data-label="Chat on the left, canvas on the right" data-speaker-notes="One picture: chat on the left, canvas on the right. You talk on the left; the design lives on the right and you can reach into it. Click an element to leave an inline comment, drag or edit text directly, or use the adjustment sliders for spacing, colour and layout. The split is the whole mental model: conversation drives structure and the canvas takes the detail work. Part two is about choosing which one to use when. This is a drawn mock, not a screenshot.">
+<div class="slide-content"><div class="slide-head reveal"><span class="snum">05</span><ol class="mini" aria-label="Part 1 of 3: Map"><li class="on"><i></i>Map</li><li class=""><i></i>Craft</li><li class=""><i></i>Ship</li></ol><div class="crumb">The interface</div></div>
+<h2 class="reveal">Chat on the left, canvas on the right</h2><div class="v2-body reveal"><div class="cd-ui"><svg class="" viewBox="0 0 1728 560" role="img" aria-label="Mock of the Claude Design window: a chat pane on the left holds the brief; the canvas on the right shows a one-pager with a comment pinned on a card, a selected headline for direct editing, and a slider panel for spacing and colour."><defs><marker id="cdmk1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" class="mk-c"/></marker></defs>
+<rect x="2" y="2" width="1724" height="556" rx="24" class="bx-card"/>
+<path d="M2 58 V26 A24 24 0 0 1 26 2 H1702 A24 24 0 0 1 1726 26 V58 Z" class="f-bar"/>
+<circle cx="36" cy="30" r="9" class="f-mut"/><circle cx="64" cy="30" r="9" class="f-mut"/><circle cx="92" cy="30" r="9" class="f-mut"/>
+<text x="140" y="39" class="t-faint">claude.ai/design</text>
+<line x1="580" y1="58" x2="580" y2="558" class="ln-dim"/>
+<rect x="36" y="92" width="508" height="150" rx="20" class="bx-mid"/>
+<text x="64" y="140" class="t-strong">Build a one-pager for the</text>
+<text x="64" y="180" class="t-strong">Q3 launch, aimed at sales,</text>
+<text x="64" y="220" class="t-strong">with three sections.</text>
+<rect x="36" y="276" width="440" height="18" rx="9" class="f-bar"/>
+<rect x="36" y="310" width="480" height="18" rx="9" class="f-bar"/>
+<rect x="36" y="344" width="330" height="18" rx="9" class="f-bar"/>
+<rect x="36" y="474" width="508" height="60" rx="30" class="bx-dash"/>
+<text x="68" y="514" class="t-faint">Swap the hero and the cards…</text>
+<rect x="620" y="90" width="1070" height="440" rx="14" class="f-bg bx-q"/>
+<rect x="650" y="118" width="1010" height="150" rx="12" class="f-ink"/>
+<text x="700" y="210" class="t-paper lg">Q3 launch</text>
+<rect x="682" y="150" width="330" height="84" rx="4" class="sel"/>
+<rect x="674" y="142" width="16" height="16" class="f-coral"/><rect x="1004" y="142" width="16" height="16" class="f-coral"/>
+<rect x="674" y="226" width="16" height="16" class="f-coral"/><rect x="1004" y="226" width="16" height="16" class="f-coral"/>
+<rect x="650" y="292" width="320" height="150" rx="12" class="bx-mid"/>
+<rect x="995" y="292" width="320" height="150" rx="12" class="bx-hot soft"/>
+<rect x="1340" y="292" width="320" height="150" rx="12" class="bx-mid"/>
+<rect x="680" y="330" width="180" height="16" rx="8" class="f-bar"/><rect x="680" y="362" width="240" height="14" rx="7" class="f-bar"/>
+<rect x="1025" y="330" width="180" height="16" rx="8" class="f-coral"/><rect x="1025" y="362" width="240" height="14" rx="7" class="f-bar"/>
+<rect x="1370" y="330" width="180" height="16" rx="8" class="f-bar"/><rect x="1370" y="362" width="240" height="14" rx="7" class="f-bar"/>
+<rect x="650" y="462" width="220" height="50" rx="25" class="f-coral"/>
+<text x="760" y="495" text-anchor="middle" class="t-on">Get started</text>
+<circle cx="1300" cy="296" r="26" class="f-coral"/>
+<svg x="1285" y="281" width="30" height="30" viewBox="0 0 120 120" class="ic inv-ink"><path d="M14 20 H106 V80 H54 L32 102 V80 H14 Z"/><path d="M34 42 H86 M34 58 H70"/></svg>
+<rect x="1098" y="186" width="390" height="62" rx="14" class="f-soft bx-hot"/>
+<text x="1293" y="227" text-anchor="middle" class="t-acc">"brand colour here"</text>
+<rect x="1300" y="455" width="360" height="66" rx="12" class="f-ink"/>
+<line x1="1326" y1="476" x2="1530" y2="476" class="ln-slide"/><circle cx="1470" cy="476" r="10" class="f-coral"/>
+<line x1="1326" y1="502" x2="1530" y2="502" class="ln-slide"/><circle cx="1380" cy="502" r="10" class="f-coral"/>
+<text x="1548" y="484" class="t-onmut sm">space</text><text x="1548" y="510" class="t-onmut sm">colour</text>
+<circle cx="560" cy="96" r="24" class="f-coral"/><text x="560" y="106" text-anchor="middle" class="t-on">1</text><circle cx="660" cy="146" r="24" class="f-coral"/><text x="660" y="156" text-anchor="middle" class="t-on">3</text><circle cx="1512" cy="216" r="24" class="f-coral"/><text x="1512" y="226" text-anchor="middle" class="t-on">2</text><circle cx="1290" cy="540" r="24" class="f-coral"/><text x="1290" y="550" text-anchor="middle" class="t-on">4</text></svg></div><div class="cd-legend"><span><b>1</b>Chat: structure</span><span><b>2</b>Comment: one element</span><span><b>3</b>Direct edit</span><span><b>4</b>Sliders: spacing, colour</span></div></div></div></section>
 
-  <section class="slide dark" data-label="The interface"
-    data-speaker-notes="One picture: chat on the left, canvas on the right. You talk on the left; the artifact lives on the right and you can reach into it — click an element to leave an inline comment, or grab it and edit directly. That two-pane split is the whole mental model: conversation drives structure, the canvas takes the detail work. Everything in part 02 is about choosing which pane to use when.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">4</span><div class="crumb"><b>What it is</b> · the interface</div></div>
-      <h2 class="reveal">Chat left, <span class="o">canvas right</span></h2>
-      <div class="diagram reveal">
-        <svg viewBox="0 0 1300 430" role="img" aria-label="Two-pane interface: a chat pane on the left sends build and refine messages to the canvas on the right, where elements take inline comments, direct edits, and slider controls" xmlns="http://www.w3.org/2000/svg">
-          <defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
-          <!-- chat pane -->
-          <rect class="dg-box" x="40" y="40" width="420" height="350" rx="14"/>
-          <text class="dg-t acc" x="250" y="86" text-anchor="middle" font-size="24">CHAT</text>
-          <text class="dg-t" x="250" y="150" text-anchor="middle" font-size="24">"Build a one-pager</text>
-          <text class="dg-t" x="250" y="184" text-anchor="middle" font-size="24">for the Q3 launch…"</text>
-          <text class="dg-t mut" x="250" y="260" text-anchor="middle" font-size="22">briefs · structural changes</text>
-          <text class="dg-t mut" x="250" y="294" text-anchor="middle" font-size="22">"try a different approach"</text>
-          <!-- arrows -->
-          <path class="dg-line" d="M475 160 H575" marker-end="url(#arr)"/>
-          <path class="dg-line" d="M575 280 H475" marker-end="url(#arr)"/>
-          <text class="dg-t acc" x="525" y="140" text-anchor="middle" font-size="20">build</text>
-          <text class="dg-t acc" x="525" y="320" text-anchor="middle" font-size="20">refine</text>
-          <!-- canvas pane -->
-          <rect class="dg-box outer" x="590" y="40" width="670" height="350" rx="14"/>
-          <text class="dg-t acc" x="925" y="86" text-anchor="middle" font-size="24">CANVAS — the working design</text>
-          <rect class="dg-box mid" x="630" y="115" width="590" height="90" rx="10"/>
-          <text class="dg-t" x="925" y="168" text-anchor="middle" font-size="23">click an element → inline comment</text>
-          <rect class="dg-box mid" x="630" y="225" width="285" height="130" rx="10"/>
-          <text class="dg-t" x="772" y="285" text-anchor="middle" font-size="23">drag, resize,</text>
-          <text class="dg-t" x="772" y="318" text-anchor="middle" font-size="23">edit text directly</text>
-          <rect class="dg-box hot" x="935" y="225" width="285" height="130" rx="10"/>
-          <text class="dg-t on" x="1077" y="285" text-anchor="middle" font-size="23">sliders &amp; controls</text>
-          <text class="dg-t on" x="1077" y="318" text-anchor="middle" font-size="20">spacing · color · layout</text>
-        </svg>
-      </div>
-      <p class="dg-cap reveal"><b>Two panes, one rule:</b> the conversation drives structure, the canvas takes the detail work.</p>
-    </div>
-  </section>
+<section class="slide dark v2" id="slide-6" data-label="Decks, pages and working prototypes" data-speaker-notes="Walk the range and save the surprise for the last tile. The expected list: decks, one-pagers, landing pages, marketing collateral. Less expected: wireframes, mockups and interactive prototypes, clickable flows a stakeholder can drive. Because it writes code, Anthropic says prototypes can carry voice, video, shaders and 3D, which no slide tool gives you. Explorations deserve a mention too: ask for several directions and compare them before you commit to the first idea.">
+<div class="slide-content"><div class="slide-head reveal"><span class="snum">06</span><ol class="mini" aria-label="Part 1 of 3: Map"><li class="on"><i></i>Map</li><li class=""><i></i>Craft</li><li class=""><i></i>Ship</li></ol><div class="crumb">What it makes</div></div>
+<h2 class="reveal">Decks, pages and working prototypes</h2><div class="v2-body reveal"><div class="cd-six"><div class=""><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><rect x="10" y="16" width="100" height="68" rx="6"/><path d="M60 84 V104 M38 108 H82"/><path d="M26 36 H64 M26 52 H54"/><rect x="72" y="42" width="24" height="28" rx="3"/></svg><h3>Decks and one-pagers</h3><p>Pitch decks, briefs, the Thursday slides.</p></div><div class=""><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><rect x="8" y="16" width="104" height="88" rx="8"/><path d="M8 38 H112"/><path d="M20 27 H22 M30 27 H32" stroke-width="7"/><path d="M26 60 H72 M26 78 H58"/></svg><h3>Pages and collateral</h3><p>Landing pages, social posts, flyers.</p></div><div class=""><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><rect x="8" y="16" width="104" height="88" rx="8"/><path d="M74 16 V104"/><path d="M22 38 H60 M22 54 H60 M22 70 H48"/><path d="M86 40 H100 M86 56 H100"/></svg><h3>Wireframes and mockups</h3><p>Screens to react to before a sprint.</p></div><div class=""><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M26 12 L26 98 L48 78 L62 110 L80 102 L66 72 L96 72 Z"/></svg><h3>Interactive prototypes</h3><p>Clickable flows a stakeholder can drive.</p></div><div class=""><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><rect x="12" y="12" width="44" height="44" rx="6"/><rect x="64" y="12" width="44" height="44" rx="6"/><rect x="12" y="64" width="44" height="44" rx="6"/><rect x="64" y="64" width="44" height="44" rx="6"/><circle cx="34" cy="34" r="10"/><path d="M74 46 L86 22 L98 46 Z"/><path d="M22 96 L34 76 L46 96"/><path d="M74 86 H98"/></svg><h3>Explorations</h3><p>Several directions, side by side.</p></div><div class="hot"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M60 10 C64 44 76 56 110 60 C76 64 64 76 60 110 C56 76 44 64 10 60 C44 56 56 44 60 10 Z"/></svg><h3>Beyond slideware</h3><p>Prototypes with voice, video, shaders and 3D.</p></div></div></div><p class="note reveal">One loop, describe then refine, drives every output type.</p></div></section>
 
-  <section class="slide light" data-label="What it makes"
-    data-speaker-notes="The range, with the surprise saved for the callout. The expected list: decks, one-pagers, landing pages, marketing collateral. The less expected: product wireframes, mockups and genuinely interactive prototypes — clickable flows a stakeholder can drive. And because it writes real code, prototypes can carry voice, video, shaders and 3D — things no slide tool produces. Design explorations deserve a mention: ask for four directions and compare, instead of committing to the first idea.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">5</span><div class="crumb"><b>What it is</b> · what it makes</div></div>
-      <h2 class="reveal">Decks to <span class="o">working prototypes</span></h2>
-      <div class="cards c3 reveal">
-        <div class="tile"><span class="k">Decks &amp; one-pagers</span><p>Pitch decks, presentations, briefs — the classic "I need slides by Thursday."</p></div>
-        <div class="tile"><span class="k">Pages &amp; collateral</span><p>Landing pages, social assets, campaign material — marketing without the queue.</p></div>
-        <div class="tile"><span class="k">Wireframes &amp; mockups</span><p>Product screens to react to — before engineering spends a sprint on them.</p></div>
-        <div class="tile"><span class="k">Interactive prototypes</span><p><b>Clickable</b> flows without writing code — stakeholders drive it, not squint at it.</p></div>
-        <div class="tile"><span class="k">Design explorations</span><p>"Show me four directions" — compare side by side instead of marrying idea #1.</p></div>
-        <div class="tile fill"><span class="k">Beyond slideware</span><p>Because it writes real code: prototypes with <b>voice, video, shaders &amp; 3D</b>.</p></div>
-      </div>
-      <p class="note reveal">One tool, one skill to learn — the same <b>describe → refine</b> loop drives every output type.</p>
-    </div>
-  </section>
+<section class="slide light v2" id="slide-7" data-label="Four ways to start" data-speaker-notes="You rarely start from a blank page. Describe it in text. Upload the Word, PowerPoint or Excel file you already have: the ugly quarterly deck goes in and a designed one comes out. Use the web capture tool on a website, yours for a brand baseline or a competitor&#x27;s for reference. Or point it at a codebase, which is where product teams start. On big repos, the Help Center warns about lag and suggests linking very large repositories from Claude Code instead. The AI For Developers write-up adds a practical trick: link the subdirectory you need, such as apps/marketing, not the whole monorepo.">
+<div class="slide-content"><div class="slide-head reveal"><span class="snum">07</span><ol class="mini" aria-label="Part 1 of 3: Map"><li class="on"><i></i>Map</li><li class=""><i></i>Craft</li><li class=""><i></i>Ship</li></ol><div class="crumb">Starting points</div></div>
+<h2 class="reveal">Four ways to start</h2><div class="v2-body reveal"><svg class="cd-full" viewBox="0 0 1728 580" role="img" aria-label="Four starting points, a text brief, an uploaded DOCX, PPTX or XLSX file, a website capture and a codebase, all lead into one canvas and the same refine loop."><defs><marker id="cdmk2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" class="mk-c"/></marker></defs><rect x="2" y="2" width="760" height="124" rx="20" class="bx-card"/><svg x="37" y="29" width="70" height="70" viewBox="0 0 120 120" class="ic "><path d="M14 20 H106 V80 H54 L32 102 V80 H14 Z"/><path d="M34 42 H86 M34 58 H70"/></svg><text x="136" y="56" class="cd-h">Describe it</text><text x="136" y="98" class="t-mut">a text brief in chat</text><path d="M770 64 C 960 64 980 236.0 1150 236.0" class="ln-c" marker-end="url(#cdmk2)"/><rect x="2" y="152" width="760" height="124" rx="20" class="bx-card"/><svg x="37" y="179" width="70" height="70" viewBox="0 0 120 120" class="ic "><path d="M60 84 V16 M34 42 L60 16 L86 42"/><path d="M14 74 V104 H106 V74"/></svg><text x="136" y="206" class="cd-h">Upload a file</text><text x="136" y="248" class="t-mut">DOCX · PPTX · XLSX · images</text><path d="M770 214 C 960 214 980 272.0 1150 272.0" class="ln-c" marker-end="url(#cdmk2)"/><rect x="2" y="302" width="760" height="124" rx="20" class="bx-card"/><svg x="37" y="329" width="70" height="70" viewBox="0 0 120 120" class="ic "><circle cx="60" cy="60" r="48"/><ellipse cx="60" cy="60" rx="20" ry="48"/><path d="M12 60 H108"/></svg><text x="136" y="356" class="cd-h">Capture a website</text><text x="136" y="398" class="t-mut">the web capture tool grabs elements</text><path d="M770 364 C 960 364 980 308.0 1150 308.0" class="ln-c" marker-end="url(#cdmk2)"/><rect x="2" y="452" width="760" height="124" rx="20" class="bx-card"/><svg x="37" y="479" width="70" height="70" viewBox="0 0 120 120" class="ic "><path d="M38 30 L10 60 L38 90 M82 30 L110 60 L82 90 M70 18 L50 102"/></svg><text x="136" y="506" class="cd-h">Point at a codebase</text><text x="136" y="548" class="t-mut">reads your real components</text><path d="M770 514 C 960 514 980 344.0 1150 344.0" class="ln-c" marker-end="url(#cdmk2)"/><rect x="1166" y="120" width="560" height="340" rx="28" class="bx-hot soft"/>
+<text x="1446" y="200" text-anchor="middle" class="t-acc">ONE CANVAS</text>
+<text x="1446" y="286" text-anchor="middle" class="cd-h xl">first version</text>
+<text x="1446" y="350" text-anchor="middle" class="t-mut">then the same</text>
+<text x="1446" y="390" text-anchor="middle" class="t-mut">refine loop</text></svg></div><p class="note reveal">Huge repo? Link it from Claude Code, or attach only the folder you need.</p></div></section>
 
-  <section class="slide dark" data-label="Four ways to start"
-    data-speaker-notes="You rarely start from a blank page. Four entry points: describe it in text; upload the Word, PowerPoint or Excel file you already have — the ugly quarterly deck goes in, a designed one comes out; capture a website — yours for a brand baseline or a competitor's for reference; or point it at a codebase, which is where product teams start for production-shaped prototypes. The note is the practical warning from early users: attach the relevant subdirectory, not the whole monorepo — giant repos make it lag.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">6</span><div class="crumb"><b>What it is</b> · starting points</div></div>
-      <h2 class="reveal">Four ways to <span class="o">start</span></h2>
-      <div class="diagram reveal">
-        <svg viewBox="0 0 1300 470" role="img" aria-label="Four starting points — a text brief, an uploaded DOCX, PPTX or XLSX file, a website capture, and a codebase — all fan into the same canvas and the same describe-refine loop" xmlns="http://www.w3.org/2000/svg">
-          <defs><marker id="cdm6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
-          <!-- four inputs -->
-          <rect class="dg-box" x="40" y="25" width="580" height="88" rx="12"/>
-          <text class="dg-t" x="70" y="62" font-size="23">Describe it</text>
-          <text class="dg-t mut" x="70" y="93" font-size="20">a text brief in chat — the blank-page start</text>
-          <rect class="dg-box" x="40" y="133" width="580" height="88" rx="12"/>
-          <text class="dg-t" x="70" y="170" font-size="23">Upload a file</text>
-          <text class="dg-t acc" x="70" y="201" font-size="18">DOCX · PPTX · XLSX — ugly deck in, designed out</text>
-          <rect class="dg-box" x="40" y="241" width="580" height="88" rx="12"/>
-          <text class="dg-t" x="70" y="278" font-size="23">Capture a website</text>
-          <text class="dg-t mut" x="70" y="309" font-size="20">yours as brand baseline · a competitor's as reference</text>
-          <rect class="dg-box" x="40" y="349" width="580" height="88" rx="12"/>
-          <text class="dg-t" x="70" y="386" font-size="23">Point at a codebase</text>
-          <text class="dg-t mut" x="70" y="417" font-size="20">reads your components → production-shaped</text>
-          <!-- fan-in -->
-          <path class="dg-line" d="M625 69 C 710 69 745 190 815 213" marker-end="url(#cdm6)"/>
-          <path class="dg-line" d="M625 177 C 700 177 745 208 815 225" marker-end="url(#cdm6)"/>
-          <path class="dg-line" d="M625 285 C 700 285 745 252 815 237" marker-end="url(#cdm6)"/>
-          <path class="dg-line" d="M625 393 C 710 393 745 275 815 249" marker-end="url(#cdm6)"/>
-          <!-- one canvas -->
-          <rect class="dg-box outer" x="835" y="115" width="425" height="230" rx="14"/>
-          <text class="dg-t acc" x="1047" y="165" text-anchor="middle" font-size="22">ONE CANVAS</text>
-          <rect class="dg-box mid" x="875" y="192" width="345" height="64" rx="10"/>
-          <text class="dg-t" x="1047" y="232" text-anchor="middle" font-size="21">working first version</text>
-          <text class="dg-t mut" x="1047" y="303" text-anchor="middle" font-size="20">same describe → refine loop</text>
-        </svg>
-      </div>
-      <p class="note reveal">Codebase tip from early users: attach the <b>relevant subdirectory</b>, not the whole monorepo — very large repos cause lag.</p>
-    </div>
-  </section>
+<section class="slide light v2" id="slide-8" data-label="It builds in your brand" data-speaker-notes="The differentiator, so spend time here. The universal complaint about AI visuals is that they look like AI. Claude Design builds a design system for your team by reading your codebase and design files; a well-made deck or PDF works as a source too. Once it&#x27;s published, every project created in your organisation uses it, and teams can keep more than one. Anthropic&#x27;s product page says Claude checks its output against the design system and corrects deviations before you see them. For design systems that live in code, run /design-sync in Claude Code; it reads your tokens and components directly. Admins can also lock a team to an approved system.">
+<div class="slide-content"><div class="slide-head reveal"><span class="snum">08</span><ol class="mini" aria-label="Part 1 of 3: Map"><li class="on"><i></i>Map</li><li class=""><i></i>Craft</li><li class=""><i></i>Ship</li></ol><div class="crumb">The headline feature</div></div>
+<h2 class="reveal">It builds in your brand</h2><div class="v2-body reveal"><svg class="cd-full" viewBox="0 0 1728 530" role="img" aria-label="Sources such as a codebase, design files, decks and logos feed one design system that you set up once. Every new project uses it, and Claude checks each build against it before you see it."><defs><marker id="cdmk3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" class="mk-c"/></marker></defs><defs><marker id="cdmk4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" class="mk-a"/></marker></defs><rect x="2" y="10" width="400" height="96" rx="18" class="bx-card"/><svg x="31" y="31" width="54" height="54" viewBox="0 0 120 120" class="ic "><path d="M38 30 L10 60 L38 90 M82 30 L110 60 L82 90 M70 18 L50 102"/></svg><text x="110" y="69" class="t-strong">codebase</text><path d="M410 58 C 470 58 480 180.0 540 180.0" class="ln-m" marker-end="url(#cdmk4)"/><rect x="2" y="128" width="400" height="96" rx="18" class="bx-card"/><svg x="31" y="149" width="54" height="54" viewBox="0 0 120 120" class="ic "><rect x="8" y="16" width="104" height="88" rx="8"/><path d="M74 16 V104"/><path d="M22 38 H60 M22 54 H60 M22 70 H48"/><path d="M86 40 H100 M86 56 H100"/></svg><text x="110" y="187" class="t-strong">design files</text><path d="M410 176 C 470 176 480 220.0 540 220.0" class="ln-m" marker-end="url(#cdmk4)"/><rect x="2" y="246" width="400" height="96" rx="18" class="bx-card"/><svg x="31" y="267" width="54" height="54" viewBox="0 0 120 120" class="ic "><rect x="10" y="16" width="100" height="68" rx="6"/><path d="M60 84 V104 M38 108 H82"/><path d="M26 36 H64 M26 52 H54"/><rect x="72" y="42" width="24" height="28" rx="3"/></svg><text x="110" y="305" class="t-strong">decks, PDFs</text><path d="M410 294 C 470 294 480 260.0 540 260.0" class="ln-m" marker-end="url(#cdmk4)"/><rect x="2" y="364" width="400" height="96" rx="18" class="bx-card"/><svg x="31" y="385" width="54" height="54" viewBox="0 0 120 120" class="ic "><rect x="12" y="12" width="42" height="42" rx="8"/><rect x="66" y="12" width="42" height="42" rx="8"/><rect x="12" y="66" width="42" height="42" rx="8"/><path d="M66 74 H108 M66 88 H100 M66 102 H90"/></svg><text x="110" y="423" class="t-strong">logos, colours</text><path d="M410 412 C 470 412 480 300.0 540 300.0" class="ln-m" marker-end="url(#cdmk4)"/><rect x="556" y="90" width="560" height="300" rx="30" class="bx-good"/>
+<text x="836" y="176" text-anchor="middle" class="t-acc">SET UP ONCE</text>
+<text x="836" y="252" text-anchor="middle" class="cd-h xl">Design system</text>
+<text x="836" y="318" text-anchor="middle" class="t-mut">colours · type · components</text><path d="M1124 240 H1226" class="ln-c thick" marker-end="url(#cdmk3)"/><rect x="1244" y="110" width="440" height="76" rx="14" class="bx-mid"/><text x="1276" y="158" class="t-strong mono">project 1</text><circle cx="1640" cy="148" r="20" class="ok-dot"/><path d="M1630 149 L1638 157 L1651 140" class="ok-tick sm"/><rect x="1260" y="202" width="440" height="76" rx="14" class="bx-mid"/><text x="1292" y="250" class="t-strong mono">project 2</text><circle cx="1656" cy="240" r="20" class="ok-dot"/><path d="M1646 241 L1654 249 L1667 232" class="ok-tick sm"/><rect x="1276" y="294" width="440" height="76" rx="14" class="bx-mid"/><text x="1308" y="342" class="t-strong mono">project 3</text><circle cx="1672" cy="332" r="20" class="ok-dot"/><path d="M1662 333 L1670 341 L1683 324" class="ok-tick sm"/><path d="M1460 400 C 1460 490 1000 500 900 404" class="ln-c dash" marker-end="url(#cdmk3)"/><text x="1300" y="514" text-anchor="middle" class="t-acc">checks each build against it</text></svg></div><p class="note reveal">From Claude Code, /design-sync reads your tokens and components.</p></div></section>
 
-  <section class="slide light" data-label="It knows your brand"
-    data-speaker-notes="The differentiator slide — spend time here. The universal complaint about AI visuals is that they look like AI. Claude Design's answer: projects automatically inherit your organisation's design system — colors, fonts, components — with nothing to configure per project. Where does the design system come from? Setup reads your codebase and design files; or you push one explicitly with the /design-sync command in Claude Code, from a GitHub repo, design files or a local checkout. And the detail that makes it stick: Claude checks its own output against the design system and corrects deviations before you ever see them. It's not a filter, it's a reviewer.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">7</span><div class="crumb"><b>What it is</b> · the headline feature</div></div>
-      <h2 class="reveal">It knows <span class="o">your brand</span></h2>
-      <div class="split">
-        <ul class="bul reveal">
-          <li>Every project <b>automatically inherits your organisation's design system</b> — colors, typography, components. Nothing to configure per project.</li>
-          <li>Feed it from a <b>GitHub repo, design files, or a local codebase</b> — the <b>/design-sync</b> command in Claude Code pushes it in.</li>
-          <li>One org can hold <b>several design systems</b> — product brand, marketing brand, sub-brands.</li>
-          <li><b>It checks its own work</b> — builds with your real components, then reviews the output against the system and <b>corrects deviations before you see them</b>.</li>
-          <li>Answers the classic complaint: <i>"AI output never looks like us."</i></li>
-        </ul>
-        <div class="diagram reveal">
-          <svg viewBox="0 0 660 500" role="img" aria-label="A GitHub repo, design files or a local codebase feed the org design system through the /design-sync command; every project inherits it automatically, and Claude self-checks its output against the system" xmlns="http://www.w3.org/2000/svg">
-            <defs><marker id="cdm7" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
-            <!-- sources -->
-            <rect class="dg-box" x="20" y="20" width="190" height="62" rx="10"/>
-            <text class="dg-t" x="115" y="58" text-anchor="middle" font-size="20">GitHub repo</text>
-            <rect class="dg-box" x="225" y="20" width="190" height="62" rx="10"/>
-            <text class="dg-t" x="320" y="58" text-anchor="middle" font-size="20">design files</text>
-            <rect class="dg-box" x="430" y="20" width="190" height="62" rx="10"/>
-            <text class="dg-t" x="525" y="58" text-anchor="middle" font-size="20">local codebase</text>
-            <!-- converge -->
-            <path class="dg-line dim" d="M115 82 V112 H305"/>
-            <path class="dg-line dim" d="M525 82 V112 H335"/>
-            <path class="dg-line" d="M320 82 V140" marker-end="url(#cdm7)"/>
-            <!-- /design-sync -->
-            <rect class="dg-box hot" x="212" y="148" width="216" height="56" rx="28"/>
-            <text class="dg-t on" x="320" y="184" text-anchor="middle" font-size="21">/design-sync</text>
-            <path class="dg-line" d="M320 204 V248" marker-end="url(#cdm7)"/>
-            <!-- design system -->
-            <rect class="dg-box outer" x="85" y="256" width="470" height="92" rx="12"/>
-            <text class="dg-t" x="320" y="294" text-anchor="middle" font-size="22">Org design system</text>
-            <text class="dg-t mut" x="320" y="326" text-anchor="middle" font-size="19">colors · typography · components</text>
-            <path class="dg-line" d="M320 348 V392" marker-end="url(#cdm7)"/>
-            <!-- projects + self-check -->
-            <rect class="dg-box mid" x="125" y="400" width="390" height="76" rx="12"/>
-            <text class="dg-t" x="320" y="432" text-anchor="middle" font-size="21">every project inherits it</text>
-            <text class="dg-t mut" x="320" y="461" text-anchor="middle" font-size="18">nothing to configure</text>
-            <path class="dg-line" d="M515 428 C 615 410 620 330 560 306" marker-end="url(#cdm7)"/>
-            <text class="dg-t acc" x="608" y="422" text-anchor="middle" font-size="17">self-check</text>
-          </svg>
-        </div>
-      </div>
-    </div>
-  </section>
+<section class="slide dark v2" id="slide-9" data-label="Included, and it shares your usage limits" data-speaker-notes="The money slide, kept honest. It&#x27;s included in every paid plan from Pro upward, with no separate licence. Say this part twice: Claude Design counts toward the same usage limits as the rest of Claude. At launch it had its own weekly allowance; the Help Center now says that has been merged. A heavy design session spends the budget your coding sessions use, and big requests like full decks cost more than a chat message. You can switch on extra usage to keep going past the limit. Enterprise organisations need an admin to enable it in organisation settings. The mobile apps can generate and view a design, but editing on the canvas and sharing need web or desktop. Pro pricing is from claude.com/pricing, September 2026.">
+<div class="slide-content"><div class="slide-head reveal"><span class="snum">09</span><ol class="mini" aria-label="Part 1 of 3: Map"><li class="on"><i></i>Map</li><li class=""><i></i>Craft</li><li class=""><i></i>Ship</li></ol><div class="crumb">Plans and usage</div></div>
+<h2 class="reveal">Included, and it shares your usage limits</h2><div class="v2-body reveal"><svg class="cd-full" viewBox="0 0 1728 196" role="img" aria-label="One usage limit shared by chat, Claude Code and Claude Design, with optional extra usage beyond it."><text x="0" y="30" class="t-cap">Your plan's usage limit · one pool</text>
+<rect x="0" y="56" width="560" height="96" rx="10" class="f-bar"/>
+<rect x="572" y="56" width="500" height="96" rx="10" class="f-bar"/>
+<rect x="1084" y="56" width="440" height="96" rx="10" class="f-coral"/>
+<rect x="1536" y="56" width="190" height="96" rx="10" class="bx-dash2"/>
+<text x="36" y="116" class="t-strong">chat</text>
+<text x="608" y="116" class="t-strong">Claude Code</text>
+<text x="1120" y="116" class="t-on big">Claude Design</text>
+<text x="1631" y="116" text-anchor="middle" class="t-mut sm">extra</text>
+<text x="1631" y="186" text-anchor="middle" class="t-faint">optional</text></svg><div class="cd-cells"><div><span class="kk">Plans</span><p>Pro, Max, Team, Enterprise. Not Free.</p></div><div><span class="kk">Price</span><p>Included. Pro is $20 a month ($17 billed yearly).</p></div><div><span class="kk">Enterprise</span><p>Off until an admin enables it.</p></div><div><span class="kk">Devices</span><p>Edit on web or desktop; mobile apps can view.</p></div></div></div><p class="note reveal">Plan heavy design days like heavy coding days.</p></div></section>
 
-  <section class="slide dark" data-label="Plans & usage"
-    data-speaker-notes="The money slide, kept honest. Included in every paid plan from Pro at twenty dollars — no separate license, no credit packs. The catch worth saying twice: it draws from the same usage pool as chat and Claude Code, and there is no separate design allowance. A heavy design session eats the same budget your coding sessions use, and big-codebase projects burn noticeably more. Enterprise orgs need an admin to switch it on. Web and desktop only for now.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">8</span><div class="crumb"><b>What it is</b> · plans &amp; usage</div></div>
-      <h2 class="reveal">Included — but it <span class="o">shares your budget</span></h2>
-      <table class="tbl reveal">
-        <thead><tr><th>Question</th><th>Answer — July 2026</th></tr></thead>
-        <tbody>
-          <tr><td class="muted">Which plans?</td><td><b>Pro, Max, Team, Enterprise</b> — included, from ~$20/mo. No separate license.</td></tr>
-          <tr><td class="muted">What does it burn?</td><td>The <b>same usage pool</b> as chat &amp; Claude Code — <b>no separate design allowance</b>; optional extra usage.</td></tr>
-          <tr><td class="muted">What burns most?</td><td>Complex projects on <b>large codebases</b> — attach less, spend less.</td></tr>
-          <tr><td class="muted">Enterprise?</td><td>Admin must <b>enable it</b> in org settings first.</td></tr>
-          <tr><td class="muted">Where does it run?</td><td><b>Web &amp; desktop</b> app only — no mobile yet.</td></tr>
-        </tbody>
-      </table>
-      <p class="note reveal">Budget mindset: a design session spends the <b>same tokens</b> your coding sessions do — plan heavy design days like heavy coding days.</p>
-    </div>
-  </section>
+<section class="slide dark v2 pbeat cd-part" id="slide-10" data-label="Part 02 · How to work it" data-speaker-notes="This is the core of the talk. Plenty of people have seen a Claude Design demo; far fewer have seen a method. This part covers the iteration loop, the brief, the three ways to refine, example briefs, a live build and the pitfalls early users keep hitting. Most of the craft advice comes from hands-on write-ups, listed on the sources slide, plus my own use.">
+<div class="slide-content"><div class="slide-head reveal"><span class="snum">10</span><ol class="mini" aria-label="Part 2 of 3: Craft"><li class="done"><i></i>Map</li><li class="on"><i></i>Craft</li><li class=""><i></i>Ship</li></ol><div class="crumb">Part 02</div></div><div class="pb reveal"><div class="pb-L"><div class="pb-mega"><span class="pb-kick">Part</span>02</div>
+<h2>How to work it</h2><p class="pb-lead">The method behind the demo.</p></div><div class="pb-R"><span class="kk">In this part</span><ol class="cd-toc"><li><span>11</span>The loop</li><li><span>12</span>The brief</li><li><span>13</span>Three channels</li><li><span>14</span>Feedback that lands</li><li><span>15</span>Branching</li><li><span>16</span>Briefs to steal</li><li><span>17</span>Live build</li><li><span>19</span>Pitfalls</li></ol></div></div></div></section>
 
-  <!-- ============ PART 02 — HOW TO WORK IT ============ -->
-  <section class="slide dark divider" data-label="02 How to work it"
-    data-speaker-notes="The core of the talk. Everyone has seen a Claude Design demo; almost nobody has seen a method. This part is the method: the iteration loop, how to brief it, which of the three refinement channels to use when, example briefs to steal, a live build, and the pitfalls early users keep hitting.">
-    <div class="slide-content">
-      <div class="dnum reveal">02</div>
-      <h2 class="reveal">How to <span class="o">work it</span></h2>
-      <p class="dsub reveal">The craft: the loop, the brief, the <b>three refinement channels</b> — with example prompts to steal, and a live build.</p>
-    </div>
-  </section>
+<section class="slide light v2" id="slide-11" data-label="Judge round four, not the first draft" data-speaker-notes="The most important habit change in the talk: don&#x27;t judge the first generation. It opens the conversation, and the real value shows up in rounds two to four. So the loop is describe, review, refine, repeat. The strategy is to start simple and layer: core layout and content first, then interactions, edge cases and polish as separate rounds. People who dump a ten-requirement brief and expect a finished artifact walk away disappointed. People who iterate walk away with something they can ship. The two-to-four figure is practitioner advice from the AI For Developers write-up, not an Anthropic number.">
+<div class="slide-content"><div class="slide-head reveal"><span class="snum">11</span><ol class="mini" aria-label="Part 2 of 3: Craft"><li class="done"><i></i>Map</li><li class="on"><i></i>Craft</li><li class=""><i></i>Ship</li></ol><div class="crumb">The loop</div></div>
+<h2 class="reveal">Judge round four, not the first draft</h2><div class="v2-body reveal"><div class="cd-loop"><svg class="" viewBox="0 0 600 640" role="img" aria-label="A loop: describe, review, refine, repeated for two to four rounds."><defs><marker id="cdmk5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" class="mk-c"/></marker></defs><circle cx="300" cy="300" r="210" class="ring cd-orbit"/><path d="M392.1 111.3 A210 210 0 0 1 509.5 314.6" class="ln-c thick" marker-end="url(#cdmk5)"/><path d="M417.4 474.1 A210 210 0 0 1 182.6 474.1" class="ln-c thick" marker-end="url(#cdmk5)"/><path d="M90.5 314.6 A210 210 0 0 1 207.9 111.3" class="ln-c thick" marker-end="url(#cdmk5)"/><circle cx="300.0" cy="90.0" r="74" class="nd "/><svg x="263" y="53" width="74" height="74" viewBox="0 0 120 120" class="ic "><path d="M14 20 H106 V80 H54 L32 102 V80 H14 Z"/><path d="M34 42 H86 M34 58 H70"/></svg><text x="300.0" y="-4.0" text-anchor="middle" class="t-acc">describe</text><circle cx="481.9" cy="405.0" r="74" class="nd "/><svg x="444.865" y="368" width="74" height="74" viewBox="0 0 120 120" class="ic "><path d="M6 60 C28 24 92 24 114 60 C92 96 28 96 6 60 Z"/><circle cx="60" cy="60" r="17"/></svg><text x="481.9" y="517.0" text-anchor="middle" class="t-acc">review</text><circle cx="118.1" cy="405.0" r="74" class="nd hot"/><svg x="81.1347" y="368" width="74" height="74" viewBox="0 0 120 120" class="ic "><path d="M18 102 L26 74 L84 16 L104 36 L46 94 Z"/><path d="M72 28 L92 48"/></svg><text x="118.1" y="517.0" text-anchor="middle" class="t-acc">refine</text><text x="300" y="300" text-anchor="middle" class="cd-h">repeat</text><text x="300" y="344" text-anchor="middle" class="t-mut">2–4 rounds</text></svg><div class="v2-stack"><svg class="" viewBox="0 0 920 200" role="img" aria-label="Iterations one to four: round one is the opener, round four is the one to judge."><line x1="70" y1="80" x2="850" y2="80" class="ln-dim thick"/><circle cx="70" cy="80" r="56" class="nd soft"/><text x="70" y="100" text-anchor="middle" class="cd-num soft">1</text><circle cx="330" cy="80" r="56" class="nd"/><text x="330" y="100" text-anchor="middle" class="cd-num">2</text><circle cx="590" cy="80" r="56" class="nd"/><text x="590" y="100" text-anchor="middle" class="cd-num">3</text><circle cx="850" cy="80" r="56" class="nd hot"/><text x="850" y="100" text-anchor="middle" class="cd-num on">4</text><text x="70" y="186" text-anchor="middle" class="t-mut">opener</text><text x="850" y="186" text-anchor="middle" class="t-acc">judge here</text></svg><p class="lead sm"><span class="kk">Start simple, then layer</span>Layout and content first. Interactions, edge cases and polish come in later rounds.</p><p class="lead sm"><span class="kk">Ask small</span>Ten small requests beat one ten-part brief.</p></div></div></div></div></section>
 
-  <section class="slide light" data-label="The loop"
-    data-speaker-notes="The single most important habit change on this slide: do not judge the first generation. The first version is a conversation opener, not the deliverable — the real value shows up in iterations two to four. So the loop is describe, review, refine, repeat — and 'start simple, then layer' is the strategy: core layout and content first, then interactions, edge cases and polish as separate rounds. People who dump a ten-requirement brief and expect a finished artifact walk away disappointed; people who iterate walk away with something shippable.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">9</span><div class="crumb"><b>Craft</b> · the loop</div></div>
-      <h2 class="reveal">Judge iteration 4, <span class="o">not iteration 1</span></h2>
-      <div class="split">
-        <div>
-          <ul class="bul reveal">
-            <li>The first generation is a <b>conversation opener</b>, not the deliverable — real value shows up in <b>iterations 2–4</b>.</li>
-            <li><b>Start simple, then layer:</b> core layout &amp; content first; interactions, edge cases and polish as separate rounds.</li>
-            <li>Claude responds well to <b>incremental requests</b> — ten small asks beat one ten-part brief.</li>
-          </ul>
-          <p class="note reveal">If you remember one thing from this part: <b>don't judge generation one.</b></p>
-        </div>
-        <div class="diagram reveal">
-          <svg viewBox="0 0 620 560" role="img" aria-label="A circular loop of describe, review and refine, repeated two to four times; on the iteration scale below, iteration 1 is marked as the opener and iteration 4 as the one to judge" xmlns="http://www.w3.org/2000/svg">
-            <defs><marker id="cdm9" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
-            <!-- ambient orbit (animated) -->
-            <circle class="cd-orbit" cx="310" cy="205" r="142"/>
-            <!-- the three steps -->
-            <rect class="dg-box" x="218" y="32" width="184" height="56" rx="12"/>
-            <text class="dg-t" x="310" y="68" text-anchor="middle" font-size="22">describe</text>
-            <rect class="dg-box" x="358" y="272" width="184" height="56" rx="12"/>
-            <text class="dg-t" x="450" y="308" text-anchor="middle" font-size="22">review</text>
-            <rect class="dg-box hot" x="78" y="272" width="184" height="56" rx="12"/>
-            <text class="dg-t on" x="170" y="308" text-anchor="middle" font-size="22">refine</text>
-            <!-- clockwise arrows -->
-            <path class="dg-line" d="M404 80 C 488 100 474 186 454 266" marker-end="url(#cdm9)"/>
-            <path class="dg-line" d="M346 334 C 312 386 308 386 274 334" marker-end="url(#cdm9)"/>
-            <path class="dg-line" d="M166 266 C 148 172 158 104 212 78" marker-end="url(#cdm9)"/>
-            <!-- hub -->
-            <text class="dg-t acc" x="310" y="198" text-anchor="middle" font-size="20">repeat</text>
-            <text class="dg-t mut" x="310" y="228" text-anchor="middle" font-size="19">×2–4</text>
-            <!-- iteration scale -->
-            <path class="dg-line dim" d="M164 480 H461"/>
-            <circle class="dg-box" cx="140" cy="480" r="24"/>
-            <text class="dg-t mut" x="140" y="488" text-anchor="middle" font-size="20">1</text>
-            <circle class="dg-box mid" cx="255" cy="480" r="24"/>
-            <text class="dg-t" x="255" y="488" text-anchor="middle" font-size="20">2</text>
-            <circle class="dg-box mid" cx="370" cy="480" r="24"/>
-            <text class="dg-t" x="370" y="488" text-anchor="middle" font-size="20">3</text>
-            <circle class="dg-box hot" cx="485" cy="480" r="24"/>
-            <text class="dg-t on" x="485" y="488" text-anchor="middle" font-size="20">4</text>
-            <text class="dg-t mut" x="140" y="537" text-anchor="middle" font-size="17">opener</text>
-            <text class="dg-t acc" x="485" y="537" text-anchor="middle" font-size="18">judge here</text>
-          </svg>
-        </div>
-      </div>
-    </div>
-  </section>
+<section class="slide dark v2" id="slide-12" data-label="Brief it like a creative director" data-speaker-notes="Read both briefs aloud. The weak one is what most people type; the strong one names the audience, the sections and what goes in each. The weak brief gets you a generic template. The strong one gets you something you can review in one pass. The formula on the bottom row is the takeaway: who it&#x27;s for, which sections, what goes in each. You&#x27;re briefing, the way you&#x27;d brief a human designer or an agency.">
+<div class="slide-content"><div class="slide-head reveal"><span class="snum">12</span><ol class="mini" aria-label="Part 2 of 3: Craft"><li class="done"><i></i>Map</li><li class="on"><i></i>Craft</li><li class=""><i></i>Ship</li></ol><div class="crumb">The brief</div></div>
+<h2 class="reveal">Brief it like a creative director</h2><div class="v2-body reveal"><div class="cd-bpair"><div class="v-win paper cd-brief dim"><div class="tbar"><i class="r"></i><i class="y"></i><i class="g"></i><span>weak brief</span></div><div class="wbody"><p class="cd-bq">Make me a landing page for our new API.</p><p class="cd-res bad"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M26 26 L94 94 M94 26 L26 94" stroke-width="11"/></svg>a generic template</p></div></div><div class="v-win paper cd-brief"><div class="tbar"><i class="r"></i><i class="y"></i><i class="g"></i><span>strong brief</span></div><div class="wbody"><p class="cd-bq">Build a landing page for our new <u class="w">Payments API</u>, aimed at <u class="w">backend developers</u>. <u class="s">Hero</u> with a one-line tagline and a <u class="c">curl snippet</u>, <u class="s">three feature cards</u> with icons, a <u class="s">pricing section</u> with <u class="c">two tiers</u>.</p><p class="cd-res good"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M16 62 L46 92 L104 28" stroke-width="12"/></svg>reviewable in one pass</p></div></div></div><div class="cd-key"><span><u class="w">Who</u> it's for</span><span><u class="s">Which</u> sections</span><span><u class="c">What</u> goes in each</span></div></div></div></section>
 
-  <section class="slide dark" data-label="Brief like a creative director"
-    data-speaker-notes="The example slide — read both briefs aloud. The weak one is what most people type; the strong one names the audience, the components and the content. The difference in output is dramatic: the weak brief produces a generic template, the strong one produces something reviewable in one shot. The formula at the bottom is the takeaway: who it's for, what sections it has, what goes in each. You're not designing — you're briefing, exactly like you would a human designer or agency.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">10</span><div class="crumb"><b>Craft</b> · the brief</div></div>
-      <h2 class="reveal">Brief it like a <span class="o">creative director</span></h2>
-      <div class="cards c2 reveal">
-        <div class="tile"><span class="k">✗ Weak</span><p style="font-family:var(--font-mono); font-size:var(--small-size)">"Make me a landing page for our new API."</p><p class="muted">→ a generic template with placeholder everything.</p></div>
-        <div class="tile fill"><span class="k">✓ Strong</span><p style="font-family:var(--font-mono); font-size:var(--small-size)">"Build a landing page for our new <b>Payments API</b>, aimed at <b>backend developers</b>. Hero with a one-line tagline and a <b>curl snippet</b>, three <b>feature cards</b> with icons, a pricing section with <b>two tiers</b>."</p><p class="muted">→ reviewable in one shot.</p></div>
-      </div>
-      <p class="note reveal">The formula: <b>who it's for · which sections · what goes in each.</b> You're not designing — you're briefing, like you would an agency.</p>
-    </div>
-  </section>
+<section class="slide light v2" id="slide-13" data-label="Match the channel to the change" data-speaker-notes="Once there&#x27;s something on the canvas, you have three channels, and picking the right one is most of the craft. Chat handles structural change: rearrange, add a section, try another direction. Inline comments handle targeted tweaks: click the element and say what&#x27;s wrong, in place. Direct editing is for whatever is fastest by hand: drag, resize, align, fix a typo, or use the adjustment sliders for spacing and colour. Name the mistake both ways: doing structural work through twenty inline comments, or asking chat to nudge one button. The Help Center gives the same split: comments for component-level changes, chat for structure, direct edits for quick visual changes.">
+<div class="slide-content"><div class="slide-head reveal"><span class="snum">13</span><ol class="mini" aria-label="Part 2 of 3: Craft"><li class="done"><i></i>Map</li><li class="on"><i></i>Craft</li><li class=""><i></i>Ship</li></ol><div class="crumb">Three channels</div></div>
+<h2 class="reveal">Match the channel to the change</h2><div class="v2-body reveal"><div class="cd-chan"><div class="row"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M14 20 H106 V80 H54 L32 102 V80 H14 Z"/><path d="M34 42 H86 M34 58 H70"/></svg><div><h3>Chat</h3><p>Structure: rearrange, add a section, new direction.</p></div><div class="sc"><svg class="" viewBox="0 0 360 200" role="img" aria-label="Scope: the whole design"><rect x="4" y="4" width="352" height="192" rx="14" class="bx-good"/><rect x="24" y="22" width="312" height="56" rx="8" class="f-bar"/><rect x="24" y="92" width="148" height="62" rx="8" class="f-bar"/><rect x="188" y="92" width="148" height="62" rx="8" class="f-bar"/><rect x="24" y="166" width="90" height="18" rx="9" class="f-bar"/></svg><span class="kk">the whole design</span></div></div><div class="row"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M42 12 H78 L72 46 L94 66 H26 L48 46 Z"/><path d="M60 66 V112"/></svg><div><h3>Inline comment</h3><p>Click the element and say what is wrong.</p></div><div class="sc"><svg class="" viewBox="0 0 360 200" role="img" aria-label="Scope: one element"><rect x="4" y="4" width="352" height="192" rx="14" class="bx-dash"/><rect x="24" y="22" width="312" height="56" rx="8" class="f-bar"/><rect x="24" y="92" width="148" height="62" rx="8" class="f-bar"/><rect x="188" y="92" width="148" height="62" rx="8" class="f-bar"/><rect x="24" y="166" width="90" height="18" rx="9" class="f-bar"/><rect x="188" y="92" width="148" height="62" rx="8" class="f-coral"/><circle cx="330" cy="92" r="16" class="f-ink"/></svg><span class="kk">one element</span></div></div><div class="row"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M12 30 H108 M12 60 H108 M12 90 H108"/><circle cx="40" cy="30" r="11" class="bg"/><circle cx="82" cy="60" r="11" class="bg"/><circle cx="56" cy="90" r="11" class="bg"/></svg><div><h3>Direct edit</h3><p>Drag, resize, fix text, move a slider.</p></div><div class="sc"><svg class="" viewBox="0 0 360 200" role="img" aria-label="Scope: one detail"><rect x="4" y="4" width="352" height="192" rx="14" class="bx-dash"/><rect x="24" y="22" width="312" height="56" rx="8" class="f-bar"/><rect x="24" y="92" width="148" height="62" rx="8" class="f-bar"/><rect x="188" y="92" width="148" height="62" rx="8" class="f-bar"/><rect x="24" y="166" width="90" height="18" rx="9" class="f-bar"/><rect x="40" y="36" width="120" height="28" rx="3" class="sel"/><rect x="34" y="30" width="12" height="12" class="f-coral"/><rect x="154" y="58" width="12" height="12" class="f-coral"/></svg><span class="kk">one detail</span></div></div></div></div><p class="note reveal">Common mistake: structural work through twenty comments.</p></div></section>
 
-  <section class="slide light" data-label="Three refinement channels"
-    data-speaker-notes="Once there's something on the canvas, you have three channels — and picking the right one is most of the craft. Chat for structural change: rearrange, add a section, try another direction. Inline comments for targeted tweaks: click the element, say what's wrong with it, in place. Direct editing for what's fastest by hand: drag, resize, align, fix a typo — plus the adjustment controls and the custom sliders Claude builds for the things you keep tweaking. The mistake to name: doing structural work through twenty inline comments, or asking chat to nudge one button. Next slide gives phrasing for the first two.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">11</span><div class="crumb"><b>Craft</b> · refinement channels</div></div>
-      <h2 class="reveal">Three channels — <span class="o">pick the right one</span></h2>
-      <div class="diagram reveal">
-        <svg viewBox="0 0 1300 440" role="img" aria-label="Three refinement channels aimed at one canvas: chat redraws the whole design, an inline comment targets one element, and direct editing adjusts one detail by hand" xmlns="http://www.w3.org/2000/svg">
-          <defs><marker id="cdm11" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
-          <!-- channels -->
-          <rect class="dg-box" x="40" y="25" width="420" height="110" rx="12"/>
-          <text class="dg-t" x="70" y="65" font-size="23">Chat — structural</text>
-          <text class="dg-t mut" x="70" y="97" font-size="18">rearrange · add a section · new direction</text>
-          <text class="dg-t mut" x="70" y="123" font-size="18">feels like: talking to the designer</text>
-          <rect class="dg-box" x="40" y="160" width="420" height="110" rx="12"/>
-          <text class="dg-t" x="70" y="200" font-size="23">Inline comment — targeted</text>
-          <text class="dg-t mut" x="70" y="232" font-size="20">click the element, say what's wrong</text>
-          <text class="dg-t mut" x="70" y="258" font-size="18">feels like: markup on a proof</text>
-          <rect class="dg-box" x="40" y="295" width="420" height="110" rx="12"/>
-          <text class="dg-t" x="70" y="335" font-size="23">Direct edit — by hand</text>
-          <text class="dg-t mut" x="70" y="367" font-size="20">drag · resize · fix a typo · sliders</text>
-          <text class="dg-t mut" x="70" y="393" font-size="18">feels like: a slide editor</text>
-          <!-- arrows, sized by scope -->
-          <path class="dg-line" style="stroke-width:5" d="M465 80 H745" marker-end="url(#cdm11)"/>
-          <text class="dg-t acc" x="605" y="60" text-anchor="middle" font-size="19">the whole design</text>
-          <path class="dg-line" d="M465 215 C 600 215 680 246 815 250" marker-end="url(#cdm11)"/>
-          <text class="dg-t acc" x="608" y="196" text-anchor="middle" font-size="19">one element</text>
-          <path class="dg-line" style="stroke-width:1.75" d="M465 350 C 600 350 680 336 812 330" marker-end="url(#cdm11)"/>
-          <text class="dg-t acc" x="608" y="386" text-anchor="middle" font-size="19">one detail</text>
-          <!-- canvas wireframe -->
-          <rect class="dg-box outer" x="760" y="30" width="500" height="380" rx="14"/>
-          <text class="dg-t acc" x="1010" y="72" text-anchor="middle" font-size="21">CANVAS</text>
-          <rect class="dg-box mid" x="795" y="95" width="430" height="80" rx="10"/>
-          <text class="dg-t mut" x="1010" y="143" text-anchor="middle" font-size="19">hero section</text>
-          <rect class="dg-box mid" x="795" y="195" width="205" height="110" rx="10"/>
-          <text class="dg-t" x="897" y="243" text-anchor="middle" font-size="19">💬 "brand color</text>
-          <text class="dg-t" x="897" y="270" text-anchor="middle" font-size="19">here"</text>
-          <rect class="dg-box mid" x="1020" y="195" width="205" height="110" rx="10"/>
-          <text class="dg-t mut" x="1122" y="256" text-anchor="middle" font-size="19">card</text>
-          <rect class="dg-box mid" x="795" y="325" width="150" height="56" rx="10"/>
-          <text class="dg-t mut" x="870" y="360" text-anchor="middle" font-size="19">button</text>
-          <rect class="dg-box hot" x="936" y="317" width="16" height="16" rx="3"/>
-        </svg>
-      </div>
-      <p class="note reveal">The classic mistake: <b>structural work via twenty inline comments</b> — or asking chat to nudge one button. Match the channel to the size of the change.</p>
-    </div>
-  </section>
+<section class="slide dark v2" id="slide-14" data-label="Name the component, give it a number" data-speaker-notes="Vague feedback is the most common failure. &quot;This doesn&#x27;t look right&quot; gives the model nothing. &quot;Tighten the spacing between form fields to 8px&quot; gives it something to do. The chat lines are structural asks; the comment lines are targeted ones. Two habits to call out: name components, and put numbers on things when you have them. You don&#x27;t need design vocabulary. &quot;Less cramped&quot;, &quot;more contrast&quot; and &quot;calmer&quot; all work, but specifics beat adjectives.">
+<div class="slide-content"><div class="slide-head reveal"><span class="snum">14</span><ol class="mini" aria-label="Part 2 of 3: Craft"><li class="done"><i></i>Map</li><li class="on"><i></i>Craft</li><li class=""><i></i>Ship</li></ol><div class="crumb">Feedback that lands</div></div>
+<h2 class="reveal">Name the component, give it a number</h2><div class="v2-body reveal"><div class="cd-fb"><div class="cd-vague"><span class="kk">Vague</span><p>“This doesn’t look right.”</p><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M26 26 L94 94 M94 26 L26 94" stroke-width="11"/></svg><small>gives the model nothing to act on</small></div><div class="v-win paper cd-spec"><div class="tbar"><i class="r"></i><i class="y"></i><i class="g"></i><span>specific</span></div><div class="wbody"><div class="ln"><span>Rearrange the dashboard: metrics on top, the chart below.</span><b>chat</b></div><div class="ln"><span>Turn this one-pager into a six-slide deck.</span><b>chat</b></div><div class="ln"><span>Tighten the spacing between form fields to 8px.</span><b>comment</b></div><div class="ln"><span>Use the primary brand colour here.</span><b>comment</b></div><div class="ln"><span>Make this a dropdown instead of radio buttons.</span><b>comment</b></div></div></div></div></div></div></section>
 
-  <section class="slide dark" data-label="Say it so it lands"
-    data-speaker-notes="Concrete phrasing, because vague feedback is the number-one failure mode. 'This doesn't look right' gives the model nothing. 'Tighten the spacing between form fields to 8px' — instantly actionable. Left column: chat-sized structural asks. Right column: comment-sized targeted asks. Two habits to call out: mention components by name, and put numbers on things when you have them. You don't need design vocabulary — 'less cramped', 'more contrast', 'calmer' all work — but specifics always beat adjectives.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">12</span><div class="crumb"><b>Craft</b> · feedback that works</div></div>
-      <h2 class="reveal">Say it so it <span class="o">lands</span></h2>
-      <div class="cards c2 reveal">
-        <div class="tile"><span class="k">In chat — structural</span><p style="font-family:var(--font-mono); font-size:var(--small-size)">"Rearrange the dashboard: metrics in the top row, the chart below."<br><br>"Turn this one-pager into a 6-slide deck — one section per slide."</p></div>
-        <div class="tile"><span class="k">In a comment — targeted</span><p style="font-family:var(--font-mono); font-size:var(--small-size)">"Tighten the spacing between form fields to 8px."<br><br>"Use the primary brand color here."<br><br>"Change this to a dropdown instead of radio buttons."</p></div>
-      </div>
-      <p class="note reveal">Vague feedback is the #1 failure mode — <i>"this doesn't look right"</i> gives the model nothing. <b>Name the component, give a number</b> when you have one.</p>
-    </div>
-  </section>
+<section class="slide light v2" id="slide-15" data-label="Save the good version, then explore" data-speaker-notes="Two moves separate fluent users from frustrated ones. First, the save-and-branch phrase: &quot;Save what we have and try a completely different approach.&quot; You explore without destroying the version you liked. Second, ask for variations up front, a few visual directions as a set, compare them and then commit. Raise two things early rather than late. Say at brief time if it must work on mobile, tablet or desktop. And ask Claude to review accessibility: contrast, font sizes and hierarchy. It&#x27;s a good reviewer when you ask. The branch phrase and both habits come from the AI For Developers write-up.">
+<div class="slide-content"><div class="slide-head reveal"><span class="snum">15</span><ol class="mini" aria-label="Part 2 of 3: Craft"><li class="done"><i></i>Map</li><li class="on"><i></i>Craft</li><li class=""><i></i>Ship</li></ol><div class="crumb">Branching</div></div>
+<h2 class="reveal">Save the good version, then explore</h2><div class="v2-body reveal"><svg class="cd-full" viewBox="0 0 1728 560" role="img" aria-label="An iteration line reaches a version worth keeping, which is saved. One sentence branches from it into four directions to compare side by side."><defs><marker id="cdmk6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" class="mk-c"/></marker></defs><rect x="2" y="22" width="230" height="96" rx="16" class="bx-card"/><text x="117" y="82" text-anchor="middle" class="t-mut">round 1</text>
+<rect x="302" y="22" width="230" height="96" rx="16" class="bx-card"/><text x="417" y="82" text-anchor="middle" class="t-strong">round 2</text>
+<rect x="602" y="6" width="480" height="128" rx="20" class="bx-good"/><text x="842" y="64" text-anchor="middle" class="cd-h">the one you liked</text><path d="M236 70 H290" class="ln-m" marker-end="url(#cdmk6)"/><path d="M536 70 H590" class="ln-m" marker-end="url(#cdmk6)"/><circle cx="760" cy="100" r="16" class="ok-dot"/><path d="M752 101 L758 107 L769 93" class="ok-tick sm"/><text x="786" y="110" class="t-acc">saved</text><path d="M842 138 V190" class="ln-c thick" marker-end="url(#cdmk6)"/><rect x="172" y="200" width="1340" height="86" rx="43" class="f-coral"/><text x="842" y="253" text-anchor="middle" class="t-on big">"Save what we have and try a completely different approach."</text><path d="M842 290 C 842 320 190 310 190 342" class="ln-c" marker-end="url(#cdmk6)"/><rect x="0" y="352" width="380" height="140" rx="14" class="bx-mid"/><rect x="20" y="372" width="340" height="44" rx="6" class="f-ink"/><rect x="20" y="428" width="100" height="44" rx="6" class="f-bar"/><rect x="140" y="428" width="100" height="44" rx="6" class="f-bar"/><rect x="260" y="428" width="100" height="44" rx="6" class="f-bar"/><text x="190" y="538" text-anchor="middle" class="t-acc">direction A</text><path d="M842 290 C 842 320 639 310 639 342" class="ln-c" marker-end="url(#cdmk6)"/><rect x="449" y="352" width="380" height="140" rx="14" class="bx-mid"/><rect x="469" y="372" width="160" height="100" rx="6" class="f-coral"/><rect x="649" y="378" width="150" height="16" rx="8" class="f-bar"/><rect x="649" y="408" width="120" height="16" rx="8" class="f-bar"/><rect x="649" y="448" width="90" height="22" rx="11" class="f-ink"/><text x="639" y="538" text-anchor="middle" class="t-acc">direction B</text><path d="M842 290 C 842 320 1088 310 1088 342" class="ln-c" marker-end="url(#cdmk6)"/><rect x="898" y="352" width="380" height="140" rx="14" class="bx-mid"/><rect x="918" y="372" width="340" height="100" rx="6" class="f-bar"/><rect x="1008" y="404" width="160" height="16" rx="8" class="f-bg"/><rect x="1038" y="432" width="100" height="20" rx="10" class="f-coral"/><text x="1088" y="538" text-anchor="middle" class="t-acc">direction C</text><path d="M842 290 C 842 320 1537 310 1537 342" class="ln-c" marker-end="url(#cdmk6)"/><rect x="1347" y="352" width="380" height="140" rx="14" class="bx-mid"/><rect x="1367" y="372" width="100" height="100" rx="6" class="f-bar"/><rect x="1487" y="372" width="100" height="100" rx="6" class="f-ink"/><rect x="1607" y="372" width="100" height="100" rx="6" class="f-coral"/><text x="1537" y="538" text-anchor="middle" class="t-acc">direction D</text></svg><div class="chips cd-chips"><span><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><rect x="8" y="16" width="104" height="88" rx="8"/><path d="M8 38 H112"/><path d="M20 27 H22 M30 27 H32" stroke-width="7"/><path d="M26 60 H72 M26 78 H58"/></svg>Say early if it must work on mobile</span><span><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M6 60 C28 24 92 24 114 60 C92 96 28 96 6 60 Z"/><circle cx="60" cy="60" r="17"/></svg>Ask it to check contrast and hierarchy</span></div></div></div></section>
 
-  <section class="slide light" data-label="Explore without losing work"
-    data-speaker-notes="Two power moves that separate fluent users from frustrated ones. First, the save-and-branch phrase: 'Save what we have and try a completely different approach' — you explore without destroying the version you liked. Second, ask for variations up front: four visual directions as a set, compare, then commit. And two things to raise early rather than late: responsiveness — say up front if it must work on mobile — and accessibility, where Claude is a genuinely good reviewer if you ask it to check contrast and hierarchy.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">13</span><div class="crumb"><b>Craft</b> · exploring safely</div></div>
-      <h2 class="reveal">Explore <span class="o">without losing work</span></h2>
-      <div class="split">
-        <div>
-          <ul class="bul reveal">
-            <li>The branch phrase: <b>"Save what we have and try a completely different approach."</b> Explore freely — the version you liked survives.</li>
-            <li>Ask for <b>variations up front</b>: "give me four visual directions" → compare side by side, then commit to one.</li>
-            <li>Say <b>early</b> if it must work on mobile — responsiveness is a brief-time requirement, not a final-polish fix.</li>
-            <li>Use Claude as an <b>accessibility reviewer</b>: "check contrast, font sizes and hierarchy" — it's genuinely good at this.</li>
-          </ul>
-          <p class="note reveal">Treat the canvas like a cheap sketchbook, not a precious file — <b>branching costs one sentence.</b></p>
-        </div>
-        <div class="diagram reveal">
-          <svg viewBox="0 0 640 430" role="img" aria-label="An iteration line reaches a version worth keeping, which is saved; from there a branch tries a completely different approach and fans out into four directions to compare side by side" xmlns="http://www.w3.org/2000/svg">
-            <defs><marker id="cdm13" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
-            <!-- trunk -->
-            <rect class="dg-box" x="20" y="30" width="130" height="60" rx="10"/>
-            <text class="dg-t mut" x="85" y="67" text-anchor="middle" font-size="20">gen 1</text>
-            <path class="dg-line dim" d="M155 60 H188" marker-end="url(#cdm13)"/>
-            <rect class="dg-box" x="195" y="30" width="130" height="60" rx="10"/>
-            <text class="dg-t" x="260" y="67" text-anchor="middle" font-size="20">gen 2</text>
-            <path class="dg-line dim" d="M330 60 H363" marker-end="url(#cdm13)"/>
-            <rect class="dg-box outer" x="370" y="18" width="250" height="84" rx="12"/>
-            <text class="dg-t" x="495" y="53" text-anchor="middle" font-size="20">the one you liked</text>
-            <text class="dg-t acc" x="495" y="83" text-anchor="middle" font-size="19">✓ saved — survives</text>
-            <!-- branch -->
-            <path class="dg-line" d="M260 94 V164" marker-end="url(#cdm13)"/>
-            <text class="dg-t acc" x="280" y="140" font-size="18">branch — one sentence</text>
-            <rect class="dg-box hot" x="70" y="172" width="380" height="64" rx="12"/>
-            <text class="dg-t on" x="260" y="211" text-anchor="middle" font-size="18">"try a completely different approach"</text>
-            <path class="dg-line" d="M260 236 V286" marker-end="url(#cdm13)"/>
-            <!-- variations -->
-            <rect class="dg-box mid" x="40" y="294" width="120" height="56" rx="10"/>
-            <text class="dg-t mut" x="100" y="329" text-anchor="middle" font-size="19">dir A</text>
-            <rect class="dg-box mid" x="180" y="294" width="120" height="56" rx="10"/>
-            <text class="dg-t mut" x="240" y="329" text-anchor="middle" font-size="19">dir B</text>
-            <rect class="dg-box mid" x="320" y="294" width="120" height="56" rx="10"/>
-            <text class="dg-t mut" x="380" y="329" text-anchor="middle" font-size="19">dir C</text>
-            <rect class="dg-box mid" x="460" y="294" width="120" height="56" rx="10"/>
-            <text class="dg-t mut" x="520" y="329" text-anchor="middle" font-size="19">dir D</text>
-            <text class="dg-t mut" x="310" y="402" text-anchor="middle" font-size="18">four directions — compare side by side, then commit</text>
-          </svg>
-        </div>
-      </div>
-    </div>
-  </section>
+<section class="slide dark v2" id="slide-16" data-label="Four briefs to steal" data-speaker-notes="Four briefs that tend to produce something reviewable in one generation, across the main output types. Read one or two aloud, not all four. Each follows the formula from slide 12: audience, sections, what goes in each, plus one constraint. The deck gets shared afterwards, so people can copy these word for word and adapt them.">
+<div class="slide-content"><div class="slide-head reveal"><span class="snum">16</span><ol class="mini" aria-label="Part 2 of 3: Craft"><li class="done"><i></i>Map</li><li class="on"><i></i>Craft</li><li class=""><i></i>Ship</li></ol><div class="crumb">Briefs to steal</div></div>
+<h2 class="reveal">Four briefs to steal</h2><div class="v2-body reveal"><div class="cd-briefs"><div class="v-win paper "><div class="tbar"><i class="r"></i><i class="y"></i><i class="g"></i><span>deck</span></div><div class="wbody"><p>An 8-slide pitch deck for [product] for non-technical execs: problem, solution, demo screenshot, market, pricing, roadmap, team, ask.</p></div></div><div class="v-win paper "><div class="tbar"><i class="r"></i><i class="y"></i><i class="g"></i><span>dashboard</span></div><div class="wbody"><p>An analytics dashboard: revenue, active users and churn as top-row metric cards, a monthly trend chart below, filterable by region and plan.</p></div></div><div class="v-win paper "><div class="tbar"><i class="r"></i><i class="y"></i><i class="g"></i><span>onboarding flow</span></div><div class="wbody"><p>A 4-screen mobile onboarding flow: welcome, permissions, profile setup, first-run tips. Clickable, with a progress indicator.</p></div></div><div class="v-win paper "><div class="tbar"><i class="r"></i><i class="y"></i><i class="g"></i><span>internal tool</span></div><div class="wbody"><p>A request-intake form for the legal team: requester info, a request-type dropdown, conditional fields per type, urgency, file upload.</p></div></div></div></div><p class="note reveal">Each one: audience, sections, content per section, one constraint.</p></div></section>
 
-  <section class="slide dark" data-label="Example briefs to steal"
-    data-speaker-notes="The steal-this slide — four briefs that reliably produce something reviewable in one generation, across the main output types. Read one or two aloud, not all four. Each follows the part-02 formula: audience, sections, content per section, and a constraint. Tell the room the deck will be shared — these are meant to be copied verbatim and adapted.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">14</span><div class="crumb"><b>Craft</b> · briefs to steal</div></div>
-      <h2 class="reveal">Four briefs to <span class="o">steal</span></h2>
-      <div class="cards c2 reveal">
-        <div class="tile"><span class="k">Deck</span><p style="font-family:var(--font-mono); font-size:var(--small-size)">"A 8-slide pitch deck for [product] for non-technical execs: problem, solution, demo screenshot, market, pricing, roadmap, team, ask."</p></div>
-        <div class="tile"><span class="k">Dashboard</span><p style="font-family:var(--font-mono); font-size:var(--small-size)">"An analytics dashboard: revenue, active users &amp; churn as top-row metric cards, a monthly trend chart below, filterable by region and plan."</p></div>
-        <div class="tile"><span class="k">Onboarding flow</span><p style="font-family:var(--font-mono); font-size:var(--small-size)">"A 4-screen mobile onboarding flow: welcome, permissions, profile setup, first-run tips — clickable, with a progress indicator."</p></div>
-        <div class="tile"><span class="k">Internal tool</span><p style="font-family:var(--font-mono); font-size:var(--small-size)">"A request-intake form for the legal team: requester info, request type dropdown, conditional fields per type, urgency, file upload."</p></div>
-      </div>
-      <p class="note reveal">Same formula every time: <b>audience · sections · content per section · one constraint.</b> Copy, adapt, iterate.</p>
-    </div>
-  </section>
+<section class="slide dark v2 beat" id="slide-17" data-label="Live: one brief, five minutes" data-speaker-notes="The live build. Use the deck or the dashboard brief from slide 16, so the room has already seen it as text. Narrate each channel as you use it: the brief in chat, one structural change in chat, one inline comment, one direct edit, one slider. If your organisation has a design system set up, point out that the result lands in your brand without being asked. Resist polishing, because you&#x27;re showing the method. Five minutes, hard stop. If the network or the beta misbehaves, the fallback is on the next slide.">
+<div class="slide-content"><div class="slide-head reveal"><span class="snum">17</span><ol class="mini" aria-label="Part 2 of 3: Craft"><li class="done"><i></i>Map</li><li class="on"><i></i>Craft</li><li class=""><i></i>Ship</li></ol><div class="crumb">Live demo</div></div><div class="demo-badge reveal">Live demo</div>
+<h2 class="reveal">Live: one brief, five minutes</h2><div class="v2-body reveal"><div class="v-stn n5"><svg class="rail" viewBox="0 0 1728 256" role="img" aria-label="Demo run: brief, chat, comment, edit, slider"><line class="rl-base" x1="4" y1="156" x2="1724" y2="156"/><line class="rl-on" x1="172.8" y1="156" x2="1555.2" y2="156"/><text class="rl-n" x="172.8" y="40" text-anchor="middle">01</text><text class="rl-n" x="518.4" y="40" text-anchor="middle">02</text><text class="rl-n" x="864" y="40" text-anchor="middle">03</text><text class="rl-n" x="1209.6" y="40" text-anchor="middle">04</text><text class="rl-n" x="1555.2" y="40" text-anchor="middle">05</text><circle class="rl-c hot" cx="172.8" cy="156" r="92"/><svg x="127.72" y="110.92" width="90.16" height="90.16" viewBox="0 0 120 120" class="ic hot"><rect x="22" y="20" width="76" height="90" rx="8"/><rect x="42" y="10" width="36" height="18" rx="5" class="bg"/><path d="M38 52 H82 M38 68 H82 M38 84 H66"/></svg><circle class="rl-c" cx="518.4" cy="156" r="92"/><svg x="473.32" y="110.92" width="90.16" height="90.16" viewBox="0 0 120 120" class="ic "><path d="M14 20 H106 V80 H54 L32 102 V80 H14 Z"/><path d="M34 42 H86 M34 58 H70"/></svg><circle class="rl-c" cx="864" cy="156" r="92"/><svg x="818.92" y="110.92" width="90.16" height="90.16" viewBox="0 0 120 120" class="ic "><path d="M42 12 H78 L72 46 L94 66 H26 L48 46 Z"/><path d="M60 66 V112"/></svg><circle class="rl-c" cx="1209.6" cy="156" r="92"/><svg x="1164.52" y="110.92" width="90.16" height="90.16" viewBox="0 0 120 120" class="ic "><path d="M18 102 L26 74 L84 16 L104 36 L46 94 Z"/><path d="M72 28 L92 48"/></svg><circle class="rl-c" cx="1555.2" cy="156" r="92"/><svg x="1510.12" y="110.92" width="90.16" height="90.16" viewBox="0 0 120 120" class="ic "><path d="M12 30 H108 M12 60 H108 M12 90 H108"/><circle cx="40" cy="30" r="11" class="bg"/><circle cx="82" cy="60" r="11" class="bg"/><circle cx="56" cy="90" r="11" class="bg"/></svg></svg><div class="stops"><div><h3>Brief</h3><p>Paste one from slide 16.</p></div><div><h3>Chat</h3><p>One structural change.</p></div><div><h3>Comment</h3><p>One inline note.</p></div><div><h3>Edit</h3><p>One direct fix.</p></div><div><h3>Slider</h3><p>Spacing or colour.</p></div></div></div></div><p class="note reveal">The method matters more than the artifact. Hard stop at five minutes.</p></div></section>
 
-  <!-- LIVE DEMO -->
-  <section class="slide dark" data-label="Live: one-pager in five minutes"
-    data-speaker-notes="The live build. Use the deck brief or the dashboard brief from the previous slide — something the room just saw as text. Narrate the channels as you use them: the brief in chat, one structural change in chat, one inline comment, one direct edit, one slider. Resist polishing — the point is the method, not a perfect artifact. Five minutes, hard stop; the fallback slide is behind this one if the network or the beta misbehaves.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">15</span><div class="crumb"><b>Craft</b> · live demo</div></div>
-      <div class="demo-badge reveal">Live demo</div>
-      <h2 class="reveal">One-pager in <span class="o">five minutes</span></h2>
-      <ul class="bul reveal">
-        <li>Brief from the previous slide, pasted verbatim → <b>first generation</b>.</li>
-        <li>One <b>structural change</b> in chat · one <b>inline comment</b> · one <b>direct edit</b> · one <b>slider</b>.</li>
-        <li>Watch the design system do its work — everything lands <b>on-brand without asking</b>.</li>
-      </ul>
-      <p class="note reveal"><span class="pill live">Live</span> The point is the <b>method</b>, not a finished artifact — five minutes, hard stop.</p>
-    </div>
-  </section>
+<section class="slide light v2" id="slide-18" data-label="Fallback: the same run, frame by frame" data-speaker-notes="Use this only if the live build stalls: beta hiccup, network or time. Walk the five frames: the first draft, then what each channel changed. Keep it under two minutes and move on to the pitfalls. These frames are drawn stand-ins. Before you present, swap in screenshots from your own rehearsal run.">
+<div class="slide-content"><div class="slide-head reveal"><span class="snum">18</span><ol class="mini" aria-label="Part 2 of 3: Craft"><li class="done"><i></i>Map</li><li class="on"><i></i>Craft</li><li class=""><i></i>Ship</li></ol><div class="crumb">Fallback</div></div>
+<h2 class="reveal">Fallback: the same run, frame by frame</h2><div class="v2-body reveal"><div class="cd-story"><svg class="" viewBox="0 0 1728 400" role="img" aria-label="Five frames of the demo run: first draft, then after a chat change, an inline comment, a direct edit and a slider change."><defs><marker id="cdmk7" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" class="mk-c"/></marker></defs><rect x="0" y="4" width="316" height="390" rx="16" class="bx-card"/><rect x="20" y="26" width="276" height="140" rx="8" class="f-ink"/><rect x="20" y="190" width="84" height="160" rx="6" class="f-bar"/><rect x="116" y="190" width="84" height="160" rx="6" class="f-bar"/><rect x="212" y="190" width="84" height="160" rx="6" class="f-bar"/><rect x="44" y="82" width="150" height="26" rx="4" class="f-bg"/><rect x="353" y="4" width="316" height="390" rx="16" class="bx-card"/><rect x="373" y="214" width="276" height="140" rx="8" class="f-ink"/><rect x="373" y="26" width="84" height="160" rx="6" class="f-bar"/><rect x="469" y="26" width="84" height="160" rx="6" class="f-bar"/><rect x="565" y="26" width="84" height="160" rx="6" class="f-bar"/><rect x="397" y="270" width="150" height="26" rx="4" class="f-bg"/><rect x="706" y="4" width="316" height="390" rx="16" class="bx-card"/><rect x="726" y="214" width="276" height="140" rx="8" class="f-ink"/><rect x="726" y="26" width="84" height="160" rx="6" class="f-bar"/><rect x="822" y="26" width="84" height="160" rx="6" class="f-coral"/><rect x="918" y="26" width="84" height="160" rx="6" class="f-bar"/><rect x="750" y="270" width="150" height="26" rx="4" class="f-bg"/><rect x="1059" y="4" width="316" height="390" rx="16" class="bx-card"/><rect x="1079" y="214" width="276" height="140" rx="8" class="f-ink"/><rect x="1079" y="26" width="84" height="160" rx="6" class="f-bar"/><rect x="1175" y="26" width="84" height="160" rx="6" class="f-coral"/><rect x="1271" y="26" width="84" height="160" rx="6" class="f-bar"/><rect x="1103" y="270" width="220" height="26" rx="4" class="f-bg"/><rect x="1093" y="260" width="240" height="46" rx="3" class="sel"/><rect x="1412" y="4" width="316" height="390" rx="16" class="bx-card"/><rect x="1432" y="214" width="276" height="140" rx="8" class="f-ink"/><rect x="1432" y="26" width="68" height="130" rx="6" class="f-bar"/><rect x="1536" y="26" width="68" height="130" rx="6" class="f-coral"/><rect x="1640" y="26" width="68" height="130" rx="6" class="f-bar"/><rect x="1456" y="270" width="220" height="26" rx="4" class="f-bg"/><path d="M1442 372 H1698" class="ln-dim"/><circle cx="1642" cy="372" r="11" class="f-coral"/><path d="M318 200 H348" class="ln-c" marker-end="url(#cdmk7)"/><path d="M671 200 H701" class="ln-c" marker-end="url(#cdmk7)"/><path d="M1024 200 H1054" class="ln-c" marker-end="url(#cdmk7)"/><path d="M1377 200 H1407" class="ln-c" marker-end="url(#cdmk7)"/></svg><div class="stops"><div><span class="kk">01</span><h3>First draft</h3><p>from the brief</p></div><div><span class="kk">02</span><h3>Chat</h3><p>hero moved below the cards</p></div><div><span class="kk">03</span><h3>Comment</h3><p>card in brand colour</p></div><div><span class="kk">04</span><h3>Edit</h3><p>headline rewritten</p></div><div><span class="kk">05</span><h3>Slider</h3><p>more space</p></div></div></div></div></div></section>
 
-  <section class="slide light" data-label="Fallback: recorded run"
-    data-speaker-notes="Use only if the live build stalls — beta hiccup, network, or time. Narrate from the prepared screenshots or recording: the brief, the first generation, and the after-state of each refinement channel. Keep it under two minutes and move to the pitfalls.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">16</span><div class="crumb"><b>Craft</b> · fallback</div></div>
-      <h2 class="reveal">Fallback: <span class="o">recorded run</span></h2>
-      <div class="fallback-box reveal">
-        <div class="fb-icon">▢</div>
-        <div class="fb-caption">Placeholder — screenshots or recording of the five-minute build: the brief, generation one, and one example of each refinement channel (chat · comment · direct edit · slider).</div>
-      </div>
-      <p class="note reveal">Use only if the live build stalls. Narrate the captured before/after per channel, then move on.</p>
-    </div>
-  </section>
+<section class="slide light v2" id="slide-19" data-label="Six pitfalls early users hit" data-speaker-notes="It&#x27;s a beta, and early users keep hitting the same six things. Vague feedback and judging the first round are self-inflicted, and earlier slides cover the fix. Pixel-perfecting is a scoping error: get to ninety percent here and send it to Canva for the last mile. Very large repos cause lag; the Help Center suggests linking them from Claude Code, and attaching one subdirectory helps too. Two are known issues on Anthropic&#x27;s own list. Inline comments occasionally don&#x27;t appear, so paste the feedback into chat. And simultaneous editing by two or more people is still basic, so treat it as one driver with reviewers.">
+<div class="slide-content"><div class="slide-head reveal"><span class="snum">19</span><ol class="mini" aria-label="Part 2 of 3: Craft"><li class="done"><i></i>Map</li><li class="on"><i></i>Craft</li><li class=""><i></i>Ship</li></ol><div class="crumb">Pitfalls</div></div>
+<h2 class="reveal">Six pitfalls early users hit</h2><div class="v2-body reveal"><div class="v-rows grid2 cd-pits"><div class="v-row"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M36 40 C36 14 84 14 84 40 C84 60 60 58 60 80"/><path d="M60 100 V102" stroke-width="10"/></svg><h3>Vague feedback</h3><p>Name the component and give a number.</p></div><div class="v-row"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M6 60 C28 24 92 24 114 60 C92 96 28 96 6 60 Z"/><circle cx="60" cy="60" r="17"/></svg><h3>Judging round one</h3><p>The value shows up in rounds two to four.</p></div><div class="v-row"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><circle cx="60" cy="60" r="48"/><circle cx="60" cy="60" r="30"/><circle cx="60" cy="60" r="10"/></svg><h3>Pixel-perfecting</h3><p>Get to 90% here, finish in Canva.</p></div><div class="v-row"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M10 28 V98 H110 V42 H58 L46 28 Z"/></svg><h3>Huge repos</h3><p>Link from Claude Code or attach one folder.</p></div><div class="v-row"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M14 20 H106 V80 H54 L32 102 V80 H14 Z"/><path d="M34 42 H86 M34 58 H70"/></svg><h3>Missing comments</h3><p>Known issue: paste the note into chat.</p></div><div class="v-row"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><circle cx="44" cy="40" r="16"/><path d="M12 104 C12 80 26 68 44 68 C62 68 76 80 76 104"/><circle cx="82" cy="34" r="13" opacity=".6"/><path d="M84 60 C100 60 110 72 110 94" opacity=".6"/></svg><h3>Co-editing</h3><p>Still basic. One driver, many reviewers.</p></div></div></div></div></section>
 
-  <section class="slide dark" data-label="Pitfalls"
-    data-speaker-notes="The honest slide — this is a beta and early users keep hitting the same six things. Vague feedback and judging generation one are self-inflicted; the fix is upstream in this deck. Pixel-perfection is a scoping error: get to ninety percent here, export to Canva for the last mile. Whole monorepos cause lag — attach the subdirectory. Two genuine beta bugs to know about: inline comments occasionally vanish, in which case paste the text into chat instead; and multi-person simultaneous editing is basic — treat it as single-driver with commenters, not Figma.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">17</span><div class="crumb"><b>Craft</b> · pitfalls</div></div>
-      <h2 class="reveal">Six pitfalls <span class="o">early users hit</span></h2>
-      <div class="gloss reveal" style="grid-template-columns:1fr">
-        <div class="row"><span class="term">Vague feedback</span><span class="def">"Doesn't look right" goes nowhere — name the component, give a number.</span></div>
-        <div class="row"><span class="term">Judging gen 1</span><span class="def">The first version is an opener — the value is in iterations 2–4.</span></div>
-        <div class="row"><span class="term">Pixel-perfecting</span><span class="def">Don't chase the last 10% here — <b>export to Canva</b> for final polish.</span></div>
-        <div class="row"><span class="term">Whole monorepos</span><span class="def">Large repos lag — attach the relevant subdirectory instead.</span></div>
-        <div class="row"><span class="term">Vanishing comments</span><span class="def">Beta bug: inline comments occasionally disappear — paste the text into chat.</span></div>
-        <div class="row"><span class="term">Co-editing</span><span class="def">Simultaneous editing is basic — treat it as <b>one driver + commenters</b>, not Figma.</span></div>
-      </div>
-    </div>
-  </section>
+<section class="slide dark v2 pbeat cd-part" id="slide-20" data-label="Part 03 · From canvas to shipped" data-speaker-notes="Last part, short and practical. A design on a canvas does nothing until it&#x27;s in front of stakeholders or in a repo. Three moves: share it for feedback, export it in the right format, or hand it to Claude Code to build.">
+<div class="slide-content"><div class="slide-head reveal"><span class="snum">20</span><ol class="mini" aria-label="Part 3 of 3: Ship"><li class="done"><i></i>Map</li><li class="done"><i></i>Craft</li><li class="on"><i></i>Ship</li></ol><div class="crumb">Part 03</div></div><div class="pb reveal"><div class="pb-L"><div class="pb-mega"><span class="pb-kick">Part</span>03</div>
+<h2>From canvas to shipped</h2><p class="pb-lead">Pick the route by where the design has to end up.</p></div><div class="pb-R"><span class="kk">In this part</span><ol class="cd-toc"><li><span>21</span>Share for feedback</li><li><span>22</span>Export by destination</li><li><span>23</span>The Claude Code round trip</li></ol></div></div></div></section>
 
-  <!-- ============ PART 03 — FROM CANVAS TO SHIPPED ============ -->
-  <section class="slide dark divider" data-label="03 From canvas to shipped"
-    data-speaker-notes="Last part, short and practical: a design on a canvas is worth nothing until it's in front of stakeholders or in a repo. Three moves — share it for feedback, export it in the right format, or hand it to Claude Code for implementation.">
-    <div class="slide-content">
-      <div class="dnum reveal">03</div>
-      <h2 class="reveal">From canvas <span class="o">to shipped</span></h2>
-      <p class="dsub reveal">Share it, export it, or hand it to <b>Claude Code</b> — pick by where the design needs to end up.</p>
-    </div>
-  </section>
+<section class="slide light v2" id="slide-21" data-label="Share it for feedback" data-speaker-notes="Designs stay private until you share them. On Enterprise, a link works for anyone in your organisation, and it stays inside the organisation unless an owner turns on external sharing. On Pro, Max and Team you can share with anyone who has the link, as long as they have a Claude account. The launch post describes view access and edit access. The workflow that works today: send the link, let reviewers leave inline notes exactly where they mean them, then resolve the notes in one pass. Each note is a targeted refinement Claude can act on. Some write-ups mention a comment-only access level; Anthropic&#x27;s pages list view and edit, so check the share dialog before you promise it. Repeat the caveat: one driver, many commenters.">
+<div class="slide-content"><div class="slide-head reveal"><span class="snum">21</span><ol class="mini" aria-label="Part 3 of 3: Ship"><li class="done"><i></i>Map</li><li class="done"><i></i>Craft</li><li class="on"><i></i>Ship</li></ol><div class="crumb">Share</div></div>
+<h2 class="reveal">Share it for feedback</h2><div class="v2-body reveal"><div class="v-stn n3"><svg class="rail" viewBox="0 0 1728 378" role="img" aria-label="Private until shared, then a view or edit link, then reviewer comments that go back into the design"><defs><marker id="mk42" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" class="mk-c"/></marker></defs><line class="rl-base" x1="4" y1="254" x2="1724" y2="254"/><line class="rl-on" x1="288" y1="254" x2="1440" y2="254"/><path class="rl-back" d="M1410 132 C1410 20 318 20 318 132" marker-end="url(#mk42)"/><rect class="rl-bg" x="714" y="24" width="300" height="48" rx="24"/><text class="rl-bl" x="864" y="57" text-anchor="middle">notes go back in</text><circle class="rl-c" cx="288" cy="254" r="116"/><svg x="231.16" y="197.16" width="113.68" height="113.68" viewBox="0 0 120 120" class="ic "><rect x="22" y="52" width="76" height="58" rx="8"/><path d="M38 52 V38 A22 22 0 0 1 82 38 V52"/><path d="M60 72 V88"/></svg><circle class="rl-c" cx="864" cy="254" r="116"/><svg x="807.16" y="197.16" width="113.68" height="113.68" viewBox="0 0 120 120" class="ic "><rect x="8" y="42" width="62" height="36" rx="18"/><rect x="50" y="42" width="62" height="36" rx="18"/></svg><circle class="rl-c hot" cx="1440" cy="254" r="116"/><svg x="1383.16" y="197.16" width="113.68" height="113.68" viewBox="0 0 120 120" class="ic hot"><path d="M14 20 H106 V80 H54 L32 102 V80 H14 Z"/><path d="M34 42 H86 M34 58 H70"/></svg></svg><div class="stops"><div><h3>Private</h3><p>Until you share it.</p></div><div><h3>Share a link</h3><p>View or edit access.</p></div><div><h3>Comments</h3><p>Reviewers pin notes on the design.</p></div></div></div></div><p class="note reveal">Enterprise links stay inside the organisation unless an owner allows external sharing.</p></div></section>
 
-  <section class="slide light" data-label="Share & collaborate"
-    data-speaker-notes="Sharing is organisation-scoped with the levels you'd expect: private by default, then view-only, comment, or edit access via a link. The workflow that works today: share with comment access, let stakeholders leave inline notes exactly where they mean them, resolve the notes in one pass. Repeat the co-editing caveat from the pitfalls: one driver, many commenters — simultaneous editing is not Figma yet.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">18</span><div class="crumb"><b>Ship</b> · share &amp; collaborate</div></div>
-      <h2 class="reveal">Share for <span class="o">feedback</span></h2>
-      <div class="split">
-        <div>
-          <ul class="bul reveal">
-            <li><b>Org-scoped sharing</b>: private by default → <b>view-only</b>, <b>comment</b>, or <b>edit</b> access via link.</li>
-            <li>The workflow that works: share with <b>comment access</b> — stakeholders leave inline notes <b>exactly where they mean them</b>.</li>
-            <li>Resolve comments in one pass — each note is a targeted refinement Claude can act on directly.</li>
-            <li>Co-editing caveat (beta): <b>one driver, many commenters</b> — simultaneous editing isn't Figma yet.</li>
-          </ul>
-          <p class="note reveal">Stakeholder comments become <b>refinement input</b> — the review round and the iteration round are the same round.</p>
-        </div>
-        <div class="diagram reveal">
-          <svg viewBox="0 0 640 470" role="img" aria-label="A private design is shared via link with view-only, comment or edit access; the comment path collects inline notes from stakeholders, which loop back into the design as refinement input" xmlns="http://www.w3.org/2000/svg">
-            <defs><marker id="cdm18" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
-            <!-- the design -->
-            <rect class="dg-box outer" x="110" y="20" width="420" height="64" rx="12"/>
-            <text class="dg-t" x="320" y="59" text-anchor="middle" font-size="20">Your design — private by default</text>
-            <path class="dg-line" d="M320 84 V128" marker-end="url(#cdm18)"/>
-            <text class="dg-t acc" x="345" y="115" font-size="18">share a link</text>
-            <!-- access levels -->
-            <rect class="dg-box" x="40" y="136" width="170" height="56" rx="10"/>
-            <text class="dg-t mut" x="125" y="171" text-anchor="middle" font-size="19">view-only</text>
-            <rect class="dg-box hot" x="235" y="136" width="170" height="56" rx="10"/>
-            <text class="dg-t on" x="320" y="171" text-anchor="middle" font-size="19">comment</text>
-            <rect class="dg-box" x="430" y="136" width="170" height="56" rx="10"/>
-            <text class="dg-t mut" x="515" y="171" text-anchor="middle" font-size="19">edit</text>
-            <!-- comment workflow -->
-            <path class="dg-line" d="M320 192 V236" marker-end="url(#cdm18)"/>
-            <rect class="dg-box mid" x="135" y="244" width="370" height="80" rx="12"/>
-            <text class="dg-t" x="320" y="279" text-anchor="middle" font-size="19">💬 stakeholders leave inline notes</text>
-            <text class="dg-t mut" x="320" y="307" text-anchor="middle" font-size="17">exactly where they mean them</text>
-            <!-- loop back -->
-            <path class="dg-line" d="M130 296 C 40 300 22 130 102 54" marker-end="url(#cdm18)"/>
-            <text class="dg-t acc" x="320" y="368" text-anchor="middle" font-size="18">each note = a refinement Claude acts on</text>
-            <text class="dg-t mut" x="320" y="428" text-anchor="middle" font-size="17">beta: one driver, many commenters — not Figma yet</text>
-          </svg>
-        </div>
-      </div>
-    </div>
-  </section>
+<section class="slide dark v2" id="slide-22" data-label="Export by destination" data-speaker-notes="Pick the export by destination. PPTX, PDF or Google Slides when it has to land in a meeting. Standalone HTML when the clickable prototype needs to travel as one file. The internal URL when you want feedback, not a file. A zip when you want the raw files. The Help Center lists fifteen partner tools you can send to, Canva among them, alongside Adobe, Miro, Vercel and others, for when marketing wants to finish it in their own tool. And the handoff to Claude Code when it&#x27;s headed for a repo, which is the next slide. Google Slides and the wider partner list arrived after launch; check the menu before promising a specific one.">
+<div class="slide-content"><div class="slide-head reveal"><span class="snum">22</span><ol class="mini" aria-label="Part 3 of 3: Ship"><li class="done"><i></i>Map</li><li class="done"><i></i>Craft</li><li class="on"><i></i>Ship</li></ol><div class="crumb">Exports</div></div>
+<h2 class="reveal">Export by destination</h2><div class="v2-body reveal"><svg class="cd-full" viewBox="0 0 1728 590" role="img" aria-label="One design fans out to six exports: PPTX, PDF or Google Slides for a meeting; standalone HTML for a clickable prototype; an internal URL for feedback; a zip of raw files; Canva and 14 other partner tools; and a handoff to Claude Code for a repository."><defs><marker id="cdmk8" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" class="mk-c"/></marker></defs><rect x="2" y="190" width="380" height="220" rx="26" class="bx-hot soft"/>
+<text x="192" y="286" text-anchor="middle" class="cd-h xl">Your design</text>
+<text x="192" y="342" text-anchor="middle" class="t-mut">Export, top right</text><path d="M388 300 C 520 300 520 44 586 44" class="ln-c" marker-end="url(#cdmk8)"/><rect x="600" y="2" width="1126" height="84" rx="16" class="bx-card"/><svg x="628" y="20" width="48" height="48" viewBox="0 0 120 120" class="ic "><rect x="10" y="16" width="100" height="68" rx="6"/><path d="M60 84 V104 M38 108 H82"/><path d="M26 36 H64 M26 52 H54"/><rect x="72" y="42" width="24" height="28" rx="3"/></svg><text x="702" y="56" class="cd-h">PPTX · PDF · Google Slides</text><text x="1700" y="54" text-anchor="end" class="t-mut">for a meeting</text><path d="M388 300 C 520 300 520 144 586 144" class="ln-c" marker-end="url(#cdmk8)"/><rect x="600" y="102" width="1126" height="84" rx="16" class="bx-card"/><svg x="628" y="120" width="48" height="48" viewBox="0 0 120 120" class="ic "><path d="M38 30 L10 60 L38 90 M82 30 L110 60 L82 90 M70 18 L50 102"/></svg><text x="702" y="156" class="cd-h">Standalone HTML</text><text x="1700" y="154" text-anchor="end" class="t-mut">a clickable prototype, one file</text><path d="M388 300 C 520 300 520 244 586 244" class="ln-c" marker-end="url(#cdmk8)"/><rect x="600" y="202" width="1126" height="84" rx="16" class="bx-card"/><svg x="628" y="220" width="48" height="48" viewBox="0 0 120 120" class="ic "><rect x="8" y="42" width="62" height="36" rx="18"/><rect x="50" y="42" width="62" height="36" rx="18"/></svg><text x="702" y="256" class="cd-h">Internal URL</text><text x="1700" y="254" text-anchor="end" class="t-mut">feedback without a file</text><path d="M388 300 C 520 300 520 344 586 344" class="ln-c" marker-end="url(#cdmk8)"/><rect x="600" y="302" width="1126" height="84" rx="16" class="bx-card"/><svg x="628" y="320" width="48" height="48" viewBox="0 0 120 120" class="ic "><path d="M60 10 L108 34 V86 L60 110 L12 86 V34 Z"/><path d="M12 34 L60 58 L108 34 M60 58 V110"/></svg><text x="702" y="356" class="cd-h">.zip</text><text x="1700" y="354" text-anchor="end" class="t-mut">the raw files</text><path d="M388 300 C 520 300 520 444 586 444" class="ln-c" marker-end="url(#cdmk8)"/><rect x="600" y="402" width="1126" height="84" rx="16" class="bx-card"/><svg x="628" y="420" width="48" height="48" viewBox="0 0 120 120" class="ic "><rect x="12" y="12" width="42" height="42" rx="8"/><rect x="66" y="12" width="42" height="42" rx="8"/><rect x="12" y="66" width="42" height="42" rx="8"/><path d="M87 68 C89 82 94 86 108 87 C94 89 89 94 87 108 C85 94 80 89 66 87 C80 86 85 82 87 68 Z"/></svg><text x="702" y="456" class="cd-h">Canva and 14 more tools</text><text x="1700" y="454" text-anchor="end" class="t-mut">your team’s own tool</text><path d="M388 300 C 520 300 520 544 586 544" class="ln-c" marker-end="url(#cdmk8)"/><rect x="600" y="502" width="1126" height="84" rx="16" class="f-coral"/><svg x="628" y="520" width="48" height="48" viewBox="0 0 120 120" class="ic inv-ink"><rect x="8" y="16" width="104" height="88" rx="8"/><path d="M26 46 L44 60 L26 74"/><path d="M54 76 H86"/></svg><text x="702" y="556" class="cd-h on">Claude Code</text><text x="1700" y="554" text-anchor="end" class="t-on">a repo: next slide</text></svg></div><p class="note reveal">URL for feedback, file for meetings, handoff for engineers.</p></div></section>
 
-  <section class="slide dark" data-label="Export formats"
-    data-speaker-notes="Pick the export by destination, walk the rows: PPTX or PDF when it must land in a meeting; standalone HTML when you want the clickable prototype to travel as a file; the org URL when you want feedback rather than a file; Canva when marketing wants to finish it in their own tool; zip when you want the raw files; and the handoff bundle when it's headed for a repo — which gets its own slide next.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">19</span><div class="crumb"><b>Ship</b> · exports</div></div>
-      <h2 class="reveal">Export by <span class="o">destination</span></h2>
-      <div class="diagram reveal">
-        <svg viewBox="0 0 1300 480" role="img" aria-label="One canvas fans out to six exports: PPTX or PDF for a meeting, standalone HTML for a clickable prototype, an org URL for feedback, Canva for marketing polish, a zip of raw files, and the Claude Code handoff for a repository" xmlns="http://www.w3.org/2000/svg">
-          <defs><marker id="cdm19" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
-          <!-- canvas -->
-          <rect class="dg-box outer" x="40" y="155" width="340" height="170" rx="14"/>
-          <text class="dg-t" x="210" y="230" text-anchor="middle" font-size="24">Your canvas</text>
-          <text class="dg-t mut" x="210" y="268" text-anchor="middle" font-size="19">Export ↗ — button upper right</text>
-          <!-- fan-out -->
-          <path class="dg-line" d="M385 205 C 540 140 580 70 715 52" marker-end="url(#cdm19)"/>
-          <path class="dg-line" d="M385 220 C 540 185 580 145 715 127" marker-end="url(#cdm19)"/>
-          <path class="dg-line" d="M385 235 C 540 228 580 208 715 202" marker-end="url(#cdm19)"/>
-          <path class="dg-line" d="M385 250 C 540 255 580 270 715 276" marker-end="url(#cdm19)"/>
-          <path class="dg-line" d="M385 265 C 540 297 580 337 715 351" marker-end="url(#cdm19)"/>
-          <path class="dg-line" d="M385 280 C 540 342 580 410 715 426" marker-end="url(#cdm19)"/>
-          <!-- destinations -->
-          <rect class="dg-box" x="720" y="20" width="540" height="62" rx="10"/>
-          <text class="dg-t" x="750" y="59" font-size="21">PPTX · PDF</text>
-          <text class="dg-t mut" x="1235" y="59" text-anchor="end" font-size="18">a meeting — your deck culture</text>
-          <rect class="dg-box" x="720" y="95" width="540" height="62" rx="10"/>
-          <text class="dg-t" x="750" y="134" font-size="21">Standalone HTML</text>
-          <text class="dg-t mut" x="1235" y="134" text-anchor="end" font-size="18">clickable prototype, one file</text>
-          <rect class="dg-box" x="720" y="170" width="540" height="62" rx="10"/>
-          <text class="dg-t" x="750" y="209" font-size="21">Org URL</text>
-          <text class="dg-t mut" x="1235" y="209" text-anchor="end" font-size="18">feedback — view · comment · edit</text>
-          <rect class="dg-box" x="720" y="245" width="540" height="62" rx="10"/>
-          <text class="dg-t" x="750" y="284" font-size="21">Canva</text>
-          <text class="dg-t mut" x="1235" y="284" text-anchor="end" font-size="18">the last 10%, in marketing's tool</text>
-          <rect class="dg-box" x="720" y="320" width="540" height="62" rx="10"/>
-          <text class="dg-t" x="750" y="359" font-size="21">.zip</text>
-          <text class="dg-t mut" x="1235" y="359" text-anchor="end" font-size="18">raw HTML &amp; assets, anywhere</text>
-          <rect class="dg-box hot" x="720" y="395" width="540" height="62" rx="10"/>
-          <text class="dg-t on" x="750" y="434" font-size="21">Claude Code handoff</text>
-          <text class="dg-t on" x="1235" y="434" text-anchor="end" font-size="18">a repo — next slide</text>
-        </svg>
-      </div>
-      <p class="note reveal">Export button, upper right. Rule of thumb: <b>URL for feedback, file for meetings, handoff for engineers.</b></p>
-    </div>
-  </section>
+<section class="slide light v2" id="slide-23" data-label="The Claude Code round trip" data-speaker-notes="This slide is for anyone who sits next to a developer. Two directions make a loop. Inbound: /design-sync in Claude Code reads your tokens and components, so Design builds with your real parts. Outbound: when the design is ready, Claude packages it into a handoff bundle, and you send it to a local coding agent or to Claude Code on the web to implement against the actual codebase. Because Design built real HTML with your components all along, Claude Code has far less to reinvent. Design explores, Code ships, and the shared design system keeps both honest. The product page also mentions a /design command for working on designs from inside Claude Code; it&#x27;s newer, so treat it as one to try, not a promise.">
+<div class="slide-content"><div class="slide-head reveal"><span class="snum">23</span><ol class="mini" aria-label="Part 3 of 3: Ship"><li class="done"><i></i>Map</li><li class="done"><i></i>Craft</li><li class="on"><i></i>Ship</li></ol><div class="crumb">Claude Code handoff</div></div>
+<h2 class="reveal">The Claude Code round trip</h2><div class="v2-body reveal"><div class="v-hand cd-rt"><svg class="" viewBox="0 0 1728 440" role="img" aria-label="Round trip between your repo and Claude Design: /design-sync brings tokens and components in, and the handoff bundle carries the finished design out to Claude Code, which builds it in the repo."><defs><marker id="cdmk9" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" class="mk-c"/></marker></defs><rect x="2" y="110" width="460" height="220" rx="28" class="f-ink"/><svg x="55" y="165" width="110" height="110" viewBox="0 0 120 120" class="ic inv"><path d="M24 10 H76 L98 32 V110 H24 Z"/><path d="M76 10 V32 H98"/><path d="M50 58 L38 72 L50 86 M72 58 L84 72 L72 86"/></svg><text x="190" y="210" class="t-paper lg">Your</text><text x="190" y="272" class="t-paper lg">repo</text><rect x="1266" y="110" width="460" height="220" rx="28" class="bx-good"/><svg x="1319" y="165" width="110" height="110" viewBox="0 0 120 120" class="ic "><rect x="8" y="16" width="104" height="88" rx="8"/><path d="M74 16 V104"/><path d="M22 38 H60 M22 54 H60 M22 70 H48"/><path d="M86 40 H100 M86 56 H100"/></svg><text x="1454" y="210" class="cd-h xl">Claude</text><text x="1454" y="272" class="cd-h xl">Design</text><path d="M470 170 C 560 40 640 40 700 40" class="ln-c thick"/><path d="M1030 40 C 1090 40 1170 40 1256 160" class="ln-c thick" marker-end="url(#cdmk9)"/><rect x="700" y="4" width="330" height="72" rx="36" class="f-coral"/><text x="865" y="52" text-anchor="middle" class="t-on big">/design-sync</text><text x="865" y="130" text-anchor="middle" class="t-acc">IN: tokens and components</text><path d="M1256 290 C 1170 400 1090 400 1050 400" class="ln-c thick"/><path d="M680 400 C 640 400 560 400 474 280" class="ln-c thick" marker-end="url(#cdmk9)"/><rect x="680" y="364" width="370" height="72" rx="36" class="f-coral"/><text x="865" y="412" text-anchor="middle" class="t-on big">handoff bundle</text><text x="865" y="322" text-anchor="middle" class="t-acc">OUT: Claude Code builds it</text></svg><div class="steps"><div><h3>In</h3><p>Run /design-sync in Claude Code to bring your components across.</p></div><div><h3>Out</h3><p>Send the handoff bundle to a local coding agent or Claude Code on the web.</p></div><div><h3>Why it holds</h3><p>Claude Code starts from HTML built with your real parts.</p></div></div></div></div></div></section>
 
-  <section class="slide light" data-label="The Claude Code round trip"
-    data-speaker-notes="The slide for anyone sitting next to a developer. Two directions make a loop. Inbound: /design-sync in Claude Code pushes your design system — from the repo, design files or a local checkout — so Design builds with your real components. Outbound: the handoff bundle carries the finished design to Claude Code for implementation against the actual codebase — and because Design was building real HTML with your components all along, the handoff is a translation, not a rewrite. Design explores, Code ships, the design system keeps both honest.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>Ship</b> · Claude Code handoff</div></div>
-      <h2 class="reveal">The Claude Code <span class="o">round trip</span></h2>
-      <div class="diagram reveal">
-        <svg viewBox="0 0 1300 340" style="max-height:320px" role="img" aria-label="Round trip between your repo and Claude Design: /design-sync carries the design system in, and the handoff bundle carries the finished design back out through Claude Code into the repo" xmlns="http://www.w3.org/2000/svg">
-          <defs><marker id="cdm20" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
-          <!-- endpoints -->
-          <rect class="dg-box" x="40" y="105" width="360" height="130" rx="14"/>
-          <text class="dg-t" x="220" y="163" text-anchor="middle" font-size="24">Your repo</text>
-          <text class="dg-t mut" x="220" y="201" text-anchor="middle" font-size="19">components · design files</text>
-          <rect class="dg-box outer" x="900" y="105" width="360" height="130" rx="14"/>
-          <text class="dg-t" x="1080" y="163" text-anchor="middle" font-size="24">Claude Design</text>
-          <text class="dg-t mut" x="1080" y="201" text-anchor="middle" font-size="19">the canvas</text>
-          <!-- in: /design-sync -->
-          <path class="dg-line" d="M405 130 C 480 130 470 52 532 52" marker-end="url(#cdm20)"/>
-          <rect class="dg-box hot" x="540" y="25" width="220" height="54" rx="27"/>
-          <text class="dg-t on" x="650" y="59" text-anchor="middle" font-size="21">/design-sync</text>
-          <path class="dg-line" d="M760 52 C 822 52 815 130 893 130" marker-end="url(#cdm20)"/>
-          <text class="dg-t acc" x="650" y="112" text-anchor="middle" font-size="18">IN — your design system</text>
-          <!-- out: handoff bundle -->
-          <path class="dg-line" d="M895 233 C 890 287 880 287 838 287" marker-end="url(#cdm20)"/>
-          <rect class="dg-box hot" x="470" y="260" width="360" height="54" rx="27"/>
-          <text class="dg-t on" x="650" y="294" text-anchor="middle" font-size="20">handoff bundle → Claude Code</text>
-          <path class="dg-line" d="M462 287 C 418 287 415 250 406 232" marker-end="url(#cdm20)"/>
-          <text class="dg-t acc" x="650" y="248" text-anchor="middle" font-size="18">OUT — implementation against the real repo</text>
-        </svg>
-      </div>
-      <ul class="bul reveal" style="margin-top:28px">
-        <li><b>In:</b> <b>/design-sync</b> (in Claude Code) pushes your design system from a GitHub repo, design files, or a local codebase.</li>
-        <li><b>Out:</b> the <b>handoff bundle</b> carries the finished design to Claude Code for implementation against the real repo.</li>
-        <li>Because Design built <b>real HTML with your components</b> all along, handoff is a <b>translation, not a rewrite</b>.</li>
-      </ul>
-      <p class="note reveal"><b>Design explores, Code ships</b> — and the shared design system keeps both honest.</p>
-    </div>
-  </section>
+<section class="slide dark v2 beat" id="slide-24" data-label="Describe, refine, ship" data-speaker-notes="Close on the spine from the title slide: describe, refine, ship. One sentence each. Brief it like a creative director. Refine through the right channel, and don&#x27;t judge the first round. Ship by destination, with the Claude Code round trip for anything headed to a repo. Keep the homework small: take one brief from slide 16 and run it on a real task this week. It&#x27;s already included in your plan.">
+<div class="slide-content"><div class="slide-head reveal"><span class="snum">24</span><div class="crumb">Recap</div></div>
+<h2 class="reveal">Describe, refine, ship</h2><div class="v2-body reveal"><div class="v-rows closing"><div class="v-row"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M14 20 H106 V80 H54 L32 102 V80 H14 Z"/><path d="M34 42 H86 M34 58 H70"/></svg><h3>Describe</h3><p>Who it’s for, which sections, what goes in each.</p></div><div class="v-row"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M18 102 L26 74 L84 16 L104 36 L46 94 Z"/><path d="M72 28 L92 48"/></svg><h3>Refine</h3><p>Match the channel to the change. Judge round four.</p></div><div class="v-row"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M70 12 H22 V108 H70"/><path d="M48 60 H110 M90 40 L110 60 L90 80"/></svg><h3>Ship</h3><p>URL for feedback, file for meetings, handoff for code.</p></div></div></div><p class="note reveal">This week: run one brief from slide 16 on a real task.</p></div></section>
 
-  <!-- RECAP -->
-  <section class="slide dark" data-label="Recap"
-    data-speaker-notes="Close on the three-beat spine from the title: describe, refine, ship. One sentence per beat — brief it like a creative director, refine through the right channel and never judge generation one, then ship by destination with the Claude Code round trip for anything headed to a repo. The homework is deliberately small: steal one brief from slide 14 and run it on a real task this week.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">21</span><div class="crumb"><b>Close</b> · recap</div></div>
-      <h2 class="reveal">Describe → refine → <span class="o">ship</span></h2>
-      <div class="cards c3 reveal">
-        <div class="tile"><span class="k">01 Describe</span><p>Brief like a creative director: <b>audience · sections · content · one constraint.</b> Start from text, a file, a site, or a codebase.</p></div>
-        <div class="tile fill"><span class="k">02 Refine</span><p>Chat for structure, <b>comments for tweaks</b>, hands for the rest. Judge iteration 4, not 1 — and branch with one sentence.</p></div>
-        <div class="tile"><span class="k">03 Ship</span><p>URL for feedback, <b>file for meetings, handoff for engineers</b> — the design system rides along everywhere.</p></div>
-      </div>
-      <p class="note reveal">Homework: steal <b>one brief</b> from slide 14 and run it on a real task this week — on your plan, it's already included.</p>
-    </div>
-  </section>
-
-  <!-- SOURCES -->
-  <section class="slide light dense" data-label="Sources"
-    data-speaker-notes="Series convention: every product claim is date-stamped July 2026 and traceable. The three primary sources — the launch announcement, the product page, and the Help Center getting-started guide — plus the hands-on community write-ups behind the craft tips. Remind the room it's a beta: features and limits on these slides move, check before quoting externally.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">22</span><div class="crumb"><b>Close</b> · sources</div></div>
-      <h2 class="reveal"><span class="o">Sources</span> — all claims dated July 2026</h2>
-      <div class="links reveal">
-        <div class="linkcol">
-          <h3>Primary — Anthropic</h3>
-          <a href="https://www.anthropic.com/news/claude-design-anthropic-labs" target="_blank" rel="noopener">Claude Design — launch announcement<span class="u">anthropic.com/news · claude-design-anthropic-labs</span></a>
-          <a href="https://claude.com/product/design" target="_blank" rel="noopener">Product page<span class="u">claude.com/product/design</span></a>
-          <a href="https://support.claude.com/en/articles/14604416-get-started-with-claude-design" target="_blank" rel="noopener">Get started with Claude Design — Help Center<span class="u">support.claude.com · article 14604416</span></a>
-        </div>
-        <div class="linkcol">
-          <h3>Hands-on write-ups (craft tips)</h3>
-          <a href="https://aifordevelopers.substack.com/p/how-to-actually-use-claude-design" target="_blank" rel="noopener">How to actually use Claude Design<span class="u">aifordevelopers.substack.com</span></a>
-        </div>
-      </div>
-      <p class="note reveal">Claude Design is a <b>beta</b> — features, limits and plan details move. Re-check the Help Center before quoting externally. The 1M-users-in-week-one figure follows the series fact pass for deck 01 (July 2026).</p>
-    </div>
-  </section>
+<section class="slide light v2 ref" id="slide-25" data-label="Sources" data-speaker-notes="Every product claim traces to the first four links, checked on 23 September 2026. The craft tips, including the two-to-four rounds, the branch phrase and the subdirectory trick, come from the AI For Developers write-up. It&#x27;s a beta, so features and limits move. Re-check the Help Center before you quote anything externally.">
+<div class="slide-content"><div class="slide-head reveal"><span class="snum">25</span><div class="crumb">Sources</div></div>
+<h2 class="reveal">Sources</h2><div class="v2-body reveal"><div class="v-refs n5"><a href="https://www.anthropic.com/news/claude-design-anthropic-labs" target="_blank" rel="noopener"><span class="lt">Claude Design launch announcement</span><span class="ld">anthropic.com</span><span class="la" aria-hidden="true">↗</span></a><a href="https://claude.com/product/design" target="_blank" rel="noopener"><span class="lt">Claude Design product page</span><span class="ld">claude.com</span><span class="la" aria-hidden="true">↗</span></a><a href="https://support.claude.com/en/articles/14604416-get-started-with-claude-design" target="_blank" rel="noopener"><span class="lt">Help Center: Get started with Claude Design</span><span class="ld">support.claude.com</span><span class="la" aria-hidden="true">↗</span></a><a href="https://support.claude.com/en/articles/14604397-set-up-your-design-system-in-claude-design" target="_blank" rel="noopener"><span class="lt">Help Center: Set up your design system</span><span class="ld">support.claude.com</span><span class="la" aria-hidden="true">↗</span></a><a href="https://aifordevelopers.substack.com/p/how-to-actually-use-claude-design" target="_blank" rel="noopener"><span class="lt">How to actually use Claude Design (craft tips)</span><span class="ld">aifordevelopers.substack.com</span><span class="la" aria-hidden="true">↗</span></a></div></div><p class="note reveal">Facts checked 23 September 2026. It is a beta: re-check before quoting.</p></div></section>
 
 </deck-stage>
 
@@ -1000,7 +878,7 @@ table.tbl tr:last-child td{border-bottom:none}
   var notesEl = document.querySelector('.pui-notes');
   var nHead = notesEl.querySelector('.pui-nhead');
   var nBody = notesEl.querySelector('.pui-nbody');
-  var current = 0, presenter = null, mouseT = null;
+  var current = Math.max(0, Array.from(ds.children).findIndex(s => s.hasAttribute('data-deck-active'))), presenter = null, mouseT = null;
 
   function slides(){ return Array.prototype.slice.call(ds.querySelectorAll(':scope > section')); }
   function noteOf(s){ return s.getAttribute('data-speaker-notes') || 'No notes for this slide.'; }
@@ -1042,13 +920,13 @@ table.tbl tr:last-child td{border-bottom:none}
     presenter = window.open('', 'deck-presenter', 'width=1200,height=760');
     if (!presenter) {
       nHead.textContent = 'Presenter window';
-      nBody.textContent = 'The browser blocked the pop-up — allow pop-ups for this page and press P again.';
+      nBody.textContent = 'The browser blocked the pop-up. Allow pop-ups for this page and press P again.';
       notesEl.classList.add('open');
       return;
     }
     var pd = presenter.document;
     pd.open();
-    pd.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Presenter — ' + document.title.replace(/</g,'&lt;') + '</title><base href="' + document.baseURI + '"></head><body></body></html>');
+    pd.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Presenter · ' + document.title.replace(/</g,'&lt;') + '</title><base href="' + document.baseURI + '"></head><body></body></html>');
     pd.close();
     /* carry the deck's stylesheets + tokens over so slide clones render 1:1 */
     document.head.querySelectorAll('link[rel="stylesheet"], link[rel="preconnect"], style').forEach(function(el){
