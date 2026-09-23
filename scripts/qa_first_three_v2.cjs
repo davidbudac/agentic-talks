@@ -57,6 +57,8 @@ const decks = ['ai-toolbox-v2.html','agentic-ai-v2.html','agentic-engineering-v2
      await toggle.click();
      await page.waitForFunction(()=>document.querySelector('section[data-deck-active] [data-video-toggle]').getAttribute('aria-pressed')==='false');
      assert(await page.evaluate(()=>document.querySelector('section[data-deck-active] video').paused));
+     // Park the pointer so hover-revealed presenter controls do not appear in later screenshots.
+     await page.mouse.move(0,0);await page.waitForTimeout(2000);
     }
     const state=await page.evaluate(()=>{
      const s=document.querySelector('deck-stage > section[data-deck-active]');

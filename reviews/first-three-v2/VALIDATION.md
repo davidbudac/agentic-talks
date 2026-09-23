@@ -24,13 +24,29 @@
 | Invoice `before/` fixture | 3 tests, 2 expected failures; exit 1 |
 | Invoice/export `after/` fixture | 5 tests pass; exit 0 |
 | Exported CSV | Customer strings and totals checked after parsing, including comma, quotes and newline |
-| Copy | Under 60 visible words per new slide; model-price grids and guaranteed-success claims removed |
+| Copy | 19–78 visible words per slide after the visual pass, counting diagram labels and wayfinding; slide wording, notes, order and count unchanged; model-price grids and guaranteed-success claims removed |
 
 ## Visual review
 
 Reviewed all slides in the [contact sheets](contact-sheets/), plus full-size views of the prompt, acceptance table, media slide, chooser and worked report. The new decks keep the original Ember palette and type families with more space and less text. Diagram video controls sit below the video so they do not cover labels. Video token counts are explicitly illustrative.
 
 The browser report is [browser-results.json](browser-results.json). Full-resolution screenshots were generated in `/private/tmp/agentic-talks-v2-qa`; contact sheets are retained in the repository.
+
+## Visual pass — 23 September 2026
+
+Implemented the approved `visual-mockups-v2.html` across all 86 slides in the builder (helpers, drawn SVG diagrams and CSS). Checked again after the change:
+
+| Check | Result |
+|---|---|
+| Original three decks, `.claude/launch.json`, `cost-and-context.html` | SHA-256 still matches `original-hashes.json` |
+| Reproducible generation | Two consecutive builds produce identical HTML |
+| Slide wording and notes | Generated maps and notes files unchanged; per-slide word diff reviewed; added words are diagram labels taken from the slide or its notes |
+| Browser QA script | Pass at 1280×720 and 1920×1080: no content outside slides, clipped text, overflow, page or request errors |
+| Media, navigation, notes, presenter, reduced motion, offline | Pass (same script) |
+| Layout probe | Every slide checked for body overflow, overlap with the title and content in the bottom-centre area used by the deck controls |
+| Accessibility | Diagrams carry `role="img"` and a text label; decorative icons are hidden; links stay focusable; reduced motion unchanged |
+
+All 86 slides were also inspected at 1920×1080. The QA script now parks the pointer after the play/pause test so hover-revealed presenter buttons do not appear in later screenshots. Contact sheets were regenerated from the 1280×720 QA screenshots.
 
 ## Test interpretation
 
