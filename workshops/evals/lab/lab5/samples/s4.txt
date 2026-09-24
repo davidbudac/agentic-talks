@@ -1,0 +1,6 @@
+Add currency column to the CSV export
+
+Finance's spreadsheet holds invoices in four currencies, and the gross
+column means nothing without one. The export now ends with a currency
+column (upper-case ISO code, EUR by default). The header changes from
+five to six columns; nothing else in the export contract does.

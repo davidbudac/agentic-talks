@@ -1,0 +1,14 @@
+invoice_id,customer,net,tax_rate,currency,issue_date,terms
+INV-001,"North, Ltd",100.00,0.21,EUR,2026-09-01,net 30
+INV-002,"Studio ""A""",0.50,0.21,EUR,2026-09-02,net 14
+INV-003,"Line
+break",100.00,0,EUR,2026-09-03,on receipt
+INV-004,Müller GmbH,1250.00,0.19,EUR,2026-08-15,net 30
+INV-005,Čapek & syn s.r.o.,48000.00,0.21,CZK,2026-08-20,end of month
+INV-006,Zeta Analytics,980.40,0.20,GBP,2026-07-31,net 45
+INV-007,Žluťoučký kůň a.s.,12500.00,0.21,CZK,2026-09-10,net 14
+INV-008,Élodie Durand,320.00,0.20,EUR,2026-09-12,net 30
+INV-009,Müller GmbH,410.10,0.19,EUR,2026-09-14,net 30
+INV-010,Capek Consulting,760.00,0,USD,2026-09-15,net 30
+INV-011,Østfold Fisk AS,2200.00,0.25,EUR,2026-09-18,end of month
+INV-012,Acme Corp,99.99,0.0825,USD,2026-09-20,net 30

@@ -1,0 +1,9 @@
+name: default
+checks:
+  # Hidden JUnit acceptance tests for the task plus the repo's own tests, run
+  # with ./mvnw -q -o test in a scratch copy. Emits score 1.0/0.0 plus the
+  # session's cost, turns and tokens (from metrics.json) as metrics.
+  - checker: ../checkers/hidden-tests
+    required: true
+scoring:
+  pass_threshold: 1.0

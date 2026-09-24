@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+# smevals Checker: hidden JUnit tests plus the repository's own tests, via Maven.
+#
+# Two ways to call it:
+#   * under smevals: no arguments; grades $SMEVALS_RUN_DIR/repo for $SMEVALS_TASK
+#   * by hand:       maven-hidden-tests --repo DIR --task TASK
+#
+# Copies the attempt to a scratch directory (without target/ and .git/), copies
+# hidden/<task>/*.java into src/test/java/<package path>, and runs
+# `./mvnw -q -o -B test` (plain `mvn` when the repo has no wrapper). The package
+# path comes from PACKAGE_DIR (e.g. com/acme/orders) or from the `package` line
+# of each hidden file.
+#
+# Pass: Maven exits 0 and at least one Hidden* test class ran with no failures.
+# Prints one JSON object {score, metrics, notes}; exit 0 on pass, 1 on fail.
+# Offline (-o) needs the dependencies cached: run `./mvnw dependency:go-offline`
+# once, or set MAVEN_OFFLINE=0.
+set -euo pipefail
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+hidden_root="$here/../hidden"
+
+repo="" task=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --repo) repo="$2"; shift 2 ;;
+    --task) task="$2"; shift 2 ;;
+    -h|--help) sed -n '2,17p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    *) echo "unknown argument: $1" >&2; exit 2 ;;
+  esac
+done
+if [ -z "$repo" ] && [ -n "${SMEVALS_RUN_DIR:-}" ]; then repo="$SMEVALS_RUN_DIR/repo"; fi
+if [ -z "$task" ]; then task="${SMEVALS_TASK:-}"; fi
+if [ -z "$repo" ] || [ -z "$task" ]; then
+  echo "usage: maven-hidden-tests --repo DIR --task TASK (or run under smevals)" >&2
+  exit 2
+fi
+
+fail() { printf '{"score": 0.0, "metrics": {}, "notes": "%s"}\n' "$1"; exit 1; }
+hidden="$hidden_root/$task"
+ls "$hidden"/*.java >/dev/null 2>&1 || fail "no hidden tests in hidden/$task"
+[ -f "$repo/pom.xml" ] || fail "no pom.xml in $repo"
+
+work="$(mktemp -d "${TMPDIR:-/tmp}/hidden-check.XXXXXX")"
+trap 'rm -rf "$work"' EXIT
+(cd "$repo" && tar --exclude ./target --exclude ./.git -cf - .) | (cd "$work" && tar -xf -)
+
+for file in "$hidden"/*.java; do
+  dir="${PACKAGE_DIR:-}"
+  if [ -z "$dir" ]; then
+    dir="$(sed -n 's/^[[:space:]]*package[[:space:]]\{1,\}\([A-Za-z0-9_.]*\)[[:space:]]*;.*/\1/p' "$file" | head -1 | tr . /)"
+  fi
+  mkdir -p "$work/src/test/java/$dir"
+  cp "$file" "$work/src/test/java/$dir/"
+done
+
+offline="-o"
+[ "${MAVEN_OFFLINE:-1}" = 0 ] && offline=""
+if [ -x "$work/mvnw" ]; then mvn_cmd="./mvnw"; else mvn_cmd="mvn"; fi
+rc=0
+(cd "$work" && $mvn_cmd -q $offline -B test -DskipTests=false -Dmaven.test.skip=false) > "$work/mvn.log" 2>&1 || rc=$?
+
+python3 - "$work/target/surefire-reports" "$rc" "$work/mvn.log" <<'PY'
+import json, sys
+import xml.etree.ElementTree as ET
+from pathlib import Path
+
+reports, rc, log = Path(sys.argv[1]), int(sys.argv[2]), Path(sys.argv[3])
+hidden = own = {"tests": 0, "failed": 0}
+hidden, own, failures = dict(hidden), dict(own), []
+for path in sorted(reports.glob("TEST-*.xml")) if reports.is_dir() else []:
+    try:
+        root = ET.parse(path).getroot()
+    except ET.ParseError:
+        continue
+    name = root.get("name", "").rsplit(".", 1)[-1]
+    bucket = hidden if name.startswith("Hidden") else own
+    bucket["tests"] += int(root.get("tests", 0))
+    bucket["failed"] += int(root.get("failures", 0)) + int(root.get("errors", 0))
+    for case in root.iter("testcase"):
+        if case.find("failure") is not None or case.find("error") is not None:
+            failures.append(f"{name}.{case.get('name')}")
+passed = rc == 0 and hidden["tests"] > 0 and hidden["failed"] == 0 and own["failed"] == 0
+if passed:
+    notes = f"pass: {hidden['tests']} hidden and {own['tests']} own tests"
+elif hidden["tests"] == 0 and own["tests"] == 0:
+    lines = [l for l in log.read_text(errors="replace").splitlines() if "ERROR" in l] if log.is_file() else []
+    notes = "build failed: " + (lines[0][:200] if lines else f"maven exit {rc}")
+elif hidden["tests"] == 0:
+    notes = "hidden tests did not run"
+else:
+    notes = f"failed: hidden {hidden['failed']}/{hidden['tests']}, own {own['failed']}/{own['tests']}"
+print(json.dumps({"score": 1.0 if passed else 0.0,
+                  "metrics": {"hidden_tests": hidden["tests"], "hidden_failed": hidden["failed"],
+                              "own_tests": own["tests"], "own_failed": own["failed"], "mvn_exit": rc},
+                  "notes": notes, "details": {"failures": failures[:12]}}))
+sys.exit(0 if passed else 1)
+PY

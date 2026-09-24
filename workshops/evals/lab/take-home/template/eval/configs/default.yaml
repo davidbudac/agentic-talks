@@ -1,0 +1,4 @@
+# Lean setup: the repository's own CLAUDE.md, if it has one. Override the model with -m.
+name: default
+runner: ../run-claude
+model: claude-sonnet-5

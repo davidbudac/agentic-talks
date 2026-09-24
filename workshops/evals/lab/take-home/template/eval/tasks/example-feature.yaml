@@ -1,0 +1,7 @@
+# A small feature: the issue text as the prompt, acceptance tests hidden.
+name: example-feature
+base_ref: "0000000"   # quote it; replace with the commit before the feature was merged
+prompt: |
+  Add an optional `--since YYYY-MM-DD` filter to the `orders export` command.
+  Only orders created on or after that date are exported; without the option
+  the output is unchanged. Update the tests. Run ./mvnw -q test before you finish.

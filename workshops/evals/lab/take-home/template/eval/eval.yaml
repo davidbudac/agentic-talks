@@ -1,0 +1,5 @@
+name: my-java-repo
+description: >-
+  Three tasks taken from this repository's own history. Each run gets a fresh
+  clone at the task's base_ref, one headless Claude Code session and hidden
+  JUnit tests. Pass = hidden tests and the repository's own tests pass.

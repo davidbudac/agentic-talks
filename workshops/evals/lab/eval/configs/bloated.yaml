@@ -1,0 +1,5 @@
+# Bloated CLAUDE.md (claude-md/bloated.md): the same rules plus an essay, a
+# package listing, stale notes and duplicated conventions. Labs 1 and 2.
+name: bloated
+runner: ../run-claude-bloated
+model: claude-sonnet-5

@@ -1,0 +1,71 @@
+# Copy to .github/workflows/evals.yml in your repository, with eval/ (the
+# template) and ci/run-evals.sh committed next to your code.
+#
+# Runs the eval suite on demand and weekly, uploads every run as an artefact and
+# fails the job when the pass rate drops below THRESHOLD. CI has no Claude
+# subscription login: it needs an API key in the ANTHROPIC_API_KEY secret, and
+# every run is billed per token to that key. Keep ROUNDS and the task count small.
+name: agent-evals
+
+on:
+  workflow_dispatch:
+    inputs:
+      rounds:
+        description: "Runs per task (k)"
+        default: "3"
+      model:
+        description: "Model id"
+        default: "claude-sonnet-5"
+  schedule:
+    - cron: "0 5 * * 1"   # Mondays 05:00 UTC
+
+permissions:
+  contents: read
+
+jobs:
+  evals:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      ROUNDS: ${{ inputs.rounds || '3' }}
+      MODEL: ${{ inputs.model || 'claude-sonnet-5' }}
+      THRESHOLD: "0.8"
+      MAX_BUDGET_USD: "1.00"
+      EVAL_DIR: eval
+      RUNS_DIR: runs
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # the tasks check out older base_ref commits
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - uses: astral-sh/setup-uv@v6
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code && claude --version
+
+      - name: Prefetch Maven dependencies (the checker runs offline)
+        run: ./mvnw -q -B dependency:go-offline && ./mvnw -q -B test -DskipTests
+
+      - name: Run evals
+        env:
+          REPO_DIR: ${{ github.workspace }}
+        run: bash ci/run-evals.sh
+
+      - name: Upload runs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-runs-${{ github.run_id }}
+          path: runs/
+          retention-days: 30

@@ -1,0 +1,8 @@
+# A refactor: hidden tests check the new shape (reflection, no old callers) and
+# that behaviour is unchanged.
+name: example-refactor
+base_ref: "0000000"   # quote it; replace with the commit before the refactor
+prompt: |
+  Rename the record component Customer.mail to email across the repository
+  (code and tests). Do not keep an alias accessor. Behaviour must not change.
+  Run ./mvnw -q test before you finish.

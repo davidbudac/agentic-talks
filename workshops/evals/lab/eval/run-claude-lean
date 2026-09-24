@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# smevals Runner for configs/lean.yaml: invoice-app with claude-md/lean.md.
+CLAUDE_MD_VARIANT=lean exec "$(dirname "${BASH_SOURCE[0]}")/run-claude"

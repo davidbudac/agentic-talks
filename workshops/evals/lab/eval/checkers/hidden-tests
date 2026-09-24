@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+# Grade one attempt at an invoice-app task.
+#
+# Pass means: the hidden JUnit tests for the task (eval/hidden/<task>/*.java)
+# and the repository's own tests all pass under `./mvnw -q -o test`.
+#
+# Two ways to call it:
+#   * as an smevals Checker: no arguments; reads SMEVALS_RUN_DIR and SMEVALS_TASK
+#     and grades SMEVALS_RUN_DIR/repo (the copy the runner left behind);
+#   * by hand:  eval/checkers/hidden-tests --repo DIR --task TASK
+#
+# The attempt is graded in a scratch copy: the hidden tests are copied into
+# src/test/java, and mvnw, .mvn/ and pom.xml are replaced by the pristine ones
+# from invoice-app/, so an agent cannot change how it is graded (skip tests,
+# add a dependency, edit the wrapper). Own tests must still number at least as
+# many as the untouched repo has (eval/checkers/own-tests-min), so deleting a
+# failing test does not pass either.
+#
+# Prints one JSON object in the smevals Checker format (score, metrics, notes,
+# details), also saved as check.json in the run directory, and exits 0 on pass,
+# 1 on fail. Needs the Maven dependencies prefetched (./check-setup.sh).
+set -uo pipefail
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+lab="$(cd "$here/../.." && pwd)"
+hidden_root="$here/../hidden"
+pristine="$lab/invoice-app"
+
+repo="" task="" out=""
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --repo) repo="$2"; shift 2 ;;
+    --task) task="$2"; shift 2 ;;
+    --out) out="$2"; shift 2 ;;
+    -h|--help) sed -n '2,22p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    *) echo "unknown argument: $1" >&2; exit 2 ;;
+  esac
+done
+run_dir="${SMEVALS_RUN_DIR:-}"
+[[ -z "$repo" && -n "$run_dir" ]] && repo="$run_dir/repo"
+[[ -z "$task" ]] && task="${SMEVALS_TASK:-}"
+if [[ -z "$repo" || -z "$task" ]]; then
+  echo "usage: hidden-tests --repo DIR --task TASK (or run under smevals)" >&2
+  exit 2
+fi
+[[ -z "$out" && -n "$run_dir" ]] && out="$run_dir/check.json"
+hidden="$hidden_root/$task"
+if [[ ! -d "$hidden" ]]; then
+  echo "{\"score\": 0.0, \"notes\": \"no hidden tests for task $task\"}"
+  exit 1
+fi
+if [[ ! -f "$repo/pom.xml" ]]; then
+  echo "{\"score\": 0.0, \"notes\": \"no invoice-app copy at $repo\"}"
+  exit 1
+fi
+
+work="$(mktemp -d "${TMPDIR:-/tmp}/lab-check.XXXXXX")"
+trap 'rm -rf "$work"' EXIT
+(cd "$repo" && tar --exclude ./target --exclude ./.git -cf - .) | (cd "$work" && tar -xf -)
+rm -rf "$work/.mvn" "$work/target"
+cp -R "$pristine/.mvn" "$work/.mvn"
+cp "$pristine/mvnw" "$pristine/pom.xml" "$work/"
+dest="$work/src/test/java/com/example/invoicing"
+mkdir -p "$dest"
+cp "$hidden"/*.java "$dest/"
+expect="$(grep -h -c '@Test' "$hidden"/*.java | awk '{s+=$1} END {print s}')"
+min_own="$(cat "$here/own-tests-min" 2>/dev/null || echo 0)"
+
+rc=0
+(cd "$work" && ./mvnw -q -o -B test -DskipTests=false -Dmaven.test.skip=false -Dsurefire.failIfNoSpecifiedTests=false) \
+  > "$work/mvn.log" 2>&1 || rc=$?
+metrics_arg=()
+[[ -n "$run_dir" && -f "$run_dir/metrics.json" ]] && metrics_arg=(--metrics "$run_dir/metrics.json")
+out_arg=()
+[[ -n "$out" ]] && out_arg=(--out "$out")
+python3 "$lab/lib/surefire_summary.py" "$work/target/surefire-reports" "$rc" "$work/mvn.log" \
+  --expect-hidden "$expect" --min-own "$min_own" "${metrics_arg[@]+"${metrics_arg[@]}"}" "${out_arg[@]+"${out_arg[@]}"}"

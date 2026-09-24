@@ -1,0 +1,11 @@
+# Lab output: never commit participants' or rehearsal runs by accident.
+results/
+lab3-work/
+.pair
+# Build output
+target/
+# Python
+__pycache__/
+*.pyc
+# Take-home runs
+take-home/**/runs/

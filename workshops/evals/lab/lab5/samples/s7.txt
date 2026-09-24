@@ -1,0 +1,3 @@
+Export currency
+
+So finance have been asking for this since the summer, the problem is that the spreadsheet they import the export into has invoices in EUR CZK GBP and USD all in one sheet and when they sum the gross column they get nonsense because it adds koruna to euros, which is how the Q2 numbers ended up wrong. This puts the currency in front of the gross amount so they can filter on it and also normalises the amounts so they are all comparable. Had to change the tests because they compare the full header string, and CliTest as well because it checks the first line of the export output. Also added a test for the lower case / missing currency case. I didn't touch the report because it already groups by currency.

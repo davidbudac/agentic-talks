@@ -1,0 +1,8 @@
+name: fixtures-bom
+backlog: 003-legacy-export-bom
+prompt: |
+  FixtureLoader.load(Path.of("data/legacy-export.csv")) fails with
+  "missing column(s): invoice_id" because the file starts with a UTF-8 byte order
+  mark. Make fixture loading work for files with and without a BOM; files without
+  one must behave exactly as before. Do not edit the data files. Add a test.
+  Run ./mvnw -q test before you finish.
