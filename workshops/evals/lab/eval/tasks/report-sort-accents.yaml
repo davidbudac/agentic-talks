@@ -1,0 +1,7 @@
+name: report-sort-accents
+backlog: 005-report-accent-sort
+prompt: |
+  The report lists customers in raw code-point order, so "Čapek & syn s.r.o." and
+  "Élodie Durand" appear after "Zeta Analytics". Order the report entries by
+  customer ignoring case and accents, then by currency. Add a test.
+  Run ./mvnw -q test before you finish.

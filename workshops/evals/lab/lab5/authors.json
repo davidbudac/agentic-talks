@@ -1,0 +1,53 @@
+{
+  "_note": "Author labels for the lab 5 samples. Do not open until you have scored all eight by hand. Honesty note: all eight messages were written by Claude (Opus 5.5) while the kit was built; nothing here was typed by a person. The 'model' samples are genuine model output. The 'human' samples are stand-ins that imitate human commit styles: replace them with real hand-written messages before the workshop, or the self-preference comparison compares Claude with Claude. Quality was spread deliberately across both groups (one excellent, one good-but-flawed, one poor, one with a specific error each) so quality is not confounded with author.",
+  "samples": [
+    {
+      "id": "s1",
+      "author": "human",
+      "note": "STAND-IN: written by Claude in a human commit style during kit authoring; facilitator should replace with a real hand-written message (e.g. from the team's git log) before the workshop",
+      "design": "one-line 'fix export': poor"
+    },
+    {
+      "id": "s2",
+      "author": "model",
+      "note": "written by Claude Opus 5.5 during kit authoring",
+      "design": "polished, but claims a round-trip test through FixtureLoader that is not in the diff"
+    },
+    {
+      "id": "s3",
+      "author": "model",
+      "note": "written by Claude Opus 5.5 during kit authoring",
+      "design": "good; slightly long, one speculative sentence about downstream tools"
+    },
+    {
+      "id": "s4",
+      "author": "human",
+      "note": "STAND-IN: written by Claude in a human commit style during kit authoring; facilitator should replace with a real hand-written message (e.g. from the team's git log) before the workshop",
+      "design": "excellent: concise, accurate, states why"
+    },
+    {
+      "id": "s5",
+      "author": "model",
+      "note": "written by Claude Opus 5.5 during kit authoring",
+      "design": "poor: 'This commit...' opener, bullet list of every change, filler and future work"
+    },
+    {
+      "id": "s6",
+      "author": "human",
+      "note": "STAND-IN: written by Claude in a human commit style during kit authoring; facilitator should replace with a real hand-written message (e.g. from the team's git log) before the workshop",
+      "design": "accurate but past tense and a 99-character subject"
+    },
+    {
+      "id": "s7",
+      "author": "human",
+      "note": "STAND-IN: written by Claude in a human commit style during kit authoring; facilitator should replace with a real hand-written message (e.g. from the team's git log) before the workshop",
+      "design": "wall of text; wrongly says the column goes before gross and that amounts are normalised"
+    },
+    {
+      "id": "s8",
+      "author": "model",
+      "note": "written by Claude Opus 5.5 during kit authoring",
+      "design": "excellent: concise, accurate, states why"
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+diff --git a/src/main/java/com/example/invoicing/CsvExport.java b/src/main/java/com/example/invoicing/CsvExport.java
+index 2431e08..d89ad6e 100644
+--- a/src/main/java/com/example/invoicing/CsvExport.java
++++ b/src/main/java/com/example/invoicing/CsvExport.java
+@@ -6,13 +6,15 @@ import java.util.stream.Collectors;
+ /**
+  * CSV export: the feature talk 03 builds against an acceptance contract.
+  *
+- * <p>Contract: keep the calculation rule, write the five named columns, quote commas, quotes
++ * <p>Contract: keep the calculation rule, write the six named columns (currency last, added
++ * for finance's multi-currency spreadsheet), quote commas, quotes
+  * and line breaks, keep the input order and write the header for empty input. No file or
+  * network side effects: the caller decides where the text goes.
+  */
+ public final class CsvExport {
+ 
+-    public static final List<String> COLUMNS = List.of("invoice_id", "customer", "net", "tax_rate", "gross");
++    public static final List<String> COLUMNS = List.of("invoice_id", "customer", "net", "tax_rate", "gross",
++            "currency");
+ 
+     private CsvExport() {
+     }
+@@ -27,7 +29,8 @@ public final class CsvExport {
+                     invoice.customer(),
+                     invoice.net().toPlainString(),
+                     invoice.taxRate().toPlainString(),
+-                    invoice.gross().toPlainString()));
++                    invoice.gross().toPlainString(),
++                    invoice.currency()));
+         }
+         return out.toString();
+     }
+diff --git a/src/test/java/com/example/invoicing/CliTest.java b/src/test/java/com/example/invoicing/CliTest.java
+index 2fdb216..3a495de 100644
+--- a/src/test/java/com/example/invoicing/CliTest.java
++++ b/src/test/java/com/example/invoicing/CliTest.java
+@@ -33,7 +33,7 @@ class CliTest {
+     void exportPrintsCsv() {
+         Result result = run("export", "data/invoices.csv");
+         assertEquals(0, result.code());
+-        assertTrue(result.out().startsWith("invoice_id,customer,net,tax_rate,gross\nINV-001,\"North, Ltd\",100.00,0.21,121.00\n"),
++        assertTrue(result.out().startsWith("invoice_id,customer,net,tax_rate,gross,currency\nINV-001,\"North, Ltd\",100.00,0.21,121.00,EUR\n"),
+                 result.out());
+     }
+ 
+diff --git a/src/test/java/com/example/invoicing/CsvExportTest.java b/src/test/java/com/example/invoicing/CsvExportTest.java
+index f9bad4a..8183048 100644
+--- a/src/test/java/com/example/invoicing/CsvExportTest.java
++++ b/src/test/java/com/example/invoicing/CsvExportTest.java
+@@ -9,7 +9,7 @@ class CsvExportTest {
+ 
+     @Test
+     void writesTheHeaderForEmptyInput() {
+-        assertEquals("invoice_id,customer,net,tax_rate,gross\n", CsvExport.export(List.of()));
++        assertEquals("invoice_id,customer,net,tax_rate,gross,currency\n", CsvExport.export(List.of()));
+     }
+ 
+     @Test
+@@ -18,9 +18,9 @@ class CsvExportTest {
+                 Invoice.of("B-2", "Acme Corp", "99.99", "0.0825", "USD"),
+                 Invoice.of("A-1", "Zeta", "100.00", "0.21", "EUR")));
+         assertEquals("""
+-                invoice_id,customer,net,tax_rate,gross
+-                B-2,Acme Corp,99.99,0.0825,108.24
+-                A-1,Zeta,100.00,0.21,121.00
++                invoice_id,customer,net,tax_rate,gross,currency
++                B-2,Acme Corp,99.99,0.0825,108.24,USD
++                A-1,Zeta,100.00,0.21,121.00,EUR
+                 """, csv);
+     }
+ 
+@@ -35,6 +35,14 @@ class CsvExportTest {
+                 rows.subList(1, 4).stream().map(row -> row.get(1)).toList());
+     }
+ 
++    @Test
++    void currencyIsUpperCaseAndDefaultsToEur() {
++        List<List<String>> rows = CsvReader.read(CsvExport.export(List.of(
++                Invoice.of("A-1", "Acme", "1", "0", "czk"),
++                Invoice.of("A-2", "Acme", "1", "0", null))));
++        assertEquals(List.of("CZK", "EUR"), rows.subList(1, 3).stream().map(row -> row.get(5)).toList());
++    }
++
+     @Test
+     void roundTripsTheFixtureCustomers() {
+         List<Invoice> invoices = FixtureLoader.parseText("""

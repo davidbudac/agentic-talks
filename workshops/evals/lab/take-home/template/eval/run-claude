@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+# smevals Runner: one headless Claude Code session on a fresh copy of your repo.
+#
+# Contract (smevals README): no arguments; SMEVALS_MODEL, SMEVALS_PROMPT,
+# SMEVALS_RUN_DIR and SMEVALS_TASK_* (one per scalar task key) arrive as
+# environment variables; the working directory is the run directory; stdout
+# becomes output.txt. Exit 0 whenever Claude produced a result, even a wrong one
+# or one stopped by --max-turns; exit non-zero only when no result event came
+# back (a harness error), so smevals leaves the run ungraded.
+#
+# Where the repo comes from (set one):
+#   REPO_URL=git@github.com:acme/orders.git   cloned for every run
+#   REPO_DIR=/path/to/local/clone             cloned locally (fast, no network)
+# The task's base_ref (SMEVALS_TASK_BASE_REF) is checked out before the session,
+# and HIDE_PATHS (default: eval) is deleted from the copy.
+#
+# Leaves in the run directory: repo/ (graded by the checker), transcript.jsonl
+# (stream-json), command.sh and diff.patch.
+set -euo pipefail
+run_dir="${SMEVALS_RUN_DIR:?run this through smevals}"
+repo="$run_dir/repo"
+src="${REPO_URL:-${REPO_DIR:-}}"
+[ -n "$src" ] || { echo "set REPO_URL or REPO_DIR" >&2; exit 2; }
+git clone -q "$src" "$repo"
+if [ -n "${SMEVALS_TASK_BASE_REF:-}" ]; then
+  git -C "$repo" checkout -q "$SMEVALS_TASK_BASE_REF"
+fi
+# The agent must never see the hidden tests: drop the eval folder (and anything
+# else listed in HIDE_PATHS) from its copy, in case it exists at base_ref.
+for path in ${HIDE_PATHS:-eval}; do rm -rf "${repo:?}/$path"; done
+
+cmd=("${CLAUDE_BIN:-claude}" -p "${SMEVALS_PROMPT:?task has no prompt}"
+     --model "${SMEVALS_MODEL:?no model}"
+     --output-format stream-json --verbose
+     --max-turns "${MAX_TURNS:-25}"
+     --max-budget-usd "${MAX_BUDGET_USD:-1.00}"
+     --permission-mode dontAsk
+     --allowedTools "Read,Edit,Write,Glob,Grep,Bash(./mvnw *),Bash(mvn *),Bash(git diff*),Bash(git status*),Bash(ls*),Bash(cat *),Bash(grep *),Bash(find *)"
+     --disallowedTools "Agent,WebFetch,WebSearch"
+     --setting-sources project,local --strict-mcp-config --no-session-persistence)
+printf '#!/usr/bin/env bash\n%s\n' "$(printf '%q ' "${cmd[@]}")" > "$run_dir/command.sh"
+
+rc=0
+(cd "$repo" && "${cmd[@]}" > "$run_dir/transcript.jsonl" 2> "$run_dir/claude-stderr.txt" < /dev/null) || rc=$?
+[ -s "$run_dir/claude-stderr.txt" ] || rm -f "$run_dir/claude-stderr.txt"
+git -C "$repo" add -A >/dev/null 2>&1 && git -C "$repo" diff --cached > "$run_dir/diff.patch" 2>/dev/null || true
+echo "claude exit code: $rc" >&2
+
+python3 - "$run_dir/transcript.jsonl" <<'PY'
+import json, sys
+result = None
+for line in open(sys.argv[1], encoding="utf-8", errors="replace"):
+    try:
+        event = json.loads(line)
+    except ValueError:
+        continue
+    if event.get("type") == "result":
+        result = event
+if result is None:
+    print("no result event: Claude Code did not finish (harness error)", file=sys.stderr)
+    sys.exit(3)
+print(result.get("result") or f"[{result.get('subtype')}]")
+PY

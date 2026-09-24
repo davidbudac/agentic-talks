@@ -1,0 +1,8 @@
+name: fix-date-parser
+backlog: 004-dotted-dates-day-first
+prompt: |
+  InvoiceDates.parse("05.09.2026") returns 9 May 2026 instead of 5 September 2026.
+  The old exports are European: dotted dates are always day-first, so the
+  month-first fallback is wrong. "12.31.2026" must be rejected with an
+  IllegalArgumentException. ISO dates must behave exactly as before. Fix it and
+  add a test. Run ./mvnw -q test before you finish.

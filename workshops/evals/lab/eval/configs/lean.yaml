@@ -1,0 +1,4 @@
+# Lean CLAUDE.md (claude-md/lean.md). Labs 1, 2 and 6. Override the model with -m.
+name: lean
+runner: ../run-claude-lean
+model: claude-sonnet-5

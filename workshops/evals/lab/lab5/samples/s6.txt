@@ -1,0 +1,4 @@
+Added the currency to the export so finance can see which currency each invoice is in (backlog 001)
+
+CsvExport writes currency after gross now, upper case, EUR if missing.
+Fixed the tests that compare the whole header.

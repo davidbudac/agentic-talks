@@ -1,0 +1,4 @@
+﻿invoice_id,customer,net,tax_rate,currency,issue_date,terms
+L-2031,Müller GmbH,310.00,0.19,EUR,05.09.2026,net 30
+L-2032,Čapek & syn s.r.o.,9900.00,0.21,CZK,28.08.2026,net 14
+L-2033,Acme Corp,45.00,0.0825,USD,11.09.2026,on receipt

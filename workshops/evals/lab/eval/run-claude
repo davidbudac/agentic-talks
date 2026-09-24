@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+# smevals Runner: one headless Claude Code session on a fresh invoice-app copy.
+#
+# Contract (smevals README): no arguments; SMEVALS_MODEL, SMEVALS_PROMPT,
+# SMEVALS_TASK and SMEVALS_RUN_DIR arrive as environment variables; the working
+# directory is the Run directory; stdout becomes output.txt. Exit 0 whenever
+# Claude produced a result (even a wrong one, or one cut off by --max-turns or
+# --max-budget-usd); exit non-zero only when the harness broke (no result
+# event), so smevals leaves the run ungraded.
+#
+# The session runs in a fresh temp dir with `git init` and a baseline commit.
+# Afterwards the edited copy (without target/ and .git) is saved as repo/ in the
+# Run directory for the checker, next to transcript.jsonl (stream-json),
+# metrics.json (cost, turns, tokens), labrun.json (lab, variant, round),
+# diff.patch, meta.json and command.sh.
+#
+# CLAUDE_MD_VARIANT=lean|bloated|none picks the CLAUDE.md (see run-claude-lean).
+# LAB_NAME, LAB_VARIANT and LAB_ROUND are set by the lab runners.
+set -euo pipefail
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+lab="$(cd "$here/.." && pwd)"
+run_dir="${SMEVALS_RUN_DIR:?run this through smevals or a lab runner}"
+prompt="${SMEVALS_PROMPT:?task has no prompt}"
+model="${SMEVALS_MODEL:?no model}"
+variant="${CLAUDE_MD_VARIANT:-lean}"
+CLAUDE_BIN="${CLAUDE_BIN:-claude}"
+MAX_TURNS="${MAX_TURNS:-25}"
+MAX_BUDGET_USD="${MAX_BUDGET_USD:-0.75}"
+ALLOWED_TOOLS="${ALLOWED_TOOLS:-Read,Edit,Write,Glob,Grep,Bash(./mvnw),Bash(./mvnw *),Bash(java *),Bash(cd *),Bash(pwd),Bash(ls),Bash(ls *),Bash(cat *),Bash(head *),Bash(tail *),Bash(wc *),Bash(grep *),Bash(find *),Bash(git status*),Bash(git diff*),Bash(git log*),Bash(git show*)}"
+DISALLOWED_TOOLS="${DISALLOWED_TOOLS-Agent,WebFetch,WebSearch}"
+export PYTHONDONTWRITEBYTECODE=1
+
+work="$(mktemp -d "${TMPDIR:-/tmp}/lab-run.XXXXXX")"
+repo="$work/repo"
+cleanup() { [[ "${KEEP_WORKDIRS:-0}" == 1 ]] || rm -rf "$work"; }
+trap cleanup EXIT
+"$lab/lib/setup-repo.sh" "$repo" --claude-md "$variant" >/dev/null
+
+cmd=("$CLAUDE_BIN" -p "$prompt" --model "$model"
+     --output-format stream-json --verbose
+     --max-turns "$MAX_TURNS" --max-budget-usd "$MAX_BUDGET_USD"
+     --permission-mode dontAsk --allowedTools "$ALLOWED_TOOLS")
+[[ -n "$DISALLOWED_TOOLS" ]] && cmd+=(--disallowedTools "$DISALLOWED_TOOLS")
+if [[ "${ISOLATE:-1}" == 1 ]]; then
+  # Project settings and the repo's CLAUDE.md load; ~/.claude settings, the
+  # user CLAUDE.md, plugins and MCP servers do not, so runs compare cleanly.
+  cmd+=(--setting-sources project,local --strict-mcp-config --no-session-persistence)
+fi
+printf '#!/usr/bin/env bash\n# Exact command this run used (cwd: a fresh repo copy).\n%s\n' "$(printf '%q ' "${cmd[@]}")" > "$run_dir/command.sh"
+
+python3 - "$run_dir/labrun.json" "$variant" "$model" <<'PY'
+import json, os, sys
+path, claude_md, model = sys.argv[1:]
+json.dump({"lab": os.environ.get("LAB_NAME", "adhoc"),
+           "variant": os.environ.get("LAB_VARIANT", claude_md),
+           "run": int(os.environ.get("LAB_ROUND", "1") or 1),
+           "task": os.environ.get("SMEVALS_TASK", ""),
+           "claude_md": claude_md, "model_requested": model}, open(path, "w"), indent=2)
+PY
+
+start="$(python3 -c 'import time; print(int(time.time()*1000))')"
+rc=0
+(cd "$repo" && "${cmd[@]}" > "$run_dir/transcript.jsonl" 2> "$run_dir/claude-stderr.txt" < /dev/null) || rc=$?
+end="$(python3 -c 'import time; print(int(time.time()*1000))')"
+printf '{"wall_ms": %s, "exit_code": %s}\n' "$((end - start))" "$rc" > "$run_dir/meta.json"
+[[ -s "$run_dir/claude-stderr.txt" ]] || rm -f "$run_dir/claude-stderr.txt"
+
+git -C "$repo" add -A >/dev/null 2>&1 && git -C "$repo" diff --cached HEAD -- . ':(exclude)target' > "$run_dir/diff.patch" 2>/dev/null || true
+mkdir -p "$run_dir/repo"
+(cd "$repo" && tar --exclude ./target --exclude ./.git -cf - .) | (cd "$run_dir/repo" && tar -xf -)
+python3 "$lab/lib/labkit.py" session "$run_dir/transcript.jsonl" > "$run_dir/metrics.json"
+python3 "$lab/lib/labkit.py" result-text "$run_dir/transcript.jsonl"

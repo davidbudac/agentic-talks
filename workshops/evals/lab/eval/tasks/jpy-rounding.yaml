@@ -1,0 +1,7 @@
+name: jpy-rounding
+backlog: 002-jpy-zero-decimals
+prompt: |
+  Support JPY. Yen has no minor unit, so amounts round (still HALF_UP) to whole
+  yen: Money.round(1234.5, "JPY") is 1235, Money.format(1234.5, "JPY") is
+  "1,235 JPY", and Money.allocate(100, 3, "JPY") is [34, 33, 33]. Other
+  currencies must not change. Add tests. Run ./mvnw -q test before you finish.

@@ -1,0 +1,9 @@
+Add currency column to CSV export
+
+Consumers of the export could not tell which currency a gross amount
+was in, because the file mixes EUR, CZK, GBP and USD invoices.
+
+Write the invoice's currency as a sixth column after gross, in upper
+case, with EUR for invoices that have none. The header gains the
+column; order, quoting and the gross rule are unchanged. Tests cover
+the new column and the default.

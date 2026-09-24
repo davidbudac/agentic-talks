@@ -1,0 +1,13 @@
+Add currency column to CSV export
+
+Finance imports the export into a spreadsheet that mixes EUR, CZK, GBP
+and USD invoices, so the gross column was ambiguous without a currency.
+
+CsvExport now writes a sixth column, currency, after gross. The value is
+the invoice's normalised ISO code, so invoices without a currency export
+EUR. The export contract Javadoc is updated to match.
+
+Tests: update the expected header and rows in CsvExportTest and CliTest,
+add a test for upper-casing and the EUR default, and add a round-trip
+test that re-imports the export through FixtureLoader and checks that
+the currency survives.

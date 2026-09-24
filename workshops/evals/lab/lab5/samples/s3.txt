@@ -1,0 +1,11 @@
+Add a currency column to the CSV export
+
+The export mixes EUR, CZK, GBP and USD invoices, and finance could not
+tell which currency the gross amount was in. Add a sixth column,
+currency, after gross, holding the invoice's upper-case ISO code
+(EUR when the invoice has none).
+
+This changes the header, so anything that reads the export by position
+still works, but tools that check the column count will see six.
+Update CsvExportTest and CliTest for the new column and add a test for
+the upper-case value and the EUR default.

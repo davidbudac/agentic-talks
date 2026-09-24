@@ -1,0 +1,8 @@
+# A bug fixed in a known commit. base_ref is the fix commit's parent, so the bug
+# is present; the hidden tests are the tests that commit added.
+name: example-bugfix
+base_ref: "0000000"   # quote it; replace with parent of the fix commit (git rev-parse FIX^)
+prompt: |
+  Orders placed on 29 February are given a delivery date in March of the wrong
+  year. Fix OrderDates.deliveryDate so leap-day orders get the right date.
+  Add a test. Run ./mvnw -q test before you finish.

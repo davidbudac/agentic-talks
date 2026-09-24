@@ -1,0 +1,21 @@
+This commit enhances the CSV export functionality by introducing a new currency column.
+
+## Summary of changes
+
+- Updated the `COLUMNS` constant in `CsvExport` to include a new `currency` entry
+- Modified the `export` method to append `invoice.currency()` to each row
+- Updated the class-level Javadoc to reflect that the export now writes six columns
+- Updated `writesTheHeaderForEmptyInput` in `CsvExportTest` to expect the new header
+- Updated `writesOneLinePerInvoiceInInputOrder` in `CsvExportTest` to expect currency values
+- Added a new test, `currencyIsUpperCaseAndDefaultsToEur`, to `CsvExportTest`
+- Updated `exportPrintsCsv` in `CliTest` to expect the new header and row format
+
+## Benefits
+
+- Improved clarity for downstream consumers of the export
+- Better support for multi-currency workflows
+- Enhanced test coverage
+
+## Future work
+
+In the future, we may want to consider making the column order configurable, adding a currency symbol column, or supporting localized number formats for different regions.

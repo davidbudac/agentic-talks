@@ -1,0 +1,8 @@
+name: export-currency-column
+backlog: 001-export-currency-column
+prompt: |
+  Finance needs the currency in the CSV export: add a sixth column, "currency",
+  after "gross" in CsvExport. The value is the invoice's currency code in upper
+  case (EUR when none was given). Keep everything else in the export contract:
+  order, quoting, the gross rule, a header for empty input. Update the tests.
+  Run ./mvnw -q test before you finish.

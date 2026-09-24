@@ -1,0 +1,7 @@
+name: rename-customer-field
+backlog: 006-rename-invoice-customer
+prompt: |
+  Rename the Invoice record component `customer` to `customerName`, matching
+  Report.Entry, across the whole repository (main and test code). Do not keep an
+  alias accessor for the old name. The CSV export's header still says "customer".
+  Run ./mvnw -q test before you finish.

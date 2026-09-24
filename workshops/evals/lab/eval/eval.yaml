@@ -1,0 +1,6 @@
+name: invoice-app-java
+description: >-
+  Six small maintenance tasks on the workshop's Java invoice-app (Java 21, Maven,
+  JUnit 5). Each run gets a fresh copy of the repo, one headless Claude Code
+  session and hidden JUnit acceptance tests. Pass = the hidden tests and the
+  repo's own tests pass under ./mvnw -q -o test.
