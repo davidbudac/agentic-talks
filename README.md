@@ -2,8 +2,8 @@
 
 Zero-build HTML slide decks — a general-audience tool landscape, a beginner
 intro to agentic AI, a developer follow-up, engineering deep dives, a workshop
-on working smarter with agents, a Claude Design product tour, and a graph
-engineering deep dive. Same
+on working smarter with agents, a Claude Design product tour, a graph
+engineering deep dive, and a hands-on evals workshop. Same
 template, same aesthetic. The
 key concepts are illustrated by short looping animations rendered with
 [Remotion](https://www.remotion.dev/) (in `assets/anim/`, sources in `remotion/`),
@@ -49,6 +49,19 @@ Author: **David Budáč** · English
   span anatomy. 21 slides. **Live eval demo.** Doubles as the teaser for the
   half-day evals workshop (`workshops/evals/`), whose Lab 6 takes over routing,
   harnesses and open models.
+- **[`evals-workshop.html`](evals-workshop.html)**: *Evals, Hands On* (WIP until
+  the dry run; half-day hands-on workshop for about 20 Java developers in
+  pairs, each on their own Claude Code Pro or Max plan). The practical side of
+  talk 07: eight labs on one Java/Maven repo. Setup check, then guess and measure
+  (lean vs bloated CLAUDE.md), variance with pass@k and pass^k, break and harden
+  a grader, read the traces, test a judge model against people, route Haiku vs
+  Sonnet by cost per accepted task, and take an eval home. Results pool on a
+  live room board. 50 slides with a lab tracker in every header, a time box on
+  every "Do this" slide (**T** starts or pauses it) and facilitator notes on
+  every slide. Everything else lives in [`workshops/evals/`](workshops/evals/):
+  the lab kit (`lab/`), the facilitator run sheet
+  ([`FACILITATOR.md`](workshops/evals/FACILITATOR.md)), the participant sheet
+  ([`HANDOUT.md`](workshops/evals/HANDOUT.md)) and the board source (`board/`).
 - **[`claude-design.html`](claude-design.html)** — *Claude Design* (WIP,
   ~30-min product deep dive, no code or design background needed — any paid
   Claude plan). The full tour behind deck 01's two teaser slides: the
@@ -95,7 +108,7 @@ Browser checks use `scripts/qa_first_three_v2.cjs` with Playwright and installed
   developers going deeper (03) → devs & IT admins on internals (04) → devs
   levelling up on cost, orchestration & measurement (05–07, WIP) → anyone
   making visual work with Claude Design (08, WIP) → devs weighing up graphs
-  (09) — with
+  (09), plus the hands-on evals workshop (WIP), with
   self-identification bullets per deck and a
   one-question fallback for the undecided.
 - **Online:** if GitHub Pages is enabled, the repo's Pages root serves the chooser.
@@ -217,6 +230,8 @@ animations read the same palette from `remotion/src/theme.ts`.
 | `measuring-what-works.html` | *Measuring What Works* deck — evals, traces & judging changes by evidence (WIP). |
 | `claude-design.html` | *Claude Design* deck — ~30-min product deep dive on Anthropic's visual-creation tool (WIP, live demo, no code needed). |
 | `ai-graph-engineering.html` | *AI Graph Engineering* deck — knowledge/retrieval/workflow graphs and when either pays. |
+| `evals-workshop.html` | *Evals, Hands On*: slides for the half-day evals workshop (WIP until the dry run). |
+| `workshops/evals/` | The workshop's lab kit (`lab/`), facilitator guide, participant handout, live board source and the talk 07 archives. |
 | `graph-engineering-ai-llms.md`, `deck09-facts.md` | Research note and sourced fact sheet behind deck 09. |
 | `review-decks-01-02.md` | Fact-check of decks 01 and 02 (Sep 2026) with the per-slide change plan and its status. |
 | `index.html` | Landing page routing readers to the right deck by audience (GitHub Pages root). |
