@@ -30,10 +30,12 @@ Slots (talk-slide: what to capture · how):
           opens a shell, start Symphony there. Screen-record the Linear board too (Cmd+Shift+5).
   06-s23  Orchestrating · write a skill, then watch it fire · opens a shell in a fresh repo copy with
           demo-skill/backlog-issue/SKILL.md ready to paste into .claude/skills/; run `claude`, ask "do 003".
-  07-s18  Measuring · the recorded eval run · runs a small run/talk07.sh (3 tasks x 2 runs, spends usage)
-  07-s28  Measuring · a local Gemma 4 / Qwen 3.6 run · manual: opens a shell; e.g. `ollama run gemma4:12b`
+  07-s13  Measuring · the recorded eval run · runs a small run/talk07.sh (3 tasks x 2 runs, spends usage)
+  ws-lab6-local  Evals workshop Lab 6 (was talk 07 slide 28, now in workshops/evals/talk07-routing-archive.html)
+          · a local Gemma 4 / Qwen 3.6 run · manual: opens a shell; e.g. `ollama run gemma4:12b`
           on a task from backlog/ (the kit does not install Ollama or models).
-  07-s33  Measuring · /voice dictation · terminal text only; audio and the hold/tap UI need a screen
+  habits-voice  Talk 07 habits archive (was slide 33, now in workshops/evals/talk07-habits-archive.html)
+          · /voice dictation · terminal text only; audio and the hold/tap UI need a screen
           recording (Cmd+Shift+5 with the microphone on). Opens `claude` in a fresh repo copy.
   08-s18  Claude Design · the five-frame live build · NOT a terminal: Claude Design is a web app.
           Screen-record the browser (Cmd+Shift+5) or take five screenshots; this script only prints that.
@@ -59,10 +61,10 @@ case "$SLOT" in
   05-s25)
     confirm_plan "Record 05-s25: runs run/talk05.sh inside the recording (2 model sessions, see its estimate)"
     default_cmd=("$RUN_DIR/talk05.sh" --yes) ;;
-  07-s18)
-    confirm_plan "Record 07-s18: runs a small run/talk07.sh inside the recording (3 tasks x 2 variants x 2 runs = 12 sessions)"
+  07-s13)
+    confirm_plan "Record 07-s13: runs a small run/talk07.sh inside the recording (3 tasks x 2 variants x 2 runs = 12 sessions)"
     default_cmd=(env "TASKS=fix-date-parser fixtures-bom jpy-rounding" RUNS=2 "$RUN_DIR/talk07.sh" --yes) ;;
-  06-s9|07-s28)
+  06-s9|ws-lab6-local)
     setup_demo_repo
     default_cmd=(bash -c "cd $(printf '%q' "$REPO") && exec \${SHELL:-bash} -i") ;;
   06-s23)
@@ -71,7 +73,7 @@ case "$SLOT" in
     cp "$SERIES_DIR/demo-skill/backlog-issue/SKILL.md" "$REPO/../skill-to-paste/SKILL.md"
     say "Skill to paste: $REPO/../skill-to-paste/SKILL.md → $REPO/.claude/skills/backlog-issue/SKILL.md"
     default_cmd=(bash -c "cd $(printf '%q' "$REPO") && exec \${SHELL:-bash} -i") ;;
-  07-s33)
+  habits-voice)
     setup_demo_repo
     default_cmd=(bash -c "cd $(printf '%q' "$REPO") && exec $(printf '%q' "$CLAUDE_BIN")") ;;
   08-s18)

@@ -44,10 +44,11 @@ Author: **David Budáč** · English
   skills & plugins for teams and a per-capability MCP-vs-CLI heuristic. 32 slides.
 - **[`measuring-what-works.html`](measuring-what-works.html)** — *Measuring What
   Works* (WIP, ~30-min deep dive, for experienced devs). A minimal eval loop you
-  can start this week → reading traces for wasted turns and real cost, with the
-  OTel GenAI span anatomy → the September-2026 open-model landscape (Gemma 4,
-  Qwen 3.6/3.8, GLM-5.2/5.3), local inference & alternative harnesses → habits that
-  compound. 36 slides.
+  can start this week → pass^k, smevals and cost per accepted task to pick a
+  model → reading traces for wasted turns and real cost, with the OTel GenAI
+  span anatomy. 21 slides. **Live eval demo.** Doubles as the teaser for the
+  half-day evals workshop (`workshops/evals/`), whose Lab 6 takes over routing,
+  harnesses and open models.
 - **[`claude-design.html`](claude-design.html)** — *Claude Design* (WIP,
   ~30-min product deep dive, no code or design background needed — any paid
   Claude plan). The full tour behind deck 01's two teaser slides: the
@@ -140,8 +141,8 @@ A single **context** thread ties the sections together (🧵 markers throughout)
 **Cost & Context · Orchestrating Agents · Measuring What Works** *(decks 05–07,
 WIP)* — what agents really cost (tokens, subscriptions, Bedrock) · efficient
 context work (CLAUDE.md, `/doctor`, `/clear` vs `/compact`) · orchestration,
-sandboxing, skills & plugins, MCP vs CLI · evals, traces, local open-source
-models & alternative harnesses.
+sandboxing, skills & plugins, MCP vs CLI · evals, traces & picking a model by
+cost per accepted task (the teaser for the hands-on evals workshop).
 
 **Claude Design** *(WIP)* — what it is (Anthropic Labs, April 2026, beta) ·
 chat left / canvas right · four starting points (text, DOCX/PPTX/XLSX, web

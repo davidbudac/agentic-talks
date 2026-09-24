@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Talk 07 archive · routing and open models</title>
+
+<link rel="stylesheet" href="../../ember_design_system/tokens/colors.css">
+<link rel="stylesheet" href="../../ember_design_system/tokens/typography.css">
+<link rel="stylesheet" href="../../ember_design_system/tokens/spacing.css">
+<link rel="stylesheet" href="../../ember_design_system/tokens/effects.css">
+<style>deck-stage:not(:defined){visibility:hidden}</style>
+<style>
+/* Measuring What Works: Ember tokens, fixed 1920×1080 canvas. Base deck styles (pruned). */
+:root{--ease:cubic-bezier(.16,1,.3,1);
+  --font-d:var(--font-display); --font-b:var(--font-body); --font-m:var(--font-mono);}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--ink);color:var(--text-strong);font-family:var(--font-body)}
+.slide{display:flex; flex-direction:column; overflow:hidden;
+  font-family:var(--font-body); -webkit-font-smoothing:antialiased;
+  --pad-x:var(--slide-pad-x); --pad-t:var(--slide-pad-top); --pad-b:var(--slide-pad-bottom);
+  --h2-size:var(--fs-h2); --h3-size:34px; --lead-size:34px;
+  --body-size:26px; --small-size:20px; --code-size:20px;
+  --gap:28px; --content-gap:var(--gap); --diag-h:440px;}
+.slide-content{flex:1; min-height:0; display:flex; flex-direction:column; justify-content:center;
+  padding:var(--pad-t) var(--pad-x) var(--pad-b); overflow:hidden; position:relative; z-index:1;}
+.slide,.slide.light{--s-bg:var(--paper); --s-text:var(--text-strong); --s-muted:var(--text-muted); --s-faint:var(--text-faint);
+  --s-line:var(--line-light-2); --s-line-strong:var(--line-light);
+  --s-card-bg:var(--paper-2); --s-card-border:var(--line-card); --s-box-mid:var(--paper-3);
+  --s-outer-fill:var(--coral-soft); --s-callout-bg:var(--coral-soft);
+  --s-accent:var(--coral-ink); --s-bar:var(--bar);
+  background:var(--s-bg); color:var(--s-text);}
+.slide.dark{--s-bg:var(--ink); --s-text:var(--on-dark); --s-muted:var(--on-dark-muted); --s-faint:var(--on-dark-faint);
+  --s-line:var(--line-dark-2); --s-line-strong:var(--line-dark);
+  --s-card-bg:var(--ink-2); --s-card-border:var(--line-dark); --s-box-mid:var(--ink-2);
+  --s-outer-fill:rgba(255,92,53,.10); --s-callout-bg:rgba(255,92,53,.10);
+  --s-accent:var(--coral); --s-bar:var(--bar-dark);
+  background:var(--s-bg); color:var(--s-text);}
+.slide-head{display:flex; align-items:baseline; justify-content:space-between; gap:var(--space-5);
+  margin-bottom:var(--gap); border-bottom:var(--bw-hair) solid var(--s-line); padding-bottom:18px;}
+.snum{font:var(--w-bold) 48px/1 var(--font-display); color:var(--s-accent); letter-spacing:var(--track-snug)}
+.crumb{font:var(--w-medium) var(--small-size)/1.2 var(--font-mono); letter-spacing:var(--track-eyebrow);
+  text-transform:uppercase; color:var(--s-muted); text-align:right}
+.crumb b{color:var(--s-accent); font-weight:var(--w-semibold)}
+h2{font-family:var(--font-display); font-weight:var(--w-bold); font-size:var(--h2-size);
+  line-height:var(--lh-snug); letter-spacing:var(--track-snug); margin-bottom:22px; color:var(--s-text); text-wrap:balance}
+h3{font-family:var(--font-display); font-weight:var(--w-bold); font-size:var(--h3-size);
+  line-height:var(--lh-snug); letter-spacing:var(--track-snug); color:var(--s-text)}
+.lead{font-size:var(--lead-size); line-height:1.45; max-width:48ch; color:var(--s-text); text-wrap:pretty}
+.lead b{color:var(--s-accent)}
+strong,b{font-weight:var(--w-semibold)}
+.note{font-size:var(--small-size); color:var(--s-muted); margin-top:20px; line-height:1.45; text-wrap:pretty}
+.note b{color:var(--s-text); font-weight:var(--w-semibold)}
+.kcard{background:var(--s-callout-bg); color:var(--s-text); border:var(--bw) solid var(--s-card-border);
+  border-left:var(--bw-callout) solid var(--coral); border-radius:0 var(--radius-xl) var(--radius-xl) 0;
+  padding:40px 44px; position:relative; overflow:hidden}
+.slide.dark .kcard{box-shadow:var(--ring-accent-dark)}
+.kcard .big{font-family:var(--font-display); font-weight:var(--w-bold); color:var(--s-accent);
+  font-size:56px; line-height:1.02; letter-spacing:var(--track-snug)}
+.kcard p{font-size:var(--body-size); line-height:1.42; margin-top:14px; max-width:50ch; color:var(--s-text)}
+@keyframes mw-dash{to{stroke-dashoffset:-28}}
+.wip-badge{display:inline-flex; align-items:center; gap:10px; font-family:var(--font-mono); font-weight:700;
+  font-size:16px; letter-spacing:.14em; text-transform:uppercase; color:var(--coral);
+  border:1.5px solid var(--coral); border-radius:var(--radius-pill); padding:6px 18px; margin-bottom:20px}
+.title-slide{display:flex; flex-direction:column; justify-content:space-between; background:var(--ink);
+  padding:88px 96px 0}
+.ts-top{display:flex; justify-content:space-between; align-items:baseline; font:600 var(--fs-eyebrow) var(--font-mono);
+  letter-spacing:var(--track-eyebrow); text-transform:uppercase}
+.ts-top .k{color:var(--coral)}
+.ts-top .meta{color:var(--on-dark-faint); font-weight:500}
+.ts-hero h1{font-family:var(--font-display); font-weight:var(--w-bold); letter-spacing:-.035em; line-height:.94;
+  color:var(--on-dark); font-size:132px}
+.ts-hero h1 .dot{color:var(--coral)}
+.ts-sub{font-size:34px; color:var(--on-dark-muted); margin-top:36px; font-weight:400; max-width:34ch}
+.ts-sub b{color:var(--on-dark); font-weight:600}
+.ts-foot{border-top:var(--bw-hair) solid var(--line-dark); margin:0 -96px; padding:34px 96px 40px;
+  display:flex; justify-content:space-between; align-items:center}
+.ts-author{font-size:26px; color:var(--on-dark-muted)}
+.ts-author a{color:inherit;text-decoration:none;border-bottom:1px solid transparent;transition:border-color .15s}
+.ts-author a:hover{border-color:currentColor}
+.ts-author b{color:var(--coral); font-weight:var(--w-semibold)}
+.ts-loopline{font:500 24px var(--font-mono); letter-spacing:.04em; color:var(--on-dark-faint)}
+.ts-loopline .a{color:var(--coral)}
+.ts-loopline .w{color:var(--on-dark-muted)}
+@keyframes ae-rise{from{opacity:0; transform:translateY(22px)} to{opacity:1; transform:none}}
+@media (prefers-reduced-motion:no-preference){
+[data-deck-active] .reveal{animation:ae-rise .5s var(--ease) both}
+[data-deck-active] .reveal:nth-child(2){animation-delay:.07s}
+[data-deck-active] .reveal:nth-child(3){animation-delay:.14s}
+[data-deck-active] .reveal:nth-child(4){animation-delay:.21s}
+[data-deck-active] .reveal:nth-child(n+5){animation-delay:.27s}
+[data-deck-active] .title-slide>*{animation:ae-rise .8s var(--ease) both}
+[data-deck-active] .title-slide>.ts-hero{animation-delay:.15s}
+[data-deck-active] .title-slide>.ts-foot{animation-delay:.3s}
+}
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+/* Self-hosted Ember fonts */
+@font-face{font-family:"Space Grotesk";font-weight:400;font-style:normal;font-display:swap;src:url("../../remotion/public/fonts/space-grotesk-400.woff2") format("woff2")}
+@font-face{font-family:"Space Grotesk";font-weight:500;font-style:normal;font-display:swap;src:url("../../remotion/public/fonts/space-grotesk-500.woff2") format("woff2")}
+@font-face{font-family:"Space Grotesk";font-weight:600;font-style:normal;font-display:swap;src:url("../../remotion/public/fonts/space-grotesk-600.woff2") format("woff2")}
+@font-face{font-family:"Space Grotesk";font-weight:700;font-style:normal;font-display:swap;src:url("../../remotion/public/fonts/space-grotesk-700.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-weight:400;font-style:normal;font-display:swap;src:url("../../remotion/public/fonts/ibm-plex-sans-400.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-weight:500;font-style:normal;font-display:swap;src:url("../../remotion/public/fonts/ibm-plex-sans-500.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-weight:600;font-style:normal;font-display:swap;src:url("../../remotion/public/fonts/ibm-plex-sans-600.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-weight:700;font-style:normal;font-display:swap;src:url("../../remotion/public/fonts/ibm-plex-sans-700.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:400;font-style:normal;font-display:swap;src:url("../../remotion/public/fonts/ibm-plex-mono-400.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:500;font-style:normal;font-display:swap;src:url("../../remotion/public/fonts/ibm-plex-mono-500.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:600;font-style:normal;font-display:swap;src:url("../../remotion/public/fonts/ibm-plex-mono-600.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:700;font-style:normal;font-display:swap;src:url("../../remotion/public/fonts/ibm-plex-mono-700.woff2") format("woff2")}
+/* v2 visual layer (from the revised first three decks, pruned to what this deck uses) */
+.v2{--h2-size:88px;--h3-size:52px;--lead-size:42px;--body-size:34px;--small-size:26px;--code-size:36px;
+  --icbg:var(--s-card-bg);--v-fail:#ff6b4f}
+.v2 .slide-content{padding:60px 96px 96px;justify-content:flex-start;gap:0}
+.v2 .slide-head{align-items:center;gap:40px;margin-bottom:40px;padding-bottom:22px;border-bottom:1px solid var(--s-line);flex:none}
+.v2 .snum{font-size:52px}
+.v2 .crumb{font-size:26px;letter-spacing:.1em;min-width:220px}
+.v2 h2{font-size:var(--h2-size);line-height:1.02;letter-spacing:-.03em;margin:0;max-width:none;flex:none}
+.v2 .v2-body{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:36px;padding-top:32px}
+.v2 .note{flex:none;margin-top:18px;font:500 24px/1.3 var(--font-mono);letter-spacing:.03em;color:var(--s-muted)}
+.v2 .lead{font-size:var(--lead-size);line-height:1.35;max-width:none;color:var(--s-text)}
+.v2 .lead.sm{font-size:36px}
+.v2 .lead b,.v2 .v-row p b{color:var(--s-accent);font-weight:600}
+.v2 a{color:var(--s-accent);text-underline-offset:.18em}
+.v2 a:focus-visible{outline:3px solid var(--s-accent);outline-offset:8px}
+.v2 svg{overflow:visible}
+.v2 svg text{font-family:var(--font-mono)}
+.v2 .ic{fill:none;stroke:currentColor;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;color:var(--s-accent)}
+.v2 .ic .bg{fill:var(--icbg)}
+.v2 .kk{display:block;font:600 24px/1.2 var(--font-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--s-accent)}
+.v2 .chips{display:flex;flex-wrap:wrap;gap:14px}
+.v2 .chips span{display:inline-flex;align-items:center;gap:12px;font:500 28px var(--font-mono);color:var(--s-text);background:var(--s-bg);border:2px solid var(--s-card-border);border-radius:40px;padding:10px 24px}
+.v2 .chips .ic{width:34px;height:34px}
+.v2 .mk-c{fill:var(--coral)}
+.v2 .mk-t{fill:var(--s-text)}
+.v2 .mk-m{fill:var(--s-muted)}
+.v2 .ln-c{stroke:var(--coral);stroke-width:6;fill:none}
+.v2 .ln-t{stroke:var(--s-text);stroke-width:5;fill:none}
+.v2 .ln-m{stroke:var(--s-muted);stroke-width:4;fill:none}
+.v2 .ln-dim{stroke:var(--s-line-strong);stroke-width:3;fill:none}
+.v2 .thick{stroke-width:8}
+.v2 .dash{stroke-dasharray:14 12}
+.v2 .ring{fill:none;stroke:var(--s-line-strong);stroke-width:4;stroke-dasharray:4 12;stroke-linecap:round}
+.v2 .nd{fill:var(--ink);stroke:var(--s-bg);stroke-width:8}
+.v2 .nd + .ic{color:var(--paper)}
+.v2 .nd.hot{fill:var(--coral)}
+.v2 .nd.hot + .ic{color:var(--ink)}
+.v2 .nd.soft{fill:var(--s-card-bg);stroke:var(--s-card-border);stroke-width:3}
+.v2 .nd.soft + .ic{color:var(--s-accent)}
+.v2.dark .nd{fill:var(--ink-2);stroke:var(--coral);stroke-width:4}
+.v2.dark .nd + .ic{color:var(--coral)}
+.v2.dark .nd.hot{fill:var(--coral)}
+.v2.dark .nd.hot + .ic{color:var(--ink)}
+.v2 .f-coral{fill:var(--coral)}
+.v2 .f-ink{fill:var(--ink)}
+.v2 .f-bg{fill:var(--s-bg)}
+.v2.dark .f-ink{fill:var(--ink-3);stroke:var(--line-dark);stroke-width:2}
+.v2 .bx-card{fill:var(--s-card-bg);stroke:var(--s-card-border);stroke-width:2}
+.v2 .bx-mid{fill:var(--s-box-mid);stroke:var(--s-line-strong);stroke-width:2}
+.v2 .bx-dash{fill:none;stroke:var(--s-line-strong);stroke-width:2;stroke-dasharray:8 7}
+.v2 .bx-hot{stroke:var(--coral);stroke-width:3}
+.v2 .bx-hot.soft{fill:var(--s-callout-bg)}
+.v2 .ok-dot{fill:var(--positive-on-dark)}
+.v2.light .ok-dot{fill:var(--positive)}
+.v2 .ok-tick{fill:none;stroke:var(--ink);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.v2 .ok-tick.sm{stroke-width:4}
+.v2 .ok-tick.lg{stroke-width:11}
+.v2 .t-cap{font:500 22px var(--font-mono);letter-spacing:.12em;fill:var(--s-faint);text-transform:uppercase}
+.v2 .t-acc{font:600 28px var(--font-mono);fill:var(--s-accent);letter-spacing:.03em}
+.v2 .t-mut{font:500 28px var(--font-mono);fill:var(--s-muted)}
+.v2 .t-faint{font:500 24px var(--font-mono);fill:var(--s-faint)}
+.v2 .t-strong{font:600 32px var(--font-body);fill:var(--s-text)}
+.v2 .t-strong.mono,.v2 text.mono{font-family:var(--font-mono);font-size:28px}
+.v2 .sm{font-size:24px}
+.v2 .t-on{font:700 26px var(--font-mono);fill:var(--ink)}
+.v2 .t-on.big{font-size:32px}
+.v2 .t-paper{font:600 30px var(--font-mono);fill:var(--paper);letter-spacing:.04em}
+.v2 .t-paper.lg,.v2 .t-strong.lg{font:700 56px var(--font-display);letter-spacing:-.02em}
+.v-stn .rail{display:block;width:100%;height:auto}
+.rail .rl-base{stroke:var(--s-line-strong);stroke-width:6;stroke-dasharray:4 14;stroke-linecap:round}
+.rail .rl-on{stroke:var(--coral);stroke-width:12;stroke-linecap:round}
+.rail .rl-c{fill:var(--ink);stroke:var(--s-bg);stroke-width:10}
+.v2.dark .rail .rl-c{fill:var(--ink-2);stroke:var(--coral);stroke-width:5}
+.rail .rl-c.hot,.v2.dark .rail .rl-c.hot{fill:var(--coral);stroke:var(--s-bg);stroke-width:10}
+.rail .ic{color:var(--paper)}
+.v2.dark .rail .ic{color:var(--coral)}
+.rail .ic.hot,.v2.dark .rail .ic.hot{color:var(--ink)}
+.rail .ic.ok,.v2.dark .rail .ic.ok{color:var(--positive-on-dark)}
+.rail .rl-n{font:500 30px var(--font-mono);fill:var(--s-accent);letter-spacing:.08em}
+.v-stn .stops{display:grid;text-align:center;margin-top:24px;gap:28px}
+.v-stn.n2 .stops{grid-template-columns:repeat(2,1fr)}
+.v-stn.n3 .stops{grid-template-columns:repeat(3,1fr)}
+.v-stn.n4 .stops{grid-template-columns:repeat(4,1fr)}
+.v-stn .stops h3{font:700 72px/1.02 var(--font-display);letter-spacing:-.025em;color:var(--s-text)}
+.v-stn.n4 .stops h3{font-size:64px}
+.v-stn .stops p{font-size:38px;line-height:1.3;color:var(--s-muted);margin-top:14px}
+.v-stn.n4 .stops p{font-size:36px}
+.mini{list-style:none;display:flex;align-items:center;font:500 24px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--s-faint);margin:0 auto}
+.mini li{display:flex;align-items:center;gap:14px}
+.mini li+li::before{content:"";width:56px;height:3px;background:var(--s-line-strong);margin:0 18px;border-radius:2px}
+.mini li i{width:22px;height:22px;border-radius:50%;border:3px solid var(--s-line-strong);display:block;background:var(--s-bg)}
+.mini li.done{color:var(--s-muted)}
+.mini li.done i{border-color:var(--coral);background:var(--s-callout-bg)}
+.mini li.on{color:var(--s-accent);font-weight:600}
+.mini li.on i{background:var(--coral);border-color:var(--coral);box-shadow:0 0 0 7px rgba(255,92,53,.18)}
+.v-win{border-radius:20px;overflow:hidden;min-width:0;flex:none}
+.v-win.term{background:var(--term-bg);box-shadow:var(--shadow-terminal);border:1px solid #2a241b;color:var(--code-text)}
+.v2.dark .v-win.term{border-color:var(--line-dark)}
+.v-win .tbar{background:var(--term-bar);height:62px;display:flex;align-items:center;gap:12px;padding:0 26px}
+.v-win .tbar i{width:18px;height:18px;border-radius:50%;display:block}
+.v-win .tbar .r{background:var(--term-dot-red)}
+.v-win .tbar .y{background:var(--term-dot-yellow)}
+.v-win .tbar .g{background:var(--term-dot-green)}
+.v-win .tbar span{font:500 22px var(--font-mono);color:var(--on-dark-faint);margin-left:14px;letter-spacing:.06em}
+.v-win .wbody{padding:40px 56px 48px;font:500 38px/1.5 var(--font-mono);white-space:pre-wrap;overflow-wrap:anywhere}
+.v-win.term .k{color:var(--code-keyword)}
+.v-win.term .s{color:var(--code-string)}
+.v-win.term .c{color:var(--code-comment)}
+.v-win.term .n{color:var(--code-number)}
+.v-win.term .p{color:var(--coral)}
+.v-win.term .dim{color:var(--on-dark-muted)}
+.v-panels{display:grid;gap:40px}
+.v-panels.n2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.v-panel{background:var(--s-card-bg);border:1.5px solid var(--s-card-border);border-radius:24px;padding:40px 48px 46px;display:flex;flex-direction:column;min-width:0}
+.v-panel .illus{height:270px;display:flex;align-items:center;justify-content:center;margin-bottom:26px}
+.v-panel .illus svg{width:100%;height:100%}
+.v-panel h3{font:700 64px/1.02 var(--font-display);letter-spacing:-.03em;color:var(--s-text)}
+.v-panel p{font-size:36px;line-height:1.35;color:var(--s-muted);margin-top:16px}
+.v-panel .kk{margin-bottom:12px}
+.v-rows{display:flex;flex-direction:column;gap:22px}
+.v-row{display:grid;grid-template-columns:120px 1fr;grid-template-rows:auto auto;column-gap:36px;align-items:center;background:var(--s-card-bg);border:1.5px solid var(--s-card-border);border-left:10px solid var(--coral);border-radius:6px 22px 22px 6px;padding:30px 40px}
+.v-row .ic{grid-row:1/3;width:110px;height:110px}
+.v-row h3{font:700 54px/1.05 var(--font-display);letter-spacing:-.025em;color:var(--s-text)}
+.v-row p{font-size:34px;line-height:1.35;color:var(--s-muted);margin-top:8px}
+.v-row p .kk{display:inline;font-size:22px;margin-right:10px}
+.v-rows.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px}
+.v-rows.grid2 .v-row{padding:40px 44px;min-height:250px}
+.v-rows.compact{gap:14px}
+.v-rows.compact .v-row{padding:18px 28px;grid-template-columns:72px 1fr;column-gap:24px;background:var(--ink-2)}
+.v-rows.compact .ic{width:64px;height:64px}
+.v-rows.compact h3{font-size:40px}
+.v-rows.compact p{font-size:30px;margin-top:4px}
+.v-cycle{display:grid;grid-template-columns:600px 1fr;gap:90px;align-items:center}
+.v-cycle svg{width:600px;height:600px}
+.v-cycle ol{list-style:none;display:flex;flex-direction:column;gap:34px}
+.v-cycle li{display:grid;grid-template-columns:90px 1fr;align-items:baseline;border-top:2px solid var(--s-line);padding-top:24px}
+.v-cycle li span{font:500 30px var(--font-mono);color:var(--s-accent)}
+.v-cycle h3{font:700 68px/1 var(--font-display);letter-spacing:-.03em;color:var(--s-text)}
+.v-cycle li p{font-size:38px;line-height:1.3;color:var(--s-muted);margin-top:10px}
+.v-cycle.n4 ol{gap:22px}
+.v-cycle.n4 li{padding-top:16px}
+.v-cycle.n4 h3{font-size:56px}
+.v-cycle.n4 li p{font-size:34px;margin-top:6px}
+.v2 .kcard{padding:44px 52px}
+.v2 .kcard .big{font-size:64px;line-height:1.05;letter-spacing:-.025em}
+.v2 .kcard p{font-size:36px;line-height:1.38;margin-top:20px}
+.v-refs{display:grid;grid-template-columns:1fr;gap:0}
+.v-refs a{display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;column-gap:30px;align-items:center;padding:26px 8px;border-bottom:2px solid var(--s-line);text-decoration:none;color:var(--s-text)}
+.v-refs a:first-child{border-top:2px solid var(--s-line)}
+.v-refs a:hover .lt{color:var(--s-accent)}
+.v-refs .lt{font:700 50px/1.1 var(--font-display);letter-spacing:-.02em}
+.v-refs .ld{font:500 26px var(--font-mono);color:var(--s-muted);margin-top:8px;grid-column:1}
+.v-refs .la{grid-row:1/3;grid-column:2;font:700 52px var(--font-display);color:var(--s-accent)}
+.v-panel .illus{height:300px}
+.v-refs a{padding:34px 8px}
+.v-refs .lt{font-size:56px}
+.v2.ref h2{font-size:80px}
+.v2.title-slide .ts-hero h1{font-size:184px;line-height:.95}
+.v2.title-slide .ts-sub{font-size:44px;max-width:45ch;line-height:1.35}
+@media (prefers-reduced-motion:reduce){
+.v2 *,.v2 *::before,.v2 *::after{animation:none!important;transition:none!important}
+}
+@media (max-height:700px){
+.pui-controls{bottom:8px}
+}
+@media (max-height:600px){
+.pui-controls button{padding:7px 10px}
+}
+@media (max-height:500px){
+.pui-notes{max-height:50vh}
+}
+/* Deck-specific components (m7) */
+.m7 .f-g{fill:var(--positive)} .m7 .f-w{fill:var(--warning)}
+.m7 code{font-family:var(--font-mono);font-size:.9em;color:var(--s-accent)}
+.m7 .v2-body > svg,.m7 .fig{display:block;width:100%;height:auto}
+.m7 .t-big{font:700 120px var(--font-display);fill:var(--s-text);letter-spacing:-.03em}
+.m7 .t-strong.xl{font-size:40px}
+.m7 .t-mut.xs,.m7 .t-acc.xs{font-size:22px}
+.wip-badge{display:inline-flex;align-items:center;font:600 22px var(--font-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--coral);border:2px solid var(--coral);border-radius:40px;padding:8px 22px;margin-bottom:34px}
+.m7 .mini{font-size:22px}
+.m7 .mini li+li::before{width:40px;margin:0 14px}
+
+/* section beat */
+.m7-div::before{content:"";position:absolute;left:0;top:0;bottom:0;width:16px;background:var(--coral);z-index:2}
+.m7-div .slide-content{padding:60px 96px 96px 120px}
+.m7-div .dv{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 640px;column-gap:96px;align-items:end}
+.m7-div .dv-L{display:flex;flex-direction:column;justify-content:flex-end;min-width:0;padding-bottom:10px}
+.m7-div .dv-mega{font:700 360px/.8 var(--font-display);letter-spacing:-.05em;color:var(--coral)}
+.m7-div .dv-kick{display:block;font:600 30px var(--font-mono);letter-spacing:.2em;text-transform:uppercase;color:var(--coral);margin:0 0 22px 10px;line-height:1}
+.m7-div h2{font-size:92px;line-height:1.02;margin-top:44px}
+.m7-div .dv-lead{font-size:40px;line-height:1.35;color:var(--s-muted);margin-top:30px;max-width:30ch}
+.dv-parts{list-style:none;display:flex;flex-direction:column;gap:18px}
+.dv-parts li{border:2px solid var(--line-dark);border-radius:22px;padding:26px 32px;display:grid;grid-template-columns:90px 1fr;align-items:baseline;color:var(--on-dark-faint)}
+.dv-parts li b{font:700 52px/1 var(--font-display);letter-spacing:-.03em}
+.dv-parts li span{font:700 44px/1.1 var(--font-display);letter-spacing:-.02em}
+.dv-parts li small{grid-column:2;display:block;font:500 26px/1.35 var(--font-mono);color:var(--on-dark-muted);margin-top:12px}
+.dv-parts li.on{border-color:var(--coral);background:rgba(255,92,53,.10);color:var(--on-dark)}
+.dv-parts li.on b{color:var(--coral)}
+.dv-parts li.done{color:var(--on-dark-muted)}
+
+/* live demo + fallback */
+.m7-live{display:inline-flex;align-items:center;gap:16px;align-self:flex-start;font:700 28px var(--font-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink);background:var(--coral);border-radius:40px;padding:12px 30px 12px 24px}
+.m7-live i{width:18px;height:18px;border-radius:50%;background:var(--ink);display:block}
+@media (prefers-reduced-motion:no-preference){[data-deck-active] .m7-live i{animation:m7-pulse 1.4s ease-in-out infinite}}
+@keyframes m7-pulse{50%{opacity:.25}}
+.m7-demo .slide-head .crumb{color:var(--s-accent)}
+.m7-fb{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 560px;gap:56px;align-items:stretch}
+.m7-fb .slot{border:4px dashed var(--line-dark);border-radius:28px;padding:40px 44px;display:flex;flex-direction:column;gap:22px;justify-content:center;position:relative}
+.m7-fb .slot .kk{color:var(--on-dark-faint)}
+.m7-fb .slot table{width:100%;border-collapse:collapse;font:500 30px var(--font-mono);color:var(--on-dark-muted)}
+.m7-fb .slot th{text-align:left;font:600 22px var(--font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--coral);padding:14px 16px;border-bottom:3px solid var(--coral)}
+.m7-fb .slot td{padding:16px;border-bottom:1px solid var(--line-dark)}
+.m7-fb .slot td.e{color:var(--on-dark-faint)}
+.m7-fb .slot .ph{display:flex;align-items:center;gap:24px;font:500 30px/1.35 var(--font-mono);color:var(--on-dark-faint)}
+.m7-fb .slot .ph .ic{width:90px;height:90px;flex:none;color:var(--on-dark-faint)}
+.m7-fb .narr{background:var(--ink-2);border:2px solid var(--line-dark);border-left:10px solid var(--coral);border-radius:6px 26px 26px 6px;padding:40px 44px;display:flex;flex-direction:column;justify-content:center;gap:20px}
+.m7-fb .narr ol{list-style:none;display:flex;flex-direction:column;gap:18px;counter-reset:n}
+.m7-fb .narr li{counter-increment:n;display:grid;grid-template-columns:56px 1fr;font-size:34px;line-height:1.3;color:var(--on-dark)}
+.m7-fb .narr li::before{content:counter(n,decimal-leading-zero);font:500 26px var(--font-mono);color:var(--coral);padding-top:6px}
+
+/* bubbles + bars (vibes) */
+.m7 .bub{fill:var(--s-bg);stroke:var(--s-line-strong);stroke-width:3}
+.m7 .bar-a{fill:#8d8271} .m7 .bar-b{fill:var(--coral)}
+
+/* task suite window */
+.m7-suite{display:grid;grid-template-columns:1040px 1fr;gap:72px;align-items:center}
+.m7-rowsw .wbody{white-space:normal;padding:22px 0 26px}
+.m7-rowsw .rw{display:grid;grid-template-columns:70px 1fr auto;align-items:center;gap:20px;padding:12px 44px;font:500 32px/1.3 var(--font-mono)}
+.m7-rowsw .rw + .rw{border-top:1px solid rgba(255,255,255,.06)}
+.m7-rowsw .rw .no{color:var(--on-dark-faint);font-size:24px}
+.m7-rowsw .ok{color:var(--positive-on-dark);font-weight:700}
+.m7-rowsw .x{color:var(--v-fail);font-weight:700}
+.m7-rowsw .tot{display:flex;justify-content:space-between;align-items:baseline;padding:22px 44px 4px;margin-top:8px;border-top:2px solid var(--line-dark);font:600 26px var(--font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--on-dark-muted)}
+.m7-rowsw .tot b{font:700 72px/1 var(--font-display);letter-spacing:-.02em;color:var(--coral)}
+.m7-side{display:flex;flex-direction:column;gap:34px}
+.m7-side .lead{font-size:40px}
+
+/* verdict rows (pass@k) */
+.m7-verdicts{display:flex;flex-direction:column;gap:22px}
+.m7-verdicts .vr{display:grid;grid-template-columns:260px 280px 1fr;align-items:center;gap:36px;background:var(--s-card-bg);border:1.5px solid var(--s-card-border);border-radius:22px;padding:26px 40px}
+.m7-verdicts .k{font:700 60px/1 var(--font-mono);color:var(--s-accent)}
+.m7-verdicts .res{display:inline-flex;align-items:center;gap:14px;font:700 36px var(--font-mono);letter-spacing:.08em;border-radius:14px;padding:12px 22px;justify-self:start}
+.m7-verdicts .res.ok{background:rgba(127,220,138,.14);color:var(--positive-on-dark);border:3px solid var(--positive-on-dark)}
+.m7-verdicts .res.no{background:rgba(255,92,53,.12);color:var(--v-fail);border:3px solid var(--v-fail)}
+.m7-verdicts p{font-size:36px;line-height:1.3;color:var(--s-text)}
+.m7-verdicts p small{display:block;font-size:28px;color:var(--s-muted);margin-top:4px}
+
+/* traces */
+.m7-trace .wbody{white-space:normal;padding:18px 0 22px}
+.m7-trace .rw{display:grid;grid-template-columns:80px 150px 1fr auto;align-items:center;gap:18px;padding:13px 40px;font:500 30px/1.3 var(--font-mono);border-left:8px solid transparent}
+.m7-trace .rw .no{color:var(--on-dark-faint);font-size:24px}
+.m7-trace .rw .ty{color:var(--code-keyword);font-size:24px;letter-spacing:.08em;text-transform:uppercase}
+.m7-trace .rw .res{color:var(--on-dark-muted);font-size:26px}
+.m7-trace .rw .res.bad{color:var(--v-fail)} .m7-trace .rw .res.good{color:var(--positive-on-dark)}
+.m7-trace .rw.w{background:rgba(255,92,53,.14);border-left-color:var(--coral)}
+.m7-trace .rw .tag{font:700 22px var(--font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--coral);border:2px solid var(--coral);border-radius:20px;padding:4px 14px}
+.m7-tr2{display:grid;grid-template-columns:1fr 520px;gap:56px;align-items:center}
+.m7-call{background:var(--ink);color:var(--on-dark);border-radius:6px 26px 26px 6px;padding:44px 48px 48px;border-left:10px solid var(--coral)}
+.slide.dark .m7-call{background:var(--ink-2);border:2px solid var(--line-dark);border-left:10px solid var(--coral)}
+.m7-call .k{display:block;font:600 24px var(--font-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--on-dark-faint)}
+.m7-call .big{font:700 150px/.95 var(--font-display);letter-spacing:-.04em;color:var(--coral);margin-top:14px;white-space:nowrap}
+.m7-call .big small{font-size:60px;color:var(--on-dark);margin-left:10px;letter-spacing:-.02em}
+.m7-call p{font-size:34px;line-height:1.35;color:var(--on-dark-muted);margin-top:22px}
+.m7-call p b{color:var(--on-dark);font-weight:600}
+
+/* telemetry */
+.m7-tel{display:grid;grid-template-columns:1000px 1fr;gap:56px;align-items:center}
+.m7-tel .v-win .wbody{font-size:30px;line-height:1.6;padding:34px 44px 38px}
+.m7-tel .v-rows.compact .v-row{padding:22px 30px}
+.m7 .chips.lg span{font-size:30px;padding:12px 26px}
+
+/* smevals vocabulary */
+.m7-vocab{display:grid;grid-template-columns:860px 1fr;gap:64px;align-items:center}
+.m7-vocab svg{width:860px;height:auto}
+.m7-gloss{display:flex;flex-direction:column}
+.m7-gloss div{display:grid;grid-template-columns:190px 1fr;gap:24px;align-items:baseline;padding:16px 0;border-top:2px solid var(--s-line)}
+.m7-gloss div:last-child{border-bottom:2px solid var(--s-line)}
+.m7-gloss b{font:700 40px/1 var(--font-display);letter-spacing:-.02em;color:var(--s-accent)}
+.m7-gloss span{font-size:32px;line-height:1.3;color:var(--s-text)}
+.m7-code2{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:stretch}
+.m7-code2 .v-win .wbody{font-size:31px;line-height:1.55;padding:32px 44px 36px}
+.m7-list{list-style:none;display:flex;flex-direction:column;gap:22px}
+.m7-list li{font-size:34px;line-height:1.35;color:var(--s-text);padding-left:44px;position:relative}
+.m7-list li::before{content:"";position:absolute;left:0;top:.42em;width:20px;height:20px;background:var(--coral);clip-path:polygon(0 0,100% 50%,0 100%)}
+.m7-list li code{font-size:.92em}
+.m7-list.two{display:grid;grid-template-columns:1fr 1fr;gap:28px 56px}
+.m7-grade{display:grid;grid-template-columns:960px 1fr;gap:56px;align-items:center}
+.m7-grade .v-win .wbody{font-size:29px;line-height:1.5;padding:30px 40px 34px}
+
+/* routing + harnesses */
+.m7-pi{display:grid;grid-template-columns:640px 1fr;gap:64px;align-items:center}
+.m7-hero{background:var(--ink-2);border:2px solid var(--line-dark);border-top:10px solid var(--coral);border-radius:6px 6px 26px 26px;padding:44px 48px 50px}
+.m7-hero .n{font:700 150px/.9 var(--font-display);letter-spacing:-.05em;color:var(--coral);white-space:nowrap}
+.m7-hero .n small{display:block;font-size:56px;letter-spacing:-.02em;color:var(--on-dark);margin-top:10px}
+.m7-hero p{font-size:36px;line-height:1.35;color:var(--on-dark-muted);margin-top:24px}
+.m7-hero .kk{margin-bottom:18px}
+
+/* open models */
+.m7-model{display:grid;grid-template-columns:980px 1fr;gap:64px;align-items:center}
+.m7-model > svg{width:980px;height:auto}
+.m7-facts{display:flex;flex-direction:column;gap:0}
+.m7-facts div{padding:20px 0;border-top:2px solid var(--s-line)}
+.m7-facts div:last-child{border-bottom:2px solid var(--s-line)}
+.m7-facts .kk{font-size:22px;margin-bottom:8px}
+.m7-facts p{font-size:34px;line-height:1.32;color:var(--s-text)}
+.m7-facts p b{color:var(--s-accent);font-weight:600}
+.m7-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.m7-kpis div{border-top:8px solid var(--coral);background:var(--s-card-bg);border-radius:6px 6px 22px 22px;padding:28px 34px 32px;border-left:1.5px solid var(--s-card-border);border-right:1.5px solid var(--s-card-border);border-bottom:1.5px solid var(--s-card-border)}
+.m7-kpis b{display:block;font:700 76px/1 var(--font-display);letter-spacing:-.03em;color:var(--s-text);white-space:nowrap}
+.m7-kpis span{display:block;font-size:30px;line-height:1.3;color:var(--s-muted);margin-top:12px}
+.m7-when{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.m7-when .col{border-radius:28px;padding:40px 44px 44px;display:flex;flex-direction:column;gap:6px}
+.m7-when .col.loc{background:var(--s-callout-bg);border:3px solid var(--coral)}
+.m7-when .col.host{background:var(--s-card-bg);border:1.5px solid var(--s-card-border)}
+.m7-when h3{font:700 64px/1 var(--font-display);letter-spacing:-.03em;color:var(--s-text);margin:6px 0 16px}
+.m7-when .it{display:grid;grid-template-columns:84px 1fr;gap:24px;align-items:center;padding:16px 0;border-top:1.5px solid var(--s-line)}
+.m7-when .it .ic{width:72px;height:72px}
+.m7-when .it p{font-size:34px;line-height:1.3;color:var(--s-text)}
+.m7-open{display:flex;flex-direction:column;gap:30px}
+.m7-open > svg{width:100%;height:auto}
+.m7-open .kcard{display:grid;grid-template-columns:auto 1fr;gap:48px;align-items:center;padding:34px 48px}
+.m7-open .kcard .big{font-size:80px;white-space:nowrap}
+.m7-open .kcard p{margin-top:0;max-width:none}
+
+/* voice */
+.m7-voice{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:stretch}
+.m7-voice3 .v-win .wbody{font-size:31px;line-height:1.6;padding:30px 42px 34px}
+.m7-voice3 .opt{border-radius:26px;padding:40px 44px;display:flex;flex-direction:column;gap:16px}
+.m7-voice3 .opt.cc{background:var(--s-card-bg);border:1.5px solid var(--s-card-border)}
+.m7-voice3 .opt.hl{background:var(--s-callout-bg);border:3px solid var(--coral)}
+.m7-voice3 .opt .oh{display:flex;align-items:center;gap:22px}
+.m7-voice3 .opt .ic{width:76px;height:76px;flex:none}
+.m7-voice3 .opt h3{font:700 60px/1 var(--font-display);letter-spacing:-.03em;color:var(--s-text)}
+.m7-voice3 .opt p{font-size:32px;line-height:1.35;color:var(--s-text)}
+.m7-voice3 .opt .chips{margin-top:auto}
+.m7-voice3 .opt .chips span{font-size:24px;padding:8px 18px}
+.m7-voice3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px;align-items:stretch}
+.m7-voice3 .v-win .wbody{font-size:30px}
+
+/* sources */
+.v-refs.cols2{grid-template-columns:1fr 1fr;column-gap:64px}
+.v-refs.cols2 a{padding:14px 6px}
+.v-refs.cols2 a:nth-child(2){border-top:2px solid var(--s-line)}
+.v-refs.cols2 .lt{font-size:34px}
+.v-refs.cols2 .ld{font-size:22px;margin-top:6px}
+.v-refs.cols2 .la{font-size:36px}
+.m7 .xm{stroke:var(--s-muted);stroke-width:10;stroke-linecap:round;fill:none}
+.m7-verdicts .res .ic{width:36px;height:36px;color:currentColor;stroke-width:14}
+.m7 .t-lg{font:700 60px var(--font-display);fill:var(--s-text);letter-spacing:-.02em}
+.m7 .t-on.lg{font:700 44px var(--font-display);letter-spacing:-.02em}
+.m7 .bx-hot.fill{fill:var(--coral)}
+
+</style>
+</head>
+<body>
+<!--
+  Archive of talk 07 (Measuring What Works), old slides 19 to 30: part 02,
+  routing across harnesses, models and APIs, with the September 2026
+  open-model snapshot and the local-model demo and fallback. Removed from the
+  talk on 2026-09-24 when it became a 21-slide evals and traces talk; the
+  evals workshop's Lab 6 (Route by the numbers) draws on it. Slide HTML and
+  speaker notes are verbatim, with the original slide numbers and trackers.
+  The sources slide at the end holds the links these slides cited.
+  Runs on the Ember deck-stage component, like the talk: N notes, P presenter.
+-->
+<deck-stage width="1920" height="1080" no-rail>
+
+<section class="slide dark v2 m7 m7-div" id="slide-19" data-label="02 Route work across harnesses, models and APIs" data-speaker-notes="The discipline is the same at every layer: route by cost, intelligence and taste, whether you are picking a Claude model, a harness or an open-weight model. This part covers Cursor, OpenRouter, Pi and the open-model field, and ends with a local model running on modest hardware.">
+<div class="slide-content"><div class="slide-head"><span class="snum">19</span><div class="crumb">Part 02</div></div><div class="dv"><div class="dv-L"><div class="dv-mega"><span class="dv-kick">Part</span>02</div>
+<h2>Route work across harnesses, models and APIs</h2><p class="dv-lead">Pick per task by cost, intelligence and taste, using the numbers from part 01.</p></div><div class="dv-R"><ol class="dv-parts" aria-label="Part 2 of 3"><li class="done"><b>01</b><span>Measure</span><small>evals · traces · smevals · live demo</small></li><li class="on"><b>02</b><span>Route</span><small>harnesses · OpenRouter · open models · live demo</small></li><li class=""><b>03</b><span>Habits</span><small>voice · daily habits · recap</small></li></ol></div></div></div></section>
+
+<section class="slide light v2 m7" id="slide-20" data-label="Why not monoculture" data-speaker-notes="Cheap, fast models suit bulk mechanical work; smarter models suit hard problems you will not supervise; the highest-taste models earn their price only where UI or copy quality is the bottleneck. The placement on screen is illustrative. Your own eval numbers decide where real models sit, and the same logic applies to harnesses and to open versus hosted.">
+<div class="slide-content"><div class="slide-head"><span class="snum">20</span><ol class="mini" aria-label="Part 2 of 3: Route"><li class="done"><i></i>Measure</li><li class="on"><i></i>Route</li><li class=""><i></i>Habits</li></ol><div class="crumb">Route · why not one model</div></div>
+<h2>No model wins on cost, intelligence and taste at once</h2><div class="v2-body"><svg class="" viewBox="0 0 1728 450" role="img" aria-label="Three models on three axes. The cheap model leads on cost; the frontier model leads on intelligence and taste; no model leads all three."><circle cx="560" cy="26" r="20" class="f-g"/><text x="560" y="35" text-anchor="middle" class="t-on">A</text><text x="596" y="36" class="t-mut sm">cheap and fast</text>
+<circle cx="900" cy="26" r="20" class="f-w"/><text x="900" y="35" text-anchor="middle" class="t-on">B</text><text x="936" y="36" class="t-mut sm">workhorse</text>
+<circle cx="1180" cy="26" r="20" class="f-coral"/><text x="1180" y="35" text-anchor="middle" class="t-on">C</text><text x="1216" y="36" class="t-mut sm">frontier</text><text x="340" y="162" text-anchor="end" class="t-lg" style="font-size:48px">cheaper</text><line x1="380" y1="150" x2="1720" y2="150" class="ln-dim"/><circle cx="520" cy="150" r="36" class="f-coral"/><text x="520" y="160" text-anchor="middle" class="t-on">C</text><circle cx="1060" cy="150" r="36" class="f-w"/><text x="1060" y="160" text-anchor="middle" class="t-on">B</text><circle cx="1620" cy="150" r="36" class="f-g"/><text x="1620" y="160" text-anchor="middle" class="t-on">A</text><text x="340" y="292" text-anchor="end" class="t-lg" style="font-size:48px">smarter</text><line x1="380" y1="280" x2="1720" y2="280" class="ln-dim"/><circle cx="760" cy="280" r="36" class="f-g"/><text x="760" y="290" text-anchor="middle" class="t-on">A</text><circle cx="1260" cy="280" r="36" class="f-w"/><text x="1260" y="290" text-anchor="middle" class="t-on">B</text><circle cx="1640" cy="280" r="36" class="f-coral"/><text x="1640" y="290" text-anchor="middle" class="t-on">C</text><text x="340" y="422" text-anchor="end" class="t-lg" style="font-size:48px">finer taste</text><line x1="380" y1="410" x2="1720" y2="410" class="ln-dim"/><circle cx="860" cy="410" r="36" class="f-g"/><text x="860" y="420" text-anchor="middle" class="t-on">A</text><circle cx="1220" cy="410" r="36" class="f-w"/><text x="1220" y="420" text-anchor="middle" class="t-on">B</text><circle cx="1660" cy="410" r="36" class="f-coral"/><text x="1660" y="420" text-anchor="middle" class="t-on">C</text></svg></div><p class="note">Illustrative placement · your eval numbers decide the real positions</p></div></section>
+
+<section class="slide dark v2 m7" id="slide-21" data-label="Cursor as a harness" data-speaker-notes="Cursor suits engineers who live in an editor more than in a terminal. Auto picks a model per request; on Teams and Enterprise plans the relaunched version is called Cursor Router, with Cost, Balance and Intelligence modes. Auto bills at the routed model’s list price. Deck 05, Cost and Context, covers the pricing side.">
+<div class="slide-content"><div class="slide-head"><span class="snum">21</span><ol class="mini" aria-label="Part 2 of 3: Route"><li class="done"><i></i>Measure</li><li class="on"><i></i>Route</li><li class=""><i></i>Habits</li></ol><div class="crumb">Route · Cursor</div></div>
+<h2>Cursor: an IDE harness that routes for you</h2><div class="v2-body"><svg class="" viewBox="0 0 1728 430" role="img" aria-label="A request from the editor goes to Auto, which picks a fast, a workhorse or a frontier model per request. Teams and Enterprise plans call it Cursor Router, with Cost, Balance and Intelligence modes."><defs><marker id="mk49" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.4" markerHeight="3.4" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" class="mk-c"/></marker><marker id="mk50" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.4" markerHeight="3.4" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" class="mk-m"/></marker></defs>
+<circle cx="150" cy="200" r="120" class="nd soft"/><svg x="87" y="137" width="126" height="126" viewBox="0 0 120 120" class="ic "><rect x="8" y="16" width="104" height="88" rx="8"/><path d="M74 16 V104"/><path d="M22 38 H60 M22 54 H60 M22 70 H48"/><path d="M86 40 H100 M86 56 H100"/></svg><text x="150" y="376" text-anchor="middle" class="t-strong">your request</text><text x="150" y="414" text-anchor="middle" class="t-mut sm">in the editor</text>
+<line x1="286" y1="200" x2="520" y2="200" class="ln-c thick" marker-end="url(#mk49)"/>
+<rect x="540" y="50" width="560" height="300" rx="28" class="bx-hot soft"/><text x="820" y="140" text-anchor="middle" class="t-lg">Auto</text><text x="820" y="188" text-anchor="middle" class="t-mut sm">Cursor Router on Teams</text><text x="820" y="220" text-anchor="middle" class="t-mut sm">and Enterprise plans</text><rect x="556" y="258" width="130" height="58" rx="29" class="f-bg" style="stroke:var(--coral);stroke-width:2"/><text x="621" y="296" text-anchor="middle" class="t-acc xs">Cost</text><rect x="698" y="258" width="170" height="58" rx="29" class="f-bg" style="stroke:var(--coral);stroke-width:2"/><text x="783" y="296" text-anchor="middle" class="t-acc xs">Balance</text><rect x="880" y="258" width="206" height="58" rx="29" class="f-bg" style="stroke:var(--coral);stroke-width:2"/><text x="983" y="296" text-anchor="middle" class="t-acc xs">Intelligence</text><path d="M1106 200 C1180 200 1180 85 1250 85" class="ln-m" marker-end="url(#mk50)"/><rect x="1264" y="40" width="462" height="90" rx="16" class="bx-card"/><text x="1294" y="96" class="t-strong">fast, cheap model</text><path d="M1106 200 C1180 200 1180 215 1250 215" class="ln-c" marker-end="url(#mk49)"/><rect x="1264" y="170" width="462" height="90" rx="16" class="bx-hot soft"/><text x="1294" y="226" class="t-strong">workhorse model</text><path d="M1106 200 C1180 200 1180 345 1250 345" class="ln-m" marker-end="url(#mk50)"/><rect x="1264" y="300" width="462" height="90" rx="16" class="bx-card"/><text x="1294" y="356" class="t-strong">frontier model</text></svg></div><p class="note">Source: cursor.com help and docs, September 2026</p></div></section>
+
+<section class="slide light v2 m7" id="slide-22" data-label="OpenRouter" data-speaker-notes="OpenRouter gives you one key and one bill over more than four hundred models; its public model list returned 457 entries including variants this month. It passes provider prices through with no markup and charges 5.5 percent on card credit purchases, with a 0.80 dollar minimum. Flag the real caveat: one model is often served by several hosts, and fallback is on by default, so a request can land on a different provider than you expected. Use the provider settings to pin or restrict hosts when that matters.">
+<div class="slide-content"><div class="slide-head"><span class="snum">22</span><ol class="mini" aria-label="Part 2 of 3: Route"><li class="done"><i></i>Measure</li><li class="on"><i></i>Route</li><li class=""><i></i>Habits</li></ol><div class="crumb">Route · OpenRouter</div></div>
+<h2>OpenRouter: one key, many models</h2><div class="v2-body"><svg class="" viewBox="0 0 1728 420" role="img" aria-label="Your app sends one key to OpenRouter, which reaches 400 or more models. One model can be served by several providers; if the preferred provider fails, the request falls back to another by default."><defs><marker id="mk51" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.4" markerHeight="3.4" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" class="mk-c"/></marker><marker id="mk52" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.4" markerHeight="3.4" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" class="mk-m"/></marker></defs>
+<rect x="2" y="140" width="300" height="130" rx="20" class="bx-card"/><text x="152" y="198" text-anchor="middle" class="t-strong">your app</text><text x="152" y="240" text-anchor="middle" class="t-mut sm">one key, one bill</text>
+<line x1="308" y1="205" x2="410" y2="205" class="ln-c thick" marker-end="url(#mk51)"/>
+<rect x="424" y="110" width="380" height="190" rx="24" class="bx-hot fill"/><text x="614" y="196" text-anchor="middle" class="t-on lg">OpenRouter</text><text x="614" y="246" text-anchor="middle" class="t-on">400+ models</text>
+<line x1="810" y1="205" x2="900" y2="205" class="ln-c thick" marker-end="url(#mk51)"/>
+<rect x="914" y="140" width="360" height="130" rx="20" class="bx-card"/><text x="1094" y="198" text-anchor="middle" class="t-strong">one model</text><text x="1094" y="240" text-anchor="middle" class="t-mut sm">several hosts</text><path d="M1280 205 C1340 205 1340 75 1400 75" class="ln-c" marker-end="url(#mk51)"/><rect x="1414" y="30" width="312" height="90" rx="16" class="bx-hot soft"/><text x="1570" y="86" text-anchor="middle" class="t-strong">provider A</text><path d="M1280 205 C1340 205 1340 205 1400 205" class="ln-m dash" marker-end="url(#mk52)"/><rect x="1414" y="160" width="312" height="90" rx="16" class="bx-card"/><text x="1570" y="216" text-anchor="middle" class="t-strong">provider B</text><path d="M1280 205 C1340 205 1340 335 1400 335" class="ln-m dash" marker-end="url(#mk52)"/><rect x="1414" y="290" width="312" height="90" rx="16" class="bx-card"/><text x="1570" y="346" text-anchor="middle" class="t-strong">provider C</text><text x="1350" y="408" text-anchor="middle" class="t-acc sm">fallback, on by default</text></svg><div class="chips lg"><span>5.5% fee on card top-ups ($0.80 min)</span><span>no markup on per-token prices</span><span>pin hosts with provider.only</span></div></div><p class="note">Source: openrouter.ai/docs · fees and provider routing</p></div></section>
+
+<section class="slide dark v2 m7" id="slide-23" data-label="Pi" data-speaker-notes="Pi is Mario Zechner’s terminal coding agent. He joined Earendil in April 2026 and the project now lives there, still MIT-licensed. His original write-up puts the system prompt and tool definitions together under a thousand tokens. It supports fifteen-plus providers, including local models through Ollama. Using Claude through Pi means an API key or extra-usage billing: Anthropic changed how subscriptions cover third-party tools twice this year, so check the current rules before you rely on a Max plan.">
+<div class="slide-content"><div class="slide-head"><span class="snum">23</span><ol class="mini" aria-label="Part 2 of 3: Route"><li class="done"><i></i>Measure</li><li class="on"><i></i>Route</li><li class=""><i></i>Habits</li></ol><div class="crumb">Route · Pi</div></div>
+<h2>Pi: a minimal harness</h2><div class="v2-body"><div class="m7-pi"><div class="m7-hero"><span class="kk">System prompt + tool definitions</span><div class="n">&lt;1,000<small>tokens</small></div><p>Mario Zechner’s minimal terminal harness, now developed at Earendil.</p></div><div><div class="v-rows compact"><div class="v-row"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><circle cx="60" cy="60" r="48"/><ellipse cx="60" cy="60" rx="20" ry="48"/><path d="M12 60 H108"/></svg><h3>15+ providers</h3><p>Hundreds of models, local ones via Ollama.</p></div><div class="v-row"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M38 30 L10 60 L38 90 M82 30 L110 60 L82 90 M70 18 L50 102"/></svg><h3>Open source</h3><p>MIT licence, small enough to read.</p></div><div class="v-row"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><ellipse cx="60" cy="30" rx="40" ry="14"/><path d="M20 30 V58 C20 66 38 72 60 72 C82 72 100 66 100 58 V30"/><path d="M20 58 V86 C20 94 38 100 60 100 C82 100 100 94 100 86 V58"/></svg><h3>Claude costs extra</h3><p>Plan for an API key or extra-usage billing.</p></div></div></div></div></div><p class="note">Sources: pi.dev · mariozechner.at · Anthropic support, 2026</p></div></section>
+
+<section class="slide light v2 m7" id="slide-24" data-label="State of open-source models" data-speaker-notes="Frame the claim carefully: the gap is closing, and it is still a gap. Several open-weight releases this year come close to frontier coding scores at a fraction of the cost. NIST’s CAISI assessed GLM-5.2 in July and called it probably the most capable open-weight model at release, with overall capability similar to GPT-5.2 from December 2025. GLM-5.3 moved from MIT to a custom licence, so read licences before you standardise on a model.">
+<div class="slide-content"><div class="slide-head"><span class="snum">24</span><ol class="mini" aria-label="Part 2 of 3: Route"><li class="done"><i></i>Measure</li><li class="on"><i></i>Route</li><li class=""><i></i>Habits</li></ol><div class="crumb">Route · open models, Sept 2026</div></div>
+<h2>Open weights are closing the gap</h2><div class="v2-body"><div class="m7-open"><svg class="" viewBox="0 0 1728 300" role="img" aria-label="Open-weight releases in 2026: Gemma 4 in April, Qwen 3.6 in April, Gemma 4 12B and GLM-5.2 in June, Qwen3.8-27B and GLM-5.3 in August."><line x1="30" y1="160" x2="1700" y2="160" class="ln-dim" style="stroke-width:4"/><line x1="40" y1="152" x2="40" y2="168" class="ln-dim"/><text x="48" y="196" class="t-faint" style="font-size:22px">Apr</text><line x1="315" y1="152" x2="315" y2="168" class="ln-dim"/><text x="323" y="196" class="t-faint" style="font-size:22px">May</text><line x1="590" y1="152" x2="590" y2="168" class="ln-dim"/><text x="598" y="196" class="t-faint" style="font-size:22px">Jun</text><line x1="865" y1="152" x2="865" y2="168" class="ln-dim"/><text x="873" y="196" class="t-faint" style="font-size:22px">Jul</text><line x1="1140" y1="152" x2="1140" y2="168" class="ln-dim"/><text x="1148" y="196" class="t-faint" style="font-size:22px">Aug</text><line x1="1415" y1="152" x2="1415" y2="168" class="ln-dim"/><text x="1423" y="196" class="t-faint" style="font-size:22px">Sep</text><line x1="49" y1="112" x2="49" y2="144" class="ln-c"/><text x="35" y="58" class="t-strong">Gemma 4</text><text x="35" y="96" class="t-mut sm">E2B to 31B</text><circle cx="49" cy="160" r="16" class="f-coral"/><line x1="200" y1="176" x2="200" y2="212" class="ln-c"/><text x="186" y="250" class="t-strong">Qwen 3.6</text><text x="186" y="288" class="t-mut sm">27B · 35B-A3B</text><circle cx="200" cy="160" r="16" class="f-coral"/><line x1="617" y1="112" x2="617" y2="144" class="ln-c"/><text x="603" y="58" class="t-strong">Gemma 4 12B</text><text x="603" y="96" class="t-mut sm">fits 16GB</text><circle cx="617" cy="160" r="16" class="f-coral"/><line x1="736" y1="176" x2="736" y2="212" class="ln-c"/><text x="722" y="250" class="t-strong">GLM-5.2</text><text x="722" y="288" class="t-mut sm">~750B MoE · MIT</text><circle cx="736" cy="160" r="16" class="f-coral"/><line x1="1250" y1="112" x2="1250" y2="144" class="ln-c"/><text x="1236" y="58" class="t-strong">Qwen3.8-27B</text><text x="1236" y="96" class="t-mut sm">Apache 2.0</text><circle cx="1250" cy="160" r="16" class="f-coral"/><line x1="1360" y1="176" x2="1360" y2="212" class="ln-c"/><text x="1346" y="250" class="t-strong">GLM-5.3</text><text x="1346" y="288" class="t-mut sm">new licence</text><circle cx="1360" cy="160" r="16" class="f-coral"/><line x1="1616" y1="110" x2="1616" y2="210" class="ln-t dash"/><text x="1630" y="96" text-anchor="middle" class="t-acc sm">today</text></svg><div class="kcard"><div class="big">≈ GPT-5.2</div><p>NIST’s CAISI rated June’s GLM-5.2 about level with OpenAI’s December 2025 model: <b>close, and about six months behind.</b></p></div></div></div></div></section>
+
+<section class="slide dark v2 m7" id="slide-25" data-label="Gemma 4" data-speaker-notes="Google released Gemma 4 on 2 April 2026 in four sizes: E2B, E4B, a 26B mixture of experts with 3.8B active parameters, and a 31B dense model. The 12B arrived on 3 June. Google says it nears the 26B on benchmarks with under half the memory, and runs in 16GB of VRAM or unified memory. Google’s own Q4_0 build is about 7GB. Local, laptop-class inference is real.">
+<div class="slide-content"><div class="slide-head"><span class="snum">25</span><ol class="mini" aria-label="Part 2 of 3: Route"><li class="done"><i></i>Measure</li><li class="on"><i></i>Route</li><li class=""><i></i>Habits</li></ol><div class="crumb">Route · Gemma 4</div></div>
+<h2>Gemma 4: laptop-viable</h2><div class="v2-body"><div class="m7-model"><svg class="" viewBox="0 0 980 560" role="img" aria-label="Gemma 4 sizes by parameter count: E2B, E4B, 12B, 26B with 3.8B active, and 31B. The 12B is highlighted as fitting a 16GB machine at Q4_0."><rect x="40" y="435" width="140" height="25" rx="6" class="bx-mid"/><text x="110" y="506" text-anchor="middle" class="t-strong mono">E2B</text><text x="110" y="544" text-anchor="middle" class="t-mut xs">effective</text><rect x="226" y="411" width="140" height="49" rx="6" class="bx-mid"/><text x="296" y="506" text-anchor="middle" class="t-strong mono">E4B</text><text x="296" y="544" text-anchor="middle" class="t-mut xs">effective</text><rect x="412" y="313" width="140" height="147" rx="6" class="f-coral"/><text x="482" y="506" text-anchor="middle" class="t-acc">12B</text><text x="482" y="544" text-anchor="middle" class="t-mut xs">June 2026</text><rect x="598" y="151" width="140" height="309" rx="6" class="bx-mid"/><text x="668" y="506" text-anchor="middle" class="t-strong mono">26B</text><text x="668" y="544" text-anchor="middle" class="t-mut xs">3.8B active</text><rect x="784" y="84" width="140" height="376" rx="6" class="bx-mid"/><text x="854" y="506" text-anchor="middle" class="t-strong mono">31B</text><text x="854" y="544" text-anchor="middle" class="t-mut xs">dense</text><line x1="10" y1="290" x2="960" y2="290" class="ln-c dash" style="stroke-width:4"/><text x="14" y="276" class="t-acc sm">fits 16GB at Q4_0</text><text x="10" y="30" class="t-cap">bar height = parameters</text></svg><div class="m7-facts"><div><span class="kk">Released</span><p>2 April 2026, Apache 2.0. The 12B followed on 3 June.</p></div>
+<div><span class="kk">Laptop pick</span><p>The <b>12B</b> nears the 26B’s benchmarks in under half the memory.</p></div>
+<div><span class="kk">Run it</span><p><code>ollama run gemma4:12b</code></p></div></div></div></div><p class="note">Source: Google’s Gemma 4 and Gemma 4 12B announcements</p></div></section>
+
+<section class="slide light v2 m7" id="slide-26" data-label="Qwen 3.6" data-speaker-notes="Alibaba released two Apache 2.0 Qwen 3.6 models in April: a 27B dense model and a 35B-A3B mixture of experts with 3 billion active parameters per token. Context is 262K native and about a million with YaRN. The claim about beating Qwen3.5-397B on coding comes from Qwen’s own blog and applies to the 27B. At 4-bit the 35B-A3B needs about 23GB and the 27B about 18GB, per Unsloth and Ollama. Qwen3.8-27B shipped in August as the successor.">
+<div class="slide-content"><div class="slide-head"><span class="snum">26</span><ol class="mini" aria-label="Part 2 of 3: Route"><li class="done"><i></i>Measure</li><li class="on"><i></i>Route</li><li class=""><i></i>Habits</li></ol><div class="crumb">Route · Qwen 3.6</div></div>
+<h2>Qwen 3.6: dense 27B, or 3B active</h2><div class="v2-body"><div class="m7-model"><svg class="" viewBox="0 0 960 500" role="img" aria-label="The 27B dense model uses every weight for every token; the 35B-A3B mixture of experts activates only 3B per token. Context is 256K native, about 1M with YaRN."><text x="220" y="36" text-anchor="middle" class="t-strong">27B dense</text><text x="740" y="36" text-anchor="middle" class="t-strong">35B-A3B MoE</text>
+<rect x="2" y="60" width="436" height="290" rx="16" class="f-coral"/><text x="220" y="196" text-anchor="middle" class="t-on">every weight,</text><text x="220" y="234" text-anchor="middle" class="t-on">every token</text>
+<rect x="522" y="60" width="436" height="290" rx="16" class="bx-mid"/><rect x="522" y="60" width="40" height="290" rx="8" class="f-coral"/>
+<text x="590" y="188" class="t-acc">3B active per token</text><text x="590" y="230" class="t-mut sm">32B parked in RAM</text>
+<text x="2" y="410" class="t-cap">context window</text><rect x="2" y="428" width="250" height="60" rx="8" class="f-coral"/><text x="127" y="467" text-anchor="middle" class="t-on">256K</text>
+<rect x="252" y="428" width="706" height="60" rx="8" class="bx-dash"/><text x="605" y="467" text-anchor="middle" class="t-mut sm">~1M with YaRN</text></svg><div class="m7-facts"><div><span class="kk">27B dense</span><p>Qwen reports it beats its own 397B flagship on coding benchmarks.</p></div>
+<div><span class="kk">35B-A3B</span><p>About <b>23GB at 4-bit</b>: plan for a 32GB machine.</p></div>
+<div><span class="kk">Since August</span><p>Successor: <b>Qwen3.8-27B</b>, also Apache 2.0.</p></div></div></div></div><p class="note">Sources: Qwen model cards and blog · Ollama library</p></div></section>
+
+<section class="slide light v2 m7 m7-demo" id="slide-27" data-label="Live demo: local models on small hardware" data-speaker-notes="Runbook: on your own laptop, run Gemma 4 12B or Qwen 3.6 35B-A3B through Ollama, give it a real coding task from this team’s repo and let it finish on screen. The message is that local models are usable on modest hardware. Do not claim they match the frontier. If generation is too slow to finish live, narrate the progress and cut to the fallback.">
+<div class="slide-content"><div class="slide-head"><span class="snum">27</span><ol class="mini" aria-label="Part 2 of 3: Route"><li class="done"><i></i>Measure</li><li class="on"><i></i>Route</li><li class=""><i></i>Habits</li></ol><div class="crumb">Route · live demo</div></div>
+<h2>Live: a local model on a real task</h2><div class="v2-body"><span class="m7-live"><i></i>Live demo</span><div class="v-stn n3"><svg class="rail" viewBox="0 0 1728 304" role="img" aria-label="Sequence: Pull → Run → Judge"><line class="rl-base" x1="4" y1="180" x2="1724" y2="180"/><line class="rl-on" x1="288" y1="180" x2="1440" y2="180"/><text class="rl-n" x="288" y="40" text-anchor="middle">01</text><text class="rl-n" x="864" y="40" text-anchor="middle">02</text><text class="rl-n" x="1440" y="40" text-anchor="middle">03</text><circle class="rl-c" cx="288" cy="180" r="116"/><svg x="231.16" y="123.16" width="113.68" height="113.68" viewBox="0 0 120 120" class="ic "><rect x="22" y="22" width="76" height="54" rx="6"/><path d="M8 94 H112 L102 80 H18 Z"/></svg><circle class="rl-c" cx="864" cy="180" r="116"/><svg x="807.16" y="123.16" width="113.68" height="113.68" viewBox="0 0 120 120" class="ic "><rect x="8" y="16" width="104" height="88" rx="8"/><path d="M26 46 L44 60 L26 74"/><path d="M54 76 H86"/></svg><circle class="rl-c hot" cx="1440" cy="180" r="116"/><svg x="1383.16" y="123.16" width="113.68" height="113.68" viewBox="0 0 120 120" class="ic hot"><path d="M60 14 V104 M36 108 H84 M20 30 H100"/><path d="M20 30 L6 68 H34 Z M100 30 L86 68 H114 Z"/></svg></svg><div class="stops"><div><h3>Pull</h3><p>gemma4:12b or qwen3.6:35b</p></div><div><h3>Run</h3><p>a real task from our repo</p></div><div><h3>Judge</h3><p>usable on a laptop?</p></div></div></div></div><p class="note">The claim: usable on modest hardware · frontier quality is a different claim</p></div></section>
+
+<section class="slide dark v2 m7" id="slide-28" data-label="Fallback: local model demo" data-speaker-notes="Use this only if local generation is too slow on stage. Narrate the recording: which model, which task, how long it took and the final result. Keep the honest framing: slower than a hosted frontier model, and usable.">
+<div class="slide-content"><div class="slide-head"><span class="snum">28</span><ol class="mini" aria-label="Part 2 of 3: Route"><li class="done"><i></i>Measure</li><li class="on"><i></i>Route</li><li class=""><i></i>Habits</li></ol><div class="crumb">Route · fallback</div></div>
+<h2>Fallback: the recorded local run</h2><div class="v2-body"><div class="m7-fb"><div class="slot"><span class="kk">Slot for the rehearsal recording</span><div class="ph"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><rect x="12" y="12" width="96" height="66" rx="8"/><path d="M12 68 L42 42 L62 60 L76 48 L108 74"/><circle cx="84" cy="32" r="8"/><path d="M22 100 V108 M36 94 V114 M50 98 V110 M64 90 V118 M78 96 V112 M92 100 V108" stroke-width="6"/></svg><span>Paste the recording of a local Gemma 4 or Qwen 3.6 run here.</span></div></div><div class="narr"><span class="kk">Narrate</span><ol><li>Which model and machine</li><li>The task, and how long it took</li><li>The result, honestly</li></ol></div></div></div></div></section>
+
+<section class="slide dark v2 m7" id="slide-29" data-label="Colibri for GLM-5.2" data-speaker-notes="GLM-5.2 is Z.ai’s open-weight MoE coding model, MIT-licensed, with about 750 billion total parameters and roughly 40 billion active. Colibri is a pure-C inference engine by Vincenzo Fornaro that keeps the dense part in RAM at int4 and streams routed experts from disk through an LRU cache. On a 25GB dev box the README reports 0.05 to 0.1 tokens per second cold, and about 1.8 warm on a 128GB CPU-only desktop. The point is that it runs at all. The project moves fast: it now supports nine model families, so re-check the numbers before you present.">
+<div class="slide-content"><div class="slide-head"><span class="snum">29</span><ol class="mini" aria-label="Part 2 of 3: Route"><li class="done"><i></i>Measure</li><li class="on"><i></i>Route</li><li class=""><i></i>Habits</li></ol><div class="crumb">Route · Colibri</div></div>
+<h2>Colibri: a GLM-class model without a GPU</h2><div class="v2-body"><svg class="" viewBox="0 0 1728 316" role="img" aria-label="Colibri keeps the dense core of the model in about 25GB of RAM and streams only the routed experts from the SSD each token, with an LRU cache for hot experts. No GPU."><defs><marker id="mk53" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.4" markerHeight="3.4" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" class="mk-c"/></marker></defs>
+<rect x="2" y="40" width="500" height="240" rx="22" class="bx-mid"/><svg x="35" y="65" width="90" height="90" viewBox="0 0 120 120" class="ic "><rect x="12" y="24" width="96" height="72" rx="10"/><path d="M12 70 H108"/><circle cx="90" cy="83" r="4"/></svg><text x="150" y="104" class="t-cap">SSD</text><text x="150" y="146" class="t-strong">routed experts</text><text x="40" y="232" class="t-mut sm">~370GB, read on demand</text>
+<line x1="512" y1="160" x2="840" y2="160" class="ln-c thick" marker-end="url(#mk53)"/><text x="676" y="136" text-anchor="middle" class="t-acc sm">only the routed few</text><text x="676" y="200" text-anchor="middle" class="t-mut xs">per token</text>
+<rect x="860" y="10" width="866" height="300" rx="24" class="bx-hot soft"/><text x="1293" y="56" text-anchor="middle" class="t-acc">RAM · about 25GB</text>
+<rect x="890" y="80" width="806" height="92" rx="14" class="f-coral"/><text x="1293" y="137" text-anchor="middle" class="t-on">dense core · ~17B params · int4 · resident</text>
+<rect x="890" y="190" width="806" height="92" rx="14" class="bx-card"/><text x="1293" y="247" text-anchor="middle" class="t-strong mono">hot experts · per-layer LRU cache</text></svg><div class="m7-kpis"><div><b>no GPU</b><span>pure C, no dependencies</span></div><div><b>0.05–0.1</b><span>tokens/s cold, 25GB box</span></div><div><b>~1.8</b><span>tokens/s warm, 128GB CPU-only desktop</span></div></div></div><p class="note">Speeds from the project README, September 2026 · github.com/JustVugg/colibri</p></div></section>
+
+<section class="slide light v2 m7" id="slide-30" data-label="When local makes sense" data-speaker-notes="Close the open-model thread with a balanced decision. Local makes sense for privacy-sensitive or air-gapped work, when you want marginal cost near zero, and when latency can be loose. Stay hosted when you need frontier quality or fast turnaround, or when running the hardware costs more than it saves.">
+<div class="slide-content"><div class="slide-head"><span class="snum">30</span><ol class="mini" aria-label="Part 2 of 3: Route"><li class="done"><i></i>Measure</li><li class="on"><i></i>Route</li><li class=""><i></i>Habits</li></ol><div class="crumb">Route · local or hosted</div></div>
+<h2>Choose local for control, hosted for capability</h2><div class="v2-body"><div class="m7-when"><div class="col loc"><span class="kk">Go local for</span><h3>Control</h3><div class="it"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><rect x="22" y="52" width="76" height="58" rx="8"/><path d="M38 52 V38 A22 22 0 0 1 82 38 V52"/><path d="M60 72 V88"/></svg><p>Private or air-gapped code</p></div><div class="it"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><ellipse cx="60" cy="30" rx="40" ry="14"/><path d="M20 30 V58 C20 66 38 72 60 72 C82 72 100 66 100 58 V30"/><path d="M20 58 V86 C20 94 38 100 60 100 C82 100 100 94 100 86 V58"/></svg><p>Marginal cost near zero</p></div><div class="it"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><circle cx="60" cy="60" r="48"/><path d="M60 28 V60 L82 74"/></svg><p>Latency you can wait out</p></div></div><div class="col host"><span class="kk">Stay hosted for</span><h3>Capability</h3><div class="it"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M60 12 L72 44 L106 46 L80 68 L88 102 L60 84 L32 102 L40 68 L14 46 L48 44 Z"/></svg><p>Frontier quality</p></div><div class="it"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><circle cx="60" cy="66" r="42"/><path d="M60 66 L86 40" stroke-width="8"/><path d="M60 12 V20 M12 66 H20 M100 66 H108 M26 32 L32 38 M94 32 L88 38"/></svg><p>Fast turnaround</p></div><div class="it"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><circle cx="60" cy="60" r="22"/><path d="M60 12 V28 M60 92 V108 M12 60 H28 M92 60 H108 M26 26 L37 37 M83 83 L94 94 M94 26 L83 37 M37 83 L26 94"/></svg><p>No hardware or ops to run</p></div></div></div></div></div></section>
+
+<section class="slide light v2 m7 ref" id="slide-99" data-label="Sources for the routing slides" data-speaker-notes="These are the sources the routing and open-model slides cited, copied from the talk’s old sources slide. The open-model field moves monthly, so re-check every model slide before Lab 6 uses it.">
+<div class="slide-content"><div class="slide-head"><span class="snum">↗</span><div class="crumb">Archive · sources</div></div>
+<h2>Sources, checked September 2026</h2><div class="v2-body"><div class="v-refs cols2"><a href="https://cursor.com/help/models-and-usage/cursor-router" target="_blank" rel="noopener"><span class="lt">Cursor Router and Auto</span><span class="ld">cursor.com</span><span class="la" aria-hidden="true">↗</span></a><a href="https://openrouter.ai/docs/faq" target="_blank" rel="noopener"><span class="lt">OpenRouter FAQ: fees</span><span class="ld">openrouter.ai</span><span class="la" aria-hidden="true">↗</span></a><a href="https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/" target="_blank" rel="noopener"><span class="lt">Gemma 4</span><span class="ld">blog.google</span><span class="la" aria-hidden="true">↗</span></a><a href="https://www.nist.gov/news-events/news/2026/07/caisi-assessment-zais-glm-52" target="_blank" rel="noopener"><span class="lt">NIST CAISI on GLM-5.2</span><span class="ld">nist.gov</span><span class="la" aria-hidden="true">↗</span></a><a href="https://github.com/JustVugg/colibri" target="_blank" rel="noopener"><span class="lt">Colibri</span><span class="ld">github.com</span><span class="la" aria-hidden="true">↗</span></a></div></div></div></section>
+
+</deck-stage>
+
+<script src="../../ember_design_system/deck-stage.js"></script>
+<script>
+  /* Re-trigger .reveal animations on slide change */
+  document.addEventListener('DOMContentLoaded', function () {
+    var ds = document.querySelector('deck-stage');
+    if (!ds) return;
+    ds.addEventListener('slidechange', function (e) {
+      var s = e.detail && e.detail.slide;
+      if (!s) return;
+      s.querySelectorAll('.reveal').forEach(function (el) {
+        el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
+      });
+    });
+  });
+</script>
+
+<style id="presenter-ui-css">
+  /* ─── Presenter aids (outside <deck-stage>: siblings paint above it) ─── */
+  .pui-controls{
+    position:fixed; right:18px; bottom:18px; z-index:40;
+    display:flex; gap:8px;
+    opacity:0; transition:opacity .25s; pointer-events:none;
+  }
+  body.pui-mouse .pui-controls,
+  .pui-controls:hover,
+  .pui-controls:focus-within{ opacity:1; pointer-events:auto; }
+  .pui-controls button{
+    font:var(--w-semibold) 12px/1 var(--font-mono); letter-spacing:.08em;
+    color:var(--on-dark-muted); background:var(--ink-2);
+    border:1px solid var(--line-dark); border-radius:var(--radius-pill);
+    padding:9px 14px; cursor:pointer;
+  }
+  .pui-controls button:hover{ color:var(--paper); border-color:var(--coral); }
+  .pui-controls kbd{ color:var(--coral); font:inherit; margin-left:6px; }
+  .pui-notes{
+    position:fixed; left:0; right:0; bottom:0; z-index:39;
+    background:var(--ink-2); color:var(--on-dark);
+    border-top:2px solid var(--coral);
+    padding:20px 34px 24px; max-height:38vh; overflow:auto;
+    font:var(--w-regular) clamp(15px,1.6vw,21px)/1.55 var(--font-b, var(--font-body));
+    display:none;
+  }
+  .pui-notes.open{ display:block; }
+  .pui-notes .pui-nhead{
+    font:var(--w-semibold) 12px/1 var(--font-mono); letter-spacing:.12em;
+    text-transform:uppercase; color:var(--coral); margin-bottom:12px;
+  }
+  @media print{ .pui-controls, .pui-notes{ display:none !important; } }
+</style>
+<div class="pui-controls">
+  <button type="button" data-pui="notes">NOTES<kbd>N</kbd></button>
+  <button type="button" data-pui="present">PRESENT<kbd>P</kbd></button>
+  <button type="button" data-pui="fullscreen">FULLSCREEN<kbd>F</kbd></button>
+</div>
+<div class="pui-notes" role="note" aria-live="polite">
+  <div class="pui-nhead"></div>
+  <div class="pui-nbody"></div>
+</div>
+
+<script>
+/* ─── Presenter aids: notes overlay (N), fullscreen (F), presenter window (P) ─── */
+(function(){
+  if (window.self !== window.top) return; /* skip when embedded by a host/viewer */
+  var ds = document.querySelector('deck-stage');
+  var notesEl = document.querySelector('.pui-notes');
+  var nHead = notesEl.querySelector('.pui-nhead');
+  var nBody = notesEl.querySelector('.pui-nbody');
+  var current = Math.max(0, Array.from(ds.children).findIndex(s => s.hasAttribute('data-deck-active'))), presenter = null, mouseT = null;
+
+  function slides(){ return Array.prototype.slice.call(ds.querySelectorAll(':scope > section')); }
+  function noteOf(s){ return s.getAttribute('data-speaker-notes') || 'No notes for this slide.'; }
+  function labelOf(s){ return s.getAttribute('data-label') || ''; }
+
+  /* controls fade in on mouse activity, like the component's own overlay */
+  document.addEventListener('mousemove', function(){
+    document.body.classList.add('pui-mouse');
+    clearTimeout(mouseT);
+    mouseT = setTimeout(function(){ document.body.classList.remove('pui-mouse'); }, 1800);
+  });
+
+  function syncNotes(){
+    var all = slides(), s = all[current];
+    if (!s) return;
+    nHead.textContent = 'Notes · ' + labelOf(s) + ' · ' + (current + 1) + ' / ' + all.length;
+    nBody.textContent = noteOf(s);
+  }
+  function toggleNotes(){ notesEl.classList.toggle('open'); if (notesEl.classList.contains('open')) syncNotes(); }
+
+  function toggleFullscreen(){
+    if (document.fullscreenElement) { document.exitFullscreen(); }
+    else { document.documentElement.requestFullscreen().catch(function(){}); }
+  }
+  /* fullscreen = clean presenting surface: hide the thumbnail rail while in it */
+  var railWasOff = false;
+  document.addEventListener('fullscreenchange', function(){
+    if (document.fullscreenElement) {
+      railWasOff = ds.hasAttribute('no-rail');
+      ds.setAttribute('no-rail', '');
+    } else if (!railWasOff) {
+      ds.removeAttribute('no-rail');
+    }
+  });
+
+  /* ── presenter window: current + next previews, notes, timer, clock ── */
+  function openPresenter(){
+    if (presenter && !presenter.closed) { presenter.focus(); return; }
+    presenter = window.open('', 'deck-presenter', 'width=1200,height=760');
+    if (!presenter) {
+      nHead.textContent = 'Presenter window';
+      nBody.textContent = 'The browser blocked the pop-up. Allow pop-ups for this page and press P again.';
+      notesEl.classList.add('open');
+      return;
+    }
+    var pd = presenter.document;
+    pd.open();
+    pd.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Presenter · ' + document.title.replace(/</g,'&lt;') + '</title><base href="' + document.baseURI + '"></head><body></body></html>');
+    pd.close();
+    /* carry the deck's stylesheets + tokens over so slide clones render 1:1 */
+    document.head.querySelectorAll('link[rel="stylesheet"], link[rel="preconnect"], style').forEach(function(el){
+      var c = pd.importNode(el, true);
+      if (el.tagName === 'LINK' && el.href) c.setAttribute('href', el.href);
+      pd.head.appendChild(c);
+    });
+    var st = pd.createElement('style');
+    st.textContent =
+      '*,*::before,*::after{animation:none !important;transition:none !important}' +
+      'html,body{margin:0;height:100%;background:#0e0c08;color:var(--on-dark);font-family:var(--font-m,monospace);overflow:hidden}' +
+      '.pw{display:grid;grid-template-rows:52px 1fr;height:100%}' +
+      '.pw-bar{display:flex;align-items:center;gap:22px;padding:0 20px;border-bottom:1px solid var(--line-dark);font-size:13px;letter-spacing:.06em;color:var(--on-dark-muted)}' +
+      '.pw-bar .cnt{color:var(--coral);font-weight:700;font-size:16px}' +
+      '.pw-bar .lbl{color:var(--paper);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}' +
+      '.pw-bar .tmr{cursor:pointer}.pw-bar .tmr b{color:var(--paper)}' +
+      '.pw-bar button{font:inherit;color:var(--on-dark-muted);background:none;border:1px solid var(--line-dark);border-radius:6px;padding:5px 12px;cursor:pointer}' +
+      '.pw-bar button:hover{color:var(--paper);border-color:var(--coral)}' +
+      '.pw-main{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:14px;padding:14px;min-height:0}' +
+      '.pw-col{display:grid;grid-template-rows:auto 1fr;min-height:0;gap:8px}' +
+      '.pw-col.right{grid-template-rows:auto auto auto minmax(0,1fr)}' +
+      '.pw-cap{font-size:11px;letter-spacing:.14em;color:var(--on-dark-faint);text-transform:uppercase}' +
+      '.pw-box{position:relative;min-height:0;overflow:hidden;border:1px solid var(--line-dark);border-radius:8px;background:#000}' +
+      '.pw-canvas{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;background:var(--paper)}' +
+      '.pw-canvas > section{width:1920px;height:1080px;position:relative;overflow:hidden}' +
+      '.pw-notes{overflow:auto;font-family:var(--font-b,sans-serif);font-size:19px;line-height:1.55;color:var(--on-dark);padding-right:6px}';
+    pd.head.appendChild(st);
+    pd.body.innerHTML =
+      '<div class="pw">' +
+        '<div class="pw-bar">' +
+          '<span class="cnt"></span><span class="lbl"></span>' +
+          '<span class="tmr" title="click to reset">elapsed <b class="el">00:00</b></span>' +
+          '<span>clock <b class="ck"></b></span>' +
+          '<button data-nav="-1">‹ prev</button><button data-nav="1">next ›</button>' +
+        '</div>' +
+        '<div class="pw-main">' +
+          '<div class="pw-col"><div class="pw-cap">Current</div><div class="pw-box" id="pwCur"><div class="pw-canvas"></div></div></div>' +
+          '<div class="pw-col right"><div class="pw-cap">Next</div><div class="pw-box" id="pwNext" style="aspect-ratio:16/9;min-height:120px"><div class="pw-canvas"></div></div>' +
+          '<div class="pw-cap" style="margin-top:6px">Notes</div><div class="pw-notes"></div></div>' +
+        '</div>' +
+      '</div>';
+
+    var t0 = Date.now();
+    function two(n){ return (n < 10 ? '0' : '') + n; }
+    function tick(){
+      if (presenter.closed) return;
+      var el = Math.floor((Date.now() - t0) / 1000);
+      pd.querySelector('.el').textContent = two(Math.floor(el / 60)) + ':' + two(el % 60);
+      var d = new Date();
+      pd.querySelector('.ck').textContent = two(d.getHours()) + ':' + two(d.getMinutes());
+      presenter.setTimeout(tick, 1000);
+    }
+    tick();
+    pd.querySelector('.tmr').addEventListener('click', function(){ t0 = Date.now(); });
+
+    function fit(boxId){
+      var box = pd.getElementById(boxId), cv = box.querySelector('.pw-canvas');
+      var k = Math.min(box.clientWidth / 1920, box.clientHeight / 1080);
+      cv.style.transform = 'scale(' + k + ')';
+      cv.style.left = ((box.clientWidth - 1920 * k) / 2) + 'px';
+      cv.style.top = ((box.clientHeight - 1080 * k) / 2) + 'px';
+    }
+    function fill(boxId, slide){
+      var cv = pd.getElementById(boxId).querySelector('.pw-canvas');
+      cv.textContent = '';
+      if (slide) {
+        var c = pd.importNode(slide, true);
+        c.setAttribute('data-deck-active', '');
+        cv.appendChild(c);
+      }
+      fit(boxId);
+    }
+    presenter.__update = function(i){
+      var all = slides(), s = all[i];
+      if (!s) return;
+      var next = i + 1;
+      while (next < all.length && all[next].hasAttribute('data-deck-skip')) next++;
+      fill('pwCur', s);
+      fill('pwNext', all[next] || null);
+      pd.querySelector('.cnt').textContent = (i + 1) + ' / ' + all.length;
+      pd.querySelector('.lbl').textContent = labelOf(s) + (all[next] ? '   →   next: ' + labelOf(all[next]) : '   ·   last slide');
+      pd.querySelector('.pw-notes').textContent = noteOf(s);
+    };
+    presenter.addEventListener('resize', function(){ fit('pwCur'); fit('pwNext'); });
+    pd.addEventListener('keydown', function(e){
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); ds.next(); }
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); ds.prev(); }
+      else if (e.key === 'Home') { ds.goTo(0); }
+      else if (e.key === 'End') { ds.goTo(slides().length - 1); }
+    });
+    pd.querySelectorAll('[data-nav]').forEach(function(b){
+      b.addEventListener('click', function(){ this.dataset.nav === '1' ? ds.next() : ds.prev(); });
+    });
+    presenter.__update(current);
+  }
+
+  ds.addEventListener('slidechange', function(e){
+    current = e.detail.index;
+    if (notesEl.classList.contains('open')) syncNotes();
+    if (presenter && !presenter.closed && presenter.__update) presenter.__update(current);
+  });
+
+  document.addEventListener('keydown', function(e){
+    var t = e.target;
+    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = e.key.toLowerCase();
+    if (k === 'n') { toggleNotes(); }
+    else if (k === 'f') { toggleFullscreen(); }
+    else if (k === 'p') { openPresenter(); }
+  });
+  document.querySelector('[data-pui="notes"]').addEventListener('click', toggleNotes);
+  document.querySelector('[data-pui="fullscreen"]').addEventListener('click', toggleFullscreen);
+  document.querySelector('[data-pui="present"]').addEventListener('click', openPresenter);
+})();
+</script>
+</body>
+</html>

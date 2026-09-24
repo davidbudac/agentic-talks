@@ -53,7 +53,7 @@ Settings, all of them environment variables:
 
 | Variable | Default | Meaning |
 |---|---|---|
-| `MODEL` | `claude-sonnet-5` | The model the decks price (talk 05, slides 4 and 8; talk 07, slide 14) |
+| `MODEL` | `claude-sonnet-5` | The model the decks price (talk 05, slides 4 and 8; talk 07, slide 9) |
 | `MAX_TURNS` | 15 to 30, set per runner | Passed as `--max-turns` |
 | `MAX_BUDGET_USD` | 1.00 (0.60 for talk 07) | Passed as `--max-budget-usd`: a hard stop for each session |
 | `ISOLATE` | `1` | Adds `--setting-sources project,local --strict-mcp-config --no-session-persistence`. Your user CLAUDE.md, user settings, plugins and MCP servers stay out, so runs compare cleanly. Set it to `0` to measure your own setup, or if sign-in fails |
@@ -187,16 +187,19 @@ numbers but a person still edits the visual or adds something unmeasured.
 | 06 | 14 | Failure mode 3: review bottlenecks | 12 PRs opened a day, 4 reviewed -> 40 waiting by Friday | `manual` | `-` | manual |
 | 06 | 23 | Fallback: the skill demo | 'Screen recording goes here' | `record.sh 06-s23` | `-` | manual |
 | 06 | 30 | Measure one tool both ways | 8 cells 'your number' | `talk06.sh` | `mcp_vs_cli.{mcp,cli}.{context_total_tokens,total_tokens,duration_s,correct}` | auto |
-| 07 | 4 | Why vibes don't scale | A 6/10, B 9/10 | `talk07.sh` | `variants.*.{passes,runs}` | partial |
-| 07 | 5 | Start with a task-completion suite | 6 tasks from last month, 4/6 pass | `talk07.sh` | `cells[*].{task,passes,k}` | auto |
-| 07 | 8 | A trace is the whole transcript | t1-t6 auth.ts session | `talk07.sh` | `example_trace.steps` | auto |
-| 07 | 9 | Read traces for wasted turns | 3 of 6 turns repeat earlier work | `talk07.sh` | `waste.{re-read,repeat,blind retry,turns}` | auto |
-| 07 | 11 | Anatomy of an agent trace | Elastic example: 8,214 input, 1,102 output, 412 ms / 96 ms tools | `manual` | `-` | manual |
-| 07 | 17-18 | Live: score two variants / Fallback: the recorded eval run | task 1-4 x variant A/B '…' | `talk07.sh + record.sh 07-s18` | `cells, variants` | auto |
-| 07 | 20 | No model wins on cost, intelligence and taste | A/B/C placement | `talk07.sh VARIANT=models` | `variants.*.{pass_rate,cost_per_pass_usd}` | partial |
-| 07 | 28 | Fallback: the recorded local run | recording slot | `record.sh 07-s28` | `-` | manual |
-| 07 | 33 | Fallback: the recorded dictation | recording slot | `record.sh 07-s33` | `-` | manual |
+| 07 | 3 | Why vibes don't scale | A 6/10, B 9/10 | `talk07.sh` | `variants.*.{passes,runs}` | partial |
+| 07 | 4 | Start with a task-completion suite | 6 tasks from last month, 4/6 pass | `talk07.sh` | `cells[*].{task,passes,k}` | auto |
+| 07 | 12-13 | Live: score two variants / Fallback: the recorded eval run | task 1-4 x variant A/B '…' | `talk07.sh + record.sh 07-s13` | `cells, variants` | auto |
+| 07 | 14 | Evals tell you which model to use | A $0.10/run, 3/10 accepted, $0.33/accepted; B $0.25/run, 9/10, $0.28 | `talk07.sh VARIANT=models` | `variants.*.{pass_rate,cost_per_pass_usd}` | partial |
+| 07 | 15 | A trace is the whole transcript | t1-t6 auth.ts session | `talk07.sh` | `example_trace.steps` | auto |
+| 07 | 16 | Read traces for wasted turns | 3 of 6 turns repeat earlier work | `talk07.sh` | `waste.{re-read,repeat,blind retry,turns}` | auto |
+| 07 | 18 | Anatomy of an agent trace | Elastic example: 8,214 input, 1,102 output, 412 ms / 96 ms tools | `manual` | `-` | manual |
 | 08 | 18 | Fallback: the same run, frame by frame | five drawn stand-in frames | `manual` | `-` | manual |
+
+Talk 07 was cut to 21 slides on 2026-09-24. Its local-model and /voice
+fallbacks (old slides 28 and 33) left the deck with the routing and habits
+parts: see `workshops/evals/` and the record.sh slots `ws-lab6-local` and
+`habits-voice` below.
 
 ### What the kit cannot measure, and how to capture it by hand
 
@@ -215,22 +218,24 @@ numbers but a person still edits the visual or adds something unmeasured.
 - **06 s23 skill demo**: `run/record.sh 06-s23` opens a fresh repo copy with
   `demo-skill/backlog-issue/SKILL.md` ready to paste into
   `.claude/skills/backlog-issue/`. Run `claude` there and ask "do 003".
-- **07 s11 OTel spans**: set `CLAUDE_CODE_ENABLE_TELEMETRY=1`,
+- **07 s18 OTel spans**: set `CLAUDE_CODE_ENABLE_TELEMETRY=1`,
   `CLAUDE_CODE_ENHANCED_TELEMETRY_BETA=1` and an OTLP exporter, with a
   collector running. For per-call tokens without a collector, use
   `analyze.py trace`.
-- **07 s28 local model**: `run/record.sh 07-s28`, then run Ollama yourself.
-  The kit installs no models.
-- **07 s33 /voice**: a terminal recording has no audio. Use a screen
-  recording with the microphone on (`run/record.sh 07-s33` opens `claude` in a
-  repo copy).
+- **Local model, evals workshop Lab 6** (was talk 07 s28; the slides are now
+  in `workshops/evals/talk07-routing-archive.html`): `run/record.sh
+  ws-lab6-local`, then run Ollama yourself. The kit installs no models.
+- **/voice, talk 07 habits archive** (was s33; now in
+  `workshops/evals/talk07-habits-archive.html`, no longer presented): a
+  terminal recording has no audio. Use a screen recording with the microphone
+  on (`run/record.sh habits-voice` opens `claude` in a repo copy).
 - **08 s18 Claude Design**: it is a web app. Screen-record or screenshot the
   five steps. `run/record.sh 08-s18` prints the steps.
 
 ### Recordings
 
 ```sh
-run/record.sh --list                      # slots: 05-s25 06-s9 06-s23 07-s18 07-s28 07-s33 08-s18
+run/record.sh --list                      # slots: 05-s25 06-s9 06-s23 07-s13 ws-lab6-local habits-voice 08-s18
 run/record.sh 06-s23                      # asciinema if installed, else `script -r` + .cast conversion
 agg results/recordings/06-s23-….cast out.gif --font-size 20
 ffmpeg -i out.gif -movflags faststart -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" out.mp4
@@ -317,7 +322,7 @@ check the checkers (`run/selftest.sh` does this), not to feed the agent.
   says so in `claude_md_tokens_source`.
 - smevals 0.2.0 on PyPI has `run -m -c -t -g --runs-dir`, `grade`,
   `report --json/--by-task` and `serve`. The `-n` top-up flag shown on talk 07
-  slide 14 exists on smevals' main branch (commit 0c28dc6) but **not in the
+  slide 9 exists on smevals' main branch (commit 0c28dc6) but **not in the
   0.2.0 release**, so `talk07.sh` calls `smevals run` once per round.
 
 Sources: `claude --help` on this machine; the CLI reference

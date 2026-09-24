@@ -13,13 +13,13 @@
 # Each `smevals run` call without -n executes exactly one run per task and
 # model, so the script calls it once per round and variant: variants
 # interleave and an interrupted session leaves balanced samples. (The -n
-# top-up flag shown on talk 07 slide 14 is on smevals' main branch but not in
+# top-up flag shown on talk 07 slide 9 is on smevals' main branch but not in
 # the 0.2.0 release on PyPI, so the kit does not rely on it.) RESUME=<results
 # dir> adds rounds to an earlier run's folder.
 #
-# Fills slide 5 (the task suite with pass/fail), 9 (waste read from real
-# traces), 17/18 (the scored sheet), and gives slide 20 real positions when
-# VARIANT=models.
+# Fills slide 4 (the task suite with pass/fail), 16 (waste read from real
+# traces), 12/13 (the scored sheet), and gives slide 14 real cost per accepted
+# task when VARIANT=models.
 #
 # Usage: run/talk07.sh [--dry-run] [--yes]
 # Environment: RUNS (default 3 = k), TASKS (default: all six, space-separated),
