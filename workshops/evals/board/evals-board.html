@@ -256,6 +256,13 @@ function renderLab1(rows) {
   const pc = groupBy(preds, p => p.variant), nPred = preds.length;
   const topPred = Object.entries(pc).sort((a, b) => b[1].length - a[1].length)[0];
   const L = by.lean, B = by.bloated;
+  if (!usingSample && !l1Revealed) {
+    $("#l1head").innerHTML = topPred ? `${topPred[1].length} of ${nPred} pairs bet on <em>${esc(topPred[0])}</em>. The measured result stays hidden until you reveal it.` : "Predictions come in first. The result stays hidden until you reveal it.";
+    $("#l1body").innerHTML = `<div class="metrics"><div class="metric"><span>predictions</span><b>${nPred}</b><small>${Object.entries(pc).map(([k, v]) => esc(k) + " " + v.length).join(" · ") || "none yet"}</small></div>
+      <div class="metric"><span>runs in</span><b>${runs.length}</b><small>from ${new Set(runs.map(r => r.pair)).size} pairs</small></div></div>
+      <div class="row-actions"><button type="button" class="primary" data-l1="reveal">Reveal the result</button></div>`;
+    return;
+  }
   let head = "";
   if (topPred && L && B) {
     const ratio = L.tokens ? B.tokens / L.tokens : null;
@@ -264,9 +271,10 @@ function renderLab1(rows) {
   $("#l1head").innerHTML = head;
   const maxT = Math.max(...st.map(s => s.tokens || 0));
   $("#l1body").innerHTML = `
-    <div class="metrics">${st.map(s => `<div class="metric"><span>${esc(s.variant)}</span><b>${pct(s.rate)}</b><small>${s.passed}/${s.runs} passed · ${s.turns ? s.turns.toFixed(1) : "–"} turns</small></div>`).join("")}
+    <div class="metrics">${st.map(s => `<div class="metric"><span>${esc(s.variant)}</span><b>${pct(s.rate)}</b><small>${s.passed}/${s.runs} passed · ${usd(s.perPass)} per pass · ${s.turns ? s.turns.toFixed(1) : "–"} turns</small></div>`).join("")}
       <div class="metric"><span>predictions</span><b>${nPred}</b><small>${Object.entries(pc).map(([k, v]) => esc(k) + " " + v.length).join(" · ") || "none yet"}</small></div></div>
-    <div><div class="legend" style="margin:6px 0 8px">Tokens per run, cache included</div>${barRows(st.map(s => ({ label: s.variant, value: s.tokens || 0, text: kTok(s.tokens) + " · " + usd(s.cost), cls: s.variant === "bloated" ? "" : "b" })), maxT)}</div>`;
+    <div><div class="legend" style="margin:6px 0 8px">Tokens per run, cache included</div>${barRows(st.map(s => ({ label: s.variant, value: s.tokens || 0, text: kTok(s.tokens) + " · " + usd(s.cost), cls: s.variant === "bloated" ? "" : "b" })), maxT)}</div>
+    ${usingSample ? "" : `<div class="row-actions"><button type="button" data-l1="hide">Hide the result again</button></div>`}`;
 }
 
 function renderLab2(rows) {
@@ -349,6 +357,13 @@ function renderRaw(rows) {
 }
 
 let liveRows = [], dbReady = false, usingSample = true;
+let l1Revealed = false; try { l1Revealed = localStorage.getItem("evalsBoardL1") === "1"; } catch (e) {}
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-l1]"); if (!b) return;
+  l1Revealed = b.dataset.l1 === "reveal";
+  try { localStorage.setItem("evalsBoardL1", l1Revealed ? "1" : "0"); } catch (err) {}
+  render();
+});
 function render() {
   usingSample = liveRows.length === 0;
   const rows = (usingSample ? sampleRows() : liveRows).map(r => r.kind ? r : Object.assign({}, r, { kind: "run" }));

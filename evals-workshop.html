@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Evals, Hands On · workshop deck</title>
+<link rel="icon" href="data:,">
+
+<link rel="stylesheet" href="ember_design_system/tokens/colors.css">
+<link rel="stylesheet" href="ember_design_system/tokens/typography.css">
+<link rel="stylesheet" href="ember_design_system/tokens/spacing.css">
+<link rel="stylesheet" href="ember_design_system/tokens/effects.css">
+<style>deck-stage:not(:defined){visibility:hidden}</style>
+<style>
+/* Measuring What Works: Ember tokens, fixed 1920×1080 canvas. Base deck styles (pruned). */
+:root{--ease:cubic-bezier(.16,1,.3,1);
+  --font-d:var(--font-display); --font-b:var(--font-body); --font-m:var(--font-mono);}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--ink);color:var(--text-strong);font-family:var(--font-body)}
+.slide{display:flex; flex-direction:column; overflow:hidden;
+  font-family:var(--font-body); -webkit-font-smoothing:antialiased;
+  --pad-x:var(--slide-pad-x); --pad-t:var(--slide-pad-top); --pad-b:var(--slide-pad-bottom);
+  --h2-size:var(--fs-h2); --h3-size:34px; --lead-size:34px;
+  --body-size:26px; --small-size:20px; --code-size:20px;
+  --gap:28px; --content-gap:var(--gap); --diag-h:440px;}
+.slide-content{flex:1; min-height:0; display:flex; flex-direction:column; justify-content:center;
+  padding:var(--pad-t) var(--pad-x) var(--pad-b); overflow:hidden; position:relative; z-index:1;}
+.slide,.slide.light{--s-bg:var(--paper); --s-text:var(--text-strong); --s-muted:var(--text-muted); --s-faint:var(--text-faint);
+  --s-line:var(--line-light-2); --s-line-strong:var(--line-light);
+  --s-card-bg:var(--paper-2); --s-card-border:var(--line-card); --s-box-mid:var(--paper-3);
+  --s-outer-fill:var(--coral-soft); --s-callout-bg:var(--coral-soft);
+  --s-accent:var(--coral-ink); --s-bar:var(--bar);
+  background:var(--s-bg); color:var(--s-text);}
+.slide.dark{--s-bg:var(--ink); --s-text:var(--on-dark); --s-muted:var(--on-dark-muted); --s-faint:var(--on-dark-faint);
+  --s-line:var(--line-dark-2); --s-line-strong:var(--line-dark);
+  --s-card-bg:var(--ink-2); --s-card-border:var(--line-dark); --s-box-mid:var(--ink-2);
+  --s-outer-fill:rgba(255,92,53,.10); --s-callout-bg:rgba(255,92,53,.10);
+  --s-accent:var(--coral); --s-bar:var(--bar-dark);
+  background:var(--s-bg); color:var(--s-text);}
+.slide-head{display:flex; align-items:baseline; justify-content:space-between; gap:var(--space-5);
+  margin-bottom:var(--gap); border-bottom:var(--bw-hair) solid var(--s-line); padding-bottom:18px;}
+.snum{font:var(--w-bold) 48px/1 var(--font-display); color:var(--s-accent); letter-spacing:var(--track-snug)}
+.crumb{font:var(--w-medium) var(--small-size)/1.2 var(--font-mono); letter-spacing:var(--track-eyebrow);
+  text-transform:uppercase; color:var(--s-muted); text-align:right}
+.crumb b{color:var(--s-accent); font-weight:var(--w-semibold)}
+h2{font-family:var(--font-display); font-weight:var(--w-bold); font-size:var(--h2-size);
+  line-height:var(--lh-snug); letter-spacing:var(--track-snug); margin-bottom:22px; color:var(--s-text); text-wrap:balance}
+h3{font-family:var(--font-display); font-weight:var(--w-bold); font-size:var(--h3-size);
+  line-height:var(--lh-snug); letter-spacing:var(--track-snug); color:var(--s-text)}
+.lead{font-size:var(--lead-size); line-height:1.45; max-width:48ch; color:var(--s-text); text-wrap:pretty}
+.lead b{color:var(--s-accent)}
+strong,b{font-weight:var(--w-semibold)}
+.note{font-size:var(--small-size); color:var(--s-muted); margin-top:20px; line-height:1.45; text-wrap:pretty}
+.note b{color:var(--s-text); font-weight:var(--w-semibold)}
+.kcard{background:var(--s-callout-bg); color:var(--s-text); border:var(--bw) solid var(--s-card-border);
+  border-left:var(--bw-callout) solid var(--coral); border-radius:0 var(--radius-xl) var(--radius-xl) 0;
+  padding:40px 44px; position:relative; overflow:hidden}
+.slide.dark .kcard{box-shadow:var(--ring-accent-dark)}
+.kcard .big{font-family:var(--font-display); font-weight:var(--w-bold); color:var(--s-accent);
+  font-size:56px; line-height:1.02; letter-spacing:var(--track-snug)}
+.kcard p{font-size:var(--body-size); line-height:1.42; margin-top:14px; max-width:50ch; color:var(--s-text)}
+@keyframes mw-dash{to{stroke-dashoffset:-28}}
+.wip-badge{display:inline-flex; align-items:center; gap:10px; font-family:var(--font-mono); font-weight:700;
+  font-size:16px; letter-spacing:.14em; text-transform:uppercase; color:var(--coral);
+  border:1.5px solid var(--coral); border-radius:var(--radius-pill); padding:6px 18px; margin-bottom:20px}
+.title-slide{display:flex; flex-direction:column; justify-content:space-between; background:var(--ink);
+  padding:88px 96px 0}
+.ts-top{display:flex; justify-content:space-between; align-items:baseline; font:600 var(--fs-eyebrow) var(--font-mono);
+  letter-spacing:var(--track-eyebrow); text-transform:uppercase}
+.ts-top .k{color:var(--coral)}
+.ts-top .meta{color:var(--on-dark-faint); font-weight:500}
+.ts-hero h1{font-family:var(--font-display); font-weight:var(--w-bold); letter-spacing:-.035em; line-height:.94;
+  color:var(--on-dark); font-size:132px}
+.ts-hero h1 .dot{color:var(--coral)}
+.ts-sub{font-size:34px; color:var(--on-dark-muted); margin-top:36px; font-weight:400; max-width:34ch}
+.ts-sub b{color:var(--on-dark); font-weight:600}
+.ts-foot{border-top:var(--bw-hair) solid var(--line-dark); margin:0 -96px; padding:34px 96px 40px;
+  display:flex; justify-content:space-between; align-items:center}
+.ts-author{font-size:26px; color:var(--on-dark-muted)}
+.ts-author a{color:inherit;text-decoration:none;border-bottom:1px solid transparent;transition:border-color .15s}
+.ts-author a:hover{border-color:currentColor}
+.ts-author b{color:var(--coral); font-weight:var(--w-semibold)}
+.ts-loopline{font:500 24px var(--font-mono); letter-spacing:.04em; color:var(--on-dark-faint)}
+.ts-loopline .a{color:var(--coral)}
+.ts-loopline .w{color:var(--on-dark-muted)}
+@keyframes ae-rise{from{opacity:0; transform:translateY(22px)} to{opacity:1; transform:none}}
+@media (prefers-reduced-motion:no-preference){
+[data-deck-active] .reveal{animation:ae-rise .5s var(--ease) both}
+[data-deck-active] .reveal:nth-child(2){animation-delay:.07s}
+[data-deck-active] .reveal:nth-child(3){animation-delay:.14s}
+[data-deck-active] .reveal:nth-child(4){animation-delay:.21s}
+[data-deck-active] .reveal:nth-child(n+5){animation-delay:.27s}
+[data-deck-active] .title-slide>*{animation:ae-rise .8s var(--ease) both}
+[data-deck-active] .title-slide>.ts-hero{animation-delay:.15s}
+[data-deck-active] .title-slide>.ts-foot{animation-delay:.3s}
+}
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+/* Self-hosted Ember fonts */
+@font-face{font-family:"Space Grotesk";font-weight:400;font-style:normal;font-display:swap;src:url("remotion/public/fonts/space-grotesk-400.woff2") format("woff2")}
+@font-face{font-family:"Space Grotesk";font-weight:500;font-style:normal;font-display:swap;src:url("remotion/public/fonts/space-grotesk-500.woff2") format("woff2")}
+@font-face{font-family:"Space Grotesk";font-weight:600;font-style:normal;font-display:swap;src:url("remotion/public/fonts/space-grotesk-600.woff2") format("woff2")}
+@font-face{font-family:"Space Grotesk";font-weight:700;font-style:normal;font-display:swap;src:url("remotion/public/fonts/space-grotesk-700.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-weight:400;font-style:normal;font-display:swap;src:url("remotion/public/fonts/ibm-plex-sans-400.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-weight:500;font-style:normal;font-display:swap;src:url("remotion/public/fonts/ibm-plex-sans-500.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-weight:600;font-style:normal;font-display:swap;src:url("remotion/public/fonts/ibm-plex-sans-600.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-weight:700;font-style:normal;font-display:swap;src:url("remotion/public/fonts/ibm-plex-sans-700.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:400;font-style:normal;font-display:swap;src:url("remotion/public/fonts/ibm-plex-mono-400.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:500;font-style:normal;font-display:swap;src:url("remotion/public/fonts/ibm-plex-mono-500.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:600;font-style:normal;font-display:swap;src:url("remotion/public/fonts/ibm-plex-mono-600.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:700;font-style:normal;font-display:swap;src:url("remotion/public/fonts/ibm-plex-mono-700.woff2") format("woff2")}
+/* v2 visual layer (from the revised first three decks, pruned to what this deck uses) */
+.v2{--h2-size:88px;--h3-size:52px;--lead-size:42px;--body-size:34px;--small-size:26px;--code-size:36px;
+  --icbg:var(--s-card-bg);--v-fail:#ff6b4f}
+.v2 .slide-content{padding:60px 96px 96px;justify-content:flex-start;gap:0}
+.v2 .slide-head{align-items:center;gap:40px;margin-bottom:40px;padding-bottom:22px;border-bottom:1px solid var(--s-line);flex:none}
+.v2 .snum{font-size:52px}
+.v2 .crumb{font-size:26px;letter-spacing:.1em;min-width:220px}
+.v2 h2{font-size:var(--h2-size);line-height:1.02;letter-spacing:-.03em;margin:0;max-width:none;flex:none}
+.v2 .v2-body{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:36px;padding-top:32px}
+.v2 .note{flex:none;margin-top:18px;font:500 24px/1.3 var(--font-mono);letter-spacing:.03em;color:var(--s-muted)}
+.v2 .lead{font-size:var(--lead-size);line-height:1.35;max-width:none;color:var(--s-text)}
+.v2 .lead.sm{font-size:36px}
+.v2 .lead b,.v2 .v-row p b{color:var(--s-accent);font-weight:600}
+.v2 a{color:var(--s-accent);text-underline-offset:.18em}
+.v2 a:focus-visible{outline:3px solid var(--s-accent);outline-offset:8px}
+.v2 svg{overflow:visible}
+.v2 svg text{font-family:var(--font-mono)}
+.v2 .ic{fill:none;stroke:currentColor;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;color:var(--s-accent)}
+.v2 .ic .bg{fill:var(--icbg)}
+.v2 .kk{display:block;font:600 24px/1.2 var(--font-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--s-accent)}
+.v2 .chips{display:flex;flex-wrap:wrap;gap:14px}
+.v2 .chips span{display:inline-flex;align-items:center;gap:12px;font:500 28px var(--font-mono);color:var(--s-text);background:var(--s-bg);border:2px solid var(--s-card-border);border-radius:40px;padding:10px 24px}
+.v2 .chips .ic{width:34px;height:34px}
+.v2 .mk-c{fill:var(--coral)}
+.v2 .mk-t{fill:var(--s-text)}
+.v2 .mk-m{fill:var(--s-muted)}
+.v2 .ln-c{stroke:var(--coral);stroke-width:6;fill:none}
+.v2 .ln-t{stroke:var(--s-text);stroke-width:5;fill:none}
+.v2 .ln-m{stroke:var(--s-muted);stroke-width:4;fill:none}
+.v2 .ln-dim{stroke:var(--s-line-strong);stroke-width:3;fill:none}
+.v2 .thick{stroke-width:8}
+.v2 .dash{stroke-dasharray:14 12}
+.v2 .ring{fill:none;stroke:var(--s-line-strong);stroke-width:4;stroke-dasharray:4 12;stroke-linecap:round}
+.v2 .nd{fill:var(--ink);stroke:var(--s-bg);stroke-width:8}
+.v2 .nd + .ic{color:var(--paper)}
+.v2 .nd.hot{fill:var(--coral)}
+.v2 .nd.hot + .ic{color:var(--ink)}
+.v2 .nd.soft{fill:var(--s-card-bg);stroke:var(--s-card-border);stroke-width:3}
+.v2 .nd.soft + .ic{color:var(--s-accent)}
+.v2.dark .nd{fill:var(--ink-2);stroke:var(--coral);stroke-width:4}
+.v2.dark .nd + .ic{color:var(--coral)}
+.v2.dark .nd.hot{fill:var(--coral)}
+.v2.dark .nd.hot + .ic{color:var(--ink)}
+.v2 .f-coral{fill:var(--coral)}
+.v2 .f-ink{fill:var(--ink)}
+.v2 .f-bg{fill:var(--s-bg)}
+.v2.dark .f-ink{fill:var(--ink-3);stroke:var(--line-dark);stroke-width:2}
+.v2 .bx-card{fill:var(--s-card-bg);stroke:var(--s-card-border);stroke-width:2}
+.v2 .bx-mid{fill:var(--s-box-mid);stroke:var(--s-line-strong);stroke-width:2}
+.v2 .bx-dash{fill:none;stroke:var(--s-line-strong);stroke-width:2;stroke-dasharray:8 7}
+.v2 .bx-hot{stroke:var(--coral);stroke-width:3}
+.v2 .bx-hot.soft{fill:var(--s-callout-bg)}
+.v2 .ok-dot{fill:var(--positive-on-dark)}
+.v2.light .ok-dot{fill:var(--positive)}
+.v2 .ok-tick{fill:none;stroke:var(--ink);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.v2 .ok-tick.sm{stroke-width:4}
+.v2 .ok-tick.lg{stroke-width:11}
+.v2 .t-cap{font:500 22px var(--font-mono);letter-spacing:.12em;fill:var(--s-faint);text-transform:uppercase}
+.v2 .t-acc{font:600 28px var(--font-mono);fill:var(--s-accent);letter-spacing:.03em}
+.v2 .t-mut{font:500 28px var(--font-mono);fill:var(--s-muted)}
+.v2 .t-faint{font:500 24px var(--font-mono);fill:var(--s-faint)}
+.v2 .t-strong{font:600 32px var(--font-body);fill:var(--s-text)}
+.v2 .t-strong.mono,.v2 text.mono{font-family:var(--font-mono);font-size:28px}
+.v2 .sm{font-size:24px}
+.v2 .t-on{font:700 26px var(--font-mono);fill:var(--ink)}
+.v2 .t-on.big{font-size:32px}
+.v2 .t-paper{font:600 30px var(--font-mono);fill:var(--paper);letter-spacing:.04em}
+.v2 .t-paper.lg,.v2 .t-strong.lg{font:700 56px var(--font-display);letter-spacing:-.02em}
+.v-stn .rail{display:block;width:100%;height:auto}
+.rail .rl-base{stroke:var(--s-line-strong);stroke-width:6;stroke-dasharray:4 14;stroke-linecap:round}
+.rail .rl-on{stroke:var(--coral);stroke-width:12;stroke-linecap:round}
+.rail .rl-c{fill:var(--ink);stroke:var(--s-bg);stroke-width:10}
+.v2.dark .rail .rl-c{fill:var(--ink-2);stroke:var(--coral);stroke-width:5}
+.rail .rl-c.hot,.v2.dark .rail .rl-c.hot{fill:var(--coral);stroke:var(--s-bg);stroke-width:10}
+.rail .ic{color:var(--paper)}
+.v2.dark .rail .ic{color:var(--coral)}
+.rail .ic.hot,.v2.dark .rail .ic.hot{color:var(--ink)}
+.rail .ic.ok,.v2.dark .rail .ic.ok{color:var(--positive-on-dark)}
+.rail .rl-n{font:500 30px var(--font-mono);fill:var(--s-accent);letter-spacing:.08em}
+.v-stn .stops{display:grid;text-align:center;margin-top:24px;gap:28px}
+.v-stn.n2 .stops{grid-template-columns:repeat(2,1fr)}
+.v-stn.n3 .stops{grid-template-columns:repeat(3,1fr)}
+.v-stn.n4 .stops{grid-template-columns:repeat(4,1fr)}
+.v-stn .stops h3{font:700 72px/1.02 var(--font-display);letter-spacing:-.025em;color:var(--s-text)}
+.v-stn.n4 .stops h3{font-size:64px}
+.v-stn .stops p{font-size:38px;line-height:1.3;color:var(--s-muted);margin-top:14px}
+.v-stn.n4 .stops p{font-size:36px}
+.mini{list-style:none;display:flex;align-items:center;font:500 24px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--s-faint);margin:0 auto}
+.mini li{display:flex;align-items:center;gap:14px}
+.mini li+li::before{content:"";width:56px;height:3px;background:var(--s-line-strong);margin:0 18px;border-radius:2px}
+.mini li i{width:22px;height:22px;border-radius:50%;border:3px solid var(--s-line-strong);display:block;background:var(--s-bg)}
+.mini li.done{color:var(--s-muted)}
+.mini li.done i{border-color:var(--coral);background:var(--s-callout-bg)}
+.mini li.on{color:var(--s-accent);font-weight:600}
+.mini li.on i{background:var(--coral);border-color:var(--coral);box-shadow:0 0 0 7px rgba(255,92,53,.18)}
+.v-win{border-radius:20px;overflow:hidden;min-width:0;flex:none}
+.v-win.term{background:var(--term-bg);box-shadow:var(--shadow-terminal);border:1px solid #2a241b;color:var(--code-text)}
+.v2.dark .v-win.term{border-color:var(--line-dark)}
+.v-win .tbar{background:var(--term-bar);height:62px;display:flex;align-items:center;gap:12px;padding:0 26px}
+.v-win .tbar i{width:18px;height:18px;border-radius:50%;display:block}
+.v-win .tbar .r{background:var(--term-dot-red)}
+.v-win .tbar .y{background:var(--term-dot-yellow)}
+.v-win .tbar .g{background:var(--term-dot-green)}
+.v-win .tbar span{font:500 22px var(--font-mono);color:var(--on-dark-faint);margin-left:14px;letter-spacing:.06em}
+.v-win .wbody{padding:40px 56px 48px;font:500 38px/1.5 var(--font-mono);white-space:pre-wrap;overflow-wrap:anywhere}
+.v-win.term .k{color:var(--code-keyword)}
+.v-win.term .s{color:var(--code-string)}
+.v-win.term .c{color:var(--code-comment)}
+.v-win.term .n{color:var(--code-number)}
+.v-win.term .p{color:var(--coral)}
+.v-win.term .dim{color:var(--on-dark-muted)}
+.v-panels{display:grid;gap:40px}
+.v-panels.n2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.v-panel{background:var(--s-card-bg);border:1.5px solid var(--s-card-border);border-radius:24px;padding:40px 48px 46px;display:flex;flex-direction:column;min-width:0}
+.v-panel .illus{height:270px;display:flex;align-items:center;justify-content:center;margin-bottom:26px}
+.v-panel .illus svg{width:100%;height:100%}
+.v-panel h3{font:700 64px/1.02 var(--font-display);letter-spacing:-.03em;color:var(--s-text)}
+.v-panel p{font-size:36px;line-height:1.35;color:var(--s-muted);margin-top:16px}
+.v-panel .kk{margin-bottom:12px}
+.v-rows{display:flex;flex-direction:column;gap:22px}
+.v-row{display:grid;grid-template-columns:120px 1fr;grid-template-rows:auto auto;column-gap:36px;align-items:center;background:var(--s-card-bg);border:1.5px solid var(--s-card-border);border-left:10px solid var(--coral);border-radius:6px 22px 22px 6px;padding:30px 40px}
+.v-row .ic{grid-row:1/3;width:110px;height:110px}
+.v-row h3{font:700 54px/1.05 var(--font-display);letter-spacing:-.025em;color:var(--s-text)}
+.v-row p{font-size:34px;line-height:1.35;color:var(--s-muted);margin-top:8px}
+.v-row p .kk{display:inline;font-size:22px;margin-right:10px}
+.v-rows.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px}
+.v-rows.grid2 .v-row{padding:40px 44px;min-height:250px}
+.v-rows.compact{gap:14px}
+.v-rows.compact .v-row{padding:18px 28px;grid-template-columns:72px 1fr;column-gap:24px;background:var(--ink-2)}
+.v-rows.compact .ic{width:64px;height:64px}
+.v-rows.compact h3{font-size:40px}
+.v-rows.compact p{font-size:30px;margin-top:4px}
+.v-cycle{display:grid;grid-template-columns:600px 1fr;gap:90px;align-items:center}
+.v-cycle svg{width:600px;height:600px}
+.v-cycle ol{list-style:none;display:flex;flex-direction:column;gap:34px}
+.v-cycle li{display:grid;grid-template-columns:90px 1fr;align-items:baseline;border-top:2px solid var(--s-line);padding-top:24px}
+.v-cycle li span{font:500 30px var(--font-mono);color:var(--s-accent)}
+.v-cycle h3{font:700 68px/1 var(--font-display);letter-spacing:-.03em;color:var(--s-text)}
+.v-cycle li p{font-size:38px;line-height:1.3;color:var(--s-muted);margin-top:10px}
+.v-cycle.n4 ol{gap:22px}
+.v-cycle.n4 li{padding-top:16px}
+.v-cycle.n4 h3{font-size:56px}
+.v-cycle.n4 li p{font-size:34px;margin-top:6px}
+.v2 .kcard{padding:44px 52px}
+.v2 .kcard .big{font-size:64px;line-height:1.05;letter-spacing:-.025em}
+.v2 .kcard p{font-size:36px;line-height:1.38;margin-top:20px}
+.v-refs{display:grid;grid-template-columns:1fr;gap:0}
+.v-refs a{display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;column-gap:30px;align-items:center;padding:26px 8px;border-bottom:2px solid var(--s-line);text-decoration:none;color:var(--s-text)}
+.v-refs a:first-child{border-top:2px solid var(--s-line)}
+.v-refs a:hover .lt{color:var(--s-accent)}
+.v-refs .lt{font:700 50px/1.1 var(--font-display);letter-spacing:-.02em}
+.v-refs .ld{font:500 26px var(--font-mono);color:var(--s-muted);margin-top:8px;grid-column:1}
+.v-refs .la{grid-row:1/3;grid-column:2;font:700 52px var(--font-display);color:var(--s-accent)}
+.v-panel .illus{height:300px}
+.v-refs a{padding:34px 8px}
+.v-refs .lt{font-size:56px}
+.v2.ref h2{font-size:80px}
+.v2.title-slide .ts-hero h1{font-size:184px;line-height:.95}
+.v2.title-slide .ts-sub{font-size:44px;max-width:45ch;line-height:1.35}
+@media (prefers-reduced-motion:reduce){
+.v2 *,.v2 *::before,.v2 *::after{animation:none!important;transition:none!important}
+}
+@media (max-height:700px){
+.pui-controls{bottom:8px}
+}
+@media (max-height:600px){
+.pui-controls button{padding:7px 10px}
+}
+@media (max-height:500px){
+.pui-notes{max-height:50vh}
+}
+/* Deck-specific components (m7) */
+.m7 .f-g{fill:var(--positive)} .m7 .f-w{fill:var(--warning)}
+.m7 code{font-family:var(--font-mono);font-size:.9em;color:var(--s-accent)}
+.m7 .v2-body > svg,.m7 .fig{display:block;width:100%;height:auto}
+.m7 .t-big{font:700 120px var(--font-display);fill:var(--s-text);letter-spacing:-.03em}
+.m7 .t-strong.xl{font-size:40px}
+.m7 .t-mut.xs,.m7 .t-acc.xs{font-size:22px}
+.wip-badge{display:inline-flex;align-items:center;font:600 22px var(--font-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--coral);border:2px solid var(--coral);border-radius:40px;padding:8px 22px;margin-bottom:34px}
+.m7 .mini{font-size:22px}
+.m7 .mini li+li::before{width:40px;margin:0 14px}
+
+/* section beat */
+.m7-div::before{content:"";position:absolute;left:0;top:0;bottom:0;width:16px;background:var(--coral);z-index:2}
+.m7-div .slide-content{padding:60px 96px 96px 120px}
+.m7-div .dv{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 640px;column-gap:96px;align-items:end}
+.m7-div .dv-L{display:flex;flex-direction:column;justify-content:flex-end;min-width:0;padding-bottom:10px}
+.m7-div .dv-mega{font:700 360px/.8 var(--font-display);letter-spacing:-.05em;color:var(--coral)}
+.m7-div .dv-kick{display:block;font:600 30px var(--font-mono);letter-spacing:.2em;text-transform:uppercase;color:var(--coral);margin:0 0 22px 10px;line-height:1}
+.m7-div h2{font-size:92px;line-height:1.02;margin-top:44px}
+.m7-div .dv-lead{font-size:40px;line-height:1.35;color:var(--s-muted);margin-top:30px;max-width:30ch}
+.dv-parts{list-style:none;display:flex;flex-direction:column;gap:18px}
+.dv-parts li{border:2px solid var(--line-dark);border-radius:22px;padding:26px 32px;display:grid;grid-template-columns:90px 1fr;align-items:baseline;color:var(--on-dark-faint)}
+.dv-parts li b{font:700 52px/1 var(--font-display);letter-spacing:-.03em}
+.dv-parts li span{font:700 44px/1.1 var(--font-display);letter-spacing:-.02em}
+.dv-parts li small{grid-column:2;display:block;font:500 26px/1.35 var(--font-mono);color:var(--on-dark-muted);margin-top:12px}
+.dv-parts li.on{border-color:var(--coral);background:rgba(255,92,53,.10);color:var(--on-dark)}
+.dv-parts li.on b{color:var(--coral)}
+.dv-parts li.done{color:var(--on-dark-muted)}
+
+/* live demo + fallback */
+.m7-live{display:inline-flex;align-items:center;gap:16px;align-self:flex-start;font:700 28px var(--font-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink);background:var(--coral);border-radius:40px;padding:12px 30px 12px 24px}
+.m7-live i{width:18px;height:18px;border-radius:50%;background:var(--ink);display:block}
+@media (prefers-reduced-motion:no-preference){[data-deck-active] .m7-live i{animation:m7-pulse 1.4s ease-in-out infinite}}
+@keyframes m7-pulse{50%{opacity:.25}}
+.m7-demo .slide-head .crumb{color:var(--s-accent)}
+.m7-fb{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 560px;gap:56px;align-items:stretch}
+.m7-fb .slot{border:4px dashed var(--line-dark);border-radius:28px;padding:40px 44px;display:flex;flex-direction:column;gap:22px;justify-content:center;position:relative}
+.m7-fb .slot .kk{color:var(--on-dark-faint)}
+.m7-fb .slot table{width:100%;border-collapse:collapse;font:500 30px var(--font-mono);color:var(--on-dark-muted)}
+.m7-fb .slot th{text-align:left;font:600 22px var(--font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--coral);padding:14px 16px;border-bottom:3px solid var(--coral)}
+.m7-fb .slot td{padding:16px;border-bottom:1px solid var(--line-dark)}
+.m7-fb .slot td.e{color:var(--on-dark-faint)}
+.m7-fb .slot .ph{display:flex;align-items:center;gap:24px;font:500 30px/1.35 var(--font-mono);color:var(--on-dark-faint)}
+.m7-fb .slot .ph .ic{width:90px;height:90px;flex:none;color:var(--on-dark-faint)}
+.m7-fb .narr{background:var(--ink-2);border:2px solid var(--line-dark);border-left:10px solid var(--coral);border-radius:6px 26px 26px 6px;padding:40px 44px;display:flex;flex-direction:column;justify-content:center;gap:20px}
+.m7-fb .narr ol{list-style:none;display:flex;flex-direction:column;gap:18px;counter-reset:n}
+.m7-fb .narr li{counter-increment:n;display:grid;grid-template-columns:56px 1fr;font-size:34px;line-height:1.3;color:var(--on-dark)}
+.m7-fb .narr li::before{content:counter(n,decimal-leading-zero);font:500 26px var(--font-mono);color:var(--coral);padding-top:6px}
+
+/* bubbles + bars (vibes) */
+.m7 .bub{fill:var(--s-bg);stroke:var(--s-line-strong);stroke-width:3}
+.m7 .bar-a{fill:#8d8271} .m7 .bar-b{fill:var(--coral)}
+
+/* task suite window */
+.m7-suite{display:grid;grid-template-columns:1040px 1fr;gap:72px;align-items:center}
+.m7-rowsw .wbody{white-space:normal;padding:22px 0 26px}
+.m7-rowsw .rw{display:grid;grid-template-columns:70px 1fr auto;align-items:center;gap:20px;padding:12px 44px;font:500 32px/1.3 var(--font-mono)}
+.m7-rowsw .rw + .rw{border-top:1px solid rgba(255,255,255,.06)}
+.m7-rowsw .rw .no{color:var(--on-dark-faint);font-size:24px}
+.m7-rowsw .ok{color:var(--positive-on-dark);font-weight:700}
+.m7-rowsw .x{color:var(--v-fail);font-weight:700}
+.m7-rowsw .tot{display:flex;justify-content:space-between;align-items:baseline;padding:22px 44px 4px;margin-top:8px;border-top:2px solid var(--line-dark);font:600 26px var(--font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--on-dark-muted)}
+.m7-rowsw .tot b{font:700 72px/1 var(--font-display);letter-spacing:-.02em;color:var(--coral)}
+.m7-side{display:flex;flex-direction:column;gap:34px}
+.m7-side .lead{font-size:40px}
+
+/* verdict rows (pass@k) */
+.m7-verdicts{display:flex;flex-direction:column;gap:22px}
+.m7-verdicts .vr{display:grid;grid-template-columns:260px 280px 1fr;align-items:center;gap:36px;background:var(--s-card-bg);border:1.5px solid var(--s-card-border);border-radius:22px;padding:26px 40px}
+.m7-verdicts .k{font:700 60px/1 var(--font-mono);color:var(--s-accent)}
+.m7-verdicts .res{display:inline-flex;align-items:center;gap:14px;font:700 36px var(--font-mono);letter-spacing:.08em;border-radius:14px;padding:12px 22px;justify-self:start}
+.m7-verdicts .res.ok{background:rgba(127,220,138,.14);color:var(--positive-on-dark);border:3px solid var(--positive-on-dark)}
+.m7-verdicts .res.no{background:rgba(255,92,53,.12);color:var(--v-fail);border:3px solid var(--v-fail)}
+.m7-verdicts p{font-size:36px;line-height:1.3;color:var(--s-text)}
+.m7-verdicts p small{display:block;font-size:28px;color:var(--s-muted);margin-top:4px}
+
+/* traces */
+.m7-trace .wbody{white-space:normal;padding:18px 0 22px}
+.m7-trace .rw{display:grid;grid-template-columns:80px 150px 1fr auto;align-items:center;gap:18px;padding:13px 40px;font:500 30px/1.3 var(--font-mono);border-left:8px solid transparent}
+.m7-trace .rw .no{color:var(--on-dark-faint);font-size:24px}
+.m7-trace .rw .ty{color:var(--code-keyword);font-size:24px;letter-spacing:.08em;text-transform:uppercase}
+.m7-trace .rw .res{color:var(--on-dark-muted);font-size:26px}
+.m7-trace .rw .res.bad{color:var(--v-fail)} .m7-trace .rw .res.good{color:var(--positive-on-dark)}
+.m7-trace .rw.w{background:rgba(255,92,53,.14);border-left-color:var(--coral)}
+.m7-trace .rw .tag{font:700 22px var(--font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--coral);border:2px solid var(--coral);border-radius:20px;padding:4px 14px}
+.m7-tr2{display:grid;grid-template-columns:1fr 520px;gap:56px;align-items:center}
+.m7-call{background:var(--ink);color:var(--on-dark);border-radius:6px 26px 26px 6px;padding:44px 48px 48px;border-left:10px solid var(--coral)}
+.slide.dark .m7-call{background:var(--ink-2);border:2px solid var(--line-dark);border-left:10px solid var(--coral)}
+.m7-call .k{display:block;font:600 24px var(--font-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--on-dark-faint)}
+.m7-call .big{font:700 150px/.95 var(--font-display);letter-spacing:-.04em;color:var(--coral);margin-top:14px;white-space:nowrap}
+.m7-call .big small{font-size:60px;color:var(--on-dark);margin-left:10px;letter-spacing:-.02em}
+.m7-call p{font-size:34px;line-height:1.35;color:var(--on-dark-muted);margin-top:22px}
+.m7-call p b{color:var(--on-dark);font-weight:600}
+
+/* telemetry */
+.m7-tel{display:grid;grid-template-columns:1000px 1fr;gap:56px;align-items:center}
+.m7-tel .v-win .wbody{font-size:30px;line-height:1.6;padding:34px 44px 38px}
+.m7-tel .v-rows.compact .v-row{padding:22px 30px}
+.m7 .chips.lg span{font-size:30px;padding:12px 26px}
+
+/* smevals vocabulary */
+.m7-vocab{display:grid;grid-template-columns:860px 1fr;gap:64px;align-items:center}
+.m7-vocab svg{width:860px;height:auto}
+.m7-gloss{display:flex;flex-direction:column}
+.m7-gloss div{display:grid;grid-template-columns:190px 1fr;gap:24px;align-items:baseline;padding:16px 0;border-top:2px solid var(--s-line)}
+.m7-gloss div:last-child{border-bottom:2px solid var(--s-line)}
+.m7-gloss b{font:700 40px/1 var(--font-display);letter-spacing:-.02em;color:var(--s-accent)}
+.m7-gloss span{font-size:32px;line-height:1.3;color:var(--s-text)}
+.m7-code2{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:stretch}
+.m7-code2 .v-win .wbody{font-size:31px;line-height:1.55;padding:32px 44px 36px}
+.m7-list{list-style:none;display:flex;flex-direction:column;gap:22px}
+.m7-list li{font-size:34px;line-height:1.35;color:var(--s-text);padding-left:44px;position:relative}
+.m7-list li::before{content:"";position:absolute;left:0;top:.42em;width:20px;height:20px;background:var(--coral);clip-path:polygon(0 0,100% 50%,0 100%)}
+.m7-list li code{font-size:.92em}
+.m7-list.two{display:grid;grid-template-columns:1fr 1fr;gap:28px 56px}
+.m7-grade{display:grid;grid-template-columns:960px 1fr;gap:56px;align-items:center}
+.m7-grade .v-win .wbody{font-size:29px;line-height:1.5;padding:30px 40px 34px}
+
+/* routing + harnesses */
+.m7-pi{display:grid;grid-template-columns:640px 1fr;gap:64px;align-items:center}
+.m7-hero{background:var(--ink-2);border:2px solid var(--line-dark);border-top:10px solid var(--coral);border-radius:6px 6px 26px 26px;padding:44px 48px 50px}
+.m7-hero .n{font:700 150px/.9 var(--font-display);letter-spacing:-.05em;color:var(--coral);white-space:nowrap}
+.m7-hero .n small{display:block;font-size:56px;letter-spacing:-.02em;color:var(--on-dark);margin-top:10px}
+.m7-hero p{font-size:36px;line-height:1.35;color:var(--on-dark-muted);margin-top:24px}
+.m7-hero .kk{margin-bottom:18px}
+
+/* open models */
+.m7-model{display:grid;grid-template-columns:980px 1fr;gap:64px;align-items:center}
+.m7-model > svg{width:980px;height:auto}
+.m7-facts{display:flex;flex-direction:column;gap:0}
+.m7-facts div{padding:20px 0;border-top:2px solid var(--s-line)}
+.m7-facts div:last-child{border-bottom:2px solid var(--s-line)}
+.m7-facts .kk{font-size:22px;margin-bottom:8px}
+.m7-facts p{font-size:34px;line-height:1.32;color:var(--s-text)}
+.m7-facts p b{color:var(--s-accent);font-weight:600}
+.m7-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.m7-kpis div{border-top:8px solid var(--coral);background:var(--s-card-bg);border-radius:6px 6px 22px 22px;padding:28px 34px 32px;border-left:1.5px solid var(--s-card-border);border-right:1.5px solid var(--s-card-border);border-bottom:1.5px solid var(--s-card-border)}
+.m7-kpis b{display:block;font:700 76px/1 var(--font-display);letter-spacing:-.03em;color:var(--s-text);white-space:nowrap}
+.m7-kpis span{display:block;font-size:30px;line-height:1.3;color:var(--s-muted);margin-top:12px}
+.m7-when{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.m7-when .col{border-radius:28px;padding:40px 44px 44px;display:flex;flex-direction:column;gap:6px}
+.m7-when .col.loc{background:var(--s-callout-bg);border:3px solid var(--coral)}
+.m7-when .col.host{background:var(--s-card-bg);border:1.5px solid var(--s-card-border)}
+.m7-when h3{font:700 64px/1 var(--font-display);letter-spacing:-.03em;color:var(--s-text);margin:6px 0 16px}
+.m7-when .it{display:grid;grid-template-columns:84px 1fr;gap:24px;align-items:center;padding:16px 0;border-top:1.5px solid var(--s-line)}
+.m7-when .it .ic{width:72px;height:72px}
+.m7-when .it p{font-size:34px;line-height:1.3;color:var(--s-text)}
+.m7-open{display:flex;flex-direction:column;gap:30px}
+.m7-open > svg{width:100%;height:auto}
+.m7-open .kcard{display:grid;grid-template-columns:auto 1fr;gap:48px;align-items:center;padding:34px 48px}
+.m7-open .kcard .big{font-size:80px;white-space:nowrap}
+.m7-open .kcard p{margin-top:0;max-width:none}
+
+/* voice */
+.m7-voice{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:stretch}
+.m7-voice3 .v-win .wbody{font-size:31px;line-height:1.6;padding:30px 42px 34px}
+.m7-voice3 .opt{border-radius:26px;padding:40px 44px;display:flex;flex-direction:column;gap:16px}
+.m7-voice3 .opt.cc{background:var(--s-card-bg);border:1.5px solid var(--s-card-border)}
+.m7-voice3 .opt.hl{background:var(--s-callout-bg);border:3px solid var(--coral)}
+.m7-voice3 .opt .oh{display:flex;align-items:center;gap:22px}
+.m7-voice3 .opt .ic{width:76px;height:76px;flex:none}
+.m7-voice3 .opt h3{font:700 60px/1 var(--font-display);letter-spacing:-.03em;color:var(--s-text)}
+.m7-voice3 .opt p{font-size:32px;line-height:1.35;color:var(--s-text)}
+.m7-voice3 .opt .chips{margin-top:auto}
+.m7-voice3 .opt .chips span{font-size:24px;padding:8px 18px}
+.m7-voice3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px;align-items:stretch}
+.m7-voice3 .v-win .wbody{font-size:30px}
+
+/* sources */
+.v-refs.cols2{grid-template-columns:1fr 1fr;column-gap:64px}
+.v-refs.cols2 a{padding:14px 6px}
+.v-refs.cols2 a:nth-child(2){border-top:2px solid var(--s-line)}
+.v-refs.cols2 .lt{font-size:34px}
+.v-refs.cols2 .ld{font-size:22px;margin-top:6px}
+.v-refs.cols2 .la{font-size:36px}
+.m7 .xm{stroke:var(--s-muted);stroke-width:10;stroke-linecap:round;fill:none}
+.m7-verdicts .res .ic{width:36px;height:36px;color:currentColor;stroke-width:14}
+.m7 .t-lg{font:700 60px var(--font-display);fill:var(--s-text);letter-spacing:-.02em}
+.m7 .t-on.lg{font:700 44px var(--font-display);letter-spacing:-.02em}
+.m7 .bx-hot.fill{fill:var(--coral)}
+
+/* sources: seven links, set larger than the old twelve */
+.v-refs.cols2.n7 a{padding:30px 6px}
+.v-refs.cols2.n7 .lt{font-size:40px}
+.v-refs.cols2.n7 .ld{font-size:26px;margin-top:8px}
+.v-refs.cols2.n7 .la{font-size:44px}
+
+/* cost per accepted task (from the v2 decks) */
+.v-acc{display:grid;grid-template-columns:1fr 620px;gap:80px;align-items:center}
+.v-acc .legend{display:flex;gap:40px;font:500 26px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--s-muted);margin-bottom:12px}
+.v-acc .legend b{font-weight:600;color:var(--s-accent)}
+.v-acc .legend span{display:flex;align-items:center;gap:12px}
+.v-acc .legend i{width:26px;height:26px;border-radius:5px;display:block}
+.v-acc .A{background:#8d8271} .v-acc .B{background:var(--coral)}
+.v-acc .m{padding:14px 0 18px;border-top:1px solid var(--s-line)}
+.v-acc .m .lab{font-size:32px;line-height:1.2;color:var(--s-text);margin-bottom:10px;display:flex;justify-content:space-between;align-items:baseline}
+.v-acc .m .lab small{font:500 20px var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--s-faint)}
+.v-acc .m .lab small.hot{color:var(--s-accent)}
+.v-acc .br{display:flex;align-items:center;gap:18px;height:40px}
+.v-acc .br+.br{margin-top:8px}
+.v-acc .br i{height:100%;border-radius:0 6px 6px 0;display:block}
+.v-acc .br b{font:700 32px var(--font-display);color:var(--s-text);white-space:nowrap}
+.v-acc .call{background:var(--ink);color:var(--on-dark);border-radius:6px 26px 26px 6px;padding:44px 52px 48px;border-left:10px solid var(--coral)}
+.v-acc .call .k{display:block;font:600 22px var(--font-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--on-dark-faint)}
+.v-acc .call .big{font:700 116px/.95 var(--font-display);letter-spacing:-.04em;margin-top:14px;white-space:nowrap}
+.v-acc .call .big small{font:500 40px var(--font-display);letter-spacing:-.01em;margin-left:18px;color:var(--on-dark-faint)}
+.v-acc .call .big.o{color:var(--coral)}
+.v-acc .call .hr{height:1px;background:var(--line-dark);margin:28px 0 24px}
+.v-acc .call p{font-size:32px;line-height:1.35;color:var(--on-dark-muted);margin-top:18px}
+.v-acc .call p.ws{color:var(--on-dark);margin-top:10px}
+
+/* workshop teaser: format card + seven lab tiles */
+.m7-ws{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:28px;height:610px}
+.m7-ws .ws-lab{background:var(--s-card-bg);border:1.5px solid var(--s-card-border);border-top:10px solid var(--coral);border-radius:6px 6px 22px 22px;padding:30px 34px 36px;display:flex;flex-direction:column;min-width:0}
+.m7-ws .ws-lab .top{display:flex;justify-content:space-between;align-items:flex-start}
+.m7-ws .ws-lab .top span{font:600 26px var(--font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--s-accent)}
+.m7-ws .ws-lab .ic{width:84px;height:84px;color:var(--s-accent)}
+.m7-ws .ws-lab h3{font:700 48px/1.05 var(--font-display);letter-spacing:-.025em;color:var(--s-text);margin-top:auto}
+.m7-ws .ws-lab.hot{background:var(--s-callout-bg);border-color:var(--coral)}
+.m7-ws .ws-fmt{background:var(--ink);color:var(--on-dark);border-radius:6px 6px 22px 22px;border-top:10px solid var(--coral);padding:30px 34px 36px;display:flex;flex-direction:column}
+.m7-ws .ws-fmt .top{display:flex;justify-content:space-between;align-items:flex-start}
+.m7-ws .ws-fmt .ic{width:84px;height:84px;color:var(--coral)}
+.m7-ws .ws-fmt .kk{color:var(--coral)}
+.m7-ws .ws-fmt ul{list-style:none;margin-top:auto;display:flex;flex-direction:column;gap:4px}
+.m7-ws .ws-fmt li{font:700 40px/1.1 var(--font-display);letter-spacing:-.02em}
+
+</style>
+
+<style id="ws-css">
+/* ── Evals workshop layer ── */
+.ws .slide-head{gap:28px}
+.ws .crumb{min-width:260px}
+.trk{list-style:none;display:flex;align-items:center;gap:10px;margin:0 auto;padding:0}
+.trk .tl{font:600 22px var(--font-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--s-faint);margin-right:10px}
+.trk li{width:50px;height:50px;border-radius:50%;border:2.5px solid var(--s-line-strong);display:grid;place-items:center;
+  font:600 24px/1 var(--font-mono);color:var(--s-faint);background:var(--s-bg)}
+.trk li.done{border-color:var(--coral);color:var(--s-accent);background:var(--s-callout-bg)}
+.trk li.on{background:var(--coral);border-color:var(--coral);color:var(--ink);box-shadow:0 0 0 7px rgba(255,92,53,.22)}
+.title-slide .trk{margin:0}
+.title-slide .trk li{width:44px;height:44px;font-size:22px}
+.ws code{font-family:var(--font-mono);font-size:.88em;color:var(--s-accent)}
+.do-card code,.mtx code,.deb-q code{white-space:nowrap}
+.ws .v2-body{gap:32px}
+
+/* lab beat */
+.ws-beat::before{content:"";position:absolute;left:0;top:0;bottom:0;width:16px;background:var(--coral);z-index:2}
+.ws-beat .slide-content{padding:60px 96px 80px 120px}
+.ws-beat .slide-head{margin-bottom:0}
+.bt{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 620px;column-gap:88px;align-items:end;padding-top:24px}
+.bt-L{display:flex;flex-direction:column;justify-content:flex-end;min-width:0}
+.bt-kick{display:block;font:600 30px var(--font-mono);letter-spacing:.2em;text-transform:uppercase;color:var(--coral);margin-left:8px}
+.bt-mega{font:700 380px/.8 var(--font-display);letter-spacing:-.05em;color:var(--coral);margin-top:26px}
+.ws-beat h2{font-size:100px;line-height:1;margin-top:40px}
+.bt-goal{font-size:40px;line-height:1.32;color:var(--s-text);margin-top:26px;max-width:32ch;text-wrap:pretty}
+.bt-R{display:flex;flex-direction:column;justify-content:space-between;align-self:stretch;min-height:0}
+.bt-ic{align-self:flex-end;width:230px;height:230px;border-radius:50%;border:4px solid var(--coral);display:grid;place-items:center;background:rgba(255,92,53,.08)}
+.bt-ic .ic{width:130px;height:130px;color:var(--coral)}
+.bt-facts{display:flex;flex-direction:column;border-top:2px solid var(--line-dark)}
+.bt-facts > div{padding:22px 0;border-bottom:2px solid var(--line-dark);display:grid;grid-template-columns:76px 1fr;gap:24px;align-items:center}
+.bt-facts .ic{width:66px;height:66px;color:var(--coral)}
+.bt-facts .kk{font-size:22px;color:var(--on-dark-faint);margin-bottom:6px}
+.bt-facts p{font-size:32px;line-height:1.3;color:var(--on-dark)}
+.bt-facts p.tb{font:700 60px/1 var(--font-display);letter-spacing:-.02em;color:var(--coral)}
+.bt-facts p.tb small{font:500 26px var(--font-mono);letter-spacing:.04em;color:var(--on-dark-muted);margin-left:14px}
+
+/* do this */
+.ws-do h2{font-size:72px}
+.ws-do .v2-body{padding-top:28px;justify-content:flex-start}
+.do-grid{display:grid;grid-template-columns:minmax(0,1fr) 500px;gap:44px;align-items:stretch;flex:1;min-height:0}
+.do-grid .v-win{display:flex;flex-direction:column;min-height:0}
+.do-grid .v-win .wbody{font:500 27px/1.46 var(--font-mono);padding:24px 34px 28px;flex:1;min-height:0;white-space:pre-wrap}
+.do-grid .v-win .wbody.sm{font-size:25px}
+.do-side{display:flex;flex-direction:column;gap:22px;min-width:0}
+.tbox{all:unset;box-sizing:border-box;display:block;cursor:pointer;background:var(--ink);color:var(--on-dark);border-radius:6px 6px 22px 22px;
+  border-top:10px solid var(--coral);padding:24px 32px 26px;text-align:left}
+.slide.dark .tbox{background:var(--ink-2);border-left:2px solid var(--line-dark);border-right:2px solid var(--line-dark);border-bottom:2px solid var(--line-dark)}
+.tbox:focus-visible{outline:3px solid var(--coral);outline-offset:6px}
+.tbox .kk{display:flex;justify-content:space-between;color:var(--on-dark-faint);font-size:22px}
+.tbox .kk b{color:var(--coral);font-weight:600}
+.tbox .tb-time{display:block;font:700 116px/1 var(--font-display);letter-spacing:-.03em;color:var(--coral);font-variant-numeric:tabular-nums;margin-top:10px}
+.tbox .tb-bar{display:block;height:10px;background:var(--line-dark);border-radius:6px;overflow:hidden;margin:16px 0 12px}
+.tbox .tb-bar i{display:block;height:100%;width:100%;background:var(--coral);border-radius:6px}
+.tbox .tb-state{display:block;font:600 22px var(--font-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--on-dark-muted)}
+.tbox.run .tb-state{color:var(--positive-on-dark)}
+.tbox.over .tb-time{color:var(--v-fail)}
+@media (prefers-reduced-motion:no-preference){
+  [data-deck-active] .tbox.over .tb-time{animation:m7-pulse 1.4s ease-in-out infinite}
+  .tbox .tb-bar i{transition:width .25s linear}
+}
+.do-card{background:var(--s-card-bg);border:1.5px solid var(--s-card-border);border-left:10px solid var(--coral);border-radius:6px 22px 22px 6px;padding:22px 28px 24px}
+.do-card .kk{margin-bottom:10px;font-size:22px}
+.do-card p{font-size:28px;line-height:1.36;color:var(--s-text)}
+.do-card p + p{margin-top:8px}
+.do-card.quiet{border-left-color:var(--s-line-strong)}
+.do-card.quiet .kk{color:var(--s-muted)}
+
+/* debrief */
+.deb-grid{display:grid;grid-template-columns:minmax(0,1fr) 640px;gap:64px;align-items:center;flex:1;min-height:0}
+.deb-q{list-style:none;counter-reset:q;display:flex;flex-direction:column;gap:28px;padding:0}
+.deb-q li{counter-increment:q;display:grid;grid-template-columns:72px 1fr;font-size:38px;line-height:1.3;color:var(--s-text)}
+.deb-q li::before{content:counter(q,decimal-leading-zero);font:600 28px var(--font-mono);color:var(--s-accent);padding-top:8px}
+.deb-q li b{color:var(--s-accent);font-weight:600}
+.board-card{background:var(--ink);color:var(--on-dark);border-left:10px solid var(--coral);border-radius:6px 26px 26px 6px;padding:40px 46px 44px}
+.slide.dark .board-card{background:var(--ink-2);border:2px solid var(--line-dark);border-left:10px solid var(--coral)}
+.board-card .kk{color:var(--on-dark-faint)}
+.board-card h3{font:700 52px/1.05 var(--font-display);letter-spacing:-.025em;color:var(--on-dark);margin-top:14px}
+.board-card p{font-size:31px;line-height:1.36;color:var(--on-dark-muted);margin-top:16px}
+.board-card p b{color:var(--on-dark);font-weight:600}
+.v2 a.board-link{display:inline-flex;align-items:center;gap:14px;margin-top:28px;font:700 24px var(--font-mono);letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink);background:var(--coral);border-radius:40px;padding:14px 30px;text-decoration:none}
+.board-link .ic{width:30px;height:30px;color:var(--ink);stroke-width:12}
+.board-card .big{font:700 150px/.9 var(--font-display);letter-spacing:-.04em;color:var(--coral);margin-top:14px;white-space:nowrap}
+.board-card .big small{font-size:52px;color:var(--on-dark);margin-left:12px;letter-spacing:-.02em}
+
+/* break */
+.ws-break .slide-content{padding:60px 96px 80px}
+.brk{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 560px;gap:96px;align-items:center}
+.brk .ic.cup{width:200px;height:200px;color:var(--coral)}
+.brk h2{font-size:220px;line-height:.9;letter-spacing:-.04em;margin-top:30px}
+.brk .lead{font-size:44px;color:var(--on-dark-muted);margin-top:30px;max-width:30ch}
+.brk .lead b{color:var(--on-dark)}
+.brk .note{font-size:26px;margin-top:26px;max-width:52ch}
+.ws .v-acc .m .lab small{font-size:22px}
+.v-refs .la .ic{width:46px;height:46px;color:var(--s-accent);stroke-width:10}
+.brk .tbox .tb-time{font-size:150px}
+
+/* welcome */
+.ws-agenda{display:grid;grid-template-columns:1fr 1fr;gap:0 64px}
+.ws-agenda .col{display:flex;flex-direction:column}
+.ag{display:grid;grid-template-columns:140px 64px 1fr auto;align-items:center;gap:20px;padding:17px 0;border-top:2px solid var(--s-line)}
+.ag:last-child{border-bottom:2px solid var(--s-line)}
+.ag time{font:600 30px var(--font-mono);color:var(--s-accent)}
+.ag .dot{width:54px;height:54px;border-radius:50%;border:3px solid var(--coral);display:grid;place-items:center;font:700 26px var(--font-mono);color:var(--s-accent)}
+.ag .dot.brk{border-style:dashed;border-color:var(--s-line-strong);color:var(--s-faint)}
+.ag span.t{font:700 38px/1.1 var(--font-display);letter-spacing:-.02em;color:var(--s-text)}
+.ag .tag{font:600 22px var(--font-mono);letter-spacing:.12em;text-transform:uppercase;border-radius:20px;padding:6px 14px;border:2px solid var(--s-line-strong);color:var(--s-muted)}
+.ag .tag.m{border-color:var(--coral);color:var(--s-accent)}
+.ag.b span.t{color:var(--s-muted);font-weight:500}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.lap{background:var(--s-card-bg);border:1.5px solid var(--s-card-border);border-radius:24px;padding:34px 42px 38px;display:flex;flex-direction:column;gap:6px}
+.lap.hot{border:3px solid var(--coral);background:var(--s-callout-bg)}
+.lap .lh{display:flex;align-items:center;gap:24px;margin-bottom:10px}
+.lap .lh .ic{width:84px;height:84px;flex:none}
+.lap h3{font:700 60px/1 var(--font-display);letter-spacing:-.03em}
+.lap h3 code{font-size:.62em;color:var(--s-accent);display:block;margin-top:8px}
+.lap .it{display:grid;grid-template-columns:150px 1fr;gap:18px;padding:12px 0;border-top:1.5px solid var(--s-line);font-size:31px;line-height:1.3}
+.lap .it b{white-space:nowrap;font:600 22px var(--font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--s-accent);padding-top:6px}
+.steps3{list-style:none;display:flex;flex-direction:column;gap:22px;counter-reset:s;padding:0}
+.steps3 li{counter-increment:s;display:grid;grid-template-columns:84px 1fr;align-items:baseline;font-size:36px;line-height:1.3;border-top:2px solid var(--s-line);padding-top:20px}
+.steps3 li::before{content:counter(s,decimal-leading-zero);font:600 30px var(--font-mono);color:var(--s-accent)}
+.two-col{display:grid;grid-template-columns:minmax(0,1fr) 640px;gap:64px;align-items:center}
+.tasks{display:flex;flex-direction:column}
+.tasks div{display:grid;grid-template-columns:420px 1fr;gap:28px;padding:15px 0;border-top:2px solid var(--s-line);align-items:baseline}
+.tasks div:last-child{border-bottom:2px solid var(--s-line)}
+.tasks code{font-size:28px;font-weight:600}
+.tasks span{font-size:30px;line-height:1.3;color:var(--s-text)}
+.tasks div.dim code{color:var(--s-muted)} .tasks div.dim span{color:var(--s-muted)}
+
+/* concept pieces */
+.cmp{display:flex;flex-direction:column;gap:34px}
+.cmp .row{display:grid;grid-template-columns:260px 1fr;gap:30px;align-items:center}
+.cmp .row b{font:700 44px var(--font-display);letter-spacing:-.02em;color:var(--s-text)}
+.cmp .row b small{display:block;font:500 22px var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--s-faint);margin-top:6px}
+.cmp .bar{height:74px;border-radius:0 10px 10px 0;display:flex;align-items:center;padding:0 24px;font:700 34px var(--font-display);color:var(--ink);white-space:nowrap}
+.cmp .bar.a{background:#8d8271}
+.cmp .bar.b{background:var(--coral)}
+.cmp p{grid-column:2;font-size:30px;line-height:1.32;color:var(--s-muted);margin-top:-14px}
+.formula{background:var(--ink);color:var(--on-dark);border-radius:6px 26px 26px 6px;border-left:10px solid var(--coral);padding:40px 50px}
+.formula .kk{color:var(--on-dark-faint)}
+.formula .eq{display:grid;grid-template-columns:auto 1fr;gap:30px;align-items:center;margin-top:18px}
+.formula .eq b{font:700 64px/1 var(--font-display);letter-spacing:-.03em;color:var(--coral)}
+.formula .frac{display:flex;flex-direction:column;font:600 40px/1.3 var(--font-mono);white-space:nowrap}
+.formula .frac span:first-child{border-bottom:3px solid var(--on-dark-muted);padding-bottom:8px}
+.formula .frac span:last-child{padding-top:8px}
+.ivl{display:flex;flex-direction:column;gap:30px}
+.ivl .r{display:grid;grid-template-columns:360px 1fr;gap:30px;align-items:center}
+.ivl .r > div:first-child b{display:block;font:700 44px/1.05 var(--font-display);letter-spacing:-.02em}
+.ivl .r > div:first-child span{font:500 24px var(--font-mono);color:var(--s-muted)}
+.ivl svg{width:100%;height:auto}
+.mtx{width:100%;border-collapse:collapse;font:500 32px var(--font-mono)}
+.mtx th{text-align:left;font:600 22px var(--font-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--s-accent);padding:14px 20px;border-bottom:3px solid var(--coral)}
+.mtx td{padding:20px;border-bottom:1.5px solid var(--s-line);color:var(--s-text)}
+.mtx td.ok{color:var(--positive);font-weight:700}
+.slide.dark .mtx td.ok{color:var(--positive-on-dark)}
+.mtx td.bad{color:var(--v-fail);font-weight:700}
+.mtx td small{display:block;font:400 24px var(--font-body);color:var(--s-muted);margin-top:4px}
+.hard{display:flex;flex-direction:column;gap:20px}
+.hard .h{display:grid;grid-template-columns:100px 1fr auto;gap:28px;align-items:center;background:var(--s-card-bg);border:1.5px solid var(--s-card-border);border-radius:22px;padding:24px 34px}
+.hard .h .ic{width:84px;height:84px}
+.hard .h h3{font:700 44px/1.05 var(--font-display);letter-spacing:-.02em}
+.hard .h p{font-size:30px;line-height:1.3;color:var(--s-muted);margin-top:6px}
+.hard .h .lvl{font:600 22px var(--font-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--s-accent);border:2px solid var(--coral);border-radius:20px;padding:6px 16px;white-space:nowrap}
+.hard .h.weak .lvl{color:var(--s-muted);border-color:var(--s-line-strong)}
+.v-stn.n5 .stops{grid-template-columns:repeat(5,1fr);gap:22px}
+.v-stn.n5 .stops h3{font-size:46px}
+.v-stn.n5 .stops p{font-size:29px;margin-top:10px}
+.v-stn.n4 .stops p code{font-size:.85em}
+.jd{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:stretch}
+.jd .v-panel h3{font-size:54px}
+.jd .v-panel p{font-size:32px}
+.jd ul{list-style:none;display:flex;flex-direction:column;gap:18px;margin-top:10px;padding:0}
+.jd li{font-size:31px;line-height:1.32;padding-left:40px;position:relative;color:var(--s-text)}
+.jd li::before{content:"";position:absolute;left:0;top:.42em;width:18px;height:18px;background:var(--coral);clip-path:polygon(0 0,100% 50%,0 100%)}
+.hn{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px}
+.hn .v-panel{padding:34px 40px 40px}
+.hn .big{font:700 72px/1 var(--font-display);letter-spacing:-.03em;color:var(--s-accent);margin:14px 0 6px;white-space:nowrap}
+.hn h3{font-size:50px}
+.hn .v-panel p{font-size:30px}
+.ow{display:grid;grid-template-columns:minmax(0,1fr) 760px;gap:56px;align-items:stretch}
+.ow .m7-facts p{font-size:32px}
+.ow .m7-when{grid-template-columns:1fr;gap:22px}
+.ow .m7-when .col{padding:28px 36px 30px}
+.ow .m7-when h3{font-size:46px;margin:4px 0 8px}
+.ow .m7-when p{font-size:30px;line-height:1.32;color:var(--s-text)}
+.rc{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}
+.rc > div{background:var(--s-card-bg);border:1.5px solid var(--s-card-border);border-top:8px solid var(--coral);border-radius:6px 6px 20px 20px;padding:24px 28px 28px;min-width:0}
+.rc .kk{font-size:22px}
+.rc p{font-size:28px;line-height:1.3;color:var(--s-text);margin-top:10px}
+.rc > div.defs{background:var(--ink);border-top-color:var(--coral);color:var(--on-dark)}
+.slide.dark .rc > div.defs{background:var(--ink-3)}
+.rc .defs p{color:var(--on-dark);font-size:24px;margin-top:8px}
+.rc .defs p b{color:var(--coral);font-family:var(--font-mono);font-weight:600}
+.ws .v-refs .lt{font-size:46px}
+.ws .v-refs a{padding:26px 8px}
+.axis{width:100%;height:auto}
+.rt{display:grid;grid-template-columns:1080px 1fr;gap:56px;align-items:center}
+.rt .lead{font-size:36px}
+</style>
+
+</head>
+<body>
+<!--
+  Evals, Hands On: the slide layer for the half-day evals workshop
+  (workshops/evals/). Ten pairs, labs 0 to 7 on the Java lab kit in
+  workshops/evals/lab/, results pooled on the live room board. Facilitator
+  run sheet: workshops/evals/FACILITATOR.md; participant sheet:
+  workshops/evals/HANDOUT.md. Companion to talk 07 (measuring-what-works.html).
+  Runs on the Ember deck-stage component: arrows, Space, Home/End, #N deep
+  links; N notes, P presenter window, F fullscreen, T starts or pauses the
+  time box on a "Do this" or break slide, Shift+T resets it.
+  Status: work in progress until the dry run on a Pro account.
+-->
+<deck-stage width="1920" height="1080" no-rail>
+
+<section class="slide dark v2 m7 ws title-slide" id="slide-1" data-label="Evals, hands on" data-speaker-notes="Welcome people while they sit down and open a terminal in workshops/evals/lab. Say the promise in one sentence: by one o&#x27;clock every pair has measured a coding agent on real Java tasks, pooled the numbers with the room, and knows how to run the same eval on their own repository. Check that everyone has a partner and that both partners have a laptop open. If someone skipped the prework, pair them with a partner who did it; they can install things during lab 3, which calls no model. The badge says work in progress until the dry run on a Pro account has happened.">
+<div class="ts-top"><span class="k">Workshop · hands-on · half day</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="">0</li><li class="">1</li><li class="">2</li><li class="">3</li><li class="">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><span class="meta">September 2026</span></div><div class="ts-hero"><div class="wip-badge">Work in progress · dry run pending</div><h1>Evals,<br>hands on<span class="dot">.</span></h1><p class="ts-sub">Ten pairs, one Java repo and your own Claude Code plans. <b>Measure a coding agent</b>, pool the numbers on one board, and take a working eval home.</p></div><div class="ts-foot"><div class="ts-author"><a href="https://davidbudac.cz" target="_blank" rel="noopener">David Budáč</a> · companion to talk 07, <b>Measuring What Works</b></div><div class="ts-loopline"><span class="w">guess</span> <span class="a">·</span> <span class="w">measure</span> <span class="a">·</span> <span class="w">read</span> <span class="a">·</span> <span class="w">route</span></div></div></section>
+<section class="slide light v2 m7 ws" id="slide-2" data-label="What you take home" data-speaker-notes="Read the four outcomes and point at the board on the second screen: every number in the first three comes from this room, not from a vendor chart. Stress the fourth. The invoice app is a practice target; the value is running the same loop on your own code next week. Keep this under two minutes.">
+<div class="slide-content"><div class="slide-head"><span class="snum">02</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="">0</li><li class="">1</li><li class="">2</li><li class="">3</li><li class="">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Welcome · outcomes</div></div><h2>What you take home at 13:00</h2><div class="v2-body"><div class="v-rows grid2"><div class="v-row"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><rect x="14" y="18" width="92" height="84" rx="8"/><path d="M14 42 H106 M14 66 H106 M44 18 V102"/></svg><h3>A measured answer</h3><p>Lean or bloated CLAUDE.md, decided by pass rate and cost per pass, pooled across ten pairs.</p></div><div class="v-row"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M60 10 L104 26 V58 C104 84 86 102 60 112 C34 102 16 84 16 58 V26 Z"/><path d="M40 60 L54 74 L82 44"/></svg><h3>A checker you trust</h3><p>You break a weak grader on purpose, then harden it with hidden tests and a property check.</p></div><div class="v-row"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M60 14 V104 M36 108 H84 M20 30 H100"/><path d="M20 30 L6 68 H34 Z M100 30 L86 68 H114 Z"/></svg><h3>A judge you have tested</h3><p>Agreement with your own scores on eight commit messages, and the self-preference gap.</p></div><div class="v-row"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M12 58 L60 16 L108 58"/><path d="M26 46 V106 H94 V46"/><path d="M50 106 V76 H70 V106"/></svg><h3>An eval for your repo</h3><p>Three solved tasks from your git history, hidden tests and a CI job to run them.</p></div></div></div></div></section>
+<section class="slide light v2 m7 ws" id="slide-3" data-label="The day" data-speaker-notes="Walk the rhythm. Model runs come early, the offline labs sit in the middle so slow runs can finish, then the judge and the routing lab. Point out the two breaks. The times for labs that call a model are firm, because runs need wall-clock time; the discussion time is where you flex. If you start late, cut lab 7&#x27;s in-room part to five minutes: the take-home guide covers it. The tracker in every slide header shows where we are.">
+<div class="slide-content"><div class="slide-head"><span class="snum">03</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="">0</li><li class="">1</li><li class="">2</li><li class="">3</li><li class="">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Welcome · the day</div></div><h2>Four hours in eight labs</h2><div class="v2-body"><div class="ws-agenda"><div class="col"><div class="ag"><time>09:10</time><span class="dot">0</span><span class="t">Setup check</span><span class="tag">offline</span></div><div class="ag"><time>09:20</time><span class="dot">1</span><span class="t">Guess, then measure</span><span class="tag m">model</span></div><div class="ag"><time>09:55</time><span class="dot">2</span><span class="t">Variance</span><span class="tag m">model</span></div><div class="ag b"><time>10:25</time><span class="dot brk">·</span><span class="t">Break</span><span></span></div><div class="ag"><time>10:40</time><span class="dot">3</span><span class="t">Break the grader</span><span class="tag">offline</span></div></div><div class="col"><div class="ag"><time>11:15</time><span class="dot">4</span><span class="t">Read the traces</span><span class="tag">offline</span></div><div class="ag b"><time>11:40</time><span class="dot brk">·</span><span class="t">Break</span><span></span></div><div class="ag"><time>11:50</time><span class="dot">5</span><span class="t">Judge model</span><span class="tag m">model</span></div><div class="ag"><time>12:20</time><span class="dot">6</span><span class="t">Route by the numbers</span><span class="tag m">model</span></div><div class="ag"><time>12:45</time><span class="dot">7</span><span class="t">Take it home</span><span class="tag">offline</span></div></div></div></div><p class="note">09:00 welcome · 13:00 close · model labs use your plan, offline labs use none, so slow runs can finish during labs 3 and 4</p></div></section>
+<section class="slide light v2 m7 ws" id="slide-4" data-label="Two laptops, one pair name" data-speaker-notes="This is the one piece of set-up that matters all day. Both partners run the setup check with the same PAIR name, so the board sees one pair. Every model lab then runs with ROLE=a on one laptop and ROLE=b on the other. That halves the wall-clock time and spreads the usage across two subscriptions: about 7 sessions on laptop a and 11 on laptop b. If one partner has a Max plan, give them laptop b. Watch for pairs that run without ROLE on both laptops: they spend double and get duplicate rows.">
+<div class="slide-content"><div class="slide-head"><span class="snum">04</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="">0</li><li class="">1</li><li class="">2</li><li class="">3</li><li class="">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Welcome · pairs</div></div><h2>Two laptops, one pair name</h2><div class="v2-body"><div class="duo"><div class="lap"><div class="lh"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><rect x="22" y="22" width="76" height="52" rx="6"/><path d="M8 96 H112 L102 80 H18 Z"/></svg><h3>Laptop a<code>ROLE=a</code></h3></div><div class="it"><b>Labs 1-2</b><span>the lean CLAUDE.md</span></div><div class="it"><b>Lab 5</b><span>the judge, with your hand scores</span></div><div class="it"><b>Lab 6</b><span>Sonnet, reusing your lean runs</span></div></div><div class="lap hot"><div class="lh"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><rect x="22" y="22" width="76" height="52" rx="6"/><path d="M8 96 H112 L102 80 H18 Z"/></svg><h3>Laptop b<code>ROLE=b</code></h3></div><div class="it"><b>Labs 1-2</b><span>the bloated CLAUDE.md</span></div><div class="it"><b>Lab 5</b><span>starts lab 6 in the background</span></div><div class="it"><b>Lab 6</b><span>Haiku, six short sessions</span></div></div></div></div><p class="note">Same name on both: PAIR=your-team ./check-setup.sh · then ROLE=a or ROLE=b in front of every lab</p></div></section>
+<section class="slide light v2 m7 ws" id="slide-5" data-label="Your plan pays for the runs" data-speaker-notes="Be straight about usage: participants spend their own plan. Anthropic publishes no number for Pro, only a session limit that resets every five hours, a weekly limit, and that claude.ai and Claude Code share it. Say what your dry run showed: read /usage before and after record-facilitator-run.sh on a Pro account and quote the difference here. If it used more than about half a five-hour window, announce LITE=1 for the whole day now. Anyone who used Claude heavily this morning should take laptop a, which runs fewer sessions. Every runner prints its plan and asks before it spends.">
+<div class="slide-content"><div class="slide-head"><span class="snum">05</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="">0</li><li class="">1</li><li class="">2</li><li class="">3</li><li class="">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Welcome · usage</div></div><h2>Your plan pays for the runs</h2><div class="v2-body"><div class="m7-kpis"><div><b>~18</b><span>agent sessions per pair, all day</span></div><div><b>≤ 11</b><span>on any one laptop, split with ROLE</span></div><div><b>8</b><span>judge calls, about 1% of a session each</span></div></div><div class="chips lg"><span><code>--dry-run</code> prints the plan, spends nothing</span><span><code>LITE=1</code> roughly halves the runs</span><span><code>--sample</code> works offline</span><span><code>--yes</code> skips the question</span></div></div><p class="note">Anthropic publishes no Pro limit · the facilitator's dry run on a Pro plan set today's defaults</p></div></section>
+<section class="slide light v2 m7 ws" id="slide-6" data-label="Every lab ends on one board" data-speaker-notes="Open the board on the second screen now and leave it open all day. Show the paste box and the pair-name field. Everyone can paste because the board is shared as Can interact; if someone sees a read-only page, they are signed out of claude.ai or the share setting is wrong, so fix it now instead of in lab 1. Pasting twice is safe because the board keys rows by pair, lab, variant, task and run. If you rehearsed with sample data, clear it or ignore the SYNTH pairs.">
+<div class="slide-content"><div class="slide-head"><span class="snum">06</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="">0</li><li class="">1</li><li class="">2</li><li class="">3</li><li class="">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Welcome · the board</div></div><h2>Every lab ends on one board</h2><div class="v2-body"><div class="two-col"><ol class="steps3"><li><span>Run <code>./export-results.sh --lab labN --latest</code> at the end of each model lab.</span></li><li><span>Copy the lines it prints, one JSON object per run.</span></li><li><span>Paste them into the board and press <b>Add to the board</b>.</span></li></ol><div class="board-card"><span class="kk">Live room board</span><h3>Labs 1, 2, 5 and 6</h3><p>Pasting the same lines twice is safe: the board keeps <b>one row per run</b>.</p><p>Labs 3, 4 and 7 stay on your laptop.</p><a class="board-link" href="https://claude.ai/artifact/MgSgfU5azvZ7JpKynnGUrc" target="_blank" rel="noopener">Open the board <svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M24 96 L96 24 M44 24 H96 V76"/></svg></a></div></div></div></div></section>
+<section class="slide light v2 m7 ws" id="slide-7" data-label="One Java repo" data-speaker-notes="Give them the target in one minute. invoice-app is a small Maven project, Java 21 and JUnit 5 and nothing else, with 57 passing tests and latent bugs the tests do not cover. Each task is an issue text. A hidden JUnit test, copied in only when grading, decides pass or fail, together with the repo&#x27;s own tests. The agent works in a throwaway copy with a narrow allow-list: it cannot install packages, fetch URLs or push, and it never touches their own code or settings. The two dimmed tasks are in the kit for later practice.">
+<div class="slide-content"><div class="slide-head"><span class="snum">07</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="">0</li><li class="">1</li><li class="">2</li><li class="">3</li><li class="">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Welcome · the repo</div></div><h2>One Java repo with latent bugs</h2><div class="v2-body"><div class="two-col"><div class="tasks"><div class=""><code>fix-date-parser</code><span>05.09.2026 is read as 9 May</span></div><div class=""><code>jpy-rounding</code><span>JPY missing; two decimals hard-coded</span></div><div class=""><code>report-sort-accents</code><span>sorts by code point, ignores the Collator</span></div><div class=""><code>export-currency-column</code><span>feature: a sixth CSV column (lab 3)</span></div><div class="dim"><code>fixtures-bom</code><span>a UTF-8 BOM breaks the header</span></div><div class="dim"><code>rename-customer-field</code><span>refactor across callers</span></div></div><div class="m7-side"><p class="lead sm"><b>invoice-app</b>: Java 21, JUnit 5, 57 green tests, and bugs the tests miss.</p><p class="lead sm">A <b>hidden JUnit test</b> grades every run. The agent never sees it.</p></div></div></div></div></section>
+<section class="slide dark v2 m7 ws ws-beat" id="slide-8" data-label="Lab 0 · setup check" data-speaker-notes="Most people ran this at home from the prework, so this is a re-run on venue Wi-Fi. It calls no model and costs nothing. Use the ten minutes to find the two or three laptops that are not ready, and fix them while everyone else reads the two CLAUDE.md files in claude-md/. If a pair cannot fix a laptop within ten minutes, they run every lab on the working laptop with no ROLE and LITE=1.">
+<div class="slide-content"><div class="slide-head"><span class="snum">08</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="on">0</li><li class="">1</li><li class="">2</li><li class="">3</li><li class="">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Lab 0 · intro</div></div><div class="bt"><div class="bt-L"><span class="bt-kick">Lab 0 · setup check</span><div class="bt-mega" aria-hidden="true">0</div><h2>Prove your laptop is ready</h2><p class="bt-goal">Every line of the setup check says PASS on both laptops, under the same pair name.</p></div><div class="bt-R"><div class="bt-ic"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><rect x="8" y="16" width="104" height="88" rx="8"/><path d="M26 46 L44 60 L26 74"/><path d="M54 76 H86"/></svg></div><div class="bt-facts"><div><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><circle cx="60" cy="60" r="46"/><path d="M60 32 V60 L80 72"/></svg><div><span class="kk">Time box</span><p class="tb">10 min<small>09:10 to 09:20</small></p></div></div><div><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><circle cx="60" cy="66" r="42"/><path d="M60 66 L86 40" stroke-width="8"/><path d="M60 12 V20 M12 66 H20 M100 66 H108 M26 32 L32 38 M94 32 L88 38"/></svg><div><span class="kk">Model sessions</span><p class="">None. It reads your sign-in and calls no model.</p></div></div><div><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><rect x="10" y="14" width="44" height="40" rx="6"/><rect x="66" y="14" width="44" height="40" rx="6"/><rect x="10" y="66" width="100" height="40" rx="6"/></svg><div><span class="kk">Board</span><p class="">Nothing yet. Lab 1 is the first paste.</p></div></div></div></div></div></div></section>
+<section class="slide light v2 m7 ws ws-do" id="slide-9" data-label="Lab 0 · do this" data-speaker-notes="Press T to start the time box; press it again to pause, Shift+T resets it. Ask both partners to run the same PAIR name, a short one without spaces, for example the pair&#x27;s surnames. The first run downloads Maven and the dependencies; at the venue it should take under a minute because the prework cached them. Walk the room and look for FAIL lines. A WARN about uv is fine: the labs fall back to ENGINE=direct and produce the same files. A WARN about an API-key sign-in is not fine: that partner would pay per token, so help them sign in with the subscription.">
+<div class="slide-content"><div class="slide-head"><span class="snum">09</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="on">0</li><li class="">1</li><li class="">2</li><li class="">3</li><li class="">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Lab 0 · do this</div></div><h2>Run the setup check on both laptops</h2><div class="v2-body"><div class="do-grid"><div class="v-win term"><div class="tbar"><i class="r"></i><i class="y"></i><i class="g"></i><span>workshops/evals/lab</span></div><div class="wbody "><span class="p">$</span> cd workshops/evals/lab
+<span class="p">$</span> PAIR=your-team ./check-setup.sh  <span class="c"># both laptops, same name</span>
+<span class="dim">Java and Maven</span>
+<span class="dim">  [PASS] JDK 21 (openjdk version "21.0.4")</span>
+<span class="dim">  [PASS] offline build and tests pass (./mvnw -q -o test)</span>
+<span class="dim">  ...</span>
+<span class="dim">  [PASS] signed in (claude.ai, plan: pro)</span>
+<span class="dim">  [PASS] pair name saved to .pair: your-team</span>
+
+<span class="dim">Result: 11 passed, 0 failed, 0 warnings</span>
+<span class="dim">You are ready. Nothing above called a model.</span></div></div><div class="do-side"><button type="button" class="tbox" data-tbox="l0" data-min="8" aria-pressed="false" aria-label="Time box, 8 minutes. Press T to start or pause."><span class="kk"><span>Time box</span><b>8 min</b></span><span class="tb-time">08:00</span><span class="tb-bar"><i></i></span><span class="tb-state">Ready</span></button><div class="do-card"><span class="kk">Paste to the board</span><p>Nothing yet.</p></div><div class="do-card quiet"><span class="kk">A FAIL line?</span><p>Next slide has the fixes. Call the facilitator if it takes longer than two minutes.</p></div></div></div></div></div></section>
+<section class="slide light v2 m7 ws" id="slide-10" data-label="Lab 0 · fixes" data-speaker-notes="Leave this slide up while people fix things. The Maven prefetch is the usual failure on corporate laptops: a proxy or a mirror in settings.xml. If it cannot be fixed in a few minutes, the pair runs everything on the partner&#x27;s laptop without ROLE, and the broken laptop retries the prefetch on a phone hotspot during lab 3. Missing uv costs nothing, since the kit runs the same runner and checker without smevals. If claude auth status fails on a laptop that is signed in, the credentials may belong to another user account; run claude and log in again.">
+<div class="slide-content"><div class="slide-head"><span class="snum">10</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="on">0</li><li class="">1</li><li class="">2</li><li class="">3</li><li class="">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Lab 0 · fixes</div></div><h2>Fix a FAIL line in two minutes</h2><div class="v2-body"><table class="mtx"><thead><tr><th>The line says</th><th>Do this</th></tr></thead><tbody><tr><td style="white-space:nowrap;font-weight:600">JDK 21 missing</td><td style="font-family:var(--font-body)">Install Temurin 21 and open a new terminal.</td></tr><tr><td style="white-space:nowrap;font-weight:600">Dependency prefetch</td><td style="font-family:var(--font-body)">Proxy? Fix <code>~/.m2/settings.xml</code>, then run <code>./mvnw dependency:go-offline</code> in <code>invoice-app</code> to see why.</td></tr><tr><td style="white-space:nowrap;font-weight:600">uv or smevals</td><td style="font-family:var(--font-body)">Carry on. The labs fall back to <code>ENGINE=direct</code> with the same files.</td></tr><tr><td style="white-space:nowrap;font-weight:600">Not signed in</td><td style="font-family:var(--font-body)">Run <code>claude</code> once and log in with Pro or Max, or <code>claude auth login</code>.</td></tr><tr><td style="white-space:nowrap;font-weight:600">API key sign-in</td><td style="font-family:var(--font-body)">Runs would bill per token. Log in with the subscription instead.</td></tr></tbody></table></div></div></section>
+<section class="slide dark v2 m7 ws ws-beat" id="slide-11" data-label="Lab 1 · guess, then measure" data-speaker-notes="This is talk 07&#x27;s opening argument turned into a bet. The point is to commit before seeing data, because afterwards everyone remembers having guessed right. Keep the intro to five minutes: the runs need wall-clock time. Mention that the prediction goes on the board before any run starts.">
+<div class="slide-content"><div class="slide-head"><span class="snum">11</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="on">1</li><li class="">2</li><li class="">3</li><li class="">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Lab 1 · intro</div></div><div class="bt"><div class="bt-L"><span class="bt-kick">Lab 1 · guess, then measure</span><div class="bt-mega" aria-hidden="true">1</div><h2>Guess, then measure</h2><p class="bt-goal">Bet on which CLAUDE.md is cheaper per passing run, post the bet, then run both.</p></div><div class="bt-R"><div class="bt-ic"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M44 12 H76"/><path d="M52 12 V46 L22 100 C19 106 22 110 29 110 H91 C98 110 101 106 98 100 L68 46 V12"/><path d="M34 82 H86"/></svg></div><div class="bt-facts"><div><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><circle cx="60" cy="60" r="46"/><path d="M60 32 V60 L80 72"/></svg><div><span class="kk">Time box</span><p class="tb">35 min<small>09:20 to 09:55</small></p></div></div><div><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><circle cx="60" cy="66" r="42"/><path d="M60 66 L86 40" stroke-width="8"/><path d="M60 12 V20 M12 66 H20 M100 66 H108 M26 32 L32 38 M94 32 L88 38"/></svg><div><span class="kk">Model sessions</span><p class="">4 Sonnet per pair: 2 on each laptop</p></div></div><div><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><rect x="10" y="14" width="44" height="40" rx="6"/><rect x="66" y="14" width="44" height="40" rx="6"/><rect x="10" y="66" width="100" height="40" rx="6"/></svg><div><span class="kk">Board</span><p class="">Your prediction first, then 4 runs</p></div></div></div></div></div></div></section>
+<section class="slide light v2 m7 ws" id="slide-12" data-label="Lab 1 · two CLAUDE.md files" data-speaker-notes="Both files carry the same rules. The bloated one wraps them in the material that piles up in real projects: an essay, a package list with stale entries, old session notes, conventions stated twice that slightly contradict each other, a glossary and a FAQ. Give pairs a minute to skim both in claude-md/. Do not say what you expect. Some people will argue that the bloated file explains more and saves exploration turns; that is a fair hypothesis, and it is what the lab tests.">
+<div class="slide-content"><div class="slide-head"><span class="snum">12</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="on">1</li><li class="">2</li><li class="">3</li><li class="">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Lab 1 · the variants</div></div><h2>Two CLAUDE.md files, same rules</h2><div class="v2-body"><div class="cmp"><div class="row"><b>lean.md<small>~270 tokens</small></b><div class="bar a" style="width:8%"></div></div><p>Rules, commands, conventions. Nothing else.</p><div class="row"><b>bloated.md<small>~3,800 tokens</small></b><div class="bar b" style="width:100%">14× the tokens, same rules</div></div><p>The same rules inside an architecture essay, a stale package list, old session notes, conventions stated twice and slightly contradicting, a glossary and a FAQ.</p></div></div></div></section>
+<section class="slide light v2 m7 ws" id="slide-13" data-label="Lab 1 · cost per pass" data-speaker-notes="Define the metric before the bet so nobody argues about it afterwards. Cost per pass divides everything a variant spent by the runs that passed. Cache reads make up around ninety percent of the tokens, so the dollar figure mostly tracks cache writes and output. On a subscription nothing is billed; the estimate is still the best common currency for comparing runs. Ten pairs times two tasks gives about twenty runs per variant on the board.">
+<div class="slide-content"><div class="slide-head"><span class="snum">13</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="on">1</li><li class="">2</li><li class="">3</li><li class="">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Lab 1 · the metric</div></div><h2>Cheaper means cost per passing run</h2><div class="v2-body"><div class="two-col"><div class="formula"><span class="kk">The metric for the bet</span><div class="eq"><b>cost per pass =</b><div class="frac"><span>total spend</span><span>passing runs</span></div></div></div><ul class="m7-list"><li>No passing run means no cost per pass: that variant loses.</li><li>Dollars are Claude Code's estimate at list prices. On Pro or Max you spend plan usage.</li><li>One run per cell. The room pools about 20 per variant.</li></ul></div></div></div></section>
+<section class="slide light v2 m7 ws ws-do" id="slide-14" data-label="Lab 1 · do this" data-speaker-notes="Start the time box once most pairs have posted their guess. The prediction line goes to the board before any run, so nobody can adjust it later. Each laptop prints its plan and asks before it spends; answer y. Laptop b only has the bloated half, so its own summary cannot call the bet: the board does that in the debrief. Watch for pairs who run lab1.sh without ROLE on both laptops. If a run shows a harness error, it exports as passed null and the board leaves it out of pass rates; let it go. If a partner hits a usage limit, switch that laptop to LITE=1 or let the other laptop carry on.">
+<div class="slide-content"><div class="slide-head"><span class="snum">14</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="on">1</li><li class="">2</li><li class="">3</li><li class="">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Lab 1 · do this</div></div><h2>Post your guess, then run both variants</h2><div class="v2-body"><div class="do-grid"><div class="v-win term"><div class="tbar"><i class="r"></i><i class="y"></i><i class="g"></i><span>both laptops</span></div><div class="wbody "><span class="c"># both laptops, the same guess: lean or bloated</span>
+<span class="p">$</span> ./predict.sh lean
+<span class="dim">Prediction recorded: lean (pair your-team)</span>
+<span class="p">$</span> ./export-results.sh --lab lab1 --latest  <span class="c"># paste the guess now</span>
+
+<span class="p">$</span> ROLE=a ./lab1.sh  <span class="c"># laptop a: lean</span>
+<span class="p">$</span> ROLE=b ./lab1.sh  <span class="c"># laptop b: bloated</span>
+<span class="dim">  Expected (sonnet)  2 sessions  ~$0.30-0.90  ~4-10 min</span>
+<span class="dim">This calls Claude and uses your plan. Proceed? [y/N] y</span>
+<span class="dim">Paste to the board: ./export-results.sh --lab lab1 --latest</span></div></div><div class="do-side"><button type="button" class="tbox" data-tbox="l1" data-min="18" aria-pressed="false" aria-label="Time box, 18 minutes. Press T to start or pause."><span class="kk"><span>Time box</span><b>18 min</b></span><span class="tb-time">18:00</span><span class="tb-bar"><i></i></span><span class="tb-state">Ready</span></button><div class="do-card"><span class="kk">Paste to the board</span><p>First the guess, straight away.</p><p>Then both laptops paste their runs.</p></div><div class="do-card quiet"><span class="kk">Short on usage?</span><p><code>LITE=1</code> runs one task: one session per laptop.</p></div></div></div></div></div></section>
+<section class="slide dark v2 m7 ws" id="slide-15" data-label="Lab 1 · debrief: predictions" data-speaker-notes="Build the suspense. Put the board on the projector: until you press Reveal the result, the lab 1 panel shows only the bets and how many runs are in. Take a show of hands as well, so pairs who have not posted yet still count. Let two pairs with opposite bets argue in one sentence each. The usual arguments are that lean leaves room in the context, and that bloated saves exploration turns. Both are testable. This slide also buys two minutes for pairs whose runs are still finishing.">
+<div class="slide-content"><div class="slide-head"><span class="snum">15</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="on">1</li><li class="">2</li><li class="">3</li><li class="">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Lab 1 · debrief</div></div><h2>First: what did the room predict?</h2><div class="v2-body"><div class="deb-grid"><ol class="deb-q"><li><span>Hands up: who bet on <b>lean</b>? Who bet on <b>bloated</b>?</span></li><li><span>Two pairs with opposite bets: defend yours in one sentence.</span></li><li><span>Name one line in bloated.md you expect to help the agent, and one you expect to hurt.</span></li></ol><div class="board-card"><span class="kk">On the board, lab 1 panel</span><h3>Bets only</h3><p>The panel shows the <b>prediction split</b> and hides the result until you press <b>Reveal the result</b>.</p><a class="board-link" href="https://claude.ai/artifact/MgSgfU5azvZ7JpKynnGUrc" target="_blank" rel="noopener">Open the board <svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M24 96 L96 24 M44 24 H96 V76"/></svg></a></div></div></div></div></section>
+<section class="slide light v2 m7 ws" id="slide-16" data-label="Lab 1 · debrief: results" data-speaker-notes="Now press Reveal the result and read the panel out: the headline gives the prediction split, the pass rate per variant and how many times the tokens bloated used, and each variant&#x27;s tile shows its cost per pass. Then turn it into lab 2&#x27;s question. Each pair saw one run per cell, and some pairs will have seen the opposite of the pooled answer; that is variance, and it is the whole next lab. If the room&#x27;s result is a tie, or contradicts talk 07, say so plainly: the room&#x27;s data beats the deck. If fewer than half the pairs have posted, discuss what is there and come back to this panel after the break.">
+<div class="slide-content"><div class="slide-head"><span class="snum">16</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="on">1</li><li class="">2</li><li class="">3</li><li class="">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Lab 1 · debrief</div></div><h2>Then: what the room measured</h2><div class="v2-body"><div class="deb-grid"><ol class="deb-q"><li><span>Did the majority call it? How far apart were pass rate and tokens per run?</span></li><li><span>Which pairs saw the opposite of the pooled result?</span></li><li><span>On one run per cell, would you change your team's CLAUDE.md?</span></li></ol><div class="board-card"><span class="kk">On the board, lab 1 panel</span><h3>Pass rate and tokens</h3><p>Press <b>Reveal the result</b>: lean against bloated, every pair pooled, with pass rate, cost per pass and tokens per run.</p><a class="board-link" href="https://claude.ai/artifact/MgSgfU5azvZ7JpKynnGUrc" target="_blank" rel="noopener">Open the board <svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M24 96 L96 24 M44 24 H96 V76"/></svg></a></div></div></div></div></section>
+<section class="slide dark v2 m7 ws ws-beat" id="slide-17" data-label="Lab 2 · variance" data-speaker-notes="One task, report-sort-accents, three runs per variant. Same prompt, same repo, same model: any difference between runs is the agent&#x27;s own variance. Keep the intro short and get the runs started; the concept slides can play while they run if you are behind.">
+<div class="slide-content"><div class="slide-head"><span class="snum">17</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="on">2</li><li class="">3</li><li class="">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Lab 2 · intro</div></div><div class="bt"><div class="bt-L"><span class="bt-kick">Lab 2 · variance</span><div class="bt-mega" aria-hidden="true">2</div><h2>Variance</h2><p class="bt-goal">Run one task three times per variant and see how far identical runs spread.</p></div><div class="bt-R"><div class="bt-ic"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M100 60 A40 40 0 1 1 88 31"/><path d="M92 8 L90 32 L66 30"/></svg></div><div class="bt-facts"><div><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><circle cx="60" cy="60" r="46"/><path d="M60 32 V60 L80 72"/></svg><div><span class="kk">Time box</span><p class="tb">30 min<small>09:55 to 10:25</small></p></div></div><div><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><circle cx="60" cy="66" r="42"/><path d="M60 66 L86 40" stroke-width="8"/><path d="M60 12 V20 M12 66 H20 M100 66 H108 M26 32 L32 38 M94 32 L88 38"/></svg><div><span class="kk">Model sessions</span><p class="">6 Sonnet per pair: 3 on each laptop</p></div></div><div><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><rect x="10" y="14" width="44" height="40" rx="6"/><rect x="66" y="14" width="44" height="40" rx="6"/><rect x="10" y="66" width="100" height="40" rx="6"/></svg><div><span class="kk">Board</span><p class="">6 runs, a dot each, per pair</p></div></div></div></div></div></div></section>
+<section class="slide dark v2 m7 ws" id="slide-18" data-label="Lab 2 · pass@k and pass^k" data-speaker-notes="Talk 07 covered this, so keep it to a minute. pass@k asks whether the configuration can do the task at all. pass^k, from the tau-bench paper, asks whether every run passes, which is what you need before you let it run in CI or overnight. pass^k falls fast: an agent with a seventy percent pass rate passes three runs in a row only about a third of the time.">
+<div class="slide-content"><div class="slide-head"><span class="snum">18</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="on">2</li><li class="">3</li><li class="">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Lab 2 · the concept</div></div><h2>pass@k and pass^k answer different questions</h2><div class="v2-body"><svg viewBox="0 0 1728 240" role="img" aria-label="The same task run three times: pass, fail, pass."><circle cx="288" cy="104" r="84" class="ok-dot"/><path d="M254 106 L280 132 L326 76" class="ok-tick lg"/><text x="288" y="228" text-anchor="middle" class="t-cap">run 1</text><circle cx="864" cy="104" r="84" class="bx-mid"/><path d="M836 76 L892 132 M892 76 L836 132" class="xm"/><text x="864" y="228" text-anchor="middle" class="t-cap">run 2</text><circle cx="1440" cy="104" r="84" class="ok-dot"/><path d="M1406 106 L1432 132 L1478 76" class="ok-tick lg"/><text x="1440" y="228" text-anchor="middle" class="t-cap">run 3</text></svg><div class="m7-verdicts"><div class="vr"><span class="k">pass@3</span><span class="res ok"><svg viewBox="0 0 120 120" class="ic" aria-hidden="true"><path d="M16 62 L46 92 L104 28" stroke-width="12"/></svg>PASS</span><p>At least one run passed.<small>Can it do the task at all?</small></p></div><div class="vr"><span class="k">pass^3</span><span class="res no"><svg viewBox="0 0 120 120" class="ic" aria-hidden="true"><path d="M26 26 L94 94 M94 26 L26 94" stroke-width="11"/></svg>FAIL</span><p>Every run had to pass.<small>Can you leave it running unattended?</small></p></div></div></div><p class="note">pass^k: Yao et al., 2024, τ-bench · the board shows both per variant</p></div></section>
+<section class="slide light v2 m7 ws" id="slide-19" data-label="Lab 2 · pool the room" data-speaker-notes="This is why the board exists. Three out of three sounds perfect, but with three runs the true pass rate could be as low as 0.44. Thirty runs across the room narrow it to roughly 0.52 to 0.83 for a 70 percent agent. The rule for the debrief: only call lean against bloated if the pooled intervals do not overlap. The numbers on this slide are arithmetic, the Wilson interval the kit computes, not a measurement.">
+<div class="slide-content"><div class="slide-head"><span class="snum">19</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="on">2</li><li class="">3</li><li class="">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Lab 2 · the concept</div></div><h2>Pool the room to narrow the interval</h2><div class="v2-body"><div class="ivl"><div class="r"><div><b>Your pair, 3/3</b><span>Wilson 95% interval</span></div><svg viewBox="0 0 1160 110" aria-hidden="true"><line x1="20" y1="60" x2="1120" y2="60" class="ln-dim"/><line x1="20" y1="48" x2="20" y2="72" class="ln-dim"/><text x="20" y="106" text-anchor="middle" class="t-faint">0.0</text><line x1="570.0" y1="48" x2="570.0" y2="72" class="ln-dim"/><text x="570.0" y="106" text-anchor="middle" class="t-faint">0.5</text><line x1="1120" y1="48" x2="1120" y2="72" class="ln-dim"/><text x="1120" y="106" text-anchor="middle" class="t-faint">1.0</text><rect x="504.0" y="36" width="616.0" height="48" rx="24" class="bx-mid" opacity="0.9"/><circle cx="1120.0" cy="60" r="16" class="f-ink"/><text x="504.0" y="24" class="t-mut xs" text-anchor="middle">0.44</text><text x="1120.0" y="24" class="t-mut xs" text-anchor="middle">1.00</text></svg></div><div class="r"><div><b>The room, 21/30</b><span>Wilson 95% interval</span></div><svg viewBox="0 0 1160 110" aria-hidden="true"><line x1="20" y1="60" x2="1120" y2="60" class="ln-dim"/><line x1="20" y1="48" x2="20" y2="72" class="ln-dim"/><text x="20" y="106" text-anchor="middle" class="t-faint">0.0</text><line x1="570.0" y1="48" x2="570.0" y2="72" class="ln-dim"/><text x="570.0" y="106" text-anchor="middle" class="t-faint">0.5</text><line x1="1120" y1="48" x2="1120" y2="72" class="ln-dim"/><text x="1120" y="106" text-anchor="middle" class="t-faint">1.0</text><rect x="592.0" y="36" width="341.0" height="48" rx="24" class="f-coral" opacity="1"/><circle cx="790.0" cy="60" r="16" class="f-ink"/><text x="592.0" y="24" class="t-mut xs" text-anchor="middle">0.52</text><text x="933.0" y="24" class="t-mut xs" text-anchor="middle">0.83</text></svg></div></div><p class="lead sm">Compare lean and bloated only where the room's intervals separate. And <b>0.7³ = 0.34</b>: a 70% agent passes three in a row a third of the time.</p></div></div></section>
+<section class="slide dark v2 m7 ws ws-do" id="slide-20" data-label="Lab 2 · do this" data-speaker-notes="--yes skips the question because everyone saw the plan in lab 1. Rounds interleave, so an interrupted lab still has balanced data. Three Sonnet sessions per laptop take roughly 6 to 15 minutes; they may run into the break, and that is by design. While they wait, pairs can open results/lab1/*/summary.md and compare turns. If the Wi-Fi or a plan gives out, ./lab2.sh --sample prints the pooled shape from the synthetic set so the discussion still works; say clearly that it is synthetic.">
+<div class="slide-content"><div class="slide-head"><span class="snum">20</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="on">2</li><li class="">3</li><li class="">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Lab 2 · do this</div></div><h2>Run one task three times per variant</h2><div class="v2-body"><div class="do-grid"><div class="v-win term"><div class="tbar"><i class="r"></i><i class="y"></i><i class="g"></i><span>both laptops</span></div><div class="wbody "><span class="p">$</span> ROLE=a ./lab2.sh --yes  <span class="c"># laptop a: lean x 3</span>
+<span class="p">$</span> ROLE=b ./lab2.sh --yes  <span class="c"># laptop b: bloated x 3</span>
+<span class="dim">── round 1/3: lean</span>
+<span class="dim">...</span>
+<span class="dim">| Variant | Passes/k | pass@k | pass^k | 95% CI    |</span>
+<span class="dim">| lean    | 3/3      | yes    | yes    | 0.44-1.0  |</span>
+<span class="dim">Paste to the board: ./export-results.sh --lab lab2 --latest</span>
+<span class="p">$</span> ./export-results.sh --lab lab2 --latest
+
+<span class="c"># offline, or out of usage: the pooled shape</span>
+<span class="p">$</span> ./lab2.sh --sample</div></div><div class="do-side"><button type="button" class="tbox" data-tbox="l2" data-min="15" aria-pressed="false" aria-label="Time box, 15 minutes. Press T to start or pause."><span class="kk"><span>Time box</span><b>15 min</b></span><span class="tb-time">15:00</span><span class="tb-bar"><i></i></span><span class="tb-state">Ready</span></button><div class="do-card"><span class="kk">Paste to the board</span><p>Both laptops, three lines each.</p></div><div class="do-card quiet"><span class="kk">Runs outlast the box?</span><p>Leave them going over the break. Paste when they finish.</p></div></div></div></div></div></section>
+<section class="slide light v2 m7 ws" id="slide-21" data-label="Lab 2 · debrief" data-speaker-notes="Start with the dots, before any averages: point at one pair&#x27;s row where identical runs went differently. Then read pass@k and pass^k from the panel. The usual finding is a big gap between them, which is exactly the argument for k of at least three in their own evals. If runs are still coming in, do the debrief on what is there and look at the panel again when you return from the break. Keep it to eight minutes.">
+<div class="slide-content"><div class="slide-head"><span class="snum">21</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="on">2</li><li class="">3</li><li class="">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Lab 2 · debrief</div></div><h2>Read the spread before the average</h2><div class="v2-body"><div class="deb-grid"><ol class="deb-q"><li><span>For the same task and setup, how far apart were turns and cost?</span></li><li><span>Did any pair get 3/3 on one variant and 0/3 on the other?</span></li><li><span>Do the pooled intervals for lean and bloated overlap? Then lab 1's verdict was noise.</span></li></ol><div class="board-card"><span class="kk">On the board, lab 2 panel</span><h3>A dot per run</h3><p>Each pair's runs as dots, the single-run pass rate, and <b>pass@k</b> and <b>pass^k</b> per variant.</p><a class="board-link" href="https://claude.ai/artifact/MgSgfU5azvZ7JpKynnGUrc" target="_blank" rel="noopener">Open the board <svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M24 96 L96 24 M44 24 H96 V76"/></svg></a></div></div></div></div></section>
+<section class="slide dark v2 m7 ws ws-break" id="slide-22" data-label="Break" data-speaker-notes="Before people leave, check the board: which pairs have not posted lab 2? Their runs can finish over the break, and they paste when they are back. Use the break to rescue any laptop that failed in lab 0 or hit a usage limit: move that pair to LITE=1 or to one laptop. Press T to run the break timer on the projector.">
+<div class="slide-content"><div class="slide-head"><span class="snum">22</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="done">2</li><li class="">3</li><li class="">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Break</div></div><div class="brk"><div><svg viewBox="0 0 120 120" class="ic cup" aria-hidden="true"><path d="M18 46 H90 V76 C90 94 76 106 58 106 H50 C32 106 18 94 18 76 Z"/><path d="M90 56 H98 C107 56 112 63 112 71 C112 80 105 86 96 86 H88"/><path d="M40 12 C34 20 46 26 40 34 M62 12 C56 20 68 26 62 34"/></svg><h2>Break</h2><p class="lead">Leave lab 2 running. <b>Lab 3 calls no model</b>, so late runs can finish while you work.</p><p class="note">Not posted lab 2 yet? Paste when your runs finish. A laptop in trouble? Tell the facilitator now.</p></div><div><button type="button" class="tbox" data-tbox="b1" data-min="15" aria-pressed="false" aria-label="Back at 10:40, 15 minutes. Press T to start or pause."><span class="kk"><span>Back at 10:40</span><b>15 min</b></span><span class="tb-time">15:00</span><span class="tb-bar"><i></i></span><span class="tb-state">Ready</span></button></div></div></div></section>
+<section class="slide dark v2 m7 ws ws-beat" id="slide-23" data-label="Lab 3 · break the grader" data-speaker-notes="Say it out loud: this lab calls no model. It sits here on purpose, so lab 2 runs that are still going can finish in another terminal while pairs work. Glance at the lab 2 panel on the board now and mention any late arrivals. The task is export-currency-column: a sixth CSV column, currency, after gross, upper case, EUR by default.">
+<div class="slide-content"><div class="slide-head"><span class="snum">23</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="done">2</li><li class="on">3</li><li class="">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Lab 3 · intro</div></div><div class="bt"><div class="bt-L"><span class="bt-kick">Lab 3 · break the grader</span><div class="bt-mega" aria-hidden="true">3</div><h2>Break the grader</h2><p class="bt-goal">Write a wrong solution that a weak checker passes, then harden the checker until only the right one passes.</p></div><div class="bt-R"><div class="bt-ic"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M60 12 L112 104 H8 Z"/><path d="M60 46 V72"/><path d="M60 88 V90" stroke-width="9"/></svg></div><div class="bt-facts"><div><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><circle cx="60" cy="60" r="46"/><path d="M60 32 V60 L80 72"/></svg><div><span class="kk">Time box</span><p class="tb">35 min<small>10:40 to 11:15</small></p></div></div><div><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><circle cx="60" cy="66" r="42"/><path d="M60 66 L86 40" stroke-width="8"/><path d="M60 12 V20 M12 66 H20 M100 66 H108 M26 32 L32 38 M94 32 L88 38"/></svg><div><span class="kk">Model sessions</span><p class="">None. Maven only, 5 to 10 s per check.</p></div></div><div><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><rect x="8" y="16" width="104" height="88" rx="8"/><path d="M26 46 L44 60 L26 74"/><path d="M54 76 H86"/></svg><div><span class="kk">While you work</span><p class="">Lab 2 runs can finish in another terminal</p></div></div></div></div></div></div></section>
+<section class="slide light v2 m7 ws" id="slide-24" data-label="Lab 3 · a weak checker" data-speaker-notes="Show what the weak checker does: it compiles the code and runs one test, which checks that the header mentions currency. Both shipped cheats pass it. One adds the header and leaves the rows alone, the other writes EUR on every row whatever the invoice says. Any pass rate or cost per accepted task computed with this checker would be wrong. The checker is part of the eval, and it needs tests of its own.">
+<div class="slide-content"><div class="slide-head"><span class="snum">24</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="done">2</li><li class="on">3</li><li class="">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Lab 3 · the problem</div></div><h2>A weak checker passes wrong work</h2><div class="v2-body"><div class="two-col"><table class="mtx"><thead><tr><th>Implementation</th><th>Weak checker</th></tr></thead><tbody><tr><td>reference<small>the correct sixth column</small></td><td class="ok">PASS</td></tr><tr><td>cheat-1-header-only<small>header gains the column, rows do not</small></td><td class="bad">PASS<small>false pass</small></td></tr><tr><td>cheat-2-hardcoded-eur<small>every row says EUR</small></td><td class="bad">PASS<small>false pass</small></td></tr></tbody></table><div class="m7-side"><p class="lead sm">The weak checker compiles the code and runs <b>one test</b>: does the header mention currency?</p><p class="lead sm">Every pass rate built on it would be fiction.</p></div></div></div></div></section>
+<section class="slide light v2 m7 ws" id="slide-25" data-label="Lab 3 · harden it" data-speaker-notes="Three ways to harden it, from cheap to strong. Turning on the repo&#x27;s own tests fails both cheats today, but only because the cheats left the old five-column assertions alone; in a real eval the agent edits those tests, and a cheat that updates them to match itself passes. Hidden tests with concrete rows are better. A property check with a fixed seed is strongest, and the seed keeps failures reproducible. Remind them of the goal: under the column called mine, only the reference passes.">
+<div class="slide-content"><div class="slide-head"><span class="snum">25</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="done">2</li><li class="on">3</li><li class="">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Lab 3 · the fix</div></div><h2>Harden the checker, cheapest first</h2><div class="v2-body"><div class="hard"><div class="h weak"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M20 26 V108 H70" opacity=".45"/><path d="M32 12 H78 L100 34 V100 H32 Z"/><path d="M78 12 V34 H100"/><path d="M46 52 H86 M46 66 H86 M46 80 H72"/></svg><div><h3>Run the repo's own tests</h3><p><code>RUN_OWN_TESTS=1</code>, <code>TEST_FILTER=</code>. Stops today's cheats, but an agent can edit those tests.</p></div><span class="lvl">cheap</span></div><div class="h"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><rect x="10" y="14" width="24" height="24" rx="5"/><path d="M46 26 H110"/><rect x="10" y="48" width="24" height="24" rx="5"/><path d="M46 60 H110"/><rect x="10" y="82" width="24" height="24" rx="5"/><path d="M46 94 H96"/><path d="M15 26 L21 32 L31 19"/><path d="M15 60 L21 66 L31 53"/></svg><div><h3>Hidden JUnit tests</h3><p>Concrete rows: a CZK invoice, a lower-case code, no currency, a comma and a newline in a name.</p></div><span class="lvl">better</span></div><div class="h"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><rect x="16" y="16" width="88" height="88" rx="14"/><circle cx="40" cy="40" r="5"/><circle cx="80" cy="40" r="5"/><circle cx="60" cy="60" r="5"/><circle cx="40" cy="80" r="5"/><circle cx="80" cy="80" r="5"/></svg><div><h3>A property check</h3><p>Many invoices from a fixed <code>Random</code> seed, read back with <code>CsvReader</code>, invariants on every row.</p></div><span class="lvl">strong</span></div></div></div><p class="note">Goal: your checker passes the reference and fails everything else</p></div></section>
+<section class="slide light v2 m7 ws ws-do" id="slide-26" data-label="Lab 3 · do this" data-speaker-notes="Suggested split: five minutes reading lab3/weak/ and writing down what a wrong implementation could get away with, ten minutes of partner A cheating while partner B hardens, then swap. Every check runs Maven offline in five to ten seconds and writes results/lab3/&lt;timestamp&gt;/matrix.md; each cell also prints a short reason. Watch for checkers that fail the reference: that is the most common mistake and the best debrief material. Tell them not to open lab3/answer-key/ before the debrief.">
+<div class="slide-content"><div class="slide-head"><span class="snum">26</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="done">2</li><li class="on">3</li><li class="">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Lab 3 · do this</div></div><h2>Cheat, harden, swap, check</h2><div class="v2-body"><div class="do-grid"><div class="v-win term"><div class="tbar"><i class="r"></i><i class="y"></i><i class="g"></i><span>partner A cheats · partner B hardens</span></div><div class="wbody sm"><span class="p">$</span> ./lab3.sh  <span class="c"># creates lab3-work/repo and lab3-work/checker</span>
+<span class="c"># A: make CsvExport wrong in a new way, in</span>
+<span class="c">#    lab3-work/repo/src/main/java/com/example/invoicing/</span>
+<span class="c"># B: harden lab3-work/checker/ (checker.conf, tests/*.java)</span>
+<span class="p">$</span> ./lab3.sh check  <span class="c"># weak and mine x 4 implementations</span>
+<span class="dim">| Implementation        | weak | mine |</span>
+<span class="dim">| yours                 | PASS | fail |</span>
+<span class="dim">| reference             | PASS | PASS |</span>
+<span class="dim">| cheat-1-header-only   | PASS | fail |</span>
+<span class="dim">| cheat-2-hardcoded-eur | PASS | fail |</span>
+<span class="c"># swap roles and check again; for the debrief:</span>
+<span class="p">$</span> ./lab3.sh answer</div></div><div class="do-side"><button type="button" class="tbox" data-tbox="l3" data-min="22" aria-pressed="false" aria-label="Time box, 22 minutes. Press T to start or pause."><span class="kk"><span>Time box</span><b>22 min</b></span><span class="tb-time">22:00</span><span class="tb-bar"><i></i></span><span class="tb-state">Ready</span></button><div class="do-card"><span class="kk">Paste to the board</span><p>Nothing. Keep <code>results/lab3/&lt;ts&gt;/matrix.md</code> for the debrief.</p></div><div class="do-card quiet"><span class="kk">Stuck?</span><p><code>./lab3.sh reset</code> starts again. <code>lab3/README.md</code> has ideas.</p></div></div></div></div></div></section>
+<section class="slide dark v2 m7 ws" id="slide-27" data-label="Lab 3 · debrief" data-speaker-notes="Run ./lab3.sh answer on the projector and compare the answer-key column with a couple of pairs&#x27; columns. Ask who wrote a checker that failed the reference at some point; a checker that is too strict pushes the pass rate down as surely as a weak one inflates it. Point out the design of the real eval: hidden tests live in eval/hidden/ and are copied in only for grading, and the checker restores pom.xml, mvnw and .mvn/ and requires at least as many own tests as the untouched repo has. Ask which cheats that stops.">
+<div class="slide-content"><div class="slide-head"><span class="snum">27</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="done">2</li><li class="on">3</li><li class="">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Lab 3 · debrief</div></div><h2>Did your checker ever fail the right answer?</h2><div class="v2-body"><div class="deb-grid"><ol class="deb-q"><li><span>A checker that fails the reference rejects a correct agent. Did yours?</span></li><li><span>Which of your tests would the agent see if they lived in the repo?</span></li><li><span>What does a false pass cost your team? A false fail?</span></li></ol><div class="board-card"><span class="kk">On the projector</span><h3><code>./lab3.sh answer</code></h3><p>Adds the answer key: the own suite, hidden acceptance tests and a <b>property check over 300 seeded invoices</b>.</p></div></div></div></div></section>
+<section class="slide dark v2 m7 ws ws-beat" id="slide-28" data-label="Lab 4 · read the traces" data-speaker-notes="The score from labs 1 and 2 tells them what happened; the transcript tells them why. Every run saved its full stream-json transcript, so this lab costs nothing. Pairs without transcripts, because their runs failed or they ran LITE, use the two synthetic sample traces.">
+<div class="slide-content"><div class="slide-head"><span class="snum">28</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="done">2</li><li class="done">3</li><li class="on">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Lab 4 · intro</div></div><div class="bt"><div class="bt-L"><span class="bt-kick">Lab 4 · read the traces</span><div class="bt-mega" aria-hidden="true">4</div><h2>Read the traces</h2><p class="bt-goal">Find the turns in your own lab 1 and 2 sessions where the agent repeated work, and decide whether each one was waste.</p></div><div class="bt-R"><div class="bt-ic"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><circle cx="30" cy="32" r="16"/><rect x="72" y="72" width="34" height="34" rx="6"/><path d="M46 38 C70 44 62 76 70 84" stroke-dasharray="3 10"/><path d="M58 76 L70 86 L76 72"/></svg></div><div class="bt-facts"><div><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><circle cx="60" cy="60" r="46"/><path d="M60 32 V60 L80 72"/></svg><div><span class="kk">Time box</span><p class="tb">25 min<small>11:15 to 11:40</small></p></div></div><div><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><circle cx="60" cy="66" r="42"/><path d="M60 66 L86 40" stroke-width="8"/><path d="M60 12 V20 M12 66 H20 M100 66 H108 M26 32 L32 38 M94 32 L88 38"/></svg><div><span class="kk">Model sessions</span><p class="">None. It reads the transcripts you already have.</p></div></div><div><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><circle cx="30" cy="32" r="16"/><rect x="72" y="72" width="34" height="34" rx="6"/><path d="M46 38 C70 44 62 76 70 84" stroke-dasharray="3 10"/><path d="M58 76 L70 86 L76 72"/></svg><div><span class="kk">Input</span><p class="">Your stream-json transcripts, or two synthetic ones</p></div></div></div></div></div></div></section>
+<section class="slide dark v2 m7 ws" id="slide-29" data-label="Lab 4 · four flags" data-speaker-notes="The trace report flags four patterns: a re-read of an unchanged file, a repeated identical tool call, a blind retry after a failure with the same arguments, and a restated plan. Each flag carries the tokens it added to the context and an estimated cost. This example is the synthetic bloated trace from the kit: five flags, about 27 percent of the session&#x27;s estimated cost. Stress that a flag is a candidate. A re-read after an edit, or a retry after fixing the command, is sensible work.">
+<div class="slide-content"><div class="slide-head"><span class="snum">29</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="done">2</li><li class="done">3</li><li class="on">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Lab 4 · the concept</div></div><h2>Four patterns earn a flag</h2><div class="v2-body"><div class="m7-tr2"><div class="v-win term m7-trace"><div class="tbar"><i class="r"></i><i class="y"></i><i class="g"></i><span>synthetic sample trace · bloated · 17 calls</span></div><div class="wbody"><div class="rw "><span class="no">t3</span><span class="ty">tool</span><span>Read Report.java</span><span class="res "></span></div><div class="rw w"><span class="no">t6</span><span class="ty">tool</span><span>Read Report.java</span><span class="tag">re-read</span></div><div class="rw w"><span class="no">t7</span><span class="ty">plan</span><span>So the plan: look at Report...</span><span class="tag">restated plan</span></div><div class="rw "><span class="no">t8</span><span class="ty">tool</span><span>Bash mvn -q test</span><span class="res bad">error</span></div><div class="rw w"><span class="no">t9</span><span class="ty">tool</span><span>Bash mvn -q test</span><span class="tag">blind retry</span></div><div class="rw w"><span class="no">t10</span><span class="ty">tool</span><span>Grep src</span><span class="tag">repeat</span></div></div></div><div class="m7-call"><span class="k">In this sample</span><div class="big">27%</div><p>of the estimated cost went to <b>five flagged turns</b>. A flag marks a candidate; you decide if it is waste.</p></div></div></div></div></section>
+<section class="slide light v2 m7 ws ws-do" id="slide-30" data-label="Lab 4 · do this" data-speaker-notes="lab4.sh finds every transcript.jsonl under results/lab1 and results/lab2 and writes a Markdown report with a turn table per session. The turn table is the useful part: context size, output tokens and the tool call per turn, with flags marked. Ask pairs to compare one lean and one bloated session side by side. Nothing goes to the board. If a pair has no transcripts, lab4.sh falls back to the synthetic ones by itself and says so.">
+<div class="slide-content"><div class="slide-head"><span class="snum">30</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="done">2</li><li class="done">3</li><li class="on">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Lab 4 · do this</div></div><h2>Run the trace report on your own sessions</h2><div class="v2-body"><div class="do-grid"><div class="v-win term"><div class="tbar"><i class="r"></i><i class="y"></i><i class="g"></i><span>trace report</span></div><div class="wbody "><span class="p">$</span> ./lab4.sh  <span class="c"># your lab 1 and lab 2 transcripts</span>
+<span class="dim">Lab 4 · trace report over 5 transcript(s); no model calls.</span>
+<span class="dim">| Flag          | Count | Tokens | Cost (est) | Share |</span>
+<span class="dim">| re-read       | 2     | 2.2k   | $0.0337    | 11.3% |</span>
+<span class="dim">| blind retry   | 1     | 30     | $0.0176    | 5.9%  |</span>
+<span class="dim">Saved: results/lab4/&lt;ts&gt;/trace-report.md</span>
+
+<span class="c"># no transcripts of your own, or offline:</span>
+<span class="p">$</span> ./lab4.sh --sample
+<span class="c"># any stream-json transcript:</span>
+<span class="p">$</span> ./trace-report.sh FILE...</div></div><div class="do-side"><button type="button" class="tbox" data-tbox="l4" data-min="13" aria-pressed="false" aria-label="Time box, 13 minutes. Press T to start or pause."><span class="kk"><span>Time box</span><b>13 min</b></span><span class="tb-time">13:00</span><span class="tb-bar"><i></i></span><span class="tb-state">Ready</span></button><div class="do-card"><span class="kk">Then read</span><p>Open a flagged <code>transcript.jsonl</code> and read the turn before each flag.</p></div><div class="do-card quiet"><span class="kk">Bring to the debrief</span><p>One flag, and the CLAUDE.md line that would prevent it.</p></div></div></div></div></div></section>
+<section class="slide dark v2 m7 ws" id="slide-31" data-label="Lab 4 · debrief" data-speaker-notes="Take two or three flags from the room and let the pair argue whether each one was waste. The strong answer to the third question is a variant: write the CLAUDE.md change, then run lab 1 and lab 2 again with it and compare. That links traces back to evals, which is the spine of talk 07: the score tells you what, the trace tells you why. Keep it to seven minutes and send them to the break.">
+<div class="slide-content"><div class="slide-head"><span class="snum">31</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="done">2</li><li class="done">3</li><li class="on">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Lab 4 · debrief</div></div><h2>Which flags were real waste?</h2><div class="v2-body"><div class="deb-grid"><ol class="deb-q"><li><span>Pick one flag. Real waste, or a sensible check?</span></li><li><span>Did the bloated sessions carry more flags than the lean ones?</span></li><li><span>Which one line in a CLAUDE.md or prompt would remove it, and how would you test that change?</span></li></ol><div class="board-card"><span class="kk">Close the loop</span><h3>The next eval run</h3><p>A fix to a CLAUDE.md is a new variant. Labs 1 and 2 are the harness to <b>test it</b>.</p></div></div></div></div></section>
+<section class="slide dark v2 m7 ws ws-break" id="slide-32" data-label="Break 2" data-speaker-notes="Short break. While people are out, check the board for lab 1 and lab 2 lines that are still missing and nudge those pairs when they return. Remind yourself of the lab 5 trick: laptop b starts lab 6&#x27;s Haiku runs in the background at the start of lab 5, so lab 6 fits its 25 minutes.">
+<div class="slide-content"><div class="slide-head"><span class="snum">32</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="done">2</li><li class="done">3</li><li class="done">4</li><li class="">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Break</div></div><div class="brk"><div><svg viewBox="0 0 120 120" class="ic cup" aria-hidden="true"><path d="M18 46 H90 V76 C90 94 76 106 58 106 H50 C32 106 18 94 18 76 Z"/><path d="M90 56 H98 C107 56 112 63 112 71 C112 80 105 86 96 86 H88"/><path d="M40 12 C34 20 46 26 40 34 M62 12 C56 20 68 26 62 34"/></svg><h2>Break</h2><p class="lead">Keep your laptops awake. After the break, <b>laptop b starts one command</b> before anything else.</p><p class="note">Laptop b: <code>ROLE=b ./lab6.sh --yes</code> is the first command after the break. It runs lab 6 in the background while you score commit messages.</p></div><div><button type="button" class="tbox" data-tbox="b2" data-min="10" aria-pressed="false" aria-label="Back at 11:50, 10 minutes. Press T to start or pause."><span class="kk"><span>Back at 11:50</span><b>10 min</b></span><span class="tb-time">10:00</span><span class="tb-bar"><i></i></span><span class="tb-state">Ready</span></button></div></div></div></section>
+<section class="slide dark v2 m7 ws ws-beat" id="slide-33" data-label="Lab 5 · judge model" data-speaker-notes="Some output has no test: nobody can assert that a commit message is good, yet agents write them all day. The usual answer is a judge model with a written rubric. Before anyone trusts one, they should measure how well it agrees with people. Start laptop b&#x27;s lab 6 command first, then explain.">
+<div class="slide-content"><div class="slide-head"><span class="snum">33</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="done">2</li><li class="done">3</li><li class="done">4</li><li class="on">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Lab 5 · intro</div></div><div class="bt"><div class="bt-L"><span class="bt-kick">Lab 5 · judge model</span><div class="bt-mega" aria-hidden="true">5</div><h2>A model as the judge</h2><p class="bt-goal">Score eight commit messages by hand, run a judge on the same rubric, and measure how far it agrees with you.</p></div><div class="bt-R"><div class="bt-ic"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M60 14 V104 M36 108 H84 M20 30 H100"/><path d="M20 30 L6 68 H34 Z M100 30 L86 68 H114 Z"/></svg></div><div class="bt-facts"><div><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><circle cx="60" cy="60" r="46"/><path d="M60 32 V60 L80 72"/></svg><div><span class="kk">Time box</span><p class="tb">30 min<small>11:50 to 12:20</small></p></div></div><div><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><circle cx="60" cy="66" r="42"/><path d="M60 66 L86 40" stroke-width="8"/><path d="M60 12 V20 M12 66 H20 M100 66 H108 M26 32 L32 38 M94 32 L88 38"/></svg><div><span class="kk">Model calls</span><p class="">8 judge calls on laptop a, one turn, no tools</p></div></div><div><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M60 112 V66 L28 28 M60 66 L92 28"/><path d="M22 46 L26 24 L46 26"/><path d="M74 26 L94 24 L98 46"/></svg><div><span class="kk">Laptop b</span><p class="">Starts lab 6's Haiku runs in the background</p></div></div></div></div></div></div></section>
+<section class="slide light v2 m7 ws" id="slide-34" data-label="Lab 5 · score first" data-speaker-notes="Four steps. The rubric in lab5/rubric.md has four criteria plus a holistic overall score, each from 1 to 5, and the judge gets exactly that text. Pairs score all eight messages by hand first, without opening authors.json, because knowing who wrote a message changes how people score it. Then the judge scores each message in a separate call with no tools, so it never compares messages. The comparison reports exact agreement, agreement within one point, Spearman rank correlation and the judge&#x27;s bias.">
+<div class="slide-content"><div class="slide-head"><span class="snum">34</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="done">2</li><li class="done">3</li><li class="done">4</li><li class="on">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Lab 5 · the method</div></div><h2>Score by hand first, then run the judge</h2><div class="v2-body"><div class="v-stn n4"><svg class="rail" viewBox="0 0 1728 300" role="img" aria-label="Sequence: Rubric, then Hand scores, then Judge, then Compare"><line class="rl-base" x1="4" y1="170" x2="1724" y2="170"/><line class="rl-on" x1="216" y1="170" x2="1512" y2="170"/><text class="rl-n" x="216" y="40" text-anchor="middle">01</text><text class="rl-n" x="648" y="40" text-anchor="middle">02</text><text class="rl-n" x="1080" y="40" text-anchor="middle">03</text><text class="rl-n" x="1512" y="40" text-anchor="middle">04</text><circle class="rl-c" cx="216.0" cy="170" r="110"/><svg x="162.1" y="116.1" width="107.8" height="107.8" viewBox="0 0 120 120" class="ic"><rect x="10" y="14" width="24" height="24" rx="5"/><path d="M46 26 H110"/><rect x="10" y="48" width="24" height="24" rx="5"/><path d="M46 60 H110"/><rect x="10" y="82" width="24" height="24" rx="5"/><path d="M46 94 H96"/><path d="M15 26 L21 32 L31 19"/><path d="M15 60 L21 66 L31 53"/></svg><circle class="rl-c" cx="648.0" cy="170" r="110"/><svg x="594.1" y="116.1" width="107.8" height="107.8" viewBox="0 0 120 120" class="ic"><circle cx="44" cy="40" r="16"/><path d="M12 104 C12 80 26 68 44 68 C62 68 76 80 76 104"/><circle cx="82" cy="34" r="13" opacity=".6"/><path d="M84 60 C100 60 110 72 110 94" opacity=".6"/></svg><circle class="rl-c" cx="1080.0" cy="170" r="110"/><svg x="1026.1" y="116.1" width="107.8" height="107.8" viewBox="0 0 120 120" class="ic"><path d="M60 14 V104 M36 108 H84 M20 30 H100"/><path d="M20 30 L6 68 H34 Z M100 30 L86 68 H114 Z"/></svg><circle class="rl-c hot" cx="1512.0" cy="170" r="110"/><svg x="1458.1" y="116.1" width="107.8" height="107.8" viewBox="0 0 120 120" class="ic hot"><rect x="14" y="18" width="92" height="84" rx="8"/><path d="M14 42 H106 M14 66 H106 M44 18 V102"/></svg></svg><div class="stops"><div><h3>Rubric</h3><p>accuracy, why, scope, format, overall; 1 to 5</p></div><div><h3>Hand scores</h3><p>blind: <code>authors.json</code> stays closed</p></div><div><h3>Judge</h3><p>one <code>claude -p</code> call per message</p></div><div><h3>Compare</h3><p>exact, within one, Spearman, bias</p></div></div></div></div><p class="note">The judge gets exactly the rubric text you scored with · one call per message, so it never compares them</p></div></section>
+<section class="slide light v2 m7 ws" id="slide-35" data-label="Lab 5 · self-preference" data-speaker-notes="Self-preference is the tendency of a model to rate text from its own family higher than people do. The kit splits the gap, judge minus you, by author. Then be honest about the numbers: eight samples, four per group, cannot establish agreement or self-preference. A Spearman of 0.7 on eight samples has a 95 percent interval of roughly minus 0.01 to 0.94. Pooling ten pairs adds raters, not samples. And check authors.json: unless you replaced the four stand-in human messages before the day, all eight were written by Claude, and the self-preference check compares Claude with Claude. Say which case applies today.">
+<div class="slide-content"><div class="slide-head"><span class="snum">35</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="done">2</li><li class="done">3</li><li class="done">4</li><li class="on">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Lab 5 · the caveat</div></div><h2>Self-preference, and the limits of eight samples</h2><div class="v2-body"><div class="jd"><div class="v-panel"><span class="kk">Self-preference</span><h3>Judges favour their own family</h3><p>Panickssery et al., 2024. <code>lab5.sh</code> splits judge minus you by author: model-written against human-written.</p></div><div class="v-panel"><span class="kk">Eight samples cannot show</span><ul><li>Agreement or bias, statistically: Spearman 0.7 on 8 spans about -0.01 to 0.94.</li><li>Anything about other messages: the board adds raters, not samples.</li><li>Real human text, unless <code>authors.json</code> says the stand-ins were replaced.</li></ul></div></div></div></div></section>
+<section class="slide light v2 m7 ws ws-do" id="slide-36" data-label="Lab 5 · do this" data-speaker-notes="The order matters. Laptop b starts ROLE=b ./lab6.sh --yes first: six Haiku sessions that run in the background for 10 to 25 minutes and are ready when lab 6 starts. Pairs with Ollama who want the local model can start ROLE=b LOCAL_MODEL=qwen3-coder ./lab6.sh --local --yes instead; warn them it is slow. Then both partners score the eight messages together on laptop a, whole numbers 1 to 5 in every cell. Twelve minutes of scoring, three for the judge, the rest reading the agreement. The output on the slide is from the synthetic sample set. If the network is down, ./lab5.sh --sample uses synthetic judge scores against their real hand scores.">
+<div class="slide-content"><div class="slide-head"><span class="snum">36</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="done">2</li><li class="done">3</li><li class="done">4</li><li class="on">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Lab 5 · do this</div></div><h2>Score, judge, compare</h2><div class="v2-body"><div class="do-grid"><div class="v-win term"><div class="tbar"><i class="r"></i><i class="y"></i><i class="g"></i><span>laptop b first, then laptop a</span></div><div class="wbody sm"><span class="c"># laptop b, first: lab 6's Haiku runs, in the background</span>
+<span class="p">$</span> ROLE=b ./lab6.sh --yes
+
+<span class="c"># laptop a: read lab5/HANDOUT.md and lab5/rubric.md,</span>
+<span class="c"># fill lab5/my-scores.csv together, then</span>
+<span class="p">$</span> ./lab5.sh
+<span class="dim">- Exact agreement: 3/8; within one point: 8/8</span>
+<span class="dim">- Spearman rank correlation: 0.73</span>
+<span class="dim">- Mean bias (judge - you): +0.12 points</span>
+<span class="p">$</span> ./export-results.sh --lab lab5 --latest
+<span class="c"># offline: ./lab5.sh --sample · Haiku judge: LITE=1 ./lab5.sh</span></div></div><div class="do-side"><button type="button" class="tbox" data-tbox="l5" data-min="16" aria-pressed="false" aria-label="Time box, 16 minutes. Press T to start or pause."><span class="kk"><span>Time box</span><b>16 min</b></span><span class="tb-time">16:00</span><span class="tb-bar"><i></i></span><span class="tb-state">Ready</span></button><div class="do-card"><span class="kk">Paste to the board</span><p>Laptop a: 8 judge runs and 8 score lines.</p></div><div class="do-card quiet"><span class="kk">Do not open</span><p><code>lab5/authors.json</code> until the judge has run.</p></div></div></div></div></div></section>
+<section class="slide dark v2 m7 ws" id="slide-37" data-label="Lab 5 · debrief" data-speaker-notes="Read the scatter first: where the room&#x27;s scores spread widely, people disagree with each other, and the judge&#x27;s agreement with any one pair means less. Then the self-preference gap, with the caveat from two slides back. Sample s2 is polished but claims a round-trip test that is not in the diff: ask who caught it, the judge or the pairs. The practical rule to leave with: before a judge gates anything, score 50 to 100 outputs by hand, from several people.">
+<div class="slide-content"><div class="slide-head"><span class="snum">37</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="done">2</li><li class="done">3</li><li class="done">4</li><li class="on">5</li><li class="">6</li><li class="">7</li></ol><div class="crumb">Lab 5 · debrief</div></div><h2>How far does the judge agree with you?</h2><div class="v2-body"><div class="deb-grid"><ol class="deb-q"><li><span>Where did you and the judge differ by two points or more? Who was right?</span></li><li><span>Did the judge catch the claim in s2 that the diff does not support?</span></li><li><span>Is the judge kinder to model-written messages than you are?</span></li></ol><div class="board-card"><span class="kk">On the board, lab 5 panel</span><h3>Judge against the room</h3><p>Each sample's judge score against every pair's score, and the <b>self-preference gap</b>.</p><a class="board-link" href="https://claude.ai/artifact/MgSgfU5azvZ7JpKynnGUrc" target="_blank" rel="noopener">Open the board <svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M24 96 L96 24 M44 24 H96 V76"/></svg></a></div></div></div></div></section>
+<section class="slide dark v2 m7 ws ws-beat" id="slide-38" data-label="Lab 6 · route by the numbers" data-speaker-notes="Laptop b&#x27;s Haiku runs started at the beginning of lab 5 and should be done or nearly done. Laptop a reuses its lean Sonnet runs from labs 1 and 2 on the same tasks and tops up about two more. That keeps this lab inside a Pro window. The routing material from the old talk 07 lives here now: three slides while the last runs finish.">
+<div class="slide-content"><div class="slide-head"><span class="snum">38</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="done">2</li><li class="done">3</li><li class="done">4</li><li class="done">5</li><li class="on">6</li><li class="">7</li></ol><div class="crumb">Lab 6 · intro</div></div><div class="bt"><div class="bt-L"><span class="bt-kick">Lab 6 · route by the numbers</span><div class="bt-mega" aria-hidden="true">6</div><h2>Route by the numbers</h2><p class="bt-goal">Compare Haiku and Sonnet on the same three tasks, and pick by cost per accepted task.</p></div><div class="bt-R"><div class="bt-ic"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M60 112 V66 L28 28 M60 66 L92 28"/><path d="M22 46 L26 24 L46 26"/><path d="M74 26 L94 24 L98 46"/></svg></div><div class="bt-facts"><div><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><circle cx="60" cy="60" r="46"/><path d="M60 32 V60 L80 72"/></svg><div><span class="kk">Time box</span><p class="tb">25 min<small>12:20 to 12:45</small></p></div></div><div><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><circle cx="60" cy="66" r="42"/><path d="M60 66 L86 40" stroke-width="8"/><path d="M60 12 V20 M12 66 H20 M100 66 H108 M26 32 L32 38 M94 32 L88 38"/></svg><div><span class="kk">Model sessions</span><p class="">6 Haiku on b, already running; about 2 Sonnet on a</p></div></div><div><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M100 60 A40 40 0 1 1 88 31"/><path d="M92 8 L90 32 L66 30"/></svg><div><span class="kk">Reuse</span><p class="">4 Sonnet runs reused from labs 1-2</p></div></div></div></div></div></div></section>
+<section class="slide light v2 m7 ws" id="slide-39" data-label="Lab 6 · cost per accepted task" data-speaker-notes="These are talk 07&#x27;s invented numbers, there to show the arithmetic. Model B costs two and a half times as much per run and is still cheaper per accepted task, because nine of its ten runs pass. The lab measures the same thing on real runs: total spend of a model divided by the runs that passed the hidden tests. Mention the other cost the number leaves out: someone has to notice and handle each failure.">
+<div class="slide-content"><div class="slide-head"><span class="snum">39</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="done">2</li><li class="done">3</li><li class="done">4</li><li class="done">5</li><li class="on">6</li><li class="">7</li></ol><div class="crumb">Lab 6 · the metric</div></div><h2>Divide by the runs that passed</h2><div class="v2-body"><div class="v-acc"><div role="img" aria-label="Illustrative suite of ten runs. Model A: $0.10 per run, 3 of 10 accepted, $0.33 per accepted task. Model B: $0.25 per run, 9 of 10 accepted, $0.28 per accepted task."><div class="legend"><b>Same suite, 10 runs</b><span><i class="A"></i>Model A</span><span><i class="B"></i>Model B</span></div><div class="m"><div class="lab">Cost per run<small>headline</small></div><div class="br"><i class="A" style="width:32%"></i><b>$0.10</b></div><div class="br"><i class="B" style="width:80%"></i><b>$0.25</b></div></div><div class="m"><div class="lab">Accepted runs, out of 10</div><div class="br"><i class="A" style="width:24%"></i><b>3</b></div><div class="br"><i class="B" style="width:72%"></i><b>9</b></div></div><div class="m"><div class="lab">Cost per accepted task<small class="hot">B is cheaper</small></div><div class="br"><i class="A" style="width:80%"></i><b>$0.33</b></div><div class="br"><i class="B" style="width:68%"></i><b>$0.28</b></div></div></div><div class="call"><span class="k">Divide total spend by</span><div class="big o">passes</div><p>A cheap run that fails still costs you the run, and a retry or a review.</p></div></div></div><p class="note">Illustrative numbers from talk 07 · total cost ÷ accepted runs</p></div></section>
+<section class="slide dark v2 m7 ws ws-do" id="slide-40" data-label="Lab 6 · do this" data-speaker-notes="Laptop a runs about two Sonnet top-ups, four to ten minutes, while you talk through the next three slides. Each laptop&#x27;s own summary only shows its own model; the comparison happens on the board, so both laptops must paste. OPUS=1 goes on laptop a&#x27;s command, not a second run, and only if their plan includes Opus. If laptop b&#x27;s Haiku runs failed or never started, run ./lab6.sh --sample on the projector for the shape and use whatever the board has.">
+<div class="slide-content"><div class="slide-head"><span class="snum">40</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="done">2</li><li class="done">3</li><li class="done">4</li><li class="done">5</li><li class="on">6</li><li class="">7</li></ol><div class="crumb">Lab 6 · do this</div></div><h2>Run Sonnet next to your Haiku runs</h2><div class="v2-body"><div class="do-grid"><div class="v-win term"><div class="tbar"><i class="r"></i><i class="y"></i><i class="g"></i><span>laptop a · laptop b</span></div><div class="wbody "><span class="c"># laptop b: the Haiku runs from lab 5 should be done</span>
+<span class="c"># laptop a: Sonnet, reusing your lean runs from labs 1-2</span>
+<span class="p">$</span> ROLE=a ./lab6.sh --yes
+<span class="dim">  sonnet (claude-sonnet-5) (reusing 4 from labs 1-2)</span>
+<span class="dim">| Model  | Accepted | Cost per run | Cost per ACCEPTED task |</span>
+<span class="p">$</span> ./export-results.sh --lab lab6 --latest  <span class="c"># both laptops</span>
+
+<span class="c"># optional, if your plan includes Opus (+6 sessions):</span>
+<span class="p">$</span> OPUS=1 ROLE=a ./lab6.sh --yes
+<span class="c"># offline: the pooled shape from the synthetic set</span>
+<span class="p">$</span> ./lab6.sh --sample</div></div><div class="do-side"><button type="button" class="tbox" data-tbox="l6" data-min="12" aria-pressed="false" aria-label="Time box, 12 minutes. Press T to start or pause."><span class="kk"><span>Time box</span><b>12 min</b></span><span class="tb-time">12:00</span><span class="tb-bar"><i></i></span><span class="tb-state">Ready</span></button><div class="do-card"><span class="kk">Paste to the board</span><p>Both laptops. The board compares the models.</p></div><div class="do-card quiet"><span class="kk">Local model</span><p>Started on laptop b in lab 5 with <code>--local</code>. Its cost exports as 0.0.</p></div></div></div></div></div></section>
+<section class="slide light v2 m7 ws" id="slide-41" data-label="Lab 6 · no model wins" data-speaker-notes="Models trade off cost, intelligence and taste. Cheap, fast models suit bulk mechanical work; smarter models suit hard problems you will not supervise; the highest-taste models earn their price where UI or copy quality is the bottleneck. The placement is illustrative. Your eval numbers decide where real models sit, and the lab you are running now measures one axis of it, cost per accepted task, on three tasks.">
+<div class="slide-content"><div class="slide-head"><span class="snum">41</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="done">2</li><li class="done">3</li><li class="done">4</li><li class="done">5</li><li class="on">6</li><li class="">7</li></ol><div class="crumb">Lab 6 · routing</div></div><h2>No model wins on cost, intelligence and taste at once</h2><div class="v2-body"><div class="rt"><svg class="axis" viewBox="0 0 1080 560" role="img" aria-label="Illustrative placement of three models on three axes: A is cheapest, C is smartest and has the finest taste, B sits in the middle."><text x="0" y="50" class="t-cap">cheaper</text><line x1="0" y1="90" x2="1040" y2="90" class="ln-dim"/><path d="M1030 78 L1056 90 L1030 102" class="ln-dim"/><circle cx="128" cy="90" r="34" class="f-ink"/><text x="128" y="101" text-anchor="middle" class="t-paper">C</text><circle cx="520" cy="90" r="34" class="f-coral"/><text x="520" y="101" text-anchor="middle" class="t-on">B</text><circle cx="912" cy="90" r="34" class="f-ink"/><text x="912" y="101" text-anchor="middle" class="t-paper">A</text><text x="0" y="220" class="t-cap">smarter</text><line x1="0" y1="260" x2="1040" y2="260" class="ln-dim"/><path d="M1030 248 L1056 260 L1030 272" class="ln-dim"/><circle cx="148" cy="260" r="34" class="f-ink"/><text x="148" y="271" text-anchor="middle" class="t-paper">A</text><circle cx="569" cy="260" r="34" class="f-coral"/><text x="569" y="271" text-anchor="middle" class="t-on">B</text><circle cx="912" cy="260" r="34" class="f-ink"/><text x="912" y="271" text-anchor="middle" class="t-paper">C</text><text x="0" y="390" class="t-cap">finer taste</text><line x1="0" y1="430" x2="1040" y2="430" class="ln-dim"/><path d="M1030 418 L1056 430 L1030 442" class="ln-dim"/><circle cx="177" cy="430" r="34" class="f-ink"/><text x="177" y="441" text-anchor="middle" class="t-paper">A</text><circle cx="442" cy="430" r="34" class="f-coral"/><text x="442" y="441" text-anchor="middle" class="t-on">B</text><circle cx="892" cy="430" r="34" class="f-ink"/><text x="892" y="441" text-anchor="middle" class="t-paper">C</text></svg><div class="m7-side"><p class="lead"><b>A</b> cheap and fast, for bulk mechanical work.</p><p class="lead"><b>B</b> the workhorse.</p><p class="lead"><b>C</b> for hard problems nobody will supervise, or where taste is the bottleneck.</p></div></div></div><p class="note">Illustrative placement · your eval numbers decide the real positions</p></div></section>
+<section class="slide dark v2 m7 ws" id="slide-42" data-label="Lab 6 · other harnesses" data-speaker-notes="Three other ways to route, checked in September 2026. Cursor&#x27;s Auto picks a model per request and bills at the routed model&#x27;s list price; on Teams and Enterprise the relaunched version is Cursor Router, with Cost, Balance and Intelligence modes. OpenRouter gives one key and one bill over 400-plus models, 457 entries with variants in its public list this month; token prices pass through with no markup, card top-ups carry a 5.5 percent fee with a 0.80 dollar minimum, and fallback is on by default, so a request can land on a host you did not expect. Pi is Mario Zechner&#x27;s minimal terminal harness, now developed at Earendil under MIT; using Claude through it means an API key or extra-usage billing, so check Anthropic&#x27;s current rules on subscriptions and third-party tools first.">
+<div class="slide-content"><div class="slide-head"><span class="snum">42</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="done">2</li><li class="done">3</li><li class="done">4</li><li class="done">5</li><li class="on">6</li><li class="">7</li></ol><div class="crumb">Lab 6 · routing</div></div><h2>Other harnesses route for you</h2><div class="v2-body"><div class="hn"><div class="v-panel"><span class="kk">Cursor · IDE harness</span><div class="big">Auto</div><p>Picks a model per request. Cursor Router on Teams and Enterprise: Cost, Balance or Intelligence.</p></div><div class="v-panel"><span class="kk">OpenRouter · one key</span><div class="big">400+</div><p>Models, no markup on tokens, 5.5% card top-up fee. Fallback is on: pin hosts with <code>provider.only</code>.</p></div><div class="v-panel"><span class="kk">Pi · minimal harness</span><div class="big">&lt;1,000</div><p>Tokens of prompt and tools. MIT, 15+ providers. Claude needs an API key or extra usage.</p></div></div></div><p class="note">Sources: cursor.com, openrouter.ai docs, pi.dev · checked September 2026</p></div></section>
+<section class="slide light v2 m7 ws" id="slide-43" data-label="Lab 6 · open weights and local" data-speaker-notes="Frame it carefully: the gap is closing, and it is still a gap. NIST&#x27;s CAISI rated GLM-5.2, a roughly 750-billion-parameter mixture of experts released in June under MIT, about level with OpenAI&#x27;s GPT-5.2 of December 2025, so roughly six months behind. GLM-5.3 moved to a custom licence, so read licences before standardising. On laptops, Gemma 4 12B fits in 16 GB with ollama run gemma4:12b, and Qwen 3.6&#x27;s 35B-A3B needs about 23 GB at 4-bit, so plan for 32 GB. Claude Code can talk to Ollama&#x27;s Anthropic-compatible API; Anthropic does not support routing Claude Code to non-Claude models, and while that gateway credential is set the subscription is not used. Local makes sense for control; hosted wins on capability.">
+<div class="slide-content"><div class="slide-head"><span class="snum">43</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="done">2</li><li class="done">3</li><li class="done">4</li><li class="done">5</li><li class="on">6</li><li class="">7</li></ol><div class="crumb">Lab 6 · routing</div></div><h2>Open weights trail the frontier by about six months</h2><div class="v2-body"><div class="ow"><div class="m7-facts"><div><span class="kk">Frontier gap</span><p>NIST's CAISI rated <b>GLM-5.2</b> (June, MIT) about level with OpenAI's GPT-5.2 of December 2025.</p></div><div><span class="kk">On a laptop</span><p><b>Gemma 4 12B</b> fits 16 GB. <b>Qwen 3.6 35B-A3B</b> needs about 23 GB at 4-bit.</p></div><div><span class="kk">With Claude Code</span><p>Ollama works, uses no plan, and Anthropic does not support it.</p></div></div><div class="m7-when"><div class="col loc"><span class="kk">Go local for</span><h3>Control</h3><p>Private or air-gapped code, marginal cost near zero.</p></div><div class="col host"><span class="kk">Stay hosted for</span><h3>Capability</h3><p>Frontier quality, fast turnaround, no hardware.</p></div></div></div></div><p class="note">Sources: nist.gov CAISI, blog.google, Qwen model cards, docs.ollama.com · checked September 2026</p></div></section>
+<section class="slide dark v2 m7 ws" id="slide-44" data-label="Lab 6 · debrief" data-speaker-notes="Read the panel&#x27;s headline first: it names the model that was cheapest per run and the one that was cheapest per accepted task, and whether they differ. Then go per task: the usual pattern is that the cheap model holds up on the mechanical fix and falls over on the task that needs judgement, which is the argument for routing by task type. The answer to how to check the rule next month is the take-home: the same suite, run again. If anyone ran Opus or a local model, ask them for one sentence on it; local cost shows as zero because the kit does not price local tokens.">
+<div class="slide-content"><div class="slide-head"><span class="snum">44</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="done">2</li><li class="done">3</li><li class="done">4</li><li class="done">5</li><li class="on">6</li><li class="">7</li></ol><div class="crumb">Lab 6 · debrief</div></div><h2>Which model gets which task?</h2><div class="v2-body"><div class="deb-grid"><ol class="deb-q"><li><span>Which model was cheapest per run, and which per accepted task?</span></li><li><span>On which task did Haiku hold up, and where did it fall over?</span></li><li><span>Would you route by task type? How would you check that rule next month?</span></li></ol><div class="board-card"><span class="kk">On the board, lab 6 panel</span><h3>Cost per accepted task</h3><p>Runs, pass rate, cost per run and per accepted task for each model, with a <b>headline</b> naming the cheapest.</p><a class="board-link" href="https://claude.ai/artifact/MgSgfU5azvZ7JpKynnGUrc" target="_blank" rel="noopener">Open the board <svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M24 96 L96 24 M44 24 H96 V76"/></svg></a></div></div></div></div></section>
+<section class="slide dark v2 m7 ws ws-beat" id="slide-45" data-label="Lab 7 · take it home" data-speaker-notes="The invoice app was practice. Their own code is where the numbers mean something. This last block leaves each pair with three candidate tasks picked from their own git history, and the guide covers the rest in about an afternoon.">
+<div class="slide-content"><div class="slide-head"><span class="snum">45</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="done">2</li><li class="done">3</li><li class="done">4</li><li class="done">5</li><li class="done">6</li><li class="on">7</li></ol><div class="crumb">Lab 7 · intro</div></div><div class="bt"><div class="bt-L"><span class="bt-kick">Lab 7 · take it home</span><div class="bt-mega" aria-hidden="true">7</div><h2>Take it home</h2><p class="bt-goal">Leave with three solved tasks from your own repo and a plan to turn them into an eval this week.</p></div><div class="bt-R"><div class="bt-ic"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M12 58 L60 16 L108 58"/><path d="M26 46 V106 H94 V46"/><path d="M50 106 V76 H70 V106"/></svg></div><div class="bt-facts"><div><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><circle cx="60" cy="60" r="46"/><path d="M60 32 V60 L80 72"/></svg><div><span class="kk">Time box</span><p class="tb">15 min<small>12:45 to 13:00</small></p></div></div><div><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><circle cx="60" cy="66" r="42"/><path d="M60 66 L86 40" stroke-width="8"/><path d="M60 12 V20 M12 66 H20 M100 66 H108 M26 32 L32 38 M94 32 L88 38"/></svg><div><span class="kk">Model sessions</span><p class="">None today. CI later needs an API key.</p></div></div><div><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M20 26 V108 H70" opacity=".45"/><path d="M32 12 H78 L100 34 V100 H32 Z"/><path d="M78 12 V34 H100"/><path d="M46 52 H86 M46 66 H86 M46 80 H72"/></svg><div><span class="kk">Kit</span><p class=""><code>take-home/GUIDE.md</code> and <code>template/eval/</code></p></div></div></div></div></div></div></section>
+<section class="slide light v2 m7 ws" id="slide-46" data-label="Lab 7 · five steps" data-speaker-notes="Walk the five steps in the guide. Pick three small, finished pieces of work with tests: a bug fix, a small feature and a refactor, each under an hour for a person. Write each as task YAML with the base commit quoted, because YAML can read a numeric-looking hash as a number. Turn the tests the fix added into hidden tests. Check the checker both ways, as in lab 3: it must fail on the base and pass on the fix, and ideally fail one plausible wrong solution. Then run each task at least three times and compare variants by cost per accepted task.">
+<div class="slide-content"><div class="slide-head"><span class="snum">46</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="done">2</li><li class="done">3</li><li class="done">4</li><li class="done">5</li><li class="done">6</li><li class="on">7</li></ol><div class="crumb">Lab 7 · the recipe</div></div><h2>Five steps to an eval on your repo</h2><div class="v2-body"><div class="v-stn n5"><svg class="rail" viewBox="0 0 1728 300" role="img" aria-label="Sequence: Pick three, then Write YAML, then Hide tests, then Check both ways, then Run k ≥ 3"><line class="rl-base" x1="4" y1="170" x2="1724" y2="170"/><line class="rl-on" x1="173" y1="170" x2="1555" y2="170"/><text class="rl-n" x="173" y="40" text-anchor="middle">01</text><text class="rl-n" x="518" y="40" text-anchor="middle">02</text><text class="rl-n" x="864" y="40" text-anchor="middle">03</text><text class="rl-n" x="1210" y="40" text-anchor="middle">04</text><text class="rl-n" x="1555" y="40" text-anchor="middle">05</text><circle class="rl-c" cx="172.8" cy="170" r="96"/><svg x="125.8" y="123.0" width="94.1" height="94.1" viewBox="0 0 120 120" class="ic"><circle cx="30" cy="24" r="12"/><circle cx="30" cy="96" r="12"/><circle cx="90" cy="46" r="12"/><path d="M30 36 V84 M90 58 C90 78 60 74 36 88"/></svg><circle class="rl-c" cx="518.4" cy="170" r="96"/><svg x="471.4" y="123.0" width="94.1" height="94.1" viewBox="0 0 120 120" class="ic"><path d="M20 26 V108 H70" opacity=".45"/><path d="M32 12 H78 L100 34 V100 H32 Z"/><path d="M78 12 V34 H100"/><path d="M46 52 H86 M46 66 H86 M46 80 H72"/></svg><circle class="rl-c" cx="864.0" cy="170" r="96"/><svg x="817.0" y="123.0" width="94.1" height="94.1" viewBox="0 0 120 120" class="ic"><rect x="24" y="52" width="72" height="56" rx="8"/><path d="M38 52 V36 C38 22 48 14 60 14 C72 14 82 22 82 36 V52"/></svg><circle class="rl-c" cx="1209.6" cy="170" r="96"/><svg x="1162.6" y="123.0" width="94.1" height="94.1" viewBox="0 0 120 120" class="ic"><path d="M60 10 L104 26 V58 C104 84 86 102 60 112 C34 102 16 84 16 58 V26 Z"/><path d="M40 60 L54 74 L82 44"/></svg><circle class="rl-c hot" cx="1555.2" cy="170" r="96"/><svg x="1508.2" y="123.0" width="94.1" height="94.1" viewBox="0 0 120 120" class="ic hot"><rect x="14" y="18" width="92" height="84" rx="8"/><path d="M14 42 H106 M14 66 H106 M44 18 V102"/></svg></svg><div class="stops"><div><h3>Pick three</h3><p>a bug fix, a feature, a refactor</p></div><div><h3>Write YAML</h3><p>quoted <code>base_ref</code>, the issue as prompt</p></div><div><h3>Hide tests</h3><p><code>hidden/&lt;task&gt;/Hidden*Test.java</code></p></div><div><h3>Check both ways</h3><p>fails on base, passes on fix</p></div><div><h3>Run k ≥ 3</h3><p>compare cost per accepted task</p></div></div></div></div></div></section>
+<section class="slide light v2 m7 ws ws-do" id="slide-47" data-label="Lab 7 · do this" data-speaker-notes="Six minutes: each pair opens one of their own repositories and finds three candidate tasks with git log, noting the base and the fix commit for each. If their laptop does not have a work repository, they can do it from memory of last month&#x27;s tickets. The worktree and checker commands are what they will run later, following section 4 of the guide. The checker runs Maven offline, so they prefetch once with ./mvnw dependency:go-offline in their repo.">
+<div class="slide-content"><div class="slide-head"><span class="snum">47</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="done">2</li><li class="done">3</li><li class="done">4</li><li class="done">5</li><li class="done">6</li><li class="on">7</li></ol><div class="crumb">Lab 7 · do this</div></div><h2>Pick three tasks before you leave</h2><div class="v2-body"><div class="do-grid"><div class="v-win term"><div class="tbar"><i class="r"></i><i class="y"></i><i class="g"></i><span>in your own repository</span></div><div class="wbody "><span class="c"># fixes that came with a test</span>
+<span class="p">$</span> git log --oneline -- '*Test.java' | head -20
+<span class="c"># note two commits per task: base (the parent) and fix</span>
+
+<span class="c"># later, from the lab folder:</span>
+<span class="p">$</span> cp -R take-home/template/eval /path/to/your-repo/
+<span class="p">$</span> git worktree add /tmp/base &lt;base_ref&gt;
+<span class="p">$</span> eval/checkers/maven-hidden-tests --repo /tmp/base \
+    --task example-bugfix
+<span class="dim">  must FAIL on the base, and PASS on the fix</span></div></div><div class="do-side"><button type="button" class="tbox" data-tbox="l7" data-min="6" aria-pressed="false" aria-label="Time box, 6 minutes. Press T to start or pause."><span class="kk"><span>Time box</span><b>6 min</b></span><span class="tb-time">06:00</span><span class="tb-bar"><i></i></span><span class="tb-state">Ready</span></button><div class="do-card"><span class="kk">Paste to the board</span><p>Nothing. Write down three tasks and their commits.</p></div><div class="do-card quiet"><span class="kk">CI</span><p><code>take-home/ci/</code> has a GitHub Actions job and a shell script.</p></div></div></div></div></div></section>
+<section class="slide dark v2 m7 ws" id="slide-48" data-label="Lab 7 · debrief" data-speaker-notes="Go round the room fast, one sentence per pair; this is also the commitment device. Push for small tasks with a clear test. For CI, be clear that it needs an API key billed per token, not a subscription; three tasks at k equals three on Sonnet is roughly nine sessions at a few tens of cents each, and MAX_BUDGET_USD caps every session. Then move to the recap.">
+<div class="slide-content"><div class="slide-head"><span class="snum">48</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="done">2</li><li class="done">3</li><li class="done">4</li><li class="done">5</li><li class="done">6</li><li class="on">7</li></ol><div class="crumb">Lab 7 · debrief</div></div><h2>Name your first task</h2><div class="v2-body"><div class="deb-grid"><ol class="deb-q"><li><span>Each pair: one task, its base commit, and what the hidden test will check.</span></li><li><span>What will you measure first: a CLAUDE.md change, a model switch, or a new skill?</span></li></ol><div class="board-card"><span class="kk">In CI</span><h3>About 9 sessions</h3><p>Three tasks at k = 3 on Sonnet. CI has no subscription login, so it needs <b>ANTHROPIC_API_KEY</b>, billed per token.</p></div></div></div></div></section>
+<section class="slide light v2 m7 ws" id="slide-49" data-label="Recap" data-speaker-notes="One page to photograph. Read the seven lines, one per lab, and point at the terms card: these are the four definitions on the handout. Tell them the handout in workshops/evals/HANDOUT.md carries the commands and the definitions, and the board stays open, so they can compare their own repo&#x27;s numbers with the room&#x27;s later.">
+<div class="slide-content"><div class="slide-head"><span class="snum">49</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="done">2</li><li class="done">3</li><li class="done">4</li><li class="done">5</li><li class="done">6</li><li class="done">7</li></ol><div class="crumb">Close · recap</div></div><h2>One page to keep</h2><div class="v2-body"><div class="rc"><div><span class="kk">Lab 1</span><p>Commit the guess before the data.</p></div><div><span class="kk">Lab 2</span><p>One run is an anecdote. Pool runs, check pass^k.</p></div><div><span class="kk">Lab 3</span><p>Test the checker: pass the reference, fail plausible wrong work.</p></div><div><span class="kk">Lab 4</span><p>The score says what failed; the trace says why.</p></div><div><span class="kk">Lab 5</span><p>Check a judge against people before it gates anything.</p></div><div><span class="kk">Lab 6</span><p>Route by cost per accepted task.</p></div><div><span class="kk">Lab 7</span><p>Three real tasks, k ≥ 3, this week.</p></div><div class="defs"><span class="kk">Terms</span><p><b>pass@k</b> any run passed</p><p><b>pass^k</b> every run passed</p><p><b>per accepted</b> spend ÷ passes</p><p><b>self-pref.</b> judge favours own family</p></div></div></div></div></section>
+<section class="slide dark v2 m7 ws" id="slide-50" data-label="Thank you" data-speaker-notes="Thank the room. Ask for the two pieces of feedback on the slide, one thing to cut and one to keep, on a sticky note or in the chat. Remind them that nothing ran against their own code or settings, and that results/ in the lab folder holds every transcript if they want to keep them. Leave the board open; export it with Copy all rows as JSON for your own records before you clear it.">
+<div class="slide-content"><div class="slide-head"><span class="snum">50</span><ol class="trk" aria-label="Labs 0 to 7"><li class="tl" aria-hidden="true" style="width:auto;height:auto;border:0;background:none">Labs</li><li class="done">0</li><li class="done">1</li><li class="done">2</li><li class="done">3</li><li class="done">4</li><li class="done">5</li><li class="done">6</li><li class="done">7</li></ol><div class="crumb">Close · links</div></div><h2>Thank you. The board stays open.</h2><div class="v2-body"><div class="v-refs cols2 n7"><a href="https://claude.ai/artifact/MgSgfU5azvZ7JpKynnGUrc" target="_blank" rel="noopener"><span class="lt">The room board</span><span class="ld">claude.ai artifact · stays open</span><span class="la" aria-hidden="true"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M24 96 L96 24 M44 24 H96 V76"/></svg></span></a><a href="workshops/evals/HANDOUT.md" target="_blank" rel="noopener"><span class="lt">Participant handout</span><span class="ld">workshops/evals/HANDOUT.md</span><span class="la" aria-hidden="true"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M24 96 L96 24 M44 24 H96 V76"/></svg></span></a><a href="workshops/evals/lab/take-home/GUIDE.md" target="_blank" rel="noopener"><span class="lt">Take-home guide</span><span class="ld">lab/take-home/GUIDE.md</span><span class="la" aria-hidden="true"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M24 96 L96 24 M44 24 H96 V76"/></svg></span></a><a href="measuring-what-works.html" target="_blank" rel="noopener"><span class="lt">Talk 07, the concepts</span><span class="ld">measuring-what-works.html</span><span class="la" aria-hidden="true"><svg viewBox="0 0 120 120" class="ic " aria-hidden="true"><path d="M24 96 L96 24 M44 24 H96 V76"/></svg></span></a></div><p class="lead sm">Before you go: tell us <b>one thing to cut</b> and <b>one thing to keep</b>. Your transcripts stay in <code>results/</code> on your laptop.</p></div></div></section>
+
+</deck-stage>
+
+<script src="ember_design_system/deck-stage.js"></script>
+<script>
+  /* Re-trigger .reveal animations on slide change */
+  document.addEventListener('DOMContentLoaded', function () {
+    var ds = document.querySelector('deck-stage');
+    if (!ds) return;
+    ds.addEventListener('slidechange', function (e) {
+      var s = e.detail && e.detail.slide;
+      if (!s) return;
+      s.querySelectorAll('.reveal').forEach(function (el) {
+        el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
+      });
+    });
+  });
+</script>
+
+<style id="presenter-ui-css">
+  /* ─── Presenter aids (outside <deck-stage>: siblings paint above it) ─── */
+  .pui-controls{
+    position:fixed; right:18px; bottom:18px; z-index:40;
+    display:flex; gap:8px;
+    opacity:0; transition:opacity .25s; pointer-events:none;
+  }
+  body.pui-mouse .pui-controls,
+  .pui-controls:hover,
+  .pui-controls:focus-within{ opacity:1; pointer-events:auto; }
+  .pui-controls button{
+    font:var(--w-semibold) 12px/1 var(--font-mono); letter-spacing:.08em;
+    color:var(--on-dark-muted); background:var(--ink-2);
+    border:1px solid var(--line-dark); border-radius:var(--radius-pill);
+    padding:9px 14px; cursor:pointer;
+  }
+  .pui-controls button:hover{ color:var(--paper); border-color:var(--coral); }
+  .pui-controls kbd{ color:var(--coral); font:inherit; margin-left:6px; }
+  .pui-notes{
+    position:fixed; left:0; right:0; bottom:0; z-index:39;
+    background:var(--ink-2); color:var(--on-dark);
+    border-top:2px solid var(--coral);
+    padding:20px 34px 24px; max-height:38vh; overflow:auto;
+    font:var(--w-regular) clamp(15px,1.6vw,21px)/1.55 var(--font-b, var(--font-body));
+    display:none;
+  }
+  .pui-notes.open{ display:block; }
+  .pui-notes .pui-nhead{
+    font:var(--w-semibold) 12px/1 var(--font-mono); letter-spacing:.12em;
+    text-transform:uppercase; color:var(--coral); margin-bottom:12px;
+  }
+  @media print{ .pui-controls, .pui-notes{ display:none !important; } }
+</style>
+<div class="pui-controls">
+  <button type="button" data-pui="notes">NOTES<kbd>N</kbd></button>
+  <button type="button" data-pui="present">PRESENT<kbd>P</kbd></button>
+  <button type="button" data-pui="fullscreen">FULLSCREEN<kbd>F</kbd></button>
+</div>
+<div class="pui-notes" role="note" aria-live="polite">
+  <div class="pui-nhead"></div>
+  <div class="pui-nbody"></div>
+</div>
+
+<script>
+/* ─── Presenter aids: notes overlay (N), fullscreen (F), presenter window (P), time box (T) ─── */
+(function(){
+  if (window.self !== window.top) return; /* skip when embedded by a host/viewer */
+  var ds = document.querySelector('deck-stage');
+  var notesEl = document.querySelector('.pui-notes');
+  var nHead = notesEl.querySelector('.pui-nhead');
+  var nBody = notesEl.querySelector('.pui-nbody');
+  var current = Math.max(0, Array.from(ds.children).findIndex(s => s.hasAttribute('data-deck-active'))), presenter = null, mouseT = null;
+
+  function slides(){ return Array.prototype.slice.call(ds.querySelectorAll(':scope > section')); }
+  function noteOf(s){ return s.getAttribute('data-speaker-notes') || 'No notes for this slide.'; }
+  function labelOf(s){ return s.getAttribute('data-label') || ''; }
+
+  /* controls fade in on mouse activity, like the component's own overlay */
+  document.addEventListener('mousemove', function(){
+    document.body.classList.add('pui-mouse');
+    clearTimeout(mouseT);
+    mouseT = setTimeout(function(){ document.body.classList.remove('pui-mouse'); }, 1800);
+  });
+
+  function syncNotes(){
+    var all = slides(), s = all[current];
+    if (!s) return;
+    nHead.textContent = 'Notes · ' + labelOf(s) + ' · ' + (current + 1) + ' / ' + all.length;
+    nBody.textContent = noteOf(s);
+  }
+  function toggleNotes(){ notesEl.classList.toggle('open'); if (notesEl.classList.contains('open')) syncNotes(); }
+
+  function toggleFullscreen(){
+    if (document.fullscreenElement) { document.exitFullscreen(); }
+    else { document.documentElement.requestFullscreen().catch(function(){}); }
+  }
+  /* fullscreen = clean presenting surface: hide the thumbnail rail while in it */
+  var railWasOff = false;
+  document.addEventListener('fullscreenchange', function(){
+    if (document.fullscreenElement) {
+      railWasOff = ds.hasAttribute('no-rail');
+      ds.setAttribute('no-rail', '');
+    } else if (!railWasOff) {
+      ds.removeAttribute('no-rail');
+    }
+  });
+
+  /* ── presenter window: current + next previews, notes, timer, clock ── */
+  function openPresenter(){
+    if (presenter && !presenter.closed) { presenter.focus(); return; }
+    presenter = window.open('', 'deck-presenter', 'width=1200,height=760');
+    if (!presenter) {
+      nHead.textContent = 'Presenter window';
+      nBody.textContent = 'The browser blocked the pop-up. Allow pop-ups for this page and press P again.';
+      notesEl.classList.add('open');
+      return;
+    }
+    var pd = presenter.document;
+    window.__wsPresenter = presenter;
+    pd.open();
+    pd.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Presenter · ' + document.title.replace(/</g,'&lt;') + '</title><base href="' + document.baseURI + '"></head><body></body></html>');
+    pd.close();
+    /* carry the deck's stylesheets + tokens over so slide clones render 1:1 */
+    document.head.querySelectorAll('link[rel="stylesheet"], link[rel="preconnect"], style').forEach(function(el){
+      var c = pd.importNode(el, true);
+      if (el.tagName === 'LINK' && el.href) c.setAttribute('href', el.href);
+      pd.head.appendChild(c);
+    });
+    var st = pd.createElement('style');
+    st.textContent =
+      '*,*::before,*::after{animation:none !important;transition:none !important}' +
+      'html,body{margin:0;height:100%;background:#0e0c08;color:var(--on-dark);font-family:var(--font-m,monospace);overflow:hidden}' +
+      '.pw{display:grid;grid-template-rows:52px 1fr;height:100%}' +
+      '.pw-bar{display:flex;align-items:center;gap:22px;padding:0 20px;border-bottom:1px solid var(--line-dark);font-size:13px;letter-spacing:.06em;color:var(--on-dark-muted)}' +
+      '.pw-bar .cnt{color:var(--coral);font-weight:700;font-size:16px}' +
+      '.pw-bar .lbl{color:var(--paper);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}' +
+      '.pw-bar .tmr{cursor:pointer}.pw-bar .tmr b{color:var(--paper)}' +
+      '.pw-bar .tbx:empty{display:none}.pw-bar .tbx b{color:var(--coral)}' +
+      '.pw-bar button{font:inherit;color:var(--on-dark-muted);background:none;border:1px solid var(--line-dark);border-radius:6px;padding:5px 12px;cursor:pointer}' +
+      '.pw-bar button:hover{color:var(--paper);border-color:var(--coral)}' +
+      '.pw-main{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:14px;padding:14px;min-height:0}' +
+      '.pw-col{display:grid;grid-template-rows:auto 1fr;min-height:0;gap:8px}' +
+      '.pw-col.right{grid-template-rows:auto auto auto minmax(0,1fr)}' +
+      '.pw-cap{font-size:11px;letter-spacing:.14em;color:var(--on-dark-faint);text-transform:uppercase}' +
+      '.pw-box{position:relative;min-height:0;overflow:hidden;border:1px solid var(--line-dark);border-radius:8px;background:#000}' +
+      '.pw-canvas{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;background:var(--paper)}' +
+      '.pw-canvas > section{width:1920px;height:1080px;position:relative;overflow:hidden}' +
+      '.pw-notes{overflow:auto;font-family:var(--font-b,sans-serif);font-size:19px;line-height:1.55;color:var(--on-dark);padding-right:6px}';
+    pd.head.appendChild(st);
+    pd.body.innerHTML =
+      '<div class="pw">' +
+        '<div class="pw-bar">' +
+          '<span class="cnt"></span><span class="lbl"></span>' +
+          '<span class="tmr" title="click to reset">elapsed <b class="el">00:00</b></span>' +
+          '<span>clock <b class="ck"></b></span>' +
+          '<span class="tbx"></span>' +
+          '<button data-nav="-1">‹ prev</button><button data-nav="1">next ›</button>' +
+        '</div>' +
+        '<div class="pw-main">' +
+          '<div class="pw-col"><div class="pw-cap">Current</div><div class="pw-box" id="pwCur"><div class="pw-canvas"></div></div></div>' +
+          '<div class="pw-col right"><div class="pw-cap">Next</div><div class="pw-box" id="pwNext" style="aspect-ratio:16/9;min-height:120px"><div class="pw-canvas"></div></div>' +
+          '<div class="pw-cap" style="margin-top:6px">Notes</div><div class="pw-notes"></div></div>' +
+        '</div>' +
+      '</div>';
+
+    var t0 = Date.now();
+    function two(n){ return (n < 10 ? '0' : '') + n; }
+    function tick(){
+      if (presenter.closed) return;
+      var el = Math.floor((Date.now() - t0) / 1000);
+      pd.querySelector('.el').textContent = two(Math.floor(el / 60)) + ':' + two(el % 60);
+      var d = new Date();
+      pd.querySelector('.ck').textContent = two(d.getHours()) + ':' + two(d.getMinutes());
+      presenter.setTimeout(tick, 1000);
+    }
+    tick();
+    pd.querySelector('.tmr').addEventListener('click', function(){ t0 = Date.now(); });
+
+    function fit(boxId){
+      var box = pd.getElementById(boxId), cv = box.querySelector('.pw-canvas');
+      var k = Math.min(box.clientWidth / 1920, box.clientHeight / 1080);
+      cv.style.transform = 'scale(' + k + ')';
+      cv.style.left = ((box.clientWidth - 1920 * k) / 2) + 'px';
+      cv.style.top = ((box.clientHeight - 1080 * k) / 2) + 'px';
+    }
+    function fill(boxId, slide){
+      var cv = pd.getElementById(boxId).querySelector('.pw-canvas');
+      cv.textContent = '';
+      if (slide) {
+        var c = pd.importNode(slide, true);
+        c.setAttribute('data-deck-active', '');
+        cv.appendChild(c);
+      }
+      fit(boxId);
+    }
+    presenter.__update = function(i){
+      var all = slides(), s = all[i];
+      if (!s) return;
+      var next = i + 1;
+      while (next < all.length && all[next].hasAttribute('data-deck-skip')) next++;
+      fill('pwCur', s);
+      fill('pwNext', all[next] || null);
+      pd.querySelector('.cnt').textContent = (i + 1) + ' / ' + all.length;
+      pd.querySelector('.lbl').textContent = labelOf(s) + (all[next] ? '   →   next: ' + labelOf(all[next]) : '   ·   last slide');
+      pd.querySelector('.pw-notes').textContent = noteOf(s);
+    };
+    presenter.addEventListener('resize', function(){ fit('pwCur'); fit('pwNext'); });
+    pd.addEventListener('keydown', function(e){
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); ds.next(); }
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); ds.prev(); }
+      else if (e.key === 'Home') { ds.goTo(0); }
+      else if (e.key === 'End') { ds.goTo(slides().length - 1); }
+      else if (e.key === 't' || e.key === 'T') { if (window.__wsTimer) window.__wsTimer.toggle(e.shiftKey); }
+    });
+    pd.querySelectorAll('[data-nav]').forEach(function(b){
+      b.addEventListener('click', function(){ this.dataset.nav === '1' ? ds.next() : ds.prev(); });
+    });
+    presenter.__update(current);
+  }
+
+  ds.addEventListener('slidechange', function(e){
+    current = e.detail.index;
+    if (notesEl.classList.contains('open')) syncNotes();
+    if (presenter && !presenter.closed && presenter.__update) presenter.__update(current);
+  });
+
+  document.addEventListener('keydown', function(e){
+    var t = e.target;
+    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = e.key.toLowerCase();
+    if (k === 'n') { toggleNotes(); }
+    else if (k === 'f') { toggleFullscreen(); }
+    else if (k === 'p') { openPresenter(); }
+    else if (k === 't') { if (window.__wsTimer) window.__wsTimer.toggle(e.shiftKey); }
+  });
+  document.querySelector('[data-pui="notes"]').addEventListener('click', toggleNotes);
+  document.querySelector('[data-pui="fullscreen"]').addEventListener('click', toggleFullscreen);
+  document.querySelector('[data-pui="present"]').addEventListener('click', openPresenter);
+})();
+</script>
+
+<script>
+/* ─── Time box on "Do this" and break slides: T starts or pauses, Shift+T resets, click toggles.
+   State lives per box, so a running box keeps counting while you show another slide. ─── */
+(function(){
+  var ds = document.querySelector('deck-stage');
+  if (!ds) return;
+  var state = {};
+  function pad(n){ return (n < 10 ? '0' : '') + n; }
+  function fmt(sec){ sec = Math.max(0, Math.ceil(sec)); return pad(Math.floor(sec / 60)) + ':' + pad(sec % 60); }
+  function get(el){
+    var id = el.getAttribute('data-tbox');
+    if (!state[id]) { var t = (+el.getAttribute('data-min') || 10) * 60; state[id] = { total: t, left: t, running: false, last: 0 }; }
+    return state[id];
+  }
+  function docs(){
+    var d = [document], pw = window.__wsPresenter;
+    try { if (pw && !pw.closed) d.push(pw.document); } catch (e) {}
+    return d;
+  }
+  function label(st){
+    if (st.left <= 0) return 'Time is up';
+    if (st.running) return 'Running';
+    return st.left < st.total ? 'Paused' : 'Ready';
+  }
+  function render(id){
+    var st = state[id];
+    docs().forEach(function(d){
+      d.querySelectorAll('[data-tbox="' + id + '"]').forEach(function(b){
+        b.querySelector('.tb-time').textContent = fmt(st.left);
+        b.querySelector('.tb-state').textContent = label(st);
+        b.querySelector('.tb-bar i').style.width = (100 * st.left / st.total).toFixed(2) + '%';
+        b.classList.toggle('run', st.running);
+        b.classList.toggle('over', st.left <= 0);
+        b.setAttribute('aria-pressed', st.running ? 'true' : 'false');
+      });
+      var bar = d.querySelector('.pw-bar .tbx');
+      if (bar) {
+        var runs = Object.keys(state).filter(function(k){ return state[k].running; });
+        bar.innerHTML = runs.length ? 'time box <b>' + fmt(state[runs[0]].left) + '</b>' : '';
+      }
+    });
+  }
+  setInterval(function(){
+    var now = performance.now();
+    Object.keys(state).forEach(function(id){
+      var st = state[id];
+      if (!st.running) return;
+      st.left -= (now - st.last) / 1000; st.last = now;
+      if (st.left <= 0) { st.left = 0; st.running = false; }
+      render(id);
+    });
+  }, 250);
+  function toggleBox(el, reset){
+    var st = get(el), id = el.getAttribute('data-tbox');
+    if (reset) { st.left = st.total; st.running = false; }
+    else if (st.left <= 0) { st.left = st.total; st.running = true; }
+    else { st.running = !st.running; }
+    st.last = performance.now();
+    render(id);
+  }
+  function activeBox(){
+    var s = ds.querySelector(':scope > section[data-deck-active]');
+    return s ? s.querySelector('[data-tbox]') : null;
+  }
+  window.__wsTimer = { toggle: function(reset){ var el = activeBox(); if (el) toggleBox(el, reset); } };
+  document.addEventListener('click', function(e){
+    var b = e.target && e.target.closest ? e.target.closest('[data-tbox]') : null;
+    if (!b) return;
+    e.preventDefault();
+    toggleBox(b, e.shiftKey);
+    b.blur(); /* keep Space for slide navigation */
+  });
+})();
+</script>
+
+</body>
+</html>
