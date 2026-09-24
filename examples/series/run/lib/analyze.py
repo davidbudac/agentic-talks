@@ -343,7 +343,7 @@ def session_metrics(transcript, meta=None):
 # ── trace and bill attribution ─────────────────────────────────────────────
 
 def trace(transcript):
-    """Lead-thread turns with usage and waste flags (slides 07·8 and 07·9)."""
+    """Lead-thread turns with usage and waste flags (slides 07·15 and 07·16)."""
     events = load_events(transcript)
     calls = api_calls(events)
     results = tool_results(events)
@@ -751,7 +751,7 @@ def summarise_talk07(root):
             "mean_turns": mean(c["mean_turns"] for c in cells),
         }
     out["variants"] = per_variant
-    # Trace examples (slides 8 and 9): waste counts over all runs, one example trace.
+    # Trace examples (slides 15 and 16): waste counts over all runs, one example trace.
     waste = Counter()
     example = None
     for row in rows:
@@ -769,7 +769,7 @@ def summarise_talk07(root):
     out["example_trace"] = example
     md = ["# Talk 07 · minimal eval", ""]
     if variants:
-        md += ["## Scored sheet (slides 17-18)", "",
+        md += ["## Scored sheet (slides 12-13)", "",
                md_table(["Task"] + [f"{v} (passes/k)" for v in variants],
                         [[task] + [f"{out['cells'].get(f'{task}|{v}', {}).get('passes', '-')}/"
                                    f"{out['cells'].get(f'{task}|{v}', {}).get('k', '-')}" for v in variants]
@@ -779,11 +779,11 @@ def summarise_talk07(root):
                           p["k"], fmt_usd(p["cost_usd"]), fmt_usd(p["cost_per_pass_usd"], 3), p["mean_turns"]]
                          for v, p in per_variant.items()]), ""]
     if waste:
-        md += [f"Waste across {waste.get('runs', 0)} runs / {waste.get('turns', 0)} lead turns (slide 9): "
+        md += [f"Waste across {waste.get('runs', 0)} runs / {waste.get('turns', 0)} lead turns (slide 16): "
                f"re-reads {waste.get('re-read', 0)}, repeated calls {waste.get('repeat', 0)}, "
                f"blind retries {waste.get('blind retry', 0)}.", ""]
     if example:
-        md += [f"Example trace (slide 8): {example['task']}, {example['run_dir']}", "```"]
+        md += [f"Example trace (slide 15): {example['task']}, {example['run_dir']}", "```"]
         for step in example["steps"]:
             tools = "; ".join(f"{t['tool']} {t['target']}" + (f" [{t['flag']}]" if t["flag"] else "")
                               for t in step["tools"]) or (step["text"][:60] or "(answer)")
