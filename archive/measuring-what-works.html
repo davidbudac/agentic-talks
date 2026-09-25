@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Measuring What Works — evals, traces & the wider model landscape</title>
+
+<!-- Fonts: Space Grotesk (display) + IBM Plex Sans (body) + IBM Plex Mono (mono) — Ember design system -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+
+<link rel="stylesheet" href="../ember_design_system/styles.css">
+<style>deck-stage:not(:defined){visibility:hidden}</style>
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   Working Smarter with Agents — Ember design system, token-driven.
+   Fixed 1920×1080 canvas: sizes are px, colours/spacing are tokens.
+   ═══════════════════════════════════════════════════════════════════ */
+:root{
+  --ease:cubic-bezier(.16,1,.3,1);
+  --font-d:var(--font-display); --font-b:var(--font-body); --font-m:var(--font-mono);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--ink);color:var(--text-strong);font-family:var(--font-body)}
+
+/* ── SLIDE FRAME + local type scale ──────────────────────────────── */
+.slide{
+  display:flex; flex-direction:column; overflow:hidden;
+  font-family:var(--font-body); -webkit-font-smoothing:antialiased;
+  --pad-x:var(--slide-pad-x); --pad-t:var(--slide-pad-top); --pad-b:var(--slide-pad-bottom);
+  --h2-size:var(--fs-h2); --h3-size:34px; --lead-size:34px;
+  --body-size:26px; --small-size:20px; --code-size:20px;
+  --gap:28px; --content-gap:var(--gap); --diag-h:440px;
+}
+.slide.dense{
+  --pad-x:88px; --pad-t:var(--slide-pad-top-dense); --pad-b:var(--slide-pad-bottom-dense);
+  --h2-size:var(--fs-h2-sm); --h3-size:30px; --lead-size:30px;
+  --body-size:23px; --small-size:18px; --code-size:18px; --gap:20px; --diag-h:400px;
+}
+.slide.tight{
+  --pad-x:76px; --pad-t:60px; --pad-b:52px;
+  --h2-size:46px; --h3-size:27px; --lead-size:27px;
+  --body-size:21px; --small-size:16px; --code-size:16px; --gap:14px; --diag-h:340px;
+}
+.slide-content{
+  flex:1; min-height:0; display:flex; flex-direction:column; justify-content:center;
+  padding:var(--pad-t) var(--pad-x) var(--pad-b); overflow:hidden; position:relative; z-index:1;
+}
+
+/* ── SCHEMES — Ember light/dark rhythm. Every component reads --s-*. ─ */
+.slide,.slide.light{
+  --s-bg:var(--paper); --s-text:var(--text-strong); --s-muted:var(--text-muted); --s-faint:var(--text-faint);
+  --s-line:var(--line-light-2); --s-line-strong:var(--line-light);
+  --s-card-bg:var(--paper-2); --s-card-border:var(--line-card); --s-box-mid:var(--paper-3);
+  --s-outer-fill:var(--coral-soft); --s-callout-bg:var(--coral-soft);
+  --s-accent:var(--coral-ink); --s-bar:var(--bar);
+  background:var(--s-bg); color:var(--s-text);
+}
+.slide.dark{
+  --s-bg:var(--ink); --s-text:var(--on-dark); --s-muted:var(--on-dark-muted); --s-faint:var(--on-dark-faint);
+  --s-line:var(--line-dark-2); --s-line-strong:var(--line-dark);
+  --s-card-bg:var(--ink-2); --s-card-border:var(--line-dark); --s-box-mid:var(--ink-2);
+  --s-outer-fill:rgba(255,92,53,.10); --s-callout-bg:rgba(255,92,53,.10);
+  --s-accent:var(--coral); --s-bar:var(--bar-dark);
+  background:var(--s-bg); color:var(--s-text);
+}
+
+/* ── HEADER ──────────────────────────────────────────────────────── */
+.slide-head{
+  display:flex; align-items:baseline; justify-content:space-between; gap:var(--space-5);
+  margin-bottom:var(--gap); border-bottom:var(--bw-hair) solid var(--s-line); padding-bottom:18px;
+}
+.snum{font:var(--w-bold) 48px/1 var(--font-display); color:var(--s-accent); letter-spacing:var(--track-snug)}
+.crumb{font:var(--w-medium) var(--small-size)/1.2 var(--font-mono); letter-spacing:var(--track-eyebrow);
+  text-transform:uppercase; color:var(--s-muted); text-align:right}
+.crumb b{color:var(--s-accent); font-weight:var(--w-semibold)}
+
+/* ── TYPE ────────────────────────────────────────────────────────── */
+h2{font-family:var(--font-display); font-weight:var(--w-bold); font-size:var(--h2-size);
+  line-height:var(--lh-snug); letter-spacing:var(--track-snug); margin-bottom:22px; color:var(--s-text); text-wrap:balance}
+h2 .o{color:var(--s-accent)}
+h3{font-family:var(--font-display); font-weight:var(--w-bold); font-size:var(--h3-size);
+  line-height:var(--lh-snug); letter-spacing:var(--track-snug); color:var(--s-text)}
+.lead{font-size:var(--lead-size); line-height:1.45; max-width:48ch; color:var(--s-text); text-wrap:pretty}
+.lead b{color:var(--s-accent)}
+.muted{color:var(--s-muted)}
+strong,b{font-weight:var(--w-semibold)}
+
+ul.bul{list-style:none; display:flex; flex-direction:column; gap:20px; max-width:68ch}
+ul.bul li{font-size:var(--body-size); line-height:1.45; padding-left:1.55em; position:relative;
+  color:var(--s-text); text-wrap:pretty}
+ul.bul li::before{content:""; position:absolute; left:0; top:.44em; width:.6em; height:.6em;
+  background:var(--s-accent); clip-path:polygon(0 0,100% 50%,0 100%)}
+ul.bul li b{color:var(--s-text); font-weight:var(--w-semibold)}
+
+.note{font-size:var(--small-size); color:var(--s-muted); margin-top:20px; line-height:1.45; text-wrap:pretty}
+.note b{color:var(--s-text); font-weight:var(--w-semibold)}
+
+/* ── CARDS / TILES ───────────────────────────────────────────────── */
+.cards{display:grid; gap:var(--space-5)}
+.cards.c3{grid-template-columns:repeat(3,1fr)}
+.cards.c2,.cards.c4{grid-template-columns:repeat(2,1fr)}
+.tile{border:var(--bw) solid var(--s-card-border); border-radius:var(--radius-lg);
+  padding:30px 32px; background:var(--s-card-bg); display:flex; flex-direction:column; gap:10px}
+.tile .k{font-family:var(--font-display); font-weight:var(--w-bold); color:var(--s-accent);
+  font-size:30px; letter-spacing:var(--track-snug)}
+.tile p{font-size:var(--body-size); line-height:1.4; color:var(--s-text); text-wrap:pretty}
+.tile.fill{background:var(--s-callout-bg); border-color:var(--s-card-border);
+  border-left:var(--bw-callout) solid var(--coral); border-radius:0 var(--radius-lg) var(--radius-lg) 0}
+
+.kcard{background:var(--s-callout-bg); color:var(--s-text); border:var(--bw) solid var(--s-card-border);
+  border-left:var(--bw-callout) solid var(--coral); border-radius:0 var(--radius-xl) var(--radius-xl) 0;
+  padding:40px 44px; position:relative; overflow:hidden}
+.slide.dark .kcard{box-shadow:var(--ring-accent-dark)}
+.kcard .big{font-family:var(--font-display); font-weight:var(--w-bold); color:var(--s-accent);
+  font-size:56px; line-height:1.02; letter-spacing:var(--track-snug)}
+.kcard p{font-size:var(--body-size); line-height:1.42; margin-top:14px; max-width:50ch; color:var(--s-text)}
+
+.split{display:grid; grid-template-columns:1fr 1fr; gap:var(--space-8); align-items:center; min-height:0}
+
+/* ── TABLES ──────────────────────────────────────────────────────── */
+table.tbl{width:100%; border-collapse:collapse; font-size:var(--body-size)}
+table.tbl th,table.tbl td{text-align:left; padding:16px 20px; border-bottom:var(--bw-hair) solid var(--s-line)}
+table.tbl th{font-family:var(--font-mono); color:var(--s-accent); font-weight:var(--w-semibold);
+  font-size:var(--small-size); letter-spacing:var(--track-label); text-transform:uppercase}
+table.tbl td{color:var(--s-text)}
+table.tbl td b{color:var(--s-text); font-weight:var(--w-semibold)}
+table.tbl tr:last-child td{border-bottom:none}
+
+/* ── CHIPS ───────────────────────────────────────────────────────── */
+.extag{display:inline-block; font-family:var(--font-mono); font-size:var(--small-size); color:var(--s-accent);
+  background:var(--s-callout-bg); border:var(--bw-hair) solid var(--s-card-border);
+  padding:4px 14px; border-radius:var(--radius-sm); margin-bottom:12px; letter-spacing:var(--track-label);
+  text-transform:uppercase}
+.pills{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px}
+.pill{font-family:var(--font-mono); border:var(--bw-hair) solid var(--coral); color:var(--s-accent);
+  border-radius:var(--radius-pill); padding:4px 16px; font-size:var(--small-size);
+  font-weight:var(--w-semibold); letter-spacing:var(--track-label); white-space:nowrap}
+.pill.live{background:var(--coral); color:var(--ink); border-color:var(--coral)}
+
+/* ── CODE ────────────────────────────────────────────────────────── */
+.code{background:var(--code-bg); border:var(--bw) solid var(--s-line); border-left:3px solid var(--coral);
+  border-radius:var(--radius-lg); padding:24px 28px; font-family:var(--font-mono);
+  font-size:var(--code-size); line-height:var(--lh-mono); overflow:hidden; color:var(--code-text);
+  white-space:pre-wrap}
+.code .c{color:var(--code-comment)}
+.code .o{color:var(--code-keyword)}
+.code .g{color:var(--code-string)}
+.code .b{color:var(--code-number)}
+.code .d{color:var(--code-keyword)}
+
+/* ── SECTION DIVIDER ─────────────────────────────────────────────── */
+.divider .slide-content{align-items:flex-start; justify-content:center; text-align:left}
+.divider .dnum{font:var(--w-bold) var(--fs-mega)/var(--lh-tight) var(--font-display);
+  color:var(--coral); letter-spacing:var(--track-tight); margin-bottom:10px}
+.divider h2{font-size:var(--fs-h1)}
+.divider h2::after{content:""; display:block; width:var(--accent-bar-w); height:var(--bw-accent);
+  background:var(--coral); border-radius:var(--radius-bar); margin:.45em 0 .1em}
+.divider .dsub{color:var(--s-muted); font-size:var(--fs-body-lg); max-width:42ch;
+  margin-top:18px; line-height:var(--lh-body)}
+.divider .dsub b{color:var(--s-text); font-weight:var(--w-semibold)}
+
+/* ── GLOSSARY / USES ─────────────────────────────────────────────── */
+.gloss{display:grid; grid-template-columns:1fr 1fr; gap:4px 44px}
+.gloss .row{display:flex; gap:18px; align-items:baseline; padding:12px 0;
+  border-bottom:var(--bw-hair) solid var(--s-line)}
+.gloss .term{font-family:var(--font-display); font-weight:var(--w-semibold); color:var(--s-accent);
+  font-size:var(--body-size); min-width:6.2em; flex-shrink:0; letter-spacing:var(--track-snug)}
+.gloss .def{font-size:var(--body-size); color:var(--s-text); line-height:1.35}
+.uses{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-5)}
+
+/* ── DIAGRAMS (pure HTML/CSS boxes — no video assets in this deck) ── */
+.diagram{width:100%; display:flex; justify-content:center; align-items:center; margin-top:8px; min-height:0}
+.diagram svg{width:100%; height:auto; max-height:var(--diag-h)}
+.dg-box{fill:var(--s-card-bg); stroke:var(--s-card-border); stroke-width:1.5}
+.dg-box.hot{fill:var(--coral); stroke:var(--coral)}
+.dg-box.outer{fill:var(--s-outer-fill); stroke:var(--coral); stroke-dasharray:6 5}
+.dg-box.mid{fill:var(--s-box-mid); stroke:var(--s-card-border)}
+.dg-t{fill:var(--s-text); font-family:var(--font-body); font-weight:var(--w-semibold)}
+.dg-t.on{fill:var(--ink)}
+.dg-t.mut{fill:var(--s-muted); font-weight:var(--w-medium)}
+.dg-t.acc{fill:var(--s-accent); font-family:var(--font-mono); font-weight:var(--w-semibold)}
+.dg-line{stroke:var(--s-accent); stroke-width:2.5; fill:none}
+.dg-line.dim{stroke:var(--s-line-strong); stroke-width:1.5}
+.dg-fill-g{fill:var(--positive)} .dg-fill-a{fill:var(--warning)} .dg-fill-r{fill:var(--coral)}
+.dg-cap{text-align:center; font-size:var(--small-size); color:var(--s-muted); margin-top:10px}
+.dg-cap b{color:var(--s-text)}
+.diagram marker path{fill:var(--s-accent)}
+/* mw-: animated dash flow, this deck only — loop + flywheel diagrams */
+.mw-flow{stroke-dasharray:7 7}
+@keyframes mw-dash{to{stroke-dashoffset:-28}}
+@media (prefers-reduced-motion:no-preference){
+  [data-deck-active] .mw-flow{animation:mw-dash 1.2s linear infinite}
+}
+
+/* flow: HTML/CSS step chain used instead of video diagrams */
+.flow{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+.flow .step{border:var(--bw) solid var(--s-card-border); background:var(--s-card-bg); border-radius:var(--radius-md);
+  padding:16px 20px; font-family:var(--font-mono); font-size:var(--small-size); color:var(--s-text); text-align:center; min-width:120px}
+.flow .step.hot{background:var(--s-callout-bg); border-color:var(--coral); color:var(--s-accent); font-weight:var(--w-semibold)}
+.flow .arrow{color:var(--s-faint); font-size:22px}
+
+/* ── DEMO / FALLBACK ─────────────────────────────────────────────── */
+.demo-badge{display:inline-flex; align-items:center; gap:8px; font-family:var(--font-mono); font-weight:var(--w-bold);
+  font-size:var(--small-size); letter-spacing:var(--track-label); text-transform:uppercase; color:var(--coral);
+  border:var(--bw) solid var(--coral); border-radius:var(--radius-pill); padding:6px 18px 6px 14px; margin-bottom:16px}
+.demo-badge::before{content:"\1F534"; font-size:.85em}
+.fallback-box{border:2px dashed var(--s-card-border); border-radius:var(--radius-lg); background:var(--s-card-bg);
+  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; padding:40px; min-height:0}
+.fallback-box .fb-icon{font-family:var(--font-mono); font-size:64px; color:var(--s-faint)}
+.fallback-box .fb-caption{font-family:var(--font-mono); font-size:var(--small-size); color:var(--s-muted); text-align:center; max-width:48ch}
+
+/* ── WIP badge (title slide) ─────────────────────────────────────── */
+.wip-badge{display:inline-flex; align-items:center; gap:10px; font-family:var(--font-mono); font-weight:700;
+  font-size:16px; letter-spacing:.14em; text-transform:uppercase; color:var(--coral);
+  border:1.5px solid var(--coral); border-radius:var(--radius-pill); padding:6px 18px; margin-bottom:20px}
+
+/* ── TITLE SLIDE ─────────────────────────────────────────────────── */
+.title-slide{display:flex; flex-direction:column; justify-content:space-between; background:var(--ink);
+  padding:88px 96px 0}
+.ts-top{display:flex; justify-content:space-between; align-items:baseline; font:600 var(--fs-eyebrow) var(--font-mono);
+  letter-spacing:var(--track-eyebrow); text-transform:uppercase}
+.ts-top .k{color:var(--coral)}
+.ts-top .meta{color:var(--on-dark-faint); font-weight:500}
+.ts-hero h1{font-family:var(--font-display); font-weight:var(--w-bold); letter-spacing:-.035em; line-height:.94;
+  color:var(--on-dark); font-size:132px}
+.ts-hero h1 .dot{color:var(--coral)}
+.ts-sub{font-size:34px; color:var(--on-dark-muted); margin-top:36px; font-weight:400; max-width:34ch}
+.ts-sub b{color:var(--on-dark); font-weight:600}
+.ts-foot{border-top:var(--bw-hair) solid var(--line-dark); margin:0 -96px; padding:34px 96px 40px;
+  display:flex; justify-content:space-between; align-items:center}
+.ts-author{font-size:26px; color:var(--on-dark-muted)}
+.ts-author a{color:inherit;text-decoration:none;border-bottom:1px solid transparent;transition:border-color .15s}
+.ts-author a:hover{border-color:currentColor}
+.ts-author b{color:var(--coral); font-weight:var(--w-semibold)}
+.ts-loopline{font:500 24px var(--font-mono); letter-spacing:.04em; color:var(--on-dark-faint)}
+.ts-loopline .a{color:var(--coral)}
+.ts-loopline .w{color:var(--on-dark-muted)}
+
+/* ── CLOSING ─────────────────────────────────────────────────────── */
+.thanks{font-family:var(--font-display); font-weight:var(--w-bold); font-size:104px; line-height:.98;
+  letter-spacing:var(--track-tight); color:var(--s-text)}
+.thanks .o{color:var(--s-accent)}
+.links{display:grid; grid-template-columns:1fr 1fr; gap:var(--space-7)}
+.linkcol h3{color:var(--s-accent); font-family:var(--font-display); font-weight:var(--w-semibold);
+  margin-bottom:12px; font-size:26px; letter-spacing:var(--track-snug)}
+.linkcol a{display:block; color:var(--s-text); text-decoration:none; font-size:19px; line-height:1.3;
+  padding:6px 0; border-bottom:var(--bw-hair) solid var(--s-line)}
+.linkcol a:hover{color:var(--s-accent)}
+.linkcol a .u{display:block; color:var(--s-muted); font-family:var(--font-mono); font-size:.8em; margin-top:.08em}
+
+/* ── ENTRANCE MOTION ─────────────────────────────────────────────── */
+@keyframes ae-rise{from{opacity:0; transform:translateY(22px)} to{opacity:1; transform:none}}
+@media (prefers-reduced-motion:no-preference){
+  [data-deck-active] .reveal{animation:ae-rise .5s var(--ease) both}
+  [data-deck-active] .reveal:nth-child(2){animation-delay:.07s}
+  [data-deck-active] .reveal:nth-child(3){animation-delay:.14s}
+  [data-deck-active] .reveal:nth-child(4){animation-delay:.21s}
+  [data-deck-active] .reveal:nth-child(n+5){animation-delay:.27s}
+  [data-deck-active] .title-slide>*{animation:ae-rise .8s var(--ease) both}
+  [data-deck-active] .title-slide>.ts-hero{animation-delay:.15s}
+  [data-deck-active] .title-slide>.ts-foot{animation-delay:.3s}
+}
+</style>
+</head>
+<body>
+
+<!--
+  ============================================================
+  Measuring What Works — deck 07 in the series. A ~30-minute
+  deep dive for engineers already running Claude Code daily.
+  Three parts: 01 evals & traces (the most important part for
+  every engineer), 02 alternative harnesses/models/APIs,
+  03 day-to-day tips & close. The spine: measure first, then
+  use the numbers to route across models and harnesses, then
+  the daily habits that compound.
+  Companion decks: 05 Cost & Context (cost-and-context.html),
+  06 Orchestrating Agents (orchestrating-agents.html).
+  All pricing/product claims sourced from deck05-facts.md
+  (July 2026 research pass) — see the closing Sources slide.
+  Status: WIP / DRAFT — flagged on the title slide.
+  Runs on the Ember deck-stage component: ←/→, Space, Home/End,
+  number keys; R resets; speaker notes live on each section.
+  ============================================================
+-->
+
+<deck-stage width="1920" height="1080">
+
+  <!-- TITLE -->
+  <section class="slide dark title-slide" data-label="Title"
+    data-speaker-notes="Open with the spine and say it out loud: measure, route, habits. Make the promise concrete — evals and traces turn 'this feels better' into a number, and that number is what tells you which model or harness to reach for. Flag that this is a work-in-progress deck and you want pushback on the demos as much as the content.">
+    <div class="ts-top"><span class="k">Deep dive · advanced topics · ~30 min</span><span class="meta">Internal talk · July 2026</span></div>
+    <div class="ts-hero">
+      <div class="wip-badge">WIP — draft</div>
+      <h1>Measuring<br>What Works<span class="dot">.</span></h1>
+      <p class="ts-sub"><b>Evals and traces</b> turn vibes into numbers — then use them to <b>route</b> across models and harnesses, and the <b>daily habits</b> that compound.</p>
+    </div>
+    <div class="ts-foot">
+      <div class="ts-author"><a href="https://davidbudac.cz" target="_blank" rel="noopener">David&nbsp;Budáč</a></div>
+      <div class="ts-loopline"><span class="w">measure</span> <span class="a">→</span> <span class="w">route</span> <span class="a">→</span> <span class="w">habits</span></div>
+    </div>
+  </section>
+
+  <!-- AGENDA -->
+  <section class="slide light" data-label="Agenda"
+    data-speaker-notes="Keep this short — three parts, half an hour, one live demo in each. Call out that part 01 is the one flagged as most important for every engineer, because evals are the skill the rest of the deck depends on. Mention each demo has a runbook and a fallback slide behind it.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">2</span><div class="crumb"><b>Agenda</b></div></div>
+      <h2 class="reveal">Three parts, <span class="o">~30 minutes</span></h2>
+      <table class="tbl reveal">
+        <thead><tr><th>Part</th><th>Topic</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td><b>01</b></td><td>Measuring what works: evals & traces</td><td><b>most important for every engineer</b> · live demo</td></tr>
+          <tr><td><b>02</b></td><td>Alternative harnesses, models & APIs</td><td>live demo</td></tr>
+          <tr><td><b>03</b></td><td>Day-to-day tips & close</td><td>live demo</td></tr>
+        </tbody>
+      </table>
+      <p class="note reveal">All pricing and product claims are date-stamped <b>July 2026</b> and sourced — see the closing Sources slide.</p>
+    </div>
+  </section>
+
+  <!-- ============ PART 01 — MEASURING WHAT WORKS ============ -->
+  <section class="slide dark divider" data-label="01 Measuring what works: evals & traces"
+    data-speaker-notes="Say plainly this is the most important part for every engineer, not just for leads. Vibes don't scale past one person's intuition — evals are how a team makes changes to CLAUDE.md, prompts, or models without arguing from anecdotes. The live demo closes the part by actually running a small eval on stage.">
+    <div class="slide-content">
+      <div class="dnum reveal">01</div>
+      <h2 class="reveal">Measuring what works: <span class="o">evals & traces</span></h2>
+      <p class="dsub reveal">The <b>most important part for every engineer</b> in this room — evals are the core skill, not a nice-to-have.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Why vibes don't scale"
+    data-speaker-notes="Make the case directly: 'this feels better' does not survive a team of ten people all tweaking the same CLAUDE.md or prompt independently. Evals turn a feeling into a number two people can agree on without a meeting. Position evals as the core AI skill for an engineer in 2026, on par with writing tests.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">3</span><div class="crumb"><b>Evals</b> · why vibes don't scale</div></div>
+      <h2 class="reveal">"Feels better" <span class="o">doesn't scale</span></h2>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>One person's intuition about a prompt or CLAUDE.md change doesn't survive a team of ten making changes independently.</li>
+          <li>An eval turns a feeling into a <b>number two people can agree on</b> without a meeting.</li>
+          <li>This is the core AI skill for an engineer in 2026 — on par with writing tests.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 440 300" role="img" aria-label="The same change judged two ways: three conflicting gut feelings converge into a meeting that settles nothing, while a fixed task set run on both variants produces one number">
+            <defs><marker id="vb1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <text class="dg-t mut" x="220" y="22" font-size="12" text-anchor="middle">the same CLAUDE.md change, judged two ways</text>
+            <!-- vibes lane -->
+            <rect class="dg-box" x="20" y="38" width="120" height="34" rx="7"/>
+            <text class="dg-t mut" x="80" y="60" font-size="12" text-anchor="middle">"feels better"</text>
+            <rect class="dg-box" x="160" y="38" width="120" height="34" rx="7"/>
+            <text class="dg-t mut" x="220" y="60" font-size="12" text-anchor="middle">"feels worse"</text>
+            <rect class="dg-box" x="300" y="38" width="120" height="34" rx="7"/>
+            <text class="dg-t mut" x="360" y="60" font-size="12" text-anchor="middle">"can't tell"</text>
+            <path class="dg-line dim" d="M85 76 L 195 106" marker-end="url(#vb1)"/>
+            <path class="dg-line dim" d="M220 76 L 220 106" marker-end="url(#vb1)"/>
+            <path class="dg-line dim" d="M355 76 L 245 106" marker-end="url(#vb1)"/>
+            <rect class="dg-box mid" x="104" y="114" width="232" height="38" rx="7"/>
+            <text class="dg-t mut" x="220" y="138" font-size="12.5" text-anchor="middle">✕ a meeting — no way to settle it</text>
+            <line class="dg-line dim" x1="20" y1="172" x2="420" y2="172"/>
+            <!-- eval lane -->
+            <rect class="dg-box" x="20" y="192" width="122" height="48" rx="7"/>
+            <text class="dg-t" x="81" y="212" font-size="12.5" text-anchor="middle">fixed task set</text>
+            <text class="dg-t mut" x="81" y="230" font-size="10.5" text-anchor="middle">real past work</text>
+            <path class="dg-line" d="M150 216 L 178 216" marker-end="url(#vb1)"/>
+            <rect class="dg-box" x="188" y="192" width="112" height="48" rx="7"/>
+            <text class="dg-t" x="244" y="212" font-size="12.5" text-anchor="middle">run both</text>
+            <text class="dg-t mut" x="244" y="230" font-size="10.5" text-anchor="middle">before / after</text>
+            <path class="dg-line" d="M308 216 L 336 216" marker-end="url(#vb1)"/>
+            <rect class="dg-box hot" x="346" y="192" width="74" height="48" rx="7"/>
+            <text class="dg-t on" x="383" y="212" font-size="12.5" text-anchor="middle">one</text>
+            <text class="dg-t on" x="383" y="230" font-size="12.5" text-anchor="middle">number</text>
+            <text class="dg-t acc" x="220" y="284" font-size="12.5" text-anchor="middle">a number settles what opinions can't — no meeting required</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Eval type: task-completion suites"
+    data-speaker-notes="The most direct eval type: a fixed set of real tasks with a pass/fail or scored check, run against whatever variant you're testing. Cheap to build once you have five or ten representative tasks from actual work, not synthetic toy problems.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">4</span><div class="crumb"><b>Evals</b> · eval types</div></div>
+      <h2 class="reveal">Task-completion <span class="o">suites</span></h2>
+      <ul class="bul reveal">
+        <li>A fixed set of real tasks, each with a pass/fail or scored check.</li>
+        <li>Build it from <b>actual past work</b> — five to ten representative tasks beat fifty synthetic ones.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Eval type: LLM-as-judge"
+    data-speaker-notes="For tasks without a clean pass/fail — writing quality, code style, explanation clarity — use a second model as judge against a written rubric. Warn about the known failure mode: a judge model tends to prefer its own outputs, so rotate judges or use a different model family than the one being evaluated.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">5</span><div class="crumb"><b>Evals</b> · eval types</div></div>
+      <h2 class="reveal"><span class="o">LLM-as-judge</span></h2>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>For tasks with no clean pass/fail — writing quality, code style, clarity — score output against a written rubric using a second model.</li>
+          <li>Known failure mode: a judge tends to prefer its own family's outputs. Use a different model as judge than the one being evaluated.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 440 290" role="img" aria-label="The output under test and a written rubric both feed a judge model from a different family, which emits a score between zero and one; a dashed self-loop marks the self-preference failure mode of a judge grading its own family">
+            <defs><marker id="jd1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <text class="dg-t mut" x="220" y="20" font-size="12" text-anchor="middle">scoring when there is no clean pass/fail</text>
+            <rect class="dg-box" x="20" y="42" width="164" height="50" rx="8"/>
+            <text class="dg-t" x="102" y="63" font-size="12.5" text-anchor="middle">output under test</text>
+            <text class="dg-t mut" x="102" y="81" font-size="10.5" text-anchor="middle">prose · code style · clarity</text>
+            <rect class="dg-box" x="20" y="116" width="164" height="50" rx="8"/>
+            <text class="dg-t" x="102" y="137" font-size="12.5" text-anchor="middle">written rubric</text>
+            <text class="dg-t mut" x="102" y="155" font-size="10.5" text-anchor="middle">the criteria, in prose</text>
+            <path class="dg-line" d="M192 67 L 238 92" marker-end="url(#jd1)"/>
+            <path class="dg-line" d="M192 141 L 238 116" marker-end="url(#jd1)"/>
+            <rect class="dg-box hot" x="248" y="76" width="172" height="56" rx="9"/>
+            <text class="dg-t on" x="334" y="99" font-size="13" text-anchor="middle">judge model</text>
+            <text class="dg-t on" x="334" y="117" font-size="11" text-anchor="middle">a different model family</text>
+            <path class="dg-line" d="M334 140 L 334 172" marker-end="url(#jd1)"/>
+            <rect class="dg-box" x="272" y="182" width="124" height="42" rx="8"/>
+            <text class="dg-t acc" x="334" y="208" font-size="13" text-anchor="middle">score 0–1</text>
+            <!-- failure mode: judging its own family -->
+            <path class="dg-line dim" d="M420 84 C 448 68, 448 124, 420 116" stroke-dasharray="5 5"/>
+            <text class="dg-t mut" x="428" y="148" font-size="10.5" text-anchor="end">✕ grading its</text>
+            <text class="dg-t mut" x="428" y="162" font-size="10.5" text-anchor="end">own outputs</text>
+            <text class="dg-t acc" x="220" y="272" font-size="12.5" text-anchor="middle">⚑ judges prefer their own family — never let a model grade itself</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Eval type: pass@k"
+    data-speaker-notes="Pass@k runs the same task k times and checks whether at least one attempt succeeds — useful for agentic work where variance run-to-run is real and a single run can mislead. On a fixed repo task set, it's the honest way to compare two configurations when either one occasionally fails by chance. Also name the mirror metric, pass^k — all k runs succeed: pass@k measures whether a config can do the task at all, pass^k whether you can rely on it unattended. For anything you'll run in CI or overnight, pass^k is the one that matters.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">6</span><div class="crumb"><b>Evals</b> · eval types</div></div>
+      <h2 class="reveal"><span class="o">Pass@k</span> on a fixed repo task set</h2>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>Run the same task <b>k times</b>; check whether at least one attempt succeeds.</li>
+          <li>Accounts for run-to-run variance in agentic work — a single run can mislead either direction.</li>
+          <li>The mirror metric: <b>pass^k</b> — <i>all</i> k attempts succeed. Use it when you need reliability, not just best-case ability.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 440 280" role="img" aria-label="The same task run five times with one success: pass at 5 passes because one success is enough, pass to the power of 5 fails because every run must succeed">
+            <text class="dg-t mut" x="250" y="26" font-size="12" text-anchor="middle">the same task, run 5 times</text>
+            <!-- run outcomes: ✗ ✗ ✓ ✗ ✗ -->
+            <circle class="dg-box" cx="120" cy="70" r="21"/>
+            <circle class="dg-box" cx="185" cy="70" r="21"/>
+            <circle class="dg-fill-g" cx="250" cy="70" r="21"/>
+            <circle class="dg-box" cx="315" cy="70" r="21"/>
+            <circle class="dg-box" cx="380" cy="70" r="21"/>
+            <text class="dg-t mut" x="120" y="76" font-size="15" text-anchor="middle">✗</text>
+            <text class="dg-t mut" x="185" y="76" font-size="15" text-anchor="middle">✗</text>
+            <text class="dg-t on" x="250" y="76" font-size="15" text-anchor="middle">✓</text>
+            <text class="dg-t mut" x="315" y="76" font-size="15" text-anchor="middle">✗</text>
+            <text class="dg-t mut" x="380" y="76" font-size="15" text-anchor="middle">✗</text>
+            <!-- two verdicts on the same runs -->
+            <text class="dg-t acc" x="96" y="146" font-size="14" text-anchor="end">pass@5</text>
+            <text class="dg-t" x="112" y="146" font-size="13"><tspan class="dg-t" style="fill:var(--positive)" font-size="15">✓</tspan>  passes — one success is enough</text>
+            <text class="dg-t mut" x="112" y="168" font-size="11.5">answers: can it do the task at all?</text>
+            <text class="dg-t acc" x="96" y="212" font-size="14" text-anchor="end">pass^5</text>
+            <text class="dg-t" x="112" y="212" font-size="13"><tspan class="dg-t acc" font-size="15">✗</tspan>  fails — every run must succeed</text>
+            <text class="dg-t mut" x="112" y="234" font-size="11.5">answers: can you rely on it unattended?</text>
+            <text class="dg-t acc" x="220" y="272" font-size="12.5" text-anchor="middle">same five runs — two different questions</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Traces: capturing transcripts"
+    data-speaker-notes="A trace is the full agent transcript — every tool call, every token of reasoning, every turn. Capturing it is the raw material for the next slide's analysis, and it's also what makes a failed run debuggable after the fact instead of just 'it didn't work.'">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">7</span><div class="crumb"><b>Evals</b> · traces</div></div>
+      <h2 class="reveal">Traces: capture the <span class="o">full transcript</span></h2>
+      <ul class="bul reveal">
+        <li>Every tool call, every turn, every reasoning block — the raw material for analysis.</li>
+        <li>Also what turns a failed run from "it didn't work" into something debuggable.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Traces: reading for waste"
+    data-speaker-notes="The skill is reading a trace looking specifically for wasted turns — a file read twice, a plan restated three times, a tool call that failed silently and got retried blind. This is where deck 05, Cost &amp; Context's cost anatomy and context hygiene become directly actionable on a real session.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">8</span><div class="crumb"><b>Evals</b> · traces</div></div>
+      <h2 class="reveal">Reading traces for <span class="o">wasted turns</span></h2>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>Look for: a file read twice, a plan restated repeatedly, a failed tool call retried blind.</li>
+          <li>This is where <b>deck 05, Cost & Context</b>'s cost anatomy and context hygiene become <b>actionable on a real session.</b></li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 440 300" role="img" aria-label="A six-turn trace read top to bottom: a re-read of the same file, a restated plan and a blind retry are flagged as waste">
+            <line class="dg-line dim" x1="58" y1="30" x2="58" y2="262"/>
+            <!-- t1 ok -->
+            <text class="dg-t mut" x="48" y="45" font-size="11" text-anchor="end" font-family="var(--font-mono)">t1</text>
+            <rect class="dg-box" x="70" y="26" width="240" height="30" rx="6"/>
+            <text class="dg-t mut" x="84" y="46" font-size="12" font-family="var(--font-mono)">read auth.ts</text>
+            <!-- t2 ok -->
+            <text class="dg-t mut" x="48" y="87" font-size="11" text-anchor="end" font-family="var(--font-mono)">t2</text>
+            <rect class="dg-box" x="70" y="68" width="240" height="30" rx="6"/>
+            <text class="dg-t mut" x="84" y="88" font-size="12" font-family="var(--font-mono)">write the plan</text>
+            <!-- t3 waste: re-read -->
+            <text class="dg-t mut" x="48" y="129" font-size="11" text-anchor="end" font-family="var(--font-mono)">t3</text>
+            <rect class="dg-fill-a" x="70" y="110" width="240" height="30" rx="6" opacity="0.9"/>
+            <text class="dg-t on" x="84" y="130" font-size="12" font-family="var(--font-mono)">read auth.ts — again</text>
+            <text class="dg-t acc" x="322" y="130" font-size="12">⚑ re-read</text>
+            <!-- t4 waste: restated plan -->
+            <text class="dg-t mut" x="48" y="171" font-size="11" text-anchor="end" font-family="var(--font-mono)">t4</text>
+            <rect class="dg-fill-a" x="70" y="152" width="240" height="30" rx="6" opacity="0.9"/>
+            <text class="dg-t on" x="84" y="172" font-size="12" font-family="var(--font-mono)">restate the plan</text>
+            <text class="dg-t acc" x="322" y="172" font-size="12">⚑ repeat</text>
+            <!-- t5 waste: blind retry -->
+            <text class="dg-t mut" x="48" y="213" font-size="11" text-anchor="end" font-family="var(--font-mono)">t5</text>
+            <rect class="dg-fill-a" x="70" y="194" width="240" height="30" rx="6" opacity="0.9"/>
+            <text class="dg-t on" x="84" y="214" font-size="12" font-family="var(--font-mono)">retry failed call, same args</text>
+            <text class="dg-t acc" x="322" y="214" font-size="12">⚑ blind retry</text>
+            <!-- t6 ok -->
+            <text class="dg-t mut" x="48" y="255" font-size="11" text-anchor="end" font-family="var(--font-mono)">t6</text>
+            <rect class="dg-box" x="70" y="236" width="240" height="30" rx="6"/>
+            <text class="dg-t mut" x="84" y="256" font-size="12" font-family="var(--font-mono)">edit + tests pass ✓</text>
+            <text class="dg-t acc" x="220" y="292" font-size="12.5" text-anchor="middle">every ⚑ is tokens paid twice — half this trace is waste</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Trace tooling"
+    data-speaker-notes="Name the tooling category without over-selling any one vendor: OTel-based observability stacks capture agent traces the same way they'd capture microservice traces, and most model providers now ship their own usage/trace dashboards. Call out that Claude Code itself exports OTel metrics — tokens, cost, tool usage — via standard exporters, so a team with an existing Grafana/Datadog stack can start today with zero new vendors. Point people at whichever their org already has before reaching for a new tool.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">9</span><div class="crumb"><b>Evals</b> · tooling</div></div>
+      <h2 class="reveal">Tools: <span class="o">OTel & provider dashboards</span></h2>
+      <div class="split">
+        <ul class="bul reveal">
+          <li><b>OTel-based observability:</b> capture agent traces the same way you'd capture microservice traces.</li>
+          <li><b>Claude Code ships OTel support</b> out of the box — token, cost, and tool-usage metrics via standard exporters. Zero new vendors to start.</li>
+          <li><b>Provider dashboards:</b> most model providers now ship usage/trace views out of the box — check what your org already has before adding a new tool.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 440 300" role="img" aria-label="Two paths into tooling you already run: Claude Code's built-in OTel exporter feeds an existing Grafana, Datadog or Kibana stack, and the model provider's own usage dashboard ships out of the box">
+            <defs><marker id="ot1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <text class="dg-t mut" x="220" y="20" font-size="12" text-anchor="middle">agent traces land in tooling you already run</text>
+            <!-- lane 1: Claude Code → OTel → existing stack -->
+            <rect class="dg-box hot" x="20" y="46" width="152" height="64" rx="9"/>
+            <text class="dg-t on" x="96" y="73" font-size="13" text-anchor="middle">Claude Code</text>
+            <text class="dg-t on" x="96" y="92" font-size="10.5" text-anchor="middle">tokens · cost · tool usage</text>
+            <path class="dg-line" d="M180 78 L 246 78" marker-end="url(#ot1)"/>
+            <text class="dg-t acc" x="213" y="62" font-size="9.5" text-anchor="middle">OTel exporter</text>
+            <text class="dg-t mut" x="213" y="98" font-size="10" text-anchor="middle">built in</text>
+            <rect class="dg-box outer" x="256" y="30" width="164" height="136" rx="12"/>
+            <text class="dg-t acc" x="338" y="52" font-size="12" text-anchor="middle">your existing stack</text>
+            <rect class="dg-box" x="272" y="62" width="132" height="26" rx="6"/>
+            <text class="dg-t" x="338" y="80" font-size="11.5" text-anchor="middle">Grafana</text>
+            <rect class="dg-box" x="272" y="96" width="132" height="26" rx="6"/>
+            <text class="dg-t" x="338" y="114" font-size="11.5" text-anchor="middle">Datadog</text>
+            <rect class="dg-box" x="272" y="130" width="132" height="26" rx="6"/>
+            <text class="dg-t" x="338" y="148" font-size="11.5" text-anchor="middle">Kibana / Elastic</text>
+            <!-- lane 2: provider dashboard -->
+            <rect class="dg-box" x="20" y="200" width="152" height="56" rx="9"/>
+            <text class="dg-t" x="96" y="223" font-size="12.5" text-anchor="middle">model provider</text>
+            <text class="dg-t mut" x="96" y="241" font-size="10.5" text-anchor="middle">hosted API</text>
+            <path class="dg-line dim" d="M180 228 L 246 228" marker-end="url(#ot1)"/>
+            <rect class="dg-box" x="256" y="200" width="164" height="56" rx="9"/>
+            <text class="dg-t" x="338" y="223" font-size="12.5" text-anchor="middle">usage dashboard</text>
+            <text class="dg-t mut" x="338" y="241" font-size="10.5" text-anchor="middle">ships out of the box</text>
+            <text class="dg-t acc" x="220" y="290" font-size="12.5" text-anchor="middle">zero new vendors to start — check what your org already has</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Anatomy of an agent trace"
+    data-speaker-notes="Make the OTel story concrete with a worked example: Elastic's Agent Builder emits a full OTel trace for every conversation turn by default — 'a receipt for a single conversation turn' — and it follows the OpenTelemetry GenAI semantic conventions, which are worth knowing regardless of vendor because they're becoming the lingua franca. Walk the waterfall top-down: a parent invoke_agent span wraps the whole turn; inside it, each chat span is one LLM request carrying gen_ai.usage.input_tokens and output_tokens, and each execute_tool span records which tool ran, with what arguments, and how long it took. Because spans are just structured data in the store, the payoff is ordinary observability work: token-spend dashboards, latency waterfalls to find the slow tool, and budget alerts like 'fire when a single conversation exceeds 256k tokens.' The wasted-turns reading from two slides ago becomes queryable — a re-read file or a blind retry is visible as repeated spans, and you can alert on it instead of eyeballing transcripts. Source: Elastic Search Labs post on OTel tracing in Agent Builder, linked on the Sources slide.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">10</span><div class="crumb"><b>Evals</b> · traces · anatomy</div></div>
+      <h2 class="reveal">Anatomy of an agent trace: <span class="o">gen_ai.* spans</span></h2>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>OTel <b>GenAI semantic conventions</b> — the emerging vendor-neutral standard for agent traces.</li>
+          <li>Every turn = one trace: <code>invoke_agent</code> wraps <code>chat</code> spans (LLM calls, token counts) and <code>execute_tool</code> spans (args, duration).</li>
+          <li>Spans are just data → <b>token-spend dashboards, latency waterfalls, budget alerts</b> ("fire above 256k tokens per conversation").</li>
+          <li>The wasted-turns reading becomes <b>queryable</b>: repeated spans = a re-read or blind retry you can alert on.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 460 290" role="img" aria-label="Trace waterfall of one agent turn: a parent invoke_agent span contains alternating chat spans carrying token counts and execute_tool spans carrying tool names and durations">
+            <text class="dg-t mut" x="230" y="20" font-size="12" text-anchor="middle">one conversation turn — the trace waterfall</text>
+            <!-- parent span -->
+            <rect class="dg-box outer" x="20" y="34" width="420" height="34" rx="7"/>
+            <text class="dg-t acc" x="34" y="56" font-size="12.5" font-family="var(--font-mono)">invoke_agent</text>
+            <text class="dg-t mut" x="428" y="56" font-size="11" text-anchor="end">the whole turn</text>
+            <!-- chat 1 -->
+            <rect class="dg-fill-r" x="48" y="80" width="180" height="30" rx="6" opacity="0.9"/>
+            <text class="dg-t on" x="60" y="100" font-size="11.5" font-family="var(--font-mono)">chat (LLM)</text>
+            <text class="dg-t mut" x="240" y="100" font-size="10.5">gen_ai.usage.input_tokens: 8 214</text>
+            <!-- tool 1 -->
+            <rect class="dg-box" x="76" y="118" width="220" height="30" rx="6"/>
+            <text class="dg-t" x="88" y="138" font-size="11.5" font-family="var(--font-mono)">execute_tool · search</text>
+            <text class="dg-t mut" x="308" y="138" font-size="10.5">args + result · 412 ms</text>
+            <!-- chat 2 -->
+            <rect class="dg-fill-r" x="48" y="156" width="230" height="30" rx="6" opacity="0.9"/>
+            <text class="dg-t on" x="60" y="176" font-size="11.5" font-family="var(--font-mono)">chat (LLM)</text>
+            <text class="dg-t mut" x="290" y="176" font-size="10.5">output_tokens: 1 102</text>
+            <!-- tool 2 -->
+            <rect class="dg-box" x="76" y="194" width="150" height="30" rx="6"/>
+            <text class="dg-t" x="88" y="214" font-size="11.5" font-family="var(--font-mono)">execute_tool · edit</text>
+            <text class="dg-t mut" x="238" y="214" font-size="10.5">96 ms</text>
+            <!-- chat 3 -->
+            <rect class="dg-fill-r" x="48" y="232" width="120" height="30" rx="6" opacity="0.9"/>
+            <text class="dg-t on" x="60" y="252" font-size="11.5" font-family="var(--font-mono)">chat (LLM)</text>
+            <text class="dg-t mut" x="180" y="252" font-size="10.5">final answer</text>
+            <text class="dg-t acc" x="230" y="284" font-size="12" text-anchor="middle">width = time · every span carries gen_ai.* attributes</text>
+          </svg>
+        </div>
+      </div>
+      <p class="note reveal">Worked example: <b>Elastic Agent Builder</b> emits this per turn by default — "a receipt for a single conversation turn" — queryable, dashboardable, alertable in Kibana.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="A minimal eval loop"
+    data-speaker-notes="Give the version any team can start this week with zero new tooling: a handful of fixed prompts representative of real work, a short written rubric, and a spreadsheet to score runs against it. This is deliberately unglamorous — the point is that the bar to start is nearly zero, and the demo shows exactly this.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">11</span><div class="crumb"><b>Evals</b> · the minimal loop</div></div>
+      <h2 class="reveal">A minimal eval loop, <span class="o">this week</span></h2>
+      <div class="diagram reveal" style="--diag-h:480px">
+        <svg viewBox="0 0 860 280" role="img" aria-label="A closed loop: a fixed set of prompts is run per variant, scored against a written rubric, compared in a spreadsheet, then one thing is changed and the loop returns to the run step">
+          <defs><marker id="lp1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+          <!-- forward chain -->
+          <rect class="dg-box" x="30" y="50" width="160" height="60" rx="9"/>
+          <text class="dg-t" x="110" y="75" font-size="14" text-anchor="middle">fixed prompts</text>
+          <text class="dg-t mut" x="110" y="95" font-size="11.5" text-anchor="middle">5–10 real tasks</text>
+          <path class="dg-line" d="M198 80 L 240 80" marker-end="url(#lp1)"/>
+          <rect class="dg-box" x="250" y="50" width="130" height="60" rx="9"/>
+          <text class="dg-t" x="315" y="75" font-size="14" text-anchor="middle">run</text>
+          <text class="dg-t mut" x="315" y="95" font-size="11.5" text-anchor="middle">each variant</text>
+          <path class="dg-line" d="M388 80 L 430 80" marker-end="url(#lp1)"/>
+          <rect class="dg-box" x="440" y="50" width="150" height="60" rx="9"/>
+          <text class="dg-t" x="515" y="75" font-size="14" text-anchor="middle">score</text>
+          <text class="dg-t mut" x="515" y="95" font-size="11.5" text-anchor="middle">against a written rubric</text>
+          <path class="dg-line" d="M598 80 L 640 80" marker-end="url(#lp1)"/>
+          <rect class="dg-box" x="650" y="50" width="170" height="60" rx="9"/>
+          <text class="dg-t" x="735" y="75" font-size="14" text-anchor="middle">compare</text>
+          <text class="dg-t mut" x="735" y="95" font-size="11.5" text-anchor="middle">in a spreadsheet</text>
+          <!-- the loop back -->
+          <path class="dg-line mw-flow" d="M735 114 L 735 216 L 608 216" marker-end="url(#lp1)"/>
+          <rect class="dg-box hot" x="336" y="190" width="264" height="52" rx="10"/>
+          <text class="dg-t on" x="468" y="212" font-size="14" text-anchor="middle">change ONE thing</text>
+          <text class="dg-t on" x="468" y="231" font-size="10.5" text-anchor="middle">prompt, CLAUDE.md, or model — not two</text>
+          <path class="dg-line mw-flow" d="M328 216 L 315 216 L 315 120" marker-end="url(#lp1)"/>
+          <text class="dg-t mut" x="290" y="170" font-size="11.5" text-anchor="end">next cycle</text>
+          <text class="dg-t acc" x="430" y="272" font-size="13" text-anchor="middle">one variable per cycle — otherwise the number can't tell you what mattered</text>
+        </svg>
+      </div>
+      <p class="note reveal">Deliberately unglamorous — the bar to start is nearly zero, no new tooling required.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="smevals: an eval framework"
+    data-speaker-notes="When the spreadsheet loop starts to hurt — more tasks, more variants, more people — smevals is the graduation step: an open-source Python framework (github.com/prime-radiant-inc/smevals) that keeps the same shape but makes it repeatable. Walk the vocabulary left to right: an Eval is a collection of Tasks; a Config says which model and settings attempt them; each execution is an immutable Run; a Grader is a sequence of Checks that turns Runs into scores. The Runner is any executable — so the thing being evaluated can be a plain model call or a full agent harness like Claude Code. One subtle design point worth saying aloud: a Runner that exits non-zero is a harness failure, not evidence about the model — infrastructure errors don't pollute your numbers.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">12</span><div class="crumb"><b>Evals</b> · smevals</div></div>
+      <h2 class="reveal">smevals: the spreadsheet, <span class="o">grown up</span></h2>
+      <p class="lead reveal" style="margin-bottom:24px">Open-source Python framework — same loop as the spreadsheet, but <b>repeatable and shareable</b>.</p>
+      <div class="gloss reveal">
+        <div class="row"><span class="term">Eval</span><span class="def">a collection of Tasks measuring one capability</span></div>
+        <div class="row"><span class="term">Config</span><span class="def">which model, parameters, prompts, tools</span></div>
+        <div class="row"><span class="term">Task</span><span class="def">one exercise the model must complete</span></div>
+        <div class="row"><span class="term">Run</span><span class="def">immutable record of one Task × one Config</span></div>
+        <div class="row"><span class="term">Grader</span><span class="def">a sequence of Checks combined into a score</span></div>
+        <div class="row"><span class="term">Runner</span><span class="def">any executable — a model call <i>or</i> a full agent harness</span></div>
+      </div>
+      <p class="note reveal">Design detail worth stealing: a Runner that exits non-zero is a <b>harness failure, not model evidence</b> — infrastructure errors never pollute the scores. <span class="muted">github.com/prime-radiant-inc/smevals</span></p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="smevals: the workflow"
+    data-speaker-notes="Show how little ceremony there is: tasks, configs, and graders are small YAML files; checkers are plain executables you write in anything. Then three commands — run, grade, report — and 'smevals serve' gives a live web dashboard comparing models. The -n flag repeats each task n times, which is exactly the pass@k / pass^k discipline from a few slides back, now automated. Point out this maps one-to-one onto the minimal loop: fixed prompts become task YAMLs, the written rubric becomes a grader, the spreadsheet becomes the report.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">13</span><div class="crumb"><b>Evals</b> · smevals</div></div>
+      <h2 class="reveal">Three YAML files, <span class="o">three commands</span></h2>
+      <div class="split">
+        <div class="code reveal"><span class="c"># tasks/pelicans.yaml</span>
+<span class="o">name:</span> pelicans
+<span class="o">prompt:</span> <span class="g">Write a haiku about pelicans.</span>
+
+<span class="c"># graders/default.yaml</span>
+<span class="o">checks:</span>
+  - <span class="o">checker:</span> ../checkers/three-lines
+    <span class="o">required:</span> <span class="b">true</span></div>
+        <div class="code reveal"><span class="c"># repeat each task 5× → pass@5 / pass^5</span>
+<span class="d">$</span> smevals run my-eval -m claude-sonnet-5 <span class="b">-n 5</span>
+<span class="d">$</span> smevals grade my-eval
+<span class="d">$</span> smevals report my-eval <span class="c"># or: serve → live dashboard</span></div>
+      </div>
+      <ul class="bul reveal" style="margin-top:24px">
+        <li>Maps 1:1 onto the minimal loop — fixed prompts → task YAMLs, written rubric → grader, spreadsheet → report.</li>
+        <li>Checkers are <b>plain executables</b> — write domain-specific validators in anything.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="smevals: how a run works"
+    data-speaker-notes="Walk the diagram left to right — this is the whole mechanic. A Runner is any executable; it gets no command-line arguments, everything arrives as environment variables: SMEVALS_MODEL, SMEVALS_TASK, SMEVALS_PROMPT, plus every scalar key of the task uppercased as SMEVALS_TASK_&lt;KEY&gt;. Its stdout becomes output.txt, stderr becomes stderr.txt, and any file it writes into the working directory is preserved as an artifact — rendered images, extracted documents, whatever. Each execution lands in an immutable directory runs/task/config/model/timestamp; run.yaml is written last, so its presence marks a complete run. Stress the exit-code contract again because it's the clever part: exit 0 whenever the output is a real model response you want judged, however bad — non-zero means the harness broke, and those runs are never graded and excluded from every report. And because a Runner is just an executable, the thing under test can be a curl to a model API or a full Claude Code session in a sandbox.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">14</span><div class="crumb"><b>Evals</b> · smevals · how a run works</div></div>
+      <h2 class="reveal">How a run works: <span class="o">env vars in, files out</span></h2>
+      <div class="diagram reveal" style="--diag-h:520px">
+        <svg viewBox="0 0 860 300" role="img" aria-label="A smevals run: task and config feed environment variables into a runner executable; its stdout, stderr and artifacts land in an immutable timestamped run directory, and the exit code decides whether the run counts as model evidence or a harness failure">
+          <defs><marker id="sm1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+          <!-- inputs -->
+          <rect class="dg-box" x="20" y="30" width="170" height="52" rx="8"/>
+          <text class="dg-t" x="105" y="52" font-size="13" text-anchor="middle">Task (YAML)</text>
+          <text class="dg-t mut" x="105" y="70" font-size="11" text-anchor="middle">prompt + custom keys</text>
+          <rect class="dg-box" x="20" y="100" width="170" height="52" rx="8"/>
+          <text class="dg-t" x="105" y="122" font-size="13" text-anchor="middle">Config (YAML)</text>
+          <text class="dg-t mut" x="105" y="140" font-size="11" text-anchor="middle">model, params, runner</text>
+          <!-- env arrow -->
+          <path class="dg-line" d="M198 91 L 268 91" marker-end="url(#sm1)"/>
+          <text class="dg-t acc" x="233" y="76" font-size="10.5" text-anchor="middle">env vars only</text>
+          <text class="dg-t acc" x="233" y="110" font-size="9.5" text-anchor="middle">SMEVALS_MODEL</text>
+          <text class="dg-t acc" x="233" y="124" font-size="9.5" text-anchor="middle">SMEVALS_PROMPT…</text>
+          <!-- runner -->
+          <rect class="dg-box hot" x="278" y="55" width="180" height="72" rx="10"/>
+          <text class="dg-t on" x="368" y="85" font-size="14" text-anchor="middle">Runner</text>
+          <text class="dg-t on" x="368" y="105" font-size="11.5" text-anchor="middle">any executable — curl,</text>
+          <text class="dg-t on" x="368" y="119" font-size="11.5" text-anchor="middle">script, or a full agent</text>
+          <!-- outputs arrow -->
+          <path class="dg-line" d="M466 91 L 536 91" marker-end="url(#sm1)"/>
+          <text class="dg-t acc" x="501" y="76" font-size="10.5" text-anchor="middle">files out</text>
+          <!-- run dir -->
+          <rect class="dg-box outer" x="546" y="20" width="294" height="180" rx="12"/>
+          <text class="dg-t acc" x="693" y="44" font-size="12" text-anchor="middle">runs/&lt;task&gt;/&lt;config&gt;/&lt;model&gt;/&lt;timestamp&gt;/</text>
+          <rect class="dg-box" x="564" y="56" width="258" height="30" rx="6"/>
+          <text class="dg-t" x="578" y="76" font-size="11.5" font-family="var(--font-mono)">output.txt <tspan class="dg-t mut">← runner stdout</tspan></text>
+          <rect class="dg-box" x="564" y="92" width="258" height="30" rx="6"/>
+          <text class="dg-t" x="578" y="112" font-size="11.5" font-family="var(--font-mono)">artifacts <tspan class="dg-t mut">← any file it writes</tspan></text>
+          <rect class="dg-box" x="564" y="128" width="258" height="30" rx="6"/>
+          <text class="dg-t" x="578" y="148" font-size="11.5" font-family="var(--font-mono)">run.yaml <tspan class="dg-t mut">← written last = complete</tspan></text>
+          <text class="dg-t mut" x="693" y="186" font-size="11" text-anchor="middle">immutable — never edited by hand</text>
+          <!-- exit code fork -->
+          <path class="dg-line" d="M368 135 L 368 205" marker-end="url(#sm1)"/>
+          <text class="dg-t acc" x="382" y="175" font-size="11">exit code</text>
+          <rect class="dg-box" x="120" y="215" width="250" height="58" rx="8"/>
+          <text class="dg-t" x="245" y="238" font-size="12.5" text-anchor="middle"><tspan style="fill:var(--positive)" font-weight="700">0</tspan> — a real model response, however bad</text>
+          <text class="dg-t mut" x="245" y="258" font-size="11.5" text-anchor="middle">→ gets graded, counts as evidence</text>
+          <rect class="dg-box" x="400" y="215" width="290" height="58" rx="8"/>
+          <text class="dg-t" x="545" y="238" font-size="12.5" text-anchor="middle"><tspan class="dg-t acc" font-weight="700">non-zero</tspan> — harness broke (network, crash)</text>
+          <text class="dg-t mut" x="545" y="258" font-size="11.5" text-anchor="middle">→ never graded, excluded from every report</text>
+        </svg>
+      </div>
+      <p class="note reveal">No SDK to integrate — the contract is <b>env vars in, files out, exit code as the verdict</b>. That's why the thing under test can be a one-line curl or an entire Claude Code session.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="smevals: grading and reporting"
+    data-speaker-notes="Grading is a second pass over the stored runs — you can re-grade old runs with a new rubric without re-running anything, because runs are immutable. A Grader runs its Checks in sequence; each Checker is again just an executable that reads $SMEVALS_RUN_DIR/output.txt, exits 0 or non-zero for pass/fail, and can print JSON with a score from 0 to 1, metrics, tags and notes. Three rules do all the work: 'required: true' halts the sequence on failure so you don't pay for an expensive LLM-judge check when the output isn't even valid; 'creates:' fails a check that didn't produce its promised file; and the grade's score is the LAST score any check emitted — so you order checks cheap-to-expensive, gates first, judgment last. Reporting: -n N tops each task/model pair up to N successful runs, executing only the shortfall — that's pass@k discipline built in — and the leaderboard shows mean ± standard error per config × model, which is the honest way to compare. smevals serve gives a live dashboard that re-reads disk on every poll, so you can watch runs land during — say — a live demo.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">15</span><div class="crumb"><b>Evals</b> · smevals · grading &amp; reporting</div></div>
+      <h2 class="reveal">Grading: <span class="o">cheap gates first, judgment last</span></h2>
+      <div class="split">
+        <div class="code reveal"><span class="c"># graders/default.yaml — checks run in sequence</span>
+<span class="o">checks:</span>
+  - <span class="o">checker:</span> contains        <span class="c"># cheap gate</span>
+    <span class="o">value:</span> <span class="g">"&lt;svg"</span>
+    <span class="o">required:</span> <span class="b">true</span>       <span class="c"># fail → halt, skip the rest</span>
+  - <span class="o">checker:</span> ../checkers/render-svg
+    <span class="o">creates:</span> render.png  <span class="c"># no file → check fails</span>
+  - <span class="o">checker:</span> ../checkers/llm-judge
+                          <span class="c"># expensive — runs last;</span>
+<span class="o">scoring:</span>                  <span class="c"># its score becomes THE score</span>
+  <span class="o">pass_threshold:</span> <span class="b">0.5</span></div>
+        <ul class="bul reveal">
+          <li>A Checker reads <code>$SMEVALS_RUN_DIR/output.txt</code>, exits 0/non-zero, optionally prints JSON: <b>score 0–1, metrics, tags, notes</b>.</li>
+          <li>Runs are immutable → <b>re-grade old runs with a new rubric</b>, no re-running.</li>
+          <li><code>-n 5</code> tops each task × model up to 5 successful runs — pass@k built in. Leaderboard: <b>mean ± stderr</b> per config × model.</li>
+          <li><code>smevals serve</code> — live dashboard, re-reads disk on every poll; watch runs land in real time.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Live demo: mini eval"
+    data-speaker-notes="RUNBOOK: use a small fixed task set (3–5 tasks; e.g. the two CLAUDE.md variants from deck 05, or two models on the identical prompt) and run it against two variants live. Score each run against the pre-written rubric on screen, tally in a spreadsheet, and show the final comparison number. Keep total run time under five minutes by having tasks that finish fast; cut to fallback if a run hangs.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">16</span><div class="crumb"><b>Evals</b> · live demo</div></div>
+      <div class="demo-badge reveal">Live</div>
+      <h2 class="reveal">Run a small eval, <span class="o">live</span></h2>
+      <ul class="bul reveal">
+        <li>A small fixed task set (3–5 tasks), two variants — e.g. the two <b>CLAUDE.md variants from deck 05</b>, or two models on the identical prompt.</li>
+        <li>Score each run against a written rubric, tally in a spreadsheet on screen.</li>
+      </ul>
+      <p class="note reveal"><span class="pill live">Live</span> Same method as the minimal loop — no special tooling, just discipline.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Fallback: eval demo"
+    data-speaker-notes="Use if a live run hangs or takes too long to score on stage. Narrate from the prepared spreadsheet screenshot: the two variants, the rubric scores, and which one won and why.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">17</span><div class="crumb"><b>Evals</b> · fallback</div></div>
+      <h2 class="reveal">Fallback: <span class="o">recorded run</span></h2>
+      <div class="fallback-box reveal">
+        <div class="fb-icon">▢</div>
+        <div class="fb-caption">Placeholder — screenshot of the scored spreadsheet comparing two variants goes here.</div>
+      </div>
+      <p class="note reveal">Use only if a live run stalls or scoring runs long. Narrate the rubric scores and the winning variant from rehearsal.</p>
+    </div>
+  </section>
+
+  <!-- ============ PART 02 — ALTERNATIVE HARNESSES, MODELS & APIs ============ -->
+  <section class="slide dark divider" data-label="02 Alternative harnesses, models & APIs"
+    data-speaker-notes="Reprise the presenter's own model-picking table from deck 05, Cost &amp; Context: routing tasks by cost, intelligence, and taste is the same discipline whether you're picking a Claude model or a harness or an open-weight model. This part covers Cursor as a harness, OpenRouter and Pi, the open-model landscape, and closes with a live demo running local models on modest hardware.">
+    <div class="slide-content">
+      <div class="dnum reveal">02</div>
+      <h2 class="reveal">Alternative <span class="o">harnesses, models & APIs</span></h2>
+      <p class="dsub reveal">Why not monoculture: route by cost, intelligence, and taste — the same discipline at every layer.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Why not monoculture"
+    data-speaker-notes="State the thesis plainly: no single model or harness wins on cost, intelligence, and taste simultaneously, so routing by task is the same discipline as the presenter's own model-picking table — cheap and fast for bulk work, smarter for unsupervised hard problems, highest-taste only where UI/copy quality is the bottleneck.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">18</span><div class="crumb"><b>Alt. harnesses</b> · why not monoculture</div></div>
+      <h2 class="reveal">Route by <span class="o">cost, intelligence, taste</span></h2>
+      <ul class="bul reveal">
+        <li>No single model or harness wins on all three axes at once.</li>
+        <li>Cheap and fast for bulk, mechanical work; smarter models for hard unsupervised problems; highest-taste models only where UI/copy quality is the actual bottleneck.</li>
+      </ul>
+      <div class="diagram reveal" style="--diag-h:280px">
+        <svg viewBox="0 0 800 200" role="img" aria-label="Three models placed on three axes — cost efficiency, intelligence and taste: the cheap model leads on cost, the frontier model on intelligence and taste, no model leads all three">
+          <defs><marker id="ax1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+          <!-- legend -->
+          <circle class="dg-fill-g" cx="286" cy="16" r="10"/><text class="dg-t on" x="286" y="20" font-size="10" text-anchor="middle">A</text>
+          <text class="dg-t mut" x="302" y="20" font-size="12">cheap &amp; fast</text>
+          <circle class="dg-fill-a" cx="446" cy="16" r="10"/><text class="dg-t on" x="446" y="20" font-size="10" text-anchor="middle">B</text>
+          <text class="dg-t mut" x="462" y="20" font-size="12">workhorse</text>
+          <circle class="dg-fill-r" cx="586" cy="16" r="10"/><text class="dg-t on" x="586" y="20" font-size="10" text-anchor="middle">C</text>
+          <text class="dg-t mut" x="602" y="20" font-size="12">frontier</text>
+          <!-- axes -->
+          <text class="dg-t" x="196" y="66" font-size="13" text-anchor="end">cheaper →</text>
+          <line class="dg-line dim" x1="210" y1="62" x2="756" y2="62"/>
+          <circle class="dg-fill-r" cx="292" cy="62" r="11"/><text class="dg-t on" x="292" y="66" font-size="10.5" text-anchor="middle">C</text>
+          <circle class="dg-fill-a" cx="480" cy="62" r="11"/><text class="dg-t on" x="480" y="66" font-size="10.5" text-anchor="middle">B</text>
+          <circle class="dg-fill-g" cx="700" cy="62" r="11"/><text class="dg-t on" x="700" y="66" font-size="10.5" text-anchor="middle">A</text>
+          <text class="dg-t" x="196" y="122" font-size="13" text-anchor="end">smarter →</text>
+          <line class="dg-line dim" x1="210" y1="118" x2="756" y2="118"/>
+          <circle class="dg-fill-g" cx="400" cy="118" r="11"/><text class="dg-t on" x="400" y="122" font-size="10.5" text-anchor="middle">A</text>
+          <circle class="dg-fill-a" cx="600" cy="118" r="11"/><text class="dg-t on" x="600" y="122" font-size="10.5" text-anchor="middle">B</text>
+          <circle class="dg-fill-r" cx="716" cy="118" r="11"/><text class="dg-t on" x="716" y="122" font-size="10.5" text-anchor="middle">C</text>
+          <text class="dg-t" x="196" y="178" font-size="13" text-anchor="end">finer taste →</text>
+          <line class="dg-line dim" x1="210" y1="174" x2="756" y2="174"/>
+          <circle class="dg-fill-g" cx="430" cy="174" r="11"/><text class="dg-t on" x="430" y="178" font-size="10.5" text-anchor="middle">A</text>
+          <circle class="dg-fill-a" cx="580" cy="174" r="11"/><text class="dg-t on" x="580" y="178" font-size="10.5" text-anchor="middle">B</text>
+          <circle class="dg-fill-r" cx="726" cy="174" r="11"/><text class="dg-t on" x="726" y="178" font-size="10.5" text-anchor="middle">C</text>
+        </svg>
+      </div>
+      <p class="note reveal">No column sweeps all three rows — route per task. This is the same discipline at every layer: model choice, harness choice, even open-vs-hosted choice.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Cursor as a harness"
+    data-speaker-notes="Cursor is worth its own slide as a harness, not just a pricing model (deck 05, Cost &amp; Context): its IDE-native integration and Auto/Router model selection make it a genuine alternative to a terminal agent for engineers who live in an editor. It earns its place when routing quality matters more than terminal-native workflows like git worktrees.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">19</span><div class="crumb"><b>Alt. harnesses</b> · Cursor</div></div>
+      <h2 class="reveal">Cursor as a <span class="o">harness</span></h2>
+      <ul class="bul reveal">
+        <li>IDE-native, not terminal-native — strongest for engineers who live in an editor rather than a terminal.</li>
+        <li>Auto mode and Cursor Router (deck 05, <i>Cost & Context</i>) route per-request across models automatically.</li>
+        <li>Beats a terminal agent when routing quality and IDE integration matter more than terminal-native workflows.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="OpenRouter"
+    data-speaker-notes="OpenRouter is one API key over 315-plus models from every major vendor, with a roughly 5.5% fee on credit purchases rather than a heavy per-token markup — use that framing over the inconsistent '30-60% markup' figure some trackers cite. Flag the real caveat: failover is a feature, but it also means a request can silently land on a different provider than you expected.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>Alt. harnesses</b> · OpenRouter</div></div>
+      <h2 class="reveal">OpenRouter: <span class="o">one API, many models</span></h2>
+      <div class="split">
+        <ul class="bul reveal">
+          <li><b>315+ models</b> from Anthropic, OpenAI, Google, DeepSeek, Meta, Mistral, xAI, and others — one key, one bill.</li>
+          <li>Pay-per-token; roughly a <b>5.5% fee on credit purchases</b> rather than a heavy per-token markup on most models.</li>
+          <li>Caveat: failover is a feature, but it means a request can silently route to a different provider than expected.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 460 310" role="img" aria-label="Your app holds one key into OpenRouter, which fans out to Anthropic, OpenAI, Google, DeepSeek, Meta and Mistral; a dashed arrow marks failover silently rerouting a request to a different provider">
+            <defs><marker id="or1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <!-- app -->
+            <rect class="dg-box" x="16" y="118" width="122" height="64" rx="9"/>
+            <text class="dg-t" x="77" y="145" font-size="13" text-anchor="middle">your app</text>
+            <text class="dg-t mut" x="77" y="164" font-size="10.5" text-anchor="middle">one key · one bill</text>
+            <path class="dg-line" d="M146 150 L 186 150" marker-end="url(#or1)"/>
+            <!-- openrouter -->
+            <rect class="dg-box hot" x="196" y="112" width="124" height="76" rx="10"/>
+            <text class="dg-t on" x="258" y="145" font-size="13.5" text-anchor="middle">OpenRouter</text>
+            <text class="dg-t on" x="258" y="166" font-size="11" text-anchor="middle">315+ models</text>
+            <text class="dg-t mut" x="230" y="212" font-size="10.5" text-anchor="middle">≈5.5% fee on credit purchases,</text>
+            <text class="dg-t mut" x="230" y="227" font-size="10.5" text-anchor="middle">not a heavy per-token markup</text>
+            <!-- provider fan-out -->
+            <rect class="dg-box" x="342" y="18" width="102" height="30" rx="7"/>
+            <text class="dg-t" x="393" y="38" font-size="11.5" text-anchor="middle">Anthropic</text>
+            <rect class="dg-box" x="342" y="60" width="102" height="30" rx="7"/>
+            <text class="dg-t" x="393" y="80" font-size="11.5" text-anchor="middle">OpenAI</text>
+            <rect class="dg-box" x="342" y="102" width="102" height="30" rx="7"/>
+            <text class="dg-t" x="393" y="122" font-size="11.5" text-anchor="middle">Google</text>
+            <rect class="dg-box" x="342" y="144" width="102" height="30" rx="7"/>
+            <text class="dg-t" x="393" y="164" font-size="11.5" text-anchor="middle">DeepSeek</text>
+            <rect class="dg-box" x="342" y="186" width="102" height="30" rx="7"/>
+            <text class="dg-t" x="393" y="206" font-size="11.5" text-anchor="middle">Meta</text>
+            <rect class="dg-box" x="342" y="228" width="102" height="30" rx="7"/>
+            <text class="dg-t" x="393" y="248" font-size="11.5" text-anchor="middle">Mistral · xAI · …</text>
+            <path class="dg-line dim" d="M326 126 L 334 45" marker-end="url(#or1)"/>
+            <path class="dg-line dim" d="M328 134 L 334 80" marker-end="url(#or1)"/>
+            <path class="dg-line" d="M328 146 L 334 118" marker-end="url(#or1)"/>
+            <path class="dg-line dim" d="M328 158 L 334 159" marker-end="url(#or1)"/>
+            <path class="dg-line dim" d="M328 168 L 334 198" marker-end="url(#or1)"/>
+            <!-- failover -->
+            <path class="dg-line" d="M326 180 C 336 218, 336 232, 334 240" stroke-dasharray="5 5" marker-end="url(#or1)"/>
+            <text class="dg-t acc" x="230" y="290" font-size="12" text-anchor="middle">⚑ failover can silently land a request on a different provider</text>
+          </svg>
+        </div>
+      </div>
+      <p class="note reveal">Some trackers cite a "30-60% markup in some cases" — that figure is inconsistent across sources; the 5.5% credit-fee framing is the more defensible one.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Pi"
+    data-speaker-notes="Pi is Mario Zechner's minimal terminal harness — under a thousand tokens of system prompt, now under Earendil Inc, supporting 15-plus providers including local models via Ollama. The tradeoff to flag: running Claude models through Pi bills at raw API rates, so someone already on Claude Max is effectively paying twice — the payoff is a lighter harness and broader model choice.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">21</span><div class="crumb"><b>Alt. harnesses</b> · Pi</div></div>
+      <h2 class="reveal">Pi: a <span class="o">minimal</span> harness</h2>
+      <ul class="bul reveal">
+        <li>Terminal coding-agent harness by Mario Zechner (now Earendil Inc) — system prompt under ~1,000 tokens.</li>
+        <li>Supports 15+ providers/hundreds of models, plus local models via Ollama for zero-cost inference.</li>
+        <li>Tradeoff: using Claude models through Pi bills at <b>raw API rates</b> — a Claude Max subscriber effectively pays twice.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="State of open-source models"
+    data-speaker-notes="Frame the headline claim carefully: the frontier gap for coding tasks is closing, not closed. The next several slides give specific, verified evidence — Gemma 4, Qwen 3.6, GLM-5.2 — rather than asserting the trend in the abstract.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">22</span><div class="crumb"><b>Alt. harnesses</b> · open models, July 2026</div></div>
+      <h2 class="reveal">The frontier gap is <span class="o">closing</span> — for coding</h2>
+      <ul class="bul reveal">
+        <li>Several open-weight releases in 2026 close in on frontier coding-benchmark scores at a fraction of the parameter count or cost.</li>
+        <li>Closing, not closed — the next slides give specific, verified examples rather than the trend in the abstract.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Gemma 4"
+    data-speaker-notes="Gemma 4 arrived around March 2026 in five sizes from 2B up to 31B dense; the 12B unified multimodal variant, added June 2026, runs comfortably on a 16GB laptop at Q4_0 quantization and nearly matches the 26B model's benchmarks at less than half the memory. This is real evidence that local, laptop-class inference is viable, not aspirational.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">23</span><div class="crumb"><b>Alt. harnesses</b> · Gemma 4</div></div>
+      <h2 class="reveal">Gemma 4: <span class="o">laptop-viable</span></h2>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>Google, arrived ~March 2026. Sizes: E2B, E4B, a 12B unified multimodal (June 2026), a 26B MoE (3.8B active), a 31B dense.</li>
+          <li>The <b>12B model runs on a 16GB laptop</b> (e.g. 16GB MacBook Air) at Q4_0 quantization — nearly matching the 26B model at under half the memory.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 440 300" role="img" aria-label="Five bars sized by Gemma 4 parameter counts from E2B to 31B; the 12B bar is highlighted as fitting under a dashed 16GB-laptop line, with a bracket noting it nearly matches the 26B model's benchmarks at under half the memory">
+            <text class="dg-t mut" x="220" y="20" font-size="12" text-anchor="middle">the Gemma 4 family — bar height = total params</text>
+            <!-- bars: 5.6px per B, baseline 232 -->
+            <rect class="dg-box mid" x="30" y="221" width="56" height="11" rx="3"/>
+            <rect class="dg-box mid" x="108" y="210" width="56" height="22" rx="3"/>
+            <rect class="dg-box hot" x="186" y="165" width="56" height="67" rx="3"/>
+            <rect class="dg-box mid" x="264" y="86" width="56" height="146" rx="3"/>
+            <rect class="dg-box mid" x="342" y="58" width="56" height="174" rx="3"/>
+            <!-- 16GB laptop line: everything at or below the 12B bar fits -->
+            <line class="dg-line" x1="20" y1="156" x2="420" y2="156" stroke-dasharray="6 5"/>
+            <text class="dg-t acc" x="24" y="146" font-size="11">fits a 16GB laptop @ Q4_0</text>
+            <!-- 12B ≈ 26B benchmarks -->
+            <path class="dg-line dim" d="M216 158 C 232 104, 258 92, 286 84" stroke-dasharray="4 4"/>
+            <text class="dg-t" x="236" y="118" font-size="11">≈ same benchmarks,</text>
+            <text class="dg-t mut" x="236" y="133" font-size="10.5">under half the memory</text>
+            <!-- labels -->
+            <text class="dg-t" x="58" y="252" font-size="12.5" text-anchor="middle">E2B</text>
+            <text class="dg-t" x="136" y="252" font-size="12.5" text-anchor="middle">E4B</text>
+            <text class="dg-t acc" x="214" y="252" font-size="12.5" text-anchor="middle">12B</text>
+            <text class="dg-t" x="292" y="252" font-size="12.5" text-anchor="middle">26B</text>
+            <text class="dg-t" x="370" y="252" font-size="12.5" text-anchor="middle">31B</text>
+            <text class="dg-t mut" x="214" y="268" font-size="10.5" text-anchor="middle">multimodal</text>
+            <text class="dg-t mut" x="292" y="268" font-size="10.5" text-anchor="middle">MoE · 3.8B active</text>
+            <text class="dg-t mut" x="370" y="268" font-size="10.5" text-anchor="middle">dense</text>
+            <text class="dg-t acc" x="220" y="294" font-size="12.5" text-anchor="middle">the coral bar is the laptop pick — local inference, not aspirational</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Qwen 3.6"
+    data-speaker-notes="Qwen 3.6 is Alibaba's Apache-2.0 family, with two April 2026 flagship releases: a 27B dense model and a 35B-A3B mixture-of-experts model with only 3B active parameters per token. The MoE variant's low active-parameter count is the realistic local-laptop pick; exact RAM requirements weren't independently verified in the fact-check pass, so say that out loud rather than guessing a number.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">24</span><div class="crumb"><b>Alt. harnesses</b> · Qwen 3.6</div></div>
+      <h2 class="reveal">Qwen 3.6: <span class="o">dense and MoE flagships</span></h2>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>Alibaba, Apache 2.0. Two April 2026 flagships: <b>27B dense</b> and <b>35B-A3B MoE</b> (only 3B active params/token).</li>
+          <li>Native 256K context, extensible to ~1M via YaRN; reportedly outperforms a 397B MoE model on agentic coding benchmarks.</li>
+          <li>The 35B-A3B MoE is the realistic local-laptop pick given its low active-parameter count. <span class="muted">[exact laptop RAM requirements not independently verified]</span></li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 440 300" role="img" aria-label="Two panels compare the 27B dense model, where every parameter is active per token, with the 35B-A3B mixture-of-experts model, where only a thin 3B slice is active; below, a context bar shows 256K native extending to about 1M via YaRN">
+            <text class="dg-t mut" x="220" y="20" font-size="12" text-anchor="middle">what one token pays for, per flagship</text>
+            <!-- dense panel -->
+            <text class="dg-t" x="115" y="48" font-size="13" text-anchor="middle">27B dense</text>
+            <rect class="dg-box" x="30" y="60" width="170" height="96" rx="8"/>
+            <rect class="dg-fill-r" x="33" y="63" width="164" height="90" rx="6" opacity="0.9"/>
+            <text class="dg-t on" x="115" y="112" font-size="12.5" text-anchor="middle">all 27B active</text>
+            <text class="dg-t mut" x="115" y="176" font-size="10.5" text-anchor="middle">every token pays full compute</text>
+            <!-- MoE panel -->
+            <text class="dg-t" x="325" y="48" font-size="13" text-anchor="middle">35B-A3B MoE</text>
+            <rect class="dg-box" x="240" y="60" width="170" height="96" rx="8"/>
+            <rect class="dg-fill-r" x="243" y="63" width="15" height="90" opacity="0.9"/>
+            <text class="dg-t acc" x="266" y="98" font-size="11.5">← 3B active / token</text>
+            <text class="dg-t mut" x="266" y="118" font-size="10.5">the other 32B sit parked</text>
+            <text class="dg-t mut" x="325" y="176" font-size="10.5" text-anchor="middle">RAM for 35B, compute for 3B</text>
+            <!-- context bar -->
+            <text class="dg-t" x="30" y="212" font-size="12">context window</text>
+            <rect class="dg-fill-r" x="30" y="222" width="97" height="24" rx="4" opacity="0.9"/>
+            <text class="dg-t on" x="78" y="238" font-size="11" text-anchor="middle">256K</text>
+            <rect class="dg-box outer" x="127" y="222" width="283" height="24" rx="4"/>
+            <text class="dg-t mut" x="268" y="238" font-size="11" text-anchor="middle">extensible to ~1M via YaRN</text>
+            <text class="dg-t acc" x="220" y="288" font-size="12.5" text-anchor="middle">low active params make the A3B the realistic local-laptop pick</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Live demo: local models on small hardware"
+    data-speaker-notes="RUNBOOK: on the presenter's own laptop, run Gemma 4 (12B) or Qwen 3.6 (35B-A3B) locally via Ollama, feed it a real coding task from this team's repo, and let it run to completion on screen. The message is 'absolutely viable even on modest hardware,' not 'as good as the frontier' — don't oversell it. If local inference is too slow to finish live, narrate progress and cut to the fallback recording rather than waiting out a slow generation.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">25</span><div class="crumb"><b>Alt. harnesses</b> · live demo</div></div>
+      <div class="demo-badge reveal">Live</div>
+      <h2 class="reveal">Local models, <span class="o">small hardware</span></h2>
+      <ul class="bul reveal">
+        <li>Gemma 4 (12B) or Qwen 3.6 (35B-A3B) running locally on the presenter's own laptop via Ollama.</li>
+        <li>A real coding task from this team's repo, run to completion on screen.</li>
+      </ul>
+      <p class="note reveal"><span class="pill live">Live</span> Message: <b>absolutely viable</b> even on modest hardware — not "as good as the frontier."</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Fallback: local model demo"
+    data-speaker-notes="Use if local generation is too slow to finish live. Narrate from the recording: which model, which task, how long it took, and the final result — keep the honest framing that it's slower than a hosted frontier model but genuinely usable.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>Alt. harnesses</b> · fallback</div></div>
+      <h2 class="reveal">Fallback: <span class="o">recorded run</span></h2>
+      <div class="fallback-box reveal">
+        <div class="fb-icon">▢</div>
+        <div class="fb-caption">Placeholder — screenshot or recording of a local Gemma 4 / Qwen 3.6 run completing a real coding task goes here.</div>
+      </div>
+      <p class="note reveal">Use only if the live run is too slow to finish on stage. Keep the honest framing: slower than hosted, genuinely usable.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Colibri for GLM-5.2"
+    data-speaker-notes="GLM-5.2 is Z.ai's open-weight MoE coding model at roughly 753 billion total parameters — sources disagree slightly, some say 744B, treat the exact figure as approximate. Colibri is the piece that makes it runnable on ordinary hardware with no GPU: a ~2,400-line pure-C inference engine that keeps the dense parameters in RAM and streams routed experts from disk, running the full model on about 25GB of RAM. Be upfront that speed is very slow, roughly 0.05 to 1 token per second — the value is running it at all, not running it fast.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">27</span><div class="crumb"><b>Alt. harnesses</b> · Colibri + GLM-5.2</div></div>
+      <h2 class="reveal">Colibri: GLM-5.2 <span class="o">without a GPU</span></h2>
+      <ul class="bul reveal">
+        <li><b>GLM-5.2</b> (Z.ai): open-weight MoE, ~753B total params (~40B active), 1M context. Reportedly matches/beats GPT-5.5 on several long-horizon coding tasks. <span class="muted">[total param count varies 744B–753B across sources]</span></li>
+        <li><b>Colibri</b>: a ~2,400-line pure-C inference engine — keeps ~17B dense params in RAM (int4), streams routed experts from disk via an LRU cache.</li>
+        <li>Runs on ordinary hardware, <b>no GPU</b>, about <b>25GB RAM.</b> Speed: ~0.05–1 tokens/sec — value is running it at all, not fast.</li>
+      </ul>
+      <div class="diagram reveal" style="--diag-h:280px">
+        <svg viewBox="0 0 800 200" role="img" aria-label="Colibri's trick: the bulk of GLM-5.2's mixture-of-experts weights stay on disk; each token, only the routed experts stream into a small LRU cache next to the always-resident 17-billion-parameter dense core in about 25 gigabytes of RAM">
+          <defs><marker id="cb1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+          <!-- disk -->
+          <rect class="dg-box mid" x="40" y="46" width="230" height="112" rx="12"/>
+          <text class="dg-t acc" x="155" y="74" font-size="13" text-anchor="middle">SSD</text>
+          <text class="dg-t" x="155" y="100" font-size="13" text-anchor="middle">all routed experts</text>
+          <text class="dg-t mut" x="155" y="122" font-size="12" text-anchor="middle">the bulk of ~753B params</text>
+          <text class="dg-t mut" x="155" y="142" font-size="12" text-anchor="middle">never all in memory</text>
+          <!-- stream -->
+          <path class="dg-line" d="M278 102 L 366 102" marker-end="url(#cb1)"/>
+          <text class="dg-t acc" x="322" y="86" font-size="11.5" text-anchor="middle">per token:</text>
+          <text class="dg-t acc" x="322" y="126" font-size="11.5" text-anchor="middle">only the routed few</text>
+          <!-- RAM -->
+          <rect class="dg-box outer" x="380" y="30" width="300" height="144" rx="12"/>
+          <text class="dg-t acc" x="530" y="56" font-size="13" text-anchor="middle">RAM — ~25GB total</text>
+          <rect class="dg-fill-r" x="398" y="70" width="264" height="40" rx="7" opacity="0.9"/>
+          <text class="dg-t on" x="530" y="95" font-size="12.5" text-anchor="middle">dense core ~17B · int4 · always resident</text>
+          <rect class="dg-box" x="398" y="120" width="264" height="40" rx="7"/>
+          <text class="dg-t" x="530" y="145" font-size="12.5" text-anchor="middle">hot experts — LRU cache</text>
+          <text class="dg-t acc" x="400" y="196" font-size="12.5" text-anchor="middle">no GPU anywhere · ~0.05–1 tok/s — the value is that it runs at all</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="When local makes sense"
+    data-speaker-notes="Close the open-model thread with a balanced decision: local makes sense for privacy-sensitive or air-gapped environments, for driving marginal cost toward zero, and where latency requirements are loose enough to tolerate it. It doesn't make sense when you need frontier quality or fast turnaround, or when the hardware/ops overhead outweighs the savings.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">28</span><div class="crumb"><b>Alt. harnesses</b> · when local makes sense</div></div>
+      <h2 class="reveal">When local makes sense — <span class="o">and when it doesn't</span></h2>
+      <div class="cards c2 reveal">
+        <div class="tile fill"><span class="k">Makes sense</span><p>Privacy-sensitive or air-gapped work, driving marginal cost toward zero, latency requirements loose enough to tolerate it.</p></div>
+        <div class="tile"><span class="k">Doesn't</span><p>Need frontier quality or fast turnaround; hardware/ops overhead outweighs the savings.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PART 03 — DAY-TO-DAY TIPS & CLOSING ============ -->
+  <section class="slide dark divider" data-label="03 Day-to-day tips & closing"
+    data-speaker-notes="Land the plane with the most immediately actionable part: voice mode, daily habits, then the three-word recap ladder from the title slide, then sources. Keep the pace brisk — this part is meant to send people out with concrete next actions, not new concepts.">
+    <div class="slide-content">
+      <div class="dnum reveal">03</div>
+      <h2 class="reveal">Day-to-day tips & <span class="o">closing</span></h2>
+      <p class="dsub reveal">The habits that compound daily — then the recap, then the sources.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Voice mode"
+    data-speaker-notes="Claude Code's native /voice dictation shipped around March 3rd 2026 and is confirmed real: Hold and Tap modes, tuned for coding vocabulary. Be explicit and careful about 'Hlas' — it could not be verified as a real named product in the fact-check pass; it may be a generic reference to Czech-language dictation rather than a specific tool. Ask the presenter to confirm the exact name/spelling before using it live, or cut the reference. The live demo should showcase Claude Code's own /voice command, which is solidly verified, regardless of how the Hlas question resolves.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">29</span><div class="crumb"><b>Day-to-day</b> · voice mode</div></div>
+      <div class="demo-badge reveal">Live</div>
+      <h2 class="reveal">Voice mode: <span class="o">dictate, don't type</span></h2>
+      <ul class="bul reveal">
+        <li>Claude Code shipped native <code>/voice</code> dictation ~March 2026 — <b>Hold</b> (default) and <b>Tap</b> modes, tuned for coding vocabulary (regex, OAuth, JSON, localhost).</li>
+        <li>Hands-free review: dictate a prompt, keep typing while speaking, review output without touching the keyboard.</li>
+      </ul>
+      <p class="note reveal"><span class="pill live">Live</span> "Hlas" (Czech voice tooling per earlier notes) <span class="muted">[TODO: verify tool name — could not confirm as a real product; may be a generic reference]</span>. Demo Claude Code's own <code>/voice</code> command instead, which is solidly verified.</p>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Fallback: voice demo"
+    data-speaker-notes="Use if live dictation is unreliable on the venue's microphone setup. Narrate from the recording: the /voice command, Hold vs Tap, and a real prompt dictated and executed.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">30</span><div class="crumb"><b>Day-to-day</b> · fallback</div></div>
+      <h2 class="reveal">Fallback: <span class="o">recorded run</span></h2>
+      <div class="fallback-box reveal">
+        <div class="fb-icon">▢</div>
+        <div class="fb-caption">Placeholder — screenshot or recording of Claude Code's /voice command dictating and executing a real prompt goes here.</div>
+      </div>
+      <p class="note reveal">Use only if the venue's microphone makes live dictation unreliable.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-label="Grab-bag of daily habits"
+    data-speaker-notes="Quick list of habits that compound: keyboard-first navigation instead of reaching for the mouse, running several sessions in parallel on unrelated tasks, kicking off background/async tasks and checking back later, and checkpointing progress with small git commits so an agent's mid-task state is never the only copy.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">31</span><div class="crumb"><b>Day-to-day</b> · habits</div></div>
+      <h2 class="reveal">Habits that <span class="o">compound daily</span></h2>
+      <div class="split">
+        <ul class="bul reveal">
+          <li><b>Keyboard-first</b> — fewer context switches to the mouse.</li>
+          <li><b>Parallel sessions</b> on unrelated tasks instead of waiting serially.</li>
+          <li><b>Background/async tasks</b> — kick off, check back later.</li>
+          <li><b>Checkpoint with git</b> — small commits so an agent's mid-task state is never the only copy.</li>
+        </ul>
+        <div class="diagram reveal">
+          <svg viewBox="0 0 440 320" role="img" aria-label="A flywheel of four daily habits — keyboard-first, parallel sessions, background tasks and git checkpoints — cycling around the words 'small wins, every day'">
+            <defs><marker id="fw1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+            <!-- flywheel arcs (clockwise) -->
+            <path class="dg-line mw-flow" d="M262 69 A100 100 0 0 1 311 118" marker-end="url(#fw1)"/>
+            <path class="dg-line mw-flow" d="M311 202 A100 100 0 0 1 262 251" marker-end="url(#fw1)"/>
+            <path class="dg-line mw-flow" d="M178 251 A100 100 0 0 1 129 202" marker-end="url(#fw1)"/>
+            <path class="dg-line mw-flow" d="M129 118 A100 100 0 0 1 178 69" marker-end="url(#fw1)"/>
+            <!-- hub -->
+            <text class="dg-t acc" x="220" y="155" font-size="13" text-anchor="middle">small wins</text>
+            <text class="dg-t acc" x="220" y="174" font-size="13" text-anchor="middle">× every day</text>
+            <!-- habit nodes -->
+            <rect class="dg-box" x="150" y="20" width="140" height="40" rx="8"/>
+            <text class="dg-t" x="220" y="45" font-size="12.5" text-anchor="middle">keyboard-first</text>
+            <rect class="dg-box" x="300" y="140" width="136" height="40" rx="8"/>
+            <text class="dg-t" x="368" y="165" font-size="12.5" text-anchor="middle">parallel sessions</text>
+            <rect class="dg-box" x="150" y="260" width="140" height="40" rx="8"/>
+            <text class="dg-t" x="220" y="285" font-size="12.5" text-anchor="middle">background tasks</text>
+            <rect class="dg-box" x="4" y="140" width="136" height="40" rx="8"/>
+            <text class="dg-t" x="72" y="165" font-size="12.5" text-anchor="middle">git checkpoints</text>
+            <text class="dg-t mut" x="220" y="316" font-size="11.5" text-anchor="middle">each habit buys time the next one spends — the wheel spins faster</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide dark" data-label="Recap ladder"
+    data-speaker-notes="Close the content with the same three words from the title slide: measure, route, habits. Say it slowly and connect each word to the part that covered it — and be explicit that measuring is the one to act on first, because without evals the routing decisions in part 02 are just another set of vibes.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">32</span><div class="crumb"><b>Day-to-day</b> · recap</div></div>
+      <h2 class="reveal">Measure → route → <span class="o">habits</span></h2>
+      <div class="flow reveal">
+        <div class="step hot">01 measure</div><div class="arrow">→</div>
+        <div class="step">02 route</div><div class="arrow">→</div>
+        <div class="step">03 habits</div>
+      </div>
+      <ul class="bul reveal">
+        <li><b>Measure first.</b> Five real tasks and a written rubric beat any amount of prompt debate — start this week, in a spreadsheet.</li>
+        <li><b>Route by the numbers.</b> No model or harness wins on cost, intelligence, and taste at once — pick per task, not by loyalty.</li>
+        <li><b>Habits compound.</b> Voice, parallel sessions, background tasks, git checkpoints — small daily wins that add up.</li>
+      </ul>
+      <p class="note reveal">Act on <b>measurement</b> (part 01) first — without evals, the routing choices in part 02 are just a more expensive set of vibes.</p>
+    </div>
+  </section>
+
+  <!-- SOURCES -->
+  <section class="slide light dense" data-label="Sources"
+    data-speaker-notes="Close on sources, matching series convention: all pricing and product claims are date-stamped July 2026 and come from the fact-check pass. Point at the one explicitly unverified item — 'Hlas' as a named product — one more time so nobody repeats it as confirmed. Mention the full per-claim list lives in the internal research doc if anyone wants to dig.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">33</span><div class="crumb"><b>Close</b> · sources</div></div>
+      <h2 class="reveal"><span class="o">Sources</span> — all claims dated July 2026</h2>
+      <div class="links reveal" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="linkcol">
+          <h3>Evals &amp; tracing</h3>
+          <a href="https://github.com/prime-radiant-inc/smevals" target="_blank" rel="noopener">smevals — eval framework<span class="u">github.com/prime-radiant-inc/smevals</span></a>
+          <a href="https://www.elastic.co/search-labs/blog/opentelemetry-tracing-agent-builder" target="_blank" rel="noopener">OTel tracing for AI agents (Elastic)<span class="u">elastic.co/search-labs</span></a>
+        </div>
+        <div class="linkcol">
+          <h3>Harnesses &amp; routing</h3>
+          <a href="https://www.nxcode.io/resources/news/cursor-ai-pricing-plans-guide-2026" target="_blank" rel="noopener">Cursor pricing guide 2026<span class="u">nxcode.io</span></a>
+          <a href="https://openrouter.ai" target="_blank" rel="noopener">OpenRouter<span class="u">openrouter.ai</span></a>
+          <a href="https://ollama.com" target="_blank" rel="noopener">Ollama — local inference<span class="u">ollama.com</span></a>
+        </div>
+        <div class="linkcol">
+          <h3>Models</h3>
+          <a href="https://github.com/QwenLM/Qwen3.6" target="_blank" rel="noopener">Qwen 3.6<span class="u">github.com/QwenLM/Qwen3.6</span></a>
+          <a href="https://www.nist.gov/news-events/news/2026/07/caisi-assessment-zais-glm-52" target="_blank" rel="noopener">NIST CAISI assessment of GLM-5.2<span class="u">nist.gov</span></a>
+        </div>
+      </div>
+      <p class="note reveal">Full source list with per-claim citations: <span class="muted">deck05-facts.md</span> (internal research doc). One item flagged unverified: <b>"Hlas"</b> as a named product.</p>
+    </div>
+  </section>
+
+</deck-stage>
+
+<script src="../ember_design_system/deck-stage.js"></script>
+<script>
+  /* Re-trigger .reveal animations + restart any <video> on slide change */
+  document.addEventListener('DOMContentLoaded', function () {
+    var ds = document.querySelector('deck-stage');
+    if (!ds) return;
+    ds.addEventListener('slidechange', function (e) {
+      var s = e.detail && e.detail.slide;
+      if (!s) return;
+      s.querySelectorAll('.reveal').forEach(function (el) {
+        el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
+      });
+      var v = s.querySelector('video');
+      if (v) { v.currentTime = 0; var p = v.play(); if (p && p.catch) p.catch(function(){}); }
+    });
+  });
+</script>
+
+<style id="presenter-ui-css">
+  /* ─── Presenter aids (outside <deck-stage>: siblings paint above it) ─── */
+  .pui-controls{
+    position:fixed; right:18px; bottom:18px; z-index:40;
+    display:flex; gap:8px;
+    opacity:0; transition:opacity .25s; pointer-events:none;
+  }
+  body.pui-mouse .pui-controls,
+  .pui-controls:hover,
+  .pui-controls:focus-within{ opacity:1; pointer-events:auto; }
+  .pui-controls button{
+    font:var(--w-semibold) 12px/1 var(--font-mono); letter-spacing:.08em;
+    color:var(--on-dark-muted); background:var(--ink-2);
+    border:1px solid var(--line-dark); border-radius:var(--radius-pill);
+    padding:9px 14px; cursor:pointer;
+  }
+  .pui-controls button:hover{ color:var(--paper); border-color:var(--coral); }
+  .pui-controls kbd{ color:var(--coral); font:inherit; margin-left:6px; }
+  .pui-notes{
+    position:fixed; left:0; right:0; bottom:0; z-index:39;
+    background:var(--ink-2); color:var(--on-dark);
+    border-top:2px solid var(--coral);
+    padding:20px 34px 24px; max-height:38vh; overflow:auto;
+    font:var(--w-regular) clamp(15px,1.6vw,21px)/1.55 var(--font-b, var(--font-body));
+    display:none;
+  }
+  .pui-notes.open{ display:block; }
+  .pui-notes .pui-nhead{
+    font:var(--w-semibold) 12px/1 var(--font-mono); letter-spacing:.12em;
+    text-transform:uppercase; color:var(--coral); margin-bottom:12px;
+  }
+  @media print{ .pui-controls, .pui-notes{ display:none !important; } }
+</style>
+<div class="pui-controls">
+  <button type="button" data-pui="notes">NOTES<kbd>N</kbd></button>
+  <button type="button" data-pui="present">PRESENT<kbd>P</kbd></button>
+  <button type="button" data-pui="fullscreen">FULLSCREEN<kbd>F</kbd></button>
+</div>
+<div class="pui-notes" role="note" aria-live="polite">
+  <div class="pui-nhead"></div>
+  <div class="pui-nbody"></div>
+</div>
+
+<script>
+/* ─── Presenter aids: notes overlay (N), fullscreen (F), presenter window (P) ─── */
+(function(){
+  if (window.self !== window.top) return; /* skip when embedded by a host/viewer */
+  var ds = document.querySelector('deck-stage');
+  var notesEl = document.querySelector('.pui-notes');
+  var nHead = notesEl.querySelector('.pui-nhead');
+  var nBody = notesEl.querySelector('.pui-nbody');
+  var current = 0, presenter = null, mouseT = null;
+
+  function slides(){ return Array.prototype.slice.call(ds.querySelectorAll(':scope > section')); }
+  function noteOf(s){ return s.getAttribute('data-speaker-notes') || 'No notes for this slide.'; }
+  function labelOf(s){ return s.getAttribute('data-label') || ''; }
+
+  /* controls fade in on mouse activity, like the component's own overlay */
+  document.addEventListener('mousemove', function(){
+    document.body.classList.add('pui-mouse');
+    clearTimeout(mouseT);
+    mouseT = setTimeout(function(){ document.body.classList.remove('pui-mouse'); }, 1800);
+  });
+
+  function syncNotes(){
+    var all = slides(), s = all[current];
+    if (!s) return;
+    nHead.textContent = 'Notes · ' + labelOf(s) + ' · ' + (current + 1) + ' / ' + all.length;
+    nBody.textContent = noteOf(s);
+  }
+  function toggleNotes(){ notesEl.classList.toggle('open'); if (notesEl.classList.contains('open')) syncNotes(); }
+
+  function toggleFullscreen(){
+    if (document.fullscreenElement) { document.exitFullscreen(); }
+    else { document.documentElement.requestFullscreen().catch(function(){}); }
+  }
+  /* fullscreen = clean presenting surface: hide the thumbnail rail while in it */
+  var railWasOff = false;
+  document.addEventListener('fullscreenchange', function(){
+    if (document.fullscreenElement) {
+      railWasOff = ds.hasAttribute('no-rail');
+      ds.setAttribute('no-rail', '');
+    } else if (!railWasOff) {
+      ds.removeAttribute('no-rail');
+    }
+  });
+
+  /* ── presenter window: current + next previews, notes, timer, clock ── */
+  function openPresenter(){
+    if (presenter && !presenter.closed) { presenter.focus(); return; }
+    presenter = window.open('', 'deck-presenter', 'width=1200,height=760');
+    if (!presenter) {
+      nHead.textContent = 'Presenter window';
+      nBody.textContent = 'The browser blocked the pop-up — allow pop-ups for this page and press P again.';
+      notesEl.classList.add('open');
+      return;
+    }
+    var pd = presenter.document;
+    pd.open();
+    pd.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Presenter — ' + document.title.replace(/</g,'&lt;') + '</title><base href="' + document.baseURI + '"></head><body></body></html>');
+    pd.close();
+    /* carry the deck's stylesheets + tokens over so slide clones render 1:1 */
+    document.head.querySelectorAll('link[rel="stylesheet"], link[rel="preconnect"], style').forEach(function(el){
+      var c = pd.importNode(el, true);
+      if (el.tagName === 'LINK' && el.href) c.setAttribute('href', el.href);
+      pd.head.appendChild(c);
+    });
+    var st = pd.createElement('style');
+    st.textContent =
+      '*,*::before,*::after{animation:none !important;transition:none !important}' +
+      'html,body{margin:0;height:100%;background:#0e0c08;color:var(--on-dark);font-family:var(--font-m,monospace);overflow:hidden}' +
+      '.pw{display:grid;grid-template-rows:52px 1fr;height:100%}' +
+      '.pw-bar{display:flex;align-items:center;gap:22px;padding:0 20px;border-bottom:1px solid var(--line-dark);font-size:13px;letter-spacing:.06em;color:var(--on-dark-muted)}' +
+      '.pw-bar .cnt{color:var(--coral);font-weight:700;font-size:16px}' +
+      '.pw-bar .lbl{color:var(--paper);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}' +
+      '.pw-bar .tmr{cursor:pointer}.pw-bar .tmr b{color:var(--paper)}' +
+      '.pw-bar button{font:inherit;color:var(--on-dark-muted);background:none;border:1px solid var(--line-dark);border-radius:6px;padding:5px 12px;cursor:pointer}' +
+      '.pw-bar button:hover{color:var(--paper);border-color:var(--coral)}' +
+      '.pw-main{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:14px;padding:14px;min-height:0}' +
+      '.pw-col{display:grid;grid-template-rows:auto 1fr;min-height:0;gap:8px}' +
+      '.pw-col.right{grid-template-rows:auto auto auto minmax(0,1fr)}' +
+      '.pw-cap{font-size:11px;letter-spacing:.14em;color:var(--on-dark-faint);text-transform:uppercase}' +
+      '.pw-box{position:relative;min-height:0;overflow:hidden;border:1px solid var(--line-dark);border-radius:8px;background:#000}' +
+      '.pw-canvas{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;background:var(--paper)}' +
+      '.pw-canvas > section{width:1920px;height:1080px;position:relative;overflow:hidden}' +
+      '.pw-notes{overflow:auto;font-family:var(--font-b,sans-serif);font-size:19px;line-height:1.55;color:var(--on-dark);padding-right:6px}';
+    pd.head.appendChild(st);
+    pd.body.innerHTML =
+      '<div class="pw">' +
+        '<div class="pw-bar">' +
+          '<span class="cnt"></span><span class="lbl"></span>' +
+          '<span class="tmr" title="click to reset">elapsed <b class="el">00:00</b></span>' +
+          '<span>clock <b class="ck"></b></span>' +
+          '<button data-nav="-1">‹ prev</button><button data-nav="1">next ›</button>' +
+        '</div>' +
+        '<div class="pw-main">' +
+          '<div class="pw-col"><div class="pw-cap">Current</div><div class="pw-box" id="pwCur"><div class="pw-canvas"></div></div></div>' +
+          '<div class="pw-col right"><div class="pw-cap">Next</div><div class="pw-box" id="pwNext" style="aspect-ratio:16/9;min-height:120px"><div class="pw-canvas"></div></div>' +
+          '<div class="pw-cap" style="margin-top:6px">Notes</div><div class="pw-notes"></div></div>' +
+        '</div>' +
+      '</div>';
+
+    var t0 = Date.now();
+    function two(n){ return (n < 10 ? '0' : '') + n; }
+    function tick(){
+      if (presenter.closed) return;
+      var el = Math.floor((Date.now() - t0) / 1000);
+      pd.querySelector('.el').textContent = two(Math.floor(el / 60)) + ':' + two(el % 60);
+      var d = new Date();
+      pd.querySelector('.ck').textContent = two(d.getHours()) + ':' + two(d.getMinutes());
+      presenter.setTimeout(tick, 1000);
+    }
+    tick();
+    pd.querySelector('.tmr').addEventListener('click', function(){ t0 = Date.now(); });
+
+    function fit(boxId){
+      var box = pd.getElementById(boxId), cv = box.querySelector('.pw-canvas');
+      var k = Math.min(box.clientWidth / 1920, box.clientHeight / 1080);
+      cv.style.transform = 'scale(' + k + ')';
+      cv.style.left = ((box.clientWidth - 1920 * k) / 2) + 'px';
+      cv.style.top = ((box.clientHeight - 1080 * k) / 2) + 'px';
+    }
+    function fill(boxId, slide){
+      var cv = pd.getElementById(boxId).querySelector('.pw-canvas');
+      cv.textContent = '';
+      if (slide) {
+        var c = pd.importNode(slide, true);
+        c.setAttribute('data-deck-active', '');
+        cv.appendChild(c);
+      }
+      fit(boxId);
+    }
+    presenter.__update = function(i){
+      var all = slides(), s = all[i];
+      if (!s) return;
+      var next = i + 1;
+      while (next < all.length && all[next].hasAttribute('data-deck-skip')) next++;
+      fill('pwCur', s);
+      fill('pwNext', all[next] || null);
+      pd.querySelector('.cnt').textContent = (i + 1) + ' / ' + all.length;
+      pd.querySelector('.lbl').textContent = labelOf(s) + (all[next] ? '   →   next: ' + labelOf(all[next]) : '   ·   last slide');
+      pd.querySelector('.pw-notes').textContent = noteOf(s);
+    };
+    presenter.addEventListener('resize', function(){ fit('pwCur'); fit('pwNext'); });
+    pd.addEventListener('keydown', function(e){
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); ds.next(); }
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); ds.prev(); }
+      else if (e.key === 'Home') { ds.goTo(0); }
+      else if (e.key === 'End') { ds.goTo(slides().length - 1); }
+    });
+    pd.querySelectorAll('[data-nav]').forEach(function(b){
+      b.addEventListener('click', function(){ this.dataset.nav === '1' ? ds.next() : ds.prev(); });
+    });
+    presenter.__update(current);
+  }
+
+  ds.addEventListener('slidechange', function(e){
+    current = e.detail.index;
+    if (notesEl.classList.contains('open')) syncNotes();
+    if (presenter && !presenter.closed && presenter.__update) presenter.__update(current);
+  });
+
+  document.addEventListener('keydown', function(e){
+    var t = e.target;
+    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = e.key.toLowerCase();
+    if (k === 'n') { toggleNotes(); }
+    else if (k === 'f') { toggleFullscreen(); }
+    else if (k === 'p') { openPresenter(); }
+  });
+  document.querySelector('[data-pui="notes"]').addEventListener('click', toggleNotes);
+  document.querySelector('[data-pui="fullscreen"]').addEventListener('click', toggleFullscreen);
+  document.querySelector('[data-pui="present"]').addEventListener('click', openPresenter);
+})();
+</script>
+</body>
+</html>

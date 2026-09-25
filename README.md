@@ -221,9 +221,8 @@ animations read the same palette from `remotion/src/theme.ts`.
 
 | File | Purpose |
 |------|---------|
-| `ai-toolbox.html` | *The AI Toolbox* deck — tool landscape for everyone (no live demo). |
-| `agentic-ai.html` | *Intro to Agentic AI* deck — beginners. |
-| `agentic-engineering.html` | *Agentic Engineering* deck — developers (no live demo). |
+| `ai-toolbox-v2.html`, `agentic-ai-v2.html`, `agentic-engineering-v2.html` | Current editions of talks 01–03 (the landing page links these). |
+| `ai-toolbox.html`, `agentic-ai.html`, `agentic-engineering.html` | Earlier editions of talks 01–03, kept at their original URLs. |
 | `subagents-prompt-caching.html` | *Subagents & Prompt Caching* deck — engineering deep dive (no live demo). |
 | `cost-and-context.html` | *Cost & Context* deck — what agents really cost and how to spend context well (WIP). |
 | `orchestrating-agents.html` | *Orchestrating Agents* deck — orchestration tools and failure modes, skills & plugins, MCP vs CLI (WIP). |
@@ -234,6 +233,7 @@ animations read the same palette from `remotion/src/theme.ts`.
 | `workshops/evals/` | The workshop's lab kit (`lab/`), facilitator guide, participant handout, live board source and the talk 07 archives. |
 | `graph-engineering-ai-llms.md`, `deck09-facts.md` | Research note and sourced fact sheet behind deck 09. |
 | `review-decks-01-02.md` | Fact-check of decks 01 and 02 (Sep 2026) with the per-slide change plan and its status. |
+| `archive/` | Earlier editions of decks 04–09 (as of commit `abd9eed`, with their original animations) and `archive/index.html`, which lists the earlier edition of every deck. |
 | `index.html` | Landing page routing readers to the right deck by audience (GitHub Pages root). |
 | `assets/anim/` | Rendered concept animations (MP4 loops) embedded by the decks. |
 | `remotion/` | Remotion project — sources for the animations. |
