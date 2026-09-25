@@ -258,7 +258,7 @@ table.tbl tr:last-child td{border-bottom:none}
 
   LIVE DEMO — presenter quick reference (not shown to the audience)
   ------------------------------------------------------------
-  BEFORE the talk: start Claude Code on a real task in AUTO / accept-edits
+  BEFORE the talk: start Claude Code on a real task in AUTO (not accept-edits)
   mode, so it won't block on a permission prompt mid-talk (and that itself
   demos the permissions slides). Default demo task (see ../agentic-demo/):
     • paste agentic-demo/PROMPT.txt → builds a Pomodoro timer + tests, runs
@@ -285,7 +285,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <!-- TITLE -->
   <section class="slide dark title-slide" data-label="Title"
     data-speaker-notes="Open warm and low-jargon: this is the beginner deck, no coding background needed. Promise the one thing they will leave with — model, harness, agent, and the loop that ties them together. Mention there is a live agent running during the talk, so they know to look out for the LIVE markers.">
-    <div class="ts-top"><span class="k">A beginner's introduction to agentic AI</span><span class="meta">Internal talk · July 2026</span></div>
+    <div class="ts-top"><span class="k">A beginner's introduction to agentic AI</span><span class="meta">Internal talk · September 2026</span></div>
     <div class="ts-hero">
       <h1>Agentic<br>AI<span class="dot">.</span></h1>
       <p class="ts-sub">How <b>Claude&nbsp;Code</b>, <b>Codex</b> &amp; co. actually work</p>
@@ -329,11 +329,11 @@ table.tbl tr:last-child td{border-bottom:none}
 
   <!-- LIVE DEMO ANCHOR (interlude, no number) -->
   <section class="slide dark divider" data-label="Live demo anchor"
-    data-speaker-notes="Switch to the terminal here and actually kick off the task, in auto mode so it will not stop to ask. Say plainly that it will keep working in the background while we talk. Tell them we come back to it three times — at the loop, at thinking, and at context — so they know the markers are real, not decoration.">
+    data-speaker-notes="Switch to the terminal here and actually kick off the task, in auto mode so it will not stop to ask. Say plainly that it will keep working in the background while we talk. Tell them we come back to it four times — at the loop, at thinking, at context, and at permissions — so they know the markers are real, not decoration.">
     <div class="slide-content">
       <div class="dnum reveal" style="font-size:120px">● LIVE</div>
       <h2 class="reveal">Meanwhile — a real agent is <span class="o">working</span></h2>
-      <p class="dsub reveal">I just set <b>Claude Code</b> loose on a real task. It runs while we talk — we'll <b>check back</b> when we hit <b>the loop</b>, <b>thinking</b>, and <b>context</b>.</p>
+      <p class="dsub reveal">I just set <b>Claude Code</b> loose on a real task. It runs while we talk — we'll <b>check back</b> when we hit <b>the loop</b>, <b>thinking</b>, <b>context</b>, and <b>permissions</b>.</p>
     </div>
   </section>
 
@@ -491,7 +491,7 @@ table.tbl tr:last-child td{border-bottom:none}
           <text class="dg-t" x="546" y="126" font-size="13.5">CLOUD</text>
           <rect class="dg-box" x="552" y="140" width="214" height="96" rx="10"/>
           <text class="dg-t" x="659" y="170" font-size="16" text-anchor="middle">MODEL</text>
-          <text class="dg-t mut" x="659" y="190" font-size="12" text-anchor="middle">Claude Opus 5</text>
+          <text class="dg-t mut" x="659" y="190" font-size="12" text-anchor="middle">Claude Opus 5.5</text>
           <text class="dg-t mut" x="659" y="208" font-size="11" text-anchor="middle">stateless — no memory</text>
           <!-- loop arrows harness <-> model -->
           <path class="dg-line" d="M482 120 C 515 124, 530 138, 550 156" marker-end="url(#ahH)"/>
@@ -642,22 +642,22 @@ table.tbl tr:last-child td{border-bottom:none}
 
   <!-- SOTA MODELS -->
   <section class="slide light dense" data-label="Today's models"
-    data-speaker-notes="Do not read the table row by row — the pattern below it is the actual content. The same three tiers repeat at every maker: large, medium, small, plus a frontier tier on top lately. Say clearly that this reshuffles every few months, so treat any such list as a snapshot rather than a recommendation. Then the three stat tiles, left to right: SWE-bench Verified means fixing a real bug in a real repo; ARC-AGI-3 is deliberately built so it can't be memorised, and Opus 5 scores three times the next-best model on it; so six-month-old assumptions about what AI can't do are usually wrong.">
+    data-speaker-notes="Do not read the table row by row — the pattern below it is the actual content. The same three tiers repeat at every maker: large, medium, small, plus a frontier tier on top lately. Say clearly that this reshuffles every few months, so treat any such list as a snapshot rather than a recommendation. Then the three stat tiles, left to right: SWE-bench Verified means fixing a real bug in a real repo; ARC-AGI-3 is deliberately built so it can't be memorised, and GPT-6 Astra scores twice the next-best model on it; so six-month-old assumptions about what AI can't do are usually wrong.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">16</span><div class="crumb"><b>Landscape</b> · models</div></div>
       <h2 class="reveal">Today's best <span class="o">models</span></h2>
       <table class="tbl reveal">
-        <thead><tr><th>Maker</th><th>Flagship lineup (July 2026)</th><th>Known for</th></tr></thead>
+        <thead><tr><th>Maker</th><th>Flagship lineup (September 2026)</th><th>Known for</th></tr></thead>
         <tbody>
-          <tr><td><b>Anthropic</b></td><td>Claude Fable 5 · <b>Opus 5</b> · Sonnet 5 · Haiku 4.5</td><td>coding, agents, long context</td></tr>
-          <tr><td><b>OpenAI</b></td><td>GPT‑5.6 — Sol · Terra · Luna</td><td>general reasoning, Codex</td></tr>
-          <tr><td><b>Google</b></td><td>Gemini 3.6 Flash · 3.5 Flash‑Lite <span style="color:var(--s-muted)">(3.5 Pro still unreleased)</span></td><td>multimodal, large context</td></tr>
+          <tr><td><b>Anthropic</b></td><td>Claude Fable 5.1 · <b>Opus 5.5</b> · Sonnet 5 · Haiku 4.5</td><td>coding, agents, long context</td></tr>
+          <tr><td><b>OpenAI</b></td><td>GPT‑6 — Astra · Sol · Luna</td><td>general reasoning, Codex</td></tr>
+          <tr><td><b>Google</b></td><td>Gemini 3.8 Flash · 3.5 Flash‑Lite <span style="color:var(--s-muted)">(3.5 Pro still unreleased)</span></td><td>multimodal, large context</td></tr>
         </tbody>
       </table>
-      <p class="note reveal">The same three tiers repeat everywhere: <b>large</b> (smartest, priciest) · <b>medium</b> (the sweet spot) · <b>small</b> (fast &amp; cheap) — and Anthropic adds a <b>frontier tier on top</b> (Claude Fable 5). It reshuffles every few months, so treat any list as a snapshot. How fast does it move? —</p>
+      <p class="note reveal">The same three tiers repeat everywhere: <b>large</b> (smartest, priciest) · <b>medium</b> (the sweet spot) · <b>small</b> (fast &amp; cheap) — and Anthropic adds a <b>frontier tier on top</b> (Claude Fable 5.1). It reshuffles every few months, so treat any list as a snapshot. How fast does it move? —</p>
       <div class="cards c3 reveal" style="margin-top:18px">
         <div class="tile stat"><span class="k">96%</span><p><b>SWE-bench Verified</b> — Opus 5 fixing real bugs in real code projects</p></div>
-        <div class="tile stat"><span class="k">3× the field</span><p><b>ARC-AGI-3</b> — Opus 5 scores <b>30%</b>, three times the next-best model, on puzzles built to resist memorising</p></div>
+        <div class="tile stat"><span class="k">2× the field</span><p><b>ARC-AGI-3</b> — GPT‑6 Astra scores <b>63%</b>, twice the next-best model, on puzzles built to resist memorising</p></div>
         <div class="tile stat"><span class="k">~6 months</span><p>how long "what AI <b>can't</b> do" assumptions stay true</p></div>
       </div>
     </div>
@@ -686,10 +686,10 @@ table.tbl tr:last-child td{border-bottom:none}
       <h2 class="reveal">Today's best <span class="o">harnesses</span></h2>
       <div class="cards c3 reveal">
         <div class="tile fill"><span class="k">Claude Code</span><p>Anthropic. CLI + IDE + web. Agentic coding over your whole repo.</p></div>
-        <div class="tile"><span class="k">Codex</span><p>OpenAI's coding agent on GPT‑5.6 — in your terminal, with a cloud option.</p></div>
+        <div class="tile"><span class="k">Codex</span><p>OpenAI's coding agent on GPT‑6 — in your terminal, with a cloud option.</p></div>
         <div class="tile"><span class="k">Cursor</span><p>An IDE built around an AI agent.</p></div>
         <div class="tile"><span class="k">GitHub Copilot</span><p>Agent + autocomplete inside your editor.</p></div>
-        <div class="tile"><span class="k">Windsurf</span><p>Another agentic IDE.</p></div>
+        <div class="tile"><span class="k">Devin Desktop</span><p>Another agentic IDE (ex‑Windsurf).</p></div>
         <div class="tile"><span class="k">Aider</span><p>Open-source terminal coding agent.</p></div>
       </div>
       <p class="note reveal">The harness decides what the model can <b>actually do</b> — tools, sandboxing, memory, parallelism. At least as important as the model.</p>
@@ -703,9 +703,9 @@ table.tbl tr:last-child td{border-bottom:none}
       <div class="slide-head reveal"><span class="snum">19</span><div class="crumb"><b>Landscape</b> · the apps</div></div>
       <h2 class="reveal">Same agent, different <span class="o">front door</span></h2>
       <div class="cards c3 reveal">
-        <div class="tile fill"><span class="k">▸ Terminal (CLI)</span><p>Lives in your shell, scriptable. <b>Claude Code</b> · <b>Codex</b> · <b>Gemini CLI</b> · Aider.</p></div>
+        <div class="tile fill"><span class="k">▸ Terminal (CLI)</span><p>Lives in your shell, scriptable. <b>Claude Code</b> · <b>Codex</b> · <b>Antigravity CLI</b> · Aider.</p></div>
         <div class="tile"><span class="k">Desktop app</span><p>A standalone window, less terminal-y. <b>Claude Code</b> app · <b>Codex</b> in the ChatGPT app.</p></div>
-        <div class="tile"><span class="k">⌨ In your IDE</span><p>Inline with your editor. Claude Code &amp; Codex extensions · Cursor · Windsurf · <b>Antigravity</b> · Copilot.</p></div>
+        <div class="tile"><span class="k">⌨ In your IDE</span><p>Inline with your editor. Claude Code &amp; Codex extensions · Cursor · Devin&nbsp;Desktop · <b>Antigravity</b> · Copilot.</p></div>
       </div>
       <p class="note reveal">It's the <b>same loop underneath</b> — just a different front door. Most of the big ones ship in <b>several of these at once;</b> pick whichever fits how you work.</p>
     </div>
@@ -739,7 +739,7 @@ table.tbl tr:last-child td{border-bottom:none}
         <ul class="bul reveal">
           <li>Text or image in → <b>finished video out</b>: cinematic camera moves, characters that stay <b>consistent</b> across shots.</li>
           <li>An <b>AI director</b> splits your idea into shots, generates each, stitches them — <b>our loop again</b>, different domain.</li>
-          <li>Built for <b>marketing &amp; social</b> — even "product URL in → ready-made ad out". Same category: <b>Sora, Veo, Runway.</b></li>
+          <li>Built for <b>marketing &amp; social</b> — even "product URL in → ready-made ad out". Same category: <b>Veo, Kling, Runway.</b></li>
         </ul>
         <div class="diagram reveal"><img class="shot" src="assets/tools/higgsfield.png" alt="Higgsfield's explore page with tiles for Cinema Studio, Seedance 2.0, and other video generation tools"></div>
       </div>
@@ -776,10 +776,10 @@ table.tbl tr:last-child td{border-bottom:none}
         <tbody>
           <tr><td><b>Free</b></td><td>limited usage</td><td>limited usage</td></tr>
           <tr><td><b>Entry</b></td><td>Pro — ~$20/mo</td><td>Go ~$8 · Plus ~$20/mo</td></tr>
-          <tr><td><b>Power</b></td><td>Max 5× ~$100 · Max 20× ~$200/mo</td><td>Pro 5× ~$100 · Pro 20× ~$200/mo</td></tr>
+          <tr><td><b>Power</b></td><td>Max 5× ~$100 · Max 20× ~$200/mo</td><td>Pro 5× ~$100 · Pro 20× ~$200/mo <span style="color:var(--s-muted)">(20× sign-ups paused)</span></td></tr>
         </tbody>
       </table>
-      <p class="note reveal">Higher tiers buy <b>more usage</b> and <b>priority access</b> to the newest models. Prices as of July 2026 — they change often, so verify before quoting.</p>
+      <p class="note reveal">Higher tiers buy <b>more usage</b> and <b>priority access</b> to the newest models. Prices as of September 2026 — they change often, so verify before quoting.</p>
     </div>
   </section>
 
@@ -805,7 +805,7 @@ table.tbl tr:last-child td{border-bottom:none}
       <h2 class="reveal">Cheaper per word, <span class="o">pricier per job</span></h2>
       <div class="split">
         <ul class="bul reveal">
-          <li>The instinct: <b>the big model is the expensive one.</b> Per word, that's true — Opus costs 5× Haiku.</li>
+          <li>The instinct: <b>the big model is the expensive one.</b> Per word, that's true — Opus costs 4× Haiku.</li>
           <li>But a weaker model <b>flails</b>: it reads more files, tries more things, gets it wrong, retries. And <b>every retry re-sends the whole conversation</b> — the model has no memory, remember.</li>
           <li>A stronger model gets there in <b>fewer steps</b> — and steps are what you actually pay for. On hard work, <b>the smarter model is often the cheaper one.</b></li>
         </ul>
@@ -825,7 +825,7 @@ table.tbl tr:last-child td{border-bottom:none}
       <div class="cards c3 reveal" style="margin-top:18px">
         <div class="tile stat"><span class="k">−76% words</span><p>Opus 4.5 matched Sonnet 4.5's <b>best</b> coding score — writing 76% less</p></div>
         <div class="tile stat"><span class="k">~1⁄7 thinking</span><p>Opus 5 hit its best score with a seventh of its predecessor's thinking</p></div>
-        <div class="tile stat"><span class="k">~⅓ the cost</span><p>Sonnet 5 matches the previous Opus on web research, on a third of the tokens</p></div>
+        <div class="tile stat"><span class="k">~⅓ the cost</span><p>Sonnet 5 matches Opus 4.8 on web research, on a third of the tokens</p></div>
       </div>
       <p class="note reveal" style="margin-top:14px"><b>The catch:</b> this only holds when the job is genuinely hard — sorting emails doesn't get cheaper on Opus. Rule of thumb: <b>the cheapest model that actually does the job</b> — and check, don't guess.</p>
     </div>
@@ -833,14 +833,14 @@ table.tbl tr:last-child td{border-bottom:none}
 
   <!-- CONTEXT: WHAT IT IS + DIAGRAM D -->
   <section class="slide light" data-label="What context is"
-    data-speaker-notes="Define context plainly as everything the model sees in one call, and point at the stacked bars as that one call's payload. Give them the scale: a million tokens is roughly two and a half thousand pages on today's top models, with two hundred thousand on the small ones. The sentence to repeat is that if it is not in the context, it does not exist for the model.">
+    data-speaker-notes="Define context plainly as everything the model sees in one call, and point at the stacked bars as that one call's payload. Give them the scale: a million tokens is roughly eighteen hundred and fifty pages on today's top models, with two hundred thousand on the small ones. The sentence to repeat is that if it is not in the context, it does not exist for the model.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>Context</b> · what it is</div></div>
       <h2 class="reveal">Context = the model's <span class="o">short-term memory</span></h2>
       <div class="split">
         <ul class="bul reveal">
           <li>Everything the model sees in <b>one call</b>: system prompt, CLAUDE.md, chat history, files, tool output.</li>
-          <li>Measured in <b>tokens.</b> The <b>context window</b> is the max — <b>1M</b> (≈ 2,500 pages) on today's top models, <b>200K</b> on the small ones.</li>
+          <li>Measured in <b>tokens.</b> The <b>context window</b> is the max — <b>1M</b> (≈ 1,850 pages) on today's top models, <b>200K</b> on the small ones.</li>
           <li>If it isn't in the context, it <b>doesn't exist</b> for the model.</li>
         </ul>
         <div class="diagram reveal">
@@ -886,7 +886,7 @@ table.tbl tr:last-child td{border-bottom:none}
       <div class="slide-head reveal"><span class="snum">28</span><div class="crumb"><b>Context</b> · keeping it lean</div></div>
       <h2 class="reveal">Watch it, <span class="o">keep it lean</span></h2>
       <span class="extag reveal">EXAMPLE — a harness status line</span>
-      <div class="code reveal"><span class="d">claude-opus-5</span>     <span class="o">context: 38%</span>  (380k / 1M)   <span class="g">$0.42</span></div>
+      <div class="code reveal"><span class="d">claude-opus-5-5</span>   <span class="o">context: 38%</span>  (380k / 1M)   <span class="g">$4.20</span></div>
       <ul class="bul reveal" style="margin-top:var(--content-gap)">
         <li>Most harnesses show <b>live % used</b> — glance at it.</li>
         <li>Climbing past ~40–50%? Quality starts to slip — time to <b>trim or restart.</b></li>
@@ -932,13 +932,13 @@ table.tbl tr:last-child td{border-bottom:none}
 
   <!-- PERMISSIONS -->
   <section class="slide dark" data-label="Permissions"
-    data-speaker-notes="Three modes, increasing freedom: ask before anything risky, pre-approve a class of actions, or ask for nothing at all. This is the fourth LIVE checkpoint — say which mode the running agent is in and why it has not interrupted us. Note that Codex has the same three under different names, and close on the rule that more freedom demands more isolation.">
+    data-speaker-notes="Three steps, increasing freedom: ask before anything risky (manual), pre-approve file edits or let auto mode's classifier approve routine steps, or ask for nothing at all. This is the fourth LIVE checkpoint — say which mode the running agent is in and why it has not interrupted us. Note that Codex has the same three under different names, and close on the rule that more freedom demands more isolation.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">31</span><div class="crumb"><b>Safety</b> · permissions</div></div>
       <h2 class="reveal">Safety through <span class="o">permissions</span></h2>
       <div class="cards c3 reveal">
-        <div class="tile"><span class="k">Default · ask</span><p>The agent <b>asks first</b> before any risky action (write a file, run a command). Safest.</p></div>
-        <div class="tile"><span class="k">Auto · accept edits</span><p>Pre-approve a class of actions (e.g. file edits) so it won't interrupt on routine steps.</p></div>
+        <div class="tile"><span class="k">Manual · ask</span><p>The agent <b>asks first</b> before any risky action (write a file, run a command). Safest.</p></div>
+        <div class="tile"><span class="k">Accept edits · auto</span><p>Pre-approve file edits — or, in auto, a <b>classifier</b> approves routine steps and blocks risky ones.</p></div>
         <div class="tile fill"><span class="k">Bypass · "YOLO"</span><p>Asks for <b>nothing.</b> Fast, but it can run <b>any</b> command — only in a sandbox.</p></div>
       </div>
       <p class="note reveal"><span class="pill">● LIVE</span> Our running agent is in <b>auto mode</b> — that's why it hasn't stopped to ask. Both Claude Code and Codex ship these modes (Codex calls them <i>read-only / auto / full access</i>). More freedom demands more isolation.</p>
@@ -1014,7 +1014,7 @@ table.tbl tr:last-child td{border-bottom:none}
         <ul class="bul reveal">
           <li><b>Skill</b> = a folder with a <b>SKILL.md</b> (a name + description, plus instructions, scripts, resources).</li>
           <li><b>Loaded only when needed:</b> the agent reads a skill's full instructions <b>only when a task matches</b> — so you can keep dozens around for almost no context cost.</li>
-          <li><b>Plugins</b> bundle &amp; <b>distribute</b> skills, commands and MCP servers across a team.</li>
+          <li><b>Plugins</b> bundle &amp; <b>distribute</b> skills, sub-agents and MCP servers across a team.</li>
         </ul>
         <div class="kcard reveal">
           <div class="big">Just-in-time know-how</div>
@@ -1041,7 +1041,7 @@ table.tbl tr:last-child td{border-bottom:none}
 
   <!-- MCP + DIAGRAM F -->
   <section class="slide dark" data-label="MCP"
-    data-speaker-notes="Point at the left half of the diagram first — every app needing custom glue to every tool — then the right, where each side connects once through a shared standard. Say it is Anthropic's open standard from late 2024 and thousands of MCP servers now exist. The calendar-plus-email example is the one that lands for non-developers: two systems, one agent, no glue code.">
+    data-speaker-notes="Point at the left half of the diagram first — every app needing custom glue to every tool — then the right, where each side connects once through a shared standard. Say it is Anthropic's open standard from late 2024, now under the Linux Foundation, and thousands of MCP servers now exist. The calendar-plus-email example is the one that lands for non-developers: two systems, one agent, no glue code.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">37</span><div class="crumb"><b>Reaching out</b> · MCP</div></div>
       <h2 class="reveal">MCP = <span class="o">"USB-C for agents"</span></h2>
@@ -1073,7 +1073,7 @@ table.tbl tr:last-child td{border-bottom:none}
           </svg>
         </div>
         <ul class="bul reveal">
-          <li>Anthropic's open standard (Nov 2024). Stop writing a <b>custom connector for every tool × every app.</b></li>
+          <li>Anthropic's open standard (Nov 2024), now under the Linux Foundation. Stop writing a <b>custom connector for every tool × every app.</b></li>
           <li>Run an <b>MCP server</b> once; <b>any</b> MCP-aware agent can use it. Thousands now exist.</li>
           <li><b>Example:</b> "find my next meeting with the audit team and draft a follow-up" — Calendar + Gmail, one agent, no glue code.</li>
         </ul>
@@ -1122,13 +1122,14 @@ table.tbl tr:last-child td{border-bottom:none}
       <div class="links reveal">
         <div class="linkcol">
           <h3>Models &amp; pricing</h3>
-          <a href="https://platform.claude.com/docs/en/about-claude/models/overview" target="_blank" rel="noopener">Anthropic — Claude models overview<span class="u">platform.claude.com/docs · models</span></a>
+          <a href="https://platform.claude.com/docs/en/models/overview" target="_blank" rel="noopener">Anthropic — Claude models overview<span class="u">platform.claude.com/docs · models</span></a>
           <a href="https://claude.com/pricing" target="_blank" rel="noopener">Claude — plans &amp; pricing<span class="u">claude.com/pricing</span></a>
           <a href="https://www.anthropic.com/news/claude-opus-5" target="_blank" rel="noopener">Anthropic — Claude Opus 5 (benchmarks)<span class="u">anthropic.com/news · claude-opus-5</span></a>
           <a href="https://www.anthropic.com/news/claude-opus-4-5" target="_blank" rel="noopener">Anthropic — Opus 4.5: effort &amp; token efficiency<span class="u">anthropic.com/news · claude-opus-4-5</span></a>
-          <a href="https://openai.com/index/gpt-5-6/" target="_blank" rel="noopener">OpenAI — GPT-5.6 (Sol · Terra · Luna)<span class="u">openai.com/index/gpt-5-6</span></a>
+          <a href="https://openai.com/index/gpt-6-astra/" target="_blank" rel="noopener">OpenAI — GPT-6 (Astra · Sol · Luna)<span class="u">openai.com/index/gpt-6-astra</span></a>
+          <a href="https://arcprize.org/leaderboard" target="_blank" rel="noopener">ARC Prize — ARC-AGI-3 leaderboard<span class="u">arcprize.org/leaderboard</span></a>
           <a href="https://chatgpt.com/pricing/" target="_blank" rel="noopener">ChatGPT — pricing tiers<span class="u">chatgpt.com/pricing</span></a>
-          <a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/" target="_blank" rel="noopener">Google — Gemini 3.5<span class="u">blog.google · gemini-3-5</span></a>
+          <a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/" target="_blank" rel="noopener">Google — Gemini 3.8 Flash<span class="u">blog.google · 3-8-flash</span></a>
         </div>
         <div class="linkcol">
           <h3>Harnesses</h3>
@@ -1143,7 +1144,7 @@ table.tbl tr:last-child td{border-bottom:none}
 
   <!-- SOURCES 2 -->
   <section class="slide light" data-label="Sources 2 of 2"
-    data-speaker-notes="These are the papers behind the claims made earlier — context rot, lost in the middle, and the reasoning-faithfulness research from the thinking section. Point at them if anyone challenges a number. Repeat the closing caveat: everything here was verified in July 2026 and moves fast, so re-check before quoting.">
+    data-speaker-notes="These are the papers behind the claims made earlier — context rot, lost in the middle, and the reasoning-faithfulness research from the thinking section. Point at them if anyone challenges a number. Repeat the closing caveat: everything here was verified in September 2026 and moves fast, so re-check before quoting.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">41</span><div class="crumb"><b>Sources</b> · context, memory &amp; MCP</div></div>
       <h2 class="reveal">Sources &amp; <span class="o">links</span> (2/2)</h2>
@@ -1154,7 +1155,7 @@ table.tbl tr:last-child td{border-bottom:none}
           <a href="https://www.trychroma.com/research/context-rot" target="_blank" rel="noopener">Chroma — Context Rot (18-model study)<span class="u">trychroma.com/research/context-rot</span></a>
           <a href="https://arxiv.org/abs/2307.03172" target="_blank" rel="noopener">Liu et al. — Lost in the Middle<span class="u">arxiv.org/abs/2307.03172</span></a>
           <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noopener">Anthropic — Prompt caching<span class="u">platform.claude.com/docs · prompt-caching</span></a>
-          <a href="https://platform.claude.com/docs/en/build-with-claude/extended-thinking" target="_blank" rel="noopener">Anthropic — Extended / adaptive thinking<span class="u">platform.claude.com/docs · extended-thinking</span></a>
+          <a href="https://platform.claude.com/docs/en/build-with-claude/thinking" target="_blank" rel="noopener">Anthropic — Extended / adaptive thinking<span class="u">platform.claude.com/docs · thinking</span></a>
           <a href="https://www.anthropic.com/research/reasoning-models-dont-say-think" target="_blank" rel="noopener">Anthropic — Reasoning models don't always say what they think<span class="u">anthropic.com/research · cot-faithfulness</span></a>
         </div>
         <div class="linkcol">
@@ -1165,7 +1166,7 @@ table.tbl tr:last-child td{border-bottom:none}
           <a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">Model Context Protocol — spec &amp; docs<span class="u">modelcontextprotocol.io</span></a>
         </div>
       </div>
-      <p class="note reveal">All figures verified July 2026. Models &amp; prices move fast — re-check the primary sources before quoting.</p>
+      <p class="note reveal">All figures verified September 2026. Models &amp; prices move fast — re-check the primary sources before quoting.</p>
     </div>
   </section>
 

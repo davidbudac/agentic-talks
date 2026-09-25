@@ -266,7 +266,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <!-- TITLE -->
   <section class="slide dark title-slide" data-label="Title"
     data-speaker-notes="Open cold, no preamble: this is the developer follow-up to the beginner deck. Say the through-line out loud once, from token prediction to self-verifying loops, because every chapter pays it off. Mention it is an internal talk with no live demos, so nobody waits on a terminal.">
-    <div class="ts-top"><span class="k">A developer's guide to coding agents</span><span class="meta">Internal talk · July 2026</span></div>
+    <div class="ts-top"><span class="k">A developer's guide to coding agents</span><span class="meta">Internal talk · September 2026</span></div>
     <div class="ts-hero">
       <h1>Agentic<br>Engineering<span class="dot">.</span></h1>
       <p class="ts-sub">From <b>token prediction</b> to <b>self-verifying loops</b></p>
@@ -478,7 +478,7 @@ table.tbl tr:last-child td{border-bottom:none}
 
   <!-- REASONING — WHY IT WORKS -->
   <section class="slide light" data-label="Why thinking works"
-    data-speaker-notes="Explain the mechanism, not the magic: one forward pass per token, so forcing the answer into the next token buys exactly one pass of compute. Reasoning replaces one impossible prediction with a chain of easy ones, and the scratchpad becomes part of the program. Use the diagram for the billing point, that thinking tokens are billed once as output, stay in context for the turn, then get stripped and never re-billed as input.">
+    data-speaker-notes="Explain the mechanism, not the magic: one forward pass per token, so forcing the answer into the next token buys exactly one pass of compute. Reasoning replaces one impossible prediction with a chain of easy ones, and the scratchpad becomes part of the program. Use the diagram for the billing point, that thinking tokens are billed as output, then on newer models stay in context and are re-billed as input on later turns; Haiku 4.5 and older strip them.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">9</span><div class="crumb"><b>Thinking</b> · why it works</div></div>
       <h2 class="reveal">Why <span class="o">thinking</span> works</h2>
@@ -487,10 +487,10 @@ table.tbl tr:last-child td{border-bottom:none}
           <li><b>One forward pass per token.</b> Force the answer into the next token and it gets exactly one pass of compute — hard problems don't fit.</li>
           <li>Reasoning = the model writing <b>intermediate steps into its own context</b>, then attending to them. The scratchpad <b>becomes part of the program.</b></li>
           <li>Each step is an <b>easy</b> next-token guess; a chain of easy predictions replaces one impossible one. More tokens spent = <b>more compute on the answer</b> ("test-time compute").</li>
-          <li>Thinking tokens are billed as <b>output</b> — the priciest tokens you buy. They stay in context <b>for the rest of that turn</b>, then the API <b>strips them</b>: gone next turn, never re-billed as input. <b>Billed once.</b> The <b>effort dial</b> (next slide) sets how many.</li>
+          <li>Thinking tokens are billed as <b>output</b> — the priciest tokens you buy. They stay in context <b>on later turns too</b> (Haiku 4.5 &amp; older <b>strip them</b>): re-sent each turn, re-billed as input. <b>Billed again.</b> The <b>effort dial</b> (next slide) sets how many.</li>
         </ul>
         <div class="diagram reveal">
-          <svg viewBox="0 0 400 320" role="img" aria-label="Two stacked context windows. In this turn, the window holds the prompt, a highlighted span of thinking tokens the model writes for itself, then the answer, which attends back over the whole strip including the scratchpad. On the next turn the same strip reappears but the thinking span is an empty dashed outline — the API strips it, so it is never re-sent or re-billed as input">
+          <svg viewBox="0 0 400 320" role="img" aria-label="Two stacked context windows. In this turn, the window holds the prompt, a highlighted span of thinking tokens the model writes for itself, then the answer, which attends back over the whole strip including the scratchpad. On the next turn the same strip reappears but the thinking span is an empty dashed outline — as on Haiku 4.5 and older, which strip it; newer models keep it and re-bill it as input">
             <defs><marker id="rz1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--coral)"/></marker></defs>
             <!-- ── this turn ── -->
             <text class="dg-t mut" x="20" y="26" font-size="11">this turn →</text>
@@ -510,9 +510,9 @@ table.tbl tr:last-child td{border-bottom:none}
             <rect class="dg-box mid" x="20" y="240" width="88" height="46" rx="8"/><text class="dg-t" x="64" y="268" font-size="12" text-anchor="middle">prompt</text>
             <rect x="116" y="240" width="170" height="46" rx="8" fill="none" stroke="var(--s-line-strong)" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.55"/>
             <text class="dg-t mut" x="201" y="264" font-size="11" text-anchor="middle" text-decoration="line-through">thinking tokens</text>
-            <text class="dg-t mut" x="201" y="278" font-size="9" text-anchor="middle">stripped by the API</text>
+            <text class="dg-t mut" x="201" y="278" font-size="9" text-anchor="middle">stripped on Haiku 4.5 &amp; older</text>
             <rect class="dg-box mid" x="294" y="240" width="86" height="46" rx="8"/><text class="dg-t" x="337" y="268" font-size="12" text-anchor="middle">answer</text>
-            <text class="dg-t acc" x="200" y="308" font-size="11" text-anchor="middle">never re-sent — so never re-billed as input</text>
+            <text class="dg-t acc" x="200" y="308" font-size="11" text-anchor="middle">newer models keep it — re-billed as input</text>
           </svg>
         </div>
       </div>
@@ -522,7 +522,7 @@ table.tbl tr:last-child td{border-bottom:none}
 
   <!-- THE EFFORT DIAL (levels + quality/token chart) -->
   <section class="slide dark" data-label="The effort dial"
-    data-speaker-notes="Walk the table quickly: low and medium as the cost levers, high as the API default for everything that isn't code, xhigh as the recommended start for coding and agentic work — that is the row this room cares about — and max only for frontier problems. Then use the chart and say the sentence that matters: effort moves you along one curve, the model decides which curve, and the newer curve sits above and to the left. The claim Anthropic actually publishes is that Opus 5 more than doubles Opus 4.8 on Frontier-Bench at a lower cost per task; past xhigh, max buys roughly nothing for about a quarter more tokens, which is why the curve goes flat on the right. Flag that ultracode is a harness mode rather than an API level, and that chapter 06 covers the workflows half of it.">
+    data-speaker-notes="Walk the table quickly: low and medium as the cost levers, high as the API default and usual start (medium on Opus 5.5), xhigh as the step-up for long coding and agentic runs — that is the row this room cares about — and max only for frontier problems. Then use the chart and say the sentence that matters: effort moves you along one curve, the model decides which curve, and the newer curve sits above and to the left. The claim Anthropic actually publishes is that Opus 5 more than doubles Opus 4.8 on Frontier-Bench at a lower cost per task; past xhigh, max buys roughly nothing for about a third more tokens, which is why the curve goes flat on the right. Flag that ultracode is a harness mode rather than an API level, and that chapter 06 covers the workflows half of it.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">10</span><div class="crumb"><b>Thinking</b> · the effort dial</div></div>
       <h2 class="reveal">The other dial: <span class="o">effort</span></h2>
@@ -533,21 +533,21 @@ table.tbl tr:last-child td{border-bottom:none}
             <tbody>
               <tr><td><span style="font-family:var(--font-m);color:var(--s-accent);font-weight:600">low</span></td><td>cheapest &amp; fastest — bulk, delegated grunt work.</td></tr>
               <tr><td><span style="font-family:var(--font-m);color:var(--s-accent);font-weight:600">medium</span></td><td>the cost-saving step-down for routine agentic work.</td></tr>
-              <tr><td><span style="font-family:var(--font-m);color:var(--s-accent);font-weight:600">high</span></td><td>the API default — start here for everything that isn't code.</td></tr>
-              <tr><td><span style="font-family:var(--font-m);color:var(--s-accent);font-weight:600">xhigh</span></td><td><b>start here for coding &amp; agentic runs</b> — Anthropic's recommended default for both, and Claude Code's.</td></tr>
+              <tr><td><span style="font-family:var(--font-m);color:var(--s-accent);font-weight:600">high</span></td><td>the API default (Opus 5.5: medium) — start here for most work.</td></tr>
+              <tr><td><span style="font-family:var(--font-m);color:var(--s-accent);font-weight:600">xhigh</span></td><td><b>step up here for long coding &amp; agentic runs</b> — Anthropic's pick for 30-min+ tasks.</td></tr>
               <tr><td><span style="font-family:var(--font-m);color:var(--s-accent);font-weight:600">max</span></td><td>frontier problems only — past xhigh it mostly adds cost.</td></tr>
             </tbody>
           </table>
           <p class="note reveal" style="font-family:var(--font-m)">Claude Code's <b>"ultracode"</b> = xhigh + standing permission to run multi-agent workflows (chapter 06) — a harness mode, not an API level.</p>
         </div>
         <div class="diagram reveal">
-          <svg viewBox="0 0 470 300" role="img" aria-label="Agentic eval score versus output tokens per task: Opus 5 at xhigh clears Opus 4.8's best score while spending far fewer tokens; going from xhigh to max costs 25 percent more output tokens for no score gain">
+          <svg viewBox="0 0 470 300" role="img" aria-label="Agentic eval score versus output tokens per task: Opus 5 at xhigh clears Opus 4.8's best score while spending far fewer tokens; going from xhigh to max costs 33 percent more output tokens for no score gain">
             <line class="dg-line dim" x1="62" y1="36" x2="62" y2="232"/>
             <line class="dg-line dim" x1="62" y1="232" x2="446" y2="232"/>
             <text class="dg-t mut" x="24" y="140" font-size="11" transform="rotate(-90 24 140)" style="font-family:var(--font-m)">agentic eval score →</text>
             <text class="dg-t mut" x="255" y="270" font-size="11" text-anchor="middle" style="font-family:var(--font-m)">output tokens per task →</text>
             <!-- Opus 5 curve + dashed low extension. Flat from xhigh onward:
-                 max buys ~nothing for 25% more tokens (see the note below). -->
+                 max buys ~nothing for 33% more tokens (see the note below). -->
             <path class="dg-line" d="M240 106 C 300 104, 355 103, 400 103"/>
             <path class="dg-line" d="M240 106 C 205 120, 175 136, 150 150" stroke-dasharray="5 5"/>
             <text class="dg-t mut" x="138" y="166" font-size="9" text-anchor="middle" style="font-family:var(--font-m)">↙ lower effort</text>
@@ -559,7 +559,7 @@ table.tbl tr:last-child td{border-bottom:none}
             <line class="dg-line dim" x1="240" y1="238" x2="400" y2="238"/>
             <line class="dg-line dim" x1="240" y1="234" x2="240" y2="242"/>
             <line class="dg-line dim" x1="400" y1="234" x2="400" y2="242"/>
-            <text class="dg-t mut" x="320" y="254" font-size="9.5" text-anchor="middle" style="font-family:var(--font-m)">+25% tokens, ~no gain</text>
+            <text class="dg-t mut" x="320" y="254" font-size="9.5" text-anchor="middle" style="font-family:var(--font-m)">+33% tokens, ~no gain</text>
             <!-- data points -->
             <circle cx="400" cy="172" r="6" fill="var(--s-muted)"/>
             <text class="dg-t" x="394" y="192" font-size="11" text-anchor="end">Opus 4.8 · max</text>
@@ -572,7 +572,7 @@ table.tbl tr:last-child td{border-bottom:none}
           </svg>
         </div>
       </div>
-      <p class="note reveal">Effort moves you along <b>one model's</b> curve; the <b>model</b> picks <b>which curve</b> — and a newer curve sits above <i>and</i> to the left. On Frontier‑Bench, Anthropic reports Opus 5 <b>more than doubling</b> Opus 4.8 at a <b>lower cost per task</b>; past xhigh, <b>max</b> buys ~nothing for roughly <b>25% more tokens</b>. Its <b>low/medium</b> are unusually strong — re-sweep, don't inherit.</p>
+      <p class="note reveal">Effort moves you along <b>one model's</b> curve; the <b>model</b> picks <b>which curve</b> — and a newer curve sits above <i>and</i> to the left. On Frontier‑Bench, Anthropic reports Opus 5 <b>more than doubling</b> Opus 4.8 at a <b>lower cost per task</b>; past xhigh, <b>max</b> buys ~nothing for roughly <b>33% more tokens</b>. Its <b>low/medium</b> are unusually strong — re-sweep, don't inherit.</p>
     </div>
   </section>
 
@@ -595,8 +595,8 @@ table.tbl tr:last-child td{border-bottom:none}
       <div class="slide-head reveal"><span class="snum">11</span><div class="crumb"><b>Hands</b> · the three parts</div></div>
       <h2 class="reveal">Model · harness · <span class="o">client</span></h2>
       <div class="cards c3 reveal">
-        <div class="tile"><span class="k">Model</span><p>The brain — an API you rent. <b>Fable · Opus · Sonnet</b> (Anthropic) · <b>GPT‑5.6 Sol</b> (OpenAI) · <b>Gemini 3.1 Pro</b> (Google).</p></div>
-        <div class="tile"><span class="k">Harness</span><p>The loop around the model: assembles context, runs tools, manages permissions. <b>Claude Code · Codex CLI · Gemini CLI · Jules</b> (async).</p></div>
+        <div class="tile"><span class="k">Model</span><p>The brain — an API you rent. <b>Fable · Opus · Sonnet</b> (Anthropic) · <b>GPT‑6 Astra</b> (OpenAI) · <b>Gemini 3.1 Pro</b> (Google).</p></div>
+        <div class="tile"><span class="k">Harness</span><p>The loop around the model: assembles context, runs tools, manages permissions. <b>Claude Code · Codex CLI · Antigravity CLI · Jules</b> (async).</p></div>
         <div class="tile fill"><span class="k">Client</span><p>Where you meet the harness: <b>terminal · IDE extension</b> (VS Code, JetBrains, Antigravity) <b>· desktop · web · CI</b>.</p></div>
       </div>
       <p class="note reveal">The model only emits tokens — the <b>harness</b> is the program that gives them hands. Rent the model, run the harness, pick the client; most models work in most harnesses.</p>
@@ -845,7 +845,7 @@ table.tbl tr:last-child td{border-bottom:none}
 
   <!-- DIVIDER 05 -->
   <section class="slide dark divider" data-label="05 The bill comes due"
-    data-speaker-notes="Every lap re-sends the whole history, so cost grows quadratically and quality rots. This chapter is the diagnosis; the fixes arrive in chapter 06. Set expectations that numbers are coming and all of them are a mid-2026 snapshot.">
+    data-speaker-notes="Every lap re-sends the whole history, so cost grows quadratically and quality rots. This chapter is the diagnosis; the fixes arrive in chapter 06. Set expectations that numbers are coming and all of them are a September 2026 snapshot.">
     <div class="slide-content">
       <div class="dnum reveal">05</div>
       <h2 class="reveal">The bill <span class="o">comes due</span></h2>
@@ -950,12 +950,12 @@ table.tbl tr:last-child td{border-bottom:none}
       </table>
       <div class="split reveal" style="align-items:start;margin-top:var(--content-gap)">
         <table class="tbl">
-          <thead><tr><th>Model · July 2026</th><th>Input / MTok</th><th>Output / MTok</th></tr></thead>
+          <thead><tr><th>Model · September 2026</th><th>Input / MTok</th><th>Output / MTok</th></tr></thead>
           <tbody>
             <tr><td><b>Haiku 4.5</b></td><td>$1</td><td>$5</td></tr>
-            <tr><td><b>Sonnet 5</b></td><td>$3 <span style="color:var(--s-muted)">· intro $2</span></td><td>$15 <span style="color:var(--s-muted)">· intro $10</span></td></tr>
-            <tr><td><b>Opus 5</b></td><td>$5</td><td>$25</td></tr>
-            <tr><td><b>Fable 5</b></td><td><b>$10</b></td><td><b>$50</b></td></tr>
+            <tr><td><b>Sonnet 5</b></td><td>$2</td><td>$10</td></tr>
+            <tr><td><b>Opus 5.5</b></td><td>$4</td><td>$20</td></tr>
+            <tr><td><b>Fable 5.1</b></td><td><b>$10</b></td><td><b>$50</b></td></tr>
           </tbody>
         </table>
         <div>
@@ -980,7 +980,7 @@ table.tbl tr:last-child td{border-bottom:none}
               <tr><td><b>Opus 4.5</b> vs Sonnet 4.5<br><span style="color:var(--s-muted)">SWE-bench, medium effort</span></td><td>matched Sonnet's <b>best</b> score using <b>76% fewer output tokens</b></td></tr>
               <tr><td><b>Opus 5</b> vs Opus 4.8<br><span style="color:var(--s-muted)">internal trading eval</span></td><td>best score on <b>~1⁄7 the reasoning tokens</b>, under half the latency</td></tr>
               <tr><td><b>Sonnet 5</b> vs Opus 4.8<br><span style="color:var(--s-muted)">BrowseComp</span></td><td>same accuracy at <b>~⅓ the per-task token cost</b></td></tr>
-              <tr><td><b>Opus 5</b> xhigh vs max<br><span style="color:var(--s-muted)">GDPval-AA v2</span></td><td>higher score on <b>25% fewer output tokens</b></td></tr>
+              <tr><td><b>Opus 5</b> xhigh vs max<br><span style="color:var(--s-muted)">GDPval-AA v2</span></td><td>near-max score on <b>25% fewer output tokens</b></td></tr>
             </tbody>
           </table>
         </div>
@@ -998,7 +998,7 @@ table.tbl tr:last-child td{border-bottom:none}
 
   <!-- INPUT VS OUTPUT — ONE REAL TURN -->
   <section class="slide dark" data-label="Where the money goes"
-    data-speaker-notes="Concrete numbers for one turn: about twenty-two thousand seven hundred tokens in, about sixteen hundred out. Do the arithmetic on the slide, cache reads pull input down to roughly three cents while the sixteen hundred output tokens cost about four. The model reads fourteen times more than it writes and the tiny output side still costs more, which is why thinking tokens are the expensive dial.">
+    data-speaker-notes="Concrete numbers for one turn: about twenty-two thousand seven hundred tokens in, about sixteen hundred out. Do the arithmetic on the slide, cache reads pull input down to roughly two cents while the sixteen hundred output tokens cost about three. The model reads fourteen times more than it writes and the tiny output side still costs more, which is why thinking tokens are the expensive dial.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>The bill</b> · input vs output · example</div></div>
       <h2 class="reveal">Where the money goes: <span class="o">one turn</span></h2>
@@ -1015,26 +1015,26 @@ table.tbl tr:last-child td{border-bottom:none}
   prose ("I'll add…")        <span class="o">~250</span>
   Edit tool call (the diff)  <span class="o">~450</span></div>
       </div>
-      <p class="note reveal"><b>The bill</b> (Opus 5, $5 / $25 per MTok): input would be <b>$0.11</b>, but ~19k of it is cache-read at 0.1× → <b>~$0.03</b>. Output: 1,600 × $25/M → <b>~$0.04</b>.</p>
-      <p class="note reveal" style="margin-top:.3rem">The model reads <b>14× more than it writes</b> — yet the tiny output side <b>costs more</b>: output is 5× the price and never cached. That's why <b>thinking tokens</b> are the expensive dial — billed once, here, then stripped from context: they never come back on the input side.</p>
+      <p class="note reveal"><b>The bill</b> (Opus 5.5, $4 / $20 per MTok): input would be <b>$0.09</b>, but ~19k of it is cache-read at 0.05× → <b>~$0.02</b>. Output: 1,600 × $20/M → <b>~$0.03</b>.</p>
+      <p class="note reveal" style="margin-top:.3rem">The model reads <b>14× more than it writes</b> — yet the tiny output side <b>costs more</b>: output is 5× the price and never cached. That's why <b>thinking tokens</b> are the expensive dial — billed as output here, then kept in context: they come back on the input side.</p>
     </div>
   </section>
 
   <!-- KV CACHING — HOW IT WORKS + DIAGRAM -->
   <section class="slide light" data-label="KV caching"
-    data-speaker-notes="The provider caches the computed attention state for a prefix it has already seen, so sending the same prefix again is roughly ten times cheaper. The catch is byte-identical, which is why harnesses append and never rewrite. Edit the system prompt or reorder history and you bust the cache and pay full price again.">
+    data-speaker-notes="The provider caches the computed attention state for a prefix it has already seen, so sending the same prefix again is at least ten times cheaper. The catch is byte-identical, which is why harnesses append and never rewrite. Edit the system prompt or reorder history and you bust the cache and pay full price again.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">27</span><div class="crumb"><b>The bill</b> · KV cache · how</div></div>
       <h2 class="reveal">KV caching: <span class="o">don't recompute the prefix</span></h2>
       <div class="split">
         <ul class="bul reveal">
           <li>The provider <b>caches the computed attention state</b> (the KV pairs) for a prefix it has already seen.</li>
-          <li>Send the <b>same prefix</b> again → cached input is <b>~10× cheaper</b> and faster. But it must be <b>byte-identical.</b></li>
+          <li>Send the <b>same prefix</b> again → cached input is <b>≥10× cheaper</b> and faster. But it must be <b>byte-identical.</b></li>
           <li>So harnesses <b>append, never rewrite.</b> Edit the system prompt or reorder history and you <b>bust the cache</b> — full price again.</li>
         </ul>
         <div class="diagram reveal">
           <!-- Remotion animation (remotion/src/KvCache.tsx) -->
-          <video src="assets/anim/kv-cache-light.mp4" width="1200" height="600" autoplay muted loop playsinline aria-label="Turn after turn, everything already sent becomes cached prefix (~10x cheaper); only the appended tail of new tokens is fresh"></video>
+          <video src="assets/anim/kv-cache-light.mp4" width="1200" height="600" autoplay muted loop playsinline aria-label="Turn after turn, everything already sent becomes cached prefix (≥10x cheaper); only the appended tail of new tokens is fresh"></video>
         </div>
       </div>
       <p class="note reveal"><span class="pill">● CONTEXT</span> Caching = paying less to re-send the same context.</p>
@@ -1043,7 +1043,7 @@ table.tbl tr:last-child td{border-bottom:none}
 
   <!-- KV CACHING — HOW LONG DOES IT LIVE + TIMELINE -->
   <section class="slide dark" data-label="Cache lifetime"
-    data-speaker-notes="The default TTL is five minutes and every cache hit resets the clock, so an active session stays warm indefinitely. A break longer than the TTL leaves the cache cold and the next turn rewrites it at full price. Give the economics, reads at about a tenth of input, writes at a premium — and be precise about break-even, because it depends on the TTL: two requests on the five-minute cache, three on the one-hour, since that one writes at double. Note the cache is per-model, so switching mid-session pays to rebuild it.">
+    data-speaker-notes="The default TTL is five minutes and every cache hit resets the clock, so an active session stays warm indefinitely. A break longer than the TTL leaves the cache cold and the next turn rewrites it at full price. Give the economics, reads at a tenth of input or less, writes at a premium — and be precise about break-even, because it depends on the TTL: two requests on the five-minute cache, three on the one-hour, since that one writes at double. Note the cache is per-model, so switching mid-session pays to rebuild it.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">28</span><div class="crumb"><b>The bill</b> · KV cache · lifetime</div></div>
       <h2 class="reveal">How long does the cache <span class="o">live?</span></h2>
@@ -1051,7 +1051,7 @@ table.tbl tr:last-child td{border-bottom:none}
         <ul class="bul reveal">
           <li>Default TTL is <b>5 minutes</b> — and every cache hit <b>resets the clock</b>, so an active session stays warm indefinitely.</li>
           <li>A coffee break longer than the TTL → cache gone; the next turn <b>rewrites it at full price.</b> (A <b>1-hour</b> TTL is available, for more.)</li>
-          <li>Reads cost <b>~0.1×</b> input; writes cost a premium — <b>1.25×</b> (5-min) or <b>2×</b> (1-hour). Break-even: <b>2 requests</b> on the 5-min TTL, <b>3</b> on the 1-hour.</li>
+          <li>Reads cost <b>≤0.1×</b> input; writes cost a premium — <b>1.25×</b> (5-min) or <b>2×</b> (1-hour). Break-even: <b>2 requests</b> on the 5-min TTL, <b>3</b> on the 1-hour.</li>
         </ul>
         <div class="diagram reveal">
           <svg viewBox="0 0 800 220" role="img" aria-label="A session timeline: each turn resets the 5-minute cache TTL; a gap longer than the TTL leaves the cache cold and the next turn rewrites it at full price">
@@ -1136,7 +1136,7 @@ table.tbl tr:last-child td{border-bottom:none}
 
   <!-- THE LINEUPS -->
   <section class="slide dark" data-label="The lineups"
-    data-speaker-notes="Same shape at every lab: small, medium, large. Read one row across so the mapping sticks, then point at the Anthropic row where Fable sits above the large model. Be precise about what above means: it is priced above Opus, at twice the per-token rate. Whether it still scores above it is the next slide, and the answer is now no on several benchmarks. Caveat the whole table as a mid-2026 snapshot that reshuffles constantly.">
+    data-speaker-notes="Same shape at every lab: small, medium, large. Read one row across so the mapping sticks, then point at the Anthropic row where Fable sits above the large model. Be precise about what above means: it is priced above Opus, at two and a half times the per-token rate. Whether it still scores above it is the next slide, and the answer is now no on several benchmarks. Caveat the whole table as a September 2026 snapshot that reshuffles constantly.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">31</span><div class="crumb"><b>Split the work</b> · the lineups</div></div>
       <h2 class="reveal">Same shape <span class="o">everywhere</span></h2>
@@ -1144,17 +1144,17 @@ table.tbl tr:last-child td{border-bottom:none}
         <thead><tr><th>Maker</th><th>Small</th><th>Medium</th><th>Large</th><th>Above (frontier)</th></tr></thead>
         <tbody>
           <tr><td><b>Anthropic</b></td><td>Haiku</td><td>Sonnet</td><td>Opus</td><td><b>Fable</b></td></tr>
-          <tr><td><b>OpenAI</b> · GPT‑5.6</td><td>Luna</td><td>Terra</td><td>Sol</td><td>—</td></tr>
-          <tr><td><b>Google</b> · Gemini 3.5/3.6</td><td>Flash‑Lite</td><td>Flash</td><td>Pro</td><td>Deep Think</td></tr>
+          <tr><td><b>OpenAI</b> · GPT‑6</td><td>Luna</td><td>Sol</td><td>Astra</td><td>—</td></tr>
+          <tr><td><b>Google</b> · Gemini 3.5/3.8</td><td>Flash‑Lite</td><td>Flash</td><td>Pro</td><td>Deep Think</td></tr>
         </tbody>
       </table>
-      <p class="note reveal">S / M / L repeats at every lab; Anthropic adds <b>Fable</b> <b>above</b> the large model — <b>priced</b> above Opus (2× per token). Whether it still <b>scores</b> above it is the next slide. Snapshot, July 2026 — this reshuffles constantly.</p>
+      <p class="note reveal">S / M / L repeats at every lab; Anthropic adds <b>Fable</b> <b>above</b> the large model — <b>priced</b> above Opus (2.5× per token). Whether it still <b>scores</b> above it is the next slide. Snapshot, September 2026 — this reshuffles constantly.</p>
     </div>
   </section>
 
   <!-- BENCHMARKS -->
   <section class="slide light" data-label="How much better"
-    data-speaker-notes="Do not read the grid cell by cell. Point at two rows and move on. SWE-bench Pro shows the gap you would expect between tiers, ten to fifteen points. Frontier-Bench and ARC-AGI-3 show something else: Opus 5 more than doubles Opus 4.8 on one and scores three times the whole field on the other, because those benchmarks are deliberately built out of problems the previous generation could not touch. Say the three caveats out loud. Benchmarks are not your workload; the dashes are honest, because not everything gets run on everything; and Anthropic mostly publishes these as claims rather than tables, so the precise figures come from third-party trackers and move around a point or two — quote the shape, not the decimal. If someone spots that Fable outscores Opus 5 on the top row, that is the next-but-one slide and it is deliberate. Then land the point that matters for this chapter: jumps this size mean any routing table older than a couple of months is wrong, so re-measure rather than inheriting last quarter's defaults.">
+    data-speaker-notes="Do not read the grid cell by cell. Point at two rows and move on. SWE-bench Pro shows the gap you would expect between tiers, ten to fifteen points. Frontier-Bench and ARC-AGI-3 show something else: Opus 5 more than doubles Opus 4.8 on one and scored three times the whole field on the other at launch (GPT-6 Astra has since posted 62.7 on the standard harness), because those benchmarks are deliberately built out of problems the previous generation could not touch. Say the three caveats out loud. Benchmarks are not your workload; the dashes are honest, because not everything gets run on everything; and Anthropic mostly publishes these as claims rather than tables, so the precise figures come from third-party trackers and move around a point or two — quote the shape, not the decimal. If someone spots that Fable outscores Opus 5 on the top row, that is the next-but-one slide and it is deliberate. Then land the point that matters for this chapter: jumps this size mean any routing table older than a couple of months is wrong, so re-measure rather than inheriting last quarter's defaults.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">32</span><div class="crumb"><b>Split the work</b> · the numbers</div></div>
       <h2 class="reveal">How much better, <span class="o">actually?</span></h2>
@@ -1167,7 +1167,7 @@ table.tbl tr:last-child td{border-bottom:none}
           <tr><td><b>ARC-AGI-3</b> <span style="color:var(--s-muted)">· novel problems</span></td><td>—</td><td>—</td><td><b>30.2</b></td><td>—</td></tr>
         </tbody>
       </table>
-      <p class="note reveal">Two shapes here. On <b>ordinary coding</b> the tiers are 10–15 points apart — real, not dramatic. On benchmarks built from problems the <b>last</b> generation couldn't touch, it's a <b>2×+</b> jump (Frontier-Bench) or <b>3× the whole field</b> (ARC-AGI-3, where the next-best model scores 7.8). SWE-bench <i>Verified</i> is saturating — Opus 5 sits at <b>96%</b>. <b>Caveat:</b> Anthropic publishes most of these as claims rather than tables — exact figures come from third-party trackers and move a point or two.</p>
+      <p class="note reveal">Two shapes here. On <b>ordinary coding</b> the tiers are 10–15 points apart — real, not dramatic. On benchmarks built from problems the <b>last</b> generation couldn't touch, it's a <b>2×+</b> jump (Frontier-Bench) or <b>3× the July field</b> (ARC-AGI-3, where the next-best model scored 7.8). SWE-bench <i>Verified</i> is saturating — Opus 5 sits at <b>96%</b>. <b>Caveat:</b> Anthropic publishes most of these as claims rather than tables — exact figures come from third-party trackers and move a point or two.</p>
       <p class="note reveal" style="margin-top:.3rem"><b>Why it matters here:</b> jumps this size make an old routing table <b>wrong</b>, not just suboptimal. Dashes are honest — not every model is run on every benchmark — and none of these is <b>your</b> workload. Re-measure.</p>
     </div>
   </section>
@@ -1213,25 +1213,25 @@ table.tbl tr:last-child td{border-bottom:none}
         <div class="tile"><span class="k">Cheapest that works</span><p>Route to the <b>smallest model that clears the bar</b> — measured. Escalate on <b>failure</b>, not vibes.</p></div>
         <div class="tile fill"><span class="k">A new tier resets the curve</span><p><b>low</b> effort on a new model often beats <b>xhigh</b> on the old one — a cheaper floor, not just a higher ceiling.</p></div>
       </div>
-      <p class="note reveal">The escalation ladder: same model, more effort → bigger model → <b>Opus 5 at max</b> → Fable (for judgement work — two slides on). Move up only when something <b>actually fails</b>. (Switching models also busts your cache — one more reason not to hop on vibes.) And re-run the sweep after a model launch: <b>Opus 5's low/medium are strong enough that inherited settings are usually wrong.</b></p>
+      <p class="note reveal">The escalation ladder: same model, more effort → bigger model → <b>Opus 5.5 at max</b> → Fable (for judgement work — two slides on). Move up only when something <b>actually fails</b>. (Switching models also busts your cache — one more reason not to hop on vibes.) And re-run the sweep after a model launch: <b>Opus 5.5's low/medium are strong enough that inherited settings are usually wrong.</b></p>
     </div>
   </section>
 
   <!-- WHAT FABLE IS -->
   <section class="slide light" data-label="Fable is a tier"
-    data-speaker-notes="Be honest here, because the previous slide's table gives it away: Fable is the price tier above Opus, not a strict upgrade. It costs twice as much per token, and since the Opus 5 launch Opus 5 actually leads it on Frontier-Bench and OSWorld at half the price. What Fable still buys is judgement: planning, taste, self-correction, spotting the flaw in its own diff, and the longest-horizon runs. So the routing rule is escalate to Fable only after Opus 5 at max effort has genuinely failed. The callout is the line to say out loud, you hired a staff engineer, so do not make it type.">
+    data-speaker-notes="Be honest here, because the previous slide's table gives it away: Fable is the price tier above Opus, not a strict upgrade. It costs two and a half times as much per token, and since the Opus 5.5 launch Opus 5.5 actually leads it on Terminal-Bench and OSWorld at under half the price. What Fable still buys is judgement: planning, taste, self-correction, spotting the flaw in its own diff, and the longest-horizon runs. So the routing rule is escalate to Fable only after Opus 5.5 at max effort has genuinely failed. The callout is the line to say out loud, you hired a staff engineer, so do not make it type.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">35</span><div class="crumb"><b>Split the work</b> · what Fable is</div></div>
       <h2 class="reveal">Fable is a <span class="o">price tier, not a strict upgrade</span></h2>
       <div class="split">
         <ul class="bul reveal">
-          <li><b>2× Opus 5's price</b> ($10/$50 vs $5/$25) — and since the Opus 5 launch it no longer wins across the board: <b>Opus 5 leads it</b> on Frontier-Bench and OSWorld, at half the cost per token.</li>
+          <li><b>2.5× Opus 5.5's price</b> ($10/$50 vs $4/$20) — and since the Opus 5.5 launch it no longer wins across the board: <b>Opus 5.5 leads it</b> on Terminal-Bench and OSWorld, at under half the cost per token.</li>
           <li>Where it still earns the premium: <b>judgement</b> — planning, taste, self-correction, spotting the flaw in its own diff, and the longest-horizon runs.</li>
           <li>Where it's wasteful: <b>grunt work.</b> Mechanical edits, bulk refactors, running tests — a smaller model does those fine, for a fraction of the cost.</li>
         </ul>
         <div class="kcard reveal">
           <div class="big">Don't make Fable type</div>
-          <p>You hired a staff engineer. Use it for the <b>hard call</b> and the <b>review</b> — and only once <b>Opus 5 at max effort</b> has actually failed. Then hand the typing to something cheaper.</p>
+          <p>You hired a staff engineer. Use it for the <b>hard call</b> and the <b>review</b> — and only once <b>Opus 5.5 at max effort</b> has actually failed. Then hand the typing to something cheaper.</p>
         </div>
       </div>
     </div>
@@ -1239,7 +1239,7 @@ table.tbl tr:last-child td{border-bottom:none}
 
   <!-- FABLE PATTERN 1 — ADVISOR -->
   <section class="slide dark" data-label="Pattern 1 - the advisor"
-    data-speaker-notes="Pattern one: the executor does the work and consults an advisor before committing to a plan or a risky change. At the harness level this is just a standing rule in CLAUDE.md, shown in the code block. Be precise on the caveat: the API's built-in advisor tool is beta and the advisor model must be at least as capable as the executor, so a cheap executor with a Fable advisor is fine but the reverse is rejected. Claude Code has no advisor flag, so in practice this lives in CLAUDE.md.">
+    data-speaker-notes="Pattern one: the executor does the work and consults an advisor before committing to a plan or a risky change. At the harness level this is just a standing rule in CLAUDE.md, shown in the code block. Be precise on the caveat: the API's built-in advisor tool is beta and the advisor model must be at least as capable as the executor, so a cheap executor with a Fable advisor is fine but the reverse is rejected. Claude Code has an /advisor command and a --advisor flag; the CLAUDE.md rule is the manual version.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">36</span><div class="crumb"><b>Split the work</b> · Fable · the advisor</div></div>
       <h2 class="reveal">Pattern 1 — the <span class="o">advisor</span></h2>
@@ -1266,7 +1266,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <span class="b">Before committing to a plan or a risky change,</span>
   <span class="b">spawn a subagent with model: fable to review it,</span>
   <span class="b">and apply its verdict.</span></div>
-          <p class="note reveal">The API also has a built-in <b>advisor tool</b> (beta), consulted <b>mid-generation</b>. One rule: the <b>advisor must be at least as capable as the executor</b> — so sonnet·executor → opus/fable·advisor is fine, opus·executor → sonnet·advisor is a 400. Claude Code has no <b>--advisor</b> flag, so in the harness it's the standing rule above.</p>
+          <p class="note reveal">The API also has a built-in <b>advisor tool</b> (beta), consulted <b>mid-generation</b>. One rule: the <b>advisor must be at least as capable as the executor</b> — so sonnet·executor → opus/fable·advisor is fine, opus·executor → sonnet·advisor is a 400. Claude Code has <b>/advisor</b> and a <b>--advisor</b> flag; the rule above is the manual version.</p>
         </div>
       </div>
     </div>
@@ -1311,7 +1311,7 @@ table.tbl tr:last-child td{border-bottom:none}
 
   <!-- FABLE PATTERN 2b — CROSS-VENDOR ORCHESTRATION -->
   <section class="slide dark" data-label="Pattern 2b - cross-vendor"
-    data-speaker-notes="The model parameter for subagents only takes Claude models, so other vendors join through a thin wrapper subagent that shells out to their CLI. Here Fable hands bulk implementation to GPT-5.6 Sol through the Codex CLI. Two reasons worth saying aloud: a genuinely independent second perspective with different blind spots, and someone else's rate limits. Stress the label, because the UI only ever reports the wrapper's Claude model.">
+    data-speaker-notes="The model parameter for subagents only takes Claude models, so other vendors join through a thin wrapper subagent that shells out to their CLI. Here Fable hands bulk implementation to GPT-6 Sol through the Codex CLI. Two reasons worth saying aloud: a genuinely independent second perspective with different blind spots, and someone else's rate limits. Stress the label, because the UI only ever reports the wrapper's Claude model.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">38</span><div class="crumb"><b>Split the work</b> · Fable · cross-vendor</div></div>
       <h2 class="reveal">Pattern 2b — delegate <span class="o">across vendors</span></h2>
@@ -1319,17 +1319,17 @@ table.tbl tr:last-child td{border-bottom:none}
         <div>
           <ul class="bul reveal">
             <li>Subagents' <b>model</b> param only takes Claude models — other vendors join via a <b>thin wrapper subagent</b> that shells out to their CLI.</li>
-            <li>Here: Fable hands bulk implementation to <b>GPT-5.6 Sol</b> (OpenAI's flagship, $5 / $30 per MTok) through the <b>Codex CLI</b>.</li>
+            <li>Here: Fable hands bulk implementation to <b>GPT-6 Sol</b> (OpenAI's coding tier, $2 / $10 per MTok) through the <b>Codex CLI</b>.</li>
             <li>Why: a genuinely <b>independent second perspective</b> — different model family, different blind spots — and <b>someone else's rate limits.</b></li>
           </ul>
           <div class="code reveal"><span class="c"># CLAUDE.md</span>
-  <span class="b">For bulk implementation you may delegate to GPT-5.6</span>
+  <span class="b">For bulk implementation you may delegate to GPT-6</span>
   <span class="b">Sol: spawn a wrapper subagent that writes a self-</span>
   <span class="b">contained prompt and runs `codex exec`. Label it</span>
-  <span class="b">"gpt-5.6:" so the trace shows who did the work.</span></div>
+  <span class="b">"gpt-6:" so the trace shows who did the work.</span></div>
         </div>
         <div class="diagram reveal">
-          <svg viewBox="0 0 400 250" role="img" aria-label="Fable at the top delegates to a Claude subagent and to a thin wrapper subagent, which shells out to the Codex CLI running GPT-5.6 Sol">
+          <svg viewBox="0 0 400 250" role="img" aria-label="Fable at the top delegates to a Claude subagent and to a thin wrapper subagent, which shells out to the Codex CLI running GPT-6 Sol">
             <defs>
               <marker id="xv1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--coral)"/></marker>
             </defs>
@@ -1344,7 +1344,7 @@ table.tbl tr:last-child td{border-bottom:none}
             <text class="dg-t mut" x="303" y="139" font-size="9.5" text-anchor="middle">sonnet · low effort</text>
             <rect class="dg-box outer" x="230" y="172" width="146" height="52" rx="9"/>
             <text class="dg-t acc" x="303" y="194" font-size="11" text-anchor="middle">codex exec</text>
-            <text class="dg-t" x="303" y="211" font-size="11" text-anchor="middle">GPT-5.6 Sol</text>
+            <text class="dg-t" x="303" y="211" font-size="11" text-anchor="middle">GPT-6 Sol</text>
             <path class="dg-line" d="M172 64 C 132 90, 110 100, 98 116" marker-end="url(#xv1)"/>
             <path class="dg-line" d="M228 64 C 268 80, 288 88, 300 102" marker-end="url(#xv1)"/>
             <path class="dg-line" d="M303 148 L 303 168" marker-end="url(#xv1)"/>
@@ -1353,7 +1353,7 @@ table.tbl tr:last-child td{border-bottom:none}
           </svg>
         </div>
       </div>
-      <p class="note reveal">The UI reports the wrapper's Claude model — the <b>label</b> is the only cue the real worker was GPT-5.6 Sol. Parallel cross-vendor workers need <b>worktree isolation</b> so edits don't collide.</p>
+      <p class="note reveal">The UI reports the wrapper's Claude model — the <b>label</b> is the only cue the real worker was GPT-6 Sol. Parallel cross-vendor workers need <b>worktree isolation</b> so edits don't collide.</p>
     </div>
   </section>
 
@@ -1367,8 +1367,8 @@ table.tbl tr:last-child td{border-bottom:none}
         <thead><tr><th>Tier · the lineup from before</th><th>Suggested usage</th></tr></thead>
         <tbody>
           <tr><td><b>Small</b> — <span style="font-family:var(--font-m)">Haiku · Luna · Flash-Lite</span></td><td>classification, log triage, autocomplete, high-volume pipelines — anything you'd regret paying Opus prices for.</td></tr>
-          <tr><td><b>Medium</b> — <span style="font-family:var(--font-m)">Sonnet · Terra · Flash</span></td><td>the workhorse: implementation from a clear spec, tests, refactors, bulk subagents, data wrangling.</td></tr>
-          <tr><td><b>Large</b> — <span style="font-family:var(--font-m)">Opus · Sol · Pro</span></td><td>the agentic default: long-horizon coding, debugging, multi-step tool work, user-facing writing &amp; design.</td></tr>
+          <tr><td><b>Medium</b> — <span style="font-family:var(--font-m)">Sonnet · Sol · Flash</span></td><td>the workhorse: implementation from a clear spec, tests, refactors, bulk subagents, data wrangling.</td></tr>
+          <tr><td><b>Large</b> — <span style="font-family:var(--font-m)">Opus · Astra · Pro</span></td><td>the agentic default: long-horizon coding, debugging, multi-step tool work, user-facing writing &amp; design.</td></tr>
           <tr><td><b>Frontier</b> — <span style="font-family:var(--font-m)">Fable · Deep Think</span></td><td>plan reviews, the hard architectural call, verify stages, final polish — <b>never</b> bulk implementation, mechanical edits, or first drafts.</td></tr>
         </tbody>
       </table>
@@ -1378,13 +1378,13 @@ table.tbl tr:last-child td{border-bottom:none}
 
   <!-- DYNAMIC WORKFLOWS: WHAT + DIAGRAM -->
   <section class="slide light" data-label="Workflows"
-    data-speaker-notes="A workflow is a small orchestration the agent writes and runs: agent for a fresh subagent, parallel to fan out, pipeline for phases. Trace the diagram, parallel explore, plan, build, verify, with a failure edge looping back. Point out that it combines the whole story, fresh context per stage, per-stage model routing, and verifiers between phases.">
+    data-speaker-notes="A workflow is a small orchestration the agent writes and runs: agent for a fresh subagent, parallel to fan out, pipeline for stages. Trace the diagram, parallel explore, plan, build, verify, with a failure edge looping back. Point out that it combines the whole story, fresh context per stage, per-stage model routing, and verifiers between phases.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">40</span><div class="crumb"><b>Split the work</b> · dynamic workflows</div></div>
       <h2 class="reveal">Workflows: <span class="o">everything at once</span></h2>
       <div class="split">
         <ul class="bul reveal">
-          <li>A <b>workflow</b> is a small orchestration the agent writes &amp; runs: <b>agent()</b> (fresh subagent), <b>parallel()</b> (fan out), <b>pipeline()</b> of phases.</li>
+          <li>A <b>workflow</b> is a small orchestration the agent writes &amp; runs: <b>agent()</b> (fresh subagent), <b>parallel()</b> (fan out), <b>pipeline()</b> of stages.</li>
           <li>It combines the whole story: <b>fresh context per stage</b> (chapter 05's rot), <b>per-stage model routing</b> (this chapter), <b>verifiers between phases</b> (chapter 04's loop).</li>
         </ul>
         <div class="diagram reveal">
@@ -1427,7 +1427,7 @@ table.tbl tr:last-child td{border-bottom:none}
   );
   <span class="o">phase</span>(<span class="g">'Plan'</span>);    <span class="o">agent</span>(<span class="g">'write the plan'</span>, {model:<span class="b">'fable'</span>});
   <span class="o">phase</span>(<span class="g">'Build'</span>);   <span class="o">agent</span>(<span class="g">'implement it'</span>,  {model:<span class="b">'opus'</span>});
-  <span class="o">phase</span>(<span class="g">'Verify'</span>);  <span class="o">run</span>(<span class="g">'pytest -q'</span>);   <span class="c">// gate: must pass</span></div>
+  <span class="o">phase</span>(<span class="g">'Verify'</span>);  <span class="o">agent</span>(<span class="g">'run pytest -q'</span>); <span class="c">// gate: must pass</span></div>
         </div>
         <div>
           <span class="extag reveal">REAL — how you ask for it in Claude Code</span>
@@ -1438,7 +1438,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <span class="b">  every finding before reporting.</span>
 
   <span class="c"># power-ups</span>
-  <span class="o">ultracode</span> &lt;task&gt;  <span class="c">standing opt-in (xhigh + workflows)</span>
+  <span class="o">/effort ultracode</span> <span class="c">standing opt-in (xhigh + workflows)</span>
   <span class="o">+500k</span>             <span class="c">token budget it paces itself to</span>
   <span class="o">/workflows</span>        <span class="c">watch the phases run live</span></div>
         </div>
@@ -1477,15 +1477,15 @@ table.tbl tr:last-child td{border-bottom:none}
 
   <!-- CLAUDE.md / AGENTS.md -->
   <section class="slide light" data-label="CLAUDE.md"
-    data-speaker-notes="A markdown file the harness injects at session start, read before your first word. Cover the three scopes, repo, personal and per-directory, plus the AGENTS.md bridge for cross-vendor tools. The key economic point is that it rides in every turn's context, so keep it to short always-true rules and push recipes into skills.">
+    data-speaker-notes="A markdown file the harness injects at session start, read before your first word. Cover the main scopes, repo, personal and per-directory, plus the AGENTS.md bridge for cross-vendor tools. The key economic point is that it rides in every turn's context, so keep it to short always-true rules and push recipes into skills.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">43</span><div class="crumb"><b>Make it stick</b> · CLAUDE.md</div></div>
       <h2 class="reveal">The standing orders: <span class="o">CLAUDE.md</span></h2>
       <div class="split">
         <ul class="bul reveal">
           <li>A markdown file the harness <b>injects at session start</b> — conventions, commands, boundaries. The model reads it <b>before your first word.</b></li>
-          <li>Three scopes: <b>repo CLAUDE.md</b> (checked in — the team's), <b>~/.claude/CLAUDE.md</b> (personal — every project), and <b>per-directory</b> (monorepo sub-projects).</li>
-          <li><b>AGENTS.md</b> is the cross-vendor twin (Codex, Cursor, Copilot read it natively). Claude Code doesn't — bridge with a one-line <b>@AGENTS.md</b> import, or a symlink.</li>
+          <li>Main scopes: <b>repo CLAUDE.md</b> (checked in — the team's), <b>~/.claude/CLAUDE.md</b> (personal — every project), and <b>per-directory</b> (monorepo sub-projects).</li>
+          <li><b>AGENTS.md</b> is the cross-vendor twin (Codex, Cursor, Copilot read it natively). Claude Code too, if no CLAUDE.md exists — else bridge with a one-line <b>@AGENTS.md</b> import, or a symlink.</li>
           <li>It rides in <b>every turn's context</b> → keep it to short, <b>always-true</b> rules. Recipes belong in <b>skills</b> — next slide says why.</li>
         </ul>
         <div class="code reveal"><span class="c"># CLAUDE.md</span>
@@ -1570,7 +1570,7 @@ table.tbl tr:last-child td{border-bottom:none}
       <h2 class="reveal">From one skill to a <span class="o">system</span></h2>
       <div class="cards c2 reveal">
         <div class="tile"><span class="k">Composable sets</span><p>Matt Pocock's approach: <b>dozens of tiny skills</b> — conventions, testing style, PR etiquette — each triggering on its own cue.</p></div>
-        <div class="tile fill"><span class="k">Compound Engineering</span><p>A whole method as a skill system: <b>brainstorm → plan → work → review → compound.</b> Every solved problem becomes a <b>new doc or skill.</b></p></div>
+        <div class="tile fill"><span class="k">Compound Engineering</span><p>A whole method as a skill system: <b>brainstorm → plan → work → simplify → review → compound.</b> Every solved problem becomes a <b>new doc or skill.</b></p></div>
       </div>
       <p class="note reveal">A skill system is an <b>engineering culture the agent can read</b> — two worked examples on the next slides.</p>
     </div>
@@ -1597,7 +1597,7 @@ table.tbl tr:last-child td{border-bottom:none}
   <span class="c"># model-invoked — trigger on their own:</span>
   <span class="g">tdd</span>              red → green → refactor
   <span class="g">diagnosing-bugs</span>  reproduce → minimize → fix
-  <span class="g">handoff</span>          compact context for the next agent</div>
+  <span class="g">code-review</span>      two-axis review: standards + spec</div>
       </div>
       <p class="note reveal"><b>github.com/mattpocock/skills</b> — alignment before code, always; read the files, copy the patterns, adapt the conventions.</p>
     </div>
@@ -1605,15 +1605,16 @@ table.tbl tr:last-child td{border-bottom:none}
 
   <!-- WORKED EXAMPLE: COMPOUND ENGINEERING -->
   <section class="slide light" data-label="Worked example - Compound"
-    data-speaker-notes="Every's plugin ships a whole method as five skills around one loop. The last step is the whole idea, every solved problem becomes a doc the next session reads before it starts. So each unit of work makes the next one cheaper, and the unit of progress is not the merged PR, it is the knowledge that compounds.">
+    data-speaker-notes="Every's plugin ships a whole method as six skills around one loop. The last step is the whole idea, every solved problem becomes a doc the next session reads before it starts. So each unit of work makes the next one cheaper, and the unit of progress is not the merged PR, it is the knowledge that compounds.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">49</span><div class="crumb"><b>Make it stick</b> · example · compound</div></div>
       <h2 class="reveal">Worked example: <span class="o">Compound Engineering</span></h2>
       <div class="split">
-        <div class="code reveal"><span class="c"># one loop, five skills (Every's CE plugin):</span>
+        <div class="code reveal"><span class="c"># one loop, six skills (Every's CE plugin):</span>
   <span class="o">/ce-brainstorm</span>   scope the idea into requirements
   <span class="o">/ce-plan</span>         structured plan for the work
   <span class="o">/ce-work</span>         execute the plan end-to-end
+  <span class="o">/ce-simplify-code</span> refine for clarity and reuse
   <span class="o">/ce-code-review</span>  bugs, regressions, standards
   <span class="o">/ce-compound</span>     write the lesson to docs/solutions/
                    <span class="b">↳ auto-loaded next time it's relevant</span></div>
@@ -1695,7 +1696,7 @@ table.tbl tr:last-child td{border-bottom:none}
           <p>A token predictor → that <b>thinks</b> → with <b>hands</b> → in a <b>loop</b> → whose <b>context you engineer</b>: route it, delegate it, cache it, write it down.</p>
         </div>
         <ul class="bul reveal">
-          <li>Give Fable the <b>advisor job</b> — a standing rule in CLAUDE.md, not a flag.</li>
+          <li>Give Fable the <b>advisor job</b> — a standing rule in CLAUDE.md, or <b>/advisor</b>.</li>
           <li>Write <b>one skill</b> for your most-repeated chore.</li>
           <li>Add a <b>real verifier</b> to your next <b>/goal</b> — a command, not a vibe.</li>
         </ul>
@@ -1706,7 +1707,7 @@ table.tbl tr:last-child td{border-bottom:none}
 
   <!-- THANKS + SOURCES -->
   <section class="slide dark" data-label="Thanks and sources"
-    data-speaker-notes="Open for questions and leave the links up while people ask. Point at the primary sources for anyone who wants the numbers, the attention paper, Anthropic's context-engineering post, and the verifiers piece. Remind them the figures are a mid-2026 snapshot and that the repo has both decks.">
+    data-speaker-notes="Open for questions and leave the links up while people ask. Point at the primary sources for anyone who wants the numbers, the attention paper, Anthropic's context-engineering post, and the verifiers piece. Remind them the figures are a September 2026 snapshot and that the repo has all the decks.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">53</span><div class="crumb"><b>Close</b> · thanks &amp; sources</div></div>
       <p class="thanks reveal">Thanks! <span class="o">Questions?</span></p>
@@ -1726,10 +1727,10 @@ table.tbl tr:last-child td{border-bottom:none}
           <a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener">Claude Code — Agent Skills<span class="u">code.claude.com/docs · skills</span></a>
           <a href="https://code.claude.com/docs/en/plugins" target="_blank" rel="noopener">Claude Code — Plugins &amp; marketplaces<span class="u">code.claude.com/docs · plugins</span></a>
           <a href="https://www.aihero.dev/" target="_blank" rel="noopener">Matt Pocock — composable skill setups<span class="u">aihero.dev</span></a>
-          <a href="https://github.com/davidbudac/claude_intro_csob" target="_blank" rel="noopener">This repo — both decks<span class="u">github.com/davidbudac/claude_intro_csob</span></a>
+          <a href="https://github.com/davidbudac/agentic-talks" target="_blank" rel="noopener">This repo — all decks<span class="u">github.com/davidbudac/agentic-talks</span></a>
         </div>
       </div>
-      <p class="note reveal">David&nbsp;Budáč · figures a July 2026 snapshot — models &amp; prices move fast, so re-check the primary sources.</p>
+      <p class="note reveal">David&nbsp;Budáč · figures a September 2026 snapshot — models &amp; prices move fast, so re-check the primary sources.</p>
     </div>
   </section>
 
