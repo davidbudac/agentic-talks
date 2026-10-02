@@ -43,6 +43,14 @@ Author: **David Budáč** · English
   loop, briefing, the three refinement channels, example briefs to steal, a
   live five-minute build, pitfalls) → sharing, exports, and the Claude Code
   handoff round trip. 25 slides. **Live demo included.**
+- **[`best-practices.html`](best-practices.html)** — *Claude Best Practices* (~45-min
+  talk for advanced AI engineers and vibe coders who already use Claude Code daily).
+  What Anthropic's own engineers do, from the 13 posts on the claude.dev blog: context
+  (delete, don't add) → skills (folders with gotchas) → the prompt cache → effort & cost
+  → verification & evals → autonomy → multi-agent patterns → making the harness yours
+  (tools, HTML, mods). Every slide carries a source line; a command cheat-sheet and a
+  sources slide close it. 45 slides. **No live demos.** Facts from claude.dev articles,
+  as of October 2026.
 
 ## View it
 
@@ -50,7 +58,8 @@ Author: **David Budáč** · English
   `open index.html` opens the chooser). `index.html` routes the reader to the
   right deck by audience — non-technical (01) → developers new to agents (02) →
   developers going deeper (03) → devs & IT admins on internals (04) → devs
-  levelling up on cost, orchestration & measurement (05–07, WIP) → anyone
+  levelling up on cost, orchestration & measurement (05–07, WIP) → daily Claude Code
+  users who want Anthropic's own practices (08, Claude Best Practices) → anyone
   making visual work with Claude Design (08, WIP) — with
   self-identification bullets per deck and a
   one-question fallback for the undecided.
@@ -105,6 +114,16 @@ shared usage · the craft: iterate (judge iteration 4, not 1), brief like a
 creative director, chat vs inline comments vs direct editing, briefs to steal
 · pitfalls · sharing, exports (PPTX/PDF/HTML/Canva/zip) & the Claude Code
 handoff round trip. Facts verified July 2026.
+
+**Claude Best Practices** — context engineering (the >80% system-prompt cut, then/now
+shifts, CLAUDE.md gotchas, prompt audits) · skills (nine types, gotchas, descriptions
+as triggers, hub-and-spoke, on-demand hooks) · prompt-cache layout, numbers, do/don't
+and cache-safe compaction · the effort ladder, what effort buys (Terminal-Bench, internal
+runs), low-to-build/high-to-verify, check → effort → model, reading `/usage` ·
+measurement and evals (the claude.ai speed-up, ratchets, real-check prompts,
+good evals, hillclimbing) · autonomy (done means…, stop rule, TASKS.md, steering) ·
+dynamic-workflow patterns and their cost · tool design, HTML over Markdown, mods.
+Facts from claude.dev articles, as of October 2026.
 
 ## Live demo (agentic-ai deck, optional; the WIP workshop deck also has live demos)
 
@@ -163,6 +182,7 @@ animations read the same palette from `remotion/src/theme.ts`.
 | `subagents-prompt-caching.html` | *Subagents & Prompt Caching* deck — engineering deep dive (no live demo). |
 | `working-smarter.html` | *Working Smarter with Agents* deck — half-day workshop on cost, context efficiency & orchestration (WIP, live demos). |
 | `claude-design.html` | *Claude Design* deck — ~30-min product deep dive on Anthropic's visual-creation tool (WIP, live demo, no code needed). |
+| `best-practices.html` | *Claude Best Practices* deck — ~45-min talk on what Anthropic's engineers do, from the claude.dev blog (no live demo; facts as of October 2026). |
 | `index.html` | Landing page routing readers to the right deck by audience (GitHub Pages root). |
 | `assets/anim/` | Rendered concept animations (MP4 loops) embedded by the decks. |
 | `remotion/` | Remotion project — sources for the animations. |
