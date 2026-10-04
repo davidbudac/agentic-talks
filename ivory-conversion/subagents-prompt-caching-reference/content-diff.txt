@@ -1,0 +1,57 @@
+Raw comparison: 4 source sections, 4 output sections
+
+== Slide 01
+  data-label: IDENTICAL (raw bytes)  'Title'
+  data-origin-slide: IDENTICAL (raw bytes)  '0'
+  data-speaker-notes: IDENTICAL (raw bytes)  'Optional reference Revised October 2026. Worked examples are illustrative; no live run is required.'
+  hrefs (ordered, with multiplicity): IDENTICAL
+     subagents-prompt-caching.html
+     subagents-prompt-caching.html
+  media: source 0, output 0
+
+== Slide 02
+  data-label: IDENTICAL (raw bytes)  'Cache block'
+  data-origin-slide: IDENTICAL (raw bytes)  '23'
+  data-speaker-notes: IDENTICAL (raw bytes)  'Valid JSON example with no inline comment. Place the marker using the current API rules and inspect actual usage; 
+  hrefs (ordered, with multiplicity): IDENTICAL
+     subagents-prompt-caching.html
+  media: source 0, output 0
+
+== Slide 03
+  data-label: IDENTICAL (raw bytes)  'Multiple breakpoints'
+  data-origin-slide: IDENTICAL (raw bytes)  '30'
+  data-speaker-notes: IDENTICAL (raw bytes)  'The original implied stable earlier blocks always hit. Reuse requires stored entries and a supported lookup path, 
+  hrefs (ordered, with multiplicity): IDENTICAL
+     subagents-prompt-caching.html
+     https://platform.claude.com/docs/en/build-with-claude/prompt-caching
+  media: source 0, output 0
+
+== Slide 04
+  data-label: IDENTICAL (raw bytes)  'Choose authentication'
+  data-origin-slide: IDENTICAL (raw bytes)  '36'
+  data-speaker-notes: IDENTICAL (raw bytes)  'Documentation checked 3 October 2026. Native-client use remains subject to plan limits and agreements. Do not extr
+  hrefs (ordered, with multiplicity): IDENTICAL
+     subagents-prompt-caching.html
+     https://code.claude.com/docs/en/legal-and-compliance
+  media: source 0, output 0
+
+ALL ATTRIBUTES AND HREFS IDENTICAL: True
+
+Visible-text differences (from audit.py, explained in report.md):
+  01: banner 'Optional reference · Back to the talk' -> third .meta cell (lab 'Optional reference' + link 'Back to the talk'); the '·' separator removed.
+      ts-top meta 'Revised October 2026' -> .meta cell lab 'Revised' + 'October 2026' (same words).
+      title dot '.' removed. Added mono label 'Author'.
+  02-04: banner merged into crumb: 'In practice · Optional reference · Back to the talk' (one '·' added; words/link unchanged; text order moves crumb first).
+  Ember .snum digits 2/3/4 dropped; deck.js fills 01-04 / 04.
+
+== ROUND 2 (final) — slide 01 restructured; slides 02-04 unchanged
+Raw attribute/href comparison re-run after r2: data-label, data-origin-slide, data-speaker-notes
+byte-identical on all 4 slides; hrefs identical in order and multiplicity on all 4 slides.
+Slide 01 visible text (audit-r2.json): same words as source, reordered:
+  crumb 'Optional reference' (from .ts-top .k) -> h2 'Subagents & Prompt Caching<br>Reference' (title dot '.' removed)
+  -> tile 1 'Supporting procedures and worksheets. Return to the main talk' (link)
+  -> tile 2 h3 'David Budáč' + p 'Revised October 2026' (words unchanged, no longer split into label/value)
+  -> footer .note 'Optional reference · Back to the talk' (banner verbatim incl. '·', link).
+  The r1 'Author' label and the r1 label/value split of 'Revised October 2026' are gone.
+  Both slide-01 hrefs target subagents-prompt-caching.html; DOM order is now subtitle link, then footer link
+  (source order was banner, then subtitle; the target list is identical).
