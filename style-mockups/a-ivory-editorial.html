@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>Style A — Ivory Editorial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=Instrument+Sans:wght@400..700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shell.css">
+<style>
+/* ── Style A · Ivory Editorial ── everything scoped under .slide ── */
+.slide{
+  --ivory:#FAF9F5; --paper:#F0EEE6; --oat:#E3DACC; --slate:#141413;
+  --clay:#D97757; --clay-ink:#C6613F; --grey:#87867F; --grey-ink:#5E5D59; --rule:#D6D1C4;
+  --serif:"Newsreader",Georgia,serif; --sans:"Instrument Sans",system-ui,sans-serif; --mono:"DM Mono",ui-monospace,monospace;
+  background:var(--ivory); color:var(--slate);
+  font-family:var(--sans); font-size:30px; line-height:1.45;
+  font-feature-settings:"kern","liga";
+}
+.slide *{box-sizing:border-box}
+.slide svg{display:block;overflow:visible}
+
+/* shared chrome: pill top-left, hairline + footnote + folio at the bottom */
+.slide .top{position:absolute;left:120px;right:120px;top:84px;display:flex;justify-content:space-between;align-items:center}
+.slide .pill{display:inline-flex;align-items:center;gap:12px;height:48px;padding:0 24px 0 20px;border:1.5px solid var(--rule);border-radius:999px;
+  font:500 22px/1 var(--sans);color:var(--slate);letter-spacing:.005em;word-spacing:.1em;background:var(--ivory)}
+.slide .pill i{width:11px;height:11px;border-radius:50%;background:var(--clay);display:block}
+.slide .meta{font:400 24px/1 var(--sans);color:var(--grey-ink)}
+.slide .foot{position:absolute;left:120px;right:120px;bottom:72px;border-top:1.5px solid var(--rule);padding-top:26px;
+  display:flex;justify-content:space-between;align-items:baseline;gap:60px}
+.slide .note{font:400 26px/1.4 var(--sans);color:var(--grey-ink);max-width:1360px}
+.slide .folio{font:400 30px/1 var(--serif);color:var(--grey);font-variant-numeric:lining-nums tabular-nums}
+
+.slide h2{font:400 96px/1.02 var(--serif);font-optical-sizing:auto;letter-spacing:-.022em;color:var(--slate);margin:0}
+.slide .serif{font-family:var(--serif)}
+
+/* 1 · Title */
+.s1 .title{position:absolute;left:120px;top:300px;width:1080px}
+.s1 h1{font:400 196px/.94 var(--serif);letter-spacing:-.035em;margin:0;color:var(--slate)}
+.s1 .sub{margin-top:52px;font:400 40px/1.32 var(--serif);color:#3D3D3A;max-width:880px;letter-spacing:-.005em}
+.s1 .art{position:absolute;right:96px;top:150px;width:700px;height:760px}
+.s1 .by{font:400 36px/1 var(--serif);color:var(--slate);letter-spacing:-.005em}
+.s1 .foot{align-items:center}
+
+/* 2 · Three cards */
+.s2 h2{position:absolute;left:120px;top:206px}
+.s2 .cards{position:absolute;left:120px;right:120px;top:410px;display:grid;grid-template-columns:repeat(3,1fr);gap:36px}
+.s2 .card{background:var(--paper);border-radius:28px;padding:42px 48px 52px;height:450px;position:relative}
+.s2 .card svg{width:158px;height:134px;margin:0 0 28px -8px}
+.s2 .card h3{font:400 54px/1 var(--serif);letter-spacing:-.018em;margin:0 0 20px}
+.s2 .card p{font:400 30px/1.42 var(--sans);color:#33332F;margin:0;max-width:440px}
+
+/* 3 · Code */
+.s3 h2{position:absolute;left:120px;top:206px;width:1680px}
+.s3 .code{position:absolute;left:120px;top:384px;width:1150px;background:var(--paper);border-radius:28px;padding:30px 0 40px}
+.s3 .code .bar{display:flex;align-items:center;justify-content:space-between;padding:0 44px 22px;margin-bottom:26px;border-bottom:1.5px solid var(--oat)}
+.s3 .code .bar span{font:500 20px/1 var(--sans);color:var(--grey-ink)}
+.s3 .code .bar .dots{display:flex;gap:10px}
+.s3 .code .bar .dots b{width:13px;height:13px;border-radius:50%;border:1.5px solid #C9C2B4;display:block}
+.s3 pre{margin:0;font:400 26px/50px var(--mono);color:var(--slate);counter-reset:ln;white-space:pre}
+.s3 pre .l{display:block;position:relative;padding-left:96px;padding-right:40px}
+.s3 pre .l::before{counter-increment:ln;content:counter(ln);position:absolute;left:36px;top:0;width:32px;text-align:right;color:#A8A397;font-size:20px;line-height:52px}
+.s3 pre .k{color:var(--clay-ink);font-weight:500}
+.s3 pre .l.hl{background:rgba(217,119,87,.13)}
+.s3 .art{position:absolute;left:1340px;top:372px;width:460px;height:470px}
+.s3 .aside{position:absolute;left:1352px;top:812px;width:440px;font:italic 400 28px/1.35 var(--serif);color:var(--grey-ink)}
+
+/* 4 · Numbers */
+.s4 h2{position:absolute;left:120px;top:206px;width:1680px}
+.s4 .hero{position:absolute;left:120px;top:392px;width:720px}
+.s4 .hero .lab{font:500 24px/1 var(--sans);color:var(--grey-ink);display:flex;align-items:center;gap:12px}
+.s4 .hero .lab i{width:28px;height:14px;border-radius:7px;background:var(--clay);display:block}
+.s4 .hero .lab i.o{background:var(--oat)}
+.s4 .big{font:300 192px/1 var(--serif);letter-spacing:-.035em;margin:30px 0 0 -6px;font-variant-numeric:lining-nums;color:var(--slate)}
+.s4 .was{display:flex;align-items:baseline;justify-content:flex-end;gap:20px;margin-top:22px;width:700px}
+.s4 .was .v{font:400 60px/1 var(--serif);letter-spacing:-.02em;color:var(--grey-ink);font-variant-numeric:lining-nums}
+.s4 .strips{margin-top:40px;width:700px;height:44px}
+.s4 table{position:absolute;left:960px;top:400px;width:840px;border-collapse:collapse;font-variant-numeric:tabular-nums lining-nums}
+.s4 th{font:500 22px/1 var(--sans);color:var(--grey-ink);text-align:left;padding:0 0 20px;border-bottom:1.5px solid var(--slate)}
+.s4 th:last-child,.s4 td:last-child{text-align:right}
+.s4 td{font:400 29px/1.2 var(--sans);padding:27px 0;border-bottom:1.5px solid var(--rule);color:#2A2A27}
+.s4 td:last-child{font-family:var(--mono);font-size:28px;color:var(--slate)}
+.s4 tr.tot td{border-bottom:none;border-top:1.5px solid var(--slate);color:var(--slate);font-weight:600;padding-top:30px}
+.s4 tr.tot td:last-child{color:var(--clay-ink);font-weight:500}
+
+/* 5 · Diagram */
+.s5 .left{position:absolute;left:120px;top:196px;width:770px}
+.s5 h2{font-size:110px;line-height:.98}
+.s5 ol{list-style:none;margin:46px 0 0;padding:0}
+.s5 li{display:grid;grid-template-columns:52px 1fr;column-gap:14px;font:400 28px/1.38 var(--sans);color:#33332F;padding:14px 0;text-wrap:pretty;border-top:1.5px solid var(--rule)}
+.s5 li:last-child{border-bottom:1.5px solid var(--rule)}
+.s5 li .n{font:400 30px/1.3 var(--serif);color:var(--clay-ink);font-variant-numeric:lining-nums}
+.s5 li b{font:500 31px/1.2 var(--serif);color:var(--slate);letter-spacing:-.005em}
+.s5 .art{position:absolute;left:900px;top:150px;width:920px;height:760px}
+.s5 .art text{font-family:var(--serif)}
+</style>
+</head><body><main class="sheet">
+
+<!-- shared filters for hand-cut paper and wobbly ink (kept outside .frame so they survive ?slide=N) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="a-cut" x="-8%" y="-8%" width="116%" height="116%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="3" seed="4" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="9" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="9" result="g"/>
+      <feColorMatrix in="g" type="saturate" values="0" result="gg"/>
+      <feComposite in="gg" in2="d" operator="in" result="gin"/>
+      <feComposite in="d" in2="gin" operator="arithmetic" k1="0" k2="1" k3="0.10" k4="-0.05"/>
+    </filter>
+    <filter id="a-ink" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="2" seed="2" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="7" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="a-ink-fine" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="11" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3.5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <marker id="a-head" viewBox="0 0 20 20" refX="11" refY="10" markerWidth="20" markerHeight="20" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M3,3 L13,10 L3,17" fill="none" stroke="#141413" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+</svg>
+
+<header class="sheet-head">
+  <a class="back" href="index.html">← All styles</a>
+  <h1>A — Ivory Editorial</h1>
+  <p class="why">A calm, typeset-essay look: ivory paper, a large literary serif and one clay accent, with hand-cut paper shapes and wobbly ink drawn as SVG. Projected in a meeting room it reads like a well-made handout, which suits a technical audience that distrusts hype and wants to read the argument.</p>
+  <div class="borrow">
+    <div><b>From Anthropic</b>Ivory and oat paper, slate ink, a single clay accent, Tiempos-like serif headlines, hand-cut paper blobs and wobbly line drawings.</div>
+    <div><b>From OpenAI</b>One idea per slide, wide empty margins, hairline rules, small pill labels, numbers set like a product spec sheet.</div>
+    <div><b>Type</b>Newsreader (headlines, figures), Instrument Sans (body, labels), DM Mono (code, costs).</div>
+  </div>
+  <div class="swatches">
+    <span style="background:#FAF9F5">#FAF9F5</span>
+    <span style="background:#F0EEE6">#F0EEE6</span>
+    <span style="background:#E3DACC">#E3DACC</span>
+    <span style="background:#D97757">#D97757</span>
+    <span style="background:#C6613F;color:#fff">#C6613F</span>
+    <span style="background:#87867F;color:#fff">#87867F</span>
+    <span style="background:#141413;color:#FAF9F5">#141413</span>
+  </div>
+</header>
+
+<!-- ───────────── 1 · Title ───────────── -->
+<div class="frame"><section class="slide s1">
+  <div class="top"><span class="pill"><i></i>Advanced · daily Claude Code users</span><span class="meta">Revised October 2026</span></div>
+  <div class="title">
+    <h1>Claude Best Practices</h1>
+    <p class="sub">Practical lessons from Anthropic’s engineering posts, tested against your own work.</p>
+  </div>
+  <svg class="art" viewBox="0 0 700 760" aria-hidden="true">
+    <!-- tilted oat sheet -->
+    <path filter="url(#a-cut)" fill="#E3DACC" d="M118,96 L566,58 L628,598 L170,664 Z"/>
+    <!-- clay cut-paper blob -->
+    <path filter="url(#a-cut)" fill="#D97757" d="M230,170 C330,110 480,150 530,250 C585,360 560,470 480,540 C400,610 270,620 200,560 C130,500 120,400 140,320 C155,250 165,210 230,170 Z"/>
+    <!-- one continuous ink line: a loop that resolves into a check -->
+    <path filter="url(#a-ink)" fill="none" stroke="#141413" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"
+      d="M40,520 C120,520 210,470 262,396 C312,324 292,252 236,262 C176,274 190,370 262,420 C304,450 330,478 352,522 L660,150"/>
+    <!-- small hand marks -->
+  </svg>
+  <div class="foot"><span class="by">David Budáč</span></div>
+</section></div><p class="cap">1 · Title</p>
+
+<!-- ───────────── 2 · Three cards ───────────── -->
+<div class="frame"><section class="slide s2">
+  <div class="top"><span class="pill"><i></i>In practice</span></div>
+  <h2>Start with three changes</h2>
+  <div class="cards">
+    <div class="card">
+      <svg viewBox="0 0 132 112" aria-hidden="true">
+        <path filter="url(#a-cut)" fill="#E3DACC" d="M14,8 L100,4 L106,104 L18,108 Z"/>
+        <path filter="url(#a-cut)" fill="#D97757" d="M84,6 L106,6 L106,30 Z"/>
+        <g filter="url(#a-ink-fine)" stroke="#141413" stroke-width="4.5" stroke-linecap="round" fill="none">
+          <path d="M32,34 L84,32"/><path d="M32,56 L78,55"/><path d="M32,78 L86,77"/>
+          <path d="M22,57 C50,50 80,62 120,52" stroke="#C6613F" stroke-width="5"/>
+        </g>
+      </svg>
+      <h3>Instructions</h3>
+      <p>Remove conflicting or obsolete rules; preserve real constraints.</p>
+    </div>
+    <div class="card">
+      <svg viewBox="0 0 132 112" aria-hidden="true">
+        <path filter="url(#a-cut)" fill="#D97757" d="M58,8 C92,4 118,28 116,60 C114,92 88,108 58,106 C28,104 10,82 12,54 C14,26 30,10 58,8 Z"/>
+        <path filter="url(#a-ink)" fill="none" stroke="#141413" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" d="M36,58 L56,80 L126,10"/>
+      </svg>
+      <h3>Verification</h3>
+      <p>Make done depend on evidence tied to the task.</p>
+    </div>
+    <div class="card">
+      <svg viewBox="0 0 132 112" aria-hidden="true">
+        <path filter="url(#a-cut)" fill="#E3DACC" d="M16,52 L44,50 L46,100 L16,102 Z"/>
+        <path filter="url(#a-cut)" fill="#D97757" d="M54,26 L82,24 L84,100 L56,102 Z"/>
+        <path filter="url(#a-cut)" fill="#E3DACC" d="M92,66 L120,64 L120,100 L92,102 Z"/>
+        <path filter="url(#a-ink-fine)" fill="none" stroke="#141413" stroke-width="4.5" stroke-linecap="round" d="M4,104 C40,101 90,106 128,103"/>
+      </svg>
+      <h3>Measurement</h3>
+      <p>Compare configurations by outcomes, cost and review effort.</p>
+    </div>
+  </div>
+  <div class="foot"><span class="note">Skills, caching and delegation support these three habits.</span><span class="folio">2</span></div>
+</section></div><p class="cap">2 · Three cards</p>
+
+<!-- ───────────── 3 · Code ───────────── -->
+<div class="frame"><section class="slide s3">
+  <div class="top"><span class="pill"><i></i>The invoice task</span></div>
+  <h2>Make the acceptance contract explicit</h2>
+  <div class="code">
+    <div class="bar"><span>Request to Claude</span></div>
+<pre><span class="l"><span class="k">GOAL:</span> export invoice net, VAT and gross values to CSV.</span><span class="l"><span class="k">SCOPE:</span> invoice export code; preserve existing tests.</span><span class="l hl"><span class="k">VERIFY:</span> pytest tests/test_export.py -q</span><span class="l"><span class="k">CASES:</span> 21% VAT, zero VAT, rounding, quoted CSV fields.</span><span class="l"><span class="k">LIMIT:</span> three repair attempts; then stop and report.</span><span class="l"><span class="k">EVIDENCE:</span> diff, command, exit status, failures and gaps.</span></pre>
+  </div>
+  <svg class="art" viewBox="0 0 460 470" aria-hidden="true">
+    <!-- a signed sheet with a clay seal -->
+    <path filter="url(#a-cut)" fill="#E3DACC" d="M70,40 L380,22 L404,400 L92,428 Z"/>
+    <g filter="url(#a-ink-fine)" stroke="#141413" stroke-width="4.5" stroke-linecap="round" fill="none" opacity=".85">
+      <path d="M124,96 L330,86"/><path d="M124,138 L302,130"/><path d="M124,180 L320,172"/><path d="M124,222 L262,216"/>
+    </g>
+    <path filter="url(#a-ink)" fill="none" stroke="#141413" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"
+      d="M120,330 C150,300 170,290 172,312 C174,336 150,352 160,334 C176,306 206,296 210,322 C214,344 236,312 256,300 C270,292 270,322 286,320 C304,318 320,300 346,296"/>
+    <path filter="url(#a-cut)" fill="#D97757" d="M352,300 C392,290 428,318 424,356 C420,394 388,414 354,408 C318,402 300,374 306,344 C310,320 326,306 352,300 Z"/>
+    <path filter="url(#a-ink-fine)" fill="none" stroke="#FAF9F5" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" d="M344,356 L360,372 L392,334"/>
+  </svg>
+  <div class="foot"><span class="note">Pair this request with an enforced runtime budget and a review of the resulting artifact.</span><span class="folio">21</span></div>
+</section></div><p class="cap">3 · Code</p>
+
+<!-- ───────────── 4 · Numbers ───────────── -->
+<div class="frame"><section class="slide s4">
+  <div class="top"><span class="pill"><i></i>Worked arithmetic</span></div>
+  <h2>One cache-hit request: about five cents</h2>
+  <div class="hero">
+    <div class="lab"><i></i>With the cache hit</div>
+    <div class="big">$0.0506</div>
+    <svg class="strips" viewBox="0 0 700 44" aria-hidden="true">
+      <path filter="url(#a-cut)" fill="#E3DACC" d="M2,6 L696,3 L698,40 L3,42 Z"/>
+      <path filter="url(#a-cut)" fill="#D97757" d="M2,6 L286,4 L290,41 L3,42 Z"/>
+    </svg>
+    <div class="was"><span class="lab"><i class="o"></i>Without it</span><span class="v">$0.1228</span></div>
+  </div>
+  <table>
+    <thead><tr><th>Illustrative usage and rates</th><th>Cost</th></tr></thead>
+    <tbody>
+      <tr><td>19,000 cached input × $0.20 / million</td><td>$0.0038</td></tr>
+      <tr><td>3,700 new input × $4 / million</td><td>$0.0148</td></tr>
+      <tr><td>1,600 output × $20 / million</td><td>$0.0320</td></tr>
+      <tr class="tot"><td>22,700 input + 1,600 output in total</td><td>$0.0506</td></tr>
+    </tbody>
+  </table>
+  <div class="foot"><span class="note">Assumed rates, not a measured bill. Without the cache hit: $0.0908 input + $0.0320 output = $0.1228.</span><span class="folio">10</span></div>
+</section></div><p class="cap">4 · Numbers</p>
+
+<!-- ───────────── 5 · Diagram ───────────── -->
+<div class="frame"><section class="slide s5">
+  <div class="top"><span class="pill"><i></i>Agent · the loop</span></div>
+  <div class="left">
+    <h2>An agent<br>is a loop</h2>
+    <ol>
+      <li><span class="n">1</span><span><b>Propose:</b> the model chooses the next action.</span></li>
+      <li><span class="n">2</span><span><b>Run:</b> the harness executes it under the configured permissions.</span></li>
+      <li><span class="n">3</span><span><b>Observe:</b> the result returns as context for the next step.</span></li>
+      <li><span class="n">4</span><span><b>Check:</b> stop when the task is verified, or ask when blocked.</span></li>
+    </ol>
+  </div>
+  <svg class="art" viewBox="0 0 920 760" aria-hidden="true">
+   <g transform="translate(56,40) scale(.9)">
+    <!-- model: clay blob, left -->
+    <path filter="url(#a-cut)" fill="#D97757" d="M200,250 C280,226 352,268 366,350 C380,432 334,500 252,512 C168,524 104,470 98,392 C92,316 128,272 200,250 Z"/>
+    <!-- harness: oat cut sheet, right -->
+    <path filter="url(#a-cut)" fill="#E3DACC" d="M572,250 L824,236 L836,500 L580,516 Z"/>
+    <text x="232" y="395" text-anchor="middle" font-size="50" fill="#141413" letter-spacing="-0.5">Model</text>
+    <text x="706" y="392" text-anchor="middle" font-size="50" fill="#141413" letter-spacing="-0.5">Harness</text>
+    <!-- the loop, in wobbly ink -->
+    <g filter="url(#a-ink)" fill="none" stroke="#141413" stroke-width="6" stroke-linecap="round">
+      <path d="M250,230 C320,96 566,92 654,220" marker-end="url(#a-head)"/>
+      <path d="M668,532 C600,676 330,680 248,534" marker-end="url(#a-head)"/>
+      <path d="M848,320 C918,316 922,428 852,432" marker-end="url(#a-head)"/>
+      <path d="M86,440 C14,444 12,330 82,326" marker-end="url(#a-head)"/>
+    </g>
+    <!-- step labels -->
+    <g font-size="38" fill="#141413">
+      <text x="452" y="84" text-anchor="middle"><tspan fill="#C6613F">1</tspan>  Propose</text>
+      <text x="888" y="548" text-anchor="middle"><tspan fill="#C6613F">2</tspan>  Run</text>
+      <text x="456" y="722" text-anchor="middle"><tspan fill="#C6613F">3</tspan>  Observe</text>
+      <text x="34" y="290" text-anchor="middle"><tspan fill="#C6613F">4</tspan>  Check</text>
+    </g>
+   </g>
+  </svg>
+  <div class="foot"><span class="note">In a live run or a finished transcript, point to one tool call and its result. That is one lap of the loop.</span><span class="folio">9</span></div>
+</section></div><p class="cap">5 · Diagram</p>
+
+</main><script src="shell.js"></script></body></html>

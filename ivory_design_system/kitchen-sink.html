@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Ivory — kitchen sink</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400..600&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<style>:root{--deck-total:"26"}</style>
+</head>
+<body>
+
+<!--
+  Ivory kitchen sink — one slide per component of ivory_design_system/styles.css.
+  Visual regression page: screenshot every slide (command in /DESIGN.md) and
+  compare with ivory_design_system/shots/ks-NN.png.
+-->
+
+<deck-stage width="1920" height="1080">
+
+<!-- 01 · Title -->
+<section class="slide title-slide" data-label="Title" data-speaker-notes="Title slide. Clay only on the audience label. Headline anchored so its last line ends at y 712; the meta row sits under the footer hairline.">
+  <div class="slide-head"><span class="crumb">Design system · kitchen sink</span><span class="snum">01</span></div>
+  <h1>Ivory design<br>system</h1>
+  <p class="sub">Every component on the fixed template, one slide each.</p>
+  <div class="meta">
+    <div><span class="lab">Author</span><a href="https://davidbudac.cz">David Budáč</a></div>
+    <div><span class="lab">Revised</span>October 2026</div>
+    <div><span class="lab">Length</span>26 slides</div>
+  </div>
+</section>
+
+<!-- 02 · Template, one-line headline -->
+<section class="slide show-grid" data-label="Template · one line" data-speaker-notes="Grid overlay on. Header rule 108, headline top 172, zone 326 to 888 (562 tall), footer rule 960, footnote 983, source 1027.">
+  <div class="slide-head"><span class="crumb">Template</span><span class="snum">02</span></div>
+  <h2>One-line headline, zone from 326</h2>
+  <div class="zone"><div class="fig-ph">Content zone · 1680 × 562 · y 326 → 888</div></div>
+  <p class="note">Footnote: one line when a source line follows, at most two lines otherwise.</p>
+  <p class="src">Source line · <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">supporting documentation</a></p>
+</section>
+
+<!-- 03 · Template, two-line headline -->
+<section class="slide show-grid" data-label="Template · two lines" data-speaker-notes="Two-line headline: zone moves down to 408 and is 480 tall. The bottom edge never moves.">
+  <div class="slide-head"><span class="crumb">Template</span><span class="snum">03</span></div>
+  <h2>A two-line headline moves the zone down and keeps its bottom</h2>
+  <div class="zone"><div class="fig-ph">Content zone · 1680 × 480 · y 408 → 888</div></div>
+  <p class="note">No source line here, so a footnote may run to a second line if it really has to; one line is still the target.</p>
+</section>
+
+<!-- 04 · Cards, three equal items -->
+<section class="slide" data-label="Cards · three" data-speaker-notes="Three equal items: no clay.">
+  <div class="slide-head"><span class="crumb">The machinery</span><span class="snum">04</span></div>
+  <h2>Three parts, three different jobs</h2>
+  <div class="zone">
+    <div class="cards c3">
+      <div class="tile"><span class="lab">01</span><h3>Model</h3><p>Proposes text or a structured tool call.</p></div>
+      <div class="tile"><span class="lab">02</span><h3>Harness</h3><p>Builds context, applies permissions and runs tools.</p></div>
+      <div class="tile"><span class="lab">03</span><h3>Client</h3><p>The terminal or editor where you inspect and steer.</p></div>
+    </div>
+  </div>
+  <p class="note">For the invoice task: the model requests a test run; the harness arranges it; the client displays the result.</p>
+</section>
+
+<!-- 05 · Cards, two equal items -->
+<section class="slide" data-label="Cards · two" data-speaker-notes="Two equal items: no clay.">
+  <div class="slide-head"><span class="crumb">Split the work</span><span class="snum">05</span></div>
+  <h2>Assign a role and a return contract</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Worker</span><p>Implement the bounded invoice change. Return the diff, test output and known gaps.</p></div>
+      <div class="tile"><span class="lab">Reviewer</span><p>Check the tax rule, changed tests and edge cases. Return findings with evidence.</p></div>
+    </div>
+  </div>
+  <p class="note">A second model’s opinion is not a verifier.</p>
+</section>
+
+<!-- 06 · Before / after -->
+<section class="slide" data-label="Before / after" data-speaker-notes="Before and after: the after column is the point, so it carries the clay rule and label.">
+  <div class="slide-head"><span class="crumb">The invoice task</span><span class="snum">06</span></div>
+  <h2>A useful task has a finish line</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile was"><span class="lab">Vague request</span><p>“Fix the invoice bug.” The agent has to infer both the rule and what counts as done.</p></div>
+      <div class="tile key"><span class="lab">Checkable request</span><p>“Apply the VAT rate from the order. Preserve the tests, run the invoice suite, and show the diff.”</p></div>
+    </div>
+  </div>
+  <p class="note">Illustrative comparison, not two measured runs.</p>
+</section>
+
+<!-- 07 · Cards, four items at 30px -->
+<section class="slide" data-label="Cards · four" data-speaker-notes="Four items drop to the 30px step automatically (.c4).">
+  <div class="slide-head"><span class="crumb">Define done</span><span class="snum">07</span></div>
+  <h2>A green check proves only what it checks</h2>
+  <div class="zone">
+    <div class="cards c4">
+      <div class="tile"><span class="lab">01</span><h3>Behavior</h3><p>VAT comes from the order; zero VAT and rounding cases pass.</p></div>
+      <div class="tile"><span class="lab">02</span><h3>Integrity</h3><p>Existing tests stay meaningful. Inspect changed assertions.</p></div>
+      <div class="tile"><span class="lab">03</span><h3>Scope</h3><p>No unrelated files changed; the diff matches the task.</p></div>
+      <div class="tile"><span class="lab">04</span><h3>Acceptance</h3><p>Review exported values against the task, including gaps.</p></div>
+    </div>
+  </div>
+  <p class="note">Exit code 0 is useful evidence. It is not proof that the full task is correct.</p>
+</section>
+
+<!-- 08 · Agenda -->
+<section class="slide" data-label="Agenda" data-speaker-notes="Agenda: numbered definition rows with the wide term column. No clay.">
+  <div class="slide-head"><span class="crumb">Our route</span><span class="snum">08</span></div>
+  <h2>Build a loop you can trust enough to use</h2>
+  <div class="zone">
+    <ol class="bul def wide">
+      <li><b>Understand the machinery</b><span>Model → harness → tool result.</span></li>
+      <li><b>Define and check done</b><span>Acceptance cases, limits and evidence.</span></li>
+      <li><b>Control the workload</b><span>Useful context, measured cost and reusable checks.</span></li>
+    </ol>
+  </div>
+  <p class="note">One task throughout: correct the invoice total, then verify its CSV export.</p>
+</section>
+
+<!-- 09 · Definition rows -->
+<section class="slide" data-label="Definition rows" data-speaker-notes="Bullets with a bold lead-in become numbered definition rows. Rows share the zone height.">
+  <div class="slide-head"><span class="crumb">Model choice</span><span class="snum">09</span></div>
+  <h2>Escalate when the evidence points to a need</h2>
+  <div class="zone">
+    <ol class="bul def">
+      <li><b>Start:</b> use a configuration that has met the acceptance bar on similar work.</li>
+      <li><b>Diagnose:</b> missing facts, a broken tool and hard reasoning call for different fixes.</li>
+      <li><b>Compare:</b> try supported effort or model changes against the same checks and budget.</li>
+    </ol>
+  </div>
+  <p class="note">There is no universal “effort first” ladder. Re-evaluate defaults when the task or model changes.</p>
+</section>
+
+<!-- 10 · Plain bullets + inline -->
+<section class="slide" data-label="Bullets" data-speaker-notes="Unordered bullets: hairline rows, no marker. Inline link, inline code and an inline bold lead.">
+  <div class="slide-head"><span class="crumb">Make it repeatable</span><span class="snum">10</span></div>
+  <h2>Store the rules needed on most tasks</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li>Test with <code>pytest tests/test_invoice.py -q</code> before claiming the fix is done.</li>
+      <li><b>VAT rates</b> come from the order record, never from a constant in the code.</li>
+      <li>Use the instruction file your harness loads, e.g. <a href="https://code.claude.com/docs/en/memory">CLAUDE.md</a> or AGENTS.md.</li>
+      <li>Ask before changing the stored invoice schema.</li>
+    </ul>
+  </div>
+  <p class="note">Keep standing rules short and specific. <a href="#">Optional reference deck</a>.</p>
+</section>
+
+<!-- 11 · Numbered steps -->
+<section class="slide" data-label="Numbered steps" data-speaker-notes="Numbered steps: ol.bul without .def. Numbers come from a CSS counter.">
+  <div class="slide-head"><span class="crumb">Take it back to work</span><span class="snum">11</span></div>
+  <h2>Give the next task a checkable finish</h2>
+  <div class="zone">
+    <ol class="bul">
+      <li>Name the behavior, scope, acceptance cases and stop limit.</li>
+      <li>Inspect the diff and the actual check results; report what remains unverified.</li>
+      <li>Record total task cost, then save the check you repeat as a skill.</li>
+    </ol>
+  </div>
+  <p class="note">The durable practice is bounded work with useful context and evidence.</p>
+</section>
+
+<!-- 12 · Two-column table, 40px -->
+<section class="slide" data-label="Table · two columns" data-speaker-notes="Two-column table at the 40px step. The Compare column is the point: clay header.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum">12</span></div>
+  <h2>Change one setting at a time</h2>
+  <div class="zone">
+    <table class="tbl lg">
+      <thead><tr><th>Hold constant</th><th class="key">Compare</th></tr></thead>
+      <tbody>
+        <tr><td>Task, starting files and acceptance cases</td><td>Supported effort settings for the same model.</td></tr>
+        <tr><td>Tools, permissions and budget</td><td>Successes, failures, time, usage and review effort.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Record the exact settings; “high” is not necessarily equivalent across models or versions.</p>
+</section>
+
+<!-- 13 · Three-column table, 30px -->
+<section class="slide" data-label="Table · three columns" data-speaker-notes="Three-column table at 30px, four rows sharing the zone. No clay: four equal cases.">
+  <div class="slide-head"><span class="crumb">Split the work</span><span class="snum">13</span></div>
+  <h2>Use the simplest shape that fits</h2>
+  <div class="zone">
+    <table class="tbl c3">
+      <thead><tr><th>Task shape</th><th>Starting point</th><th>Add more when</th></tr></thead>
+      <tbody>
+        <tr><td>Explain the VAT rule</td><td>One question with the relevant source.</td><td>The answer needs code evidence.</td></tr>
+        <tr><td>Fix the invoice calculation</td><td>One agent with tools and acceptance checks.</td><td>Checks fail for unclear reasons.</td></tr>
+        <tr><td>Repeat a repair cycle</td><td>A bounded loop with a stop condition.</td><td>Attempts stop converging.</td></tr>
+        <tr><td>Investigate independent areas</td><td>Helpers with explicit inputs and returns.</td><td>Integration needs one owner.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Add orchestration when it resolves a real bottleneck. Measure its coordination cost too.</p>
+</section>
+
+<!-- 14 · Hero figure + numeric table -->
+<section class="slide" data-label="Hero + numeric table" data-speaker-notes="Hero number with to-scale bars (axis 0 to 0.15) and a numeric table with a total row. Clay on the cache-hit bar only.">
+  <div class="slide-head"><span class="crumb">Worked arithmetic</span><span class="snum">14</span></div>
+  <h2>One cache-hit request: about five cents</h2>
+  <div class="zone">
+    <div class="split even">
+      <div class="hero">
+        <div class="big">$0.0506</div>
+        <div class="bars">
+          <div class="bar key" style="--v:.3373"><span class="lab">With the cache hit</span><div class="track"><i></i><b>$0.0506</b></div></div>
+          <div class="bar" style="--v:.8187"><span class="lab">Without it</span><div class="track"><i></i><b>$0.1228</b></div></div>
+          <div class="axis"><span style="--v:0">$0.00</span><span style="--v:.3333">$0.05</span><span style="--v:.6667">$0.10</span><span style="--v:1">$0.15</span></div>
+        </div>
+      </div>
+      <table class="tbl num">
+        <thead><tr><th>Illustrative usage and rates</th><th>Cost</th></tr></thead>
+        <tbody>
+          <tr><td>19,000 cached input × $0.20 / million</td><td>$0.0038</td></tr>
+          <tr><td>3,700 new input × $4 / million</td><td>$0.0148</td></tr>
+          <tr><td>1,600 output × $20 / million</td><td>$0.0320</td></tr>
+          <tr class="tot"><td>22,700 input + 1,600 output in total</td><td>$0.0506</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <p class="note">Assumed rates, not a measured bill. Without the cache hit: $0.0908 input + $0.0320 output = $0.1228.</p>
+</section>
+
+<!-- 15 · Code panel, 40px -->
+<section class="slide" data-label="Code panel" data-speaker-notes="Code panel: 12 columns, full zone height, six lines spread evenly, numbers in column 1. The VERIFY line is the point.">
+  <div class="slide-head"><span class="crumb">The invoice task</span><span class="snum">15</span></div>
+  <h2>Make the acceptance contract explicit</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="k">GOAL:</span> export invoice net, VAT and gross values to CSV.</span>
+      <span class="l"><span class="k">SCOPE:</span> invoice export code; preserve existing tests.</span>
+      <span class="l"><span class="key">VERIFY:</span> pytest tests/test_export.py -q</span>
+      <span class="l"><span class="k">CASES:</span> 21% VAT, zero VAT, rounding, quoted CSV fields.</span>
+      <span class="l"><span class="k">LIMIT:</span> three repair attempts; then stop and report.</span>
+      <span class="l"><span class="k">EVIDENCE:</span> diff, command, exit status, failures and gaps.</span>
+    </div>
+  </div>
+  <p class="note">Pair this request with an enforced runtime budget and a review of the resulting artifact.</p>
+</section>
+
+<!-- 16 · Code panel, 30px, indentation + comment -->
+<section class="slide" data-label="Code panel · 30px" data-speaker-notes="Code panel at the 30px step (.reg) with a comment line and preserved indentation. No clay.">
+  <div class="slide-head"><span class="crumb">Make it repeatable</span><span class="snum">16</span></div>
+  <h2>Save the repeated invoice check as a skill</h2>
+  <div class="zone">
+    <div class="code reg">
+      <span class="l"><span class="c"># skill layout — illustrative</span></span>
+      <span class="l">invoice-check/</span>
+      <span class="l">  SKILL.md       when to use it + the verification procedure</span>
+      <span class="l">  scripts/       optional deterministic checks</span>
+      <span class="l">  references/    VAT and rounding rules</span>
+    </div>
+  </div>
+  <p class="note"><b>Procedure:</b> inspect the diff → run the cases → report evidence and gaps.</p>
+  <p class="src">Applied example · <a href="https://code.claude.com/docs/en/skills">supporting documentation</a></p>
+</section>
+
+<!-- 17 · Terminal trace -->
+<section class="slide" data-label="Terminal trace" data-speaker-notes="Terminal trace: same panel; arrows muted; PASS is the point.">
+  <div class="slide-head"><span class="crumb">The loop</span><span class="snum">17</span></div>
+  <h2>The invoice fix, step by step</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l">run tests     <span class="a">→</span> FAIL: expected 121, got 100</span>
+      <span class="l">read invoice  <span class="a">→</span> VAT is missing from the total</span>
+      <span class="l">edit code     <span class="a">→</span> apply the order’s 21% VAT rate</span>
+      <span class="l">run tests     <span class="a">→</span> <span class="key">PASS</span></span>
+      <span class="l">review diff   <span class="a">→</span> check scope and edge cases</span>
+    </div>
+  </div>
+  <p class="note">Illustrative trace. The model requests the actions; the harness runs them and returns the results.</p>
+</section>
+
+<!-- 18 · Split: rows + loop diagram -->
+<section class="slide" data-label="Split · loop diagram" data-speaker-notes="Split: rows in columns 1–5, figure in columns 7–12. The loop path is the single clay element.">
+  <div class="slide-head"><span class="crumb">Agent · the loop</span><span class="snum">18</span></div>
+  <h2>An agent is a loop</h2>
+  <div class="zone">
+    <div class="split">
+      <ol class="bul">
+        <li><b>Propose:</b> the model chooses the next action.</li>
+        <li><b>Run:</b> the harness executes it under the configured permissions.</li>
+        <li><b>Observe:</b> the result returns as context for the next step.</li>
+        <li><b>Check:</b> stop when the task is verified, or ask when blocked.</li>
+      </ol>
+      <div class="fig">
+        <svg viewBox="0 0 828 562" role="img" aria-label="Model and harness joined by one loop: propose, run, observe, check">
+          <defs><marker id="ks18-k" class="key" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L12,6 L0,12 Z"/></marker></defs>
+          <path class="dg-line key" d="M130,211 V72 H698 V210" marker-end="url(#ks18-k)"/>
+          <path class="dg-line key" d="M698,351 V490 H130 V352" marker-end="url(#ks18-k)"/>
+          <rect class="dg-box" x="1" y="211" width="259" height="140" rx="2"/>
+          <rect class="dg-box" x="568" y="211" width="259" height="140" rx="2"/>
+          <text class="dg-t" x="130" y="277" text-anchor="middle">MODEL</text>
+          <text class="dg-t" x="698" y="277" text-anchor="middle">HARNESS</text>
+          <text class="dg-t mut" x="130" y="315" text-anchor="middle">04 CHECK</text>
+          <text class="dg-t mut" x="698" y="315" text-anchor="middle">02 RUN</text>
+          <text class="dg-t mut" x="414" y="54" text-anchor="middle">01 PROPOSE</text>
+          <text class="dg-t mut" x="414" y="526" text-anchor="middle">03 OBSERVE</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <p class="note">In a live run or a finished transcript, point to one tool call and its result. That is one lap of the loop.</p>
+</section>
+
+<!-- 19 · Split: rows + workflow diagram -->
+<section class="slide" data-label="Split · workflow diagram" data-speaker-notes="Workflow figure: equal stages, so no clay. Orthogonal connectors, slate strokes, mono labels.">
+  <div class="slide-head"><span class="crumb">Split the work</span><span class="snum">19</span></div>
+  <h2>One workflow for the invoice change</h2>
+  <div class="zone">
+    <div class="split">
+      <ul class="bul">
+        <li><b>Explore:</b> inspect the rule, calculation and export path in parallel; return evidence.</li>
+        <li><b>Plan and build:</b> reconcile findings, then give one owner the implementation.</li>
+        <li><b>Verify:</b> run acceptance checks and inspect the diff; retry only within budget.</li>
+      </ul>
+      <div class="fig">
+        <svg viewBox="0 0 828 562" role="img" aria-label="Three parallel inspections feed a plan, then build, then verify; failures retry build at most three times; passes go to review">
+          <defs><marker id="ks19-a" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L12,6 L0,12 Z"/></marker></defs>
+          <rect class="dg-box mid" x="1" y="56" width="239" height="64" rx="2"/>
+          <rect class="dg-box mid" x="1" y="152" width="239" height="64" rx="2"/>
+          <rect class="dg-box mid" x="1" y="248" width="239" height="64" rx="2"/>
+          <text class="dg-t acc" x="120" y="95" text-anchor="middle">INSPECT RULE</text>
+          <text class="dg-t acc" x="120" y="191" text-anchor="middle">INSPECT CALC</text>
+          <text class="dg-t acc" x="120" y="287" text-anchor="middle">INSPECT EXPORT</text>
+          <text class="dg-t mut" x="120" y="350" text-anchor="middle">PARALLEL</text>
+          <path class="dg-line" d="M240,88 H290 V280 H240"/>
+          <path class="dg-line" d="M290,184 H339" marker-end="url(#ks19-a)"/>
+          <rect class="dg-box" x="340" y="152" width="260" height="64" rx="2"/>
+          <rect class="dg-box" x="340" y="276" width="260" height="64" rx="2"/>
+          <rect class="dg-box" x="340" y="400" width="260" height="64" rx="2"/>
+          <text class="dg-t" x="470" y="193" text-anchor="middle">PLAN</text>
+          <text class="dg-t" x="470" y="317" text-anchor="middle">BUILD</text>
+          <text class="dg-t" x="470" y="441" text-anchor="middle">VERIFY</text>
+          <path class="dg-line" d="M470,216 V275" marker-end="url(#ks19-a)"/>
+          <path class="dg-line" d="M470,340 V399" marker-end="url(#ks19-a)"/>
+          <path class="dg-line" d="M600,432 H690 V308 H601" marker-end="url(#ks19-a)"/>
+          <text class="dg-t mut" x="706" y="364">ON FAIL</text>
+          <text class="dg-t mut" x="706" y="392">MAX 3</text>
+          <path class="dg-line" d="M470,464 V535" marker-end="url(#ks19-a)"/>
+          <text class="dg-t mut" x="490" y="528">PASS → REVIEW</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <p class="note">Pass evidence between stages. Parallelize independent investigation; coordinate edits and integration.</p>
+</section>
+
+<!-- 20 · Split: rows + video, one-line headline -->
+<section class="slide" data-label="Split · video" data-speaker-notes="Video in columns 7–12: fills the figure box, contained, centred, no frame. Ivory-background render.">
+  <div class="slide-head"><span class="crumb">The predictor</span><span class="snum">20</span></div>
+  <h2>The model generates one token at a time</h2>
+  <div class="zone">
+    <div class="split">
+      <ul class="bul">
+        <li>Each step produces a distribution over possible next tokens; decoding chooses one.</li>
+        <li>The prediction depends on learned patterns and the context available to that step.</li>
+        <li>Tool calls are generated output too. A separate program executes them.</li>
+      </ul>
+      <div class="fig">
+        <video src="../assets/anim/next-token-ivory.mp4" width="1200" height="750" autoplay muted loop playsinline aria-label="The prompt goes into the model, candidate next tokens get probabilities, and the winner is sampled"></video>
+      </div>
+    </div>
+  </div>
+  <p class="note">The animation is a simplified decoding example. It does not describe everything learned during training.</p>
+</section>
+
+<!-- 21 · Split: rows + tall video, two-line headline -->
+<section class="slide" data-label="Split · tall video" data-speaker-notes="Two-line headline: zone is 480 tall, the taller video is height-bound and centred in columns 7–12.">
+  <div class="slide-head"><span class="crumb">The loop</span><span class="snum">21</span></div>
+  <h2>Keep going, with a limit and a stop condition</h2>
+  <div class="zone">
+    <div class="split">
+      <ul class="bul">
+        <li>The harness returns tool results so the model can choose the next step.</li>
+        <li>A verifier checks the result. Failed checks can trigger another attempt.</li>
+        <li>Stop on success, exhausted budget, repeated failure or a human decision.</li>
+      </ul>
+      <div class="fig">
+        <video src="../assets/anim/agent-loop-ivory.mp4" width="1152" height="912" autoplay muted loop playsinline aria-label="The agent loop: model proposes, harness runs, result returns, repeat until done"></video>
+      </div>
+    </div>
+  </div>
+  <p class="note">For the invoice fix: at most three repair attempts, then report evidence and unresolved failures.</p>
+</section>
+
+<!-- 22 · Full-width figure: attention -->
+<section class="slide" data-label="Figure · attention" data-speaker-notes="Full-width figure with a mono caption. The predicted position is the single clay element; strong links slate, weak links hairline.">
+  <div class="slide-head"><span class="crumb">The predictor · attention</span><span class="snum">22</span></div>
+  <h2>Attention connects information in context</h2>
+  <div class="zone">
+    <div class="fig">
+      <span class="lab">Illustration · earlier tokens can influence the next prediction</span>
+      <svg viewBox="0 0 1680 440" role="img" aria-label="Conceptual links from the position being predicted back to earlier invoice tokens; not measured attention weights">
+        <!-- drawn 1:1 for a two-line headline: zone 480 − caption 24 − gap 16 = 440 -->
+        <defs>
+          <marker id="ks22-a" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L12,6 L0,12 Z"/></marker>
+          <marker id="ks22-d" class="dim" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L12,6 L0,12 Z"/></marker>
+        </defs>
+        <path class="dg-line dim" d="M1610,360 V24 H130 V359" marker-end="url(#ks22-d)"/>
+        <path class="dg-line" d="M1570,360 V88 H414 V359" marker-end="url(#ks22-a)"/>
+        <path class="dg-line" d="M1530,360 V152 H698 V359" marker-end="url(#ks22-a)"/>
+        <path class="dg-line dim" d="M1490,360 V216 H982 V359" marker-end="url(#ks22-d)"/>
+        <path class="dg-line" d="M1450,360 V280 H1266 V359" marker-end="url(#ks22-a)"/>
+        <rect class="dg-box" x="1" y="360" width="258" height="79" rx="2"/>
+        <rect class="dg-box" x="284" y="360" width="260" height="79" rx="2"/>
+        <rect class="dg-box" x="568" y="360" width="260" height="79" rx="2"/>
+        <rect class="dg-box" x="852" y="360" width="260" height="79" rx="2"/>
+        <rect class="dg-box" x="1136" y="360" width="260" height="79" rx="2"/>
+        <rect class="dg-box key" x="1420" y="360" width="259" height="79" rx="2"/>
+        <text class="dg-t" x="130" y="409" text-anchor="middle">The</text>
+        <text class="dg-t" x="414" y="409" text-anchor="middle">invoice</text>
+        <text class="dg-t" x="698" y="409" text-anchor="middle">test</text>
+        <text class="dg-t" x="982" y="409" text-anchor="middle">expects</text>
+        <text class="dg-t" x="1266" y="409" text-anchor="middle">VAT</text>
+        <text class="dg-t key" x="1550" y="409" text-anchor="middle">so ___ ?</text>
+      </svg>
+    </div>
+  </div>
+  <p class="note">Conceptual diagram: many heads and layers contribute. Context is an input you curate, not a literal program.</p>
+</section>
+
+<!-- 23 · Full-width figure: sequence -->
+<section class="slide" data-label="Figure · sequence" data-speaker-notes="Sequence figure: lifelines in hairline, messages slate, returns hairline. The growing context bars are the single clay series.">
+  <div class="slide-head"><span class="crumb">Hands · client and server</span><span class="snum">23</span></div>
+  <h2>The harness supplies context for each call</h2>
+  <div class="zone">
+    <div class="fig">
+      <svg viewBox="0 0 1680 480" role="img" aria-label="Illustrative sequence: the harness sends growing context to the model API and runs permitted tools between calls">
+        <!-- drawn 1:1 for a two-line headline: zone 1680 × 480 -->
+        <defs>
+          <marker id="ks23-a" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L12,6 L0,12 Z"/></marker>
+          <marker id="ks23-d" class="dim" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L12,6 L0,12 Z"/></marker>
+        </defs>
+        <!-- lifelines -->
+        <path class="dg-line dim" d="M130,64 V480 M840,64 V480 M1550,64 V480"/>
+        <!-- participants -->
+        <rect class="dg-box" x="1" y="1" width="258" height="63" rx="2"/>
+        <rect class="dg-box" x="710" y="1" width="260" height="63" rx="2"/>
+        <rect class="dg-box" x="1421" y="1" width="258" height="63" rx="2"/>
+        <text class="dg-t" x="130" y="42" text-anchor="middle">YOU</text>
+        <text class="dg-t" x="840" y="42" text-anchor="middle">HARNESS</text>
+        <text class="dg-t" x="1550" y="42" text-anchor="middle">MODEL API</text>
+        <!-- request -->
+        <path class="dg-line" d="M130,104 H839" marker-end="url(#ks23-a)"/>
+        <text class="dg-t mut" x="485" y="92" text-anchor="middle">"fix the bug"</text>
+        <!-- turns: send context (slate), reply (hairline), run tool (self-loop); context bars to scale, 18px per 1k -->
+        <rect class="dg-fill-key" x="738" y="158" width="90" height="20"/>
+        <text class="dg-t mut" x="724" y="175" text-anchor="end">CONTEXT ~5K</text>
+        <path class="dg-line" d="M840,168 H1549" marker-end="url(#ks23-a)"/>
+        <text class="dg-t acc" x="1195" y="156" text-anchor="middle">SEND CONTEXT</text>
+        <path class="dg-line dim" d="M1550,200 H841" marker-end="url(#ks23-d)"/>
+        <text class="dg-t mut" x="1195" y="190" text-anchor="middle">TOKENS + TOOL CALL</text>
+        <path class="dg-line" d="M840,216 H900 V240 H841" marker-end="url(#ks23-a)"/>
+        <text class="dg-t mut" x="916" y="235">RUN TOOL</text>
+        <rect class="dg-fill-key" x="666" y="262" width="162" height="20"/>
+        <text class="dg-t mut" x="652" y="279" text-anchor="end">CONTEXT ~9K</text>
+        <path class="dg-line" d="M840,272 H1549" marker-end="url(#ks23-a)"/>
+        <text class="dg-t acc" x="1195" y="260" text-anchor="middle">SEND CONTEXT</text>
+        <path class="dg-line dim" d="M1550,304 H841" marker-end="url(#ks23-d)"/>
+        <text class="dg-t mut" x="1195" y="294" text-anchor="middle">TOKENS + TOOL CALL</text>
+        <path class="dg-line" d="M840,320 H900 V344 H841" marker-end="url(#ks23-a)"/>
+        <text class="dg-t mut" x="916" y="339">RUN TOOL</text>
+        <rect class="dg-fill-key" x="576" y="366" width="252" height="20"/>
+        <text class="dg-t mut" x="562" y="383" text-anchor="end">CONTEXT ~14K</text>
+        <path class="dg-line" d="M840,376 H1549" marker-end="url(#ks23-a)"/>
+        <text class="dg-t acc" x="1195" y="364" text-anchor="middle">SEND CONTEXT</text>
+        <path class="dg-line dim" d="M1550,408 H841" marker-end="url(#ks23-d)"/>
+        <text class="dg-t mut" x="1195" y="398" text-anchor="middle">FINAL ANSWER</text>
+      </svg>
+    </div>
+  </div>
+  <p class="note">Illustrative API-backed loop. History may be resent, referenced through a stateful API, or compacted.</p>
+</section>
+
+<!-- 24 · Full-width chart: stacked bars -->
+<section class="slide" data-label="Figure · stacked bars" data-speaker-notes="To-scale stacked bars (75 px per 1k tokens). The short new message is the point, so it is the clay segment.">
+  <div class="slide-head"><span class="crumb">The bill · context growth</span><span class="snum">24</span></div>
+  <h2>A short message can carry a long history</h2>
+  <div class="zone">
+    <div class="fig">
+      <span class="lab">Illustrative · input tokens per request, including history</span>
+      <svg viewBox="0 0 1680 440" role="img" aria-label="Three stacked bars: turn 1 about 8,500 input tokens, turn 2 about 13,000, turn 3 about 15,500; the new message is a small part of each">
+        <!-- drawn 1:1 for a two-line headline: zone 480 − caption 24 − gap 16 = 440 -->
+        <text class="dg-t acc" x="0" y="36">TURN 1</text><text class="dg-t mut" x="0" y="62">"why no VAT?"</text>
+        <rect class="dg-fill-0" x="284" y="16" width="598" height="48"/>
+        <rect class="dg-fill-key" x="884" y="16" width="37.5" height="48"/>
+        <text class="dg-t" x="940" y="49">~8,500</text>
+        <text class="dg-t acc" x="0" y="126">TURN 2</text><text class="dg-t mut" x="0" y="152">"fix it"</text>
+        <rect class="dg-fill-0" x="284" y="106" width="598" height="48"/>
+        <rect class="dg-fill-1" x="884" y="106" width="335.5" height="48"/>
+        <rect class="dg-fill-key" x="1221.5" y="106" width="37.5" height="48"/>
+        <text class="dg-t" x="1278" y="139">~13,000</text>
+        <text class="dg-t acc" x="0" y="216">TURN 3</text><text class="dg-t mut" x="0" y="242">"run the tests"</text>
+        <rect class="dg-fill-0" x="284" y="196" width="598" height="48"/>
+        <rect class="dg-fill-1" x="884" y="196" width="335.5" height="48"/>
+        <rect class="dg-fill-2" x="1221.5" y="196" width="185.5" height="48"/>
+        <rect class="dg-fill-key" x="1409" y="196" width="37.5" height="48"/>
+        <text class="dg-t" x="1466" y="229">~15,500</text>
+        <!-- axis: 0 → 16k tokens = 1200px (75px per 1k) -->
+        <path class="dg-line axis" d="M284,284 H1484 M284.75,284 V294 M584,284 V294 M884,284 V294 M1184,284 V294 M1483.25,284 V294"/>
+        <text class="dg-t mut" x="284" y="324">0</text>
+        <text class="dg-t mut" x="584" y="324" text-anchor="middle">4K</text>
+        <text class="dg-t mut" x="884" y="324" text-anchor="middle">8K</text>
+        <text class="dg-t mut" x="1184" y="324" text-anchor="middle">12K</text>
+        <text class="dg-t mut" x="1484" y="324" text-anchor="end">16K</text>
+        <!-- legend -->
+        <rect class="dg-fill-0" x="284" y="400" width="20" height="20"/><text class="dg-t mut" x="316" y="417">SYSTEM + TOOLS + CLAUDE.MD</text>
+        <rect class="dg-fill-1" x="718" y="400" width="20" height="20"/><text class="dg-t mut" x="750" y="417">TURN 1 REPLY + FILES READ</text>
+        <rect class="dg-fill-2" x="1138" y="400" width="20" height="20"/><text class="dg-t mut" x="1170" y="417">TURN 2 DIFF</text>
+        <rect class="dg-fill-key" x="1368" y="400" width="20" height="20"/><text class="dg-t mut" x="1400" y="417">YOUR NEW MESSAGE</text>
+      </svg>
+    </div>
+  </div>
+  <p class="note">Illustrative input volumes, not a bill. Repeated history counts as input; cache hits may have a different rate.</p>
+</section>
+
+<!-- 25 · Sources -->
+<section class="slide" data-label="Sources" data-speaker-notes="Sources: two link columns, table-head labels, rows share the zone. No clay.">
+  <div class="slide-head"><span class="crumb">Sources</span><span class="snum">25</span></div>
+  <h2>Questions? Check the evidence.</h2>
+  <div class="zone">
+    <div class="links">
+      <div class="linkcol">
+        <h3>Mechanisms</h3>
+        <a href="https://arxiv.org/abs/1706.03762">Attention Is All You Need<span class="u">arxiv.org/abs/1706.03762</span></a>
+        <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Effective context engineering for AI agents<span class="u">anthropic.com/engineering</span></a>
+        <a href="https://www.trychroma.com/research/context-rot">Context rot: context-length experiments<span class="u">trychroma.com/research/context-rot</span></a>
+      </div>
+      <div class="linkcol">
+        <h3>Implementation details</h3>
+        <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">Prompt caching and usage<span class="u">platform.claude.com/docs</span></a>
+        <a href="https://code.claude.com/docs/en/sub-agents">Subagents and forks<span class="u">code.claude.com/docs/en/sub-agents</span></a>
+        <a href="https://code.claude.com/docs/en/skills">Skills<span class="u">code.claude.com/docs/en/skills</span></a>
+      </div>
+    </div>
+  </div>
+  <p class="note">Primary sources checked 3 October 2026. Worked examples are illustrative. <a href="https://github.com/davidbudac/agentic-talks">All decks</a>.</p>
+</section>
+
+<!-- 26 · Long-content stress: two-line headline, 30px table -->
+<section class="slide" data-label="Stress · two lines + four rows" data-speaker-notes="Stress case: two-line headline with a four-row 30px table in the 480px zone. Nothing may cross the zone bottom at 888.">
+  <div class="slide-head"><span class="crumb">Count the work</span><span class="snum">26</span></div>
+  <h2>Count each billing category separately before comparing runs</h2>
+  <div class="zone">
+    <table class="tbl">
+      <thead><tr><th>Category</th><th>What to record</th></tr></thead>
+      <tbody>
+        <tr><td>Uncached input</td><td>New input processed at its applicable input rate.</td></tr>
+        <tr><td>Cache writes and reads</td><td>Separate token counts and the configured cache rates.</td></tr>
+        <tr><td>Generated output</td><td>Output usage, including billable reasoning where applicable.</td></tr>
+        <tr><td>Tools and services</td><td>Any separate per-call fees, such as search or code execution.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Bill = sum of each category’s tokens × its rate, plus any separate tool or service fees.</p>
+</section>
+
+</deck-stage>
+
+<script src="deck-stage.js"></script>
+<script>
+  /* restart embedded explainer videos when their slide becomes active */
+  document.querySelector('deck-stage').addEventListener('slidechange', function(e){
+    var v = e.detail.slide && e.detail.slide.querySelector('video');
+    if (v) { v.currentTime = 0; var p = v.play(); if (p && p.catch) p.catch(function(){}); }
+  });
+</script>
+
+<!-- ─── Presenter aids (Ivory): markup unchanged from Ember; styling lives in styles.css ─── -->
+<div class="pui-controls">
+  <button type="button" data-pui="notes">Notes<kbd>N</kbd></button>
+  <button type="button" data-pui="present">Present<kbd>P</kbd></button>
+  <button type="button" data-pui="fullscreen">Fullscreen<kbd>F</kbd></button>
+</div>
+<div class="pui-notes" role="note" aria-live="polite">
+  <div class="pui-nhead"></div>
+  <div class="pui-nbody"></div>
+</div>
+
+<script>
+/* ─── Presenter aids: notes overlay (N), fullscreen (F), presenter window (P) ───
+   Ivory version: identical to the Ember script except that the presenter window
+   no longer injects its own CSS — the deck's <head> stylesheets (styles.css)
+   are copied into the window and carry the .pw-* rules. */
+(function(){
+  if (window.self !== window.top) return; /* skip when embedded by a host/viewer */
+  var ds = document.querySelector('deck-stage');
+  var notesEl = document.querySelector('.pui-notes');
+  var nHead = notesEl.querySelector('.pui-nhead');
+  var nBody = notesEl.querySelector('.pui-nbody');
+  var current = Math.max(0, Array.from(ds.querySelectorAll(':scope > section')).findIndex(function(s){ return s.hasAttribute('data-deck-active'); })), presenter = null, mouseT = null;
+
+  function slides(){ return Array.prototype.slice.call(ds.querySelectorAll(':scope > section')); }
+  function noteOf(s){ return s.getAttribute('data-speaker-notes') || 'No notes for this slide.'; }
+  function labelOf(s){ return s.getAttribute('data-label') || ''; }
+
+  document.addEventListener('mousemove', function(){
+    document.body.classList.add('pui-mouse');
+    clearTimeout(mouseT);
+    mouseT = setTimeout(function(){ document.body.classList.remove('pui-mouse'); }, 1800);
+  });
+
+  function syncNotes(){
+    var all = slides(), s = all[current];
+    if (!s) return;
+    nHead.textContent = 'Notes · ' + labelOf(s) + ' · ' + (current + 1) + ' / ' + all.length;
+    nBody.textContent = noteOf(s);
+  }
+  function toggleNotes(){ notesEl.classList.toggle('open'); if (notesEl.classList.contains('open')) syncNotes(); }
+
+  function toggleFullscreen(){
+    if (document.fullscreenElement) { document.exitFullscreen(); }
+    else { document.documentElement.requestFullscreen().catch(function(){}); }
+  }
+  var railWasOff = false;
+  document.addEventListener('fullscreenchange', function(){
+    if (document.fullscreenElement) {
+      railWasOff = ds.hasAttribute('no-rail');
+      ds.setAttribute('no-rail', '');
+    } else if (!railWasOff) {
+      ds.removeAttribute('no-rail');
+    }
+  });
+
+  function openPresenter(){
+    if (presenter && !presenter.closed) { presenter.focus(); return; }
+    presenter = window.open('', 'deck-presenter', 'width=1200,height=760');
+    if (!presenter) {
+      nHead.textContent = 'Presenter window';
+      nBody.textContent = 'The browser blocked the pop-up — allow pop-ups for this page and press P again.';
+      notesEl.classList.add('open');
+      return;
+    }
+    var pd = presenter.document;
+    pd.open();
+    pd.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Presenter — ' + document.title.replace(/</g,'&lt;') + '</title><base href="' + document.baseURI + '"></head><body></body></html>');
+    pd.close();
+    /* carry the deck's stylesheets over: styles.css styles both the slide clones and the .pw-* UI */
+    document.head.querySelectorAll('link[rel="stylesheet"], link[rel="preconnect"], style').forEach(function(el){
+      var c = pd.importNode(el, true);
+      if (el.tagName === 'LINK' && el.href) c.setAttribute('href', el.href);
+      pd.head.appendChild(c);
+    });
+    pd.body.innerHTML =
+      '<div class="pw">' +
+        '<div class="pw-bar">' +
+          '<span class="cnt"></span><span class="lbl"></span>' +
+          '<span class="tmr" title="click to reset">elapsed <b class="el">00:00</b></span>' +
+          '<span>clock <b class="ck"></b></span>' +
+          '<button data-nav="-1">‹ prev</button><button data-nav="1">next ›</button>' +
+        '</div>' +
+        '<div class="pw-main">' +
+          '<div class="pw-col"><div class="pw-cap">Current</div><div class="pw-box" id="pwCur"><div class="pw-canvas"></div></div></div>' +
+          '<div class="pw-col right"><div class="pw-cap">Next</div><div class="pw-box" id="pwNext" style="aspect-ratio:16/9;min-height:120px"><div class="pw-canvas"></div></div>' +
+          '<div class="pw-cap" style="margin-top:6px">Notes</div><div class="pw-notes"></div></div>' +
+        '</div>' +
+      '</div>';
+
+    var t0 = Date.now();
+    function two(n){ return (n < 10 ? '0' : '') + n; }
+    function tick(){
+      if (presenter.closed) return;
+      var el = Math.floor((Date.now() - t0) / 1000);
+      pd.querySelector('.el').textContent = two(Math.floor(el / 60)) + ':' + two(el % 60);
+      var d = new Date();
+      pd.querySelector('.ck').textContent = two(d.getHours()) + ':' + two(d.getMinutes());
+      presenter.setTimeout(tick, 1000);
+    }
+    tick();
+    pd.querySelector('.tmr').addEventListener('click', function(){ t0 = Date.now(); });
+
+    function fit(boxId){
+      var box = pd.getElementById(boxId), cv = box.querySelector('.pw-canvas');
+      var k = Math.min(box.clientWidth / 1920, box.clientHeight / 1080);
+      cv.style.transform = 'scale(' + k + ')';
+      cv.style.left = ((box.clientWidth - 1920 * k) / 2) + 'px';
+      cv.style.top = ((box.clientHeight - 1080 * k) / 2) + 'px';
+    }
+    function fill(boxId, slide){
+      var cv = pd.getElementById(boxId).querySelector('.pw-canvas');
+      cv.textContent = '';
+      if (slide) {
+        var c = pd.importNode(slide, true);
+        c.setAttribute('data-deck-active', '');
+        cv.appendChild(c);
+      }
+      fit(boxId);
+    }
+    presenter.__update = function(i){
+      var all = slides(), s = all[i];
+      if (!s) return;
+      var next = i + 1;
+      while (next < all.length && all[next].hasAttribute('data-deck-skip')) next++;
+      fill('pwCur', s);
+      fill('pwNext', all[next] || null);
+      pd.querySelector('.cnt').textContent = (i + 1) + ' / ' + all.length;
+      pd.querySelector('.lbl').textContent = labelOf(s) + (all[next] ? '   →   next: ' + labelOf(all[next]) : '   ·   last slide');
+      pd.querySelector('.pw-notes').textContent = noteOf(s);
+    };
+    presenter.addEventListener('resize', function(){ fit('pwCur'); fit('pwNext'); });
+    pd.addEventListener('keydown', function(e){
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); ds.next(); }
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); ds.prev(); }
+      else if (e.key === 'Home') { ds.goTo(0); }
+      else if (e.key === 'End') { ds.goTo(slides().length - 1); }
+    });
+    pd.querySelectorAll('[data-nav]').forEach(function(b){
+      b.addEventListener('click', function(){ this.dataset.nav === '1' ? ds.next() : ds.prev(); });
+    });
+    presenter.__update(current);
+  }
+
+  ds.addEventListener('slidechange', function(e){
+    current = e.detail.index;
+    if (notesEl.classList.contains('open')) syncNotes();
+    if (presenter && !presenter.closed && presenter.__update) presenter.__update(current);
+  });
+
+  document.addEventListener('keydown', function(e){
+    var t = e.target;
+    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = e.key.toLowerCase();
+    if (k === 'n') { toggleNotes(); }
+    else if (k === 'f') { toggleFullscreen(); }
+    else if (k === 'p') { openPresenter(); }
+  });
+  document.querySelector('[data-pui="notes"]').addEventListener('click', toggleNotes);
+  document.querySelector('[data-pui="fullscreen"]').addEventListener('click', toggleFullscreen);
+  document.querySelector('[data-pui="present"]').addEventListener('click', openPresenter);
+})();
+</script>
+
+<script>
+/* kitchen-sink only — screenshot hooks, never copy into a deck:
+   ?chrome  shows the presenter buttons and opens the notes panel
+   ?pw      renders the presenter window into a full-page iframe instead of a pop-up */
+(function(){
+  var q = new URLSearchParams(location.search);
+  function press(k){ document.dispatchEvent(new KeyboardEvent('keydown', { key: k, bubbles: true })); }
+  if (q.has('chrome')) setTimeout(function(){ document.body.classList.add('pui-mouse'); press('n'); }, 400);
+  if (q.has('pw')) {
+    window.open = function(){
+      var f = document.createElement('iframe');
+      f.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;border:0;z-index:100';
+      document.body.appendChild(f);
+      return f.contentWindow;
+    };
+    setTimeout(function(){ press('p'); }, 400);
+  }
+})();
+</script>
+</body>
+</html>
