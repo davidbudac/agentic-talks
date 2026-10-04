@@ -1,0 +1,66 @@
+{
+  "branch": "design/ivory-technical",
+  "commits": {
+    "screenshot_fix": "525271e",
+    "stateless": "07a9c9b",
+    "cost-and-context": "eaafc96",
+    "subagents-prompt-caching": "f18cd4f"
+  },
+  "decks": {
+    "ai-toolbox": {
+      "status": "delegated",
+      "taskId": "node:delegated-task:command%3Amcp%3A92be48a6-1adb-4145-ad3b-0c28a0bd8e5b%3Adelegate-task%3Aivory-ai-toolbox-r1"
+    },
+    "agentic-ai": {
+      "status": "delegated",
+      "taskId": "node:delegated-task:command%3Amcp%3A92be48a6-1adb-4145-ad3b-0c28a0bd8e5b%3Adelegate-task%3Aivory-agentic-ai-r1"
+    },
+    "subagents-prompt-caching": {
+      "status": "committed",
+      "taskId": "node:delegated-task:command%3Amcp%3A92be48a6-1adb-4145-ad3b-0c28a0bd8e5b%3Adelegate-task%3Aivory-subagents-prompt-caching-r1"
+    },
+    "cost-and-context": {
+      "status": "committed"
+    },
+    "orchestrating-agents": {
+      "status": "delegated",
+      "taskId": "node:delegated-task:command%3Amcp%3A92be48a6-1adb-4145-ad3b-0c28a0bd8e5b%3Adelegate-task%3Aivory-orchestrating-agents-r1"
+    },
+    "measuring-what-works": {
+      "status": "pending"
+    },
+    "best-practices": {
+      "status": "pending"
+    },
+    "working-smarter": {
+      "status": "pending"
+    },
+    "agentic-engineering-reference": {
+      "status": "pending"
+    },
+    "ai-toolbox-reference": {
+      "status": "pending"
+    },
+    "agentic-ai-reference": {
+      "status": "pending"
+    },
+    "subagents-prompt-caching-reference": {
+      "status": "pending"
+    },
+    "cost-and-context-reference": {
+      "status": "pending"
+    },
+    "orchestrating-agents-reference": {
+      "status": "pending"
+    },
+    "measuring-what-works-reference": {
+      "status": "pending"
+    },
+    "best-practices-reference": {
+      "status": "pending"
+    },
+    "working-smarter-reference": {
+      "status": "pending"
+    }
+  }
+}

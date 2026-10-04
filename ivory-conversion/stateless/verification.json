@@ -59,7 +59,18 @@
     "Existing source/media hash manifest unchanged"
   ],
   "limitations": [
-    "Light/dark comparison sampled three frames each, not all 300 frames."
+    "Light/dark comparison sampled three frames each, not all 300 frames.",
+    "FFmpeg RGB decoding rounds the encoded blue channel up by one, matching the existing subagents Ivory MP4; native rendered ground is exactly #FAF9F5."
   ],
-  "render_command": "npx remotion render stateless-ivory ../assets/anim/stateless-ivory.mp4"
+  "render_command": "npx remotion render stateless-ivory ../assets/anim/stateless-ivory.mp4",
+  "native_still_corner_rgb": [
+    250,
+    249,
+    245
+  ],
+  "existing_subagents_ivory_decoded_corner_rgb": [
+    250,
+    249,
+    246
+  ]
 }
