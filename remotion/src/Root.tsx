@@ -123,7 +123,16 @@ export const RemotionRoot: React.FC = () => {
         height={700}
         defaultProps={{ theme: "dark" as const }}
       />
-      {/* "Ivory Technical" restyle of four existing animations */}
+      {/* "Ivory Technical" restyles of the existing animations */}
+      <Composition
+        id="stateless-ivory"
+        component={Stateless}
+        durationInFrames={300}
+        fps={FPS}
+        width={1200}
+        height={900}
+        defaultProps={{ theme: "ivory" as const }}
+      />
       <Composition
         id="next-token-ivory"
         component={NextToken}
