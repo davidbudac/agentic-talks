@@ -1,0 +1,32 @@
+[
+  {
+    "slide": 1,
+    "changed_pixels": 15,
+    "bbox": [
+      134,
+      432,
+      798,
+      682
+    ]
+  },
+  {
+    "slide": 2,
+    "changed_pixels": 0,
+    "bbox": null
+  },
+  {
+    "slide": 3,
+    "changed_pixels": 0,
+    "bbox": null
+  },
+  {
+    "slide": 4,
+    "changed_pixels": 0,
+    "bbox": null
+  },
+  {
+    "slide": 5,
+    "changed_pixels": 0,
+    "bbox": null
+  }
+]

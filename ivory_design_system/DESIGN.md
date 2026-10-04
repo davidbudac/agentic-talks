@@ -14,7 +14,7 @@ This folder is the whole design system. It has no dependencies, needs no build s
 | `template.html` | A minimal starter deck: title slide + one content slide, and a list of which kitchen-sink slide to copy for each component |
 | `kitchen-sink.html` | One slide per component. The reference markup and the visual-regression page. Copy from it |
 | `demo/` | The two demo videos and the image still used by the kitchen sink |
-| `shots/ks-NN.png` | Approved screenshots of the 27 kitchen-sink slides, plus `ks-chrome-notes.png` and `ks-chrome-presenter.png` |
+| `shots/ks-NN.png` | Approved screenshots of the 28 kitchen-sink slides, plus `ks-chrome-notes.png` and `ks-chrome-presenter.png` |
 | `tools/shoot.sh` | Screenshots a deck, one 1920 × 1080 PNG per slide, or prints it to PDF |
 
 ---
@@ -548,13 +548,14 @@ ivory_design_system/tools/shoot.sh --pdf talk.html /tmp/talk.pdf
 - Finds Chrome at `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`, then `google-chrome`/`chromium` on `PATH`; set `CHROME=/path/to/chrome` to override. Exits non-zero with a message if Chrome or the deck is missing, or a shot fails.
 - Environment options: `QUERY=chrome` or `QUERY=pw` (screenshot hooks, below), `OFFLINE=1` (block all network access), `BUDGET=6000` (virtual time per shot, ms), `CHROME_LOG=/tmp/chrome.log` (keep Chrome's stderr, including console messages).
 - The recipe it encodes (do not change it without re-checking `shots/`): `--headless=new`, a 1920 × 1080 window, `?_snthumb=1` (deck-stage's own switch that hides the thumbnail rail; without it the slide is letterboxed next to the rail), `#N` to pick the slide (1-based), a virtual time budget so fonts and videos settle, and **no `--disable-gpu`**: on the software path Chrome renders full-range ivory videos as pure white.
-- **Notes panel and presenter window:** `QUERY=chrome tools/shoot.sh kitchen-sink.html /tmp/c 9 9` shows the buttons and the open notes panel (compare `shots/ks-chrome-notes.png`); `QUERY=pw tools/shoot.sh kitchen-sink.html /tmp/p 14 14` renders the presenter window in the page (compare `shots/ks-chrome-presenter.png`; the clock and timer differ).
+- **Notes panel and presenter window:** `QUERY=chrome tools/shoot.sh kitchen-sink.html /tmp/c 9 9` shows the buttons and the open notes panel (compare `shots/ks-chrome-notes-clear.png`; the original `ks-chrome-notes.png` is retained as the pre-fix baseline); `QUERY=pw tools/shoot.sh kitchen-sink.html /tmp/p 14 14` renders the presenter window in the page (compare `shots/ks-chrome-presenter.png`; the clock and timer differ).
+- **Long notes [28]:** `QUERY=chrome tools/shoot.sh kitchen-sink.html /tmp/notes 28 28` exercises scrolling notes. The panel reserves `var(--gap)` (72px) at the bottom for controls. Its heading stays fixed within the panel; only `.pui-nbody` scrolls. Confirm the final sentence remains reachable above the buttons. Compare `shots/ks-chrome-long-notes.png` and `shots/ks-chrome-long-notes-end.png`.
 - **Console errors:** run with `CHROME_LOG=/tmp/chrome.log`, then `grep CONSOLE /tmp/chrome.log` should print nothing.
-- **Print:** the PDF has one page per slide, 1440 × 810 pt (= 1920 × 1080 px); slides marked `data-deck-skip` are left out. The kitchen sink gives 27 pages. Check the count with e.g. `pdfinfo out.pdf` (poppler) and open a page or two.
+- **Print:** the PDF has one page per slide, 1440 × 810 pt (= 1920 × 1080 px); slides marked `data-deck-skip` are left out. The kitchen sink gives 28 pages. Check the count with e.g. `pdfinfo out.pdf` (poppler) and open a page or two.
 
 ### Regression check of the design system itself
 
-The original 26 kitchen-sink slides retain their historical `/ 26` counters so their regression images remain comparable when examples are appended. Added image sample 27 shows `/ 27`.
+The original 26 kitchen-sink slides retain their historical `/ 26` counters so their regression images remain comparable when examples are appended. Image sample 27 retains `/ 27`; added notes sample 28 shows `/ 28`.
 
 After any change to `styles.css`, `deck.js` or the fonts: `tools/shoot.sh kitchen-sink.html /tmp/ks`, then compare each `/tmp/ks/NN.png` with `shots/ks-NN.png` pixel by pixel (e.g. `magick compare -metric AE a.png b.png null:`). Expected: 0 changed pixels, or a handful of anti-aliasing pixels on the title slide; video slides may also differ inside the video box. Open any slide that differs more. Update `shots/` only for intended changes.
 
