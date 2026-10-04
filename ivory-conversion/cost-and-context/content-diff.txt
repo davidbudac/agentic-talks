@@ -1,0 +1,50 @@
+slides: source 17, ivory 17
+
+[01] Title (origin 1): DIFFERENCES
+  - visible text differs (ignoring whitespace). only in source: {'developersRevised': 1, 'October': 1, '2026Cost': 1, '.': 1, 'David': 1}; only in ivory: {'developers': 1, 'Cost': 1, 'AuthorDavid': 1, 'RevisedOctober': 1, '2026': 1}
+
+[02] Agenda (origin 2): IDENTICAL (label, origin, raw notes, hrefs, visible text ignoring whitespace)
+
+[03] Choose the route (origin 13): IDENTICAL (label, origin, raw notes, hrefs, visible text ignoring whitespace)
+
+[04] Token volume and cost (origin 4): IDENTICAL (label, origin, raw notes, hrefs, visible text ignoring whitespace)
+
+[05] Output cost (origin 5): IDENTICAL (label, origin, raw notes, hrefs, visible text ignoring whitespace)
+
+[06] Worked cost example (origin 6): IDENTICAL (label, origin, raw notes, hrefs, visible text ignoring whitespace)
+
+[07] Useful context (origin 15): IDENTICAL (label, origin, raw notes, hrefs, visible text ignoring whitespace)
+
+[08] Request anatomy (origin 17): IDENTICAL (label, origin, raw notes, hrefs, visible text ignoring whitespace)
+
+[09] Project instructions (origin 18): IDENTICAL (label, origin, raw notes, hrefs, visible text ignoring whitespace)
+
+[10] Instruction file before and after (origin 19): IDENTICAL (label, origin, raw notes, hrefs, visible text ignoring whitespace)
+
+[11] Continue or reset (origin 21): IDENTICAL (label, origin, raw notes, hrefs, visible text ignoring whitespace)
+
+[12] Subagents (origin 22): IDENTICAL (label, origin, raw notes, hrefs, visible text ignoring whitespace)
+  hrefs src: ['media:assets/anim/subagents-light.mp4']
+  hrefs ivy: ['media:assets/anim/subagents-ivory.mp4']
+
+[13] Read selectively (origin 23): IDENTICAL (label, origin, raw notes, hrefs, visible text ignoring whitespace)
+
+[14] Compare instruction variants (origin 24): IDENTICAL (label, origin, raw notes, hrefs, visible text ignoring whitespace)
+
+[15] Static comparison worksheet (origin 25): IDENTICAL (label, origin, raw notes, hrefs, visible text ignoring whitespace)
+
+[16] Next task (origin 26): IDENTICAL (label, origin, raw notes, hrefs, visible text ignoring whitespace)
+
+[17] Sources (origin 28): IDENTICAL (label, origin, raw notes, hrefs, visible text ignoring whitespace)
+
+== static checks on cost-and-context-ivory.html
+link tags: ['<link rel="stylesheet" href="ivory_design_system/styles.css">']
+script tags: ['<script src="ivory_design_system/deck-stage.js">', '<script src="ivory_design_system/deck.js">']
+inline <script> bodies: 0
+<style> elements: 0
+style= attributes: 0
+non-empty .snum: 0 / empty .snum: 17
+dark/light/reveal/dot/ts- classes: []
+ember refs: 0  fonts.googleapis: 0
+clay (.key) per slide: [0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]
+notes per slide: [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
