@@ -1,0 +1,340 @@
+{
+  "source": "measuring-what-works.html",
+  "output": "measuring-what-works-ivory.html",
+  "counts": [
+    19,
+    19
+  ],
+  "structural_errors": [],
+  "slides": [
+    {
+      "slide": 1,
+      "label": "Title",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "replace",
+          "source": "developersRevised October 2026",
+          "output": "developers"
+        },
+        {
+          "kind": "replace",
+          "source": "Works.",
+          "output": "Works"
+        },
+        {
+          "kind": "replace",
+          "source": "David",
+          "output": "AuthorDavid"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "RevisedOctober 2026"
+        }
+      ],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Deep dive · developersRevised October 2026 Measuring What Works. Compare outcomes, inspect failures, then change the configuration. David Budáč",
+      "output_text": "Deep dive · developers Measuring What Works Compare outcomes, inspect failures, then change the configuration. AuthorDavid Budáč RevisedOctober 2026"
+    },
+    {
+      "slide": 2,
+      "label": "Agenda",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "replace",
+          "source": "Define Inputs,",
+          "output": "DefineInputs,"
+        },
+        {
+          "kind": "replace",
+          "source": "Observe Repeated",
+          "output": "ObserveRepeated"
+        },
+        {
+          "kind": "replace",
+          "source": "Decide Quality",
+          "output": "DecideQuality"
+        }
+      ],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Evaluate one invoice-export task Define Inputs, expected outcomes and graders. Observe Repeated trials, tool traces and actual artifacts. Decide Quality first, then cost, latency and operating constraints. You can complete the static grading exercise without a model account.",
+      "output_text": "In practice Evaluate one invoice-export task DefineInputs, expected outcomes and graders. ObserveRepeated trials, tool traces and actual artifacts. DecideQuality first, then cost, latency and operating constraints. You can complete the static grading exercise without a model account."
+    },
+    {
+      "slide": 3,
+      "label": "What an eval measures",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "01"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "02"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "03"
+        }
+      ],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Separate the case, the grader and the trial Test case Export a net-100 invoice with 21% VAT. Grader Parse the CSV and check that net, VAT and gross are 100, 21 and 121. Trial One fresh attempt with a recorded model, prompt, tools and environment. Evaluate the resulting artifact. A message saying “done” is not the outcome.",
+      "output_text": "In practice Separate the case, the grader and the trial 01 Test case Export a net-100 invoice with 21% VAT. 02 Grader Parse the CSV and check that net, VAT and gross are 100, 21 and 121. 03 Trial One fresh attempt with a recorded model, prompt, tools and environment. Evaluate the resulting artifact. A message saying “done” is not the outcome."
+    },
+    {
+      "slide": 4,
+      "label": "Acceptance cases",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Make the expected behavior explicit Case Expected result Net 100.00; VAT 21% VAT 21.00; gross 121.00 Net 100.00; VAT 0% VAT 0.00; gross 100.00 Net 0.05; VAT 10%; half-up cents VAT 0.01; gross 0.06 Customer name: ACME, Ltd One customer field after CSV parsing For this exercise, round VAT half up to cents, then add it to net. The business rule must come from the task.",
+      "output_text": "In practice Make the expected behavior explicit Case Expected result Net 100.00; VAT 21% VAT 21.00; gross 121.00 Net 100.00; VAT 0% VAT 0.00; gross 100.00 Net 0.05; VAT 10%; half-up cents VAT 0.01; gross 0.06 Customer name: ACME, Ltd One customer field after CSV parsing For this exercise, round VAT half up to cents, then add it to net. The business rule must come from the task."
+    },
+    {
+      "slide": 5,
+      "label": "Grading methods",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "01"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "02"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "03"
+        }
+      ],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Use the strongest practical check for each claim Deterministic check Parse CSV, assert values and run regression tests. Written rubric Assess explanation quality and completeness against named criteria. Human calibration Check ambiguous cases and compare model-judge scores with human decisions. A different judge model does not remove bias. Blind labels and vary answer order where practical.",
+      "output_text": "In practice Use the strongest practical check for each claim 01 Deterministic check Parse CSV, assert values and run regression tests. 02 Written rubric Assess explanation quality and completeness against named criteria. 03 Human calibration Check ambiguous cases and compare model-judge scores with human decisions. A different judge model does not remove bias. Blind labels and vary answer order where practical."
+    },
+    {
+      "slide": 6,
+      "label": "Repeated trials",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice One success answers a different question Illustrative outcomes for one case: fail fail pass fail fail At least one success in five attempts: yes All five attempts successful: no Observed single-attempt success rate: 1 / 5 This small sample does not establish production reliability. Report task coverage, repeats and uncertainty.",
+      "output_text": "In practice One success answers a different question Illustrative outcomes for one case: fail fail pass fail fail At least one success in five attempts: yes All five attempts successful: no Observed single-attempt success rate: 1 / 5 This small sample does not establish production reliability. Report task coverage, repeats and uncertainty."
+    },
+    {
+      "slide": 7,
+      "label": "Trace evidence",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Record the observable run Inputs, configuration, tool requests, results and timestamps. Final files or external state, check output and exit statuses. Usage categories, retries, failures and any unavailable evidence. Telemetry is not a full transcript, and neither guarantees access to hidden model reasoning.",
+      "output_text": "In practice Record the observable run Inputs, configuration, tool requests, results and timestamps. Final files or external state, check output and exit statuses. Usage categories, retries, failures and any unavailable evidence. Telemetry is not a full transcript, and neither guarantees access to hidden model reasoning."
+    },
+    {
+      "slide": 8,
+      "label": "Annotated trace",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice A repeated step is a question to investigate Observed step What to ask Read calc.py; edit it; read it again Did the second read inspect the changed code? Repeat a failed tool call Did the environment or arguments change? Restate the plan after a handoff Did this restore missing requirements? Label a step waste only after checking its purpose and effect.",
+      "output_text": "In practice A repeated step is a question to investigate Observed step What to ask Read calc.py; edit it; read it again Did the second read inspect the changed code? Repeat a failed tool call Did the environment or arguments change? Restate the plan after a handoff Did this restore missing requirements? Label a step waste only after checking its purpose and effect."
+    },
+    {
+      "slide": 9,
+      "label": "Telemetry versus transcripts",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://code.claude.com/docs/en/monitoring-usage"
+        ],
+        [
+          "https://code.claude.com/docs/en/monitoring-usage"
+        ]
+      ],
+      "source_text": "In practice Use the right evidence for the question Usage and event telemetry Find cost, duration and tool-failure patterns across runs. Transcript and artifacts Explain a particular wrong result and inspect what actually changed. Claude Code monitoring documentation describes the available metrics and events.",
+      "output_text": "In practice Use the right evidence for the question Usage and event telemetry Find cost, duration and tool-failure patterns across runs. Transcript and artifacts Explain a particular wrong result and inspect what actually changed. Claude Code monitoring documentation describes the available metrics and events."
+    },
+    {
+      "slide": 10,
+      "label": "Results worksheet",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Keep failed runs in the comparison Per trial Record Identity Case, variant, run number and versioned environment. Outcome Acceptance checks, rubric scores and evidence paths. Work Uncached input, cache writes/reads, output and retries. Operational result Time, total cost, review effort and error reason. Aggregate success rate and total spend over all trials. Do not report only successful attempts.",
+      "output_text": "In practice Keep failed runs in the comparison Per trial Record Identity Case, variant, run number and versioned environment. Outcome Acceptance checks, rubric scores and evidence paths. Work Uncached input, cache writes/reads, output and retries. Operational result Time, total cost, review effort and error reason. Aggregate success rate and total spend over all trials. Do not report only successful attempts."
+    },
+    {
+      "slide": 11,
+      "label": "Grading exercise",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Score two synthetic outputs 10 minutes — no model call needed A: net=100, VAT=21, gross=121 for BOTH 21% and 0% orders. B: correct totals for both; customer ACME, Ltd is unquoted. Grade against the four cases. Which outputs fail? What evidence is still missing? Output: a scored worksheet with explanations. Neither candidate is ready to accept.",
+      "output_text": "In practice Score two synthetic outputs 10 minutes — no model call needed A: net=100, VAT=21, gross=121 for BOTH 21% and 0% orders. B: correct totals for both; customer ACME, Ltd is unquoted. Grade against the four cases. Which outputs fail? What evidence is still missing? Output: a scored worksheet with explanations. Neither candidate is ready to accept."
+    },
+    {
+      "slide": 12,
+      "label": "Exercise debrief",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice A good report includes unknowns Check A B 21% VAT totals pass pass Zero VAT totals fail pass Half-up rounding not tested not tested CSV quoting not tested fail No measured speed or token-cost result exists for these synthetic outputs.",
+      "output_text": "In practice A good report includes unknowns Check A B 21% VAT totals pass pass Zero VAT totals fail pass Half-up rounding not tested not tested CSV quoting not tested fail No measured speed or token-cost result exists for these synthetic outputs."
+    },
+    {
+      "slide": 13,
+      "label": "Cost per accepted task",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "01"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "02"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "03"
+        }
+      ],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Model choice Measure the task, including the failed attempts Same acceptance bar Use representative invoice cases and the same permissions and tools. Whole run Record quality, elapsed time, all token categories, retries and review effort. Repeat and compare Repeat representative cases before changing the default configuration. A higher-priced model can finish in fewer attempts. Whether it costs less is a measurement, not a rule.",
+      "output_text": "Model choice Measure the task, including the failed attempts 01 Same acceptance bar Use representative invoice cases and the same permissions and tools. 02 Whole run Record quality, elapsed time, all token categories, retries and review effort. 03 Repeat and compare Repeat representative cases before changing the default configuration. A higher-priced model can finish in fewer attempts. Whether it costs less is a measurement, not a rule."
+    },
+    {
+      "slide": 14,
+      "label": "Local model memory",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Active parameters are not the RAM requirement Stored weights depend on total parameters, representation and quantization. Inference also needs a KV cache, activations, runtime buffers and overhead. Offloading can move weights to CPU memory or disk, trading memory for transfer time. Approximate weight storage: parameters × bits per weight ÷ 8. This is a lower-bound estimate, not a fit guarantee.",
+      "output_text": "In practice Active parameters are not the RAM requirement Stored weights depend on total parameters, representation and quantization. Inference also needs a KV cache, activations, runtime buffers and overhead. Offloading can move weights to CPU memory or disk, trading memory for transfer time. Approximate weight storage: parameters × bits per weight ÷ 8. This is a lower-bound estimate, not a fit guarantee."
+    },
+    {
+      "slide": 15,
+      "label": "Hardware experiment",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Measure on the machine and task you intend to use Record Why Model, quantization and runtime Defines the actual workload and implementation. Context size and concurrency Changes KV cache and memory demand. Peak memory and elapsed time Reveals fit and practical responsiveness. Acceptance results Shows whether it did the task correctly. No model download or hardware benchmark is required for this talk.",
+      "output_text": "In practice Measure on the machine and task you intend to use Record Why Model, quantization and runtime Defines the actual workload and implementation. Context size and concurrency Changes KV cache and memory demand. Peak memory and elapsed time Reveals fit and practical responsiveness. Acceptance results Shows whether it did the task correctly. No model download or hardware benchmark is required for this talk."
+    },
+    {
+      "slide": 16,
+      "label": "Local or hosted",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Choose from constraints and observed results Local may fit You can meet the quality, latency and memory requirements in an approved local environment. Hosted may fit Its capability and operations meet your requirements, and the data path and commercial terms are acceptable. Inspect the whole workflow: local inference does not stop tools or telemetry from using the network.",
+      "output_text": "In practice Choose from constraints and observed results Local may fit You can meet the quality, latency and memory requirements in an approved local environment. Hosted may fit Its capability and operations meet your requirements, and the data path and commercial terms are acceptable. Inspect the whole workflow: local inference does not stop tools or telemetry from using the network."
+    },
+    {
+      "slide": 17,
+      "label": "Voice input",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Review dictated requirements before execution Spoken: “Export invoices without changing stored records.” Check the transcription for: - negation: WITHOUT changing records - exact file names and amounts - scope and permission boundaries A voice interface changes input convenience, not the acceptance checks.",
+      "output_text": "In practice Review dictated requirements before execution Spoken: “Export invoices without changing stored records.” Check the transcription for: - negation: WITHOUT changing records - exact file names and amounts - scope and permission boundaries A voice interface changes input convenience, not the acceptance checks."
+    },
+    {
+      "slide": 18,
+      "label": "Next experiment",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "measuring-what-works-reference.html"
+        ],
+        [
+          "measuring-what-works-reference.html"
+        ]
+      ],
+      "source_text": "In practice Change one thing and keep the acceptance bar Choose representative cases and calibrate the grader. Compare variants on repeated, isolated trials. Inspect failures, then keep the change only if the complete result improves. Keep separate cases for the final check so prompt tuning does not simply memorize the test set. Optional reference material",
+      "output_text": "In practice Change one thing and keep the acceptance bar Choose representative cases and calibrate the grader. Compare variants on repeated, isolated trials. Inspect failures, then keep the change only if the complete result improves. Keep separate cases for the final check so prompt tuning does not simply memorize the test set. Optional reference material"
+    },
+    {
+      "slide": 19,
+      "label": "Sources",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents",
+          "https://code.claude.com/docs/en/monitoring-usage",
+          "https://huggingface.co/docs/accelerate/usage_guides/big_modeling"
+        ],
+        [
+          "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents",
+          "https://code.claude.com/docs/en/monitoring-usage",
+          "https://huggingface.co/docs/accelerate/usage_guides/big_modeling"
+        ]
+      ],
+      "source_text": "Sources Sources and further reading Agent evaluation structure Claude Code telemetry Model loading and offloading Primary documentation checked 3 October 2026. Examples are illustrative unless explicitly attributed.",
+      "output_text": "Sources Sources and further reading Agent evaluation structure Claude Code telemetry Model loading and offloading Primary documentation checked 3 October 2026. Examples are illustrative unless explicitly attributed."
+    }
+  ]
+}
