@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>Style D — Blueprint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Barlow+Semi+Condensed:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shell.css">
+<style>
+/* ---------- Style D · Blueprint ---------- */
+.slide{
+  --ground:#113D6E; --deep:#0B2C55; --ink:#F1F7FD; --sub:#9CCBEB; --line:#E4F0FB;
+  --line2:rgba(214,234,252,.55); --hi:#FFD23F; --gmin:rgba(170,212,250,.07); --gmaj:rgba(170,212,250,.15);
+  --hatch:url(#h45);
+  background:
+    radial-gradient(120% 95% at 46% 42%, rgba(60,120,190,.07), rgba(4,20,48,.30) 100%),
+    var(--ground);
+  color:var(--ink);
+  font-family:"Barlow Semi Condensed",sans-serif;
+  font-size:30px; line-height:1.3;
+  -webkit-font-smoothing:antialiased;
+}
+.slide::after{ /* cyanotype grain + mottle */
+  content:""; position:absolute; inset:0; pointer-events:none; z-index:5; mix-blend-mode:soft-light; opacity:.55;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='480' height='480'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+.slide.paper{
+  --ground:#E6ECEE; --deep:#D3DEE4; --ink:#123F73; --sub:#4C6F98; --line:#123F73;
+  --line2:rgba(18,63,115,.5); --gmin:rgba(18,63,115,.06); --gmaj:rgba(18,63,115,.13);
+  --hatch:url(#h45i);
+  background:radial-gradient(120% 95% at 46% 42%, #EEF2F2, #DCE4E8 100%);
+}
+.slide.paper::after{mix-blend-mode:multiply; opacity:.22}
+
+/* drafting grid, inside the border only */
+.slide .field{position:absolute; left:64px; top:64px; right:64px; bottom:64px;
+  background:
+    linear-gradient(var(--gmaj) 1.5px, transparent 1.5px) 0 0/112px 112px,
+    linear-gradient(90deg, var(--gmaj) 1.5px, transparent 1.5px) 0 0/112px 112px,
+    linear-gradient(var(--gmin) 1px, transparent 1px) 0 0/22.4px 22.4px,
+    linear-gradient(90deg, var(--gmin) 1px, transparent 1px) 0 0/22.4px 22.4px;}
+
+/* frame + drawings */
+.slide svg.fr, .slide svg.dw{position:absolute; inset:0; width:1920px; height:1080px; overflow:visible; pointer-events:none}
+.slide svg.dw{z-index:2}
+.slide svg *{vector-effect:non-scaling-stroke}
+.slide .ln-th{fill:none; stroke:var(--line2); stroke-width:1.5}
+.slide .ln-bd{fill:none; stroke:var(--line); stroke-width:3.5}
+.slide .ln-cm{stroke:var(--line); stroke-width:3}
+.slide .zn{font:500 20px "Barlow Condensed",sans-serif; fill:var(--sub); text-anchor:middle; letter-spacing:.06em}
+.slide .ln{fill:none; stroke:var(--line); stroke-width:2}
+.slide .ln-hv{fill:none; stroke:var(--line); stroke-width:3.5; stroke-linejoin:round}
+.slide .hid{stroke:var(--line); stroke-width:2.5; stroke-dasharray:12 8; opacity:.75}
+.slide .cl{fill:none; stroke:var(--sub); stroke-width:1.6; stroke-dasharray:26 6 4 6}
+.slide .ph{fill:none; stroke:var(--line2); stroke-width:2; stroke-dasharray:30 7 6 7 6 7}
+.slide .ext{stroke:var(--line); stroke-width:1.4; opacity:.85}
+.slide .dm{stroke:var(--line); stroke-width:1.8}
+.slide .dm-hi{stroke:var(--hi); stroke-width:2.4}
+.slide .ldr{fill:none; stroke:var(--line); stroke-width:1.8}
+.slide .hatch-fill{fill:var(--hatch); stroke:none}
+.slide .hx-fill{fill:url(#hx)}
+.slide .solid-fill{fill:var(--sub)}
+.slide .gnd{fill:url(#gnd)}
+.slide .hi-fill{fill:var(--hi)}
+.slide .chip{fill:var(--ground)}
+.slide .dt{font:500 30px "JetBrains Mono",monospace; fill:var(--ink); text-anchor:middle}
+.slide .vl{font:600 34px "Barlow Condensed",sans-serif; fill:var(--ink); text-transform:uppercase; letter-spacing:.06em}
+.slide .sl{font:500 22px "Barlow Condensed",sans-serif; fill:var(--sub); text-transform:uppercase; letter-spacing:.09em}
+.slide .sm{font:500 22px "JetBrains Mono",monospace; fill:var(--ink)}
+.slide .c{text-anchor:middle}
+.slide .bl circle{fill:var(--ground); stroke:var(--line); stroke-width:2.2}
+.slide .bl text{font:600 26px "Barlow Condensed",sans-serif; fill:var(--ink); text-anchor:middle}
+.slide .bl.hi circle{stroke:var(--hi); stroke-width:3}
+.slide .bl.hi text{fill:var(--hi); font-size:30px}
+
+/* shared lettering */
+.slide .hd{position:absolute; left:112px; top:100px; margin:0; z-index:3;
+  font:600 100px/1 "Barlow Condensed",sans-serif; letter-spacing:-.005em; color:var(--ink); white-space:nowrap}
+.slide .hd::after{content:""; display:block; margin-top:16px; height:6px; border-top:5px solid var(--line); border-bottom:1.5px solid var(--line); width:100%}
+.slide .note{position:absolute; z-index:3; display:flex; gap:22px; align-items:baseline}
+.slide .note b{flex:none; font:600 20px "Barlow Condensed",sans-serif; text-transform:uppercase; letter-spacing:.12em;
+  color:var(--ground); background:var(--sub); padding:3px 10px 2px; transform:translateY(-4px)}
+.slide .note p{margin:0; font-size:28px; line-height:1.35; color:var(--ink); max-width:44ch}
+.slide .bn{display:inline-flex; align-items:center; justify-content:center; flex:none; width:44px; height:44px; border-radius:50%;
+  border:2.2px solid var(--line); font:600 26px/1 "Barlow Condensed",sans-serif; color:var(--ink); background:var(--ground)}
+.slide .bn.hi{border:3px solid var(--hi); color:var(--hi); width:52px; height:52px; font-size:30px}
+
+/* title block */
+.slide .tb{position:absolute; right:64px; bottom:64px; width:763.5px; height:177.5px; z-index:4;
+  display:grid; grid-template-columns:200px 200px 196px 164px; grid-template-rows:repeat(3,58px);
+  background:var(--ground); border-left:3.5px solid var(--line); border-top:3.5px solid var(--line)}
+.slide .tb .c{border-right:1.5px solid var(--line2); border-bottom:1.5px solid var(--line2); padding:6px 12px 0; position:relative; overflow:hidden}
+.slide .tb b{display:block; font:500 18px/1 "Barlow Condensed",sans-serif; text-transform:uppercase; letter-spacing:.12em; color:var(--sub)}
+.slide .tb span{display:block; margin-top:5px; font:600 26px/1.05 "Barlow Condensed",sans-serif; text-transform:uppercase; letter-spacing:.04em; color:var(--ink); white-space:nowrap}
+.slide .tb .proj{grid-column:1/4}
+.slide .tb .sh{grid-column:4; grid-row:1/4; border-right:none; border-bottom:none; padding:8px 14px}
+.slide .tb .sh .n{font:600 92px/1 "Barlow Condensed",sans-serif; margin-top:10px; letter-spacing:0}
+.slide .tb .sh i{display:block; font:500 22px/1 "Barlow Condensed",sans-serif; font-style:normal; text-transform:uppercase; letter-spacing:.12em; color:var(--sub); margin-top:8px}
+.slide .tb .sec{grid-column:1/3}
+.slide .tb .c:nth-last-child(-n+3){border-bottom:none}
+.slide .psym{position:absolute; right:16px; top:9px; width:96px; height:40px; overflow:visible}
+.slide .psym path, .slide .psym circle{fill:none; stroke:var(--line); stroke-width:2}
+.slide .psym path.c{stroke:var(--sub); stroke-width:1.2; stroke-dasharray:8 3 2 3}
+
+/* ---------- slide 1 ---------- */
+.slide .s1-for{position:absolute; left:112px; top:112px; display:flex; z-index:3; border:2px solid var(--line)}
+.slide .s1-for b{font:600 22px/1 "Barlow Condensed",sans-serif; text-transform:uppercase; letter-spacing:.12em; padding:12px 14px; background:var(--line); color:var(--ground)}
+.slide .s1-for span{font:500 26px/1 "Barlow Condensed",sans-serif; text-transform:uppercase; letter-spacing:.08em; padding:10px 18px 0; color:var(--ink)}
+.slide .rev{position:absolute; right:64px; top:64px; z-index:3; display:grid; grid-template-columns:96px 380px; background:var(--ground);
+  border-left:3.5px solid var(--line); border-bottom:3.5px solid var(--line)}
+.slide .rev>*{padding:8px 14px; border-right:1.5px solid var(--line2)}
+.slide .rev>*:nth-child(2n){border-right:none}
+.slide .rev b{font:500 18px/1 "Barlow Condensed",sans-serif; text-transform:uppercase; letter-spacing:.12em; color:var(--sub); border-bottom:1.5px solid var(--line2)}
+.slide .rev span{font:500 28px/1.2 "Barlow Condensed",sans-serif; color:var(--ink); padding-top:10px; padding-bottom:12px}
+.slide .rev .tri{position:relative; text-align:center; font-weight:600}
+.slide .rev .tri::before{content:""; position:absolute; left:50%; top:50%; width:52px; height:46px; transform:translate(-50%,-56%);
+  background:no-repeat center/contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 52 46'><path d='M26 3L49 43H3Z' fill='none' stroke='%23FFD23F' stroke-width='3'/></svg>")}
+.slide .s1-title{position:absolute; left:104px; top:214px; margin:0; z-index:3;
+  font:600 228px/.84 "Barlow Condensed",sans-serif; text-transform:uppercase; letter-spacing:-.01em; color:var(--ink)}
+.slide .s1-title::after{content:""; display:block; margin:30px 0 0 8px; height:8px; border-top:7px solid var(--line); border-bottom:2px solid var(--line); width:calc(100% - 8px)}
+.slide .s1-sub{position:absolute; left:112px; top:660px; width:960px; margin:0; z-index:3; font-size:42px; line-height:1.24; color:var(--ink)}
+.slide .s1-by{position:absolute; left:112px; top:868px; z-index:3; border-left:5px solid var(--line); padding-left:22px}
+.slide .s1-by b{display:block; font:500 20px/1 "Barlow Condensed",sans-serif; text-transform:uppercase; letter-spacing:.12em; color:var(--sub)}
+.slide .s1-by span{display:block; margin-top:10px; font:600 52px/1 "Barlow Condensed",sans-serif; color:var(--ink)}
+.slide .s1-note{position:absolute; left:1236px; top:738px; z-index:3; display:flex; align-items:center; gap:14px;
+  font:500 24px/1 "Barlow Condensed",sans-serif; text-transform:uppercase; letter-spacing:.08em; color:var(--sub)}
+
+/* ---------- slide 2 ---------- */
+.slide .det{position:absolute; top:318px; width:528px; height:462px; z-index:3; border:2px solid var(--line2); padding:58px 40px 0}
+.slide .det::before, .slide .det::after{content:""; position:absolute; width:22px; height:22px; border-color:var(--line); border-style:solid}
+.slide .det::before{right:-2px; top:-2px; border-width:4px 4px 0 0}
+.slide .det::after{left:-2px; bottom:-2px; border-width:0 0 4px 4px}
+.slide .det-tag{position:absolute; left:-34px; top:-35px; display:flex; align-items:center; gap:16px}
+.slide .det-tag b{transform:translateY(-22px)}
+.slide .det{border-top-color:transparent}
+.slide .det .top{position:absolute; top:-2px; left:34px; right:-2px; height:2px; background:var(--line2)}
+.slide .det-tag .dc{width:66px; height:66px; border-radius:50%; border:3px solid var(--hi); color:var(--hi); background:var(--ground);
+  display:flex; align-items:center; justify-content:center; font:600 38px/1 "Barlow Condensed",sans-serif}
+.slide .det-tag b{font:500 22px/1 "Barlow Condensed",sans-serif; text-transform:uppercase; letter-spacing:.12em; color:var(--sub)}
+.slide .det .gl{display:block; width:260px; height:170px; overflow:visible}
+.slide .det .gt{font:600 20px "Barlow Condensed",sans-serif; fill:var(--sub); text-anchor:middle; letter-spacing:.1em}
+.slide .det h3{margin:30px 0 12px; font:600 52px/1 "Barlow Condensed",sans-serif; text-transform:uppercase; letter-spacing:.03em; color:var(--ink)}
+.slide .det p{margin:0; font-size:31px; line-height:1.3; color:var(--ink); opacity:.92}
+.slide .n2{left:112px; top:886px; width:930px}
+
+/* ---------- slide 3 (paper) ---------- */
+.slide .spec{position:absolute; width:1220px; z-index:3; background:rgba(255,255,255,.55); border:3px solid var(--line); padding:0 0 22px}
+.slide .spec-h{display:flex; align-items:center; gap:18px; padding:14px 28px; border-bottom:1.5px solid var(--line2); margin-bottom:22px}
+.slide .spec-h b{font:600 20px/1 "Barlow Condensed",sans-serif; text-transform:uppercase; letter-spacing:.12em; color:#fff; background:var(--ink); padding:5px 10px 4px}
+.slide .spec-h span{font:500 22px/1 "Barlow Condensed",sans-serif; text-transform:uppercase; letter-spacing:.1em; color:var(--sub)}
+.slide .spec-h .r{margin-left:auto; background:none; color:var(--sub); padding:0}
+.slide .ln-c{display:flex; align-items:center; height:74px; padding-left:28px}
+.slide .ln-c i{flex:none; width:46px; height:46px; border-radius:50%; border:2.2px solid var(--ink); display:flex; align-items:center; justify-content:center;
+  font:600 26px/1 "Barlow Condensed",sans-serif; font-style:normal; color:var(--ink); position:relative; margin-right:44px}
+.slide .ln-c i::after{content:""; position:absolute; left:100%; top:50%; width:34px; border-top:1.8px solid var(--ink)}
+.slide .ln-c code{font:400 31px/1 "JetBrains Mono",monospace; color:var(--ink); white-space:pre; padding:10px 0}
+.slide .ln-c code b{font-weight:700}
+.slide .ln-c code.hl{background:var(--hi); box-shadow:-12px 0 0 var(--hi), 12px 0 0 var(--hi)}
+.slide .n3{left:1430px; top:470px; width:378px; flex-direction:column; gap:14px}
+.slide .n3 b{transform:none; background:var(--ink); color:#fff}
+.slide .n3 p{font-size:29px}
+
+/* ---------- slide 4 ---------- */
+.slide .pl{position:absolute; left:112px; top:282px; width:920px; z-index:3; border-collapse:collapse; border-top:3.5px solid var(--line); border-bottom:3.5px solid var(--line)}
+.slide .pl th{font:500 20px/1 "Barlow Condensed",sans-serif; text-transform:uppercase; letter-spacing:.12em; color:var(--sub); text-align:left; padding:16px 0 14px; border-bottom:1.5px solid var(--line2)}
+.slide .pl td{height:90px; font-size:32px; border-bottom:1.5px solid var(--line2); vertical-align:middle}
+.slide .pl .m{text-align:right; font-family:"JetBrains Mono",monospace; font-weight:500; padding-right:6px}
+.slide .pl .bn-c{width:76px}
+.slide .pl .tot td{border-top:2.5px solid var(--line); border-bottom:none; font-weight:600; height:100px}
+.slide .pl .tot .m{color:var(--hi); font-size:38px; font-weight:700}
+.slide .pl .sig{display:inline-flex; width:44px; justify-content:center; font:600 38px/1 "Barlow Condensed",sans-serif; color:var(--hi)}
+.slide .hero{font:700 76px "JetBrains Mono",monospace; fill:var(--hi); text-anchor:middle; letter-spacing:-.02em}
+.slide .hero2{font:500 50px "JetBrains Mono",monospace; fill:var(--ink); text-anchor:middle; letter-spacing:-.02em}
+.slide .n4{left:112px; top:880px; width:950px}
+.slide .n4 p{max-width:none}
+
+/* ---------- slide 5 ---------- */
+.slide .zl{font:600 30px "Barlow Condensed",sans-serif; fill:var(--sub); text-transform:uppercase; letter-spacing:.14em}
+.slide .node{fill:var(--ground); stroke:var(--line); stroke-width:3.5}
+.slide .nl{font:600 46px "Barlow Condensed",sans-serif; fill:var(--ink); text-transform:uppercase; letter-spacing:.04em}
+.slide .loop{stroke:var(--hi); stroke-width:4; fill:none}
+.slide .term{fill:var(--ground); stroke:var(--line); stroke-width:2.5}
+.slide .tl{font:600 26px "Barlow Condensed",sans-serif; fill:var(--ink); text-transform:uppercase; letter-spacing:.1em; text-anchor:middle}
+.slide .legend{position:absolute; left:1268px; top:272px; width:540px; margin:0; padding:0; list-style:none; z-index:3}
+.slide .legend li{display:flex; gap:22px; align-items:flex-start; padding:20px 0; border-bottom:1.5px solid var(--line2)}
+.slide .legend li:first-child{border-top:3.5px solid var(--line)}
+.slide .legend p{margin:4px 0 0; font-size:29px; line-height:1.3}
+.slide .legend b{font:600 32px/1 "Barlow Condensed",sans-serif; text-transform:uppercase; letter-spacing:.05em}
+.slide .n5{left:112px; top:880px; width:950px}
+.slide .n5 p{max-width:none}
+
+</style>
+</head><body><main class="sheet">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<marker id="aw" viewBox="0 0 18 7" refX="17" refY="3.5" markerWidth="18" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0L18 3.5L0 7Z" fill="#E4F0FB"/></marker>
+<marker id="ay" viewBox="0 0 22 10" refX="21" refY="5" markerWidth="22" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0L22 5L0 10Z" fill="#FFD23F"/></marker>
+<marker id="ai" viewBox="0 0 18 7" refX="17" refY="3.5" markerWidth="18" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0L18 3.5L0 7Z" fill="#123F73"/></marker>
+<marker id="dotw" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse"><circle cx="5" cy="5" r="4" fill="#E4F0FB"/></marker>
+<pattern id="h45" width="11" height="11" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="11" stroke="#BFDDF5" stroke-width="2" stroke-opacity=".75"/></pattern>
+<pattern id="hx" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0V14M0 0H14" stroke="#BFDDF5" stroke-width="1.6" stroke-opacity=".6" fill="none"/></pattern>
+<pattern id="h45i" width="11" height="11" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="11" stroke="#123F73" stroke-width="2" stroke-opacity=".6"/></pattern>
+<pattern id="gnd" width="12" height="14" patternUnits="userSpaceOnUse"><line x1="12" y1="0" x2="0" y2="14" stroke="#BFDDF5" stroke-width="1.6" stroke-opacity=".55"/></pattern>
+</defs></svg>
+<header class="sheet-head">
+  <a class="back" href="index.html">← All styles</a>
+  <h1>D — Blueprint</h1>
+  <p class="why">Every slide is a sheet from one set of engineering drawings: cyanotype blue, a drafting grid, a title block that carries the sheet number. Technical people already read this language, so dimension lines, balloons and section hatching can do real explanatory work instead of decoration.</p>
+  <div class="borrow">
+    <div><b>Idea</b>A drawing set, not a deck: sheet border with zone ticks, title block bottom right, one drawing per sheet. The code sheet flips to a whiteprint.</div>
+    <div><b>Devices</b>Dimension lines measure the cost gap, balloons number code clauses and loop steps, hatching marks sections, phantom lines mark system boundaries.</div>
+    <div><b>Type</b>Barlow Condensed for lettering, Barlow Semi Condensed for body, JetBrains Mono for code and figures.</div>
+  </div>
+  <div class="swatches"><span style="background:#113D6E;color:#E4F0FB">#113D6E</span><span style="background:#0B2C55;color:#E4F0FB">#0B2C55</span><span style="background:#F1F7FD;color:#113D6E">#F1F7FD</span><span style="background:#9CCBEB;color:#113D6E">#9CCBEB</span><span style="background:#FFD23F;color:#113D6E">#FFD23F</span><span style="background:#E6ECEE;color:#123F73">#E6ECEE</span></div>
+</header>
+<div class="frame"><section class="slide"><div class="field"></div><svg class="fr" viewBox="0 0 1920 1080" aria-hidden="true"><rect class="ln-th" x="24" y="24" width="1872" height="1032"/><rect class="ln-bd" x="64" y="64" width="1792" height="952"/><line class="ln-th" x1="288" y1="24" x2="288" y2="64"/><line class="ln-th" x1="288" y1="1016" x2="288" y2="1056"/><line class="ln-th" x1="512" y1="24" x2="512" y2="64"/><line class="ln-th" x1="512" y1="1016" x2="512" y2="1056"/><line class="ln-th" x1="736" y1="24" x2="736" y2="64"/><line class="ln-th" x1="736" y1="1016" x2="736" y2="1056"/><line class="ln-th" x1="960" y1="24" x2="960" y2="64"/><line class="ln-th" x1="960" y1="1016" x2="960" y2="1056"/><line class="ln-th" x1="1184" y1="24" x2="1184" y2="64"/><line class="ln-th" x1="1184" y1="1016" x2="1184" y2="1056"/><line class="ln-th" x1="1408" y1="24" x2="1408" y2="64"/><line class="ln-th" x1="1408" y1="1016" x2="1408" y2="1056"/><line class="ln-th" x1="1632" y1="24" x2="1632" y2="64"/><line class="ln-th" x1="1632" y1="1016" x2="1632" y2="1056"/><line class="ln-th" x1="24" y1="302" x2="64" y2="302"/><line class="ln-th" x1="1856" y1="302" x2="1896" y2="302"/><line class="ln-th" x1="24" y1="540" x2="64" y2="540"/><line class="ln-th" x1="1856" y1="540" x2="1896" y2="540"/><line class="ln-th" x1="24" y1="778" x2="64" y2="778"/><line class="ln-th" x1="1856" y1="778" x2="1896" y2="778"/><text class="zn" x="176" y="51">1</text><text class="zn" x="176" y="1043">1</text><text class="zn" x="400" y="51">2</text><text class="zn" x="400" y="1043">2</text><text class="zn" x="624" y="51">3</text><text class="zn" x="624" y="1043">3</text><text class="zn" x="848" y="51">4</text><text class="zn" x="848" y="1043">4</text><text class="zn" x="1072" y="51">5</text><text class="zn" x="1072" y="1043">5</text><text class="zn" x="1296" y="51">6</text><text class="zn" x="1296" y="1043">6</text><text class="zn" x="1520" y="51">7</text><text class="zn" x="1520" y="1043">7</text><text class="zn" x="1744" y="51">8</text><text class="zn" x="1744" y="1043">8</text><text class="zn" x="44.0" y="190">A</text><text class="zn" x="1876.0" y="190">A</text><text class="zn" x="44.0" y="428">B</text><text class="zn" x="1876.0" y="428">B</text><text class="zn" x="44.0" y="666">C</text><text class="zn" x="1876.0" y="666">C</text><text class="zn" x="44.0" y="904">D</text><text class="zn" x="1876.0" y="904">D</text><line class="ln-cm" x1="960.0" y1="24" x2="960.0" y2="86"/><line class="ln-cm" x1="960.0" y1="1056" x2="960.0" y2="994"/><line class="ln-cm" x1="24" y1="540.0" x2="86" y2="540.0"/><line class="ln-cm" x1="1896" y1="540.0" x2="1834" y2="540.0"/><path class="ln-bd" d="M24 42V24H42"/><path class="ln-bd" d="M1896 42V24H1878"/><path class="ln-bd" d="M24 1038V1056H42"/><path class="ln-bd" d="M1896 1038V1056H1878"/></svg><svg class="dw" viewBox="0 0 1920 1080" aria-hidden="true"><rect class="ln-hv" x="1236" y="318" width="528" height="297" rx="10"/><line class="ln" x1="1236" y1="368" x2="1764" y2="368"/><circle class="ln" cx="1270" cy="343" r="9"/><path class="cl" d="M1255 343H1285M1270 328V358"/><circle class="ln" cx="1304" cy="343" r="9"/><path class="cl" d="M1289 343H1319M1304 328V358"/><circle class="ln" cx="1338" cy="343" r="9"/><path class="cl" d="M1323 343H1353M1338 328V358"/><path class="cl" d="M1210 491.5H1790"/><path class="hatch-fill" d="M1306 435.5 L1392 491.5 L1306 547.5 L1306 519.5 L1350 491.5 L1306 463.5 Z"/><path class="ln-hv" d="M1306 435.5 L1392 491.5 L1306 547.5 L1306 519.5 L1350 491.5 L1306 463.5 Z"/><rect class="hi-fill" x="1424" y="525.5" width="76" height="22"/><line class="ext" x1="1236" y1="621" x2="1236" y2="689"/><line class="ext" x1="1764" y1="621" x2="1764" y2="689"/><line class="dm" x1="1236" y1="677" x2="1764" y2="677" marker-start="url(#aw)" marker-end="url(#aw)"/><text class="dt" x="1500" y="667">16</text><line class="ext" x1="1770" y1="318" x2="1812" y2="318"/><line class="ext" x1="1770" y1="615" x2="1812" y2="615"/><line class="dm" x1="1800" y1="318" x2="1800" y2="615" marker-start="url(#aw)" marker-end="url(#aw)"/><text class="dt" x="1816" y="476.5" text-anchor="start">9</text><text class="vl" x="1236" y="753">View A</text><line class="ln-hv" x1="1236" y1="765" x2="1360" y2="765"/><line class="ln" x1="1236" y1="772" x2="1360" y2="772"/><text class="sl" x="1382" y="753">Prompt, front · scale 16 : 9</text></svg>
+<div class="s1-for"><b>For</b><span>Advanced · daily Claude Code users</span></div>
+<div class="rev">
+  <b>Rev</b><b>Description</b>
+  <span class="tri">C</span><span>Revised October 2026</span>
+</div>
+<h1 class="s1-title">Claude Best<br>Practices</h1>
+<p class="s1-sub">Practical lessons from Anthropic’s engineering posts, tested against your own work.</p>
+<div class="s1-by"><b>Presented by</b><span>David Budáč</span></div>
+<div class="tb">
+  <div class="c proj"><b>Project</b><span>Claude Best Practices</span><svg class="psym" viewBox="0 0 96 40" aria-hidden="true"><path d="M6 8 L44 2 L44 38 L6 32 Z"/><circle cx="72" cy="20" r="17"/><circle cx="72" cy="20" r="8"/><path class="c" d="M0 20H52M50 20H96M72 0V40"/></svg></div>
+  <div class="c sh"><b>Sheet</b><span class="n">01</span><i>of 30</i></div>
+  <div class="c sec"><b>Section</b><span>Cover</span></div>
+  <div class="c by"><b>Drawn by</b><span>D. Budáč</span></div>
+  <div class="c"><b>Date</b><span>Oct 2026</span></div>
+  <div class="c"><b>Rev</b><span>C</span></div>
+  <div class="c"><b>Dwg no.</b><span>CBP-01</span></div>
+</div></section></div>
+<p class="cap">1 · Title</p>
+<div class="frame"><section class="slide"><div class="field"></div><svg class="fr" viewBox="0 0 1920 1080" aria-hidden="true"><rect class="ln-th" x="24" y="24" width="1872" height="1032"/><rect class="ln-bd" x="64" y="64" width="1792" height="952"/><line class="ln-th" x1="288" y1="24" x2="288" y2="64"/><line class="ln-th" x1="288" y1="1016" x2="288" y2="1056"/><line class="ln-th" x1="512" y1="24" x2="512" y2="64"/><line class="ln-th" x1="512" y1="1016" x2="512" y2="1056"/><line class="ln-th" x1="736" y1="24" x2="736" y2="64"/><line class="ln-th" x1="736" y1="1016" x2="736" y2="1056"/><line class="ln-th" x1="960" y1="24" x2="960" y2="64"/><line class="ln-th" x1="960" y1="1016" x2="960" y2="1056"/><line class="ln-th" x1="1184" y1="24" x2="1184" y2="64"/><line class="ln-th" x1="1184" y1="1016" x2="1184" y2="1056"/><line class="ln-th" x1="1408" y1="24" x2="1408" y2="64"/><line class="ln-th" x1="1408" y1="1016" x2="1408" y2="1056"/><line class="ln-th" x1="1632" y1="24" x2="1632" y2="64"/><line class="ln-th" x1="1632" y1="1016" x2="1632" y2="1056"/><line class="ln-th" x1="24" y1="302" x2="64" y2="302"/><line class="ln-th" x1="1856" y1="302" x2="1896" y2="302"/><line class="ln-th" x1="24" y1="540" x2="64" y2="540"/><line class="ln-th" x1="1856" y1="540" x2="1896" y2="540"/><line class="ln-th" x1="24" y1="778" x2="64" y2="778"/><line class="ln-th" x1="1856" y1="778" x2="1896" y2="778"/><text class="zn" x="176" y="51">1</text><text class="zn" x="176" y="1043">1</text><text class="zn" x="400" y="51">2</text><text class="zn" x="400" y="1043">2</text><text class="zn" x="624" y="51">3</text><text class="zn" x="624" y="1043">3</text><text class="zn" x="848" y="51">4</text><text class="zn" x="848" y="1043">4</text><text class="zn" x="1072" y="51">5</text><text class="zn" x="1072" y="1043">5</text><text class="zn" x="1296" y="51">6</text><text class="zn" x="1296" y="1043">6</text><text class="zn" x="1520" y="51">7</text><text class="zn" x="1520" y="1043">7</text><text class="zn" x="1744" y="51">8</text><text class="zn" x="1744" y="1043">8</text><text class="zn" x="44.0" y="190">A</text><text class="zn" x="1876.0" y="190">A</text><text class="zn" x="44.0" y="428">B</text><text class="zn" x="1876.0" y="428">B</text><text class="zn" x="44.0" y="666">C</text><text class="zn" x="1876.0" y="666">C</text><text class="zn" x="44.0" y="904">D</text><text class="zn" x="1876.0" y="904">D</text><line class="ln-cm" x1="960.0" y1="24" x2="960.0" y2="86"/><line class="ln-cm" x1="960.0" y1="1056" x2="960.0" y2="994"/><line class="ln-cm" x1="24" y1="540.0" x2="86" y2="540.0"/><line class="ln-cm" x1="1896" y1="540.0" x2="1834" y2="540.0"/><path class="ln-bd" d="M24 42V24H42"/><path class="ln-bd" d="M1896 42V24H1878"/><path class="ln-bd" d="M24 1038V1056H42"/><path class="ln-bd" d="M1896 1038V1056H1878"/></svg><h2 class="hd">Start with three changes</h2><div class="det" style="left:112px">
+  <div class="top"></div><div class="det-tag"><span class="dc">A</span><b>Detail A</b></div>
+  <svg class="gl" viewBox="0 0 260 170" aria-hidden="true">
+<path class="ln-hv" d="M20 6H128L152 30V164H20Z"/><path class="ln" d="M128 6V30H152"/>
+<line class="ln-hv" x1="40" y1="52" x2="132" y2="52"/>
+<line class="hid" x1="40" y1="80" x2="132" y2="80"/>
+<line class="hid" x1="40" y1="108" x2="120" y2="108"/>
+<line class="ln-hv" x1="40" y1="136" x2="132" y2="136"/>
+<path class="ln" d="M170 52h28M170 136h28"/>
+<path class="ln" d="M206 42h28v20h-28z M211 42v-7a9 9 0 0 1 18 0v7"/>
+<path class="ln" d="M206 126h28v20h-28z M211 126v-7a9 9 0 0 1 18 0v7"/>
+<path class="ln" d="M180 86l16 16M196 86l-16 16"/>
+<path class="ln" d="M144 80h22M144 108h22" stroke-dasharray="4 5"/>
+</svg>
+  <h3>Instructions</h3>
+  <p>Remove conflicting or obsolete rules; preserve real constraints.</p>
+</div><div class="det" style="left:696px">
+  <div class="top"></div><div class="det-tag"><span class="dc">B</span><b>Detail B</b></div>
+  <svg class="gl" viewBox="0 0 260 170" aria-hidden="true">
+<path class="cl" d="M4 78H256"/>
+<rect class="ln-hv" x="14" y="44" width="56" height="68"/>
+<rect class="hatch-fill" x="14" y="44" width="56" height="68"/>
+<rect class="ln-hv" x="70" y="64" width="22" height="28"/>
+<rect class="ln-hv" x="92" y="58" width="78" height="40" rx="4"/>
+<path class="ln" d="M104 58v40M116 58v40M128 58v40M140 58v40M152 58v40"/>
+<rect class="ln-hv" x="170" y="64" width="22" height="28"/>
+<rect class="ln-hv" x="192" y="48" width="44" height="60"/>
+<text class="gt" x="42" y="146">GO</text>
+<text class="gt" x="214" y="146">NO GO</text>
+</svg>
+  <h3>Verification</h3>
+  <p>Make done depend on evidence tied to the task.</p>
+</div><div class="det" style="left:1280px">
+  <div class="top"></div><div class="det-tag"><span class="dc">C</span><b>Detail C</b></div>
+  <svg class="gl" viewBox="0 0 260 170" aria-hidden="true">
+<rect class="ln-hv" x="6" y="18" width="248" height="26"/>
+<path class="ln" d="M14 44v-14M24 44v-8M34 44v-8M44 44v-8M54 44v-8M64 44v-14M74 44v-8M84 44v-8M94 44v-8M104 44v-8M114 44v-14M124 44v-8M134 44v-8M144 44v-8M154 44v-8M164 44v-14M174 44v-8M184 44v-8M194 44v-8M204 44v-8M214 44v-14M224 44v-8M234 44v-8"/>
+<path class="ln-hv" d="M6 44V150H30L36 44"/>
+<rect class="ln-hv" x="146" y="10" width="60" height="42"/>
+<path class="ln-hv" d="M152 52V150H128L132 52"/>
+<rect class="hatch-fill" x="36" y="88" width="92" height="44"/>
+<rect class="ln" x="36" y="88" width="92" height="44"/>
+<path class="cl" d="M24 110H140"/>
+</svg>
+  <h3>Measurement</h3>
+  <p>Compare configurations by outcomes, cost and review effort.</p>
+</div><div class="note n2"><b>Note</b><p>Skills, caching and delegation support these three habits.</p></div><div class="tb">
+  <div class="c proj"><b>Project</b><span>Claude Best Practices</span><svg class="psym" viewBox="0 0 96 40" aria-hidden="true"><path d="M6 8 L44 2 L44 38 L6 32 Z"/><circle cx="72" cy="20" r="17"/><circle cx="72" cy="20" r="8"/><path class="c" d="M0 20H52M50 20H96M72 0V40"/></svg></div>
+  <div class="c sh"><b>Sheet</b><span class="n">02</span><i>of 30</i></div>
+  <div class="c sec"><b>Section</b><span>In practice</span></div>
+  <div class="c by"><b>Drawn by</b><span>D. Budáč</span></div>
+  <div class="c"><b>Date</b><span>Oct 2026</span></div>
+  <div class="c"><b>Rev</b><span>C</span></div>
+  <div class="c"><b>Dwg no.</b><span>CBP-02</span></div>
+</div></section></div>
+<p class="cap">2 · Three cards</p>
+<div class="frame"><section class="slide paper"><div class="field"></div><svg class="fr" viewBox="0 0 1920 1080" aria-hidden="true"><rect class="ln-th" x="24" y="24" width="1872" height="1032"/><rect class="ln-bd" x="64" y="64" width="1792" height="952"/><line class="ln-th" x1="288" y1="24" x2="288" y2="64"/><line class="ln-th" x1="288" y1="1016" x2="288" y2="1056"/><line class="ln-th" x1="512" y1="24" x2="512" y2="64"/><line class="ln-th" x1="512" y1="1016" x2="512" y2="1056"/><line class="ln-th" x1="736" y1="24" x2="736" y2="64"/><line class="ln-th" x1="736" y1="1016" x2="736" y2="1056"/><line class="ln-th" x1="960" y1="24" x2="960" y2="64"/><line class="ln-th" x1="960" y1="1016" x2="960" y2="1056"/><line class="ln-th" x1="1184" y1="24" x2="1184" y2="64"/><line class="ln-th" x1="1184" y1="1016" x2="1184" y2="1056"/><line class="ln-th" x1="1408" y1="24" x2="1408" y2="64"/><line class="ln-th" x1="1408" y1="1016" x2="1408" y2="1056"/><line class="ln-th" x1="1632" y1="24" x2="1632" y2="64"/><line class="ln-th" x1="1632" y1="1016" x2="1632" y2="1056"/><line class="ln-th" x1="24" y1="302" x2="64" y2="302"/><line class="ln-th" x1="1856" y1="302" x2="1896" y2="302"/><line class="ln-th" x1="24" y1="540" x2="64" y2="540"/><line class="ln-th" x1="1856" y1="540" x2="1896" y2="540"/><line class="ln-th" x1="24" y1="778" x2="64" y2="778"/><line class="ln-th" x1="1856" y1="778" x2="1896" y2="778"/><text class="zn" x="176" y="51">1</text><text class="zn" x="176" y="1043">1</text><text class="zn" x="400" y="51">2</text><text class="zn" x="400" y="1043">2</text><text class="zn" x="624" y="51">3</text><text class="zn" x="624" y="1043">3</text><text class="zn" x="848" y="51">4</text><text class="zn" x="848" y="1043">4</text><text class="zn" x="1072" y="51">5</text><text class="zn" x="1072" y="1043">5</text><text class="zn" x="1296" y="51">6</text><text class="zn" x="1296" y="1043">6</text><text class="zn" x="1520" y="51">7</text><text class="zn" x="1520" y="1043">7</text><text class="zn" x="1744" y="51">8</text><text class="zn" x="1744" y="1043">8</text><text class="zn" x="44.0" y="190">A</text><text class="zn" x="1876.0" y="190">A</text><text class="zn" x="44.0" y="428">B</text><text class="zn" x="1876.0" y="428">B</text><text class="zn" x="44.0" y="666">C</text><text class="zn" x="1876.0" y="666">C</text><text class="zn" x="44.0" y="904">D</text><text class="zn" x="1876.0" y="904">D</text><line class="ln-cm" x1="960.0" y1="24" x2="960.0" y2="86"/><line class="ln-cm" x1="960.0" y1="1056" x2="960.0" y2="994"/><line class="ln-cm" x1="24" y1="540.0" x2="86" y2="540.0"/><line class="ln-cm" x1="1896" y1="540.0" x2="1834" y2="540.0"/><path class="ln-bd" d="M24 42V24H42"/><path class="ln-bd" d="M1896 42V24H1878"/><path class="ln-bd" d="M24 1038V1056H42"/><path class="ln-bd" d="M1896 1038V1056H1878"/></svg><svg class="dw" viewBox="0 0 1920 1080" aria-hidden="true"><path class="ldr" d="M1424 486H1398L1200 698" marker-end="url(#ai)"/></svg><h2 class="hd">Make the acceptance contract explicit</h2>
+<div class="spec" style="left:112px;top:286px">
+  <div class="spec-h"><b>Request</b><span>Invoice export · acceptance contract</span><b class="r">6 clauses</b></div>
+  <div class="ln-c"><i>1</i><code><b>GOAL:</b> export invoice net, VAT and gross values to CSV.</code></div><div class="ln-c"><i>2</i><code><b>SCOPE:</b> invoice export code; preserve existing tests.</code></div><div class="ln-c"><i>3</i><code class="hl"><b>VERIFY:</b> pytest tests/test_export.py -q</code></div><div class="ln-c"><i>4</i><code><b>CASES:</b> 21% VAT, zero VAT, rounding, quoted CSV fields.</code></div><div class="ln-c"><i>5</i><code><b>LIMIT:</b> three repair attempts; then stop and report.</code></div><div class="ln-c"><i>6</i><code><b>EVIDENCE:</b> diff, command, exit status, failures and gaps.</code></div>
+</div>
+<div class="note n3"><b>Note · applies to clause 5</b><p>Pair this request with an enforced runtime budget and a review of the resulting artifact.</p></div><div class="tb">
+  <div class="c proj"><b>Project</b><span>Claude Best Practices</span><svg class="psym" viewBox="0 0 96 40" aria-hidden="true"><path d="M6 8 L44 2 L44 38 L6 32 Z"/><circle cx="72" cy="20" r="17"/><circle cx="72" cy="20" r="8"/><path class="c" d="M0 20H52M50 20H96M72 0V40"/></svg></div>
+  <div class="c sh"><b>Sheet</b><span class="n">21</span><i>of 30</i></div>
+  <div class="c sec"><b>Section</b><span>The invoice task</span></div>
+  <div class="c by"><b>Drawn by</b><span>D. Budáč</span></div>
+  <div class="c"><b>Date</b><span>Oct 2026</span></div>
+  <div class="c"><b>Rev</b><span>C</span></div>
+  <div class="c"><b>Dwg no.</b><span>CBP-21</span></div>
+</div></section></div>
+<p class="cap">3 · Code</p>
+<div class="frame"><section class="slide"><div class="field"></div><svg class="fr" viewBox="0 0 1920 1080" aria-hidden="true"><rect class="ln-th" x="24" y="24" width="1872" height="1032"/><rect class="ln-bd" x="64" y="64" width="1792" height="952"/><line class="ln-th" x1="288" y1="24" x2="288" y2="64"/><line class="ln-th" x1="288" y1="1016" x2="288" y2="1056"/><line class="ln-th" x1="512" y1="24" x2="512" y2="64"/><line class="ln-th" x1="512" y1="1016" x2="512" y2="1056"/><line class="ln-th" x1="736" y1="24" x2="736" y2="64"/><line class="ln-th" x1="736" y1="1016" x2="736" y2="1056"/><line class="ln-th" x1="960" y1="24" x2="960" y2="64"/><line class="ln-th" x1="960" y1="1016" x2="960" y2="1056"/><line class="ln-th" x1="1184" y1="24" x2="1184" y2="64"/><line class="ln-th" x1="1184" y1="1016" x2="1184" y2="1056"/><line class="ln-th" x1="1408" y1="24" x2="1408" y2="64"/><line class="ln-th" x1="1408" y1="1016" x2="1408" y2="1056"/><line class="ln-th" x1="1632" y1="24" x2="1632" y2="64"/><line class="ln-th" x1="1632" y1="1016" x2="1632" y2="1056"/><line class="ln-th" x1="24" y1="302" x2="64" y2="302"/><line class="ln-th" x1="1856" y1="302" x2="1896" y2="302"/><line class="ln-th" x1="24" y1="540" x2="64" y2="540"/><line class="ln-th" x1="1856" y1="540" x2="1896" y2="540"/><line class="ln-th" x1="24" y1="778" x2="64" y2="778"/><line class="ln-th" x1="1856" y1="778" x2="1896" y2="778"/><text class="zn" x="176" y="51">1</text><text class="zn" x="176" y="1043">1</text><text class="zn" x="400" y="51">2</text><text class="zn" x="400" y="1043">2</text><text class="zn" x="624" y="51">3</text><text class="zn" x="624" y="1043">3</text><text class="zn" x="848" y="51">4</text><text class="zn" x="848" y="1043">4</text><text class="zn" x="1072" y="51">5</text><text class="zn" x="1072" y="1043">5</text><text class="zn" x="1296" y="51">6</text><text class="zn" x="1296" y="1043">6</text><text class="zn" x="1520" y="51">7</text><text class="zn" x="1520" y="1043">7</text><text class="zn" x="1744" y="51">8</text><text class="zn" x="1744" y="1043">8</text><text class="zn" x="44.0" y="190">A</text><text class="zn" x="1876.0" y="190">A</text><text class="zn" x="44.0" y="428">B</text><text class="zn" x="1876.0" y="428">B</text><text class="zn" x="44.0" y="666">C</text><text class="zn" x="1876.0" y="666">C</text><text class="zn" x="44.0" y="904">D</text><text class="zn" x="1876.0" y="904">D</text><line class="ln-cm" x1="960.0" y1="24" x2="960.0" y2="86"/><line class="ln-cm" x1="960.0" y1="1056" x2="960.0" y2="994"/><line class="ln-cm" x1="24" y1="540.0" x2="86" y2="540.0"/><line class="ln-cm" x1="1896" y1="540.0" x2="1834" y2="540.0"/><path class="ln-bd" d="M24 42V24H42"/><path class="ln-bd" d="M1896 42V24H1878"/><path class="ln-bd" d="M24 1038V1056H42"/><path class="ln-bd" d="M1896 1038V1056H1878"/></svg><svg class="dw" viewBox="0 0 1920 1080" aria-hidden="true"><line class="ln-hv" x1="1130" y1="764" x2="1800" y2="764"/><rect class="gnd" x="1130" y="764" width="670" height="14"/><rect class="hx-fill" x="1176" y="655.2" width="128" height="108.8"/><rect class="ln-hv" x="1176" y="655.2" width="128" height="108.8"/><rect class="hatch-fill" x="1176" y="604.9" width="128" height="50.3"/><rect class="ln-hv" x="1176" y="604.9" width="128" height="50.3"/><rect class="solid-fill" x="1176" y="592" width="128" height="12.9"/><rect class="ln-hv" x="1176" y="592" width="128" height="12.9"/><rect class="hx-fill" x="1600" y="655.2" width="128" height="108.8"/><rect class="ln-hv" x="1600" y="655.2" width="128" height="108.8"/><rect class="hatch-fill" x="1600" y="346.5" width="128" height="308.7"/><rect class="ln-hv" x="1600" y="346.5" width="128" height="308.7"/><line class="ext" x1="1170" y1="592" x2="1134" y2="592"/><line class="ext" x1="1170" y1="764" x2="1134" y2="764"/><line class="dm-hi" x1="1146" y1="592" x2="1146" y2="764" marker-start="url(#ay)" marker-end="url(#ay)"/><line class="ext" x1="1734" y1="346.5" x2="1770" y2="346.5"/><line class="ext" x1="1734" y1="764" x2="1770" y2="764"/><line class="dm" x1="1758" y1="346.5" x2="1758" y2="764" marker-start="url(#aw)" marker-end="url(#aw)"/><line class="ext" x1="1310" y1="592" x2="1512" y2="592"/><line class="ext" x1="1594" y1="346.5" x2="1488" y2="346.5"/><line class="dm" x1="1500" y1="346.5" x2="1500" y2="592" marker-start="url(#aw)" marker-end="url(#aw)"/><text class="dt" transform="translate(1486 469.2) rotate(-90)">Δ $0.0722</text><line class="ldr" x1="1284" y1="598.4" x2="1354" y2="632" marker-start="url(#dotw)"/><line class="ldr" x1="1284" y1="630" x2="1354" y2="688" marker-start="url(#dotw)"/><line class="ldr" x1="1284" y1="709.6" x2="1354" y2="744" marker-start="url(#dotw)"/><g class="bl"><circle cx="1374" cy="632" r="20"/><text x="1374" y="640">1</text></g><g class="bl"><circle cx="1374" cy="688" r="20"/><text x="1374" y="696">2</text></g><g class="bl"><circle cx="1374" cy="744" r="20"/><text x="1374" y="752">3</text></g><rect class="chip" x="1614" y="466.8" width="100" height="68"/><text class="sl c" x="1664.0" y="494.8">Input</text><text class="sm c" x="1664.0" y="524.8">$0.0908</text><rect class="chip" x="1614" y="675.6" width="100" height="68"/><text class="sl c" x="1664.0" y="703.6">Output</text><text class="sm c" x="1664.0" y="733.6">$0.0320</text><text class="hero" x="1258.0" y="562">$0.0506</text><text class="hero2" x="1664.0" y="320.5">$0.1228</text><text class="sl c" x="1240.0" y="814">Cache hit</text><text class="sl c" x="1664.0" y="814">No cache hit</text></svg><h2 class="hd">One cache-hit request: about five cents</h2>
+<table class="pl">
+<thead><tr><th></th><th>Illustrative usage and rates</th><th class="m">Cost</th></tr></thead>
+<tbody><tr><td class="bn-c"><span class="bn">1</span></td><td>19,000 cached input × $0.20 / million</td><td class="m">$0.0038</td></tr><tr><td class="bn-c"><span class="bn">2</span></td><td>3,700 new input × $4 / million</td><td class="m">$0.0148</td></tr><tr><td class="bn-c"><span class="bn">3</span></td><td>1,600 output × $20 / million</td><td class="m">$0.0320</td></tr>
+<tr class="tot"><td class="bn-c"><span class="sig">Σ</span></td><td>22,700 input + 1,600 output in total</td><td class="m">$0.0506</td></tr>
+</tbody></table>
+<div class="note n4"><b>Note</b><p>Assumed rates, not a measured bill. Without the cache hit: $0.0908 input + $0.0320 output = $0.1228.</p></div><div class="tb">
+  <div class="c proj"><b>Project</b><span>Claude Best Practices</span><svg class="psym" viewBox="0 0 96 40" aria-hidden="true"><path d="M6 8 L44 2 L44 38 L6 32 Z"/><circle cx="72" cy="20" r="17"/><circle cx="72" cy="20" r="8"/><path class="c" d="M0 20H52M50 20H96M72 0V40"/></svg></div>
+  <div class="c sh"><b>Sheet</b><span class="n">10</span><i>of 30</i></div>
+  <div class="c sec"><b>Section</b><span>Worked arithmetic</span></div>
+  <div class="c by"><b>Drawn by</b><span>D. Budáč</span></div>
+  <div class="c"><b>Date</b><span>Oct 2026</span></div>
+  <div class="c"><b>Rev</b><span>C</span></div>
+  <div class="c"><b>Dwg no.</b><span>CBP-10</span></div>
+</div></section></div>
+<p class="cap">4 · Numbers</p>
+<div class="frame"><section class="slide"><div class="field"></div><svg class="fr" viewBox="0 0 1920 1080" aria-hidden="true"><rect class="ln-th" x="24" y="24" width="1872" height="1032"/><rect class="ln-bd" x="64" y="64" width="1792" height="952"/><line class="ln-th" x1="288" y1="24" x2="288" y2="64"/><line class="ln-th" x1="288" y1="1016" x2="288" y2="1056"/><line class="ln-th" x1="512" y1="24" x2="512" y2="64"/><line class="ln-th" x1="512" y1="1016" x2="512" y2="1056"/><line class="ln-th" x1="736" y1="24" x2="736" y2="64"/><line class="ln-th" x1="736" y1="1016" x2="736" y2="1056"/><line class="ln-th" x1="960" y1="24" x2="960" y2="64"/><line class="ln-th" x1="960" y1="1016" x2="960" y2="1056"/><line class="ln-th" x1="1184" y1="24" x2="1184" y2="64"/><line class="ln-th" x1="1184" y1="1016" x2="1184" y2="1056"/><line class="ln-th" x1="1408" y1="24" x2="1408" y2="64"/><line class="ln-th" x1="1408" y1="1016" x2="1408" y2="1056"/><line class="ln-th" x1="1632" y1="24" x2="1632" y2="64"/><line class="ln-th" x1="1632" y1="1016" x2="1632" y2="1056"/><line class="ln-th" x1="24" y1="302" x2="64" y2="302"/><line class="ln-th" x1="1856" y1="302" x2="1896" y2="302"/><line class="ln-th" x1="24" y1="540" x2="64" y2="540"/><line class="ln-th" x1="1856" y1="540" x2="1896" y2="540"/><line class="ln-th" x1="24" y1="778" x2="64" y2="778"/><line class="ln-th" x1="1856" y1="778" x2="1896" y2="778"/><text class="zn" x="176" y="51">1</text><text class="zn" x="176" y="1043">1</text><text class="zn" x="400" y="51">2</text><text class="zn" x="400" y="1043">2</text><text class="zn" x="624" y="51">3</text><text class="zn" x="624" y="1043">3</text><text class="zn" x="848" y="51">4</text><text class="zn" x="848" y="1043">4</text><text class="zn" x="1072" y="51">5</text><text class="zn" x="1072" y="1043">5</text><text class="zn" x="1296" y="51">6</text><text class="zn" x="1296" y="1043">6</text><text class="zn" x="1520" y="51">7</text><text class="zn" x="1520" y="1043">7</text><text class="zn" x="1744" y="51">8</text><text class="zn" x="1744" y="1043">8</text><text class="zn" x="44.0" y="190">A</text><text class="zn" x="1876.0" y="190">A</text><text class="zn" x="44.0" y="428">B</text><text class="zn" x="1876.0" y="428">B</text><text class="zn" x="44.0" y="666">C</text><text class="zn" x="1876.0" y="666">C</text><text class="zn" x="44.0" y="904">D</text><text class="zn" x="1876.0" y="904">D</text><line class="ln-cm" x1="960.0" y1="24" x2="960.0" y2="86"/><line class="ln-cm" x1="960.0" y1="1056" x2="960.0" y2="994"/><line class="ln-cm" x1="24" y1="540.0" x2="86" y2="540.0"/><line class="ln-cm" x1="1896" y1="540.0" x2="1834" y2="540.0"/><path class="ln-bd" d="M24 42V24H42"/><path class="ln-bd" d="M1896 42V24H1878"/><path class="ln-bd" d="M24 1038V1056H42"/><path class="ln-bd" d="M1896 1038V1056H1878"/></svg><svg class="dw" viewBox="0 0 1920 1080" aria-hidden="true"><path class="ph" d="M654 268H112V818H654"/><path class="ph" d="M654 268H1196V818H654"/><text class="zl" x="136" y="314">Model</text><text class="zl" x="700" y="314">Harness</text><path class="cl" d="M654 238V264M654 426V474M654 586V648M654 692V840"/><text class="sl" transform="translate(645 278) rotate(90)">Interface</text><line class="loop" x1="512" y1="419.0" x2="790" y2="419.0" marker-end="url(#ay)"/><line class="loop" x1="935.0" y1="478" x2="935.0" y2="580" marker-end="url(#ay)"/><line class="loop" x1="790" y1="639.0" x2="512" y2="639.0" marker-end="url(#ay)"/><line class="loop" x1="367.0" y1="580" x2="367.0" y2="478" marker-end="url(#ay)"/><text class="sl" x="654" y="403.0" text-anchor="middle">Tool call</text><text class="sl" x="654" y="675.0" text-anchor="middle">Result</text><text class="sl" x="383.0" y="537.0">Next lap</text><path class="ln" d="M696 513.0 A45 45 0 1 1 668 486.0" marker-end="url(#aw)"/><text class="sl c" x="654" y="537.0">1 lap</text><rect class="node" x="222" y="360" width="290" height="118"/><g class="bl hi"><circle cx="274" cy="419" r="26"/><text x="274" y="427">1</text></g><text class="nl" x="320" y="434.0">Propose</text><rect class="node" x="790" y="360" width="290" height="118"/><g class="bl hi"><circle cx="842" cy="419" r="26"/><text x="842" y="427">2</text></g><text class="nl" x="888" y="434.0">Run</text><path class="ln" d="M1000 394h26v20h-26z M1005 394v-6a8 8 0 0 1 16 0v6"/><text class="sl" x="1013" y="452" text-anchor="middle" style="font-size:18px;letter-spacing:.06em">Permissions</text><rect class="node" x="790" y="580" width="290" height="118"/><g class="bl hi"><circle cx="842" cy="639" r="26"/><text x="842" y="647">3</text></g><text class="nl" x="888" y="654.0">Observe</text><rect class="node" x="222" y="580" width="290" height="118"/><g class="bl hi"><circle cx="274" cy="639" r="26"/><text x="274" y="647">4</text></g><text class="nl" x="320" y="654.0">Check</text><line class="ln-hv" x1="285.0" y1="698" x2="285.0" y2="760" marker-end="url(#aw)"/><line class="ln-hv" x1="449.0" y1="698" x2="449.0" y2="760" marker-end="url(#aw)"/><rect class="term" x="215.0" y="760" width="140" height="44" rx="22"/><text class="tl" x="285.0" y="791">Stop</text><rect class="term" x="379.0" y="760" width="140" height="44" rx="22"/><text class="tl" x="449.0" y="791">Ask</text><text class="sl" x="271.0" y="736" text-anchor="end">Verified</text><text class="sl" x="463.0" y="736">Blocked</text></svg><h2 class="hd">An agent is a loop</h2>
+<ol class="legend"><li><span class="bn hi">1</span><p><b>Propose:</b> the model chooses the next action.</p></li><li><span class="bn hi">2</span><p><b>Run:</b> the harness executes it under the configured permissions.</p></li><li><span class="bn hi">3</span><p><b>Observe:</b> the result returns as context for the next step.</p></li><li><span class="bn hi">4</span><p><b>Check:</b> stop when the task is verified, or ask when blocked.</p></li></ol>
+<div class="note n5"><b>Note</b><p>In a live run or a finished transcript, point to one tool call and its result. That is one lap of the loop.</p></div><div class="tb">
+  <div class="c proj"><b>Project</b><span>Claude Best Practices</span><svg class="psym" viewBox="0 0 96 40" aria-hidden="true"><path d="M6 8 L44 2 L44 38 L6 32 Z"/><circle cx="72" cy="20" r="17"/><circle cx="72" cy="20" r="8"/><path class="c" d="M0 20H52M50 20H96M72 0V40"/></svg></div>
+  <div class="c sh"><b>Sheet</b><span class="n">09</span><i>of 30</i></div>
+  <div class="c sec"><b>Section</b><span>Agent · the loop</span></div>
+  <div class="c by"><b>Drawn by</b><span>D. Budáč</span></div>
+  <div class="c"><b>Date</b><span>Oct 2026</span></div>
+  <div class="c"><b>Rev</b><span>C</span></div>
+  <div class="c"><b>Dwg no.</b><span>CBP-09</span></div>
+</div></section></div>
+<p class="cap">5 · Diagram</p>
+</main><script src="shell.js"></script></body></html>

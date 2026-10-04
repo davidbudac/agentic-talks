@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>Style E — Swiss Grid</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shell.css">
+<style>
+/* Style E — Swiss Grid.
+   Canvas 1920×1080. Margins 96px. 12 columns of 122px, 24px gutters (step 146px).
+   Column starts: 96 242 388 534 680 826 972 1118 1264 1410 1556 1702 (end 1824). */
+.slide{
+  --red:#E3120B; --ink:#000; --paper:#fff; --hair:#C4C4C4;
+  background:var(--paper); color:var(--ink);
+  font-family:"Inter Tight","Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-weight:400; -webkit-font-smoothing:antialiased;
+  font-feature-settings:"ss01" 0;
+}
+.slide *{margin:0;padding:0;box-sizing:border-box}
+.slide .abs{position:absolute}
+.slide.red{background:var(--red);color:#fff}
+.slide.black{background:#000;color:#fff}
+
+/* shared chrome: a thick rule at y=72 and a label row beneath it */
+.slide .rule{position:absolute;top:72px;height:12px;background:currentColor}
+.slide .no,.slide .sec{position:absolute;top:104px;font-size:24px;line-height:1;letter-spacing:-.005em}
+.slide .no{left:96px;font-weight:800;font-feature-settings:"tnum" 1}
+.slide .sec{left:242px;font-weight:500}
+
+.slide h2{font-weight:800;letter-spacing:-.045em;line-height:.9}
+.slide .foot{font-size:26px;line-height:1.3;font-weight:400}
+
+/* ---------- 1 · Title ---------- */
+.s1 .eyebrow{left:96px;top:104px;font-size:28px;font-weight:600;line-height:1.1}
+.s1 .meta{left:1410px;top:104px;font-size:28px;font-weight:500;line-height:1.1;color:#000}
+.s1 h1{position:absolute;left:80px;bottom:58px;font-size:318px;font-weight:800;line-height:.82;letter-spacing:-.046em;color:#fff}
+.s1 .sub{left:1410px;top:262px;width:414px;font-size:36px;line-height:1.16;font-weight:500;color:#000;letter-spacing:-.012em}
+.s1 .by{left:1410px;top:452px;width:414px;border-top:6px solid #000;padding-top:20px;font-size:40px;font-weight:800;color:#000;letter-spacing:-.02em}
+.s1 .disc{left:1410px;top:591px;width:414px;height:414px;border-radius:50%;background:#000}
+
+/* ---------- 2 · Three columns ---------- */
+.s2 .giant{right:-118px;bottom:-236px;font-size:1240px;font-weight:800;line-height:1;letter-spacing:-.06em;color:var(--red);font-feature-settings:"tnum" 0}
+.s2 h2{position:absolute;left:90px;top:176px;width:1290px;font-size:150px}
+.s2 .col{position:absolute;top:566px;width:414px;border-top:10px solid #000;padding-top:30px}
+.s2 .col h3{font-size:52px;font-weight:800;letter-spacing:-.03em;line-height:1;margin-bottom:22px}
+.s2 .col p{font-size:32px;line-height:1.22;letter-spacing:-.01em}
+.s2 .foot{left:96px;top:930px;width:1290px;border-top:2px solid #000;padding-top:18px}
+
+/* ---------- 3 · Code ---------- */
+.s3 .giant{right:-70px;top:-236px;font-size:820px;font-weight:800;line-height:1;letter-spacing:-.07em;color:var(--red)}
+.s3 h2{position:absolute;left:90px;top:176px;width:1000px;font-size:104px;line-height:.94;letter-spacing:-.04em}
+.s3 .code{position:absolute;left:96px;top:500px;width:1728px;font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-size:30px;line-height:1}
+.s3 .code .ln{display:grid;grid-template-columns:122px 24px 1fr;height:66px;align-items:center;border-bottom:1px solid #fff}
+.s3 .code .ln:first-child{border-top:6px solid #fff;height:71px}
+.s3 .code .ln:last-child{border-bottom:6px solid #fff;height:71px}
+.s3 .code .n{height:100%;background:var(--red);color:#000;font-weight:700;display:flex;align-items:center;justify-content:flex-end;padding-right:18px;font-size:26px}
+.s3 .code .t{grid-column:3;white-space:pre;color:#fff}
+.s3 .code b{font-weight:700;color:#fff}
+.s3 .code .t span{color:#fff;opacity:1}
+.s3 .foot{left:242px;top:944px;width:1144px;color:#fff}
+
+/* ---------- 4 · Numbers ---------- */
+.s4 .panel{left:1070px;top:0;width:850px;height:1080px;background:var(--red);color:#fff}
+.s4 h2{position:absolute;left:90px;top:176px;width:900px;font-size:100px;line-height:.92}
+.s4 table{position:absolute;left:96px;top:520px;width:852px;border-collapse:collapse;font-feature-settings:"tnum" 1}
+.s4 th{font-size:22px;font-weight:600;text-align:left;padding:0 0 14px;border-bottom:6px solid #000}
+.s4 th:last-child,.s4 td:last-child{text-align:right}
+.s4 td{font-size:30px;line-height:1;padding:24px 0 22px;border-bottom:1px solid var(--hair);letter-spacing:-.005em}
+.s4 td:last-child{font-weight:600}
+.s4 tr.total td{border-top:6px solid #000;border-bottom:none;font-weight:800}
+.s4 .foot{left:96px;top:938px;width:852px}
+.s4 .k{left:1118px;font-size:26px;font-weight:500;line-height:1.1}
+.s4 .big{left:1110px;font-weight:800;letter-spacing:-.03em;line-height:.8;font-feature-settings:"tnum" 1}
+.s4 .bar{left:1118px;height:44px}
+.s4 .scale{left:1118px;width:706px;font-size:22px;font-weight:500;color:#000;display:flex;justify-content:space-between}
+
+/* ---------- 5 · Diagram ---------- */
+.s5 h2{position:absolute;left:86px;top:166px;font-size:176px;line-height:.86}
+.s5 svg{position:absolute;left:0;top:0}
+.s5 ol{position:absolute;left:1118px;top:420px;width:706px;list-style:none}
+.s5 li{display:grid;grid-template-columns:76px 1fr;border-top:2px solid #000;padding:20px 0 24px}
+.s5 li:last-child{border-bottom:2px solid #000}
+.s5 li .d{font-size:44px;font-weight:800;line-height:.9;color:var(--red);font-feature-settings:"tnum" 1}
+.s5 li p{font-size:30px;line-height:1.22;letter-spacing:-.01em}
+.s5 li b{font-weight:800}
+.s5 .foot{left:1118px;top:912px;width:706px}
+</style>
+</head><body><main class="sheet">
+<header class="sheet-head">
+  <a class="back" href="index.html">← All styles</a>
+  <h1>E — Swiss Grid</h1>
+  <p class="why">An International Typographic Style poster system: one grotesque, black, white and a single signal red on a strict 12-column grid. Scale does the shouting and the grid does the explaining, which suits a technical room that wants the argument, not decoration, from across the table.</p>
+  <div class="borrow">
+    <div><b>Idea</b>Müller-Brockmann concert posters and mid-century Swiss corporate manuals, applied to a technical talk.</div>
+    <div><b>Devices</b>Full-bleed red and black slides for rhythm, giant cropped slide numerals, thick rules over hairlines, typographic tables, pure-geometry diagrams.</div>
+    <div><b>Type</b>Inter Tight 400 / 500 / 800, JetBrains Mono for code only.</div>
+  </div>
+  <div class="swatches"><span style="background:#E3120B;color:#fff">#E3120B</span><span style="background:#000;color:#fff">#000000</span><span style="background:#fff;color:#000">#FFFFFF</span><span style="background:#C4C4C4;color:#000">#C4C4C4</span></div>
+</header>
+
+<!-- 1 · Title -->
+<div class="frame"><section class="slide red s1">
+  <div class="rule" style="left:96px;width:1728px;color:#000"></div>
+  <p class="abs eyebrow">Advanced · daily Claude Code users</p>
+  <p class="abs meta">Revised October 2026</p>
+  <p class="abs sub">Practical lessons from Anthropic’s engineering posts, tested against your own work.</p>
+  <p class="abs by">David Budáč</p>
+  <div class="abs disc"></div>
+  <h1>Claude<br>Best<br>Practices</h1>
+</section></div><p class="cap">1 · Title</p>
+
+<!-- 2 · Three columns -->
+<div class="frame"><section class="slide s2">
+  <div class="abs giant">2</div>
+  <div class="rule" style="left:96px;width:1290px"></div>
+  <p class="no">2</p><p class="sec">In practice</p>
+  <h2>Start with<br>three changes</h2>
+  <div class="col" style="left:96px"><h3>Instructions</h3><p>Remove conflicting or obsolete rules; preserve real constraints.</p></div>
+  <div class="col" style="left:534px"><h3>Verification</h3><p>Make done depend on evidence tied to the task.</p></div>
+  <div class="col" style="left:972px"><h3>Measurement</h3><p>Compare configurations by outcomes, cost and review effort.</p></div>
+  <p class="abs foot">Skills, caching and delegation support these three habits.</p>
+</section></div><p class="cap">2 · Three cards</p>
+
+<!-- 3 · Code -->
+<div class="frame"><section class="slide black s3">
+  <div class="abs giant">21</div>
+  <div class="rule" style="left:96px;width:1144px;color:#fff"></div>
+  <p class="no">21</p><p class="sec">The invoice task</p>
+  <h2>Make the acceptance<br>contract explicit</h2>
+  <div class="code">
+    <div class="ln"><span class="n">1</span><span class="t"><b>GOAL:</b> export invoice net, VAT and gross values to CSV.</span></div>
+    <div class="ln"><span class="n">2</span><span class="t"><b>SCOPE:</b> invoice export code; preserve existing tests.</span></div>
+    <div class="ln"><span class="n">3</span><span class="t"><b>VERIFY:</b> pytest tests/test_export.py -q</span></div>
+    <div class="ln"><span class="n">4</span><span class="t"><b>CASES:</b> 21% VAT, zero VAT, rounding, quoted CSV fields.</span></div>
+    <div class="ln"><span class="n">5</span><span class="t"><b>LIMIT:</b> three repair attempts; then stop and report.</span></div>
+    <div class="ln"><span class="n">6</span><span class="t"><b>EVIDENCE:</b> diff, command, exit status, failures and gaps.</span></div>
+  </div>
+  <p class="abs foot">Pair this request with an enforced runtime budget and a review of the resulting artifact.</p>
+</section></div><p class="cap">3 · Code</p>
+
+<!-- 4 · Numbers -->
+<div class="frame"><section class="slide s4">
+  <div class="abs panel"></div>
+  <div class="rule" style="left:96px;width:852px"></div>
+  <p class="no">10</p><p class="sec">Worked arithmetic</p>
+  <h2>One cache-hit<br>request: about<br>five cents</h2>
+  <table>
+    <thead><tr><th>Illustrative usage and rates</th><th>Cost</th></tr></thead>
+    <tbody>
+      <tr><td>19,000 cached input × $0.20 / million</td><td>$0.0038</td></tr>
+      <tr><td>3,700 new input × $4 / million</td><td>$0.0148</td></tr>
+      <tr><td>1,600 output × $20 / million</td><td>$0.0320</td></tr>
+      <tr class="total"><td>22,700 input + 1,600 output in total</td><td>$0.0506</td></tr>
+    </tbody>
+  </table>
+  <p class="abs foot">Assumed rates, not a measured bill. Without the cache hit: $0.0908 input + $0.0320 output = $0.1228.</p>
+
+  <p class="abs k" style="top:104px">With the cache hit</p>
+  <p class="abs big" style="top:176px;font-size:168px;color:#fff">$0.0506</p>
+  <div class="abs bar" style="top:366px;width:291px;background:#fff"></div>
+  <p class="abs k" style="top:520px;color:#000">Without the cache hit</p>
+  <p class="abs big" style="top:596px;font-size:168px;color:#000">$0.1228</p>
+  <div class="abs bar" style="top:786px;width:706px;background:#000"></div>
+  <div class="abs scale" style="top:848px"><span>$0</span><span>$0.1228</span></div>
+</section></div><p class="cap">4 · Numbers</p>
+
+<!-- 5 · Diagram -->
+<div class="frame"><section class="slide s5">
+  <div class="rule" style="left:96px;width:1728px"></div>
+  <p class="no">9</p><p class="sec">Agent · the loop</p>
+  <h2>An agent is a loop</h2>
+  <svg width="1920" height="1080" viewBox="0 0 1920 1080" aria-hidden="true">
+    <!-- divider: model side (left) | harness side (right) -->
+    <rect x="96" y="420" width="426" height="560" fill="#E3120B"/>
+    <rect x="522" y="420" width="426" height="560" fill="#000"/>
+    <!-- the loop -->
+    <circle cx="522" cy="700" r="236" fill="none" stroke="#fff" stroke-width="18" clip-path="url(#left)"/>
+    <defs>
+      <clipPath id="left"><rect x="0" y="0" width="522" height="1080"/></clipPath>
+      <clipPath id="right"><rect x="522" y="0" width="1398" height="1080"/></clipPath>
+    </defs>
+    <circle cx="522" cy="700" r="236" fill="none" stroke="#fff" stroke-width="18" clip-path="url(#right)"/>
+    <!-- direction: clockwise -->
+    <g fill="#fff"><polygon points="-17,-26 21,0 -17,26" transform="translate(689,533) rotate(45)"/>
+      <polygon points="-17,-26 21,0 -17,26" transform="translate(689,867) rotate(135)"/></g>
+    <g fill="#fff"><polygon points="-17,-26 21,0 -17,26" transform="translate(355,867) rotate(225)"/>
+      <polygon points="-17,-26 21,0 -17,26" transform="translate(355,533) rotate(315)"/></g>
+    <!-- step markers -->
+    <g font-family="Inter Tight, Helvetica, Arial, sans-serif" font-weight="800" font-size="40" text-anchor="middle">
+      <circle cx="522" cy="464" r="44" fill="#fff"/><text x="522" y="478" fill="#000">1</text>
+      <circle cx="758" cy="700" r="44" fill="#fff"/><text x="758" y="714" fill="#000">2</text>
+      <circle cx="522" cy="936" r="44" fill="#fff"/><text x="522" y="950" fill="#000">3</text>
+      <circle cx="286" cy="700" r="44" fill="#fff"/><text x="286" y="714" fill="#E3120B">4</text>
+    </g>
+    <g font-family="Inter Tight, Helvetica, Arial, sans-serif" font-weight="800" font-size="40">
+      <text x="122" y="470" fill="#fff">Model</text>
+      <text x="922" y="470" fill="#fff" text-anchor="end">Harness</text>
+    </g>
+  </svg>
+  <ol>
+    <li><span class="d">1</span><p><b>Propose:</b> the model chooses the next action.</p></li>
+    <li><span class="d">2</span><p><b>Run:</b> the harness executes it under the configured permissions.</p></li>
+    <li><span class="d">3</span><p><b>Observe:</b> the result returns as context for the next step.</p></li>
+    <li><span class="d">4</span><p><b>Check:</b> stop when the task is verified, or ask when blocked.</p></li>
+  </ol>
+  <p class="abs foot">In a live run or a finished transcript, point to one tool call and its result. That is one lap of the loop.</p>
+</section></div><p class="cap">5 · Diagram</p>
+</main><script src="shell.js"></script></body></html>
