@@ -1,0 +1,83 @@
+Source slides: 5  Output slides: 5
+
+=== Slide 01 ===
+data-label: IDENTICAL (raw bytes) = 'Title'
+data-origin-slide: IDENTICAL (raw bytes) = '0'
+data-speaker-notes: IDENTICAL (raw bytes)
+hrefs: IDENTICAL order+count (2)
+    best-practices.html
+    best-practices.html
+source text: Optional reference · Back to the talk Optional referenceRevised October 2026 Claude Best Practices Reference. Supporting procedures and worksheets. Return to the main talk David Budáč
+output text: Optional reference Claude Best Practices Reference Supporting procedures and worksheets. Return to the main talk David Budáč Revised October 2026 Optional reference · Back to the talk
+tokens only in source: {'Reference.': 1, 'referenceRevised': 1}
+tokens only in output: {'Reference': 1, 'Revised': 1, 'reference': 1}
+
+=== Slide 02 ===
+data-label: IDENTICAL (raw bytes) = 'Command reference'
+data-origin-slide: IDENTICAL (raw bytes) = '43'
+data-speaker-notes: IDENTICAL (raw bytes)
+hrefs: IDENTICAL order+count (2)
+    best-practices.html
+    https://code.claude.com/docs/en/interactive-mode
+source text: Optional reference · Back to the talk 2 In practice Find the command in the installed version Need Check Inspect session context and usage Installed help for context and cost/usage commands. Change model or effort Supported settings for that client and model. Manage skills, hooks and plugins Current documentation and versioned configuration. Interactive-mode reference
+output text: In practice · Optional reference · Back to the talk Find the command in the installed version Need Check Inspect session context and usage Installed help for context and cost/usage commands. Change model or effort Supported settings for that client and model. Manage skills, hooks and plugins Current documentation and versioned configuration. Interactive-mode reference
+tokens only in source: {'2': 1}
+tokens only in output: {'·': 1}
+
+=== Slide 03 ===
+data-label: IDENTICAL (raw bytes) = 'Sources'
+data-origin-slide: IDENTICAL (raw bytes) = '45'
+data-speaker-notes: IDENTICAL (raw bytes)
+hrefs: IDENTICAL order+count (6)
+    best-practices.html
+    https://claude.dev/blog/getting-started-with-claude-code-mods/
+    https://claude.dev/blog/building-with-claude-sonnet-5-5/
+    https://claude.dev/blog/automating-eval-design-and-hillclimbing/
+    https://claude.dev/blog/what-a-task-costs-on-opus-5-5/
+    https://claude.dev/blog/spending-your-effort/
+source text: Optional reference · Back to the talk 3 Sources Sources and further reading Getting started with Claude Code mods · Oct 1 Building with Claude Sonnet 5.5 · Sep 28 Automating eval design and hillclimbing with Claude · Sep 28 What a task costs on Opus 5.5 · Sep 25 Using Claude Code: Spending your effort · Sep 25 Original article bibliography · April–October 2026. Retained for attribution; only claims used in the revision were refreshed.
+output text: Sources · Optional reference · Back to the talk Sources and further reading Getting started with Claude Code mods · Oct 1 Building with Claude Sonnet 5.5 · Sep 28 Automating eval design and hillclimbing with Claude · Sep 28 What a task costs on Opus 5.5 · Sep 25 Using Claude Code: Spending your effort · Sep 25 Original article bibliography · April–October 2026. Retained for attribution; only claims used in the revision were refreshed.
+tokens only in source: {'3': 1}
+tokens only in output: {'·': 1}
+
+=== Slide 04 ===
+data-label: IDENTICAL (raw bytes) = 'Sources'
+data-origin-slide: IDENTICAL (raw bytes) = '0'
+data-speaker-notes: IDENTICAL (raw bytes)
+hrefs: IDENTICAL order+count (6)
+    best-practices.html
+    https://claude.dev/blog/how-we-made-claude-ai-faster/
+    https://claude.dev/blog/getting-the-most-out-of-opus-5-5/
+    https://claude.dev/blog/the-new-rules-of-context-engineering-for-claude-5-generation-models/
+    https://claude.dev/blog/lessons-from-building-claude-code-how-we-use-skills/
+    https://claude.dev/blog/a-harness-for-every-task-dynamic-workflows-in-claude-code/
+source text: Optional reference · Back to the talk 4 Sources Sources and further reading How we made claude.ai 3x faster in two weeks · Sep 23 Getting the most out of Opus 5.5 in Claude and Claude Code · Sep 22 The new rules of context engineering for Claude 5 generation models · Jul 24 Lessons from building Claude Code: How we use skills · Jun 3 A harness for every task: dynamic workflows in Claude Code · Jun 2 Original article bibliography · April–October 2026. Retained for attribution; only claims used in the revision were refreshed.
+output text: Sources · Optional reference · Back to the talk Sources and further reading How we made claude.ai 3x faster in two weeks · Sep 23 Getting the most out of Opus 5.5 in Claude and Claude Code · Sep 22 The new rules of context engineering for Claude 5 generation models · Jul 24 Lessons from building Claude Code: How we use skills · Jun 3 A harness for every task: dynamic workflows in Claude Code · Jun 2 Original article bibliography · April–October 2026. Retained for attribution; only claims used in the revision were refreshed.
+tokens only in source: {'4': 1}
+tokens only in output: {'·': 1}
+
+=== Slide 05 ===
+data-label: IDENTICAL (raw bytes) = 'Sources'
+data-origin-slide: IDENTICAL (raw bytes) = '0'
+data-speaker-notes: IDENTICAL (raw bytes)
+hrefs: IDENTICAL order+count (4)
+    best-practices.html
+    https://claude.dev/blog/using-claude-code-the-unreasonable-effectiveness-of-html/
+    https://claude.dev/blog/lessons-from-building-claude-code-prompt-caching-is-everything/
+    https://claude.dev/blog/seeing-like-an-agent/
+source text: Optional reference · Back to the talk 5 Sources Sources and further reading Using Claude Code: The unreasonable effectiveness of HTML · May 20 Lessons from building Claude Code: Prompt caching is everything · Apr 30 Seeing like an agent: how we design tools in Claude Code · Apr 10 Original article bibliography · April–October 2026. Retained for attribution; only claims used in the revision were refreshed.
+output text: Sources · Optional reference · Back to the talk Sources and further reading Using Claude Code: The unreasonable effectiveness of HTML · May 20 Lessons from building Claude Code: Prompt caching is everything · Apr 30 Seeing like an agent: how we design tools in Claude Code · Apr 10 Original article bibliography · April–October 2026. Retained for attribution; only claims used in the revision were refreshed.
+tokens only in source: {'5': 1}
+tokens only in output: {'·': 1}
+
+=== Explanation of every difference ===
+01: "Reference." -> "Reference": the Ember title .dot "." removed (decoration, per root mapping).
+    "referenceRevised" (source) vs "reference" + "Revised" (output): the source's .ts-top put
+    "Optional reference" and "Revised October 2026" in adjacent spans with no whitespace, so the
+    extractor glued them. Same words; in the output "Optional reference" is the crumb and
+    "Revised October 2026" is the tile-2 p. Banner "Optional reference · Back to the talk" is the
+    footer .note verbatim. Words otherwise reordered into the accepted cards.c2 opener.
+02-05: hand-written .snum digits 2/3/4/5 removed (deck.js generates 02-05 / 05).
+    One "·" added per slide joining the source crumb (In practice / Sources) with the banner text
+    "Optional reference · Back to the talk" (root mapping: reference-banner -> crumb).
+No other visible-text, href, data-label, data-origin-slide or data-speaker-notes differences.
