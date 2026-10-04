@@ -331,6 +331,11 @@ body.pui-mouse .pui-controls,.pui-controls:hover,.pui-controls:focus-within{opac
 }
 .pui-notes.open{display:block}
 .pui-notes .pui-nhead{font:500 12px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);margin-bottom:12px}
+/* Reserve the control row; scroll note text above it, never behind it. */
+.pui-notes{box-sizing:border-box;padding-bottom:var(--gap);overflow:hidden}
+.pui-notes.open{display:flex;flex-direction:column}
+.pui-notes .pui-nhead{flex-shrink:0}
+.pui-notes .pui-nbody{min-height:0;overflow:auto}
 
 /* ── 16 · Presenter window (built by deck.js; this file is copied in) ── */
 .pw{position:fixed;inset:0;display:grid;grid-template-rows:52px minmax(0,1fr);background:var(--paper);color:var(--slate);font:400 13px/1.2 var(--mono);overflow:hidden}
