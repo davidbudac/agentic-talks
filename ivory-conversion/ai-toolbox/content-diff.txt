@@ -1,0 +1,85 @@
+ai-toolbox.html -> ai-toolbox-ivory.html : per-slide content comparison
+Generated from ivory-conversion/audit.py output (audit.json in this folder).
+Slides: source 31, output 31. Structural errors: none
+Per slide: data-label, data-origin-slide, data-speaker-notes (parsed AND raw attribute bytes) and the sorted href list are compared;
+visible text is compared word by word (whitespace-normalised, .snum digits ignored).
+
+[01] Title: metadata/notes/hrefs OK; visible text 4 change(s), explained below; hrefs 1 ['https://davidbudac.cz']
+      replace: source='toolsRevised October 2026' -> output='tools'
+      replace: source='Toolbox.' -> output='Toolbox'
+      replace: source='David' -> output='AuthorDavid'
+      replace: source='chat → agent → toolbox ↺' -> output='RevisedOctober 2026'
+[02] The hook: metadata/notes/hrefs OK; visible text identical; hrefs 0
+[03] Agenda: metadata/notes/hrefs OK; visible text 3 change(s), explained below; hrefs 0
+      replace: source='need? A' -> output='need?A'
+      replace: source='start? The' -> output='start?The'
+      replace: source='check? Accuracy,' -> output='check?Accuracy,'
+[04] One task, agent-style: metadata/notes/hrefs OK; visible text identical; hrefs 0
+[05] Chatbot vs agent: metadata/notes/hrefs OK; visible text identical; hrefs 0
+[06] The agent loop: metadata/notes/hrefs OK; visible text identical; hrefs 0
+[07] The model has no memory: metadata/notes/hrefs OK; visible text identical; hrefs 0
+[08] The human checkpoint: metadata/notes/hrefs OK; visible text identical; hrefs 0
+[09] Three everyday tasks: metadata/notes/hrefs OK; visible text identical; hrefs 0
+[10] Choose a starting point: metadata/notes/hrefs OK; visible text identical; hrefs 0
+[11] Agents for files: metadata/notes/hrefs OK; visible text identical; hrefs 0
+[12] Design by iteration: metadata/notes/hrefs OK; visible text identical; hrefs 0
+[13] Research over your documents: metadata/notes/hrefs OK; visible text identical; hrefs 0
+[14] Read the price tag: metadata/notes/hrefs OK; visible text identical; hrefs 0
+[15] Products change: metadata/notes/hrefs OK; visible text identical; hrefs 0
+[16] Build a small app: metadata/notes/hrefs OK; visible text identical; hrefs 0
+[17] Generated video: metadata/notes/hrefs OK; visible text identical; hrefs 0
+[18] Templated video: metadata/notes/hrefs OK; visible text identical; hrefs 0
+[19] Voice and dubbing: metadata/notes/hrefs OK; visible text identical; hrefs 0
+[20] Images and design: metadata/notes/hrefs OK; visible text identical; hrefs 0
+[21] Repeatable automation: metadata/notes/hrefs OK; visible text identical; hrefs 0
+[22] Before real use: metadata/notes/hrefs OK; visible text identical; hrefs 0
+[23] Story: Project Vend: metadata/notes/hrefs OK; visible text identical; hrefs 0
+[24] Story: the craft still matters: metadata/notes/hrefs OK; visible text identical; hrefs 0
+[25] Three integration routes: metadata/notes/hrefs OK; visible text identical; hrefs 0
+[26] Files from chat: metadata/notes/hrefs OK; visible text identical; hrefs 0
+[27] Edit inside the app: metadata/notes/hrefs OK; visible text identical; hrefs 0
+[28] MCP: metadata/notes/hrefs OK; visible text 2 change(s), explained below; hrefs 0
+      delete: source='without MCP — N×M glue with MCP — connect once MCP' -> output=''
+      insert: source='' -> output='without MCP — N×M glue with MCP — connect once MCP'
+[29] Choose one task: metadata/notes/hrefs OK; visible text identical; hrefs 2 ['ai-toolbox-reference.html', 'index.html']
+[30] Sources 1 of 2: metadata/notes/hrefs OK; visible text identical; hrefs 12
+[31] Sources 2 of 2: metadata/notes/hrefs OK; visible text identical; hrefs 14
+
+== Explanation of every reported difference ==
+
+[01] Title
+  - 'Toolbox.' -> 'Toolbox': the Ember title dot <span class="dot">.</span> was dropped, as instructed. REMOVED SOURCE TEXT.
+  - 'chat → agent → toolbox ↺': the Ember .ts-loopline was dropped, as instructed. REMOVED SOURCE TEXT.
+  - 'Revised October 2026': moved from the top bar (.ts-top .meta) into the Ivory .meta row as the
+    label "Revised" plus "October 2026". The words are the same; only the position changed. This shows up as a replace
+    because the comparator reads the words in a different order.
+  - 'Author' (before David): ADDED mono label, per the Ivory title .meta anatomy (same as the example deck and
+    cost-and-context). The author link https://davidbudac.cz (target=_blank rel=noopener) is unchanged.
+  - Not added: a "Length 31 slides" cell. That would be new visible text.
+
+[03] Agenda
+  - 'need? A' -> 'need?A' (and the same for 'start?' and 'check?'): an artifact of the comparator only. The Ember tiles had
+    the term and the description in block elements (span.k + p). In Ivory ol.bul.def they are inline <b> and <span> in
+    one <li>, which the comparator joins without a space. On screen, the term and the definition sit in separate grid
+    columns (see the pass-2 PNG 03). The words are unchanged.
+
+[28] MCP
+  - The SVG labels "without MCP — N×M glue", "with MCP — connect once" and "MCP" have the same text and the same
+    order. They move after the bullets in document order because the Ember split put the diagram LEFT, while the Ivory
+    split puts the rows on the left (cols 1–5) and the figure on the right (cols 7–12). This is the same decision as
+    agentic-engineering-ivory slides 04/10/19/23. The diagram was redrawn 1:1 (828 × 562): orthogonal connectors, and the
+    clay hub (box + label = one element).
+
+== Differences the comparator does not report (all design, no wording) ==
+  - Hand-written Ember .snum digits (2…31) were removed. deck.js fills NN / 31.
+  - Ember headline accents <span class="o"> on slides 05, 06, 07, 28, 30 and 31 were unwrapped. The text is unchanged.
+  - Ember crumb accents <b> on slides 05, 06, 07, 28, 30 and 31 were unwrapped. The text is unchanged ("Basics · the loop", …).
+  - Slide 09: one &nbsp; was inserted between "Source documents" and "→" so that a line no longer starts with an arrow
+    (whitespace only, found in screenshot pass 1).
+  - Media: assets/anim/agent-loop-dark.mp4 -> assets/anim/agent-loop-ivory.mp4 (slide 06), and
+    assets/anim/stateless-dark.mp4 -> assets/anim/stateless-ivory.mp4 (slide 07). These are existing files and were not modified.
+    These are src attributes, not hrefs.
+  - CSS-generated decoration: the 01–03 row counters on slides 03 and 29 (ol.bul) and the code line numbers on slides 04,
+    11 and 26.
+
+Parent review: slide 20 uses repeatable&nbsp;formats. to avoid a one-word final line. Whitespace-only; all words unchanged. Audit rerun passed.
