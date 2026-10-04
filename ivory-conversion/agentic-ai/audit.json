@@ -1,0 +1,594 @@
+{
+  "source": "agentic-ai.html",
+  "output": "agentic-ai-ivory.html",
+  "counts": [
+    26,
+    26
+  ],
+  "structural_errors": [],
+  "slides": [
+    {
+      "slide": 1,
+      "label": "Title",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "replace",
+          "source": "AIRevised October 2026",
+          "output": "AI"
+        },
+        {
+          "kind": "replace",
+          "source": "AI.",
+          "output": "AI"
+        },
+        {
+          "kind": "replace",
+          "source": "David",
+          "output": "AuthorDavid"
+        },
+        {
+          "kind": "replace",
+          "source": "model → harness → agent ↺",
+          "output": "RevisedOctober 2026"
+        }
+      ],
+      "links": [
+        [
+          "https://davidbudac.cz"
+        ],
+        [
+          "https://davidbudac.cz"
+        ]
+      ],
+      "source_text": "A beginner's introduction to agentic AIRevised October 2026 Agentic AI. How Claude Code, Codex & co. actually work David Budáč model → harness → agent ↺",
+      "output_text": "A beginner's introduction to agentic AI Agentic AI How Claude Code, Codex & co. actually work AuthorDavid Budáč RevisedOctober 2026"
+    },
+    {
+      "slide": 2,
+      "label": "The hook",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "The hook You type one line. It does the rest. you › \"the invoice test is failing — fix it\" …then, with no further input, the AI on its own: ✓ ran the tests saw it expected 121, got 100 ✓ opened invoice.py spotted VAT was never applied ✓ edited the code added the 21% VAT line ✓ ran the tests again PASS ✓ Illustrative trace: a passing test is evidence for that case. Review the diff and relevant edge cases before accepting the change.",
+      "output_text": "The hook You type one line. It does the rest. you › \"the invoice test is failing — fix it\" …then, with no further input, the AI on its own: ✓ ran the tests saw it expected 121, got 100 ✓ opened invoice.py spotted VAT was never applied ✓ edited the code added the 21% VAT line ✓ ran the tests again PASS ✓ Illustrative trace: a passing test is evidence for that case. Review the diff and relevant edge cases before accepting the change."
+    },
+    {
+      "slide": 3,
+      "label": "Chatbot vs agent",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Core · chatbot vs agent A chatbot answers. An agent acts. Chatbot — the one you know You ask → it tells you what to do → you open the files, run the commands, paste the errors back… and repeat. Agent You ask → it does the work itself — reads the files, runs the commands, checks the result → you review at the end. The model proposes actions. The harness executes permitted tools. Together, repeating this process, they form an agent.",
+      "output_text": "Core · chatbot vs agent A chatbot answers. An agent acts. Chatbot — the one you know You ask → it tells you what to do → you open the files, run the commands, paste the errors back… and repeat. Agent You ask → it does the work itself — reads the files, runs the commands, checks the result → you review at the end. The model proposes actions. The harness executes permitted tools. Together, repeating this process, they form an agent."
+    },
+    {
+      "slide": 4,
+      "label": "Agenda",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "replace",
+          "source": "loop Who",
+          "output": "loopWho"
+        },
+        {
+          "kind": "replace",
+          "source": "work Supply",
+          "output": "workSupply"
+        },
+        {
+          "kind": "replace",
+          "source": "result Inspect",
+          "output": "resultInspect"
+        }
+      ],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Our route Give an agent a task you can check Understand the loop Who chooses an action, who runs it, and how the result comes back. Guide the work Supply relevant context, useful project rules and scoped permissions. Check the result Inspect the changed files and run the check that defines done. One example throughout: an invoice total that is missing VAT.",
+      "output_text": "Our route Give an agent a task you can check Understand the loopWho chooses an action, who runs it, and how the result comes back. Guide the workSupply relevant context, useful project rules and scoped permissions. Check the resultInspect the changed files and run the check that defines done. One example throughout: an invoice total that is missing VAT."
+    },
+    {
+      "slide": 5,
+      "label": "Model in the cloud",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Harness · what runs where Model in the cloud, harness on your machine YOU you talk → chat AGENT = harness + model, in a loop YOUR MACHINE (local) CLAUDE CODE the harness your files ▸ terminal runs actions CLOUD MODEL Claude model stateless — no memory sends context → ← next action You talk to the agent. Claude Code is the harness — it runs locally with your files & terminal, and loops with the model in the cloud (which stays stateless). The agent isn't a separate thing — it's that loop.",
+      "output_text": "Harness · what runs where Model in the cloud, harness on your machine YOU you talk → chat AGENT = harness + model, in a loop YOUR MACHINE (local) CLAUDE CODE the harness your files ▸ terminal runs actions CLOUD MODEL Claude model stateless — no memory sends context → ← next action You talk to the agent. Claude Code is the harness — it runs locally with your files & terminal, and loops with the model in the cloud (which stays stateless). The agent isn't a separate thing — it's that loop."
+    },
+    {
+      "slide": 6,
+      "label": "No memory in practice",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Model · example \"No memory\" in practice There's no \"conversation\" on the model's side. Each call hands it the whole history as one flat list: # What the model is handed on turn 3 — the WHOLE chat, again: you said: \"My name is David.\" it replied: \"Nice to meet you, David.\" you now ask: \"What's my name?\" ← answerable only because line 1 was re-sent Delete the first line and the model can't answer. The \"memory\" lives in the request — not the model.",
+      "output_text": "Model · example \"No memory\" in practice There's no \"conversation\" on the model's side. Each call hands it the whole history as one flat list: # What the model is handed on turn 3 — the WHOLE chat, again: you said: \"My name is David.\" it replied: \"Nice to meet you, David.\" you now ask: \"What's my name?\" ← answerable only because line 1 was re-sent Delete the first line and the model can't answer. The \"memory\" lives in the request — not the model."
+    },
+    {
+      "slide": 7,
+      "label": "What one turn sends",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "The request One message sits inside a larger request SYSTEM role, rules and tool descriptions PROJECT how to run the invoice tests HISTORY the task and earlier results TOOL OUTPUT invoice.py and the failing test YOUR MESSAGE \"fix the missing VAT\" Context is the information supplied for this call. Tokens are the chunks used to measure it.",
+      "output_text": "The request One message sits inside a larger request SYSTEM role, rules and tool descriptions PROJECT how to run the invoice tests HISTORY the task and earlier results TOOL OUTPUT invoice.py and the failing test YOUR MESSAGE \"fix the missing VAT\" Context is the information supplied for this call. Tokens are the chunks used to measure it."
+    },
+    {
+      "slide": 8,
+      "label": "Optional demo",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Optional live example Watch one bounded task Fix the invoice calculation so the VAT test passes. Do not change the test or unrelated files. Run the relevant tests and show the final diff. Optional live run: use a disposable project and scoped permissions. The next slide provides an illustrative trace if no demo is available.",
+      "output_text": "Optional live example Watch one bounded task Fix the invoice calculation so the VAT test passes. Do not change the test or unrelated files. Run the relevant tests and show the final diff. Optional live run: use a disposable project and scoped permissions. The next slide provides an illustrative trace if no demo is available."
+    },
+    {
+      "slide": 9,
+      "label": "The agent loop",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Agent · the loop An agent is a loop Propose: the model chooses the next action. Run: the harness executes it under the configured permissions. Observe: the result returns as context for the next step. Check: stop when the task is verified, or ask when blocked. In a live run or a finished transcript, point to one tool call and its result. That is one lap of the loop.",
+      "output_text": "Agent · the loop An agent is a loop Propose: the model chooses the next action. Run: the harness executes it under the configured permissions. Observe: the result returns as context for the next step. Check: stop when the task is verified, or ask when blocked. In a live run or a finished transcript, point to one tool call and its result. That is one lap of the loop."
+    },
+    {
+      "slide": 10,
+      "label": "The loop, worked example",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "The loop The invoice fix, step by step run tests → FAIL: expected 121, got 100 read invoice → VAT is missing from the total edit code → apply the order’s 21% VAT rate run tests → PASS review diff → check scope and edge cases Illustrative trace. The model requests the actions; the harness runs them and returns the results.",
+      "output_text": "The loop The invoice fix, step by step run tests → FAIL: expected 121, got 100 read invoice → VAT is missing from the total edit code → apply the order’s 21% VAT rate run tests → PASS review diff → check scope and edge cases Illustrative trace. The model requests the actions; the harness runs them and returns the results."
+    },
+    {
+      "slide": 11,
+      "label": "Thinking",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Thinking · how it works The model thinks before it answers PROMPT ILLUSTRATIVE REASONING • recall the VAT rule (21%) • 100 × 1.21 = 121 • so the test expects the tax added (these reasoning tokens cost money too) ANSWER Reasoning gives the model room to work through intermediate steps before answering or acting. More effort can help a difficult diagnosis; it also takes more time and tokens. For the invoice task, verify the VAT rule and run the test. A plausible explanation alone is not evidence. Visible thinking may be a summary. Judge the result and the checks, not how convincing the narration sounds.",
+      "output_text": "Thinking · how it works The model thinks before it answers PROMPT ILLUSTRATIVE REASONING • recall the VAT rule (21%) • 100 × 1.21 = 121 • so the test expects the tax added (these reasoning tokens cost money too) ANSWER Reasoning gives the model room to work through intermediate steps before answering or acting. More effort can help a difficult diagnosis; it also takes more time and tokens. For the invoice task, verify the VAT rule and run the test. A plausible explanation alone is not evidence. Visible thinking may be a summary. Judge the result and the checks, not how convincing the narration sounds."
+    },
+    {
+      "slide": 12,
+      "label": "Choose an interface",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "01"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "02"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "03"
+        }
+      ],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Getting started Choose the interface you already work in Terminal Run a coding agent beside your commands and tests. Editor Review and change code inside your existing development workflow. App or web Give a task, inspect progress, and review the returned files. Look for clear permissions, visible changes and a way to run checks. Model and product lists are in the reference deck.",
+      "output_text": "Getting started Choose the interface you already work in 01 Terminal Run a coding agent beside your commands and tests. 02 Editor Review and change code inside your existing development workflow. 03 App or web Give a task, inspect progress, and review the returned files. Look for clear permissions, visible changes and a way to run checks. Model and product lists are in the reference deck."
+    },
+    {
+      "slide": 13,
+      "label": "Choose a billing route",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Getting started Two ways to pay for the work Subscription A plan for using an app or coding tool, subject to its usage limits. Metered API Usage-based billing for integrations and automated workloads. Set a budget and monitor it. Check the chosen product’s plan, supported access route and limits. Price per token is only one part of the cost of a completed task.",
+      "output_text": "Getting started Two ways to pay for the work Subscription A plan for using an app or coding tool, subject to its usage limits. Metered API Usage-based billing for integrations and automated workloads. Set a budget and monitor it. Check the chosen product’s plan, supported access route and limits. Price per token is only one part of the cost of a completed task."
+    },
+    {
+      "slide": 14,
+      "label": "What context is",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Context · what it is Context = the model's short-term memory Context contains the instructions, conversation and tool results supplied for this call. The context window is the maximum capacity. Its size depends on the model and configuration. Supply the relevant test and invoice code. An unread file cannot guide the model through this request. CONTEXT WINDOW · finite capacity system prompt CLAUDE.md · rules conversation history files you opened tool output free space",
+      "output_text": "Context · what it is Context = the model's short-term memory Context contains the instructions, conversation and tool results supplied for this call. The context window is the maximum capacity. Its size depends on the model and configuration. Supply the relevant test and invoice code. An unread file cannot guide the model through this request. CONTEXT WINDOW · finite capacity system prompt CLAUDE.md · rules conversation history files you opened tool output free space"
+    },
+    {
+      "slide": 15,
+      "label": "Context quality",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Context More context is not always more useful Useful context The failing test, the VAT rule and the code path that computes the total. Distracting context Old tasks, duplicate file dumps and unrelated logs that obscure those facts. Watch for ignored requirements, repeated work and missed evidence. There is no universal percentage at which quality fails.",
+      "output_text": "Context More context is not always more useful Useful context The failing test, the VAT rule and the code path that computes the total. Distracting context Old tasks, duplicate file dumps and unrelated logs that obscure those facts. Watch for ignored requirements, repeated work and missed evidence. There is no universal percentage at which quality fails."
+    },
+    {
+      "slide": 16,
+      "label": "Keep context useful",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "01"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "02"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "03"
+        }
+      ],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Context Choose the next step from the task state New task Start a fresh conversation when the previous task is complete. Same task Summarize the goal, decisions, failures and next check before continuing. Broad search Delegate investigation and request findings with file references. Inspect the context display as a capacity indicator. Check behavior and results before deciding what to remove.",
+      "output_text": "Context Choose the next step from the task state 01 New task Start a fresh conversation when the previous task is complete. 02 Same task Summarize the goal, decisions, failures and next check before continuing. 03 Broad search Delegate investigation and request findings with file references. Inspect the context display as a capacity indicator. Check behavior and results before deciding what to remove."
+    },
+    {
+      "slide": 17,
+      "label": "Caching and compaction",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Context Cheaper reuse and shorter context Caching Reuses computed state for a matching prefix. It can reduce processing cost and latency; the content is still input. Compaction Replaces older material with a summary. It frees room, but details omitted from that summary may be lost. For the invoice task, preserve the VAT rule, failing test, attempted changes and verification command.",
+      "output_text": "Context Cheaper reuse and shorter context Caching Reuses computed state for a matching prefix. It can reduce processing cost and latency; the content is still input. Compaction Replaces older material with a summary. It frees room, but details omitted from that summary may be lost. For the invoice task, preserve the VAT rule, failing test, attempted changes and verification command."
+    },
+    {
+      "slide": 18,
+      "label": "Sub-agents",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Context · sub-agents Sub-agents keep the main context clean Delegate a focused investigation, such as finding every place invoice totals are calculated. The helper’s intermediate tool output stays in its own working context. Ask for a concise result with evidence. A fresh subagent needs a self-contained task. A conversation fork can inherit the existing history.",
+      "output_text": "Context · sub-agents Sub-agents keep the main context clean Delegate a focused investigation, such as finding every place invoice totals are calculated. The helper’s intermediate tool output stays in its own working context. Ask for a concise result with evidence. A fresh subagent needs a self-contained task. A conversation fork can inherit the existing history."
+    },
+    {
+      "slide": 19,
+      "label": "Permissions",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "01"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "02"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "03"
+        }
+      ],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Permissions Decide what the agent may touch Scope the work Allow the project files and test commands needed for the task. Keep approval points Ask before destructive actions, access changes or publishing outside the task. Contain mistakes For unattended experiments, restrict filesystem, network and credentials in an actual sandbox. A separate folder or Git branch protects neither credentials nor the rest of the machine. Check the configured boundary.",
+      "output_text": "Permissions Decide what the agent may touch 01 Scope the work Allow the project files and test commands needed for the task. 02 Keep approval points Ask before destructive actions, access changes or publishing outside the task. 03 Contain mistakes For unattended experiments, restrict filesystem, network and credentials in an actual sandbox. A separate folder or Git branch protects neither credentials nor the rest of the machine. Check the configured boundary."
+    },
+    {
+      "slide": 20,
+      "label": "Project rules",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Project knowledge Teach it the rules it cannot infer # CLAUDE.md — invoice project - Run invoice checks with: python -m unittest - VAT rates come from the order record. - Do not replace the tests to make a fix pass. - Ask before changing the stored invoice schema. Keep standing rules short. Use the instruction-file convention supported by your harness, such as CLAUDE.md or AGENTS.md.",
+      "output_text": "Project knowledge Teach it the rules it cannot infer # CLAUDE.md — invoice project - Run invoice checks with: python -m unittest - VAT rates come from the order record. - Do not replace the tests to make a fix pass. - Ask before changing the stored invoice schema. Keep standing rules short. Use the instruction-file convention supported by your harness, such as CLAUDE.md or AGENTS.md."
+    },
+    {
+      "slide": 21,
+      "label": "Skills and plugins",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Project knowledge Save a repeatable check as a skill invoice-check/ SKILL.md when to run + how to verify scripts/ optional deterministic checks references/ VAT and rounding rules Skill: a reusable procedure loaded when relevant. Plugin: a way to distribute a toolkit to a team.",
+      "output_text": "Project knowledge Save a repeatable check as a skill invoice-check/ SKILL.md when to run + how to verify scripts/ optional deterministic checks references/ VAT and rounding rules Skill: a reusable procedure loaded when relevant. Plugin: a way to distribute a toolkit to a team."
+    },
+    {
+      "slide": 22,
+      "label": "Tools for the invoice task",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "01"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "02"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "03"
+        }
+      ],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "External tools Give the agent access to the next fact CLI Run the project’s invoice tests and inspect Git changes. API Fetch a permitted record through a service interface. MCP connection Expose supported issue-tracker or document tools to the agent. Choose the narrowest useful access. A connector does not grant permission to publish or change unrelated records.",
+      "output_text": "External tools Give the agent access to the next fact 01 CLI Run the project’s invoice tests and inspect Git changes. 02 API Fetch a permitted record through a service interface. 03 MCP connection Expose supported issue-tracker or document tools to the agent. Choose the narrowest useful access. A connector does not grant permission to publish or change unrelated records."
+    },
+    {
+      "slide": 23,
+      "label": "MCP",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Reaching out · MCP MCP = \"USB-C for agents\" without MCP — N×M glue with MCP — connect once MCP MCP standardizes how a supported client discovers and calls tools exposed by a server. Example: read the issue describing the invoice bug, then propose an update with verification evidence. Each integration still needs compatible support, authentication and scoped permissions.",
+      "output_text": "Reaching out · MCP MCP = \"USB-C for agents\" without MCP — N×M glue with MCP — connect once MCP MCP standardizes how a supported client discovers and calls tools exposed by a server. Example: read the issue describing the invoice bug, then propose an update with verification evidence. Each integration still needs compatible support, authentication and scoped permissions."
+    },
+    {
+      "slide": 24,
+      "label": "Your first agent task",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "agentic-ai-reference.html",
+          "index.html"
+        ],
+        [
+          "agentic-ai-reference.html",
+          "index.html"
+        ]
+      ],
+      "source_text": "Try this next Give a bounded task. Check the result. Goal: name the result and the files or system in scope. Context: supply the relevant examples, rules and failure evidence. Permissions: decide what can run and where approval is needed. Acceptance: inspect the diff, run the relevant check, record what remains unverified. Optional reference: terminology, products and historical pricing · All talks",
+      "output_text": "Try this next Give a bounded task. Check the result. Goal: name the result and the files or system in scope. Context: supply the relevant examples, rules and failure evidence. Permissions: decide what can run and where approval is needed. Acceptance: inspect the diff, run the relevant check, record what remains unverified. Optional reference: terminology, products and historical pricing · All talks"
+    },
+    {
+      "slide": 25,
+      "label": "Sources 1 of 2",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "replace",
+          "source": "overviewplatform.claude.com/docs",
+          "output": "overview platform.claude.com/docs"
+        },
+        {
+          "kind": "replace",
+          "source": "pricingclaude.com/pricing",
+          "output": "pricing claude.com/pricing"
+        },
+        {
+          "kind": "replace",
+          "source": "(benchmarks)anthropic.com/news",
+          "output": "(benchmarks) anthropic.com/news"
+        },
+        {
+          "kind": "replace",
+          "source": "efficiencyanthropic.com/news",
+          "output": "efficiency anthropic.com/news"
+        },
+        {
+          "kind": "replace",
+          "source": "Luna)openai.com/index/gpt-6-astra",
+          "output": "Luna) openai.com/index/gpt-6-astra"
+        },
+        {
+          "kind": "replace",
+          "source": "leaderboardarcprize.org/leaderboard",
+          "output": "leaderboard arcprize.org/leaderboard"
+        },
+        {
+          "kind": "replace",
+          "source": "tierschatgpt.com/pricing",
+          "output": "tiers chatgpt.com/pricing"
+        },
+        {
+          "kind": "replace",
+          "source": "Flashblog.google",
+          "output": "Flash blog.google"
+        },
+        {
+          "kind": "replace",
+          "source": "CLAUDE.mdcode.claude.com/docs",
+          "output": "CLAUDE.md code.claude.com/docs"
+        },
+        {
+          "kind": "replace",
+          "source": "sub-agentscode.claude.com/docs",
+          "output": "sub-agents code.claude.com/docs"
+        },
+        {
+          "kind": "replace",
+          "source": "Codexopenai.com/codex",
+          "output": "Codex openai.com/codex"
+        },
+        {
+          "kind": "replace",
+          "source": "sourcegithub.com/openai/codex",
+          "output": "source github.com/openai/codex"
+        }
+      ],
+      "links": [
+        [
+          "https://platform.claude.com/docs/en/models/overview",
+          "https://claude.com/pricing",
+          "https://www.anthropic.com/news/claude-opus-5",
+          "https://www.anthropic.com/news/claude-opus-4-5",
+          "https://openai.com/index/gpt-6-astra/",
+          "https://arcprize.org/leaderboard",
+          "https://chatgpt.com/pricing/",
+          "https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/",
+          "https://code.claude.com/docs/en/memory",
+          "https://code.claude.com/docs/en/sub-agents",
+          "https://openai.com/codex/",
+          "https://github.com/openai/codex"
+        ],
+        [
+          "https://platform.claude.com/docs/en/models/overview",
+          "https://claude.com/pricing",
+          "https://www.anthropic.com/news/claude-opus-5",
+          "https://www.anthropic.com/news/claude-opus-4-5",
+          "https://openai.com/index/gpt-6-astra/",
+          "https://arcprize.org/leaderboard",
+          "https://chatgpt.com/pricing/",
+          "https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/",
+          "https://code.claude.com/docs/en/memory",
+          "https://code.claude.com/docs/en/sub-agents",
+          "https://openai.com/codex/",
+          "https://github.com/openai/codex"
+        ]
+      ],
+      "source_text": "Sources · further reading Sources & links (1/2) Models & pricing Anthropic — Claude models overviewplatform.claude.com/docs · models Claude — plans & pricingclaude.com/pricing Anthropic — Claude Opus 5 (benchmarks)anthropic.com/news · claude-opus-5 Anthropic — Opus 4.5: effort & token efficiencyanthropic.com/news · claude-opus-4-5 OpenAI — GPT-6 (Astra · Sol · Luna)openai.com/index/gpt-6-astra ARC Prize — ARC-AGI-3 leaderboardarcprize.org/leaderboard ChatGPT — pricing tierschatgpt.com/pricing Google — Gemini 3.8 Flashblog.google · 3-8-flash Harnesses Claude Code — memory & CLAUDE.mdcode.claude.com/docs · memory Claude Code — sub-agentscode.claude.com/docs · sub-agents OpenAI — Codexopenai.com/codex Codex CLI — sourcegithub.com/openai/codex",
+      "output_text": "Sources · further reading Sources & links (1/2) Models & pricing Anthropic — Claude models overview platform.claude.com/docs · models Claude — plans & pricing claude.com/pricing Anthropic — Claude Opus 5 (benchmarks) anthropic.com/news · claude-opus-5 Anthropic — Opus 4.5: effort & token efficiency anthropic.com/news · claude-opus-4-5 OpenAI — GPT-6 (Astra · Sol · Luna) openai.com/index/gpt-6-astra ARC Prize — ARC-AGI-3 leaderboard arcprize.org/leaderboard ChatGPT — pricing tiers chatgpt.com/pricing Google — Gemini 3.8 Flash blog.google · 3-8-flash Harnesses Claude Code — memory & CLAUDE.md code.claude.com/docs · memory Claude Code — sub-agents code.claude.com/docs · sub-agents OpenAI — Codex openai.com/codex Codex CLI — source github.com/openai/codex"
+    },
+    {
+      "slide": 26,
+      "label": "Sources 2 of 2",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "replace",
+          "source": "engineeringanthropic.com/engineering",
+          "output": "engineering anthropic.com/engineering"
+        },
+        {
+          "kind": "replace",
+          "source": "study)trychroma.com/research/context-rot",
+          "output": "study) trychroma.com/research/context-rot"
+        },
+        {
+          "kind": "replace",
+          "source": "Middlearxiv.org/abs/2307.03172",
+          "output": "Middle arxiv.org/abs/2307.03172"
+        },
+        {
+          "kind": "replace",
+          "source": "cachingplatform.claude.com/docs",
+          "output": "caching platform.claude.com/docs"
+        },
+        {
+          "kind": "replace",
+          "source": "thinkingplatform.claude.com/docs",
+          "output": "thinking platform.claude.com/docs"
+        },
+        {
+          "kind": "replace",
+          "source": "thinkanthropic.com/research",
+          "output": "think anthropic.com/research"
+        },
+        {
+          "kind": "replace",
+          "source": "Skillsanthropic.com/engineering",
+          "output": "Skills anthropic.com/engineering"
+        },
+        {
+          "kind": "replace",
+          "source": "(SKILL.md)github.com/anthropics/skills",
+          "output": "(SKILL.md) github.com/anthropics/skills"
+        },
+        {
+          "kind": "replace",
+          "source": "MCPanthropic.com/news",
+          "output": "MCP anthropic.com/news"
+        },
+        {
+          "kind": "replace",
+          "source": "docsmodelcontextprotocol.io",
+          "output": "docs modelcontextprotocol.io"
+        }
+      ],
+      "links": [
+        [
+          "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+          "https://www.trychroma.com/research/context-rot",
+          "https://arxiv.org/abs/2307.03172",
+          "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+          "https://platform.claude.com/docs/en/build-with-claude/thinking",
+          "https://www.anthropic.com/research/reasoning-models-dont-say-think",
+          "https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills",
+          "https://github.com/anthropics/skills",
+          "https://www.anthropic.com/news/model-context-protocol",
+          "https://modelcontextprotocol.io"
+        ],
+        [
+          "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+          "https://www.trychroma.com/research/context-rot",
+          "https://arxiv.org/abs/2307.03172",
+          "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+          "https://platform.claude.com/docs/en/build-with-claude/thinking",
+          "https://www.anthropic.com/research/reasoning-models-dont-say-think",
+          "https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills",
+          "https://github.com/anthropics/skills",
+          "https://www.anthropic.com/news/model-context-protocol",
+          "https://modelcontextprotocol.io"
+        ]
+      ],
+      "source_text": "Sources · context, memory & MCP Sources & links (2/2) Context, caching & reasoning Anthropic — Effective context engineeringanthropic.com/engineering Chroma — Context Rot (18-model study)trychroma.com/research/context-rot Liu et al. — Lost in the Middlearxiv.org/abs/2307.03172 Anthropic — Prompt cachingplatform.claude.com/docs · prompt-caching Anthropic — Extended / adaptive thinkingplatform.claude.com/docs · thinking Anthropic — Reasoning models don't always say what they thinkanthropic.com/research · cot-faithfulness Skills, plugins & MCP Anthropic — Agent Skillsanthropic.com/engineering · agent-skills Anthropic — Skills repo (SKILL.md)github.com/anthropics/skills Anthropic — Introducing MCPanthropic.com/news · model-context-protocol Model Context Protocol — spec & docsmodelcontextprotocol.io All figures verified September 2026. Models & prices move fast — re-check the primary sources before quoting.",
+      "output_text": "Sources · context, memory & MCP Sources & links (2/2) Context, caching & reasoning Anthropic — Effective context engineering anthropic.com/engineering Chroma — Context Rot (18-model study) trychroma.com/research/context-rot Liu et al. — Lost in the Middle arxiv.org/abs/2307.03172 Anthropic — Prompt caching platform.claude.com/docs · prompt-caching Anthropic — Extended / adaptive thinking platform.claude.com/docs · thinking Anthropic — Reasoning models don't always say what they think anthropic.com/research · cot-faithfulness Skills, plugins & MCP Anthropic — Agent Skills anthropic.com/engineering · agent-skills Anthropic — Skills repo (SKILL.md) github.com/anthropics/skills Anthropic — Introducing MCP anthropic.com/news · model-context-protocol Model Context Protocol — spec & docs modelcontextprotocol.io All figures verified September 2026. Models & prices move fast — re-check the primary sources before quoting."
+    }
+  ]
+}

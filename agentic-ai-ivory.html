@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Agentic AI — How Claude Code, Codex &amp; co. actually work</title>
+<link rel="stylesheet" href="ivory_design_system/styles.css">
+</head>
+<body>
+
+<!-- OPTIONAL DEMO: use a disposable local project with scoped permissions.
+  Show one test failure, a bounded fix and the final test/diff. If unavailable,
+  use the explicitly illustrative invoice trace in the next slides.
+  Later callbacks can use the finished transcript; no live timing dependency. -->
+
+<!--
+  Agentic AI (beginner deck), Ivory conversion of agentic-ai.html.
+  Ivory design system: ivory_design_system/DESIGN.md. deck.js numbers the
+  slides and provides notes (N), presenter window (P) and fullscreen (F).
+-->
+
+<deck-stage width="1920" height="1080">
+
+<!-- 01 · Title -->
+<section data-origin-slide="1" class="slide title-slide" data-label="Title"
+    data-speaker-notes="Introduce the beginner outcome: give one bounded task and verify it. The invoice example runs throughout. A live demonstration is optional; the illustrative trace is sufficient. Product detail is in the dated reference deck.">
+  <div class="slide-head"><span class="crumb">A beginner's introduction to agentic AI</span><span class="snum"></span></div>
+  <h1>Agentic<br>AI</h1>
+  <p class="sub">How <b>Claude&nbsp;Code</b>, <b>Codex</b> &amp; co. actually work</p>
+  <div class="meta">
+    <div><span class="lab">Author</span><a href="https://davidbudac.cz" target="_blank" rel="noopener">David&nbsp;Budáč</a></div>
+    <div><span class="lab">Revised</span>October 2026</div>
+  </div>
+</section>
+
+<!-- 02 · The hook (Ember: code panel → terminal trace; PASS is the point) -->
+<section data-origin-slide="2" class="slide" data-label="The hook"
+    data-speaker-notes="Introduce this as an illustrative four-step invoice example, not a recording of a benchmark. The expected tax rule comes from the task and test. Passing this one test does not establish all invoice behavior. We return to the same example throughout.">
+  <div class="slide-head"><span class="crumb">The hook</span><span class="snum"></span></div>
+  <h2>You type one line. It does the rest.</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="k">you ›</span> "the invoice test is failing — fix it"</span>
+      <span class="l"><span class="c">…then, with no further input, the AI on its own:</span></span>
+      <span class="l">  ✓ ran the tests           <span class="c">saw it expected 121, got 100</span></span>
+      <span class="l">  ✓ opened invoice.py       <span class="c">spotted VAT was never applied</span></span>
+      <span class="l">  ✓ edited the code         <span class="c">added the 21% VAT line</span></span>
+      <span class="l">  ✓ ran the tests again     <span class="key">PASS ✓</span></span>
+    </div>
+  </div>
+  <p class="note">Illustrative trace: a passing test is evidence for that case. Review the diff and relevant edge cases before accepting the change.</p>
+</section>
+
+<!-- 03 · Chatbot vs agent (Ember: .split of .tile + .tile.fill → .cards.c2, .tile.key on Agent) -->
+<section data-origin-slide="3" class="slide" data-label="Chatbot vs agent"
+    data-speaker-notes="Anchor on what the room already knows: ChatGPT in a browser tab. Walk the left tile as the familiar routine — it tells you what to do, and you do the copying, pasting and running yourself. Then the right tile: the agent does those steps itself and you review at the end. Land the note hard — it is often the very same model underneath; what changed is the machinery wrapped around it, which is exactly where we go next.">
+  <div class="slide-head"><span class="crumb">Core · chatbot vs agent</span><span class="snum"></span></div>
+  <h2>A chatbot answers. An agent acts.</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Chatbot — the one you know</span><p>You ask → it <b>tells you</b> what to do → <b>you</b> open the files, run the commands, paste the errors back… and repeat.</p></div>
+      <div class="tile key"><span class="lab">Agent</span><p>You ask → it <b>does the work itself</b> — reads the files, runs the commands, checks the result → <b>you review</b> at the end.</p></div>
+    </div>
+  </div>
+  <p class="note">The <b>model</b> proposes actions. The <b>harness</b> executes permitted tools. Together, repeating this process, they form an <b>agent</b>.</p>
+</section>
+
+<!-- 04 · Agenda (Ember: .cards.c3 used as an agenda → ol.bul.def.wide) -->
+<section data-origin-slide="5" class="slide" data-label="Agenda" data-speaker-notes="Keep this agenda to twenty seconds. The outcome is confidence giving a bounded task and checking it. Product comparisons are in the separate reference deck.">
+  <div class="slide-head"><span class="crumb">Our route</span><span class="snum"></span></div>
+  <h2>Give an agent a task you can check</h2>
+  <div class="zone">
+    <ol class="bul def wide">
+      <li><b>Understand the loop</b><span>Who chooses an action, who runs it, and how the result comes back.</span></li>
+      <li><b>Guide the work</b><span>Supply relevant context, useful project rules and scoped permissions.</span></li>
+      <li><b>Check the result</b><span>Inspect the changed files and run the check that defines done.</span></li>
+    </ol>
+  </div>
+  <p class="note">One example throughout: an invoice total that is missing VAT.</p>
+</section>
+
+<!-- 05 · Model in the cloud (SVG redrawn 1:1, full width under a two-line headline: 1680 × 480) -->
+<section data-origin-slide="10" class="slide" data-label="Model in the cloud"
+    data-speaker-notes="Define all three terms on this one diagram. This is the local CLI example: the harness runs with local files and tools, while inference is remote. Other products host the harness remotely; do not generalize this placement to every agent. The agent is the entire loop, not a third server.">
+  <div class="slide-head"><span class="crumb">Harness · what runs where</span><span class="snum"></span></div>
+  <h2>Model in the cloud, harness on your machine</h2>
+  <div class="zone">
+    <div class="fig">
+      <svg viewBox="0 0 1680 480" role="img" aria-label="You talk to the agent. The agent is Claude Code (the harness, running locally with your files and terminal) looping with the stateless model in the cloud.">
+        <!-- drawn 1:1 for a full-width figure under a two-line headline: 1680 × 480.
+             Agent boundary from column 3 (x 284); the harness box is the one clay element. -->
+        <defs>
+          <marker id="s05-a" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L12,6 L0,12 Z"/></marker>
+          <marker id="s05-d" class="dim" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L12,6 L0,12 Z"/></marker>
+        </defs>
+        <!-- you (outside the agent) -->
+        <rect class="dg-box" x="1" y="180" width="166" height="120" rx="2"/>
+        <text class="dg-t" x="84" y="236" text-anchor="middle">YOU</text>
+        <text class="dg-t mut" x="84" y="272" text-anchor="middle">you talk →</text>
+        <path class="dg-line" d="M167,240 H283" marker-end="url(#s05-a)"/>
+        <text class="dg-t mut" x="225" y="224" text-anchor="middle">chat</text>
+        <!-- agent: the whole running system -->
+        <rect class="dg-box outer" x="284" y="1" width="1395" height="478" rx="2"/>
+        <text class="dg-t" x="308" y="46">AGENT</text>
+        <text class="dg-t mut" x="410" y="46">= harness + model, in a loop</text>
+        <!-- your machine -->
+        <rect class="dg-box mid" x="308" y="72" width="544" height="388" rx="2"/>
+        <text class="dg-t acc" x="332" y="106">YOUR MACHINE (local)</text>
+        <rect class="dg-box key" x="332" y="128" width="496" height="140" rx="2"/>
+        <text class="dg-t" x="580" y="190" text-anchor="middle">CLAUDE CODE</text>
+        <text class="dg-t mut" x="580" y="226" text-anchor="middle">the harness</text>
+        <rect class="dg-box" x="332" y="348" width="236" height="88" rx="2"/>
+        <rect class="dg-box" x="592" y="348" width="236" height="88" rx="2"/>
+        <text class="dg-t" x="450" y="401" text-anchor="middle">your files</text>
+        <text class="dg-t" x="710" y="401" text-anchor="middle">▸ terminal</text>
+        <path class="dg-line" d="M450,268 V347" marker-end="url(#s05-a)"/>
+        <path class="dg-line" d="M710,268 V347" marker-end="url(#s05-a)"/>
+        <text class="dg-t mut" x="580" y="314" text-anchor="middle">runs actions</text>
+        <!-- cloud -->
+        <rect class="dg-box mid" x="1136" y="104" width="519" height="336" rx="2"/>
+        <text class="dg-t acc" x="1160" y="138">CLOUD</text>
+        <rect class="dg-box" x="1160" y="160" width="471" height="256" rx="2"/>
+        <text class="dg-t" x="1395" y="252" text-anchor="middle">MODEL</text>
+        <text class="dg-t mut" x="1395" y="296" text-anchor="middle">Claude model</text>
+        <text class="dg-t mut" x="1395" y="330" text-anchor="middle">stateless — no memory</text>
+        <!-- loop: harness ⇄ model -->
+        <path class="dg-line" d="M828,184 H1159" marker-end="url(#s05-a)"/>
+        <text class="dg-t acc" x="994" y="168" text-anchor="middle">sends context →</text>
+        <path class="dg-line dim" d="M1160,244 H829" marker-end="url(#s05-d)"/>
+        <text class="dg-t mut" x="994" y="278" text-anchor="middle">← next action</text>
+      </svg>
+    </div>
+  </div>
+  <p class="note">You talk to the <b>agent.</b> <b>Claude Code is the harness</b> — it runs locally with your files &amp; terminal, and loops with the <b>model in the cloud</b> (which stays stateless). The agent isn't a separate thing — <b>it's that loop.</b></p>
+</section>
+
+<!-- 06 · No memory in practice (Ember: .lead + .code → .split: the lead becomes two .bul rows; the code becomes a 1:1 SVG figure, 828 × 562, three message rows in order, no line numbers) -->
+<section data-origin-slide="9" class="slide" data-label="No memory in practice"
+    data-speaker-notes="Explain this request-based example: the name can be recalled because the harness provides it in the request. Products may store history or durable memories, but the model needs relevant information supplied for the current call. We no longer need the Memento analogy or a separate memory recap.">
+  <div class="slide-head"><span class="crumb">Model · example</span><span class="snum"></span></div>
+  <h2>"No memory" in practice</h2>
+  <div class="zone">
+    <div class="split">
+      <ul class="bul">
+        <li>There's no "conversation" on the model's side.</li>
+        <li>Each call hands it the <b>whole history</b> as one flat list:</li>
+      </ul>
+      <div class="fig">
+        <svg viewBox="0 0 828 562" role="img" aria-label="The request on turn 3 repeats the whole chat in order: you said My name is David, it replied, you now ask what your name is; the question is answerable only because the first line was re-sent">
+          <!-- drawn 1:1 for a split figure under a one-line headline: 828 × 562.
+               Source code-comment as caption; three message rows in request order (no line numbers);
+               the first row is the clay element; the source's trailing comment links back to it. -->
+          <defs><marker id="s06-d" class="dim" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L12,6 L0,12 Z"/></marker></defs>
+          <text class="dg-t mut" x="0" y="24"># What the model is handed on turn 3 —</text>
+          <text class="dg-t mut" x="0" y="54">the WHOLE chat, again:</text>
+          <rect class="dg-box key" x="1" y="92" width="760" height="100" rx="2"/>
+          <text class="dg-t acc" x="32" y="149">you said:</text>
+          <text class="dg-t" x="246" y="151">"My name is David."</text>
+          <rect class="dg-box" x="1" y="220" width="760" height="100" rx="2"/>
+          <text class="dg-t acc" x="32" y="277">it replied:</text>
+          <text class="dg-t" x="246" y="279">"Nice to meet you, David."</text>
+          <rect class="dg-box" x="1" y="348" width="760" height="100" rx="2"/>
+          <text class="dg-t acc" x="32" y="405">you now ask:</text>
+          <text class="dg-t" x="246" y="407">"What's my name?"</text>
+          <text class="dg-t mut" x="0" y="520">← answerable only because line 1 was re-sent</text>
+          <path class="dg-line dim" d="M640,513 H800 V142 H763" marker-end="url(#s06-d)"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <p class="note">Delete the first line and the model <b>can't answer.</b> The "memory" lives in the request — not the model.</p>
+</section>
+
+<!-- 07 · What one turn sends -->
+<section data-origin-slide="11" class="slide" data-label="What one turn sends" data-speaker-notes="Point to the five groups. Do not imply every file in the repository is automatically sent: only supplied or retrieved content is present. Later, summaries can replace older history. We define context and tokens here instead of asking the room to memorize a glossary.">
+  <div class="slide-head"><span class="crumb">The request</span><span class="snum"></span></div>
+  <h2>One message sits inside a larger request</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="k">SYSTEM</span>       role, rules and tool descriptions</span>
+      <span class="l"><span class="k">PROJECT</span>      how to run the invoice tests</span>
+      <span class="l"><span class="k">HISTORY</span>      the task and earlier results</span>
+      <span class="l"><span class="k">TOOL OUTPUT</span>  invoice.py and the failing test</span>
+      <span class="l"><span class="k">YOUR MESSAGE</span> &quot;fix the missing VAT&quot;</span>
+    </div>
+  </div>
+  <p class="note"><b>Context</b> is the information supplied for this call. <b>Tokens</b> are the chunks used to measure it.</p>
+</section>
+
+<!-- 08 · Optional demo -->
+<section data-origin-slide="4" class="slide" data-label="Optional demo" data-speaker-notes="Use a prepared disposable project with no production credentials. Explain the allowed files and commands before starting. Inspect one tool call, the final test output and the diff. If the run finishes early, use its transcript for later discussion. Do not weaken permissions to avoid a pause. Without a prepared project, use the explicitly illustrative trace.">
+  <div class="slide-head"><span class="crumb">Optional live example</span><span class="snum"></span></div>
+  <h2>Watch one bounded task</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l">Fix the invoice calculation so the VAT test passes.</span>
+      <span class="l">Do not change the test or unrelated files.</span>
+      <span class="l">Run the relevant tests and show the final diff.</span>
+    </div>
+  </div>
+  <p class="note">Optional live run: use a disposable project and scoped permissions. The next slide provides an illustrative trace if no demo is available.</p>
+</section>
+
+<!-- 09 · The agent loop (Ember: .split video + bullets → .split, text left and video right as in agentic-engineering-ivory) -->
+<section data-origin-slide="12" class="slide" data-label="The agent loop"
+    data-speaker-notes="Let the animation run once. Use one call/result pair from a live or completed transcript; the task does not need to still be running. Distinguish the model deciding to stop from the human acceptance check. The next slide makes the loop concrete.">
+  <div class="slide-head"><span class="crumb">Agent · the loop</span><span class="snum"></span></div>
+  <h2>An agent is a loop</h2>
+  <div class="zone">
+    <div class="split">
+      <ol class="bul">
+        <li><b>Propose:</b> the model chooses the next action.</li>
+        <li><b>Run:</b> the harness executes it under the configured permissions.</li>
+        <li><b>Observe:</b> the result returns as context for the next step.</li>
+        <li><b>Check:</b> stop when the task is verified, or ask when blocked.</li>
+      </ol>
+      <div class="fig">
+        <!-- Remotion animation (remotion/src/AgentLoop.tsx), ivory render -->
+        <video src="assets/anim/agent-loop-ivory.mp4" width="1152" height="912" autoplay muted loop playsinline aria-label="The agent loop: model proposes an action, harness runs it, result returns to the model, repeat until done"></video>
+      </div>
+    </div>
+  </div>
+  <p class="note">In a live run or a finished transcript, point to one tool call and its result. That is one lap of the loop.</p>
+</section>
+
+<!-- 10 · The loop, worked example (terminal trace) -->
+<section data-origin-slide="13" class="slide" data-label="The loop, worked example" data-speaker-notes="Each tool call and result is one lap. Read the trace top to bottom and point to the same task from the hook. The passing test demonstrates the example, while diff review and additional relevant checks establish acceptance.">
+  <div class="slide-head"><span class="crumb">The loop</span><span class="snum"></span></div>
+  <h2>The invoice fix, step by step</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l">run tests     <span class="a">→</span> FAIL: expected 121, got 100</span>
+      <span class="l">read invoice  <span class="a">→</span> VAT is missing from the total</span>
+      <span class="l">edit code     <span class="a">→</span> apply the order’s 21% VAT rate</span>
+      <span class="l">run tests     <span class="a">→</span> <span class="key">PASS</span></span>
+      <span class="l">review diff   <span class="a">→</span> check scope and edge cases</span>
+    </div>
+  </div>
+  <p class="note">Illustrative trace. The model requests the actions; the harness runs them and returns the results.</p>
+</section>
+
+<!-- 11 · Thinking (SVG redrawn 1:1, split figure left: 828 × 562) -->
+<section data-origin-slide="14" class="slide" data-label="Thinking"
+    data-speaker-notes="The diagram is a teaching illustration, not access to a real private scratchpad. Merge the old thinking caveat here: visible reasoning is not guaranteed to faithfully expose the cause of a decision. Explain the practical tradeoff without universal effort defaults or a live timing dependency.">
+  <div class="slide-head"><span class="crumb">Thinking · how it works</span><span class="snum"></span></div>
+  <h2>The model thinks before it answers</h2>
+  <div class="zone">
+    <div class="split flip">
+      <div class="fig">
+        <svg viewBox="0 0 828 562" role="img" aria-label="Illustration of intermediate reasoning before an answer; not a captured internal trace">
+          <!-- drawn 1:1 for a split figure under a one-line headline: 828 × 562 -->
+          <defs><marker id="s11-a" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L12,6 L0,12 Z"/></marker></defs>
+          <rect class="dg-box" x="284" y="1" width="260" height="72" rx="2"/>
+          <text class="dg-t" x="414" y="46" text-anchor="middle">PROMPT</text>
+          <path class="dg-line" d="M414,73 V119" marker-end="url(#s11-a)"/>
+          <rect class="dg-box outer" x="1" y="120" width="826" height="300" rx="2"/>
+          <text class="dg-t acc" x="32" y="164">ILLUSTRATIVE REASONING</text>
+          <text class="dg-t mut" x="32" y="218">• recall the VAT rule (21%)</text>
+          <text class="dg-t mut" x="32" y="260">• 100 × 1.21 = 121</text>
+          <text class="dg-t mut" x="32" y="302">• so the test expects the tax added</text>
+          <text class="dg-t mut" x="32" y="376">(these reasoning tokens cost money too)</text>
+          <path class="dg-line" d="M414,420 V488" marker-end="url(#s11-a)"/>
+          <rect class="dg-box key" x="284" y="489" width="260" height="72" rx="2"/>
+          <text class="dg-t" x="414" y="534" text-anchor="middle">ANSWER</text>
+        </svg>
+      </div>
+      <ul class="bul">
+        <li>Reasoning gives the model room to work through intermediate steps before answering or acting.</li>
+        <li>More effort can help a difficult diagnosis; it also takes more time and tokens.</li>
+        <li>For the invoice task, verify the VAT rule and run the test. A plausible explanation alone is not evidence.</li>
+      </ul>
+    </div>
+  </div>
+  <p class="note">Visible thinking may be a summary. Judge the result and the checks, not how convincing the narration sounds.</p>
+</section>
+
+<!-- 12 · Choose an interface -->
+<section data-origin-slide="21" class="slide" data-label="Choose an interface" data-speaker-notes="The loop is the same teaching model across surfaces, but capabilities and permissions differ. Let beginners start with the surface they understand; avoid turning this into a catalogue of products.">
+  <div class="slide-head"><span class="crumb">Getting started</span><span class="snum"></span></div>
+  <h2>Choose the interface you already work in</h2>
+  <div class="zone">
+    <div class="cards c3">
+      <div class="tile"><span class="lab">01</span><h3>Terminal</h3><p>Run a coding agent beside your commands and tests.</p></div>
+      <div class="tile"><span class="lab">02</span><h3>Editor</h3><p>Review and change code inside your existing development workflow.</p></div>
+      <div class="tile"><span class="lab">03</span><h3>App or web</h3><p>Give a task, inspect progress, and review the returned files.</p></div>
+    </div>
+  </div>
+  <p class="note">Look for clear permissions, visible changes and a way to run checks. Model and product lists are in the reference deck.</p>
+</section>
+
+<!-- 13 · Choose a billing route -->
+<section data-origin-slide="26" class="slide" data-label="Choose a billing route" data-speaker-notes="Do not claim the API has no cap: budgets, rate limits and provider limits still matter. Avoid prescribing subscription credentials for custom automation. Detailed historical plan tables are in the dated reference deck.">
+  <div class="slide-head"><span class="crumb">Getting started</span><span class="snum"></span></div>
+  <h2>Two ways to pay for the work</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Subscription</span><p>A plan for using an app or coding tool, subject to its usage limits.</p></div>
+      <div class="tile"><span class="lab">Metered API</span><p>Usage-based billing for integrations and automated workloads. Set a budget and monitor it.</p></div>
+    </div>
+  </div>
+  <p class="note">Check the chosen product’s plan, supported access route and limits. Price per token is only one part of the cost of a completed task.</p>
+</section>
+
+<!-- 14 · What context is (SVG redrawn 1:1, split figure right under a two-line headline: 828 × 480) -->
+<section data-origin-slide="28" class="slide" data-label="What context is"
+    data-speaker-notes="Use the stacked diagram to revisit the payload. Avoid equating context with all learned knowledge: the model also has pretrained knowledge. What it lacks is access to project facts that have not been supplied or retrieved. The diagram is conceptual, not a measurement of this session.">
+  <div class="slide-head"><span class="crumb">Context · what it is</span><span class="snum"></span></div>
+  <h2>Context = the model's short-term memory</h2>
+  <div class="zone">
+    <div class="split">
+      <ul class="bul">
+        <li>Context contains the instructions, conversation and tool results supplied for <b>this call</b>.</li>
+        <li>The <b>context window</b> is the maximum capacity. Its size depends on the model and configuration.</li>
+        <li>Supply the relevant test and invoice code. An unread file cannot guide the model through this request.</li>
+      </ul>
+      <div class="fig">
+        <svg viewBox="0 0 828 480" role="img" aria-label="The context window is a fixed-size box filled by system prompt, rules, history, files and tool output">
+          <!-- drawn 1:1 for a split figure under a two-line headline: 828 × 480. Equal parts: no clay. -->
+          <rect class="dg-box mid" x="1" y="1" width="826" height="478" rx="2"/>
+          <text class="dg-t acc" x="32" y="46">CONTEXT WINDOW · finite capacity</text>
+          <rect class="dg-box" x="32" y="76" width="764" height="64" rx="2"/>
+          <rect class="dg-box" x="32" y="154" width="764" height="64" rx="2"/>
+          <rect class="dg-box" x="32" y="232" width="764" height="64" rx="2"/>
+          <rect class="dg-box" x="32" y="310" width="764" height="64" rx="2"/>
+          <rect class="dg-box" x="32" y="388" width="504" height="64" rx="2"/>
+          <rect class="dg-box outer" x="560" y="388" width="236" height="64" rx="2"/>
+          <text class="dg-t" x="60" y="117">system prompt</text>
+          <text class="dg-t" x="60" y="195">CLAUDE.md · rules</text>
+          <text class="dg-t" x="60" y="273">conversation history</text>
+          <text class="dg-t" x="60" y="351">files you opened</text>
+          <text class="dg-t" x="60" y="429">tool output</text>
+          <text class="dg-t mut" x="678" y="427" text-anchor="middle">free space</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 15 · Context quality -->
+<section data-origin-slide="29" class="slide" data-label="Context quality" data-speaker-notes="Replace the old quality animation here: its fixed curve can suggest a numerical threshold the evidence does not establish. Context behavior depends on task, model and distractors. The context research remains linked on the sources slide.">
+  <div class="slide-head"><span class="crumb">Context</span><span class="snum"></span></div>
+  <h2>More context is not always more useful</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Useful context</span><p>The failing test, the VAT rule and the code path that computes the total.</p></div>
+      <div class="tile"><span class="lab">Distracting context</span><p>Old tasks, duplicate file dumps and unrelated logs that obscure those facts.</p></div>
+    </div>
+  </div>
+  <p class="note">Watch for ignored requirements, repeated work and missed evidence. There is no universal percentage at which quality fails.</p>
+</section>
+
+<!-- 16 · Keep context useful -->
+<section data-origin-slide="30" class="slide" data-label="Keep context useful" data-speaker-notes="No live checkpoint is required. Show a completed transcript if useful. Do not prescribe a fixed 40 or 50 percent reset rule. Preserve requirements and evidence during a handoff.">
+  <div class="slide-head"><span class="crumb">Context</span><span class="snum"></span></div>
+  <h2>Choose the next step from the task state</h2>
+  <div class="zone">
+    <div class="cards c3">
+      <div class="tile"><span class="lab">01</span><h3>New task</h3><p>Start a fresh conversation when the previous task is complete.</p></div>
+      <div class="tile"><span class="lab">02</span><h3>Same task</h3><p>Summarize the goal, decisions, failures and next check before continuing.</p></div>
+      <div class="tile"><span class="lab">03</span><h3>Broad search</h3><p>Delegate investigation and request findings with file references.</p></div>
+    </div>
+  </div>
+  <p class="note">Inspect the context display as a capacity indicator. Check behavior and results before deciding what to remove.</p>
+</section>
+
+<!-- 17 · Caching and compaction -->
+<section data-origin-slide="31" class="slide" data-label="Caching and compaction" data-speaker-notes="These mechanisms solve different problems. Their implementation and activation depend on the harness/provider. Do not describe cached content as permanent model memory or imply compaction preserves every detail.">
+  <div class="slide-head"><span class="crumb">Context</span><span class="snum"></span></div>
+  <h2>Cheaper reuse and shorter context</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Caching</span><p>Reuses computed state for a matching prefix. It can reduce processing cost and latency; the content is still input.</p></div>
+      <div class="tile"><span class="lab">Compaction</span><p>Replaces older material with a summary. It frees room, but details omitted from that summary may be lost.</p></div>
+    </div>
+  </div>
+  <p class="note">For the invoice task, preserve the VAT rule, failing test, attempted changes and verification command.</p>
+</section>
+
+<!-- 18 · Sub-agents (Ember: .split video + bullets → .split, text left and video right as in agentic-engineering-ivory) -->
+<section data-origin-slide="32" class="slide" data-label="Sub-agents"
+    data-speaker-notes="Preserve the animation as an illustration of output isolation. It is not a universal statement about input inheritance: fresh subagents and forks differ. Claude Code subagent documentation, checked 2026-10-03, describes both. Ask for file locations and uncertainty, not a bare conclusion. Delegation has coordination and token costs.">
+  <div class="slide-head"><span class="crumb">Context · sub-agents</span><span class="snum"></span></div>
+  <h2>Sub-agents keep the main context clean</h2>
+  <div class="zone">
+    <div class="split">
+      <ul class="bul">
+        <li>Delegate a focused investigation, such as finding every place invoice totals are calculated.</li>
+        <li>The helper’s intermediate tool output stays in its own working context. Ask for a concise result with evidence.</li>
+        <li>A fresh subagent needs a self-contained task. A conversation fork can inherit the existing history.</li>
+      </ul>
+      <div class="fig">
+        <!-- Remotion animation (remotion/src/Subagents.tsx), ivory render -->
+        <video src="assets/anim/subagents-ivory.mp4" width="1176" height="756" autoplay muted loop playsinline aria-label="A main agent delegates messy work to sub-agents that have their own context and return only a short summary"></video>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 19 · Permissions -->
+<section data-origin-slide="33" class="slide" data-label="Permissions" data-speaker-notes="Use an actual permission decision from the prepared demo if available. Product mode names differ and should not be presented as identical. A worktree separates edits; it is not by itself a security sandbox. Keep the default approval flow for the demo.">
+  <div class="slide-head"><span class="crumb">Permissions</span><span class="snum"></span></div>
+  <h2>Decide what the agent may touch</h2>
+  <div class="zone">
+    <div class="cards c3">
+      <div class="tile"><span class="lab">01</span><h3>Scope the work</h3><p>Allow the project files and test commands needed for the task.</p></div>
+      <div class="tile"><span class="lab">02</span><h3>Keep approval points</h3><p>Ask before destructive actions, access changes or publishing outside the task.</p></div>
+      <div class="tile"><span class="lab">03</span><h3>Contain mistakes</h3><p>For unattended experiments, restrict filesystem, network and credentials in an actual sandbox.</p></div>
+    </div>
+  </div>
+  <p class="note">A separate folder or Git branch protects neither credentials nor the rest of the machine. Check the configured boundary.</p>
+</section>
+
+<!-- 20 · Project rules -->
+<section data-origin-slide="36" class="slide" data-label="Project rules" data-speaker-notes="This is an illustrative project file, not the actual repository test command. Use the same invoice example. Persistent notes become useful only when the harness loads the relevant information; avoid repeating the no-memory analogy.">
+  <div class="slide-head"><span class="crumb">Project knowledge</span><span class="snum"></span></div>
+  <h2>Teach it the rules it cannot infer</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="c"># CLAUDE.md — invoice project</span></span>
+      <span class="l">- Run invoice checks with: python -m unittest</span>
+      <span class="l">- VAT rates come from the order record.</span>
+      <span class="l">- Do not replace the tests to make a fix pass.</span>
+      <span class="l">- Ask before changing the stored invoice schema.</span>
+    </div>
+  </div>
+  <p class="note">Keep standing rules short. Use the instruction-file convention supported by your harness, such as CLAUDE.md or AGENTS.md.</p>
+</section>
+
+<!-- 21 · Skills and plugins -->
+<section data-origin-slide="37" class="slide" data-label="Skills and plugins" data-speaker-notes="The skill could check VAT, zero-value invoices and rounding, then report the test output and unverified cases. Its description helps the agent discover it. Descriptions and loaded content still have context cost. Keep detailed installation steps for a deeper talk.">
+  <div class="slide-head"><span class="crumb">Project knowledge</span><span class="snum"></span></div>
+  <h2>Save a repeatable check as a skill</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l">invoice-check/</span>
+      <span class="l">  SKILL.md       when to run + how to verify</span>
+      <span class="l">  scripts/       optional deterministic checks</span>
+      <span class="l">  references/    VAT and rounding rules</span>
+    </div>
+  </div>
+  <p class="note"><b>Skill:</b> a reusable procedure loaded when relevant. <b>Plugin:</b> a way to distribute a toolkit to a team.</p>
+</section>
+
+<!-- 22 · Tools for the invoice task -->
+<section data-origin-slide="38" class="slide" data-label="Tools for the invoice task" data-speaker-notes="These are access mechanisms, not competing intelligence levels. CLIs can call remote APIs too. For this example, the agent might read the issue that defines the invoice bug; it should not modify financial production data.">
+  <div class="slide-head"><span class="crumb">External tools</span><span class="snum"></span></div>
+  <h2>Give the agent access to the next fact</h2>
+  <div class="zone">
+    <div class="cards c3">
+      <div class="tile"><span class="lab">01</span><h3>CLI</h3><p>Run the project’s invoice tests and inspect Git changes.</p></div>
+      <div class="tile"><span class="lab">02</span><h3>API</h3><p>Fetch a permitted record through a service interface.</p></div>
+      <div class="tile"><span class="lab">03</span><h3>MCP connection</h3><p>Expose supported issue-tracker or document tools to the agent.</p></div>
+    </div>
+  </div>
+  <p class="note">Choose the narrowest useful access. A connector does not grant permission to publish or change unrelated records.</p>
+</section>
+
+<!-- 23 · MCP (SVG redrawn 1:1, split figure left: 828 × 562; the source's diagonal tangle becomes orthogonal hairline routes) -->
+<section data-origin-slide="39" class="slide" data-label="MCP"
+    data-speaker-notes="Use the integration diagram briefly. Explain that MCP standardizes the interface between a client and server; it does not guarantee every app supports every tool. The invoice task remains the example, and posting results is a separate authorized action.">
+  <div class="slide-head"><span class="crumb">Reaching out · MCP</span><span class="snum"></span></div>
+  <h2>MCP = "USB-C for agents"</h2>
+  <div class="zone">
+    <div class="split flip">
+      <div class="fig">
+        <svg viewBox="0 0 828 562" role="img" aria-label="Without MCP every app needs a custom connector to every tool; with MCP each connects once through a shared hub">
+          <!-- drawn 1:1 for a split figure under a one-line headline: 828 × 562.
+               Left: 3 × 3 point-to-point routes (hairline, orthogonal). Right: one hub, the clay element. -->
+          <text class="dg-t mut" x="195" y="40" text-anchor="middle">without MCP — N×M glue</text>
+          <text class="dg-t acc" x="633" y="40" text-anchor="middle">with MCP — connect once</text>
+          <!-- left: every app wired to every tool -->
+          <path class="dg-line dim" d="M96,134 H120 V134 H293 M96,150 H139 V314 H293 M96,166 H158 V494 H293 M96,314 H177 V150 H293 M96,330 H196 V330 H293 M96,346 H215 V510 H293 M96,494 H234 V166 H293 M96,510 H253 V346 H293 M96,526 H272 V526 H293"/>
+          <rect class="dg-box" x="1" y="120" width="95" height="60" rx="2"/>
+          <rect class="dg-box" x="1" y="300" width="95" height="60" rx="2"/>
+          <rect class="dg-box" x="1" y="480" width="95" height="60" rx="2"/>
+          <rect class="dg-box" x="294" y="120" width="96" height="60" rx="2"/>
+          <rect class="dg-box" x="294" y="300" width="96" height="60" rx="2"/>
+          <rect class="dg-box" x="294" y="480" width="96" height="60" rx="2"/>
+          <!-- right: each side connects once through the hub -->
+          <path class="dg-line" d="M534,150 H561 V510 H534 M534,330 H587 M681,330 H706 M731,150 H706 V510 H731 M706,330 H730"/>
+          <rect class="dg-box" x="438" y="120" width="96" height="60" rx="2"/>
+          <rect class="dg-box" x="438" y="300" width="96" height="60" rx="2"/>
+          <rect class="dg-box" x="438" y="480" width="96" height="60" rx="2"/>
+          <rect class="dg-box key" x="588" y="300" width="92" height="60" rx="2"/>
+          <text class="dg-t" x="634" y="339" text-anchor="middle">MCP</text>
+          <rect class="dg-box" x="731" y="120" width="96" height="60" rx="2"/>
+          <rect class="dg-box" x="731" y="300" width="96" height="60" rx="2"/>
+          <rect class="dg-box" x="731" y="480" width="96" height="60" rx="2"/>
+        </svg>
+      </div>
+      <ul class="bul">
+        <li>MCP standardizes how a supported client discovers and calls tools exposed by a server.</li>
+        <li>Example: read the issue describing the invoice bug, then propose an update with verification evidence.</li>
+        <li>Each integration still needs compatible support, authentication and scoped permissions.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 24 · Your first agent task (Ember: bullets with bold lead-ins → ol.bul.def.wide, as in agentic-engineering-ivory 29) -->
+<section data-origin-slide="40" class="slide" data-label="Your first agent task" data-speaker-notes="End here for questions. Ask the audience to choose one small task with a check they can run. The following two slides are source references, not another recap.">
+  <div class="slide-head"><span class="crumb">Try this next</span><span class="snum"></span></div>
+  <h2>Give a bounded task. Check the result.</h2>
+  <div class="zone">
+    <ol class="bul def wide">
+      <li><b>Goal:</b> name the result and the files or system in scope.</li>
+      <li><b>Context:</b> supply the relevant examples, rules and failure evidence.</li>
+      <li><b>Permissions:</b> decide what can run and where approval is needed.</li>
+      <li><b>Acceptance:</b> inspect the diff, run the relevant check, record what remains unverified.</li>
+    </ol>
+  </div>
+  <p class="note"><a href="agentic-ai-reference.html">Optional reference: terminology, products and historical pricing</a> · <a href="index.html">All talks</a></p>
+</section>
+
+<!-- 25 · Sources 1 of 2 (8 + 4 links exceed .links (3–5 rows per column): numeric-layout table, title link left, URL right; reported as unfit) -->
+<section data-origin-slide="42" class="slide" data-label="Sources 1 of 2"
+    data-speaker-notes="Leave this up while questions run rather than reading it. Point out the two most useful starting places for a beginner — the Claude models overview and the pricing page — and say the rest are there for anyone who wants the primary source. Mention the deck lives in the repo, so nobody needs to photograph the links.">
+  <div class="slide-head"><span class="crumb">Sources · further reading</span><span class="snum"></span></div>
+  <h2>Sources &amp; links (1/2)</h2>
+  <div class="zone">
+    <table class="tbl num">
+      <thead><tr><th scope="col">Models &amp; pricing</th><th scope="col"></th></tr></thead>
+      <tbody>
+        <tr><td><a href="https://platform.claude.com/docs/en/models/overview" target="_blank" rel="noopener">Anthropic — Claude models overview</a></td><td><span class="mut">platform.claude.com/docs · models</span></td></tr>
+        <tr><td><a href="https://claude.com/pricing" target="_blank" rel="noopener">Claude — plans &amp; pricing</a></td><td><span class="mut">claude.com/pricing</span></td></tr>
+        <tr><td><a href="https://www.anthropic.com/news/claude-opus-5" target="_blank" rel="noopener">Anthropic — Claude Opus 5 (benchmarks)</a></td><td><span class="mut">anthropic.com/news · claude-opus-5</span></td></tr>
+        <tr><td><a href="https://www.anthropic.com/news/claude-opus-4-5" target="_blank" rel="noopener">Anthropic — Opus 4.5: effort &amp; token efficiency</a></td><td><span class="mut">anthropic.com/news · claude-opus-4-5</span></td></tr>
+        <tr><td><a href="https://openai.com/index/gpt-6-astra/" target="_blank" rel="noopener">OpenAI — GPT-6 (Astra · Sol · Luna)</a></td><td><span class="mut">openai.com/index/gpt-6-astra</span></td></tr>
+        <tr><td><a href="https://arcprize.org/leaderboard" target="_blank" rel="noopener">ARC Prize — ARC-AGI-3 leaderboard</a></td><td><span class="mut">arcprize.org/leaderboard</span></td></tr>
+        <tr><td><a href="https://chatgpt.com/pricing/" target="_blank" rel="noopener">ChatGPT — pricing tiers</a></td><td><span class="mut">chatgpt.com/pricing</span></td></tr>
+        <tr><td><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/" target="_blank" rel="noopener">Google — Gemini 3.8 Flash</a></td><td><span class="mut">blog.google · 3-8-flash</span></td></tr>
+        <tr><th scope="rowgroup">Harnesses</th><th></th></tr>
+        <tr><td><a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">Claude Code — memory &amp; CLAUDE.md</a></td><td><span class="mut">code.claude.com/docs · memory</span></td></tr>
+        <tr><td><a href="https://code.claude.com/docs/en/sub-agents" target="_blank" rel="noopener">Claude Code — sub-agents</a></td><td><span class="mut">code.claude.com/docs · sub-agents</span></td></tr>
+        <tr><td><a href="https://openai.com/codex/" target="_blank" rel="noopener">OpenAI — Codex</a></td><td><span class="mut">openai.com/codex</span></td></tr>
+        <tr><td><a href="https://github.com/openai/codex" target="_blank" rel="noopener">Codex CLI — source</a></td><td><span class="mut">github.com/openai/codex</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 26 · Sources 2 of 2 (6 + 4 links, one title too long for an 828px .linkcol: same table layout as slide 25; reported as unfit) -->
+<section data-origin-slide="43" class="slide" data-label="Sources 2 of 2"
+    data-speaker-notes="These are the papers behind the claims made earlier — context rot, lost in the middle, and the reasoning-faithfulness research from the thinking section. Point at them if anyone challenges a number. Repeat the closing caveat: everything here was verified in September 2026 and moves fast, so re-check before quoting.">
+  <div class="slide-head"><span class="crumb">Sources · context, memory &amp; MCP</span><span class="snum"></span></div>
+  <h2>Sources &amp; links (2/2)</h2>
+  <div class="zone">
+    <table class="tbl num">
+      <thead><tr><th scope="col">Context, caching &amp; reasoning</th><th scope="col"></th></tr></thead>
+      <tbody>
+        <tr><td><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">Anthropic — Effective context engineering</a></td><td><span class="mut">anthropic.com/engineering</span></td></tr>
+        <tr><td><a href="https://www.trychroma.com/research/context-rot" target="_blank" rel="noopener">Chroma — Context Rot (18-model study)</a></td><td><span class="mut">trychroma.com/research/context-rot</span></td></tr>
+        <tr><td><a href="https://arxiv.org/abs/2307.03172" target="_blank" rel="noopener">Liu et al. — Lost in the Middle</a></td><td><span class="mut">arxiv.org/abs/2307.03172</span></td></tr>
+        <tr><td><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noopener">Anthropic — Prompt caching</a></td><td><span class="mut">platform.claude.com/docs · prompt-caching</span></td></tr>
+        <tr><td><a href="https://platform.claude.com/docs/en/build-with-claude/thinking" target="_blank" rel="noopener">Anthropic — Extended / adaptive thinking</a></td><td><span class="mut">platform.claude.com/docs · thinking</span></td></tr>
+        <tr><td><a href="https://www.anthropic.com/research/reasoning-models-dont-say-think" target="_blank" rel="noopener">Anthropic — Reasoning models don't always say what they think</a></td><td><span class="mut">anthropic.com/research · cot-faithfulness</span></td></tr>
+        <tr><th scope="rowgroup">Skills, plugins &amp; MCP</th><th></th></tr>
+        <tr><td><a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills" target="_blank" rel="noopener">Anthropic — Agent Skills</a></td><td><span class="mut">anthropic.com/engineering · agent-skills</span></td></tr>
+        <tr><td><a href="https://github.com/anthropics/skills" target="_blank" rel="noopener">Anthropic — Skills repo (SKILL.md)</a></td><td><span class="mut">github.com/anthropics/skills</span></td></tr>
+        <tr><td><a href="https://www.anthropic.com/news/model-context-protocol" target="_blank" rel="noopener">Anthropic — Introducing MCP</a></td><td><span class="mut">anthropic.com/news · model-context-protocol</span></td></tr>
+        <tr><td><a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">Model Context Protocol — spec &amp; docs</a></td><td><span class="mut">modelcontextprotocol.io</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">All figures verified September 2026. Models &amp; prices move fast — re-check the primary sources before quoting.</p>
+</section>
+
+</deck-stage>
+<script src="ivory_design_system/deck-stage.js"></script>
+<script src="ivory_design_system/deck.js"></script>
+</body>
+</html>
