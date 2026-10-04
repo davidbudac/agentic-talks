@@ -1,0 +1,65 @@
+{
+  "composition": {
+    "width": 1200,
+    "height": 900,
+    "fps": 30,
+    "frames": 300
+  },
+  "legacy_comparison": [
+    {
+      "theme": "light",
+      "frame": 45,
+      "byte_identical": true,
+      "sha256": "b845bc12d78a63770fd32c858f56cd4018728fc9fed9f902d71dc22d135d1fd1"
+    },
+    {
+      "theme": "light",
+      "frame": 135,
+      "byte_identical": true,
+      "sha256": "9f9a4f6028a96f0ae6b382ea1660035e03f3ac1f91065a3f77537420a7eb354a"
+    },
+    {
+      "theme": "light",
+      "frame": 265,
+      "byte_identical": true,
+      "sha256": "537db765e191074be8f03a3e88c6da038c5ee5706c0ee63d9d072243657482e3"
+    },
+    {
+      "theme": "dark",
+      "frame": 45,
+      "byte_identical": true,
+      "sha256": "fd10c5c209d18603ead5eeab310c7f62737676c2fe2bf6f1220de56d62fdee05"
+    },
+    {
+      "theme": "dark",
+      "frame": 135,
+      "byte_identical": true,
+      "sha256": "7041ddfcdcc95f2b25cf50b04c5550e3933a0ebfd8aa51d40959a0f5b4a42fb9"
+    },
+    {
+      "theme": "dark",
+      "frame": 265,
+      "byte_identical": true,
+      "sha256": "fde67ef18069cf7ddc1d4d474227dcafadc348bf17a9386168997fd4d0889bf5"
+    }
+  ],
+  "ivory_mp4_frames_opened": [
+    45,
+    135,
+    265
+  ],
+  "ivory_corner_rgb": [
+    250,
+    249,
+    246
+  ],
+  "one_clay_element": "model outline",
+  "checks": [
+    "TypeScript noEmit passed",
+    "Existing source/media hash manifest unchanged"
+  ],
+  "limitations": [
+    "Light/dark comparison sampled three frames each, not all 300 frames."
+  ],
+  "render_command": "npx remotion render stateless-ivory ../assets/anim/stateless-ivory.mp4"
+}
