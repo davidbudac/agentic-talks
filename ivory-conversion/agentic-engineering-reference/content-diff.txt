@@ -1,0 +1,42 @@
+Content comparison: agentic-engineering-reference.html -> agentic-engineering-reference-ivory.html
+Generated from ivory-conversion/audit.py (audit.json, exit 0, no structural or per-slide errors)
+plus a raw code-line check (44/44 source code lines, including blank lines and leading
+indentation, present character for character in the output .code spans).
+Slides: 10 -> 10
+
+01 Reference guide [no origin attr]: data-label same; data-origin-slide absent in both; raw notes same; hrefs same [agentic-engineering.html]; text identical
+02 Explore a transformer [origin 8]: data-label same; origin same; raw notes same; hrefs same; text: crumb order (see A)
+03 Request anatomy [origin 18]: data-label same; origin same; raw notes same; hrefs same; text: crumb order (see A)
+04 Growth arithmetic [origin 28]: data-label same; origin same; raw notes same; hrefs same; text: crumb order (see A)
+05 Cache break-even [origin 33]: data-label same; origin same; raw notes same; hrefs same; text: crumb order (see A)
+06 Workflow sketch [origin 47]: data-label same; origin same; raw notes same; hrefs same; text: crumb order (see A)
+07 Skill file example [origin 53]: data-label same; origin same; raw notes same; hrefs same; text: crumb order (see A)
+08 Further skill systems [origin 56]: data-label same; origin same; raw notes same; hrefs same; text: crumb order (see A)
+09 Plugin publication recipe [origin 58]: data-label same; origin same; raw notes same; hrefs same; text: crumb order (see A)
+10 Sources [origin 60]: data-label same; origin same; raw notes same; hrefs same; text: crumb order (see A) + URL lines (see B)
+
+Hrefs per slide (identical multiset in source and output; audit "links" field):
+  01: agentic-engineering.html
+  02: agentic-engineering.html, https://poloclub.github.io/transformer-explainer/, https://bbycroft.net/llm, https://karpathy.ai/zero-to-hero.html
+  03-07: agentic-engineering.html
+  08: agentic-engineering.html, https://github.com/mattpocock/skills, https://github.com/EveryInc/compound-engineering-plugin
+  09: agentic-engineering.html, https://code.claude.com/docs/en/plugins, https://code.claude.com/docs/en/plugin-marketplaces
+  10: agentic-engineering.html, 3 mechanism URLs, 3 implementation URLs, https://github.com/davidbudac/agentic-talks
+  (agentic-engineering.html = link to the original Ember main deck, kept exactly as in source.)
+
+Explained differences
+A. Slides 02-10. Source order: banner "Optional reference · Back to the talk", then crumb "<label>".
+   Output crumb: "<label> · Optional reference · Back to the talk". Same words and href. Reordered
+   so the section label leads (root DESIGN.md: reference-banner -> header crumb). One "·" separator
+   added between the label and the banner text. audit.py reports this as delete+insert of the label.
+B. Slide 10. Mono URL lines added under each link title (.links anatomy), copied verbatim from the
+   committed twin agentic-engineering-ivory.html slide 30: arxiv.org/abs/1706.03762,
+   anthropic.com/engineering, trychroma.com/research/context-rot, platform.claude.com/docs,
+   code.claude.com/docs/en/sub-agents, code.claude.com/docs/en/skills. Link titles are unchanged.
+   The audit's "Needarxiv..." tokens come from its text extraction joining the inline .u span to
+   the preceding word, not from a change in the title text.
+C. All slides. Ember's hand-written .snum digits (1-10) were removed. deck.js fills them, so the
+   rendered numbers are 01-10 / 10. audit.py omits .snum.
+D. Whitespace only. Raw-text code blocks became one <span class="l"> per line. Blank lines were kept
+   as empty lines, as in the twin slide (05). Leading indentation is preserved.
+Removed text: none.
