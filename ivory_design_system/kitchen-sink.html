@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <title>Ivory — kitchen sink</title>
 <link rel="stylesheet" href="styles.css">
-<style>:root{--deck-total:"26"}</style>
+<!-- Keep original 26 regression counters unchanged; added examples show the current total. -->
+<style>:root{--deck-total:"26"}.image-sample{--deck-total:"27"}</style>
 </head>
 <body>
 
@@ -553,6 +554,23 @@
     </table>
   </div>
   <p class="note">Bill = sum of each category’s tokens × its rate, plus any separate tool or service fees.</p>
+</section>
+
+<!-- 27 · Image: contain the original aspect ratio -->
+<section class="slide image-sample" data-label="Figure · image containment" data-speaker-notes="The 1200 by 900 still keeps its original 4:3 proportions inside an 828 by 562 figure. The figure box fills the zone; the contained image is centered. No stretching or cropping. The raster is a frame from the Ivory stateless animation.">
+  <div class="slide-head"><span class="crumb">Media · images</span><span class="snum"></span></div>
+  <h2>Preserve the image’s proportions</h2>
+  <div class="zone">
+    <div class="split">
+      <ul class="bul">
+        <li>Use the original image dimensions in the width and height attributes.</li>
+        <li>Contain the complete image inside the figure box, centered on both axes.</li>
+        <li>Keep the original aspect ratio. Do not stretch or crop the source.</li>
+      </ul>
+      <div class="fig"><img src="demo/stateless-still.png" width="1200" height="900" alt="Ivory stateless animation still: each call sends its context to the model."></div>
+    </div>
+  </div>
+  <p class="note">A 4:3 raster inside a wider figure leaves space at its sides; the Ivory ground merges with the slide.</p>
 </section>
 
 </deck-stage>
