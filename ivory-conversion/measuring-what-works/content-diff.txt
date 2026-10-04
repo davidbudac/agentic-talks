@@ -1,0 +1,109 @@
+Comparator: python3 ivory-conversion/audit.py measuring-what-works.html measuring-what-works-ivory.html
+Slide counts (source, output): [19, 19]
+Structural errors: none
+
+## 01 Title
+  metadata/notes/link errors: none (data-label, data-origin-slide, data-speaker-notes raw bytes, hrefs identical)
+  hrefs: -
+  replace: source='developersRevised October 2026' output='developers'
+  replace: source='Works.' output='Works'
+  replace: source='David' output='AuthorDavid'
+  insert: source='' output='RevisedOctober 2026'
+
+## 02 Agenda
+  metadata/notes/link errors: none (data-label, data-origin-slide, data-speaker-notes raw bytes, hrefs identical)
+  hrefs: -
+  replace: source='Define Inputs,' output='DefineInputs,'
+  replace: source='Observe Repeated' output='ObserveRepeated'
+  replace: source='Decide Quality' output='DecideQuality'
+
+## 03 What an eval measures
+  metadata/notes/link errors: none (data-label, data-origin-slide, data-speaker-notes raw bytes, hrefs identical)
+  hrefs: -
+  insert: source='' output='01'
+  insert: source='' output='02'
+  insert: source='' output='03'
+
+## 04 Acceptance cases
+  metadata/notes/link errors: none (data-label, data-origin-slide, data-speaker-notes raw bytes, hrefs identical)
+  hrefs: -
+  visible text: identical
+
+## 05 Grading methods
+  metadata/notes/link errors: none (data-label, data-origin-slide, data-speaker-notes raw bytes, hrefs identical)
+  hrefs: -
+  insert: source='' output='01'
+  insert: source='' output='02'
+  insert: source='' output='03'
+
+## 06 Repeated trials
+  metadata/notes/link errors: none (data-label, data-origin-slide, data-speaker-notes raw bytes, hrefs identical)
+  hrefs: -
+  visible text: identical
+
+## 07 Trace evidence
+  metadata/notes/link errors: none (data-label, data-origin-slide, data-speaker-notes raw bytes, hrefs identical)
+  hrefs: -
+  visible text: identical
+
+## 08 Annotated trace
+  metadata/notes/link errors: none (data-label, data-origin-slide, data-speaker-notes raw bytes, hrefs identical)
+  hrefs: -
+  visible text: identical
+
+## 09 Telemetry versus transcripts
+  metadata/notes/link errors: none (data-label, data-origin-slide, data-speaker-notes raw bytes, hrefs identical)
+  hrefs: ['https://code.claude.com/docs/en/monitoring-usage']
+  visible text: identical
+
+## 10 Results worksheet
+  metadata/notes/link errors: none (data-label, data-origin-slide, data-speaker-notes raw bytes, hrefs identical)
+  hrefs: -
+  visible text: identical
+
+## 11 Grading exercise
+  metadata/notes/link errors: none (data-label, data-origin-slide, data-speaker-notes raw bytes, hrefs identical)
+  hrefs: -
+  visible text: identical
+
+## 12 Exercise debrief
+  metadata/notes/link errors: none (data-label, data-origin-slide, data-speaker-notes raw bytes, hrefs identical)
+  hrefs: -
+  visible text: identical
+
+## 13 Cost per accepted task
+  metadata/notes/link errors: none (data-label, data-origin-slide, data-speaker-notes raw bytes, hrefs identical)
+  hrefs: -
+  insert: source='' output='01'
+  insert: source='' output='02'
+  insert: source='' output='03'
+
+## 14 Local model memory
+  metadata/notes/link errors: none (data-label, data-origin-slide, data-speaker-notes raw bytes, hrefs identical)
+  hrefs: -
+  visible text: identical
+
+## 15 Hardware experiment
+  metadata/notes/link errors: none (data-label, data-origin-slide, data-speaker-notes raw bytes, hrefs identical)
+  hrefs: -
+  visible text: identical
+
+## 16 Local or hosted
+  metadata/notes/link errors: none (data-label, data-origin-slide, data-speaker-notes raw bytes, hrefs identical)
+  hrefs: -
+  visible text: identical
+
+## 17 Voice input
+  metadata/notes/link errors: none (data-label, data-origin-slide, data-speaker-notes raw bytes, hrefs identical)
+  hrefs: -
+  visible text: identical
+
+## 18 Next experiment
+  metadata/notes/link errors: none (data-label, data-origin-slide, data-speaker-notes raw bytes, hrefs identical)
+  hrefs: ['measuring-what-works-reference.html']
+  visible text: identical
+
+## 19 Sources
+  metadata/notes/link errors: none (data-label, data-origin-slide, data-speaker-notes raw bytes, hrefs identical)
+  hrefs: ['https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents', 'https://code.claude.com/docs/en/monitoring-usage', 'https://huggingface.co/docs/accelerate/usage_guides/big_modeling']
+  visible text: identical
