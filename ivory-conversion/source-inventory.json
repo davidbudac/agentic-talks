@@ -1,0 +1,1830 @@
+{
+  "ai-toolbox": {
+    "source_sha256": "48cdf7ccc4040bf4976525bedc1e157a81bee42dde44cdf76f2817743a3e934f",
+    "slides": 31,
+    "media": [
+      "assets/anim/agent-loop-dark.mp4",
+      "assets/anim/stateless-dark.mp4"
+    ],
+    "slide_inventory": [
+      {
+        "slide": 1,
+        "label": "Title",
+        "origin": "1",
+        "words": 35
+      },
+      {
+        "slide": 2,
+        "label": "The hook",
+        "origin": "2",
+        "words": 56
+      },
+      {
+        "slide": 3,
+        "label": "Agenda",
+        "origin": "3",
+        "words": 70
+      },
+      {
+        "slide": 4,
+        "label": "One task, agent-style",
+        "origin": "23",
+        "words": 73
+      },
+      {
+        "slide": 5,
+        "label": "Chatbot vs agent",
+        "origin": "5",
+        "words": 87
+      },
+      {
+        "slide": 6,
+        "label": "The agent loop",
+        "origin": "6",
+        "words": 45
+      },
+      {
+        "slide": 7,
+        "label": "The model has no memory",
+        "origin": "7",
+        "words": 67
+      },
+      {
+        "slide": 8,
+        "label": "The human checkpoint",
+        "origin": "25",
+        "words": 56
+      },
+      {
+        "slide": 9,
+        "label": "Three everyday tasks",
+        "origin": "22",
+        "words": 66
+      },
+      {
+        "slide": 10,
+        "label": "Choose a starting point",
+        "origin": "18",
+        "words": 68
+      },
+      {
+        "slide": 11,
+        "label": "Agents for files",
+        "origin": "14",
+        "words": 44
+      },
+      {
+        "slide": 12,
+        "label": "Design by iteration",
+        "origin": "15",
+        "words": 63
+      },
+      {
+        "slide": 13,
+        "label": "Research over your documents",
+        "origin": "17",
+        "words": 61
+      },
+      {
+        "slide": 14,
+        "label": "Read the price tag",
+        "origin": "4",
+        "words": 50
+      },
+      {
+        "slide": 15,
+        "label": "Products change",
+        "origin": "20",
+        "words": 53
+      },
+      {
+        "slide": 16,
+        "label": "Build a small app",
+        "origin": "27",
+        "words": 56
+      },
+      {
+        "slide": 17,
+        "label": "Generated video",
+        "origin": "28",
+        "words": 60
+      },
+      {
+        "slide": 18,
+        "label": "Templated video",
+        "origin": "29",
+        "words": 48
+      },
+      {
+        "slide": 19,
+        "label": "Voice and dubbing",
+        "origin": "31",
+        "words": 53
+      },
+      {
+        "slide": 20,
+        "label": "Images and design",
+        "origin": "33",
+        "words": 55
+      },
+      {
+        "slide": 21,
+        "label": "Repeatable automation",
+        "origin": "37",
+        "words": 55
+      },
+      {
+        "slide": 22,
+        "label": "Before real use",
+        "origin": "38",
+        "words": 71
+      },
+      {
+        "slide": 23,
+        "label": "Story: Project Vend",
+        "origin": "41",
+        "words": 60
+      },
+      {
+        "slide": 24,
+        "label": "Story: the craft still matters",
+        "origin": "45",
+        "words": 64
+      },
+      {
+        "slide": 25,
+        "label": "Three integration routes",
+        "origin": "53",
+        "words": 67
+      },
+      {
+        "slide": 26,
+        "label": "Files from chat",
+        "origin": "49",
+        "words": 57
+      },
+      {
+        "slide": 27,
+        "label": "Edit inside the app",
+        "origin": "48",
+        "words": 64
+      },
+      {
+        "slide": 28,
+        "label": "MCP",
+        "origin": "47",
+        "words": 64
+      },
+      {
+        "slide": 29,
+        "label": "Choose one task",
+        "origin": "54",
+        "words": 50
+      },
+      {
+        "slide": 30,
+        "label": "Sources 1 of 2",
+        "origin": "56",
+        "words": 78
+      },
+      {
+        "slide": 31,
+        "label": "Sources 2 of 2",
+        "origin": "57",
+        "words": 101
+      }
+    ]
+  },
+  "agentic-ai": {
+    "source_sha256": "521d6cf5a74e1ddd4ceaf265cecddab4442dffbb6e26de7f5b6377ea1d8bf716",
+    "slides": 26,
+    "media": [
+      "assets/anim/agent-loop-dark.mp4",
+      "assets/anim/subagents-light.mp4"
+    ],
+    "slide_inventory": [
+      {
+        "slide": 1,
+        "label": "Title",
+        "origin": "1",
+        "words": 26
+      },
+      {
+        "slide": 2,
+        "label": "The hook",
+        "origin": "2",
+        "words": 86
+      },
+      {
+        "slide": 3,
+        "label": "Chatbot vs agent",
+        "origin": "3",
+        "words": 83
+      },
+      {
+        "slide": 4,
+        "label": "Agenda",
+        "origin": "5",
+        "words": 63
+      },
+      {
+        "slide": 5,
+        "label": "Model in the cloud",
+        "origin": "10",
+        "words": 94
+      },
+      {
+        "slide": 6,
+        "label": "No memory in practice",
+        "origin": "9",
+        "words": 86
+      },
+      {
+        "slide": 7,
+        "label": "What one turn sends",
+        "origin": "11",
+        "words": 58
+      },
+      {
+        "slide": 8,
+        "label": "Optional demo",
+        "origin": "4",
+        "words": 56
+      },
+      {
+        "slide": 9,
+        "label": "The agent loop",
+        "origin": "12",
+        "words": 70
+      },
+      {
+        "slide": 10,
+        "label": "The loop, worked example",
+        "origin": "13",
+        "words": 62
+      },
+      {
+        "slide": 11,
+        "label": "Thinking",
+        "origin": "14",
+        "words": 107
+      },
+      {
+        "slide": 12,
+        "label": "Choose an interface",
+        "origin": "21",
+        "words": 64
+      },
+      {
+        "slide": 13,
+        "label": "Choose a billing route",
+        "origin": "26",
+        "words": 64
+      },
+      {
+        "slide": 14,
+        "label": "What context is",
+        "origin": "28",
+        "words": 75
+      },
+      {
+        "slide": 15,
+        "label": "Context quality",
+        "origin": "29",
+        "words": 57
+      },
+      {
+        "slide": 16,
+        "label": "Keep context useful",
+        "origin": "30",
+        "words": 61
+      },
+      {
+        "slide": 17,
+        "label": "Caching and compaction",
+        "origin": "31",
+        "words": 61
+      },
+      {
+        "slide": 18,
+        "label": "Sub-agents",
+        "origin": "32",
+        "words": 56
+      },
+      {
+        "slide": 19,
+        "label": "Permissions",
+        "origin": "33",
+        "words": 69
+      },
+      {
+        "slide": 20,
+        "label": "Project rules",
+        "origin": "36",
+        "words": 67
+      },
+      {
+        "slide": 21,
+        "label": "Skills and plugins",
+        "origin": "37",
+        "words": 45
+      },
+      {
+        "slide": 22,
+        "label": "Tools for the invoice task",
+        "origin": "38",
+        "words": 58
+      },
+      {
+        "slide": 23,
+        "label": "MCP",
+        "origin": "39",
+        "words": 60
+      },
+      {
+        "slide": 24,
+        "label": "Your first agent task",
+        "origin": "40",
+        "words": 63
+      },
+      {
+        "slide": 25,
+        "label": "Sources 1 of 2",
+        "origin": "42",
+        "words": 88
+      },
+      {
+        "slide": 26,
+        "label": "Sources 2 of 2",
+        "origin": "43",
+        "words": 105
+      }
+    ]
+  },
+  "subagents-prompt-caching": {
+    "source_sha256": "824f28f0b7e89c5da270b8c8d0d59917e3894d63c5db51d8d2ae15fd942e7ea2",
+    "slides": 21,
+    "media": [
+      "assets/anim/subagents-light.mp4",
+      "assets/anim/kv-cache-light.mp4"
+    ],
+    "slide_inventory": [
+      {
+        "slide": 1,
+        "label": "Title",
+        "origin": "1",
+        "words": 21
+      },
+      {
+        "slide": 2,
+        "label": "Agenda",
+        "origin": "2",
+        "words": 33
+      },
+      {
+        "slide": 3,
+        "label": "Local and cloud map",
+        "origin": "6",
+        "words": 49
+      },
+      {
+        "slide": 4,
+        "label": "Subagents",
+        "origin": "7",
+        "words": 66
+      },
+      {
+        "slide": 5,
+        "label": "Delegation lifecycle",
+        "origin": "9",
+        "words": 46
+      },
+      {
+        "slide": 6,
+        "label": "Fresh or forked",
+        "origin": "10",
+        "words": 55
+      },
+      {
+        "slide": 7,
+        "label": "Return contract",
+        "origin": "11",
+        "words": 60
+      },
+      {
+        "slide": 8,
+        "label": "Parallel work",
+        "origin": "12",
+        "words": 43
+      },
+      {
+        "slide": 9,
+        "label": "Delegation economics",
+        "origin": "14",
+        "words": 46
+      },
+      {
+        "slide": 10,
+        "label": "Call versus agent",
+        "origin": "16",
+        "words": 44
+      },
+      {
+        "slide": 11,
+        "label": "Illustrative helper return",
+        "origin": "17",
+        "words": 64
+      },
+      {
+        "slide": 12,
+        "label": "KV caching",
+        "origin": "22",
+        "words": 72
+      },
+      {
+        "slide": 13,
+        "label": "Shared prefix example",
+        "origin": "25",
+        "words": 61
+      },
+      {
+        "slide": 14,
+        "label": "Token volume and cost",
+        "origin": "27",
+        "words": 61
+      },
+      {
+        "slide": 15,
+        "label": "Cache break-even",
+        "origin": "28",
+        "words": 80
+      },
+      {
+        "slide": 16,
+        "label": "Cache lifetime",
+        "origin": "29",
+        "words": 57
+      },
+      {
+        "slide": 17,
+        "label": "Verify cache usage",
+        "origin": "31",
+        "words": 54
+      },
+      {
+        "slide": 18,
+        "label": "Warm-up before fan-out",
+        "origin": "33",
+        "words": 56
+      },
+      {
+        "slide": 19,
+        "label": "Choose authentication",
+        "origin": "35",
+        "words": 52
+      },
+      {
+        "slide": 20,
+        "label": "Takeaways",
+        "origin": "38",
+        "words": 54
+      },
+      {
+        "slide": 21,
+        "label": "Sources",
+        "origin": "39",
+        "words": 29
+      }
+    ]
+  },
+  "cost-and-context": {
+    "source_sha256": "9d053a6ef442136560a4f1e855fc7299f9772824e2419c49863b0bb45a922b63",
+    "slides": 17,
+    "media": [
+      "assets/anim/subagents-light.mp4"
+    ],
+    "slide_inventory": [
+      {
+        "slide": 1,
+        "label": "Title",
+        "origin": "1",
+        "words": 22
+      },
+      {
+        "slide": 2,
+        "label": "Agenda",
+        "origin": "2",
+        "words": 44
+      },
+      {
+        "slide": 3,
+        "label": "Choose the route",
+        "origin": "13",
+        "words": 61
+      },
+      {
+        "slide": 4,
+        "label": "Token volume and cost",
+        "origin": "4",
+        "words": 61
+      },
+      {
+        "slide": 5,
+        "label": "Output cost",
+        "origin": "5",
+        "words": 60
+      },
+      {
+        "slide": 6,
+        "label": "Worked cost example",
+        "origin": "6",
+        "words": 62
+      },
+      {
+        "slide": 7,
+        "label": "Useful context",
+        "origin": "15",
+        "words": 58
+      },
+      {
+        "slide": 8,
+        "label": "Request anatomy",
+        "origin": "17",
+        "words": 47
+      },
+      {
+        "slide": 9,
+        "label": "Project instructions",
+        "origin": "18",
+        "words": 61
+      },
+      {
+        "slide": 10,
+        "label": "Instruction file before and after",
+        "origin": "19",
+        "words": 57
+      },
+      {
+        "slide": 11,
+        "label": "Continue or reset",
+        "origin": "21",
+        "words": 52
+      },
+      {
+        "slide": 12,
+        "label": "Subagents",
+        "origin": "22",
+        "words": 66
+      },
+      {
+        "slide": 13,
+        "label": "Read selectively",
+        "origin": "23",
+        "words": 56
+      },
+      {
+        "slide": 14,
+        "label": "Compare instruction variants",
+        "origin": "24",
+        "words": 62
+      },
+      {
+        "slide": 15,
+        "label": "Static comparison worksheet",
+        "origin": "25",
+        "words": 62
+      },
+      {
+        "slide": 16,
+        "label": "Next task",
+        "origin": "26",
+        "words": 47
+      },
+      {
+        "slide": 17,
+        "label": "Sources",
+        "origin": "28",
+        "words": 29
+      }
+    ]
+  },
+  "orchestrating-agents": {
+    "source_sha256": "5b5609026a8e37bad1204a9d6ac9cc8d512870a8015412b42b2ffcec4c0dc3cc",
+    "slides": 19,
+    "media": [],
+    "slide_inventory": [
+      {
+        "slide": 1,
+        "label": "Title",
+        "origin": "1",
+        "words": 18
+      },
+      {
+        "slide": 2,
+        "label": "Agenda",
+        "origin": "2",
+        "words": 47
+      },
+      {
+        "slide": 3,
+        "label": "Coordination and containment",
+        "origin": "4",
+        "words": 46
+      },
+      {
+        "slide": 4,
+        "label": "Workflow choice",
+        "origin": "15",
+        "words": 63
+      },
+      {
+        "slide": 5,
+        "label": "Ticket lifecycle",
+        "origin": "7",
+        "words": 60
+      },
+      {
+        "slide": 6,
+        "label": "Static ticket walkthrough",
+        "origin": "9",
+        "words": 69
+      },
+      {
+        "slide": 7,
+        "label": "Tool boundary",
+        "origin": "10",
+        "words": 50
+      },
+      {
+        "slide": 8,
+        "label": "Loop failure controls",
+        "origin": "12",
+        "words": 63
+      },
+      {
+        "slide": 9,
+        "label": "Review capacity",
+        "origin": "14",
+        "words": 56
+      },
+      {
+        "slide": 10,
+        "label": "A verification skill",
+        "origin": "17",
+        "words": 43
+      },
+      {
+        "slide": 11,
+        "label": "Rules, procedure and tool",
+        "origin": "19",
+        "words": 63
+      },
+      {
+        "slide": 12,
+        "label": "Share the procedure",
+        "origin": "20",
+        "words": 50
+      },
+      {
+        "slide": 13,
+        "label": "Skill exercise",
+        "origin": "22",
+        "words": 56
+      },
+      {
+        "slide": 14,
+        "label": "Skill file example",
+        "origin": "23",
+        "words": 68
+      },
+      {
+        "slide": 15,
+        "label": "MCP and CLI",
+        "origin": "25",
+        "words": 49
+      },
+      {
+        "slide": 16,
+        "label": "Tool overhead",
+        "origin": "28",
+        "words": 58
+      },
+      {
+        "slide": 17,
+        "label": "Interface comparison exercise",
+        "origin": "30",
+        "words": 54
+      },
+      {
+        "slide": 18,
+        "label": "Next workflow",
+        "origin": "31",
+        "words": 46
+      },
+      {
+        "slide": 19,
+        "label": "Sources",
+        "origin": "32",
+        "words": 28
+      }
+    ]
+  },
+  "measuring-what-works": {
+    "source_sha256": "12197ebb3a94124b672c801a466db7bda668e5fe8461473b7edc0fd52c37f2fe",
+    "slides": 19,
+    "media": [],
+    "slide_inventory": [
+      {
+        "slide": 1,
+        "label": "Title",
+        "origin": "1",
+        "words": 19
+      },
+      {
+        "slide": 2,
+        "label": "Agenda",
+        "origin": "2",
+        "words": 41
+      },
+      {
+        "slide": 3,
+        "label": "What an eval measures",
+        "origin": "4",
+        "words": 60
+      },
+      {
+        "slide": 4,
+        "label": "Acceptance cases",
+        "origin": "5",
+        "words": 69
+      },
+      {
+        "slide": 5,
+        "label": "Grading methods",
+        "origin": "6",
+        "words": 59
+      },
+      {
+        "slide": 6,
+        "label": "Repeated trials",
+        "origin": "7",
+        "words": 53
+      },
+      {
+        "slide": 7,
+        "label": "Trace evidence",
+        "origin": "8",
+        "words": 46
+      },
+      {
+        "slide": 8,
+        "label": "Annotated trace",
+        "origin": "9",
+        "words": 64
+      },
+      {
+        "slide": 9,
+        "label": "Telemetry versus transcripts",
+        "origin": "10",
+        "words": 45
+      },
+      {
+        "slide": 10,
+        "label": "Results worksheet",
+        "origin": "11",
+        "words": 61
+      },
+      {
+        "slide": 11,
+        "label": "Grading exercise",
+        "origin": "12",
+        "words": 59
+      },
+      {
+        "slide": 12,
+        "label": "Exercise debrief",
+        "origin": "13",
+        "words": 43
+      },
+      {
+        "slide": 13,
+        "label": "Cost per accepted task",
+        "origin": "15",
+        "words": 65
+      },
+      {
+        "slide": 14,
+        "label": "Local model memory",
+        "origin": "20",
+        "words": 63
+      },
+      {
+        "slide": 15,
+        "label": "Hardware experiment",
+        "origin": "22",
+        "words": 65
+      },
+      {
+        "slide": 16,
+        "label": "Local or hosted",
+        "origin": "25",
+        "words": 61
+      },
+      {
+        "slide": 17,
+        "label": "Voice input",
+        "origin": "27",
+        "words": 45
+      },
+      {
+        "slide": 18,
+        "label": "Next experiment",
+        "origin": "30",
+        "words": 56
+      },
+      {
+        "slide": 19,
+        "label": "Sources",
+        "origin": "31",
+        "words": 28
+      }
+    ]
+  },
+  "best-practices": {
+    "source_sha256": "9eb4253461b5479ea2abe16e3cd0915151b0fcae1bf4a992638c24409b6c1f05",
+    "slides": 30,
+    "media": [],
+    "slide_inventory": [
+      {
+        "slide": 1,
+        "label": "Title",
+        "origin": "1",
+        "words": 24
+      },
+      {
+        "slide": 2,
+        "label": "Agenda",
+        "origin": "2",
+        "words": 43
+      },
+      {
+        "slide": 3,
+        "label": "Simplifying prompts",
+        "origin": "4",
+        "words": 54
+      },
+      {
+        "slide": 4,
+        "label": "Instruction file before and after",
+        "origin": "6",
+        "words": 62
+      },
+      {
+        "slide": 5,
+        "label": "Instruction audit",
+        "origin": "7",
+        "words": 44
+      },
+      {
+        "slide": 6,
+        "label": "A verification skill",
+        "origin": "9",
+        "words": 48
+      },
+      {
+        "slide": 7,
+        "label": "Skill interface",
+        "origin": "11",
+        "words": 48
+      },
+      {
+        "slide": 8,
+        "label": "Skill structure",
+        "origin": "12",
+        "words": 40
+      },
+      {
+        "slide": 9,
+        "label": "Shared prefix example",
+        "origin": "14",
+        "words": 66
+      },
+      {
+        "slide": 10,
+        "label": "Worked cost example",
+        "origin": "15",
+        "words": 67
+      },
+      {
+        "slide": 11,
+        "label": "Cache tradeoffs",
+        "origin": "16",
+        "words": 56
+      },
+      {
+        "slide": 12,
+        "label": "Compaction",
+        "origin": "17",
+        "words": 54
+      },
+      {
+        "slide": 13,
+        "label": "Effort comparison",
+        "origin": "19",
+        "words": 54
+      },
+      {
+        "slide": 14,
+        "label": "Build and verify",
+        "origin": "21",
+        "words": 50
+      },
+      {
+        "slide": 15,
+        "label": "Routing and escalation",
+        "origin": "22",
+        "words": 70
+      },
+      {
+        "slide": 16,
+        "label": "Cost per accepted task",
+        "origin": "23",
+        "words": 70
+      },
+      {
+        "slide": 17,
+        "label": "Real verification",
+        "origin": "27",
+        "words": 68
+      },
+      {
+        "slide": 18,
+        "label": "Progress and regression checks",
+        "origin": "26",
+        "words": 54
+      },
+      {
+        "slide": 19,
+        "label": "Grading methods",
+        "origin": "28",
+        "words": 64
+      },
+      {
+        "slide": 20,
+        "label": "Avoid overfitting",
+        "origin": "29",
+        "words": 54
+      },
+      {
+        "slide": 21,
+        "label": "A bounded task contract",
+        "origin": "31",
+        "words": 75
+      },
+      {
+        "slide": 22,
+        "label": "Handoff",
+        "origin": "32",
+        "words": 51
+      },
+      {
+        "slide": 23,
+        "label": "Human decisions",
+        "origin": "33",
+        "words": 50
+      },
+      {
+        "slide": 24,
+        "label": "Two useful patterns",
+        "origin": "36",
+        "words": 55
+      },
+      {
+        "slide": 25,
+        "label": "Cost and containment",
+        "origin": "38",
+        "words": 60
+      },
+      {
+        "slide": 26,
+        "label": "Tool interface",
+        "origin": "40",
+        "words": 47
+      },
+      {
+        "slide": 27,
+        "label": "Useful HTML output",
+        "origin": "41",
+        "words": 58
+      },
+      {
+        "slide": 28,
+        "label": "Hooks and extensions",
+        "origin": "42",
+        "words": 58
+      },
+      {
+        "slide": 29,
+        "label": "Tomorrow",
+        "origin": "44",
+        "words": 52
+      },
+      {
+        "slide": 30,
+        "label": "Sources",
+        "origin": "45",
+        "words": 28
+      }
+    ]
+  },
+  "working-smarter": {
+    "source_sha256": "cdb5df9a22d13cb9b8f42c87c8674e239d0be4bcf3abcdf3beb3d4d2916f231c",
+    "slides": 44,
+    "media": [
+      "assets/anim/subagents-light.mp4"
+    ],
+    "slide_inventory": [
+      {
+        "slide": 1,
+        "label": "Title",
+        "origin": "1",
+        "words": 21
+      },
+      {
+        "slide": 2,
+        "label": "Workshop route",
+        "origin": "2",
+        "words": 66
+      },
+      {
+        "slide": 3,
+        "label": "What an eval measures",
+        "origin": "49",
+        "words": 60
+      },
+      {
+        "slide": 4,
+        "label": "Acceptance cases",
+        "origin": "50",
+        "words": 69
+      },
+      {
+        "slide": 5,
+        "label": "Grading methods",
+        "origin": "51",
+        "words": 59
+      },
+      {
+        "slide": 6,
+        "label": "Repeated trials",
+        "origin": "52",
+        "words": 53
+      },
+      {
+        "slide": 7,
+        "label": "Trace evidence",
+        "origin": "53",
+        "words": 46
+      },
+      {
+        "slide": 8,
+        "label": "Annotated trace",
+        "origin": "54",
+        "words": 64
+      },
+      {
+        "slide": 9,
+        "label": "Results worksheet",
+        "origin": "56",
+        "words": 61
+      },
+      {
+        "slide": 10,
+        "label": "Grading exercise",
+        "origin": "57",
+        "words": 59
+      },
+      {
+        "slide": 11,
+        "label": "Exercise debrief",
+        "origin": "58",
+        "words": 43
+      },
+      {
+        "slide": 12,
+        "label": "Token volume and cost",
+        "origin": "4",
+        "words": 61
+      },
+      {
+        "slide": 13,
+        "label": "Worked cost example",
+        "origin": "6",
+        "words": 62
+      },
+      {
+        "slide": 14,
+        "label": "Choose the route",
+        "origin": "13",
+        "words": 61
+      },
+      {
+        "slide": 15,
+        "label": "Useful context",
+        "origin": "15",
+        "words": 58
+      },
+      {
+        "slide": 16,
+        "label": "Project instructions",
+        "origin": "18",
+        "words": 61
+      },
+      {
+        "slide": 17,
+        "label": "Instruction file before and after",
+        "origin": "19",
+        "words": 57
+      },
+      {
+        "slide": 18,
+        "label": "Compare instruction variants",
+        "origin": "24",
+        "words": 62
+      },
+      {
+        "slide": 19,
+        "label": "Static comparison worksheet",
+        "origin": "25",
+        "words": 62
+      },
+      {
+        "slide": 20,
+        "label": "Continue or reset",
+        "origin": "21",
+        "words": 52
+      },
+      {
+        "slide": 21,
+        "label": "Subagents",
+        "origin": "22",
+        "words": 66
+      },
+      {
+        "slide": 22,
+        "label": "Coordination and containment",
+        "origin": "28",
+        "words": 46
+      },
+      {
+        "slide": 23,
+        "label": "Ticket lifecycle",
+        "origin": "31",
+        "words": 60
+      },
+      {
+        "slide": 24,
+        "label": "Static ticket walkthrough",
+        "origin": "33",
+        "words": 69
+      },
+      {
+        "slide": 25,
+        "label": "Tool boundary",
+        "origin": "34",
+        "words": 50
+      },
+      {
+        "slide": 26,
+        "label": "Loop failure controls",
+        "origin": "36",
+        "words": 63
+      },
+      {
+        "slide": 27,
+        "label": "Review capacity",
+        "origin": "38",
+        "words": 56
+      },
+      {
+        "slide": 28,
+        "label": "Rules, procedure and tool",
+        "origin": "43",
+        "words": 63
+      },
+      {
+        "slide": 29,
+        "label": "A verification skill",
+        "origin": "41",
+        "words": 43
+      },
+      {
+        "slide": 30,
+        "label": "Skill exercise",
+        "origin": "46",
+        "words": 56
+      },
+      {
+        "slide": 31,
+        "label": "Skill file example",
+        "origin": "47",
+        "words": 68
+      },
+      {
+        "slide": 32,
+        "label": "Share the procedure",
+        "origin": "44",
+        "words": 50
+      },
+      {
+        "slide": 33,
+        "label": "MCP and CLI",
+        "origin": "60",
+        "words": 49
+      },
+      {
+        "slide": 34,
+        "label": "Tool overhead",
+        "origin": "63",
+        "words": 58
+      },
+      {
+        "slide": 35,
+        "label": "Interface comparison exercise",
+        "origin": "65",
+        "words": 54
+      },
+      {
+        "slide": 36,
+        "label": "Cost per accepted task",
+        "origin": "67",
+        "words": 65
+      },
+      {
+        "slide": 37,
+        "label": "Local model memory",
+        "origin": "72",
+        "words": 63
+      },
+      {
+        "slide": 38,
+        "label": "Hardware experiment",
+        "origin": "74",
+        "words": 65
+      },
+      {
+        "slide": 39,
+        "label": "Static hardware exercise",
+        "origin": "75",
+        "words": 67
+      },
+      {
+        "slide": 40,
+        "label": "Local or hosted",
+        "origin": "77",
+        "words": 61
+      },
+      {
+        "slide": 41,
+        "label": "Voice input",
+        "origin": "79",
+        "words": 45
+      },
+      {
+        "slide": 42,
+        "label": "Static voice exercise",
+        "origin": "80",
+        "words": 37
+      },
+      {
+        "slide": 43,
+        "label": "Workshop close",
+        "origin": "82",
+        "words": 51
+      },
+      {
+        "slide": 44,
+        "label": "Sources",
+        "origin": "83",
+        "words": 27
+      }
+    ]
+  },
+  "agentic-engineering-reference": {
+    "source_sha256": "ac1ff6300b6a4af874f184d1f1e32306646ff81b63fbb9c042602cb8859d2253",
+    "slides": 10,
+    "media": [],
+    "slide_inventory": [
+      {
+        "slide": 1,
+        "label": "Reference guide",
+        "origin": null,
+        "words": 33
+      },
+      {
+        "slide": 2,
+        "label": "Explore a transformer",
+        "origin": "8",
+        "words": 53
+      },
+      {
+        "slide": 3,
+        "label": "Request anatomy",
+        "origin": "18",
+        "words": 54
+      },
+      {
+        "slide": 4,
+        "label": "Growth arithmetic",
+        "origin": "28",
+        "words": 94
+      },
+      {
+        "slide": 5,
+        "label": "Cache break-even",
+        "origin": "33",
+        "words": 87
+      },
+      {
+        "slide": 6,
+        "label": "Workflow sketch",
+        "origin": "47",
+        "words": 69
+      },
+      {
+        "slide": 7,
+        "label": "Skill file example",
+        "origin": "53",
+        "words": 75
+      },
+      {
+        "slide": 8,
+        "label": "Further skill systems",
+        "origin": "56",
+        "words": 59
+      },
+      {
+        "slide": 9,
+        "label": "Plugin publication recipe",
+        "origin": "58",
+        "words": 52
+      },
+      {
+        "slide": 10,
+        "label": "Sources",
+        "origin": "60",
+        "words": 45
+      }
+    ]
+  },
+  "ai-toolbox-reference": {
+    "source_sha256": "d91e88455136939c613156327e434282aebc0b170e4b9a53d4a4020ee757c863",
+    "slides": 22,
+    "media": [],
+    "slide_inventory": [
+      {
+        "slide": 1,
+        "label": "Reference guide",
+        "origin": null,
+        "words": 35
+      },
+      {
+        "slide": 2,
+        "label": "Glossary",
+        "origin": "8",
+        "words": 144
+      },
+      {
+        "slide": 3,
+        "label": "Today's models",
+        "origin": "11",
+        "words": 117
+      },
+      {
+        "slide": 4,
+        "label": "The Claude family",
+        "origin": "12",
+        "words": 129
+      },
+      {
+        "slide": 5,
+        "label": "Claude Code and Codex",
+        "origin": "13",
+        "words": 120
+      },
+      {
+        "slide": 6,
+        "label": "The ChatGPT family",
+        "origin": "16",
+        "words": 132
+      },
+      {
+        "slide": 7,
+        "label": "The plan ladder",
+        "origin": "19",
+        "words": 115
+      },
+      {
+        "slide": 8,
+        "label": "Deep research",
+        "origin": "24",
+        "words": 101
+      },
+      {
+        "slide": 9,
+        "label": "AI avatars",
+        "origin": "30",
+        "words": 104
+      },
+      {
+        "slide": 10,
+        "label": "Music and easy editing",
+        "origin": "32",
+        "words": 129
+      },
+      {
+        "slide": 11,
+        "label": "Presentations",
+        "origin": "34",
+        "words": 108
+      },
+      {
+        "slide": 12,
+        "label": "Copy platforms",
+        "origin": "35",
+        "words": 113
+      },
+      {
+        "slide": 13,
+        "label": "Perplexity",
+        "origin": "36",
+        "words": 120
+      },
+      {
+        "slide": 14,
+        "label": "Cheat sheet",
+        "origin": "39",
+        "words": 148
+      },
+      {
+        "slide": 15,
+        "label": "Story 2 · Ten years, two days",
+        "origin": "42",
+        "words": 103
+      },
+      {
+        "slide": 16,
+        "label": "Story 3 · The exams",
+        "origin": "43",
+        "words": 96
+      },
+      {
+        "slide": 17,
+        "label": "Story 4 · The security double",
+        "origin": "44",
+        "words": 110
+      },
+      {
+        "slide": 18,
+        "label": "The ChatGPT side",
+        "origin": "50",
+        "words": 107
+      },
+      {
+        "slide": 19,
+        "label": "The built-ins",
+        "origin": "51",
+        "words": 116
+      },
+      {
+        "slide": 20,
+        "label": "The universal adapter",
+        "origin": "52",
+        "words": 110
+      },
+      {
+        "slide": 21,
+        "label": "Sources 1 of 2",
+        "origin": "56",
+        "words": 88
+      },
+      {
+        "slide": 22,
+        "label": "Sources 2 of 2",
+        "origin": "57",
+        "words": 111
+      }
+    ]
+  },
+  "agentic-ai-reference": {
+    "source_sha256": "9bd1d2930f430d7526a14d1232f7d09a6c8dae050bb0103bd4fc5a626b1c676a",
+    "slides": 13,
+    "media": [
+      "assets/tools/lovable.png",
+      "assets/tools/higgsfield.png",
+      "assets/tools/hyperframes.png"
+    ],
+    "slide_inventory": [
+      {
+        "slide": 1,
+        "label": "Reference guide",
+        "origin": null,
+        "words": 35
+      },
+      {
+        "slide": 2,
+        "label": "Glossary",
+        "origin": "7",
+        "words": 124
+      },
+      {
+        "slide": 3,
+        "label": "Today's models",
+        "origin": "18",
+        "words": 158
+      },
+      {
+        "slide": 4,
+        "label": "Which tier when",
+        "origin": "19",
+        "words": 126
+      },
+      {
+        "slide": 5,
+        "label": "Today's harnesses",
+        "origin": "20",
+        "words": 93
+      },
+      {
+        "slide": 6,
+        "label": "Lovable",
+        "origin": "22",
+        "words": 101
+      },
+      {
+        "slide": 7,
+        "label": "Higgsfield",
+        "origin": "23",
+        "words": 99
+      },
+      {
+        "slide": 8,
+        "label": "HyperFrames",
+        "origin": "24",
+        "words": 93
+      },
+      {
+        "slide": 9,
+        "label": "Subscriptions",
+        "origin": "25",
+        "words": 78
+      },
+      {
+        "slide": 10,
+        "label": "Cost per task",
+        "origin": "27",
+        "words": 78
+      },
+      {
+        "slide": 11,
+        "label": "Unattended runs",
+        "origin": "34",
+        "words": 73
+      },
+      {
+        "slide": 12,
+        "label": "Sources 1 of 2",
+        "origin": "42",
+        "words": 98
+      },
+      {
+        "slide": 13,
+        "label": "Sources 2 of 2",
+        "origin": "43",
+        "words": 115
+      }
+    ]
+  },
+  "subagents-prompt-caching-reference": {
+    "source_sha256": "e47be1fccdc348137b4cbc2402960df6865d01376260d9c63a3a76fcff23fbb8",
+    "slides": 4,
+    "media": [],
+    "slide_inventory": [
+      {
+        "slide": 1,
+        "label": "Title",
+        "origin": "0",
+        "words": 27
+      },
+      {
+        "slide": 2,
+        "label": "Cache block",
+        "origin": "23",
+        "words": 42
+      },
+      {
+        "slide": 3,
+        "label": "Multiple breakpoints",
+        "origin": "30",
+        "words": 54
+      },
+      {
+        "slide": 4,
+        "label": "Choose authentication",
+        "origin": "36",
+        "words": 59
+      }
+    ]
+  },
+  "cost-and-context-reference": {
+    "source_sha256": "5a2b85f5d7f0750d5aac7f9436e180433d88a0c35c3158ea7d771e564585366c",
+    "slides": 4,
+    "media": [],
+    "slide_inventory": [
+      {
+        "slide": 1,
+        "label": "Title",
+        "origin": "0",
+        "words": 26
+      },
+      {
+        "slide": 2,
+        "label": "Plan comparison worksheet",
+        "origin": "7",
+        "words": 74
+      },
+      {
+        "slide": 3,
+        "label": "Cloud route worksheet",
+        "origin": "11",
+        "words": 55
+      },
+      {
+        "slide": 4,
+        "label": "Compare instruction variants",
+        "origin": "20",
+        "words": 69
+      }
+    ]
+  },
+  "orchestrating-agents-reference": {
+    "source_sha256": "bb362435a4cf7d5e7a377112e0f9d0739327d7c37dd662b3e17398418f15e48a",
+    "slides": 4,
+    "media": [],
+    "slide_inventory": [
+      {
+        "slide": 1,
+        "label": "Title",
+        "origin": "0",
+        "words": 25
+      },
+      {
+        "slide": 2,
+        "label": "Tool examples",
+        "origin": "5",
+        "words": 57
+      },
+      {
+        "slide": 3,
+        "label": "Plugin publication recipe",
+        "origin": "21",
+        "words": 52
+      },
+      {
+        "slide": 4,
+        "label": "Interface comparison exercise",
+        "origin": "29",
+        "words": 61
+      }
+    ]
+  },
+  "measuring-what-works-reference": {
+    "source_sha256": "a2ab9561506a67efee5034b84aeec198e05e26efb34136bfb47c1a5d4f1c4c48",
+    "slides": 5,
+    "media": [],
+    "slide_inventory": [
+      {
+        "slide": 1,
+        "label": "Title",
+        "origin": "0",
+        "words": 26
+      },
+      {
+        "slide": 2,
+        "label": "Configuration worksheet",
+        "origin": "16",
+        "words": 62
+      },
+      {
+        "slide": 3,
+        "label": "Repeated-run probabilities",
+        "origin": "7",
+        "words": 67
+      },
+      {
+        "slide": 4,
+        "label": "Local model memory",
+        "origin": "24",
+        "words": 70
+      },
+      {
+        "slide": 5,
+        "label": "Voice input",
+        "origin": "28",
+        "words": 52
+      }
+    ]
+  },
+  "best-practices-reference": {
+    "source_sha256": "cd361213d3a4aabd56008c70237ed2376cbd683ed218f5df0558d44b317b466e",
+    "slides": 5,
+    "media": [],
+    "slide_inventory": [
+      {
+        "slide": 1,
+        "label": "Title",
+        "origin": "0",
+        "words": 26
+      },
+      {
+        "slide": 2,
+        "label": "Command reference",
+        "origin": "43",
+        "words": 54
+      },
+      {
+        "slide": 3,
+        "label": "Sources",
+        "origin": "45",
+        "words": 76
+      },
+      {
+        "slide": 4,
+        "label": "Sources",
+        "origin": "0",
+        "words": 96
+      },
+      {
+        "slide": 5,
+        "label": "Sources",
+        "origin": "0",
+        "words": 67
+      }
+    ]
+  },
+  "working-smarter-reference": {
+    "source_sha256": "51a2f4e859cf349476d2a6133492ab800801c76c734b1b2262ccbdb6193d2993",
+    "slides": 8,
+    "media": [],
+    "slide_inventory": [
+      {
+        "slide": 1,
+        "label": "Title",
+        "origin": "0",
+        "words": 27
+      },
+      {
+        "slide": 2,
+        "label": "Plan comparison worksheet",
+        "origin": "7",
+        "words": 74
+      },
+      {
+        "slide": 3,
+        "label": "Cloud route worksheet",
+        "origin": "11",
+        "words": 55
+      },
+      {
+        "slide": 4,
+        "label": "Tool examples",
+        "origin": "29",
+        "words": 57
+      },
+      {
+        "slide": 5,
+        "label": "Plugin publication recipe",
+        "origin": "45",
+        "words": 52
+      },
+      {
+        "slide": 6,
+        "label": "Configuration worksheet",
+        "origin": "68",
+        "words": 62
+      },
+      {
+        "slide": 7,
+        "label": "Repeated-run probabilities",
+        "origin": "52",
+        "words": 67
+      },
+      {
+        "slide": 8,
+        "label": "Local model memory",
+        "origin": "76",
+        "words": 70
+      }
+    ]
+  }
+}
