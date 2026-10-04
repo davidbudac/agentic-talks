@@ -1,7 +1,7 @@
 import React from "react";
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
-import { themes, ThemeName } from "./theme";
-import { fontB, fontD, fontM } from "./fonts";
+import { themes, ThemeName, rad, sw } from "./theme";
+import { fontsFor } from "./fonts";
 import { loopFade, prog, pulse } from "./helpers";
 
 // Next-token prediction: prompt → model → probability bars → the winner is
@@ -16,11 +16,13 @@ const CANDIDATES = [
 
 export const NextToken: React.FC<{ theme: ThemeName }> = ({ theme }) => {
   const t = themes[theme];
+  const { fontB, fontD, fontM } = fontsFor(theme);
   const frame = useCurrentFrame();
   const { durationInFrames } = useVideoConfig();
 
+  // ivory: the chosen bar is clay, every other bar is one flat grey, no outline.
   const barFill = (kind: string) =>
-    kind === "coral" ? t.coral : kind === "warn" ? t.warning : t.cardBg;
+    kind === "coral" ? t.coral : t.flat ? t.faint : kind === "warn" ? t.warning : t.cardBg;
 
   // the sampled word flies from its bar into the blank
   const fly = prog(frame, 122, 150);
@@ -36,14 +38,14 @@ export const NextToken: React.FC<{ theme: ThemeName }> = ({ theme }) => {
         style={{ opacity: loopFade(frame, durationInFrames) }}
       >
         {/* prompt box */}
-        <rect x={14} y={98} width={132} height={50} rx={9} fill={t.midFill} stroke={t.midStroke} strokeWidth={1.5} />
+        <rect x={14} y={98} width={132} height={50} rx={rad(t, 9)} fill={t.midFill} stroke={t.midStroke} strokeWidth={sw(t, 1.5)} />
         <text x={80} y={120} fontSize={12.5} textAnchor="middle" fill={t.text} fontFamily={fontB} fontWeight={600}>
           "The tests
         </text>
         <text x={80} y={138} fontSize={12.5} textAnchor="middle" fill={t.text} fontFamily={fontB} fontWeight={600}>
           are{" "}
           {fly >= 1 ? (
-            <tspan fill={t.accent} fontWeight={700}>
+            <tspan fill={t.accent} fontWeight={t.bold}>
               passing"
             </tspan>
           ) : (
@@ -58,15 +60,15 @@ export const NextToken: React.FC<{ theme: ThemeName }> = ({ theme }) => {
               <path
                 d="M148 123 L 162 123"
                 fill="none"
-                stroke={t.coral}
-                strokeWidth={2.5}
+                stroke={t.flow}
+                strokeWidth={sw(t, 2.5)}
                 pathLength={1}
                 strokeDasharray={1}
                 strokeDashoffset={1 - draw}
               />
               <path
                 d="M0,-4.5 L8,0 L0,4.5 Z"
-                fill={t.coral}
+                fill={t.flow}
                 opacity={prog(frame, 26, 32)}
                 transform="translate(162 123)"
               />
@@ -78,21 +80,28 @@ export const NextToken: React.FC<{ theme: ThemeName }> = ({ theme }) => {
           const scale = 1 + 0.05 * pulse(frame, 30, 62);
           return (
             <g transform={`translate(200 123) scale(${scale}) translate(-200 -123)`}>
-              <circle cx={200} cy={123} r={34} fill={t.coral} />
-              <text x={200} y={120} fontSize={12} textAnchor="middle" fill={t.onHot} fontFamily={fontB} fontWeight={600}>
+              <circle
+                cx={200}
+                cy={123}
+                r={34}
+                fill={t.hotFilled ? t.coral : t.cardBg}
+                stroke={t.hotFilled ? "none" : t.midStroke}
+                strokeWidth={t.hotFilled ? 0 : sw(t, 1.5)}
+              />
+              <text x={200} y={120} fontSize={12} textAnchor="middle" fill={t.hotFilled ? t.onHot : t.text} fontFamily={fontB} fontWeight={600}>
                 MODEL
               </text>
-              <text x={200} y={136} fontSize={9.5} textAnchor="middle" fill={t.onHot} fontFamily={fontB} fontWeight={600}>
+              <text x={200} y={136} fontSize={9.5} textAnchor="middle" fill={t.hotFilled ? t.onHot : t.muted} fontFamily={fontB} fontWeight={600}>
                 next?
               </text>
             </g>
           );
         })()}
         <path
-          d="M234 118 C 250 100, 250 80, 300 60"
+          d={t.flat ? "M234 118 C 244 104, 244 78, 247 58" : "M234 118 C 250 100, 250 80, 300 60"}
           fill="none"
           stroke={t.lineStrong}
-          strokeWidth={1.5}
+          strokeWidth={sw(t, 1.5)}
           pathLength={1}
           strokeDasharray={1}
           strokeDashoffset={1 - prog(frame, 40, 56)}
@@ -121,14 +130,14 @@ export const NextToken: React.FC<{ theme: ThemeName }> = ({ theme }) => {
               <rect
                 x={312}
                 y={c.y - 10}
-                width={c.w * grow}
+                width={(t.flat ? c.p * (74 / 0.62) : c.w) * grow}
                 height={12}
-                rx={3}
+                rx={rad(t, 3)}
                 fill={barFill(c.kind)}
-                stroke={c.kind === "dim" ? t.cardBorder : "none"}
-                strokeWidth={c.kind === "dim" ? 1.5 : 0}
+                stroke={c.kind === "dim" && !t.flat ? t.cardBorder : "none"}
+                strokeWidth={c.kind === "dim" && !t.flat ? sw(t, 1.5) : 0}
               />
-              <text x={252} y={c.y + 14} fontSize={10} fill={t.muted} fontFamily={fontM} fontWeight={500} opacity={prog(frame, from + 18, from + 28)}>
+              <text x={252} y={c.y + 14} fontSize={10} fill={t.muted} fontFamily={fontM} fontWeight={t.monoWeight} opacity={prog(frame, from + 18, from + 28)}>
                 {c.p.toFixed(2)}
               </text>
               {/* sampling ring around the winner */}
@@ -138,10 +147,10 @@ export const NextToken: React.FC<{ theme: ThemeName }> = ({ theme }) => {
                   y={c.y - 16}
                   width={146}
                   height={34}
-                  rx={7}
+                  rx={rad(t, 7)}
                   fill="none"
-                  stroke={t.coral}
-                  strokeWidth={2}
+                  stroke={t.strokeHot}
+                  strokeWidth={sw(t, 2)}
                   opacity={pulse(frame, 100, 130)}
                 />
               ) : null}
@@ -150,7 +159,7 @@ export const NextToken: React.FC<{ theme: ThemeName }> = ({ theme }) => {
         })}
         {/* the word in flight */}
         {fly > 0 && fly < 1 ? (
-          <text x={flyX} y={flyY} fontSize={12.5} fill={t.accent} fontFamily={fontB} fontWeight={700}>
+          <text x={flyX} y={flyY} fontSize={12.5} fill={t.accent} fontFamily={fontB} fontWeight={t.bold}>
             passing
           </text>
         ) : null}
@@ -160,9 +169,9 @@ export const NextToken: React.FC<{ theme: ThemeName }> = ({ theme }) => {
           y={232}
           fontSize={12.5}
           textAnchor="middle"
-          fill={t.accent}
+          fill={t.caption}
           fontFamily={fontD}
-          fontWeight={700}
+          fontWeight={t.captionWeight}
           opacity={prog(frame, 158, 176)}
         >
           sample · append · repeat
