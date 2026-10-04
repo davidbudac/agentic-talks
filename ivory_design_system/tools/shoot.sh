@@ -6,6 +6,7 @@
 #
 # Writes <out-dir>/NN.png (two digits, 1-based slide number). Without [last]
 # the slide count is read from the rendered deck. Without [first] it starts at 1.
+# Stops on the first Chrome failure; never retries crashes across the deck.
 #
 # Environment:
 #   CHROME      Chrome/Chromium binary (default: the macOS Google Chrome path,
@@ -63,7 +64,8 @@ if [ -n "${CHROME_LOG:-}" ]; then flags+=(--enable-logging=stderr --v=0); log=$C
 if [ "$pdf" = "1" ]; then
   mkdir -p "$(dirname "$out")"
   rm -f "$out"
-  "$CHROME" "${flags[@]}" --no-pdf-header-footer "--print-to-pdf=$out" "$url?$query" >/dev/null 2>>"$log" || true
+  "$CHROME" "${flags[@]}" --no-pdf-header-footer "--print-to-pdf=$out" "$url?$query" >/dev/null 2>>"$log" \
+    || die "Chrome failed while printing PDF; stopped (log: $log)"
   [ -s "$out" ] || die "Chrome produced no PDF ($out)"
   echo "$out"
   exit 0
@@ -71,8 +73,10 @@ fi
 
 # ── slide count ──────────────────────────────────────────────────────────
 if [ -z "$last" ]; then
-  last=$("$CHROME" "${flags[@]}" --dump-dom "$url?$query" 2>>"$log" \
-         | grep -o 'data-deck-slide="[0-9]*"' | sort -u | wc -l | tr -d ' ') || true
+  dom=$("$CHROME" "${flags[@]}" --dump-dom "$url?$query" 2>>"$log") \
+    || die "Chrome failed while counting slides; no screenshots attempted (log: $log)"
+  last=$(printf '%s' "$dom" | grep -o 'data-deck-slide="[0-9]*"' | sort -u | wc -l | tr -d ' ') || true
+  unset dom
   if [ -z "$last" ] || [ "$last" -eq 0 ]; then
     last=$(grep -o '<section[ >]' "$deck" | wc -l | tr -d ' ') || true
   fi
@@ -83,11 +87,11 @@ case "$first$last" in *[!0-9]*) die "first/last must be numbers";; esac
 
 # ── shoot ────────────────────────────────────────────────────────────────
 mkdir -p "$out"
-fail=0
 for ((n = first; n <= last; n++)); do
   png=$(printf '%s/%02d.png' "$out" "$n")
   rm -f "$png"
-  "$CHROME" "${flags[@]}" "--screenshot=$png" "$url?$query#$n" >/dev/null 2>>"$log" || true
-  if [ -s "$png" ]; then echo "$png"; else echo "shoot.sh: no screenshot for slide $n" >&2; fail=1; fi
+  "$CHROME" "${flags[@]}" "--screenshot=$png" "$url?$query#$n" >/dev/null 2>>"$log" \
+    || die "Chrome failed on slide $n; remaining slides not attempted (log: $log)"
+  [ -s "$png" ] || die "no screenshot for slide $n; remaining slides not attempted (log: $log)"
+  echo "$png"
 done
-exit $fail
