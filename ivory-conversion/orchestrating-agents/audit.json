@@ -1,0 +1,306 @@
+{
+  "source": "orchestrating-agents.html",
+  "output": "orchestrating-agents-ivory.html",
+  "counts": [
+    19,
+    19
+  ],
+  "structural_errors": [],
+  "slides": [
+    {
+      "slide": 1,
+      "label": "Title",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "replace",
+          "source": "developersRevised October 2026",
+          "output": "developers"
+        },
+        {
+          "kind": "replace",
+          "source": "Agents.",
+          "output": "Agents"
+        },
+        {
+          "kind": "replace",
+          "source": "David",
+          "output": "AuthorDavid"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "RevisedOctober 2026"
+        }
+      ],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Deep dive · developersRevised October 2026 Orchestrating Agents. Assign work, contain actions and review what returns. David Budáč",
+      "output_text": "Deep dive · developers Orchestrating Agents Assign work, contain actions and review what returns. AuthorDavid Budáč RevisedOctober 2026"
+    },
+    {
+      "slide": 2,
+      "label": "Agenda",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "replace",
+          "source": "Coordinate Assign",
+          "output": "CoordinateAssign"
+        },
+        {
+          "kind": "replace",
+          "source": "Contain Set",
+          "output": "ContainSet"
+        },
+        {
+          "kind": "replace",
+          "source": "Integrate Check",
+          "output": "IntegrateCheck"
+        }
+      ],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Follow one invoice ticket to a reviewed patch Coordinate Assign work and resolve ownership. Contain Set the allowed files, network and runtime budget. Integrate Check evidence, combine changes and decide whether to accept. One ticket: export net, VAT and gross invoice values as CSV.",
+      "output_text": "In practice Follow one invoice ticket to a reviewed patch CoordinateAssign work and resolve ownership. ContainSet the allowed files, network and runtime budget. IntegrateCheck evidence, combine changes and decide whether to accept. One ticket: export net, VAT and gross invoice values as CSV."
+    },
+    {
+      "slide": 3,
+      "label": "Coordination and containment",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Two separate design decisions Orchestration Who gets a task, what it depends on and who integrates the result. Isolation What files, credentials, processes and network endpoints the tools can access. A dashboard or Git worktree does not by itself enforce a security boundary.",
+      "output_text": "In practice Two separate design decisions Orchestration Who gets a task, what it depends on and who integrates the result. Isolation What files, credentials, processes and network endpoints the tools can access. A dashboard or Git worktree does not by itself enforce a security boundary."
+    },
+    {
+      "slide": 4,
+      "label": "Workflow choice",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Choose from the bottleneck Bottleneck Useful capability Too many sessions to track A monitor with task state and evidence links. Independent changes collide Separate workspaces plus explicit file ownership. Ready work waits unclaimed A queue with leases, retries and review gates. Tools can touch too much A restricted environment with scoped credentials. Choose products only after these requirements are clear.",
+      "output_text": "In practice Choose from the bottleneck Bottleneck Useful capability Too many sessions to track A monitor with task state and evidence links. Independent changes collide Separate workspaces plus explicit file ownership. Ready work waits unclaimed A queue with leases, retries and review gates. Tools can touch too much A restricted environment with scoped credentials. Choose products only after these requirements are clear."
+    },
+    {
+      "slide": 5,
+      "label": "Ticket lifecycle",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice One ticket, explicit state transitions Ready: invoice rule + scope + acceptance cases Claimed: one owner + lease + retry budget Working: permitted workspace + progress evidence Review: patch + checks + unresolved gaps Accepted: reviewer confirms the requested behavior Failed or blocked work returns with evidence. A green tool run does not automatically publish a change.",
+      "output_text": "In practice One ticket, explicit state transitions Ready: invoice rule + scope + acceptance cases Claimed: one owner + lease + retry budget Working: permitted workspace + progress evidence Review: patch + checks + unresolved gaps Accepted: reviewer confirms the requested behavior Failed or blocked work returns with evidence. A green tool run does not automatically publish a change."
+    },
+    {
+      "slide": 6,
+      "label": "Static ticket walkthrough",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Walk the invoice ticket without a live service Event Expected state or action Worker finds missing VAT rule Blocked; request the rule before changing behavior. Two workers claim the same ticket One claim wins; the other does not start editing. Tests pass but escaping is untested Review records the gap and adds an acceptance check. Exercise: explain who owns each decision and what evidence is attached.",
+      "output_text": "In practice Walk the invoice ticket without a live service Event Expected state or action Worker finds missing VAT rule Blocked; request the rule before changing behavior. Two workers claim the same ticket One claim wins; the other does not start editing. Tests pass but escaping is untested Review records the gap and adds an acceptance check. Exercise: explain who owns each decision and what evidence is attached."
+    },
+    {
+      "slide": 7,
+      "label": "Tool boundary",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Specify the environment the worker receives Allow the repository paths and commands required by the ticket. Scope credentials and network access to the necessary services. Use separate edit workspaces; enforce time, attempt and spend limits outside the prompt. Review mounts, egress and permissions in the actual runtime.",
+      "output_text": "In practice Specify the environment the worker receives Allow the repository paths and commands required by the ticket. Scope credentials and network access to the necessary services. Use separate edit workspaces; enforce time, attempt and spend limits outside the prompt. Review mounts, egress and permissions in the actual runtime."
+    },
+    {
+      "slide": 8,
+      "label": "Loop failure controls",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Define done Match each failure to a control Failure Concrete control Repeats the same failed repair Limit attempts; require a new hypothesis before retrying. Weakens tests to make them pass Review the test diff; run independent acceptance checks. Changes unrelated behavior Scope allowed paths; inspect the complete diff. Prompts help communicate these rules. Enforce the important boundaries in tools, permissions and review.",
+      "output_text": "Define done Match each failure to a control Failure Concrete control Repeats the same failed repair Limit attempts; require a new hypothesis before retrying. Weakens tests to make them pass Review the test diff; run independent acceptance checks. Changes unrelated behavior Scope allowed paths; inspect the complete diff. Prompts help communicate these rules. Enforce the important boundaries in tools, permissions and review."
+    },
+    {
+      "slide": 9,
+      "label": "Review capacity",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "01"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "02"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "03"
+        }
+      ],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Limit work in progress to what can be reviewed Before starting Assign the reviewer and agree on the return format. While work runs Stop filling the queue when review capacity is exhausted. At acceptance Inspect the integrated result, including interactions between patches. More workers can move the queue downstream. Measure completed, accepted work.",
+      "output_text": "In practice Limit work in progress to what can be reviewed 01 Before starting Assign the reviewer and agree on the return format. 02 While work runs Stop filling the queue when review capacity is exhausted. 03 At acceptance Inspect the integrated result, including interactions between patches. More workers can move the queue downstream. Measure completed, accepted work."
+    },
+    {
+      "slide": 10,
+      "label": "A verification skill",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Make it repeatable Save the repeated invoice check as a skill invoice-check/ SKILL.md when to use it + verification procedure scripts/ optional deterministic checks references/ VAT and rounding rules Procedure: inspect the diff → run the cases → report evidence and gaps.",
+      "output_text": "Make it repeatable Save the repeated invoice check as a skill invoice-check/ SKILL.md when to use it + verification procedure scripts/ optional deterministic checks references/ VAT and rounding rules Procedure: inspect the diff → run the cases → report evidence and gaps."
+    },
+    {
+      "slide": 11,
+      "label": "Rules, procedure and tool",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Give each part of the invoice workflow one job Need Where it belongs VAT rate comes from the order Short project instruction. How to verify an invoice export Skill with cases and a reporting procedure. Read the invoice specification ticket An authorized CLI, API or MCP tool. A procedure teaches how to use access. It does not grant that access.",
+      "output_text": "In practice Give each part of the invoice workflow one job Need Where it belongs VAT rate comes from the order Short project instruction. How to verify an invoice export Skill with cases and a reporting procedure. Read the invoice specification ticket An authorized CLI, API or MCP tool. A procedure teaches how to use access. It does not grant that access."
+    },
+    {
+      "slide": 12,
+      "label": "Share the procedure",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Make it repeatable Package useful checks for the team Skill The repeatable invoice-check procedure and supporting files. Plugin or shared package A versioned way to distribute the procedure and supported integrations. Test discovery and behavior in a clean session before sharing. Installation does not replace review or permission boundaries.",
+      "output_text": "Make it repeatable Package useful checks for the team Skill The repeatable invoice-check procedure and supporting files. Plugin or shared package A versioned way to distribute the procedure and supported integrations. Test discovery and behavior in a clean session before sharing. Installation does not replace review or permission boundaries."
+    },
+    {
+      "slide": 13,
+      "label": "Skill exercise",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Write a verification skill you can test 10 minutes Define the trigger: invoice or CSV export changes. Write four checks: VAT, zero VAT, rounding, escaping. Name the command and required evidence. Test with one matching task and one unrelated task. Output: a small skill file and evidence that it is used when appropriate.",
+      "output_text": "In practice Write a verification skill you can test 10 minutes Define the trigger: invoice or CSV export changes. Write four checks: VAT, zero VAT, rounding, escaping. Name the command and required evidence. Test with one matching task and one unrelated task. Output: a small skill file and evidence that it is used when appropriate."
+    },
+    {
+      "slide": 14,
+      "label": "Skill file example",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Skill reference An invoice-check skill for Claude Code --- name: invoice-check description: Verify changes to invoice totals or CSV export. --- 1. Read the invoice rule and inspect the proposed diff. 2. Run the invoice and export tests; keep the actual output. 3. Check VAT, rounding and CSV escaping coverage. 4. Report findings, exit status and untested cases. Example path: .claude/skills/invoice-check/SKILL.md. Check discovery in a fresh session.",
+      "output_text": "Skill reference An invoice-check skill for Claude Code --- name: invoice-check description: Verify changes to invoice totals or CSV export. --- 1. Read the invoice rule and inspect the proposed diff. 2. Run the invoice and export tests; keep the actual output. 3. Check VAT, rounding and CSV escaping coverage. 4. Report findings, exit status and untested cases. Example path: .claude/skills/invoice-check/SKILL.md. Check discovery in a fresh session."
+    },
+    {
+      "slide": 15,
+      "label": "MCP and CLI",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Compare the complete interaction MCP Tools exposed through a client/server protocol, with structured inputs and supported authentication paths. CLI Commands executed by a shell tool, with help, arguments, output and error handling. Both can reach local or remote services. Both need appropriate credentials, permissions and review.",
+      "output_text": "In practice Compare the complete interaction MCP Tools exposed through a client/server protocol, with structured inputs and supported authentication paths. CLI Commands executed by a shell tool, with help, arguments, output and error handling. Both can reach local or remote services. Both need appropriate credentials, permissions and review."
+    },
+    {
+      "slide": 16,
+      "label": "Tool overhead",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Definitions are only one part of the cost MCP schemas may be loaded eagerly or discovered on demand, depending on the client. CLI use also consumes shell definitions, help text, command output and repair attempts. Compare successful completion, tool failures, total usage and latency. Measure the actual client configuration. There is no universal cheaper interface.",
+      "output_text": "In practice Definitions are only one part of the cost MCP schemas may be loaded eagerly or discovered on demand, depending on the client. CLI use also consumes shell definitions, help text, command output and repair attempts. Compare successful completion, tool failures, total usage and latency. Measure the actual client configuration. There is no universal cheaper interface."
+    },
+    {
+      "slide": 17,
+      "label": "Interface comparison exercise",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Run the same read through both interfaces Task: retrieve the invoice ticket and its acceptance cases. Hold data, access scope and requested output constant. For CLI and MCP, record: correctness; calls; failures; tokens; elapsed time Repeat after warm-up; report missing measurements. This is an experiment design, not a completed case study.",
+      "output_text": "In practice Run the same read through both interfaces Task: retrieve the invoice ticket and its acceptance cases. Hold data, access scope and requested output constant. For CLI and MCP, record: correctness; calls; failures; tokens; elapsed time Repeat after warm-up; report missing measurements. This is an experiment design, not a completed case study."
+    },
+    {
+      "slide": 18,
+      "label": "Next workflow",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "orchestrating-agents-reference.html"
+        ],
+        [
+          "orchestrating-agents-reference.html"
+        ]
+      ],
+      "source_text": "In practice Design the return and the review before fan-out One owner per task and a clear integration point. Enforced boundaries and a finite retry budget. Evidence-bearing returns, checked against the original acceptance cases. Choose interface and orchestration tools from observed needs. Optional reference material",
+      "output_text": "In practice Design the return and the review before fan-out One owner per task and a clear integration point. Enforced boundaries and a finite retry budget. Evidence-bearing returns, checked against the original acceptance cases. Choose interface and orchestration tools from observed needs. Optional reference material"
+    },
+    {
+      "slide": 19,
+      "label": "Sources",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://modelcontextprotocol.io/docs/learn/architecture",
+          "https://code.claude.com/docs/en/skills",
+          "https://code.claude.com/docs/en/sub-agents",
+          "https://code.claude.com/docs/en/sandboxing"
+        ],
+        [
+          "https://modelcontextprotocol.io/docs/learn/architecture",
+          "https://code.claude.com/docs/en/skills",
+          "https://code.claude.com/docs/en/sub-agents",
+          "https://code.claude.com/docs/en/sandboxing"
+        ]
+      ],
+      "source_text": "Sources Sources and further reading MCP architecture Skills Subagents and isolation options Claude Code sandboxing Primary documentation checked 3 October 2026. Examples are illustrative unless explicitly attributed.",
+      "output_text": "Sources Sources and further reading MCP architecture Skills Subagents and isolation options Claude Code sandboxing Primary documentation checked 3 October 2026. Examples are illustrative unless explicitly attributed."
+    }
+  ]
+}
