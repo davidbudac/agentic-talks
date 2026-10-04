@@ -19,10 +19,30 @@ Videos for decks live in `assets/anim/`; use the `<name>-ivory.mp4` renders (ivo
 
 | Deck | Style |
 |---|---|
-| `agentic-engineering-ivory.html` | **Ivory** (30 slides, the Ivory conversion of `agentic-engineering.html`) |
-| `agentic-engineering.html` and every other deck, the `*-reference.html` decks, `title-mockups.html` | Ember (`ember_design_system/`), not migrated yet |
+| `agentic-engineering-ivory.html` | **Ivory** (30 slides; previously completed model) |
+| `cost-and-context-ivory.html` | **Ivory** (17 slides; converted and verified) |
+| `ai-toolbox-ivory.html` | **Ivory** (31 slides; converted and verified) |
+| `agentic-ai-ivory.html` | **Ivory** (26 slides; converted and verified) |
+| `subagents-prompt-caching-ivory.html` | **Ivory** (21 slides; converted and verified) |
+| `orchestrating-agents-ivory.html` | **Ivory** (19 slides; converted and verified) |
+| `measuring-what-works-ivory.html` | **Ivory** (19 slides; converted and verified) |
+| `best-practices-ivory.html` | **Ivory** (30 slides; converted and verified) |
+| `working-smarter-ivory.html` | **Ivory** (44 slides; converted and verified) |
+| `agentic-engineering-reference-ivory.html` | **Ivory** (10 slides; converted and verified) |
+| `ai-toolbox-reference-ivory.html` | **Ivory** (22 slides; converted and verified) |
+| `agentic-ai-reference-ivory.html` | **Ivory** (13 slides; converted and verified) |
+| `subagents-prompt-caching-reference-ivory.html` | **Ivory** (4 slides; converted and verified) |
+| `cost-and-context-reference-ivory.html` | **Ivory** (4 slides; converted and verified) |
+| `orchestrating-agents-reference-ivory.html` | **Ivory** (4 slides; converted and verified) |
+| `measuring-what-works-reference-ivory.html` | **Ivory** (5 slides; converted and verified) |
+| `best-practices-reference-ivory.html` | **Ivory** (5 slides; converted and verified) |
+| `working-smarter-reference-ivory.html` | **Ivory** (8 slides; converted and verified) |
 
-- Ember (`ember_design_system/`) stays in place for the decks not yet migrated. Do not mix the two stylesheets in one deck.
+The 17 new conversions contain 282 slides. See [the conversion report](ivory-conversion/report.md) for commits, content differences, visual review and verification limits.
+
+Original main and `*-reference.html` working copies remain unchanged in Ember; links in the Ivory copies still point to those original filenames for the later replacement. `title-mockups.html` is out of scope.
+
+- Ember (`ember_design_system/`) stays in place for the preserved originals. Do not mix the two stylesheets in one deck.
 - Migrating a deck means: swap the head, delete the inline styles and scripts, wrap the content in `.zone`, convert code and diagrams, then run the checklist in the Ivory spec (§10). Follow the generic porting procedure in the Ivory spec (§8) plus the Ember specifics below.
 
 ## History
