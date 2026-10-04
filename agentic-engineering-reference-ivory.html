@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Agentic Engineering — Optional Reference</title>
+<link rel="stylesheet" href="ivory_design_system/styles.css">
+</head>
+<body>
+
+<!--
+  ============================================================
+  Agentic Engineering — optional reference deck.
+  Supporting material for agentic-engineering.html: cost
+  derivations, a workflow sketch, the invoice-check skill and
+  further links. Not part of the spoken path.
+  Ivory design system (DESIGN.md, ivory_design_system/).
+  Runs on the deck-stage component: ←/→, Space, Home/End,
+  number keys; R resets; N notes, P presenter window, F fullscreen;
+  speaker notes live on each section.
+  ============================================================
+-->
+
+<deck-stage width="1920" height="1080">
+
+<!-- 01 · Reference guide -->
+<section class="slide" data-label="Reference guide" data-speaker-notes="Optional reference, not a continuation required for the main talk. Original material remains recoverable from the recorded baseline commit.">
+  <div class="slide-head"><span class="crumb">Optional reference</span><span class="snum"></span></div>
+  <h2>Engineering reference</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><h3>Use selectively</h3><p>Cost derivations, a workflow sketch and the invoice-check skill.</p></div>
+      <div class="tile"><h3>Check before use</h3><p>Product recipes reflect documentation checked 3 October 2026.</p></div>
+    </div>
+  </div>
+  <p class="note"><a href="agentic-engineering.html">Return to the 30-slide main talk</a></p>
+</section>
+
+<!-- 02 · Explore a transformer -->
+<section data-origin-slide="8" class="slide" data-label="Explore a transformer" data-speaker-notes="Use outside the spoken path. The links are retained as learning resources, not audited or timed course recommendations.">
+  <div class="slide-head"><span class="crumb">Further exploration · Optional reference · <a href="agentic-engineering.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Watch the mechanism, then inspect the code</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><h3>Interactive explanations</h3><p><a href="https://poloclub.github.io/transformer-explainer/">Transformer Explainer</a><br><a href="https://bbycroft.net/llm">LLM Visualization</a></p></div>
+      <div class="tile"><h3>Build a small model</h3><p><a href="https://karpathy.ai/zero-to-hero.html">Neural Networks: Zero to Hero</a><br>Follow a small model from training to generation.</p></div>
+    </div>
+  </div>
+  <p class="note">Optional learning links. A small teaching model does not represent every production architecture.</p>
+</section>
+
+<!-- 03 · Request anatomy -->
+<section data-origin-slide="18" class="slide" data-label="Request anatomy" data-speaker-notes="The former twenty-thousand-token breakdown was an illustration presented as an actual harness turn. This version teaches which categories to inspect without asserting measured sizes.">
+  <div class="slide-head"><span class="crumb">Context reference · Optional reference · <a href="agentic-engineering.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Inspect what actually enters a request</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li>Standing instructions and applicable project rules.</li>
+      <li>Tool definitions and relevant skill content.</li>
+      <li>Retained conversation, selected files and tool results.</li>
+      <li>The current user message.</li>
+    </ul>
+  </div>
+  <p class="note">Use a request inspector or provider token counters for real sizes. Avoid summing overlapping categories.</p>
+</section>
+
+<!-- 04 · Growth arithmetic -->
+<section data-origin-slide="28" class="slide" data-label="Growth arithmetic" data-speaker-notes="Do not call it a measured session, and do not claim wall time or billed cost must follow the same curve. The expression counts the input to every call under the stated constant-growth assumptions.">
+  <div class="slide-head"><span class="crumb">Worked arithmetic · Optional reference · <a href="agentic-engineering.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Growing history can produce quadratic input volume</h2>
+  <div class="zone">
+    <div class="code reg">
+      <span class="l"><span class="c">Assume n calls; initial input B; each call adds d tokens.</span></span>
+      <span class="l"><span class="c">No pruning, compaction or window cap in this toy model.</span></span>
+      <span class="l"></span>
+      <span class="l"><span class="k">Input at call k</span> = B + (k − 1)d</span>
+      <span class="l"><span class="k">Total input</span>     = <span class="key">nB + d × n(n − 1) / 2</span></span>
+      <span class="l"></span>
+      <span class="l">B = 5,000; d = 2,000; n = 10</span>
+      <span class="l">Last call = 23,000; total input = 140,000 tokens.</span>
+    </div>
+  </div>
+  <p class="note">This is an input-volume model. Apply actual cache, output and tool rates to calculate the bill.</p>
+</section>
+
+<!-- 05 · Cache break-even -->
+<section data-origin-slide="33" class="slide" data-label="Cache break-even" data-speaker-notes="The examples match common Claude cache-write multipliers, but reads differ across models. Cache entries must exist and remain eligible. With a 0.10 read multiplier, two requests at a double-price write cost 2.10 versus 2.00 uncached, so three are needed. Excludes varying tails, output and tool costs.">
+  <div class="slide-head"><span class="crumb">Worked arithmetic · Optional reference · <a href="agentic-engineering.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Include the write before counting savings</h2>
+  <div class="zone">
+    <div class="code reg">
+      <span class="l"><span class="c">Same eligible prefix; all later requests hit the cache.</span></span>
+      <span class="l"><span class="c">Normalize ordinary input cost to 1 per request.</span></span>
+      <span class="l"></span>
+      <span class="l"><span class="k">Total cached cost</span> = w + (n − 1)r</span>
+      <span class="l">Caching saves when <span class="key">w + (n − 1)r &lt; n</span>.</span>
+      <span class="l"></span>
+      <span class="l"><span class="k">Example r = 0.10:</span></span>
+      <span class="l">w = 1.25 <span class="a">→</span> savings at 2 requests</span>
+      <span class="l">w = 2.00 <span class="a">→</span> savings at 3 requests</span>
+    </div>
+  </div>
+  <p class="note">Illustrative multipliers: verify model, platform, TTL and expiry rules. A cache miss changes the calculation.</p>
+</section>
+
+<!-- 06 · Workflow sketch -->
+<section data-origin-slide="47" class="slide" data-label="Workflow sketch" data-speaker-notes="A shape to discuss, not runnable Python or a product command. The workflow starts with an empty failure list and known acceptance cases. Passing checks returns a review candidate. Stop if a required permission or missing fact prevents a meaningful next step.">
+  <div class="slide-head"><span class="crumb">Workflow reference · Optional reference · <a href="agentic-engineering.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Make the retry edge explicit</h2>
+  <div class="zone">
+    <div class="code reg">
+      <span class="l"><span class="c">PSEUDOCODE — not a harness API</span></span>
+      <span class="l"></span>
+      <span class="l">findings = investigate(rule, calculation, export)</span>
+      <span class="l">plan = reconcile(findings, acceptance_cases)</span>
+      <span class="l">latest_failures = []</span>
+      <span class="l"><span class="k">for</span> attempt in range(3):</span>
+      <span class="l">    patch = implement(plan, latest_failures)</span>
+      <span class="l">    result = run_acceptance_checks(patch)</span>
+      <span class="l">    <span class="k">if</span> result.passed: <span class="k">return</span> request_review(patch, result)</span>
+      <span class="l">    <span class="key">latest_failures = result.failures</span></span>
+      <span class="l"><span class="k">return</span> report_blocked(latest_failures)</span>
+    </div>
+  </div>
+  <p class="note">Use enforced tool, time and cost limits around the workflow. Assign an owner to integration.</p>
+</section>
+
+<!-- 07 · Skill file example -->
+<section data-origin-slide="53" class="slide" data-label="Skill file example" data-speaker-notes="The paths and frontmatter are Claude Code examples checked against its skills documentation. Description-based discovery is not guaranteed on every phrasing. Invoke the skill explicitly if needed and test its behavior. This slide does not create or run a skill.">
+  <div class="slide-head"><span class="crumb">Skill reference · Optional reference · <a href="agentic-engineering.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>An invoice-check skill for Claude Code</h2>
+  <div class="zone">
+    <div class="code reg">
+      <span class="l"><span class="c">---</span></span>
+      <span class="l"><span class="k">name:</span> invoice-check</span>
+      <span class="l"><span class="k">description:</span> Verify changes to invoice totals or CSV export.</span>
+      <span class="l"><span class="c">---</span></span>
+      <span class="l">1. Read the invoice rule and inspect the proposed diff.</span>
+      <span class="l">2. Run the invoice and export tests; keep the actual output.</span>
+      <span class="l">3. Check VAT, rounding and CSV escaping coverage.</span>
+      <span class="l">4. Report findings, exit status and untested cases.</span>
+    </div>
+  </div>
+  <p class="note">Example path: <code>.claude/skills/invoice-check/SKILL.md</code>. Check discovery in a fresh session.</p>
+</section>
+
+<!-- 08 · Further skill systems -->
+<section data-origin-slide="56" class="slide" data-label="Further skill systems" data-speaker-notes="Retained as links, not a current command catalogue or endorsement of every instruction. Our main talk uses the invoice example so these external systems are not a prerequisite.">
+  <div class="slide-head"><span class="crumb">Further exploration · Optional reference · <a href="agentic-engineering.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Read the procedures before adopting the system</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><h3>Matt Pocock’s skills</h3><p><a href="https://github.com/mattpocock/skills">Source repository</a><br>Inspect how each skill defines its trigger, procedure and output.</p></div>
+      <div class="tile"><h3>Compound Engineering</h3><p><a href="https://github.com/EveryInc/compound-engineering-plugin">Source repository</a><br>Inspect how planning, implementation and captured lessons connect.</p></div>
+    </div>
+  </div>
+  <p class="note">Optional source examples. Commands and package contents change; adapt and test the parts you choose.</p>
+</section>
+
+<!-- 09 · Plugin publication recipe -->
+<section data-origin-slide="58" class="slide" data-label="Plugin publication recipe" data-speaker-notes="Claude Code example, checked 3 October 2026. This is a recipe to read; no publication is performed. A marketplace needs its own listing and valid source paths. Confirm team permissions and review hooks or integrations before distributing. Installation steps belong with the chosen channel.">
+  <div class="slide-head"><span class="crumb">Publication reference · Optional reference · <a href="agentic-engineering.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Package, test, then share</h2>
+  <div class="zone">
+    <div class="code reg">
+      <span class="l">my-plugin/</span>
+      <span class="l">  .claude-plugin/plugin.json</span>
+      <span class="l">  skills/invoice-check/SKILL.md</span>
+      <span class="l"></span>
+      <span class="l">1. Give the manifest a name and version.</span>
+      <span class="l">2. Test locally: claude --plugin-dir ./my-plugin</span>
+      <span class="l">3. Review contents and pin the version to distribute.</span>
+      <span class="l">4. Publish through your team’s approved channel.</span>
+    </div>
+  </div>
+  <p class="note"><a href="https://code.claude.com/docs/en/plugins">Plugin overview</a> · <a href="https://code.claude.com/docs/en/plugin-marketplaces">Marketplace setup</a></p>
+</section>
+
+<!-- 10 · Sources -->
+<section data-origin-slide="60" class="slide" data-label="Sources" data-speaker-notes="Sources support the mechanisms and implementation qualifications. No paid provider experiments were performed for this revision. The old benchmark and model-price grids are omitted; their original text remains in Git. Reference material contains additional links for publication and learning.">
+  <div class="slide-head"><span class="crumb">Sources · Optional reference · <a href="agentic-engineering.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Questions? Check the evidence.</h2>
+  <div class="zone">
+    <div class="links">
+      <div class="linkcol">
+        <h3>Mechanisms</h3>
+        <a href="https://arxiv.org/abs/1706.03762">Attention Is All You Need<span class="u">arxiv.org/abs/1706.03762</span></a>
+        <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Context engineering<span class="u">anthropic.com/engineering</span></a>
+        <a href="https://www.trychroma.com/research/context-rot">Context-length experiments<span class="u">trychroma.com/research/context-rot</span></a>
+      </div>
+      <div class="linkcol">
+        <h3>Implementation details</h3>
+        <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">Prompt caching and usage<span class="u">platform.claude.com/docs</span></a>
+        <a href="https://code.claude.com/docs/en/sub-agents">Subagents and forks<span class="u">code.claude.com/docs/en/sub-agents</span></a>
+        <a href="https://code.claude.com/docs/en/skills">Skills<span class="u">code.claude.com/docs/en/skills</span></a>
+      </div>
+    </div>
+  </div>
+  <p class="note">Primary sources checked 3 October 2026. Worked examples are illustrative. <a href="https://github.com/davidbudac/agentic-talks">All decks</a>.</p>
+</section>
+
+</deck-stage>
+<script src="ivory_design_system/deck-stage.js"></script>
+<script src="ivory_design_system/deck.js"></script>
+</body>
+</html>
