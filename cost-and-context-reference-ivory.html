@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cost &amp; Context — Reference</title>
+<link rel="stylesheet" href="ivory_design_system/styles.css">
+</head>
+<body>
+
+<!--
+  ============================================================
+  Cost & Context — optional reference deck.
+  Supporting procedures and worksheets for cost-and-context.html.
+  Not part of the spoken path.
+  Ivory design system (DESIGN.md, ivory_design_system/).
+  Runs on the deck-stage component: ←/→, Space, Home/End,
+  number keys; R resets; N notes, P presenter window, F fullscreen;
+  speaker notes live on each section.
+  ============================================================
+-->
+
+<deck-stage width="1920" height="1080">
+
+<!-- 01 · Title (regular .slide, h2 + .cards.c2; banner → footer .note) -->
+<section data-origin-slide="0" class="slide" data-label="Title" data-speaker-notes="Optional reference Revised October 2026. Worked examples are illustrative; no live run is required.">
+  <div class="slide-head"><span class="crumb">Optional reference</span><span class="snum"></span></div>
+  <h2>Cost &amp; Context<br>Reference</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><p>Supporting procedures and worksheets. <a href="cost-and-context.html">Return to the main talk</a></p></div>
+      <div class="tile"><h3>David Budáč</h3><p>Revised October 2026</p></div>
+    </div>
+  </div>
+  <p class="note">Optional reference · <a href="cost-and-context.html">Back to the talk</a></p>
+</section>
+
+<!-- 02 · Plan comparison worksheet (Ember table.tbl → .tbl, 4 rows at 30px; equal rows, no clay) -->
+<section data-origin-slide="7" class="slide" data-label="Plan comparison worksheet" data-speaker-notes="This replaces volatile price grids and research chatter. It is a worksheet, not a current price audit.">
+  <div class="slide-head"><span class="crumb">In practice · Optional reference · <a href="cost-and-context.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Compare current offers using your workload</h2>
+  <div class="zone">
+    <table class="tbl">
+      <thead><tr><th scope="col">Record</th><th scope="col">Question</th></tr></thead>
+      <tbody>
+        <tr><td>Price and usage limits</td><td>Which work is included, capped or separately billed?</td></tr>
+        <tr><td>Authentication and automation</td><td>Does the intended client and deployment use a supported path?</td></tr>
+        <tr><td>Governance</td><td>Which retention, identity and audit controls are configured?</td></tr>
+        <tr><td>Actual workload</td><td>What is the cost at your observed volume and success rate?</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Verify the current plan pages before purchase. <a href="https://claude.com/pricing">Claude plans</a></p>
+</section>
+
+<!-- 03 · Cloud route worksheet (Ember ul.bul → ul.bul; equal checks, no clay) -->
+<section data-origin-slide="11" class="slide" data-label="Cloud route worksheet" data-speaker-notes="This replaces unqualified Bedrock residency and governance claims. The organization must assess its actual endpoints, policies and agreements.">
+  <div class="slide-head"><span class="crumb">In practice · Optional reference · <a href="cost-and-context.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Verify the configured boundary</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li>Identify the provider, region and any cross-region inference routing.</li>
+      <li>Confirm the relevant retention, logging and identity settings.</li>
+      <li>Check model availability, quotas, pricing and your organization’s agreement.</li>
+    </ul>
+  </div>
+  <p class="note">A cloud brand alone does not establish residency or prevent data from leaving a region.</p>
+</section>
+
+<!-- 04 · Compare instruction variants (Ember .code → .code, one .l per line; same markup as the main-deck twin, no clay) -->
+<section data-origin-slide="20" class="slide" data-label="Compare instruction variants" data-speaker-notes="An optional live run must use disposable copies and approved credentials. With no runtime, use the next static worksheet and discuss what still needs measurement.">
+  <div class="slide-head"><span class="crumb">In practice · Optional reference · <a href="cost-and-context.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Exercise · compare two versions fairly</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="c">10 minutes</span></span>
+      <span class="l"><span class="k">A:</span> the long instruction file. <span class="k">B:</span> the shorter version.</span>
+      <span class="l">Use identical task inputs, repo state, model and tools.</span>
+      <span class="l"><span class="k">Record:</span> acceptance results, all usage, time and retries.</span>
+      <span class="l">Repeat runs if available; inspect failures before choosing.</span>
+    </div>
+  </div>
+  <p class="note">Output: a comparison worksheet and one justified decision. A smaller prompt that drops the VAT rule loses.</p>
+</section>
+
+</deck-stage>
+<script src="ivory_design_system/deck-stage.js"></script>
+<script src="ivory_design_system/deck.js"></script>
+</body>
+</html>
