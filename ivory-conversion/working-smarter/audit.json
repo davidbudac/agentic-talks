@@ -1,0 +1,640 @@
+{
+  "source": "working-smarter.html",
+  "output": "working-smarter-ivory.html",
+  "counts": [
+    44,
+    44
+  ],
+  "structural_errors": [],
+  "slides": [
+    {
+      "slide": 1,
+      "label": "Title",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "replace",
+          "source": "developersRevised October 2026",
+          "output": "developers"
+        },
+        {
+          "kind": "replace",
+          "source": "Agents.",
+          "output": "Agents"
+        },
+        {
+          "kind": "replace",
+          "source": "David",
+          "output": "AuthorDavid"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "RevisedOctober 2026"
+        }
+      ],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Workshop · developersRevised October 2026 Working Smarter with Agents. A half-day workshop: define, measure, improve and verify one workflow. David Budáč",
+      "output_text": "Workshop · developers Working Smarter with Agents A half-day workshop: define, measure, improve and verify one workflow. AuthorDavid Budáč RevisedOctober 2026"
+    },
+    {
+      "slide": 2,
+      "label": "Workshop route",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Leave with five concrete artifacts Block Time Participant output Define and evaluate 50 min Acceptance cases + scored worksheet Cost and context 45 min Usage sheet + revised instructions Break 15 min Coordinate and package 55 min Ticket contract + verification skill Choose tools and next experiment 45 min Comparison design + next action Total: 210 minutes. Includes discussion; live execution is optional.",
+      "output_text": "In practice Leave with five concrete artifacts Block Time Participant output Define and evaluate 50 min Acceptance cases + scored worksheet Cost and context 45 min Usage sheet + revised instructions Break 15 min Coordinate and package 55 min Ticket contract + verification skill Choose tools and next experiment 45 min Comparison design + next action Total: 210 minutes. Includes discussion; live execution is optional."
+    },
+    {
+      "slide": 3,
+      "label": "What an eval measures",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "01"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "02"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "03"
+        }
+      ],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Separate the case, the grader and the trial Test case Export a net-100 invoice with 21% VAT. Grader Parse the CSV and check that net, VAT and gross are 100, 21 and 121. Trial One fresh attempt with a recorded model, prompt, tools and environment. Evaluate the resulting artifact. A message saying “done” is not the outcome.",
+      "output_text": "In practice Separate the case, the grader and the trial 01 Test case Export a net-100 invoice with 21% VAT. 02 Grader Parse the CSV and check that net, VAT and gross are 100, 21 and 121. 03 Trial One fresh attempt with a recorded model, prompt, tools and environment. Evaluate the resulting artifact. A message saying “done” is not the outcome."
+    },
+    {
+      "slide": 4,
+      "label": "Acceptance cases",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Make the expected behavior explicit Case Expected result Net 100.00; VAT 21% VAT 21.00; gross 121.00 Net 100.00; VAT 0% VAT 0.00; gross 100.00 Net 0.05; VAT 10%; half-up cents VAT 0.01; gross 0.06 Customer name: ACME, Ltd One customer field after CSV parsing For this exercise, round VAT half up to cents, then add it to net. The business rule must come from the task.",
+      "output_text": "In practice Make the expected behavior explicit Case Expected result Net 100.00; VAT 21% VAT 21.00; gross 121.00 Net 100.00; VAT 0% VAT 0.00; gross 100.00 Net 0.05; VAT 10%; half-up cents VAT 0.01; gross 0.06 Customer name: ACME, Ltd One customer field after CSV parsing For this exercise, round VAT half up to cents, then add it to net. The business rule must come from the task."
+    },
+    {
+      "slide": 5,
+      "label": "Grading methods",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "01"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "02"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "03"
+        }
+      ],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Use the strongest practical check for each claim Deterministic check Parse CSV, assert values and run regression tests. Written rubric Assess explanation quality and completeness against named criteria. Human calibration Check ambiguous cases and compare model-judge scores with human decisions. A different judge model does not remove bias. Blind labels and vary answer order where practical.",
+      "output_text": "In practice Use the strongest practical check for each claim 01 Deterministic check Parse CSV, assert values and run regression tests. 02 Written rubric Assess explanation quality and completeness against named criteria. 03 Human calibration Check ambiguous cases and compare model-judge scores with human decisions. A different judge model does not remove bias. Blind labels and vary answer order where practical."
+    },
+    {
+      "slide": 6,
+      "label": "Repeated trials",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice One success answers a different question Illustrative outcomes for one case: fail fail pass fail fail At least one success in five attempts: yes All five attempts successful: no Observed single-attempt success rate: 1 / 5 This small sample does not establish production reliability. Report task coverage, repeats and uncertainty.",
+      "output_text": "In practice One success answers a different question Illustrative outcomes for one case: fail fail pass fail fail At least one success in five attempts: yes All five attempts successful: no Observed single-attempt success rate: 1 / 5 This small sample does not establish production reliability. Report task coverage, repeats and uncertainty."
+    },
+    {
+      "slide": 7,
+      "label": "Trace evidence",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Record the observable run Inputs, configuration, tool requests, results and timestamps. Final files or external state, check output and exit statuses. Usage categories, retries, failures and any unavailable evidence. Telemetry is not a full transcript, and neither guarantees access to hidden model reasoning.",
+      "output_text": "In practice Record the observable run Inputs, configuration, tool requests, results and timestamps. Final files or external state, check output and exit statuses. Usage categories, retries, failures and any unavailable evidence. Telemetry is not a full transcript, and neither guarantees access to hidden model reasoning."
+    },
+    {
+      "slide": 8,
+      "label": "Annotated trace",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice A repeated step is a question to investigate Observed step What to ask Read calc.py; edit it; read it again Did the second read inspect the changed code? Repeat a failed tool call Did the environment or arguments change? Restate the plan after a handoff Did this restore missing requirements? Label a step waste only after checking its purpose and effect.",
+      "output_text": "In practice A repeated step is a question to investigate Observed step What to ask Read calc.py; edit it; read it again Did the second read inspect the changed code? Repeat a failed tool call Did the environment or arguments change? Restate the plan after a handoff Did this restore missing requirements? Label a step waste only after checking its purpose and effect."
+    },
+    {
+      "slide": 9,
+      "label": "Results worksheet",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Keep failed runs in the comparison Per trial Record Identity Case, variant, run number and versioned environment. Outcome Acceptance checks, rubric scores and evidence paths. Work Uncached input, cache writes/reads, output and retries. Operational result Time, total cost, review effort and error reason. Aggregate success rate and total spend over all trials. Do not report only successful attempts.",
+      "output_text": "In practice Keep failed runs in the comparison Per trial Record Identity Case, variant, run number and versioned environment. Outcome Acceptance checks, rubric scores and evidence paths. Work Uncached input, cache writes/reads, output and retries. Operational result Time, total cost, review effort and error reason. Aggregate success rate and total spend over all trials. Do not report only successful attempts."
+    },
+    {
+      "slide": 10,
+      "label": "Grading exercise",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Score two synthetic outputs 10 minutes — no model call needed A: net=100, VAT=21, gross=121 for BOTH 21% and 0% orders. B: correct totals for both; customer ACME, Ltd is unquoted. Grade against the four cases. Which outputs fail? What evidence is still missing? Output: a scored worksheet with explanations. Neither candidate is ready to accept.",
+      "output_text": "In practice Score two synthetic outputs 10 minutes — no model call needed A: net=100, VAT=21, gross=121 for BOTH 21% and 0% orders. B: correct totals for both; customer ACME, Ltd is unquoted. Grade against the four cases. Which outputs fail? What evidence is still missing? Output: a scored worksheet with explanations. Neither candidate is ready to accept."
+    },
+    {
+      "slide": 11,
+      "label": "Exercise debrief",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice A good report includes unknowns Check A B 21% VAT totals pass pass Zero VAT totals fail pass Half-up rounding not tested not tested CSV quoting not tested fail No measured speed or token-cost result exists for these synthetic outputs.",
+      "output_text": "In practice A good report includes unknowns Check A B 21% VAT totals pass pass Zero VAT totals fail pass Half-up rounding not tested not tested CSV quoting not tested fail No measured speed or token-cost result exists for these synthetic outputs."
+    },
+    {
+      "slide": 12,
+      "label": "Token volume and cost",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Count the work Count each billing category separately Category What to record Uncached input New input processed at its applicable input rate. Cache writes and reads Separate token counts and the configured cache rates. Generated output Output usage, including billable reasoning where applicable. Bill = sum of each category’s tokens × its rate, plus any separate tool or service fees.",
+      "output_text": "Count the work Count each billing category separately Category What to record Uncached input New input processed at its applicable input rate. Cache writes and reads Separate token counts and the configured cache rates. Generated output Output usage, including billable reasoning where applicable. Bill = sum of each category’s tokens × its rate, plus any separate tool or service fees."
+    },
+    {
+      "slide": 13,
+      "label": "Worked cost example",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Worked arithmetic One cache-hit request: about five cents Illustrative usage and rates Cost 19,000 cached input × $0.20 / million $0.0038 3,700 new input × $4 / million $0.0148 1,600 output × $20 / million $0.0320 22,700 input + 1,600 output in total $0.0506 Assumed rates, not a measured bill. Without the cache hit: $0.0908 input + $0.0320 output = $0.1228.",
+      "output_text": "Worked arithmetic One cache-hit request: about five cents Illustrative usage and rates Cost 19,000 cached input × $0.20 / million $0.0038 3,700 new input × $4 / million $0.0148 1,600 output × $20 / million $0.0320 22,700 input + 1,600 output in total $0.0506 Assumed rates, not a measured bill. Without the cache hit: $0.0908 input + $0.0320 output = $0.1228."
+    },
+    {
+      "slide": 14,
+      "label": "Choose the route",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Start with how the work will run Need Check before choosing Daily interactive work Native client, plan limits and actual monthly usage. Custom service, batch or CI Supported API authentication, rate limits and a budget. Organizational controls Identity, data handling, audit, residency and procurement requirements. Compare current offers against these requirements. Detailed shopping questions are in reference material.",
+      "output_text": "In practice Start with how the work will run Need Check before choosing Daily interactive work Native client, plan limits and actual monthly usage. Custom service, batch or CI Supported API authentication, rate limits and a budget. Organizational controls Identity, data handling, audit, residency and procurement requirements. Compare current offers against these requirements. Detailed shopping questions are in reference material."
+    },
+    {
+      "slide": 15,
+      "label": "Useful context",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Context quality Keep the facts that the next decision needs Keep The invoice rule, failing case, relevant code, decisions and latest test result. Summarize or remove Duplicate file dumps, stale logs and abandoned approaches, once their useful findings are captured. Watch for missed requirements and repeated work. There is no universal “dumb zone” or safe fill percentage.",
+      "output_text": "Context quality Keep the facts that the next decision needs Keep The invoice rule, failing case, relevant code, decisions and latest test result. Summarize or remove Duplicate file dumps, stale logs and abandoned approaches, once their useful findings are captured. Watch for missed requirements and repeated work. There is no universal “dumb zone” or safe fill percentage."
+    },
+    {
+      "slide": 16,
+      "label": "Project instructions",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Make it repeatable Store the rules needed on most tasks # Project instructions — illustrative invoice repository - Test with: pytest tests/test_invoice.py -q - VAT rates come from the order record. - Preserve existing assertions; explain test changes. - Ask before changing the stored invoice schema. Use the instruction-file convention your harness actually loads. Keep standing rules short and specific.",
+      "output_text": "Make it repeatable Store the rules needed on most tasks # Project instructions — illustrative invoice repository - Test with: pytest tests/test_invoice.py -q - VAT rates come from the order record. - Preserve existing assertions; explain test changes. - Ask before changing the stored invoice schema. Use the instruction-file convention your harness actually loads. Keep standing rules short and specific."
+    },
+    {
+      "slide": 17,
+      "label": "Instruction file before and after",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Shorten the file while preserving its constraints Before Long project history, duplicate style advice, VAT rules, test commands and an old incident log. After Keep VAT source, rounding rule, test command and schema boundary. Link occasional procedures from a skill. The acceptance check is unchanged behavior on the same tasks, not the smallest file.",
+      "output_text": "In practice Shorten the file while preserving its constraints Before Long project history, duplicate style advice, VAT rules, test commands and an old incident log. After Keep VAT source, rounding rule, test command and schema boundary. Link occasional procedures from a skill. The acceptance check is unchanged behavior on the same tasks, not the smallest file."
+    },
+    {
+      "slide": 18,
+      "label": "Compare instruction variants",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Exercise · compare two versions fairly 10 minutes A: the long instruction file. B: the shorter version. Use identical task inputs, repo state, model and tools. Record: acceptance results, all usage, time and retries. Repeat runs if available; inspect failures before choosing. Output: a comparison worksheet and one justified decision. A smaller prompt that drops the VAT rule loses.",
+      "output_text": "In practice Exercise · compare two versions fairly 10 minutes A: the long instruction file. B: the shorter version. Use identical task inputs, repo state, model and tools. Record: acceptance results, all usage, time and retries. Repeat runs if available; inspect failures before choosing. Output: a comparison worksheet and one justified decision. A smaller prompt that drops the VAT rule loses."
+    },
+    {
+      "slide": 19,
+      "label": "Static comparison worksheet",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice No runtime? Check the proposed rewrite on paper Requirement A B VAT from order + rounding rule present verify preserved Exact invoice test command present verify preserved Schema change approval present verify preserved Measured task usage and results not run not run Discuss what B removed and which regression case would expose a lost rule. No savings are claimed.",
+      "output_text": "In practice No runtime? Check the proposed rewrite on paper Requirement A B VAT from order + rounding rule present verify preserved Exact invoice test command present verify preserved Schema change approval present verify preserved Measured task usage and results not run not run Discuss what B removed and which regression case would expose a lost rule. No savings are claimed."
+    },
+    {
+      "slide": 20,
+      "label": "Continue or reset",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Choose from the state of the task Unrelated next task Start fresh with its own scope and needed project context. Same task, long history Summarize the goal, evidence, decisions, failed attempts and next check. Check what survives compaction. Neither a fresh session nor a summary has zero context cost.",
+      "output_text": "In practice Choose from the state of the task Unrelated next task Start fresh with its own scope and needed project context. Same task, long history Summarize the goal, evidence, decisions, failed attempts and next check. Check what survives compaction. Neither a fresh session nor a summary has zero context cost."
+    },
+    {
+      "slide": 21,
+      "label": "Subagents",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Split the work · subagents Delegate a question; ask for evidence back Fresh helpers need a self-contained task and relevant inputs. Forks can inherit existing history. Keep intermediate investigation in the helper’s context; return findings with file references. Review the result. Delegation adds coordination cost and does not itself isolate filesystem access. Example return: VAT calculation locations, the failing path, supporting lines and unresolved questions.",
+      "output_text": "Split the work · subagents Delegate a question; ask for evidence back Fresh helpers need a self-contained task and relevant inputs. Forks can inherit existing history. Keep intermediate investigation in the helper’s context; return findings with file references. Review the result. Delegation adds coordination cost and does not itself isolate filesystem access. Example return: VAT calculation locations, the failing path, supporting lines and unresolved questions."
+    },
+    {
+      "slide": 22,
+      "label": "Coordination and containment",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Two separate design decisions Orchestration Who gets a task, what it depends on and who integrates the result. Isolation What files, credentials, processes and network endpoints the tools can access. A dashboard or Git worktree does not by itself enforce a security boundary.",
+      "output_text": "In practice Two separate design decisions Orchestration Who gets a task, what it depends on and who integrates the result. Isolation What files, credentials, processes and network endpoints the tools can access. A dashboard or Git worktree does not by itself enforce a security boundary."
+    },
+    {
+      "slide": 23,
+      "label": "Ticket lifecycle",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice One ticket, explicit state transitions Ready: invoice rule + scope + acceptance cases Claimed: one owner + lease + retry budget Working: permitted workspace + progress evidence Review: patch + checks + unresolved gaps Accepted: reviewer confirms the requested behavior Failed or blocked work returns with evidence. A green tool run does not automatically publish a change.",
+      "output_text": "In practice One ticket, explicit state transitions Ready: invoice rule + scope + acceptance cases Claimed: one owner + lease + retry budget Working: permitted workspace + progress evidence Review: patch + checks + unresolved gaps Accepted: reviewer confirms the requested behavior Failed or blocked work returns with evidence. A green tool run does not automatically publish a change."
+    },
+    {
+      "slide": 24,
+      "label": "Static ticket walkthrough",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Walk the invoice ticket without a live service Event Expected state or action Worker finds missing VAT rule Blocked; request the rule before changing behavior. Two workers claim the same ticket One claim wins; the other does not start editing. Tests pass but escaping is untested Review records the gap and adds an acceptance check. Exercise: explain who owns each decision and what evidence is attached.",
+      "output_text": "In practice Walk the invoice ticket without a live service Event Expected state or action Worker finds missing VAT rule Blocked; request the rule before changing behavior. Two workers claim the same ticket One claim wins; the other does not start editing. Tests pass but escaping is untested Review records the gap and adds an acceptance check. Exercise: explain who owns each decision and what evidence is attached."
+    },
+    {
+      "slide": 25,
+      "label": "Tool boundary",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Specify the environment the worker receives Allow the repository paths and commands required by the ticket. Scope credentials and network access to the necessary services. Use separate edit workspaces; enforce time, attempt and spend limits outside the prompt. Review mounts, egress and permissions in the actual runtime.",
+      "output_text": "In practice Specify the environment the worker receives Allow the repository paths and commands required by the ticket. Scope credentials and network access to the necessary services. Use separate edit workspaces; enforce time, attempt and spend limits outside the prompt. Review mounts, egress and permissions in the actual runtime."
+    },
+    {
+      "slide": 26,
+      "label": "Loop failure controls",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Define done Match each failure to a control Failure Concrete control Repeats the same failed repair Limit attempts; require a new hypothesis before retrying. Weakens tests to make them pass Review the test diff; run independent acceptance checks. Changes unrelated behavior Scope allowed paths; inspect the complete diff. Prompts help communicate these rules. Enforce the important boundaries in tools, permissions and review.",
+      "output_text": "Define done Match each failure to a control Failure Concrete control Repeats the same failed repair Limit attempts; require a new hypothesis before retrying. Weakens tests to make them pass Review the test diff; run independent acceptance checks. Changes unrelated behavior Scope allowed paths; inspect the complete diff. Prompts help communicate these rules. Enforce the important boundaries in tools, permissions and review."
+    },
+    {
+      "slide": 27,
+      "label": "Review capacity",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "01"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "02"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "03"
+        }
+      ],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Limit work in progress to what can be reviewed Before starting Assign the reviewer and agree on the return format. While work runs Stop filling the queue when review capacity is exhausted. At acceptance Inspect the integrated result, including interactions between patches. More workers can move the queue downstream. Measure completed, accepted work.",
+      "output_text": "In practice Limit work in progress to what can be reviewed 01 Before starting Assign the reviewer and agree on the return format. 02 While work runs Stop filling the queue when review capacity is exhausted. 03 At acceptance Inspect the integrated result, including interactions between patches. More workers can move the queue downstream. Measure completed, accepted work."
+    },
+    {
+      "slide": 28,
+      "label": "Rules, procedure and tool",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Give each part of the invoice workflow one job Need Where it belongs VAT rate comes from the order Short project instruction. How to verify an invoice export Skill with cases and a reporting procedure. Read the invoice specification ticket An authorized CLI, API or MCP tool. A procedure teaches how to use access. It does not grant that access.",
+      "output_text": "In practice Give each part of the invoice workflow one job Need Where it belongs VAT rate comes from the order Short project instruction. How to verify an invoice export Skill with cases and a reporting procedure. Read the invoice specification ticket An authorized CLI, API or MCP tool. A procedure teaches how to use access. It does not grant that access."
+    },
+    {
+      "slide": 29,
+      "label": "A verification skill",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Make it repeatable Save the repeated invoice check as a skill invoice-check/ SKILL.md when to use it + verification procedure scripts/ optional deterministic checks references/ VAT and rounding rules Procedure: inspect the diff → run the cases → report evidence and gaps.",
+      "output_text": "Make it repeatable Save the repeated invoice check as a skill invoice-check/ SKILL.md when to use it + verification procedure scripts/ optional deterministic checks references/ VAT and rounding rules Procedure: inspect the diff → run the cases → report evidence and gaps."
+    },
+    {
+      "slide": 30,
+      "label": "Skill exercise",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Write a verification skill you can test 10 minutes Define the trigger: invoice or CSV export changes. Write four checks: VAT, zero VAT, rounding, escaping. Name the command and required evidence. Test with one matching task and one unrelated task. Output: a small skill file and evidence that it is used when appropriate.",
+      "output_text": "In practice Write a verification skill you can test 10 minutes Define the trigger: invoice or CSV export changes. Write four checks: VAT, zero VAT, rounding, escaping. Name the command and required evidence. Test with one matching task and one unrelated task. Output: a small skill file and evidence that it is used when appropriate."
+    },
+    {
+      "slide": 31,
+      "label": "Skill file example",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Skill reference An invoice-check skill for Claude Code --- name: invoice-check description: Verify changes to invoice totals or CSV export. --- 1. Read the invoice rule and inspect the proposed diff. 2. Run the invoice and export tests; keep the actual output. 3. Check VAT, rounding and CSV escaping coverage. 4. Report findings, exit status and untested cases. Example path: .claude/skills/invoice-check/SKILL.md. Check discovery in a fresh session.",
+      "output_text": "Skill reference An invoice-check skill for Claude Code --- name: invoice-check description: Verify changes to invoice totals or CSV export. --- 1. Read the invoice rule and inspect the proposed diff. 2. Run the invoice and export tests; keep the actual output. 3. Check VAT, rounding and CSV escaping coverage. 4. Report findings, exit status and untested cases. Example path: .claude/skills/invoice-check/SKILL.md. Check discovery in a fresh session."
+    },
+    {
+      "slide": 32,
+      "label": "Share the procedure",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Make it repeatable Package useful checks for the team Skill The repeatable invoice-check procedure and supporting files. Plugin or shared package A versioned way to distribute the procedure and supported integrations. Test discovery and behavior in a clean session before sharing. Installation does not replace review or permission boundaries.",
+      "output_text": "Make it repeatable Package useful checks for the team Skill The repeatable invoice-check procedure and supporting files. Plugin or shared package A versioned way to distribute the procedure and supported integrations. Test discovery and behavior in a clean session before sharing. Installation does not replace review or permission boundaries."
+    },
+    {
+      "slide": 33,
+      "label": "MCP and CLI",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Compare the complete interaction MCP Tools exposed through a client/server protocol, with structured inputs and supported authentication paths. CLI Commands executed by a shell tool, with help, arguments, output and error handling. Both can reach local or remote services. Both need appropriate credentials, permissions and review.",
+      "output_text": "In practice Compare the complete interaction MCP Tools exposed through a client/server protocol, with structured inputs and supported authentication paths. CLI Commands executed by a shell tool, with help, arguments, output and error handling. Both can reach local or remote services. Both need appropriate credentials, permissions and review."
+    },
+    {
+      "slide": 34,
+      "label": "Tool overhead",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Definitions are only one part of the cost MCP schemas may be loaded eagerly or discovered on demand, depending on the client. CLI use also consumes shell definitions, help text, command output and repair attempts. Compare successful completion, tool failures, total usage and latency. Measure the actual client configuration. There is no universal cheaper interface.",
+      "output_text": "In practice Definitions are only one part of the cost MCP schemas may be loaded eagerly or discovered on demand, depending on the client. CLI use also consumes shell definitions, help text, command output and repair attempts. Compare successful completion, tool failures, total usage and latency. Measure the actual client configuration. There is no universal cheaper interface."
+    },
+    {
+      "slide": 35,
+      "label": "Interface comparison exercise",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Run the same read through both interfaces Task: retrieve the invoice ticket and its acceptance cases. Hold data, access scope and requested output constant. For CLI and MCP, record: correctness; calls; failures; tokens; elapsed time Repeat after warm-up; report missing measurements. This is an experiment design, not a completed case study.",
+      "output_text": "In practice Run the same read through both interfaces Task: retrieve the invoice ticket and its acceptance cases. Hold data, access scope and requested output constant. For CLI and MCP, record: correctness; calls; failures; tokens; elapsed time Repeat after warm-up; report missing measurements. This is an experiment design, not a completed case study."
+    },
+    {
+      "slide": 36,
+      "label": "Cost per accepted task",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "01"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "02"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "03"
+        }
+      ],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Model choice Measure the task, including the failed attempts Same acceptance bar Use representative invoice cases and the same permissions and tools. Whole run Record quality, elapsed time, all token categories, retries and review effort. Repeat and compare Repeat representative cases before changing the default configuration. A higher-priced model can finish in fewer attempts. Whether it costs less is a measurement, not a rule.",
+      "output_text": "Model choice Measure the task, including the failed attempts 01 Same acceptance bar Use representative invoice cases and the same permissions and tools. 02 Whole run Record quality, elapsed time, all token categories, retries and review effort. 03 Repeat and compare Repeat representative cases before changing the default configuration. A higher-priced model can finish in fewer attempts. Whether it costs less is a measurement, not a rule."
+    },
+    {
+      "slide": 37,
+      "label": "Local model memory",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Active parameters are not the RAM requirement Stored weights depend on total parameters, representation and quantization. Inference also needs a KV cache, activations, runtime buffers and overhead. Offloading can move weights to CPU memory or disk, trading memory for transfer time. Approximate weight storage: parameters × bits per weight ÷ 8. This is a lower-bound estimate, not a fit guarantee.",
+      "output_text": "In practice Active parameters are not the RAM requirement Stored weights depend on total parameters, representation and quantization. Inference also needs a KV cache, activations, runtime buffers and overhead. Offloading can move weights to CPU memory or disk, trading memory for transfer time. Approximate weight storage: parameters × bits per weight ÷ 8. This is a lower-bound estimate, not a fit guarantee."
+    },
+    {
+      "slide": 38,
+      "label": "Hardware experiment",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Measure on the machine and task you intend to use Record Why Model, quantization and runtime Defines the actual workload and implementation. Context size and concurrency Changes KV cache and memory demand. Peak memory and elapsed time Reveals fit and practical responsiveness. Acceptance results Shows whether it did the task correctly. No model download or hardware benchmark is required for this talk.",
+      "output_text": "In practice Measure on the machine and task you intend to use Record Why Model, quantization and runtime Defines the actual workload and implementation. Context size and concurrency Changes KV cache and memory demand. Peak memory and elapsed time Reveals fit and practical responsiveness. Acceptance results Shows whether it did the task correctly. No model download or hardware benchmark is required for this talk."
+    },
+    {
+      "slide": 39,
+      "label": "Static hardware exercise",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Estimate storage, then list what is missing 10 minutes — illustrative hardware scenario 35B total parameters; 3B active per token; four-bit weights. Weight-only storage ≈ 35B × 4 / 8 = 17.5 GB. Would a machine with 16 GB available memory fit it? What could offloading change? What must you measure? Output: a qualified feasibility note. Include KV cache, buffers, quantization overhead and speed.",
+      "output_text": "In practice Estimate storage, then list what is missing 10 minutes — illustrative hardware scenario 35B total parameters; 3B active per token; four-bit weights. Weight-only storage ≈ 35B × 4 / 8 = 17.5 GB. Would a machine with 16 GB available memory fit it? What could offloading change? What must you measure? Output: a qualified feasibility note. Include KV cache, buffers, quantization overhead and speed."
+    },
+    {
+      "slide": 40,
+      "label": "Local or hosted",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Choose from constraints and observed results Local may fit You can meet the quality, latency and memory requirements in an approved local environment. Hosted may fit Its capability and operations meet your requirements, and the data path and commercial terms are acceptable. Inspect the whole workflow: local inference does not stop tools or telemetry from using the network.",
+      "output_text": "In practice Choose from constraints and observed results Local may fit You can meet the quality, latency and memory requirements in an approved local environment. Hosted may fit Its capability and operations meet your requirements, and the data path and commercial terms are acceptable. Inspect the whole workflow: local inference does not stop tools or telemetry from using the network."
+    },
+    {
+      "slide": 41,
+      "label": "Voice input",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Review dictated requirements before execution Spoken: “Export invoices without changing stored records.” Check the transcription for: - negation: WITHOUT changing records - exact file names and amounts - scope and permission boundaries A voice interface changes input convenience, not the acceptance checks.",
+      "output_text": "In practice Review dictated requirements before execution Spoken: “Export invoices without changing stored records.” Check the transcription for: - negation: WITHOUT changing records - exact file names and amounts - scope and permission boundaries A voice interface changes input convenience, not the acceptance checks."
+    },
+    {
+      "slide": 42,
+      "label": "Static voice exercise",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Find the transcription error before sending Intended request “Export the invoices without changing stored records.” Faulty transcript “Export the invoices, changing stored records.” 3 minutes: restore the missing boundary and state the acceptance check.",
+      "output_text": "In practice Find the transcription error before sending Intended request “Export the invoices without changing stored records.” Faulty transcript “Export the invoices, changing stored records.” 3 minutes: restore the missing boundary and state the acceptance check."
+    },
+    {
+      "slide": 43,
+      "label": "Workshop close",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "working-smarter-reference.html"
+        ],
+        [
+          "working-smarter-reference.html"
+        ]
+      ],
+      "source_text": "In practice Choose one experiment to take back My task and acceptance cases: The one change I will compare: What I will keep constant: Evidence I will record: Budget and stop condition: Who reviews the result: Output: one experiment plan with a clear owner and review date. Optional reference material",
+      "output_text": "In practice Choose one experiment to take back My task and acceptance cases: The one change I will compare: What I will keep constant: Evidence I will record: Budget and stop condition: Who reviews the result: Output: one experiment plan with a clear owner and review date. Optional reference material"
+    },
+    {
+      "slide": 44,
+      "label": "Sources",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents",
+          "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+          "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+          "https://code.claude.com/docs/en/skills",
+          "https://modelcontextprotocol.io/docs/learn/architecture"
+        ],
+        [
+          "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents",
+          "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+          "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+          "https://code.claude.com/docs/en/skills",
+          "https://modelcontextprotocol.io/docs/learn/architecture"
+        ]
+      ],
+      "source_text": "Sources Sources and further reading Agent evaluation Context engineering Prompt caching Skills MCP architecture Primary documentation checked 3 October 2026. Examples are illustrative unless explicitly attributed.",
+      "output_text": "Sources Sources and further reading Agent evaluation Context engineering Prompt caching Skills MCP architecture Primary documentation checked 3 October 2026. Examples are illustrative unless explicitly attributed."
+    }
+  ]
+}

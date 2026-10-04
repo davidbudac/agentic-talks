@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Working Smarter with Agents</title>
+<link rel="stylesheet" href="ivory_design_system/styles.css">
+</head>
+<body>
+
+<!--
+  Working Smarter with Agents — Ivory conversion of working-smarter.html (44 slides).
+  Design-only port: wording, slide order, data-label, data-origin-slide and
+  data-speaker-notes are unchanged. Revised clarity teaching path; see
+  reviews/2026-10-03-clarity/.
+  Ivory design system (DESIGN.md, ivory_design_system/).
+  Runs on the deck-stage component: ←/→, Space, Home/End,
+  number keys; R resets; N notes, P presenter window, F fullscreen.
+-->
+
+<deck-stage width="1920" height="1080">
+
+<!-- 01 · Title -->
+<section data-origin-slide="1" class="slide title-slide" data-label="Title" data-speaker-notes="Workshop · developers Revised October 2026. Worked examples are illustrative; no live run is required.">
+  <div class="slide-head"><span class="crumb">Workshop · developers</span><span class="snum"></span></div>
+  <h1>Working Smarter<br>with Agents</h1>
+  <p class="sub">A half-day workshop: define, measure, improve and verify one workflow.</p>
+  <div class="meta">
+    <div><span class="lab">Author</span>David&nbsp;Budáč</div>
+    <div><span class="lab">Revised</span>October 2026</div>
+  </div>
+</section>
+
+<!-- 02 · Workshop route (3 columns, 5 rows → .tbl.c3 at 30px) -->
+<section data-origin-slide="2" class="slide" data-label="Workshop route" data-speaker-notes="Facilitator uses the self-contained invoice exercise. No paid accounts are required for the static route. With a runtime, use disposable copies and approved access. Keep the participant output visible in each block.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Leave with five concrete artifacts</h2>
+  <div class="zone">
+    <table class="tbl c3">
+      <thead><tr><th scope="col">Block</th><th scope="col">Time</th><th scope="col">Participant output</th></tr></thead>
+      <tbody>
+        <tr><td>Define and evaluate</td><td>50 min</td><td>Acceptance cases + scored worksheet</td></tr>
+        <tr><td>Cost and context</td><td>45 min</td><td>Usage sheet + revised instructions</td></tr>
+        <tr><td>Break</td><td>15 min</td><td></td></tr>
+        <tr><td>Coordinate and package</td><td>55 min</td><td>Ticket contract + verification skill</td></tr>
+        <tr><td>Choose tools and next experiment</td><td>45 min</td><td>Comparison design + next action</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Total: 210 minutes. Includes discussion; live execution is optional.</p>
+</section>
+
+<!-- 03 · What an eval measures -->
+<section data-origin-slide="49" class="slide" data-label="What an eval measures" data-speaker-notes="This is an illustrative task definition. Other cases cover zero VAT, rounding and CSV quoting. The grader can have a bug too; inspect it against known correct and incorrect outputs.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Separate the case, the grader and the trial</h2>
+  <div class="zone">
+    <div class="cards c3">
+      <div class="tile"><span class="lab">01</span><h3>Test case</h3><p>Export a net-100 invoice with 21% VAT.</p></div>
+      <div class="tile"><span class="lab">02</span><h3>Grader</h3><p>Parse the CSV and check that net, VAT and gross are 100, 21 and 121.</p></div>
+      <div class="tile"><span class="lab">03</span><h3>Trial</h3><p>One fresh attempt with a recorded model, prompt, tools and environment.</p></div>
+    </div>
+  </div>
+  <p class="note">Evaluate the resulting artifact. A message saying “done” is not the outcome.</p>
+</section>
+
+<!-- 04 · Acceptance cases -->
+<section data-origin-slide="50" class="slide" data-label="Acceptance cases" data-speaker-notes="These exact examples are synthetic teaching fixtures, not universal tax advice. Use decimal arithmetic in the grader. The CSV test should parse fields, not merely search for a comma.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Make the expected behavior explicit</h2>
+  <div class="zone">
+    <table class="tbl">
+      <thead><tr><th scope="col">Case</th><th scope="col">Expected result</th></tr></thead>
+      <tbody>
+        <tr><td>Net 100.00; VAT 21%</td><td>VAT 21.00; gross 121.00</td></tr>
+        <tr><td>Net 100.00; VAT 0%</td><td>VAT 0.00; gross 100.00</td></tr>
+        <tr><td>Net 0.05; VAT 10%; half-up cents</td><td>VAT 0.01; gross 0.06</td></tr>
+        <tr><td>Customer name: ACME, Ltd</td><td>One customer field after CSV parsing</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">For this exercise, round VAT half up to cents, then add it to net. The business rule must come from the task.</p>
+</section>
+
+<!-- 05 · Grading methods -->
+<section data-origin-slide="51" class="slide" data-label="Grading methods" data-speaker-notes="A model judge is useful for subjective dimensions but can favor style, verbosity or familiar outputs. Treat grader disagreement as evidence to inspect, not automatic model failure.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Use the strongest practical check for each claim</h2>
+  <div class="zone">
+    <div class="cards c3">
+      <div class="tile"><span class="lab">01</span><h3>Deterministic check</h3><p>Parse CSV, assert values and run regression tests.</p></div>
+      <div class="tile"><span class="lab">02</span><h3>Written rubric</h3><p>Assess explanation quality and completeness against named criteria.</p></div>
+      <div class="tile"><span class="lab">03</span><h3>Human calibration</h3><p>Check ambiguous cases and compare model-judge scores with human decisions.</p></div>
+    </div>
+  </div>
+  <p class="note">A different judge model does not remove bias. Blind labels and vary answer order where practical.</p>
+</section>
+
+<!-- 06 · Repeated trials (Ember: raw-text .code → one span.l per line; blank line dropped) -->
+<section data-origin-slide="52" class="slide" data-label="Repeated trials" data-speaker-notes="Explain pass@k as probability of at least one success within k attempts and pass^k as probability all k succeed. This row illustrates the events, not a reliable estimate of either probability. Retries cost time and tokens.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>One success answers a different question</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="c">Illustrative outcomes for one case:</span> fail fail <span class="key">pass</span> fail fail</span>
+      <span class="l"><span class="k">At least one success in five attempts:</span> yes</span>
+      <span class="l"><span class="k">All five attempts successful:</span> no</span>
+      <span class="l"><span class="k">Observed single-attempt success rate:</span> 1 / 5</span>
+    </div>
+  </div>
+  <p class="note">This small sample does not establish production reliability. Report task coverage, repeats and uncertainty.</p>
+</section>
+
+<!-- 07 · Trace evidence -->
+<section data-origin-slide="53" class="slide" data-label="Trace evidence" data-speaker-notes="Avoid promising every reasoning block. Capture what the harness and provider expose with appropriate redaction. The environment’s final artifact matters more than the agent’s description of it.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Record the observable run</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li>Inputs, configuration, tool requests, results and timestamps.</li>
+      <li>Final files or external state, check output and exit statuses.</li>
+      <li>Usage categories, retries, failures and any unavailable evidence.</li>
+    </ul>
+  </div>
+  <p class="note">Telemetry is not a full transcript, and neither guarantees access to hidden model reasoning.</p>
+</section>
+
+<!-- 08 · Annotated trace (3 rows → .lg) -->
+<section data-origin-slide="54" class="slide" data-label="Annotated trace" data-speaker-notes="Replaces the assertion that half an illustrative trace was waste. The counterfactual is whether omitting the step preserves correctness and reduces work.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>A repeated step is a question to investigate</h2>
+  <div class="zone">
+    <table class="tbl lg">
+      <thead><tr><th scope="col">Observed step</th><th scope="col">What to ask</th></tr></thead>
+      <tbody>
+        <tr><td>Read calc.py; edit it; read it again</td><td>Did the second read inspect the changed code?</td></tr>
+        <tr><td>Repeat a failed tool call</td><td>Did the environment or arguments change?</td></tr>
+        <tr><td>Restate the plan after a handoff</td><td>Did this restore missing requirements?</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Label a step waste only after checking its purpose and effect.</p>
+</section>
+
+<!-- 09 · Results worksheet -->
+<section data-origin-slide="56" class="slide" data-label="Results worksheet" data-speaker-notes="Use the same starting repository for each trial and prevent artifacts leaking between variants. Separate development cases from held-out checks.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Keep failed runs in the comparison</h2>
+  <div class="zone">
+    <table class="tbl">
+      <thead><tr><th scope="col">Per trial</th><th scope="col">Record</th></tr></thead>
+      <tbody>
+        <tr><td>Identity</td><td>Case, variant, run number and versioned environment.</td></tr>
+        <tr><td>Outcome</td><td>Acceptance checks, rubric scores and evidence paths.</td></tr>
+        <tr><td>Work</td><td>Uncached input, cache writes/reads, output and retries.</td></tr>
+        <tr><td>Operational result</td><td>Time, total cost, review effort and error reason.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Aggregate success rate and total spend over all trials. Do not report only successful attempts.</p>
+</section>
+
+<!-- 10 · Grading exercise (blank line dropped) -->
+<section data-origin-slide="57" class="slide" data-label="Grading exercise" data-speaker-notes="A fails zero VAT. B fails the comma-containing customer field. Rounding is untested in both, so mark unknown rather than inventing a pass. See exercise-materials.md for the synthetic CSV fixtures.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Score two synthetic outputs</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="c">10 minutes — no model call needed</span></span>
+      <span class="l"><span class="k">A:</span> net=100, VAT=21, gross=121 for BOTH 21% and 0% orders.</span>
+      <span class="l"><span class="k">B:</span> correct totals for both; customer ACME, Ltd is unquoted.</span>
+      <span class="l">Grade against the four cases. Which outputs fail?</span>
+      <span class="l">What evidence is still missing?</span>
+    </div>
+  </div>
+  <p class="note">Output: a scored worksheet with explanations. Neither candidate is ready to accept.</p>
+</section>
+
+<!-- 11 · Exercise debrief -->
+<section data-origin-slide="58" class="slide" data-label="Exercise debrief" data-speaker-notes="A single missing critical case is enough to block acceptance. The next experiment should exercise rounding and repair the known failures. Avoid choosing B simply because it has more passes; it still fails a requirement.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>A good report includes unknowns</h2>
+  <div class="zone">
+    <table class="tbl c3">
+      <thead><tr><th scope="col">Check</th><th scope="col">A</th><th scope="col">B</th></tr></thead>
+      <tbody>
+        <tr><td>21% VAT totals</td><td>pass</td><td>pass</td></tr>
+        <tr><td>Zero VAT totals</td><td>fail</td><td>pass</td></tr>
+        <tr><td>Half-up rounding</td><td>not tested</td><td>not tested</td></tr>
+        <tr><td>CSV quoting</td><td>not tested</td><td>fail</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">No measured speed or token-cost result exists for these synthetic outputs.</p>
+</section>
+
+<!-- 12 · Token volume and cost (same markup as cost-and-context-ivory.html slide 04) -->
+<section data-origin-slide="4" class="slide" data-label="Token volume and cost" data-speaker-notes="Input volume alone cannot establish the dominant cost. Output rates, reasoning usage, cache writes, cache hits, retries and tools all matter. Use provider usage records and avoid counting cached input twice. Subscription limits are a different accounting model.">
+  <div class="slide-head"><span class="crumb">Count the work</span><span class="snum"></span></div>
+  <h2>Count each billing category separately</h2>
+  <div class="zone">
+    <table class="tbl lg">
+      <thead><tr><th scope="col">Category</th><th scope="col">What to record</th></tr></thead>
+      <tbody>
+        <tr><td>Uncached input</td><td>New input processed at its applicable input rate.</td></tr>
+        <tr><td>Cache writes and reads</td><td>Separate token counts and the configured cache rates.</td></tr>
+        <tr><td>Generated output</td><td>Output usage, including billable reasoning where applicable.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Bill = sum of each category’s tokens × its rate, plus any separate tool or service fees.</p>
+</section>
+
+<!-- 13 · Worked cost example (same markup as cost-and-context-ivory.html slide 06) -->
+<section data-origin-slide="6" class="slide" data-label="Worked cost example" data-speaker-notes="This example deliberately specifies an existing cache hit, no new cache-write tokens and no separate tool charges. Establishing the cache earlier also costs money. The original input line items summed to 22,709, not exactly 22,700; this version uses explicit rounded totals consistently. Compare a complete task, including cache warm-up and retries.">
+  <div class="slide-head"><span class="crumb">Worked arithmetic</span><span class="snum"></span></div>
+  <h2>One cache-hit request: about five cents</h2>
+  <div class="zone">
+    <table class="tbl num">
+      <thead><tr><th scope="col">Illustrative usage and rates</th><th scope="col">Cost</th></tr></thead>
+      <tbody>
+        <tr><td>19,000 cached input × $0.20 / million</td><td>$0.0038</td></tr>
+        <tr><td>3,700 new input × $4 / million</td><td>$0.0148</td></tr>
+        <tr><td>1,600 output × $20 / million</td><td>$0.0320</td></tr>
+        <tr class="tot"><td>22,700 input + 1,600 output in total</td><td><b class="key">$0.0506</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Assumed rates, not a measured bill. Without the cache hit: $0.0908 input + $0.0320 output = $0.1228.</p>
+</section>
+
+<!-- 14 · Choose the route (same markup as cost-and-context-ivory.html slide 03) -->
+<section data-origin-slide="13" class="slide" data-label="Choose the route" data-speaker-notes="Avoid declaring a winner by team size alone. A subscription and an API have different limits and billing; neither guarantees unlimited work.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Start with how the work will run</h2>
+  <div class="zone">
+    <table class="tbl lg">
+      <thead><tr><th scope="col">Need</th><th scope="col">Check before choosing</th></tr></thead>
+      <tbody>
+        <tr><td>Daily interactive work</td><td>Native client, plan limits and actual monthly usage.</td></tr>
+        <tr><td>Custom service, batch or CI</td><td>Supported API authentication, rate limits and a budget.</td></tr>
+        <tr><td>Organizational controls</td><td>Identity, data handling, audit, residency and procurement requirements.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Compare current offers against these requirements. Detailed shopping questions are in reference material.</p>
+</section>
+
+<!-- 15 · Useful context (same markup as cost-and-context-ivory.html slide 07) -->
+<section data-origin-slide="15" class="slide" data-label="Useful context" data-speaker-notes="Long-context performance varies by task, model, positions and distractors. Attention weights summing to one do not establish a single fixed reasoning budget. A handoff or compacted summary can omit important details: check that the acceptance contract and evidence survive.">
+  <div class="slide-head"><span class="crumb">Context quality</span><span class="snum"></span></div>
+  <h2>Keep the facts that the next decision needs</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile key"><span class="lab">Keep</span><p>The invoice rule, failing case, relevant code, decisions and latest test result.</p></div>
+      <div class="tile"><span class="lab">Summarize or remove</span><p>Duplicate file dumps, stale logs and abandoned approaches, once their useful findings are captured.</p></div>
+    </div>
+  </div>
+  <p class="note">Watch for missed requirements and repeated work. There is no universal “dumb zone” or safe fill percentage.</p>
+</section>
+
+<!-- 16 · Project instructions (same markup as cost-and-context-ivory.html slide 09) -->
+<section data-origin-slide="18" class="slide" data-label="Project instructions" data-speaker-notes="Examples include CLAUDE.md and AGENTS.md, but discovery and precedence differ by harness. Do not claim a universal fallback or import rule. A file only helps when its relevant instructions enter the active context.">
+  <div class="slide-head"><span class="crumb">Make it repeatable</span><span class="snum"></span></div>
+  <h2>Store the rules needed on most tasks</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="c"># Project instructions — illustrative invoice repository</span></span>
+      <span class="l">- Test with: pytest tests/test_invoice.py -q</span>
+      <span class="l">- VAT rates come from the order record.</span>
+      <span class="l">- Preserve existing assertions; explain test changes.</span>
+      <span class="l">- Ask before changing the stored invoice schema.</span>
+    </div>
+  </div>
+  <p class="note">Use the instruction-file convention your harness actually loads. Keep standing rules short and specific.</p>
+</section>
+
+<!-- 17 · Instruction file before and after (same markup as cost-and-context-ivory.html slide 10) -->
+<section data-origin-slide="19" class="slide" data-label="Instruction file before and after" data-speaker-notes="Illustrative transformation. Some easily derived facts can still be useful navigation hints, so do not turn deletion into an absolute rule.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Shorten the file while preserving its constraints</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile was"><span class="lab">Before</span><p>Long project history, duplicate style advice, VAT rules, test commands and an old incident log.</p></div>
+      <div class="tile key"><span class="lab">After</span><p>Keep VAT source, rounding rule, test command and schema boundary. Link occasional procedures from a skill.</p></div>
+    </div>
+  </div>
+  <p class="note">The acceptance check is unchanged behavior on the same tasks, not the smallest file.</p>
+</section>
+
+<!-- 18 · Compare instruction variants (same markup as cost-and-context-ivory.html slide 14) -->
+<section data-origin-slide="24" class="slide" data-label="Compare instruction variants" data-speaker-notes="An optional live run must use disposable copies and approved credentials. With no runtime, use the next static worksheet and discuss what still needs measurement.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Exercise · compare two versions fairly</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="c">10 minutes</span></span>
+      <span class="l"><span class="k">A:</span> the long instruction file. <span class="k">B:</span> the shorter version.</span>
+      <span class="l">Use identical task inputs, repo state, model and tools.</span>
+      <span class="l"><span class="k">Record:</span> acceptance results, all usage, time and retries.</span>
+      <span class="l">Repeat runs if available; inspect failures before choosing.</span>
+    </div>
+  </div>
+  <p class="note">Output: a comparison worksheet and one justified decision. A smaller prompt that drops the VAT rule loses.</p>
+</section>
+
+<!-- 19 · Static comparison worksheet (same markup as cost-and-context-ivory.html slide 15) -->
+<section data-origin-slide="25" class="slide" data-label="Static comparison worksheet" data-speaker-notes="This replaces the empty recorded-run placeholder. Ask participants to identify a measurable acceptance condition for each retained rule. Leave measured fields explicitly not run.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>No runtime? Check the proposed rewrite on paper</h2>
+  <div class="zone">
+    <table class="tbl c3">
+      <thead><tr><th scope="col">Requirement</th><th scope="col">A</th><th scope="col">B</th></tr></thead>
+      <tbody>
+        <tr><td>VAT from order + rounding rule</td><td>present</td><td>verify preserved</td></tr>
+        <tr><td>Exact invoice test command</td><td>present</td><td>verify preserved</td></tr>
+        <tr><td>Schema change approval</td><td>present</td><td>verify preserved</td></tr>
+        <tr><td>Measured task usage and results</td><td>not run</td><td>not run</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Discuss what B removed and which regression case would expose a lost rule. No savings are claimed.</p>
+</section>
+
+<!-- 20 · Continue or reset (same markup as cost-and-context-ivory.html slide 11) -->
+<section data-origin-slide="21" class="slide" data-label="Continue or reset" data-speaker-notes="Claude Code provides clear and compact commands; consult installed help for current behavior. Do not reset a live task without preserving needed state.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Choose from the state of the task</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Unrelated next task</span><p>Start fresh with its own scope and needed project context.</p></div>
+      <div class="tile"><span class="lab">Same task, long history</span><p>Summarize the goal, evidence, decisions, failed attempts and next check.</p></div>
+    </div>
+  </div>
+  <p class="note">Check what survives compaction. Neither a fresh session nor a summary has zero context cost.</p>
+</section>
+
+<!-- 21 · Subagents (same markup as cost-and-context-ivory.html slide 12) -->
+<section data-origin-slide="22" class="slide" data-label="Subagents"
+    data-speaker-notes="The animation shows separation of intermediate output, not a guarantee of empty input context. Fresh agents also receive system instructions and tool definitions. Worktrees separate edits, not security boundaries. Avoid delegating a trivial step when coordination costs more than the work.">
+  <div class="slide-head"><span class="crumb">Split the work · subagents</span><span class="snum"></span></div>
+  <h2>Delegate a question; ask for evidence back</h2>
+  <div class="zone">
+    <div class="split">
+      <ul class="bul">
+        <li>Fresh helpers need a self-contained task and relevant inputs. Forks can inherit existing history.</li>
+        <li>Keep intermediate investigation in the helper’s context; return findings with file references.</li>
+        <li>Review the result. Delegation adds coordination cost and does not itself isolate filesystem access.</li>
+      </ul>
+      <div class="fig">
+        <!-- Remotion animation (remotion/src/Subagents.tsx), ivory render -->
+        <video src="assets/anim/subagents-ivory.mp4" width="1176" height="756" autoplay muted loop playsinline aria-label="A main agent delegates messy work to sub-agents that have their own context and return only a short summary"></video>
+      </div>
+    </div>
+  </div>
+  <p class="note">Example return: VAT calculation locations, the failing path, supporting lines and unresolved questions.</p>
+</section>
+
+<!-- 22 · Coordination and containment (same markup as orchestrating-agents-ivory.html slide 03) -->
+<section data-origin-slide="28" class="slide" data-label="Coordination and containment" data-speaker-notes="Preserve the local/environment distinction. Real containment depends on the configured runtime and permissions, not the number of agents.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Two separate design decisions</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Orchestration</span><p>Who gets a task, what it depends on and who integrates the result.</p></div>
+      <div class="tile"><span class="lab">Isolation</span><p>What files, credentials, processes and network endpoints the tools can access.</p></div>
+    </div>
+  </div>
+  <p class="note">A dashboard or Git worktree does not by itself enforce a security boundary.</p>
+</section>
+
+<!-- 23 · Ticket lifecycle (same markup as orchestrating-agents-ivory.html slide 05) -->
+<section data-origin-slide="31" class="slide" data-label="Ticket lifecycle" data-speaker-notes="A lease or equivalent ownership control prevents duplicate claims. Persist task state. A real integration still needs authentication, idempotency and recovery; this is a teaching lifecycle.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>One ticket, explicit state transitions</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="k">Ready:</span> invoice rule + scope + acceptance cases</span>
+      <span class="l"><span class="k">Claimed:</span> one owner + lease + retry budget</span>
+      <span class="l"><span class="k">Working:</span> permitted workspace + progress evidence</span>
+      <span class="l"><span class="k">Review:</span> patch + checks + unresolved gaps</span>
+      <span class="l"><span class="k">Accepted:</span> reviewer confirms the requested behavior</span>
+    </div>
+  </div>
+  <p class="note">Failed or blocked work returns with evidence. A green tool run does not automatically publish a change.</p>
+</section>
+
+<!-- 24 · Static ticket walkthrough (same markup as orchestrating-agents-ivory.html slide 06) -->
+<section data-origin-slide="33" class="slide" data-label="Static ticket walkthrough" data-speaker-notes="Replaces the empty Symphony recording placeholder. This is a tabletop exercise, not a trace from an orchestrator.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Walk the invoice ticket without a live service</h2>
+  <div class="zone">
+    <table class="tbl lg">
+      <thead><tr><th scope="col">Event</th><th scope="col">Expected state or action</th></tr></thead>
+      <tbody>
+        <tr><td>Worker finds missing VAT rule</td><td>Blocked; request the rule before changing behavior.</td></tr>
+        <tr><td>Two workers claim the same ticket</td><td>One claim wins; the other does not start editing.</td></tr>
+        <tr><td>Tests pass but escaping is untested</td><td>Review records the gap and adds an acceptance check.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Exercise: explain who owns each decision and what evidence is attached.</p>
+</section>
+
+<!-- 25 · Tool boundary (same markup as orchestrating-agents-ivory.html slide 07) -->
+<section data-origin-slide="34" class="slide" data-label="Tool boundary" data-speaker-notes="The old sandbox diagram implied a worktree constrained Git and filesystem access. Make the enforcement mechanism explicit and test it before unattended runs.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Specify the environment the worker receives</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li>Allow the repository paths and commands required by the ticket.</li>
+      <li>Scope credentials and network access to the necessary services.</li>
+      <li>Use separate edit workspaces; enforce time, attempt and spend limits outside the prompt.</li>
+    </ul>
+  </div>
+  <p class="note">Review mounts, egress and permissions in the actual runtime.</p>
+</section>
+
+<!-- 26 · Loop failure controls (same markup as orchestrating-agents-ivory.html slide 08) -->
+<section data-origin-slide="36" class="slide" data-label="Loop failure controls" data-speaker-notes="The original called both failures spec bugs. Failures can also arise from model behavior, tools or environment. Do not promise an ungameable prompt. The controls reduce risk and make failure detectable.">
+  <div class="slide-head"><span class="crumb">Define done</span><span class="snum"></span></div>
+  <h2>Match each failure to a control</h2>
+  <div class="zone">
+    <table class="tbl lg">
+      <thead><tr><th scope="col">Failure</th><th scope="col" class="key">Concrete control</th></tr></thead>
+      <tbody>
+        <tr><td>Repeats the same failed repair</td><td>Limit attempts; require a new hypothesis before retrying.</td></tr>
+        <tr><td>Weakens tests to make them pass</td><td>Review the test diff; run independent acceptance checks.</td></tr>
+        <tr><td>Changes unrelated behavior</td><td>Scope allowed paths; inspect the complete diff.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Prompts help communicate these rules. Enforce the important boundaries in tools, permissions and review.</p>
+</section>
+
+<!-- 27 · Review capacity (same markup as orchestrating-agents-ivory.html slide 09) -->
+<section data-origin-slide="38" class="slide" data-label="Review capacity" data-speaker-notes="Do not equate PR count with throughput. A small concurrency limit can outperform unconstrained generation when integration dominates.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Limit work in progress to what can be reviewed</h2>
+  <div class="zone">
+    <div class="cards c3">
+      <div class="tile"><span class="lab">01</span><h3>Before starting</h3><p>Assign the reviewer and agree on the return format.</p></div>
+      <div class="tile"><span class="lab">02</span><h3>While work runs</h3><p>Stop filling the queue when review capacity is exhausted.</p></div>
+      <div class="tile"><span class="lab">03</span><h3>At acceptance</h3><p>Inspect the integrated result, including interactions between patches.</p></div>
+    </div>
+  </div>
+  <p class="note">More workers can move the queue downstream. Measure completed, accepted work.</p>
+</section>
+
+<!-- 28 · Rules, procedure and tool (same markup as orchestrating-agents-ivory.html slide 11) -->
+<section data-origin-slide="43" class="slide" data-label="Rules, procedure and tool" data-speaker-notes="Keep one example across rules, skills and tools. MCP is an interface option, not a synonym for authentication.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Give each part of the invoice workflow one job</h2>
+  <div class="zone">
+    <table class="tbl lg">
+      <thead><tr><th scope="col">Need</th><th scope="col">Where it belongs</th></tr></thead>
+      <tbody>
+        <tr><td>VAT rate comes from the order</td><td>Short project instruction.</td></tr>
+        <tr><td>How to verify an invoice export</td><td>Skill with cases and a reporting procedure.</td></tr>
+        <tr><td>Read the invoice specification ticket</td><td>An authorized CLI, API or MCP tool.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">A procedure teaches how to use access. It does not grant that access.</p>
+</section>
+
+<!-- 29 · A verification skill (same markup as orchestrating-agents-ivory.html slide 10) -->
+<section data-origin-slide="41" class="slide" data-label="A verification skill" data-speaker-notes="Keep the verification example consistent with the talk. A skill describes a repeatable procedure; it does not make the agent or the tests infallible. Discovery metadata and loaded content both have context costs. A concrete Claude Code file example is in the reference deck.">
+  <div class="slide-head"><span class="crumb">Make it repeatable</span><span class="snum"></span></div>
+  <h2>Save the repeated invoice check as a skill</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l">invoice-check/</span>
+      <span class="l">  SKILL.md     when to use it + verification procedure</span>
+      <span class="l">  scripts/     optional deterministic checks</span>
+      <span class="l">  references/  VAT and rounding rules</span>
+    </div>
+  </div>
+  <p class="note"><b>Procedure:</b> inspect the diff → run the cases → report evidence and gaps.</p>
+</section>
+
+<!-- 30 · Skill exercise (same markup as orchestrating-agents-ivory.html slide 13) -->
+<section data-origin-slide="46" class="slide" data-label="Skill exercise" data-speaker-notes="Use the static example next if no agent runtime is available. Do not claim a file was triggered merely because its YAML parses.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Write a verification skill you can test</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="c">10 minutes</span></span>
+      <span class="l">Define the trigger: invoice or CSV export changes.</span>
+      <span class="l">Write four checks: VAT, zero VAT, rounding, escaping.</span>
+      <span class="l">Name the command and required evidence.</span>
+      <span class="l">Test with one matching task and one unrelated task.</span>
+    </div>
+  </div>
+  <p class="note">Output: a small skill file and evidence that it is used when appropriate.</p>
+</section>
+
+<!-- 31 · Skill file example (same markup as orchestrating-agents-ivory.html slide 14) -->
+<section data-origin-slide="47" class="slide" data-label="Skill file example" data-speaker-notes="The paths and frontmatter are Claude Code examples checked against its skills documentation. Description-based discovery is not guaranteed on every phrasing. Invoke the skill explicitly if needed and test its behavior. This slide does not create or run a skill.">
+  <div class="slide-head"><span class="crumb">Skill reference</span><span class="snum"></span></div>
+  <h2>An invoice-check skill for Claude Code</h2>
+  <div class="zone">
+    <div class="code reg">
+      <span class="l"><span class="c">---</span></span>
+      <span class="l"><span class="k">name:</span> invoice-check</span>
+      <span class="l"><span class="k">description:</span> Verify changes to invoice totals or CSV export.</span>
+      <span class="l"><span class="c">---</span></span>
+      <span class="l">1. Read the invoice rule and inspect the proposed diff.</span>
+      <span class="l">2. Run the invoice and export tests; keep the actual output.</span>
+      <span class="l">3. Check VAT, rounding and CSV escaping coverage.</span>
+      <span class="l">4. Report findings, exit status and untested cases.</span>
+    </div>
+  </div>
+  <p class="note">Example path: <code>.claude/skills/invoice-check/SKILL.md</code>. Check discovery in a fresh session.</p>
+</section>
+
+<!-- 32 · Share the procedure (same markup as orchestrating-agents-ivory.html slide 12) -->
+<section data-origin-slide="44" class="slide" data-label="Share the procedure" data-speaker-notes="The concrete publication recipe is optional reference material. Keep this explanation independent of a particular marketplace layout. A plugin can distribute more than skills; supported component types depend on the host.">
+  <div class="slide-head"><span class="crumb">Make it repeatable</span><span class="snum"></span></div>
+  <h2>Package useful checks for the team</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Skill</span><p>The repeatable invoice-check procedure and supporting files.</p></div>
+      <div class="tile"><span class="lab">Plugin or shared package</span><p>A versioned way to distribute the procedure and supported integrations.</p></div>
+    </div>
+  </div>
+  <p class="note">Test discovery and behavior in a clean session before sharing. Installation does not replace review or permission boundaries.</p>
+</section>
+
+<!-- 33 · MCP and CLI (same markup as orchestrating-agents-ivory.html slide 15) -->
+<section data-origin-slide="60" class="slide" data-label="MCP and CLI" data-speaker-notes="Do not equate MCP with remote and CLI with local. A CLI can call a remote service, and an MCP server can run locally.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Compare the complete interaction</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">MCP</span><p>Tools exposed through a client/server protocol, with structured inputs and supported authentication paths.</p></div>
+      <div class="tile"><span class="lab">CLI</span><p>Commands executed by a shell tool, with help, arguments, output and error handling.</p></div>
+    </div>
+  </div>
+  <p class="note">Both can reach local or remote services. Both need appropriate credentials, permissions and review.</p>
+</section>
+
+<!-- 34 · Tool overhead (same markup as orchestrating-agents-ivory.html slide 16) -->
+<section data-origin-slide="63" class="slide" data-label="Tool overhead" data-speaker-notes="Deferred tool loading can change the comparison substantially. Do not claim it is universally opt-in or always enabled.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Definitions are only one part of the cost</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li>MCP schemas may be loaded eagerly or discovered on demand, depending on the client.</li>
+      <li>CLI use also consumes shell definitions, help text, command output and repair attempts.</li>
+      <li>Compare successful completion, tool failures, total usage and latency.</li>
+    </ul>
+  </div>
+  <p class="note">Measure the actual client configuration. There is no universal cheaper interface.</p>
+</section>
+
+<!-- 35 · Interface comparison exercise (same markup as orchestrating-agents-ivory.html slide 17) -->
+<section data-origin-slide="65" class="slide" data-label="Interface comparison exercise" data-speaker-notes="Do not manufacture a winning result. If one route lacks the same capability, record that as a capability difference before comparing costs.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Run the same read through both interfaces</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="k">Task:</span> retrieve the invoice ticket and its acceptance cases.</span>
+      <span class="l">Hold data, access scope and requested output constant.</span>
+      <span class="l">For CLI and MCP, record:</span>
+      <span class="l">  correctness; calls; failures; tokens; elapsed time</span>
+      <span class="l">Repeat after warm-up; report missing measurements.</span>
+    </div>
+  </div>
+  <p class="note">This is an experiment design, not a completed case study.</p>
+</section>
+
+<!-- 36 · Cost per accepted task (same markup as agentic-engineering-ivory.html slide 20) -->
+<section data-origin-slide="67" class="slide" data-label="Cost per accepted task" data-speaker-notes="Remove the old benchmark collage and the arithmetic implying that five times cheaper tokens become dearer merely by using three times as many. Separate success rate from spend per successful attempt so failed runs do not disappear from the comparison.">
+  <div class="slide-head"><span class="crumb">Model choice</span><span class="snum"></span></div>
+  <h2>Measure the task, including the failed attempts</h2>
+  <div class="zone">
+    <div class="cards c3">
+      <div class="tile"><span class="lab">01</span><h3>Same acceptance bar</h3><p>Use representative invoice cases and the same permissions and tools.</p></div>
+      <div class="tile"><span class="lab">02</span><h3>Whole run</h3><p>Record quality, elapsed time, all token categories, retries and review effort.</p></div>
+      <div class="tile"><span class="lab">03</span><h3>Repeat and compare</h3><p>Repeat representative cases before changing the default configuration.</p></div>
+    </div>
+  </div>
+  <p class="note">A higher-priced model can finish in fewer attempts. Whether it costs less is a measurement, not a rule.</p>
+</section>
+
+<!-- 37 · Local model memory -->
+<section data-origin-slide="72" class="slide" data-label="Local model memory" data-speaker-notes="For mixture-of-experts models, few parameters may be active per token while many expert weights still need storage. Example: 35 billion parameters at four bits is about 17.5 decimal GB before metadata and runtime overhead; it is not a three-billion-parameter memory footprint.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Active parameters are not the RAM requirement</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li>Stored weights depend on total parameters, representation and quantization.</li>
+      <li>Inference also needs a KV cache, activations, runtime buffers and overhead.</li>
+      <li>Offloading can move weights to CPU memory or disk, trading memory for transfer time.</li>
+    </ul>
+  </div>
+  <p class="note">Approximate weight storage: parameters × bits per weight ÷ 8. This is a lower-bound estimate, not a fit guarantee.</p>
+</section>
+
+<!-- 38 · Hardware experiment -->
+<section data-origin-slide="74" class="slide" data-label="Hardware experiment" data-speaker-notes="This replaces an unconditional laptop-viability demo. Any optional rehearsal must record exact hardware and environment. Local inference still uses electricity, hardware and operator time.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Measure on the machine and task you intend to use</h2>
+  <div class="zone">
+    <table class="tbl">
+      <thead><tr><th scope="col">Record</th><th scope="col">Why</th></tr></thead>
+      <tbody>
+        <tr><td>Model, quantization and runtime</td><td>Defines the actual workload and implementation.</td></tr>
+        <tr><td>Context size and concurrency</td><td>Changes KV cache and memory demand.</td></tr>
+        <tr><td>Peak memory and elapsed time</td><td>Reveals fit and practical responsiveness.</td></tr>
+        <tr><td>Acceptance results</td><td>Shows whether it did the task correctly.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">No model download or hardware benchmark is required for this talk.</p>
+</section>
+
+<!-- 39 · Static hardware exercise (blank line dropped) -->
+<section data-origin-slide="75" class="slide" data-label="Static hardware exercise" data-speaker-notes="The weight-only figure already exceeds sixteen decimal GB. Offloading may permit execution with weights elsewhere, but this does not prove acceptable latency or quality. No laptop benchmark result is claimed.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Estimate storage, then list what is missing</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="c">10 minutes — illustrative hardware scenario</span></span>
+      <span class="l">35B total parameters; 3B active per token; four-bit weights.</span>
+      <span class="l">Weight-only storage ≈ 35B × 4 / 8 = 17.5 GB.</span>
+      <span class="l">Would a machine with 16 GB available memory fit it?</span>
+      <span class="l">What could offloading change? What must you measure?</span>
+    </div>
+  </div>
+  <p class="note">Output: a qualified feasibility note. Include KV cache, buffers, quantization overhead and speed.</p>
+</section>
+
+<!-- 40 · Local or hosted -->
+<section data-origin-slide="77" class="slide" data-label="Local or hosted" data-speaker-notes="A deployment decision needs real measurements and organization-specific requirements. A small active parameter count or benchmark headline is insufficient.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Choose from constraints and observed results</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Local may fit</span><p>You can meet the quality, latency and memory requirements in an approved local environment.</p></div>
+      <div class="tile"><span class="lab">Hosted may fit</span><p>Its capability and operations meet your requirements, and the data path and commercial terms are acceptable.</p></div>
+    </div>
+  </div>
+  <p class="note">Inspect the whole workflow: local inference does not stop tools or telemetry from using the network.</p>
+</section>
+
+<!-- 41 · Voice input (blank line dropped; clay on the negation) -->
+<section data-origin-slide="79" class="slide" data-label="Voice input" data-speaker-notes="Removes the unverified Hlas note and version-specific voice demo claims. Any available dictation tool can support this static example. No microphone or recorded run is required.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Review dictated requirements before execution</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="k">Spoken:</span> “Export invoices without changing stored records.”</span>
+      <span class="l"><span class="k">Check the transcription for:</span></span>
+      <span class="l">- negation: <span class="key">WITHOUT</span> changing records</span>
+      <span class="l">- exact file names and amounts</span>
+      <span class="l">- scope and permission boundaries</span>
+    </div>
+  </div>
+  <p class="note">A voice interface changes input convenience, not the acceptance checks.</p>
+</section>
+
+<!-- 42 · Static voice exercise (two items to compare: no clay) -->
+<section data-origin-slide="80" class="slide" data-label="Static voice exercise" data-speaker-notes="This replaces the sixth empty demo fallback. Participants can perform it by reading; no microphone, voice product or external service is required.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Find the transcription error before sending</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Intended request</span><p>“Export the invoices without changing stored records.”</p></div>
+      <div class="tile"><span class="lab">Faulty transcript</span><p>“Export the invoices, changing stored records.”</p></div>
+    </div>
+  </div>
+  <p class="note">3 minutes: restore the missing boundary and state the acceptance check.</p>
+</section>
+
+<!-- 43 · Workshop close (second Ember .note → .src: one footnote per slide) -->
+<section data-origin-slide="82" class="slide" data-label="Workshop close" data-speaker-notes="Use the final discussion to check whether each participant has a feasible experiment. Do not require a model purchase, deployment or organization change to complete the workshop.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Choose one experiment to take back</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l">My task and acceptance cases:</span>
+      <span class="l">The one change I will compare:</span>
+      <span class="l">What I will keep constant:</span>
+      <span class="l">Evidence I will record:</span>
+      <span class="l">Budget and stop condition:</span>
+      <span class="l">Who reviews the result:</span>
+    </div>
+  </div>
+  <p class="note">Output: one experiment plan with a clear owner and review date.</p>
+  <p class="src"><a href="working-smarter-reference.html">Optional reference material</a></p>
+</section>
+
+<!-- 44 · Sources -->
+<section data-origin-slide="83" class="slide" data-label="Sources" data-speaker-notes="Leave the sources visible for questions. These links support the mechanisms and qualifications; the examples are teaching material, not benchmark measurements.">
+  <div class="slide-head"><span class="crumb">Sources</span><span class="snum"></span></div>
+  <h2>Sources and further reading</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li><a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Agent evaluation</a></li>
+      <li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Context engineering</a></li>
+      <li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">Prompt caching</a></li>
+      <li><a href="https://code.claude.com/docs/en/skills">Skills</a></li>
+      <li><a href="https://modelcontextprotocol.io/docs/learn/architecture">MCP architecture</a></li>
+    </ul>
+  </div>
+  <p class="note">Primary documentation checked 3 October 2026. Examples are illustrative unless explicitly attributed.</p>
+</section>
+
+</deck-stage>
+
+<script src="ivory_design_system/deck-stage.js"></script>
+<script src="ivory_design_system/deck.js"></script>
+</body>
+</html>
