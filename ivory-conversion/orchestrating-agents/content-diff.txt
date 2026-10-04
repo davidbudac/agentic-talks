@@ -1,0 +1,117 @@
+Content comparison: orchestrating-agents.html -> orchestrating-agents-ivory.html
+Generated from audit.json (python3 ivory-conversion/audit.py orchestrating-agents.html orchestrating-agents-ivory.html; exit 0).
+Slide counts: [19, 19]   structural_errors: none
+Per slide: data-label / data-origin-slide / data-speaker-notes (parsed AND raw attribute text) compared; hrefs compared as sorted lists; visible text diffed word by word (.snum excluded).
+
+--- 01 · Title
+  metadata/notes/raw-notes: identical
+  hrefs source: []  output: []  -> identical
+  text replace: 'developersRevised October 2026' -> 'developers'
+  text replace: 'Agents.' -> 'Agents'
+  text replace: 'David' -> 'AuthorDavid'
+  text insert: '' -> 'RevisedOctober 2026'
+    explanation: 'developersRevised October 2026' -> 'developers': the top-bar meta 'Revised October 2026' moved into the .meta row (see last item). Joined word is an artefact of inline spans in the source .ts-top.
+    explanation: 'Agents.' -> 'Agents': REMOVED the Ember title dot <span class="dot">.</span> (instructed).
+    explanation: 'David' -> 'AuthorDavid': ADDED mono label 'Author' (Ivory .meta anatomy; same as cost-and-context-ivory). Joined because .lab is inline.
+    explanation: insert 'RevisedOctober 2026': MOVED text, label 'Revised' + 'October 2026' (same words as the removed top-bar meta). 'Revised' is now a .lab label.
+
+--- 02 · Agenda
+  metadata/notes/raw-notes: identical
+  hrefs source: []  output: []  -> identical
+  text replace: 'Coordinate Assign' -> 'CoordinateAssign'
+  text replace: 'Contain Set' -> 'ContainSet'
+  text replace: 'Integrate Check' -> 'IntegrateCheck'
+    explanation: 'Coordinate Assign' -> 'CoordinateAssign' (x3): whitespace only. Source h3+p were block elements; Ivory def rows use inline <b>+<span>, which the comparator joins. Words are identical. The 01-03 row counters are CSS ::before, not text.
+
+--- 03 · Coordination and containment
+  metadata/notes/raw-notes: identical
+  hrefs source: []  output: []  -> identical
+  visible text: identical (whitespace-normalised)
+
+--- 04 · Workflow choice
+  metadata/notes/raw-notes: identical
+  hrefs source: []  output: []  -> identical
+  visible text: identical (whitespace-normalised)
+
+--- 05 · Ticket lifecycle
+  metadata/notes/raw-notes: identical
+  hrefs source: []  output: []  -> identical
+  visible text: identical (whitespace-normalised)
+
+--- 06 · Static ticket walkthrough
+  metadata/notes/raw-notes: identical
+  hrefs source: []  output: []  -> identical
+  visible text: identical (whitespace-normalised)
+
+--- 07 · Tool boundary
+  metadata/notes/raw-notes: identical
+  hrefs source: []  output: []  -> identical
+  visible text: identical (whitespace-normalised)
+
+--- 08 · Loop failure controls
+  metadata/notes/raw-notes: identical
+  hrefs source: []  output: []  -> identical
+  visible text: identical (whitespace-normalised)
+
+--- 09 · Review capacity
+  metadata/notes/raw-notes: identical
+  hrefs source: []  output: []  -> identical
+  text insert: '' -> '01'
+  text insert: '' -> '02'
+  text insert: '' -> '03'
+    explanation: insert '01' '02' '03': ADDED mono .lab number labels on the three tiles (Ivory cards anatomy for numbered/ordered equals; same as example deck).
+
+--- 10 · A verification skill
+  metadata/notes/raw-notes: identical
+  hrefs source: []  output: []  -> identical
+  visible text: identical (whitespace-normalised)
+
+--- 11 · Rules, procedure and tool
+  metadata/notes/raw-notes: identical
+  hrefs source: []  output: []  -> identical
+  visible text: identical (whitespace-normalised)
+
+--- 12 · Share the procedure
+  metadata/notes/raw-notes: identical
+  hrefs source: []  output: []  -> identical
+  visible text: identical (whitespace-normalised)
+
+--- 13 · Skill exercise
+  metadata/notes/raw-notes: identical
+  hrefs source: []  output: []  -> identical
+  visible text: identical (whitespace-normalised)
+
+--- 14 · Skill file example
+  metadata/notes/raw-notes: identical
+  hrefs source: []  output: []  -> identical
+  visible text: identical (whitespace-normalised)
+
+--- 15 · MCP and CLI
+  metadata/notes/raw-notes: identical
+  hrefs source: []  output: []  -> identical
+  visible text: identical (whitespace-normalised)
+
+--- 16 · Tool overhead
+  metadata/notes/raw-notes: identical
+  hrefs source: []  output: []  -> identical
+  visible text: identical (whitespace-normalised)
+
+--- 17 · Interface comparison exercise
+  metadata/notes/raw-notes: identical
+  hrefs source: []  output: []  -> identical
+  visible text: identical (whitespace-normalised)
+
+--- 18 · Next workflow
+  metadata/notes/raw-notes: identical
+  hrefs source: ['orchestrating-agents-reference.html']  output: ['orchestrating-agents-reference.html']  -> identical
+  visible text: identical (whitespace-normalised)
+
+--- 19 · Sources
+  metadata/notes/raw-notes: identical
+  hrefs source: ['https://modelcontextprotocol.io/docs/learn/architecture', 'https://code.claude.com/docs/en/skills', 'https://code.claude.com/docs/en/sub-agents', 'https://code.claude.com/docs/en/sandboxing']  output: ['https://modelcontextprotocol.io/docs/learn/architecture', 'https://code.claude.com/docs/en/skills', 'https://code.claude.com/docs/en/sub-agents', 'https://code.claude.com/docs/en/sandboxing']  -> identical
+  visible text: identical (whitespace-normalised)
+
+Other differences not visible to the word diff (design only, no words changed):
+  - Code panels (05, 10, 13, 14, 17): raw text lines -> one <span class="l"> per line; CSS line numbers 01-NN added; tokens styled .k/.c (no text change).
+  - Slide 18: second .note (the reference link) became .src; same text and href.
+  - Hand-written .snum digits 2-19 removed (deck.js numbers slides); excluded from the diff by design.
