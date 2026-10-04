@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Measuring What Works — Reference</title>
+<link rel="stylesheet" href="ivory_design_system/styles.css">
+</head>
+<body>
+
+<!--
+  ============================================================
+  Measuring What Works — optional reference deck.
+  Supporting procedures and worksheets for measuring-what-works.html.
+  Not part of the spoken path.
+  Ivory design system (DESIGN.md, ivory_design_system/).
+  Runs on the deck-stage component: ←/→, Space, Home/End,
+  number keys; R resets; N notes, P presenter window, F fullscreen;
+  speaker notes live on each section.
+  ============================================================
+-->
+
+<deck-stage width="1920" height="1080">
+
+<!-- 01 · Title (regular .slide, h2 + .cards.c2; banner → footer .note; same structure as cost-and-context-reference-ivory) -->
+<section data-origin-slide="0" class="slide" data-label="Title" data-speaker-notes="Optional reference Revised October 2026. Worked examples are illustrative; no live run is required.">
+  <div class="slide-head"><span class="crumb">Optional reference</span><span class="snum"></span></div>
+  <h2>Measuring What Works<br>Reference</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><p>Supporting procedures and worksheets. <a href="measuring-what-works.html">Return to the main talk</a></p></div>
+      <div class="tile"><h3>David Budáč</h3><p>Revised October 2026</p></div>
+    </div>
+  </div>
+  <p class="note">Optional reference · <a href="measuring-what-works.html">Back to the talk</a></p>
+</section>
+
+<!-- 02 · Configuration worksheet (Ember table.tbl → .tbl, 4 rows at 30px; equal layers, no clay) -->
+<section data-origin-slide="16" class="slide" data-label="Configuration worksheet" data-speaker-notes="Replaces the alternative-model catalogue with a reproducible comparison record. Published model cards and exact runtime docs belong with any actual experiment.">
+  <div class="slide-head"><span class="crumb">In practice · Optional reference · <a href="measuring-what-works.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Record what you are comparing</h2>
+  <div class="zone">
+    <table class="tbl">
+      <thead><tr><th scope="col">Layer</th><th scope="col">Record before running</th></tr></thead>
+      <tbody>
+        <tr><td>Model</td><td>Exact identifier, effort and generation settings.</td></tr>
+        <tr><td>Harness</td><td>Version, prompts, tools, permissions and retry logic.</td></tr>
+        <tr><td>Routing service</td><td>Provider selection, fallback behavior and data path.</td></tr>
+        <tr><td>Local runtime</td><td>Quantization, hardware, context and concurrency.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">A changed harness can change the result even with the same model.</p>
+</section>
+
+<!-- 03 · Repeated-run probabilities (Ember .code → .code, one .l per line, blank lines and alignment kept; clay on the assumption the headline names) -->
+<section data-origin-slide="7" class="slide" data-label="Repeated-run probabilities" data-speaker-notes="Estimate probabilities from appropriate repeated runs across representative cases. Shared state, identical systematic errors and adaptation between attempts can violate the assumptions.">
+  <div class="slide-head"><span class="crumb">In practice · Optional reference · <a href="measuring-what-works.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>The independence assumption matters</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l">If each trial succeeds <span class="key">independently</span> with probability p:</span>
+      <span class="l"></span>
+      <span class="l">P(at least one success in k trials) = 1 − (1 − p)^k</span>
+      <span class="l">P(all k trials succeed)            = p^k</span>
+      <span class="l"></span>
+      <span class="l">For p = 0.8 and k = 3: 0.992 versus 0.512.</span>
+    </div>
+  </div>
+  <p class="note">These are mathematical examples, not measured model results. Correlated failures can invalidate the simple model.</p>
+</section>
+
+<!-- 04 · Local model memory (Ember ul.bul → ul.bul; same markup as the main-deck twin in measuring-what-works-ivory.html, no clay) -->
+<section data-origin-slide="24" class="slide" data-label="Local model memory" data-speaker-notes="For mixture-of-experts models, few parameters may be active per token while many expert weights still need storage. Example: 35 billion parameters at four bits is about 17.5 decimal GB before metadata and runtime overhead; it is not a three-billion-parameter memory footprint.">
+  <div class="slide-head"><span class="crumb">In practice · Optional reference · <a href="measuring-what-works.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Active parameters are not the RAM requirement</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li>Stored weights depend on total parameters, representation and quantization.</li>
+      <li>Inference also needs a KV cache, activations, runtime buffers and overhead.</li>
+      <li>Offloading can move weights to CPU memory or disk, trading memory for transfer time.</li>
+    </ul>
+  </div>
+  <p class="note">Approximate weight storage: parameters × bits per weight ÷ 8. This is a lower-bound estimate, not a fit guarantee.</p>
+</section>
+
+<!-- 05 · Voice input (Ember .code → .code; same markup as the main-deck twin in measuring-what-works-ivory.html: blank lines dropped, clay on WITHOUT) -->
+<section data-origin-slide="28" class="slide" data-label="Voice input" data-speaker-notes="Removes the unverified Hlas note and version-specific voice demo claims. Any available dictation tool can support this static example. No microphone or recorded run is required.">
+  <div class="slide-head"><span class="crumb">In practice · Optional reference · <a href="measuring-what-works.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Review dictated requirements before execution</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="k">Spoken:</span> “Export invoices without changing stored records.”</span>
+      <span class="l"><span class="k">Check the transcription for:</span></span>
+      <span class="l">- negation: <span class="key">WITHOUT</span> changing records</span>
+      <span class="l">- exact file names and amounts</span>
+      <span class="l">- scope and permission boundaries</span>
+    </div>
+  </div>
+  <p class="note">A voice interface changes input convenience, not the acceptance checks.</p>
+</section>
+
+</deck-stage>
+<script src="ivory_design_system/deck-stage.js"></script>
+<script src="ivory_design_system/deck.js"></script>
+</body>
+</html>
