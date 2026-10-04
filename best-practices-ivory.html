@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Claude Best Practices</title>
+<link rel="stylesheet" href="ivory_design_system/styles.css">
+</head>
+<body>
+
+<!--
+  Claude Best Practices — Ivory conversion of best-practices.html (30 slides).
+  Design-only port: wording, slide order, data-label, data-origin-slide and
+  data-speaker-notes are unchanged.
+  Ivory design system (DESIGN.md, ivory_design_system/).
+  Runs on the deck-stage component: ←/→, Space, Home/End,
+  number keys; R resets; N notes, P presenter window, F fullscreen.
+-->
+
+<deck-stage width="1920" height="1080">
+
+<!-- 01 · Title -->
+<section data-origin-slide="1" class="slide title-slide" data-label="Title" data-speaker-notes="Advanced · daily Claude Code users Revised October 2026. Worked examples are illustrative; no live run is required.">
+  <div class="slide-head"><span class="crumb">Advanced · daily Claude Code users</span><span class="snum"></span></div>
+  <h1>Claude<br>Best Practices</h1>
+  <p class="sub">Practical lessons from Anthropic’s engineering posts, tested against your own work.</p>
+  <div class="meta">
+    <div><span class="lab">Author</span>David&nbsp;Budáč</div>
+    <div><span class="lab">Revised</span>October 2026</div>
+  </div>
+</section>
+
+<!-- 02 · Agenda (Ember: .cards.c3 used as an agenda → ol.bul.def.wide) -->
+<section data-origin-slide="2" class="slide" data-label="Agenda" data-speaker-notes="Keep the practical outcome before the eight-topic catalogue. The sources are engineering reports, not guarantees for every repository.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Start with three changes</h2>
+  <div class="zone">
+    <ol class="bul def wide">
+      <li><b>Instructions</b><span>Remove conflicting or obsolete rules; preserve real constraints.</span></li>
+      <li><b>Verification</b><span>Make done depend on evidence tied to the task.</span></li>
+      <li><b>Measurement</b><span>Compare configurations by outcomes, cost and review effort.</span></li>
+    </ol>
+  </div>
+  <p class="note">Skills, caching and delegation support these three habits.</p>
+</section>
+
+<!-- 03 · Simplifying prompts (reported claim → your test; the test is the point) -->
+<section data-origin-slide="4" class="slide" data-label="Simplifying prompts" data-speaker-notes="This is a scoped report from Anthropic, not an instruction to delete eighty percent of every CLAUDE.md. Preserve constraints whose removal causes a meaningful failure.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Use the reported result as a reason to test</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Reported by Anthropic</span><p>Its team removed over 80% of a system prompt for particular models without a measured drop on its coding evals.</p></div>
+      <div class="tile key"><span class="lab">Your next step</span><p>Remove one obsolete instruction group, then rerun your own acceptance cases.</p></div>
+    </div>
+  </div>
+  <p class="note"><a href="https://claude.dev/blog/the-new-rules-of-context-engineering-for-claude-5-generation-models/">Source: context engineering, July 2026</a></p>
+</section>
+
+<!-- 04 · Instruction file before and after -->
+<section data-origin-slide="6" class="slide" data-label="Instruction file before and after" data-speaker-notes="Illustrative transformation. Some easily derived facts can still be useful navigation hints, so do not turn deletion into an absolute rule.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Shorten the file while preserving its constraints</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile was"><span class="lab">Before</span><p>Long project history, duplicate style advice, VAT rules, test commands and an old incident log.</p></div>
+      <div class="tile key"><span class="lab">After</span><p>Keep VAT source, rounding rule, test command and schema boundary. Link occasional procedures from a skill.</p></div>
+    </div>
+  </div>
+  <p class="note">The acceptance check is unchanged behavior on the same tasks, not the smallest file.</p>
+  <p class="src">Applied example · <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">supporting documentation</a></p>
+</section>
+
+<!-- 05 · Instruction audit (caption line → .c comment) -->
+<section data-origin-slide="7" class="slide" data-label="Instruction audit" data-speaker-notes="The example is our adaptation, not a quote. Remove stale workarounds only when the original failure is understood and covered. Do not automatically trust an audit command to determine the correct policy.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Find conflicts before adding another rule</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="c">Conflict in an illustrative project:</span></span>
+      <span class="l">“Never add comments.”</span>
+      <span class="l">“Document non-obvious tax rounding decisions.”</span>
+      <span class="l"></span>
+      <span class="l"><span class="key">Replacement:</span></span>
+      <span class="l">“Explain non-obvious rounding decisions near the code.”</span>
+    </div>
+  </div>
+  <p class="note">Then check the task that originally required the rule.</p>
+  <p class="src">Applied example · <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">supporting documentation</a></p>
+</section>
+
+<!-- 06 · A verification skill (same as agentic-engineering-ivory 26) -->
+<section data-origin-slide="9" class="slide" data-label="A verification skill" data-speaker-notes="Keep the verification example consistent with the talk. A skill describes a repeatable procedure; it does not make the agent or the tests infallible. Discovery metadata and loaded content both have context costs. A concrete Claude Code file example is in the reference deck.">
+  <div class="slide-head"><span class="crumb">Make it repeatable</span><span class="snum"></span></div>
+  <h2>Save the repeated invoice check as a skill</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l">invoice-check/</span>
+      <span class="l">  SKILL.md     when to use it + verification procedure</span>
+      <span class="l">  scripts/     optional deterministic checks</span>
+      <span class="l">  references/  VAT and rounding rules</span>
+    </div>
+  </div>
+  <p class="note"><b>Procedure:</b> inspect the diff → run the cases → report evidence and gaps.</p>
+  <p class="src">Applied example · <a href="https://code.claude.com/docs/en/skills">supporting documentation</a></p>
+</section>
+
+<!-- 07 · Skill interface -->
+<section data-origin-slide="11" class="slide" data-label="Skill interface" data-speaker-notes="A description aids discovery but is not a deterministic dispatch contract. Include a manual invocation path for important checks.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Make the trigger and output specific</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Trigger</span><p>“Verify changes to invoice totals or CSV export.”</p></div>
+      <div class="tile"><span class="lab">Result</span><p>Findings with file references, check output and untested cases.</p></div>
+    </div>
+  </div>
+  <p class="note">Test one matching request and one unrelated request. Revise the description if discovery is unreliable.</p>
+  <p class="src">Applied example · <a href="https://code.claude.com/docs/en/skills">supporting documentation</a></p>
+</section>
+
+<!-- 08 · Skill structure -->
+<section data-origin-slide="12" class="slide" data-label="Skill structure" data-speaker-notes="The skill is a folder, not just a wall of text. Preserve the specific gotcha in the relevant reference. A helper script can still be wrong; inspect and validate it.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Keep the core procedure short</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l">invoice-check/</span>
+      <span class="l">  SKILL.md       trigger, steps, expected report</span>
+      <span class="l">  scripts/       deterministic parsing and checks</span>
+      <span class="l">  references/    rounding rules and exceptional cases</span>
+    </div>
+  </div>
+  <p class="note">Load detail when useful. Review executable helpers and their permissions.</p>
+  <p class="src">Applied example · <a href="https://code.claude.com/docs/en/skills">supporting documentation</a></p>
+</section>
+
+<!-- 09 · Shared prefix example (same as subagents-prompt-caching-ivory 13) -->
+<section data-origin-slide="14" class="slide" data-label="Shared prefix example" data-speaker-notes="For this Claude example, tools precede system content, then messages. Breakpoints determine writes. Avoid timestamps or changing task text inside the intended shared prefix.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Keep the shared material before the questions</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="k">Shared eligible prefix</span></span>
+      <span class="l">  tools + stable instructions + invoice schema</span>
+      <span class="l"></span>
+      <span class="l"><span class="k">Request A:</span> Where is VAT applied?</span>
+      <span class="l"><span class="k">Request B:</span> Where is CSV escaping handled?</span>
+      <span class="l"></span>
+      <span class="l">Changing the question need not change the shared prefix.</span>
+    </div>
+  </div>
+  <p class="note">A matching prefix must be eligible and already cached; stable text alone does not create a hit. <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">Caching docs</a></p>
+  <p class="src">Applied example · <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">supporting documentation</a></p>
+</section>
+
+<!-- 10 · Worked cost example (same as cost-and-context-ivory 06; total row → tr.tot) -->
+<section data-origin-slide="15" class="slide" data-label="Worked cost example" data-speaker-notes="This example deliberately specifies an existing cache hit, no new cache-write tokens and no separate tool charges. Establishing the cache earlier also costs money. The original input line items summed to 22,709, not exactly 22,700; this version uses explicit rounded totals consistently. Compare a complete task, including cache warm-up and retries.">
+  <div class="slide-head"><span class="crumb">Worked arithmetic</span><span class="snum"></span></div>
+  <h2>One cache-hit request: about five cents</h2>
+  <div class="zone">
+    <table class="tbl num">
+      <thead><tr><th scope="col">Illustrative usage and rates</th><th scope="col">Cost</th></tr></thead>
+      <tbody>
+        <tr><td>19,000 cached input × $0.20 / million</td><td>$0.0038</td></tr>
+        <tr><td>3,700 new input × $4 / million</td><td>$0.0148</td></tr>
+        <tr><td>1,600 output × $20 / million</td><td>$0.0320</td></tr>
+        <tr class="tot"><td>22,700 input + 1,600 output in total</td><td><b class="key">$0.0506</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Assumed rates, not a measured bill. Without the cache hit: $0.0908 input + $0.0320 output = $0.1228.</p>
+  <p class="src">Applied example · <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">supporting documentation</a></p>
+</section>
+
+<!-- 11 · Cache tradeoffs -->
+<section data-origin-slide="16" class="slide" data-label="Cache tradeoffs" data-speaker-notes="This replaces the blanket rule against mid-session model and tool changes. Cache invalidation is a cost to measure, not a veto on needed corrections.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Preserve reuse when it serves the task</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Avoid accidental churn</span><p>Keep stable instructions and tool definitions stable where practical.</p></div>
+      <div class="tile"><span class="lab">Make necessary changes</span><p>Correct stale rules, change a failing configuration or compact when the task needs it.</p></div>
+    </div>
+  </div>
+  <p class="note">A cache hit is valuable only when the resulting work is useful.</p>
+  <p class="src">Applied example · <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">supporting documentation</a></p>
+</section>
+
+<!-- 12 · Compaction -->
+<section data-origin-slide="17" class="slide" data-label="Compaction" data-speaker-notes="Do not promise cache-safe compaction for every client or setting. Summarization changes what future calls can use even when earlier processing was cached.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Preserve the state that explains the next step</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="k">Handoff or compaction checklist</span></span>
+      <span class="l">Goal and acceptance cases</span>
+      <span class="l">Current files and actual check results</span>
+      <span class="l">Decisions, failed approaches and unresolved questions</span>
+      <span class="l">Permission boundary and next action</span>
+    </div>
+  </div>
+  <p class="note">A matching prefix can help reuse where supported. Verify the summary’s completeness separately.</p>
+  <p class="src">Applied example · <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">supporting documentation</a></p>
+</section>
+
+<!-- 13 · Effort comparison (kitchen sink 12: th.key on Compare) -->
+<section data-origin-slide="19" class="slide" data-label="Effort comparison" data-speaker-notes="Remove the mixed model/effort benchmark table. More effort can change verification behavior, but the effect and optimum are task-specific.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Change one setting at a time</h2>
+  <div class="zone">
+    <table class="tbl lg">
+      <thead><tr><th scope="col">Hold constant</th><th scope="col" class="key">Compare</th></tr></thead>
+      <tbody>
+        <tr><td>Task, starting files and acceptance cases</td><td>Supported effort settings for the same model.</td></tr>
+        <tr><td>Tools, permissions and budget</td><td>Successes, failures, time, usage and review effort.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Record the exact settings; “high” is not necessarily equivalent across models or versions.</p>
+  <p class="src">Applied example · <a href="https://claude.dev/blog/spending-your-effort/">supporting documentation</a></p>
+</section>
+
+<!-- 14 · Build and verify (proposal → acceptance test; the test is the point) -->
+<section data-origin-slide="21" class="slide" data-label="Build and verify" data-speaker-notes="This retains the useful practical suggestion without claiming it is the universal best default. The review phase needs actual checks, not only a request to think harder.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Treat “low build, high verify” as a hypothesis</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Proposed workflow</span><p>Build with a lower-effort setting, then run a distinct review and verification phase.</p></div>
+      <div class="tile key"><span class="lab">Acceptance test</span><p>Compare it with one configuration under the same overall budget and rubric.</p></div>
+    </div>
+  </div>
+  <p class="note"><a href="https://claude.dev/blog/spending-your-effort/">Source: Spending your effort</a> describes the author’s workflow and experiments.</p>
+</section>
+
+<!-- 15 · Routing and escalation (bold lead-ins → ol.bul.def; same as agentic-engineering-ivory 21) -->
+<section data-origin-slide="22" class="slide" data-label="Routing and escalation" data-speaker-notes="A larger model cannot recover a missing business rule by thinking harder. Use the invoice task to distinguish an omitted VAT rate from a difficult code path. Cache changes and extra review time belong in the comparison.">
+  <div class="slide-head"><span class="crumb">Model choice</span><span class="snum"></span></div>
+  <h2>Escalate when the evidence points to a need</h2>
+  <div class="zone">
+    <ol class="bul def wide">
+      <li><b>Start:</b> use a configuration that has met the acceptance bar on similar work.</li>
+      <li><b>Diagnose:</b> missing facts, a broken tool and hard reasoning call for different fixes.</li>
+      <li><b>Compare:</b> try supported effort or model changes against the same checks and budget.</li>
+    </ol>
+  </div>
+  <p class="note">There is no universal “effort first” ladder. Re-evaluate defaults when the task or model changes.</p>
+  <p class="src">Applied example · <a href="https://claude.dev/blog/spending-your-effort/">supporting documentation</a></p>
+</section>
+
+<!-- 16 · Cost per accepted task (same as agentic-engineering-ivory) -->
+<section data-origin-slide="23" class="slide" data-label="Cost per accepted task" data-speaker-notes="Remove the old benchmark collage and the arithmetic implying that five times cheaper tokens become dearer merely by using three times as many. Separate success rate from spend per successful attempt so failed runs do not disappear from the comparison.">
+  <div class="slide-head"><span class="crumb">Model choice</span><span class="snum"></span></div>
+  <h2>Measure the task, including the failed attempts</h2>
+  <div class="zone">
+    <div class="cards c3">
+      <div class="tile"><span class="lab">01</span><h3>Same acceptance bar</h3><p>Use representative invoice cases and the same permissions and tools.</p></div>
+      <div class="tile"><span class="lab">02</span><h3>Whole run</h3><p>Record quality, elapsed time, all token categories, retries and review effort.</p></div>
+      <div class="tile"><span class="lab">03</span><h3>Repeat and compare</h3><p>Repeat representative cases before changing the default configuration.</p></div>
+    </div>
+  </div>
+  <p class="note">A higher-priced model can finish in fewer attempts. Whether it costs less is a measurement, not a rule.</p>
+  <p class="src">Applied example · <a href="https://claude.dev/blog/spending-your-effort/">supporting documentation</a></p>
+</section>
+
+<!-- 17 · Real verification (caption line → .k heading; the "1."–"4." are source text) -->
+<section data-origin-slide="27" class="slide" data-label="Real verification" data-speaker-notes="Use the smallest check that actually exercises the relevant behavior, then the required regression suite. Do not expand testing merely to generate more output.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Ask for evidence tied to the changed behavior</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="k">Before calling the invoice fix done:</span></span>
+      <span class="l">1. Run the invoice acceptance cases.</span>
+      <span class="l">2. Inspect changed assertions and the final diff.</span>
+      <span class="l">3. Check the exported CSV values.</span>
+      <span class="l">4. Report commands, exit statuses, failures and gaps.</span>
+    </div>
+  </div>
+  <p class="note">A syntax check cannot establish the VAT calculation. A command that never starts is not a passed test.</p>
+  <p class="src">Applied example · <a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">supporting documentation</a></p>
+</section>
+
+<!-- 18 · Progress and regression checks -->
+<section data-origin-slide="26" class="slide" data-label="Progress and regression checks" data-speaker-notes="This replaces secondary sprint statistics with a concrete engineering example. The target can change intentionally, but changes must be reviewed and separated from performance claims.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Use one metric for improvement and a guardrail for damage</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Improvement target</span><p>Reduce export latency on the same fixture and environment.</p></div>
+      <div class="tile"><span class="lab">Regression guardrail</span><p>Keep VAT correctness, CSV shape and memory use within the accepted limits.</p></div>
+    </div>
+  </div>
+  <p class="note">Do not improve the score by weakening the workload or grader.</p>
+  <p class="src">Applied example · <a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">supporting documentation</a></p>
+</section>
+
+<!-- 19 · Grading methods (same as measuring-what-works-ivory 05) -->
+<section data-origin-slide="28" class="slide" data-label="Grading methods" data-speaker-notes="A model judge is useful for subjective dimensions but can favor style, verbosity or familiar outputs. Treat grader disagreement as evidence to inspect, not automatic model failure.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Use the strongest practical check for each claim</h2>
+  <div class="zone">
+    <div class="cards c3">
+      <div class="tile"><span class="lab">01</span><h3>Deterministic check</h3><p>Parse CSV, assert values and run regression tests.</p></div>
+      <div class="tile"><span class="lab">02</span><h3>Written rubric</h3><p>Assess explanation quality and completeness against named criteria.</p></div>
+      <div class="tile"><span class="lab">03</span><h3>Human calibration</h3><p>Check ambiguous cases and compare model-judge scores with human decisions.</p></div>
+    </div>
+  </div>
+  <p class="note">A different judge model does not remove bias. Blind labels and vary answer order where practical.</p>
+  <p class="src">Applied example · <a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">supporting documentation</a></p>
+</section>
+
+<!-- 20 · Avoid overfitting -->
+<section data-origin-slide="29" class="slide" data-label="Avoid overfitting" data-speaker-notes="Retain the hillclimbing lesson without a long benchmark table. Repeat runs and preserve cases that protect against regressions.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Keep some cases out of prompt tuning</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li>Develop on cases that expose known failures.</li>
+      <li>Hold back different invoice variants for the final comparison.</li>
+      <li>Inspect grader mistakes and near-duplicate cases before celebrating a score.</li>
+    </ul>
+  </div>
+  <p class="note">A better development score is evidence to investigate, not proof of general improvement.</p>
+  <p class="src">Applied example · <a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">supporting documentation</a></p>
+</section>
+
+<!-- 21 · A bounded task contract (kitchen sink 15; same as agentic-engineering-ivory 13) -->
+<section data-origin-slide="31" class="slide" data-label="A bounded task contract" data-speaker-notes="An illustrative request template, not a command to run in this repository. Do not publish, commit or deploy as an implicit consequence of passing tests. The checks must exist and assert the intended behavior before the loop is trusted.">
+  <div class="slide-head"><span class="crumb">The invoice task</span><span class="snum"></span></div>
+  <h2>Make the acceptance contract explicit</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="k">GOAL:</span> export invoice net, VAT and gross values to CSV.</span>
+      <span class="l"><span class="k">SCOPE:</span> invoice export code; preserve existing tests.</span>
+      <span class="l"><span class="key">VERIFY:</span> pytest tests/test_export.py -q</span>
+      <span class="l"><span class="k">CASES:</span> 21% VAT, zero VAT, rounding, quoted CSV fields.</span>
+      <span class="l"><span class="k">LIMIT:</span> three repair attempts; then stop and report.</span>
+      <span class="l"><span class="k">EVIDENCE:</span> diff, command, exit status, failures and gaps.</span>
+    </div>
+  </div>
+  <p class="note">Pair this request with an enforced runtime budget and a review of the resulting artifact.</p>
+  <p class="src">Applied example · <a href="https://code.claude.com/docs/en/sub-agents">supporting documentation</a></p>
+</section>
+
+<!-- 22 · Handoff -->
+<section data-origin-slide="32" class="slide" data-label="Handoff" data-speaker-notes="The prior slide mixed a session handoff with one-subagent-per-service instructions. They solve different problems. A task checklist can be stale; reconcile it with the files.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Separate durable task state from delegation</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="k">TASK STATE</span></span>
+      <span class="l">Goal; completed work; evidence; unresolved work; next check.</span>
+      <span class="l"></span>
+      <span class="l"><span class="k">HELPER TASK</span></span>
+      <span class="l">One scoped question; relevant inputs; permitted actions;</span>
+      <span class="l">required findings with evidence and uncertainty.</span>
+    </div>
+  </div>
+  <p class="note">A new worker reads the handoff, verifies the current state, then continues.</p>
+  <p class="src">Applied example · <a href="https://code.claude.com/docs/en/sub-agents">supporting documentation</a></p>
+</section>
+
+<!-- 23 · Human decisions -->
+<section data-origin-slide="33" class="slide" data-label="Human decisions" data-speaker-notes="Replace broad encouragement to be braver with explicit product and permission decisions.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Keep ownership of scope and acceptance</h2>
+  <div class="zone">
+    <div class="cards c3">
+      <div class="tile"><span class="lab">01</span><h3>Scope</h3><p>Decide what outcome and tradeoffs are worth pursuing.</p></div>
+      <div class="tile"><span class="lab">02</span><h3>Authority</h3><p>Set which actions require approval and enforce access boundaries.</p></div>
+      <div class="tile"><span class="lab">03</span><h3>Acceptance</h3><p>Review the result against requirements and user-visible behavior.</p></div>
+    </div>
+  </div>
+  <p class="note">Delegation moves work; it does not remove accountability.</p>
+  <p class="src">Applied example · <a href="https://code.claude.com/docs/en/sub-agents">supporting documentation</a></p>
+</section>
+
+<!-- 24 · Two useful patterns -->
+<section data-origin-slide="36" class="slide" data-label="Two useful patterns" data-speaker-notes="Two patterns are enough for this talk. Advanced pattern catalogues remain in the original baseline; do not imply model diversity automatically removes bias.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Use separate contexts for a clear reason</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Investigate and combine</span><p>Independent questions; evidence-bearing returns; one integration owner.</p></div>
+      <div class="tile"><span class="lab">Build and review</span><p>One worker produces a patch; a separate reviewer checks it against a rubric.</p></div>
+    </div>
+  </div>
+  <p class="note">A second agent can miss the same issue. Keep deterministic checks and final acceptance.</p>
+  <p class="src">Applied example · <a href="https://code.claude.com/docs/en/sub-agents">supporting documentation</a></p>
+</section>
+
+<!-- 25 · Cost and containment -->
+<section data-origin-slide="38" class="slide" data-label="Cost and containment" data-speaker-notes="Removes anecdotal token counts and separates cost control from security containment.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Two checks before adding workers</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Will it help?</span><p>Estimate coordination and review effort; measure cost per accepted result.</p></div>
+      <div class="tile"><span class="lab">What may it touch?</span><p>Configure filesystem, network and credential boundaries independently of context separation.</p></div>
+    </div>
+  </div>
+  <p class="note">Enforce budgets in the harness. A token budget written in a prompt is a request, not necessarily a hard cap.</p>
+  <p class="src">Applied example · <a href="https://code.claude.com/docs/en/sub-agents">supporting documentation</a></p>
+</section>
+
+<!-- 26 · Tool interface (field names → .k; the failed status is the point) -->
+<section data-origin-slide="40" class="slide" data-label="Tool interface" data-speaker-notes="This replaces a history of tool redesigns with a concrete interface. Structured fields make interpretation easier but do not guarantee correct model reasoning.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Make tool outcomes easy to interpret</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="c">Invoice verifier result</span></span>
+      <span class="l"><span class="k">status:</span> <span class="key">failed</span></span>
+      <span class="l"><span class="k">case:</span> zero VAT</span>
+      <span class="l"><span class="k">expected_gross:</span> 100.00</span>
+      <span class="l"><span class="k">actual_gross:</span> 121.00</span>
+      <span class="l"><span class="k">evidence:</span> test output and fixture path</span>
+    </div>
+  </div>
+  <p class="note">Use clear inputs, bounded outputs and explicit errors. Improve the tool from observed failure traces.</p>
+  <p class="src">Applied example · <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">supporting documentation</a></p>
+</section>
+
+<!-- 27 · Useful HTML output -->
+<section data-origin-slide="41" class="slide" data-label="Useful HTML output" data-speaker-notes="Keep the HTML-output idea as a useful option, not a universal replacement for Markdown. The main outcome is a reviewable decision, not an impressive UI.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Use an interactive view when it improves a decision</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Compare</span><p>Show invoice variants side by side with the changed fields highlighted.</p></div>
+      <div class="tile"><span class="lab">Choose and export</span><p>Let the reviewer record a decision and export the accepted specification.</p></div>
+    </div>
+  </div>
+  <p class="note">Plain text is enough for a short finding. Choose the format from the review task.</p>
+  <p class="src">Applied example · <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">supporting documentation</a></p>
+</section>
+
+<!-- 28 · Hooks and extensions -->
+<section data-origin-slide="42" class="slide" data-label="Hooks and extensions" data-speaker-notes="Replace unstable mods API code with a concrete outcome and current documentation. A prompt or hook alone is not a complete sandbox.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Automate a specific control, then test it</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li>Example: require the invoice check before an authorized release step.</li>
+      <li>Verify the hook’s actual event, inputs, failure behavior and scope.</li>
+      <li>Test allowed, denied and error cases in a disposable environment.</li>
+    </ul>
+  </div>
+  <p class="note">A hook is only as strong as its placement and implementation. <a href="https://code.claude.com/docs/en/hooks">Hooks reference</a></p>
+  <p class="src">Applied example · <a href="https://code.claude.com/docs/en/hooks">supporting documentation</a></p>
+</section>
+
+<!-- 29 · Tomorrow (Ember: .note + .src + a second .note with the reference link → one .note + one .src) -->
+<section data-origin-slide="44" class="slide" data-label="Tomorrow" data-speaker-notes="The close now returns to the opening three actions, not eight slogans.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Start with one repeatable improvement</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li>Remove one conflicting instruction and run its regression cases.</li>
+      <li>Save the invoice verification procedure as a small skill.</li>
+      <li>Measure the next completed task, including failures and review.</li>
+    </ul>
+  </div>
+  <p class="note">Keep the change only when the evidence supports it.</p>
+  <p class="src">Applied example · <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">supporting documentation</a> · <a href="best-practices-reference.html">Optional reference material</a></p>
+</section>
+
+<!-- 30 · Sources -->
+<section data-origin-slide="45" class="slide" data-label="Sources" data-speaker-notes="Leave the sources visible for questions. These links support the mechanisms and qualifications; the examples are teaching material, not benchmark measurements.">
+  <div class="slide-head"><span class="crumb">Sources</span><span class="snum"></span></div>
+  <h2>Sources and further reading</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li><a href="https://claude.dev/blog/the-new-rules-of-context-engineering-for-claude-5-generation-models/">Context engineering lessons</a></li>
+      <li><a href="https://claude.dev/blog/spending-your-effort/">Effort experiments</a></li>
+      <li><a href="https://claude.dev/blog/automating-eval-design-and-hillclimbing/">Evaluation and hillclimbing</a></li>
+      <li><a href="https://code.claude.com/docs/en/skills">Skills documentation</a></li>
+    </ul>
+  </div>
+  <p class="note">Primary documentation checked 3 October 2026. Examples are illustrative unless explicitly attributed.</p>
+</section>
+
+</deck-stage>
+<script src="ivory_design_system/deck-stage.js"></script>
+<script src="ivory_design_system/deck.js"></script>
+</body>
+</html>

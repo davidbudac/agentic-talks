@@ -1,0 +1,172 @@
+best-practices.html -> best-practices-ivory.html: per-slide content comparison
+Generated from ivory-conversion/audit.py (audit.json). Counts: [30, 30] Structural errors: none
+data-label, data-origin-slide and raw data-speaker-notes: identical on all 30 slides (parsed and raw attribute text).
+hrefs: identical, in order, on all 30 slides (listed below).
+
+== 01 · Title
+   errors: none
+   hrefs: identical (none)
+   text replace: 'usersRevised October 2026' -> 'users'
+   text replace: 'Practices.' -> 'Practices'
+   text replace: 'David' -> 'AuthorDavid'
+   text insert: '' -> 'RevisedOctober 2026'
+   why: Title-slide restructure (root DESIGN.md mapping): the title dot '.' (<span class="dot">) is dropped; 'Revised October 2026' moves from the Ember top bar into .meta as label 'Revised' + 'October 2026'; the 'Author' .lab label is added. No .ts-loopline exists in the source. No 'Length' cell added.
+
+== 02 · Agenda
+   errors: none
+   hrefs: identical (none)
+   text replace: 'Instructions Remove' -> 'InstructionsRemove'
+   text replace: 'Verification Make' -> 'VerificationMake'
+   text replace: 'Measurement Compare' -> 'MeasurementCompare'
+   why: Words identical. The comparator joins term and definition because ol.bul.def uses inline <b> + <span> where Ember used block h3 + p.
+
+== 03 · Simplifying prompts
+   errors: none
+   hrefs: identical ['https://claude.dev/blog/the-new-rules-of-context-engineering-for-claude-5-generation-models/']
+   visible text: identical after whitespace normalisation
+
+== 04 · Instruction file before and after
+   errors: none
+   hrefs: identical ['https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents']
+   visible text: identical after whitespace normalisation
+
+== 05 · Instruction audit
+   errors: none
+   hrefs: identical ['https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents']
+   visible text: identical after whitespace normalisation
+
+== 06 · A verification skill
+   errors: none
+   hrefs: identical ['https://code.claude.com/docs/en/skills']
+   visible text: identical after whitespace normalisation
+
+== 07 · Skill interface
+   errors: none
+   hrefs: identical ['https://code.claude.com/docs/en/skills']
+   visible text: identical after whitespace normalisation
+
+== 08 · Skill structure
+   errors: none
+   hrefs: identical ['https://code.claude.com/docs/en/skills']
+   visible text: identical after whitespace normalisation
+
+== 09 · Shared prefix example
+   errors: none
+   hrefs: identical ['https://platform.claude.com/docs/en/build-with-claude/prompt-caching', 'https://platform.claude.com/docs/en/build-with-claude/prompt-caching']
+   visible text: identical after whitespace normalisation
+
+== 10 · Worked cost example
+   errors: none
+   hrefs: identical ['https://platform.claude.com/docs/en/build-with-claude/prompt-caching']
+   visible text: identical after whitespace normalisation
+
+== 11 · Cache tradeoffs
+   errors: none
+   hrefs: identical ['https://platform.claude.com/docs/en/build-with-claude/prompt-caching']
+   visible text: identical after whitespace normalisation
+
+== 12 · Compaction
+   errors: none
+   hrefs: identical ['https://platform.claude.com/docs/en/build-with-claude/prompt-caching']
+   visible text: identical after whitespace normalisation
+
+== 13 · Effort comparison
+   errors: none
+   hrefs: identical ['https://claude.dev/blog/spending-your-effort/']
+   visible text: identical after whitespace normalisation
+
+== 14 · Build and verify
+   errors: none
+   hrefs: identical ['https://claude.dev/blog/spending-your-effort/']
+   visible text: identical after whitespace normalisation
+
+== 15 · Routing and escalation
+   errors: none
+   hrefs: identical ['https://claude.dev/blog/spending-your-effort/']
+   visible text: identical after whitespace normalisation
+
+== 16 · Cost per accepted task
+   errors: none
+   hrefs: identical ['https://claude.dev/blog/spending-your-effort/']
+   text insert: '' -> '01'
+   text insert: '' -> '02'
+   text insert: '' -> '03'
+   why: Added mono .lab number labels 01-03 on three equal cards (allowed decoration, same as agentic-engineering-ivory).
+
+== 17 · Real verification
+   errors: none
+   hrefs: identical ['https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents']
+   visible text: identical after whitespace normalisation
+
+== 18 · Progress and regression checks
+   errors: none
+   hrefs: identical ['https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents']
+   visible text: identical after whitespace normalisation
+
+== 19 · Grading methods
+   errors: none
+   hrefs: identical ['https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents']
+   text insert: '' -> '01'
+   text insert: '' -> '02'
+   text insert: '' -> '03'
+   why: Added mono .lab number labels 01-03 (same as measuring-what-works-ivory 05).
+
+== 20 · Avoid overfitting
+   errors: none
+   hrefs: identical ['https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents']
+   visible text: identical after whitespace normalisation
+
+== 21 · A bounded task contract
+   errors: none
+   hrefs: identical ['https://code.claude.com/docs/en/sub-agents']
+   visible text: identical after whitespace normalisation
+
+== 22 · Handoff
+   errors: none
+   hrefs: identical ['https://code.claude.com/docs/en/sub-agents']
+   visible text: identical after whitespace normalisation
+
+== 23 · Human decisions
+   errors: none
+   hrefs: identical ['https://code.claude.com/docs/en/sub-agents']
+   text insert: '' -> '01'
+   text insert: '' -> '02'
+   text insert: '' -> '03'
+   why: Added mono .lab number labels 01-03.
+
+== 24 · Two useful patterns
+   errors: none
+   hrefs: identical ['https://code.claude.com/docs/en/sub-agents']
+   visible text: identical after whitespace normalisation
+
+== 25 · Cost and containment
+   errors: none
+   hrefs: identical ['https://code.claude.com/docs/en/sub-agents']
+   visible text: identical after whitespace normalisation
+
+== 26 · Tool interface
+   errors: none
+   hrefs: identical ['https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents']
+   visible text: identical after whitespace normalisation
+
+== 27 · Useful HTML output
+   errors: none
+   hrefs: identical ['https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents']
+   visible text: identical after whitespace normalisation
+
+== 28 · Hooks and extensions
+   errors: none
+   hrefs: identical ['https://code.claude.com/docs/en/hooks', 'https://code.claude.com/docs/en/hooks']
+   visible text: identical after whitespace normalisation
+
+== 29 · Tomorrow
+   errors: none
+   hrefs: identical ['https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents', 'best-practices-reference.html']
+   text insert: '' -> '·'
+   why: Added ' · ' separator: the Ember second .note (reference link) was merged into the single .src line after 'supporting documentation' because Ivory allows one .note + one .src. Both hrefs are unchanged.
+
+== 30 · Sources
+   errors: none
+   hrefs: identical ['https://claude.dev/blog/the-new-rules-of-context-engineering-for-claude-5-generation-models/', 'https://claude.dev/blog/spending-your-effort/', 'https://claude.dev/blog/automating-eval-design-and-hillclimbing/', 'https://code.claude.com/docs/en/skills']
+   visible text: identical after whitespace normalisation
+
