@@ -1,0 +1,95 @@
+{
+  "branch": "design/ivory-technical",
+  "commits": {
+    "screenshot_fix": "525271e",
+    "stateless": "07a9c9b",
+    "cost-and-context": "eaafc96",
+    "subagents-prompt-caching": "f18cd4f",
+    "ai-toolbox": "8ec0225",
+    "orchestrating-agents": "8844de3",
+    "agentic-ai": "5841956",
+    "measuring-what-works": "97c0f46",
+    "best-practices": "6b29524",
+    "working-smarter": "dfdfc73",
+    "agentic-engineering-reference": "d8c992b",
+    "ai-toolbox-reference": "7d9f7b2",
+    "ivory_1_1": "331727d",
+    "agentic-ai-reference": "b6af6d2",
+    "subagents-prompt-caching-reference": "2f8224e",
+    "cost-and-context-reference": "96a2227",
+    "orchestrating-agents-reference": "d004ffe",
+    "notes_panel_fix": "1dfdc80",
+    "measuring-what-works-reference": "ea70991",
+    "best-practices-reference": "8877872",
+    "working-smarter-reference": "9c3ea39"
+  },
+  "decks": {
+    "ai-toolbox": {
+      "status": "committed",
+      "taskId": "node:delegated-task:command%3Amcp%3A92be48a6-1adb-4145-ad3b-0c28a0bd8e5b%3Adelegate-task%3Aivory-ai-toolbox-r1"
+    },
+    "agentic-ai": {
+      "status": "committed",
+      "taskId": "node:delegated-task:command%3Amcp%3A92be48a6-1adb-4145-ad3b-0c28a0bd8e5b%3Adelegate-task%3Aivory-agentic-ai-r2"
+    },
+    "subagents-prompt-caching": {
+      "status": "committed",
+      "taskId": "node:delegated-task:command%3Amcp%3A92be48a6-1adb-4145-ad3b-0c28a0bd8e5b%3Adelegate-task%3Aivory-subagents-prompt-caching-r1"
+    },
+    "cost-and-context": {
+      "status": "committed"
+    },
+    "orchestrating-agents": {
+      "status": "committed",
+      "taskId": "node:delegated-task:command%3Amcp%3A92be48a6-1adb-4145-ad3b-0c28a0bd8e5b%3Adelegate-task%3Aivory-orchestrating-agents-r1"
+    },
+    "measuring-what-works": {
+      "status": "committed",
+      "taskId": "node:delegated-task:command%3Amcp%3A92be48a6-1adb-4145-ad3b-0c28a0bd8e5b%3Adelegate-task%3Aivory-measuring-what-works-r1"
+    },
+    "best-practices": {
+      "status": "committed",
+      "taskId": "node:delegated-task:command%3Amcp%3A92be48a6-1adb-4145-ad3b-0c28a0bd8e5b%3Adelegate-task%3Aivory-best-practices-r1"
+    },
+    "working-smarter": {
+      "status": "committed",
+      "taskId": "node:delegated-task:command%3Amcp%3A92be48a6-1adb-4145-ad3b-0c28a0bd8e5b%3Adelegate-task%3Aivory-working-smarter-r1"
+    },
+    "agentic-engineering-reference": {
+      "status": "committed",
+      "taskId": "node:delegated-task:command%3Amcp%3A92be48a6-1adb-4145-ad3b-0c28a0bd8e5b%3Adelegate-task%3Aivory-agentic-engineering-reference-r1"
+    },
+    "ai-toolbox-reference": {
+      "status": "committed",
+      "taskId": "node:delegated-task:command%3Amcp%3A92be48a6-1adb-4145-ad3b-0c28a0bd8e5b%3Adelegate-task%3Aivory-ai-toolbox-reference-r1"
+    },
+    "agentic-ai-reference": {
+      "status": "committed",
+      "taskId": "node:delegated-task:command%3Amcp%3A92be48a6-1adb-4145-ad3b-0c28a0bd8e5b%3Adelegate-task%3Aivory-agentic-ai-reference-r1"
+    },
+    "subagents-prompt-caching-reference": {
+      "status": "committed",
+      "taskId": "node:delegated-task:command%3Amcp%3A92be48a6-1adb-4145-ad3b-0c28a0bd8e5b%3Adelegate-task%3Aivory-subagents-prompt-caching-reference-r2"
+    },
+    "cost-and-context-reference": {
+      "status": "committed",
+      "taskId": "node:delegated-task:command%3Amcp%3A92be48a6-1adb-4145-ad3b-0c28a0bd8e5b%3Adelegate-task%3Aivory-cost-and-context-reference-r1"
+    },
+    "orchestrating-agents-reference": {
+      "status": "committed",
+      "taskId": "node:delegated-task:command%3Amcp%3A92be48a6-1adb-4145-ad3b-0c28a0bd8e5b%3Adelegate-task%3Aivory-orchestrating-agents-reference-r1"
+    },
+    "measuring-what-works-reference": {
+      "status": "committed",
+      "taskId": "node:delegated-task:command%3Amcp%3A92be48a6-1adb-4145-ad3b-0c28a0bd8e5b%3Adelegate-task%3Aivory-measuring-what-works-reference-r1"
+    },
+    "best-practices-reference": {
+      "status": "committed",
+      "taskId": "node:delegated-task:command%3Amcp%3A92be48a6-1adb-4145-ad3b-0c28a0bd8e5b%3Adelegate-task%3Aivory-best-practices-reference-r1"
+    },
+    "working-smarter-reference": {
+      "status": "committed",
+      "taskId": "node:delegated-task:command%3Amcp%3A92be48a6-1adb-4145-ad3b-0c28a0bd8e5b%3Adelegate-task%3Aivory-working-smarter-reference-r1"
+    }
+  }
+}

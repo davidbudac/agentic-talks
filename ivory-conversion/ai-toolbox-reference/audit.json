@@ -1,0 +1,726 @@
+{
+  "source": "ai-toolbox-reference.html",
+  "output": "ai-toolbox-reference-ivory.html",
+  "counts": [
+    22,
+    22
+  ],
+  "structural_errors": [],
+  "slides": [
+    {
+      "slide": 1,
+      "label": "Reference guide",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "ai-toolbox.html"
+        ],
+        [
+          "ai-toolbox.html"
+        ]
+      ],
+      "source_text": "Reference Reference material Use selectively Product details and supporting examples from the original July 2026 deck. Verify before reuse Check availability, prices and limits with the linked primary sources. Return to the main talk",
+      "output_text": "Reference Reference material Use selectively Product details and supporting examples from the original July 2026 deck. Verify before reuse Check availability, prices and limits with the linked primary sources. Return to the main talk"
+    },
+    {
+      "slide": 2,
+      "label": "Glossary",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Basics · cheat sheet ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Basics · cheat sheet",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "ai-toolbox.html"
+        ],
+        [
+          "ai-toolbox.html"
+        ]
+      ],
+      "source_text": "Reference · July 2026 snapshot · Back to the talk Basics · cheat sheet Words you'll keep hearing TokenA chunk of text ≈ ¾ of a word. What models read & bill in. PromptThe text you send the model. ContextEverything the model sees in one call — its short-term memory. AgentAn AI that does things in a loop, not just answers. HarnessThe program wrapped around the model — its hands. ConnectorA plug between an AI and another app (Gmail, Drive, Slack…). MCPThe open standard those plugs are built on — \"USB-C for AI\". CreditsPre-paid units most creative tools bill in — each generation burns some. Generative AIAI that makes media — images, video, voice, music. Deep researchThe AI browses for 5–30 min and returns a cited report. Don't memorise these — each comes back with its own slide. This is just your map.",
+      "output_text": "Basics · cheat sheet · Reference · July 2026 snapshot · Back to the talk Words you'll keep hearing TokenA chunk of text ≈ ¾ of a word. What models read & bill in. PromptThe text you send the model. ContextEverything the model sees in one call — its short-term memory. AgentAn AI that does things in a loop, not just answers. HarnessThe program wrapped around the model — its hands. ConnectorA plug between an AI and another app (Gmail, Drive, Slack…). MCPThe open standard those plugs are built on — \"USB-C for AI\". CreditsPre-paid units most creative tools bill in — each generation burns some. Generative AIAI that makes media — images, video, voice, music. Deep researchThe AI browses for 5–30 min and returns a cited report. Don't memorise these — each comes back with its own slide. This is just your map."
+    },
+    {
+      "slide": 3,
+      "label": "Today's models",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Big three · models ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Big three · models",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "ai-toolbox.html"
+        ],
+        [
+          "ai-toolbox.html"
+        ]
+      ],
+      "source_text": "Reference · July 2026 snapshot · Back to the talk Big three · models The brains: today's models Maker Flagship lineup (July 2026) Known for Anthropic Claude Fable 5 · Opus 5 · Sonnet 5 · Haiku 4.5 coding, agents, long context OpenAI GPT‑5.6 — Sol · Terra · Luna general reasoning, Codex Google Gemini 3.6 Flash · 3.5 Flash‑Lite (3.5 Pro still unreleased) multimodal, large context The same tiers repeat everywhere: large (smartest, priciest) · medium (the sweet spot) · small (fast & cheap) — plus a frontier tier on top lately. It reshuffles every few months — treat any list as a snapshot. For today, the products matter more than the model names —",
+      "output_text": "Big three · models · Reference · July 2026 snapshot · Back to the talk The brains: today's models Maker Flagship lineup (July 2026) Known for Anthropic Claude Fable 5 · Opus 5 · Sonnet 5 · Haiku 4.5 coding, agents, long context OpenAI GPT‑5.6 — Sol · Terra · Luna general reasoning, Codex Google Gemini 3.6 Flash · 3.5 Flash‑Lite (3.5 Pro still unreleased) multimodal, large context The same tiers repeat everywhere: large (smartest, priciest) · medium (the sweet spot) · small (fast & cheap) — plus a frontier tier on top lately. It reshuffles every few months — treat any list as a snapshot. For today, the products matter more than the model names —"
+    },
+    {
+      "slide": 4,
+      "label": "The Claude family",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Big three · anthropic ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Big three · anthropic",
+          "output": ""
+        },
+        {
+          "kind": "replace",
+          "source": "app The",
+          "output": "appThe"
+        },
+        {
+          "kind": "replace",
+          "source": "Code The",
+          "output": "CodeThe"
+        },
+        {
+          "kind": "replace",
+          "source": "Cowork The",
+          "output": "CoworkThe"
+        },
+        {
+          "kind": "replace",
+          "source": "Design Prompt",
+          "output": "DesignPrompt"
+        },
+        {
+          "kind": "replace",
+          "source": "Chrome A",
+          "output": "ChromeA"
+        },
+        {
+          "kind": "replace",
+          "source": "365 Side",
+          "output": "365Side"
+        }
+      ],
+      "links": [
+        [
+          "ai-toolbox.html"
+        ],
+        [
+          "ai-toolbox.html"
+        ]
+      ],
+      "source_text": "Reference · July 2026 snapshot · Back to the talk Big three · anthropic The Claude family Claude app The chat assistant — web, desktop, mobile. Drafting, analysis, files, web search. Claude Code The coding agent, for developers — terminal & IDE. Claude Cowork The agent for everyone else — point it at a folder of files. Next slide. Claude Design Prompt → decks, pages & visuals in your brand. Two slides on. Claude in Chrome A browser extension that reads pages, clicks and fills forms with you. Claude for Microsoft 365 Side panel inside Excel, PowerPoint, Word & Outlook — see \"plugging it in\". One subscription, not six products: everything here is included from Pro at ~$20/mo (free tier = chat only). Prices as of July 2026.",
+      "output_text": "Big three · anthropic · Reference · July 2026 snapshot · Back to the talk The Claude family Claude appThe chat assistant — web, desktop, mobile. Drafting, analysis, files, web search. Claude CodeThe coding agent, for developers — terminal & IDE. Claude CoworkThe agent for everyone else — point it at a folder of files. Next slide. Claude DesignPrompt → decks, pages & visuals in your brand. Two slides on. Claude in ChromeA browser extension that reads pages, clicks and fills forms with you. Claude for Microsoft 365Side panel inside Excel, PowerPoint, Word & Outlook — see \"plugging it in\". One subscription, not six products: everything here is included from Pro at ~$20/mo (free tier = chat only). Prices as of July 2026."
+    },
+    {
+      "slide": 5,
+      "label": "Claude Code and Codex",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Big three · the coding agents ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Big three · the coding agents",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "ai-toolbox.html"
+        ],
+        [
+          "ai-toolbox.html"
+        ]
+      ],
+      "source_text": "Reference · July 2026 snapshot · Back to the talk Big three · the coding agents Claude Code & Codex — the coding agents Claude Code Anthropic's agent for developers: lives in the terminal or editor, reads a whole codebase, writes & runs code, fixes its own mistakes. Included from Pro (~$20/mo). Codex OpenAI's equivalent, on GPT‑5.6 — terminal, IDE and a cloud version that works on tasks while you're away. Bundled into ChatGPT plans (full access from Plus, ~$20/mo). Why you should care even if you never code: these transformed programming first — Anthropic says over 80% of its own production code is now written by Claude. Then someone asked: what if we removed the code part? →",
+      "output_text": "Big three · the coding agents · Reference · July 2026 snapshot · Back to the talk Claude Code & Codex — the coding agents Claude Code Anthropic's agent for developers: lives in the terminal or editor, reads a whole codebase, writes & runs code, fixes its own mistakes. Included from Pro (~$20/mo). Codex OpenAI's equivalent, on GPT‑5.6 — terminal, IDE and a cloud version that works on tasks while you're away. Bundled into ChatGPT plans (full access from Plus, ~$20/mo). Why you should care even if you never code: these transformed programming first — Anthropic says over 80% of its own production code is now written by Claude. Then someone asked: what if we removed the code part? →"
+    },
+    {
+      "slide": 6,
+      "label": "The ChatGPT family",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Big three · openai ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Big three · openai",
+          "output": ""
+        },
+        {
+          "kind": "replace",
+          "source": "app The",
+          "output": "appThe"
+        },
+        {
+          "kind": "replace",
+          "source": "Codex The",
+          "output": "CodexThe"
+        },
+        {
+          "kind": "replace",
+          "source": "mode Plans",
+          "output": "modePlans"
+        },
+        {
+          "kind": "replace",
+          "source": "2.0 Image",
+          "output": "2.0Image"
+        },
+        {
+          "kind": "replace",
+          "source": "GPTs A",
+          "output": "GPTsA"
+        },
+        {
+          "kind": "delete",
+          "source": "⚠",
+          "output": ""
+        },
+        {
+          "kind": "replace",
+          "source": "out Free",
+          "output": "outFree"
+        }
+      ],
+      "links": [
+        [
+          "ai-toolbox.html"
+        ],
+        [
+          "ai-toolbox.html"
+        ]
+      ],
+      "source_text": "Reference · July 2026 snapshot · Back to the talk Big three · openai The ChatGPT family ChatGPT app The chat assistant — Free · Go ~$8 · Plus ~$20 · Pro $100–200/mo. Codex The coding agent — bundled in; full access from Plus. Agent mode Plans & executes multi-step tasks — browses, runs code, hands back real decks & spreadsheets. Images 2.0 Image generation & editing in-chat — 2K output, consistent characters across a batch. Custom GPTs A reusable, pre-configured ChatGPT for one job (\"our tone-of-voice editor\") — shareable with the team. ⚠ Watch out Free & Go now show ads. And the famous Sora video app? Gone — story in a moment. Same ladder as Claude: ~$20/mo (Plus) is where the real toolbox unlocks. Prices as of July 2026.",
+      "output_text": "Big three · openai · Reference · July 2026 snapshot · Back to the talk The ChatGPT family ChatGPT appThe chat assistant — Free · Go ~$8 · Plus ~$20 · Pro $100–200/mo. CodexThe coding agent — bundled in; full access from Plus. Agent modePlans & executes multi-step tasks — browses, runs code, hands back real decks & spreadsheets. Images 2.0Image generation & editing in-chat — 2K output, consistent characters across a batch. Custom GPTsA reusable, pre-configured ChatGPT for one job (\"our tone-of-voice editor\") — shareable with the team. Watch outFree & Go now show ads. And the famous Sora video app? Gone — story in a moment. Same ladder as Claude: ~$20/mo (Plus) is where the real toolbox unlocks. Prices as of July 2026."
+    },
+    {
+      "slide": 7,
+      "label": "The plan ladder",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Big three · the plan ladder ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Big three · the plan ladder",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "ai-toolbox.html"
+        ],
+        [
+          "ai-toolbox.html"
+        ]
+      ],
+      "source_text": "Reference · July 2026 snapshot · Back to the talk Big three · the plan ladder The ladder is the same everywhere Tier Claude ChatGPT Google AI Free chat, limited chat, limited (+ ads) chat + Notebook basics Entry Pro ~$20 Go ~$8 · Plus ~$20 Plus ~$5 · Pro ~$20 Power Max ~$100 / $200 Pro ~$100 / $200 Ultra ~$100 / $200 Team ~$20–25/seat Business ~$20–25/seat Workspace ~$14–22/user Higher tiers buy more usage & early access — not a different product. The team tiers are where admin controls, SSO and \"no training on your data\" live — for work accounts, that's the row that matters. Prices July 2026 — they change often.",
+      "output_text": "Big three · the plan ladder · Reference · July 2026 snapshot · Back to the talk The ladder is the same everywhere Tier Claude ChatGPT Google AI Free chat, limited chat, limited (+ ads) chat + Notebook basics Entry Pro ~$20 Go ~$8 · Plus ~$20 Plus ~$5 · Pro ~$20 Power Max ~$100 / $200 Pro ~$100 / $200 Ultra ~$100 / $200 Team ~$20–25/seat Business ~$20–25/seat Workspace ~$14–22/user Higher tiers buy more usage & early access — not a different product. The team tiers are where admin controls, SSO and \"no training on your data\" live — for work accounts, that's the row that matters. Prices July 2026 — they change often."
+    },
+    {
+      "slide": 8,
+      "label": "Deep research",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "In practice · deep research ·"
+        },
+        {
+          "kind": "delete",
+          "source": "In practice · deep research",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "ai-toolbox.html"
+        ],
+        [
+          "ai-toolbox.html"
+        ]
+      ],
+      "source_text": "Reference · July 2026 snapshot · Back to the talk In practice · deep research Deep research: one question, a full report Ask one question → the AI browses dozens of sources for 5–30 minutes → returns a multi-page, cited report. Shipped by all three labs (and Perplexity) under roughly this name; included from the ~$20 tiers. Ideal for: market landscapes, competitor teardowns, \"what does the research actually say?\" Looks right ≠ is right These reports look authoritative and still contain errors. Treat them as a well-organised starting point with a reading list — never a finished document you forward.",
+      "output_text": "In practice · deep research · Reference · July 2026 snapshot · Back to the talk Deep research: one question, a full report Ask one question → the AI browses dozens of sources for 5–30 minutes → returns a multi-page, cited report. Shipped by all three labs (and Perplexity) under roughly this name; included from the ~$20 tiers. Ideal for: market landscapes, competitor teardowns, \"what does the research actually say?\" Looks right ≠ is right These reports look authoritative and still contain errors. Treat them as a well-organised starting point with a reading list — never a finished document you forward."
+    },
+    {
+      "slide": 9,
+      "label": "AI avatars",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Landscape · avatars ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Landscape · avatars",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "ai-toolbox.html"
+        ],
+        [
+          "ai-toolbox.html"
+        ]
+      ],
+      "source_text": "Reference · July 2026 snapshot · Back to the talk Landscape · avatars A presenter who never books a studio Synthesia — corporate Script → presenter in 160+ languages. Training & explainers you re-render, not re-shoot, when things change. Free 10 min/mo · Starter $29 · Creator $89/mo. HeyGen — marketing Its party trick: video translation with lip-sync — the original speaker appears to speak another language, mouth matched. Free 3 videos · from ~$29/mo. D-ID is the budget option (~$16/mo): animates a still photo into a talking head. Rule of thumb: Synthesia for training, HeyGen for marketing & localisation. Prices July 2026.",
+      "output_text": "Landscape · avatars · Reference · July 2026 snapshot · Back to the talk A presenter who never books a studio Synthesia — corporate Script → presenter in 160+ languages. Training & explainers you re-render, not re-shoot, when things change. Free 10 min/mo · Starter $29 · Creator $89/mo. HeyGen — marketing Its party trick: video translation with lip-sync — the original speaker appears to speak another language, mouth matched. Free 3 videos · from ~$29/mo. D-ID is the budget option (~$16/mo): animates a still photo into a talking head. Rule of thumb: Synthesia for training, HeyGen for marketing & localisation. Prices July 2026."
+    },
+    {
+      "slide": 10,
+      "label": "Music and easy editing",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Landscape · music & editing ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Landscape · music & editing",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "ai-toolbox.html"
+        ],
+        [
+          "ai-toolbox.html"
+        ]
+      ],
+      "source_text": "Reference · July 2026 snapshot · Back to the talk Landscape · music & editing Soundtracks & the sleeper hit Suno Describe a song → finished track with vocals. Pro ~$10/mo incl. commercial rights — but training data is in litigation: legal check before paid media. Udio Settled with the labels; rebuilding as a licensed \"walled garden\" — downloads currently disabled. A tool that can't export isn't a tool yet. ElevenLabs Music Licensed catalogue (Merlin/Kobalt, royalties paid) — the legally safest AI music route. Descript — edit video like a document It transcribes your recording; delete a sentence in the text and it's cut from the video. One-click \"um\" removal, studio-sound cleanup. ~$16–24/mo — the highest ROI per hour of learning in this entire deck. Prices ~July 2026.",
+      "output_text": "Landscape · music & editing · Reference · July 2026 snapshot · Back to the talk Soundtracks & the sleeper hit Suno Describe a song → finished track with vocals. Pro ~$10/mo incl. commercial rights — but training data is in litigation: legal check before paid media. Udio Settled with the labels; rebuilding as a licensed \"walled garden\" — downloads currently disabled. A tool that can't export isn't a tool yet. ElevenLabs Music Licensed catalogue (Merlin/Kobalt, royalties paid) — the legally safest AI music route. Descript — edit video like a document It transcribes your recording; delete a sentence in the text and it's cut from the video. One-click \"um\" removal, studio-sound cleanup. ~$16–24/mo — the highest ROI per hour of learning in this entire deck. Prices ~July 2026."
+    },
+    {
+      "slide": 11,
+      "label": "Presentations",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Landscape · presentations ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Landscape · presentations",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "ai-toolbox.html"
+        ],
+        [
+          "ai-toolbox.html"
+        ]
+      ],
+      "source_text": "Reference · July 2026 snapshot · Back to the talk Landscape · presentations Decks from a prompt Gamma The leader. Topic or document in → designed deck out; exports to PowerPoint, publishes as a website. Free to try · paid ~$10–25/mo. Canva presentations Already included if you have Canva — better brand control, good presenter mode. Beautiful.ai \"Smart slides\" that keep layouts tidy — but $40/user/mo, no free tier. Hard to justify vs the other two. Also in this race: Claude Design (see the reference material) and ChatGPT's agent mode. And Tome — 2023's most-hyped deck tool — is dead: the churn lesson, again. Prices ~July 2026.",
+      "output_text": "Landscape · presentations · Reference · July 2026 snapshot · Back to the talk Decks from a prompt Gamma The leader. Topic or document in → designed deck out; exports to PowerPoint, publishes as a website. Free to try · paid ~$10–25/mo. Canva presentations Already included if you have Canva — better brand control, good presenter mode. Beautiful.ai \"Smart slides\" that keep layouts tidy — but $40/user/mo, no free tier. Hard to justify vs the other two. Also in this race: Claude Design (see the reference material) and ChatGPT's agent mode. And Tome — 2023's most-hyped deck tool — is dead: the churn lesson, again. Prices ~July 2026."
+    },
+    {
+      "slide": 12,
+      "label": "Copy platforms",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Landscape · copywriting ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Landscape · copywriting",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "ai-toolbox.html"
+        ],
+        [
+          "ai-toolbox.html"
+        ]
+      ],
+      "source_text": "Reference · July 2026 snapshot · Back to the talk Landscape · copywriting The category the chatbots ate Jasper The old category king — revenue roughly halved. Survives on brand-voice consistency across big teams. ~$39–69/mo. Copy.ai Left the category — pivoted to sales automation. Agents from ~$249/mo. The pivot tells the story. Writer The governance play: flags copy that breaks brand or compliance rules before human review. ~$39/user · enterprise. Notion AI AI over your own wiki — \"summarise every campaign retro mentioning X.\" Now needs Business, ~$20/user/mo. The takeaway: for writing itself, the $20 general assistant is now as good. Pay for these only for governance at scale. Prices ~July 2026.",
+      "output_text": "Landscape · copywriting · Reference · July 2026 snapshot · Back to the talk The category the chatbots ate Jasper The old category king — revenue roughly halved. Survives on brand-voice consistency across big teams. ~$39–69/mo. Copy.ai Left the category — pivoted to sales automation. Agents from ~$249/mo. The pivot tells the story. Writer The governance play: flags copy that breaks brand or compliance rules before human review. ~$39/user · enterprise. Notion AI AI over your own wiki — \"summarise every campaign retro mentioning X.\" Now needs Business, ~$20/user/mo. The takeaway: for writing itself, the $20 general assistant is now as good. Pay for these only for governance at scale. Prices ~July 2026."
+    },
+    {
+      "slide": 13,
+      "label": "Perplexity",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Landscape · research & search ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Landscape · research & search",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "ai-toolbox.html"
+        ],
+        [
+          "ai-toolbox.html"
+        ]
+      ],
+      "source_text": "Reference · July 2026 snapshot · Back to the talk Landscape · research & search Perplexity — search that shows its sources Ask a question → an answer in prose with citations to live sources — every claim verifiable, not ten blue links. Pro ~$20/mo: unlimited pro search + 20 deep-research runs a day. Enterprise ~$40/seat. Comet — its browser with the assistant built in — went free worldwide in October 2025 (before that, gated behind the $200 Max tier). Careful where it clicks An AI browser acting on pages you're logged into is a documented prompt-injection risk — a hidden instruction on a page can steer it. Keep agentic browsers away from sensitive logged-in systems. Prices ~July 2026.",
+      "output_text": "Landscape · research & search · Reference · July 2026 snapshot · Back to the talk Perplexity — search that shows its sources Ask a question → an answer in prose with citations to live sources — every claim verifiable, not ten blue links. Pro ~$20/mo: unlimited pro search + 20 deep-research runs a day. Enterprise ~$40/seat. Comet — its browser with the assistant built in — went free worldwide in October 2025 (before that, gated behind the $200 Max tier). Careful where it clicks An AI browser acting on pages you're logged into is a documented prompt-injection risk — a hidden instruction on a page can steer it. Keep agentic browsers away from sensitive logged-in systems. Prices ~July 2026."
+    },
+    {
+      "slide": 14,
+      "label": "Cheat sheet",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Landscape · cheat sheet ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Landscape · cheat sheet",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "ai-toolbox.html"
+        ],
+        [
+          "ai-toolbox.html"
+        ]
+      ],
+      "source_text": "Reference · July 2026 snapshot · Back to the talk Landscape · cheat sheet The whole landscape on one slide Job Examples Also look at Entry price Everyday assistant + agent Claude · ChatGPT · Gemini — free → ~$20/mo Page or app from a prompt Lovable v0, Bolt, Replit free → ~$25/mo Generated video Veo + Flow Higgsfield, Runway ~$15–20/mo Templated / data video HyperFrames — free (open source) Avatar presenter Synthesia HeyGen, D-ID free → $29/mo Voice & dubbing ElevenLabs — ~$5/mo (commercial) Music ElevenLabs Music (safest) Suno (check rights) ~$10/mo Images & design Canva Ideogram, Firefly, Midjourney free → ~$12/mo Decks Gamma Claude Design, Canva free → ~$10/mo Cited research Perplexity lab deep-research modes free → $20/mo Automation Zapier Make, n8n, Relay free → ~$30/mo Screenshot this one. Names churn; categories are stable — this is how you re-orient in six months. July 2026.",
+      "output_text": "Landscape · cheat sheet · Reference · July 2026 snapshot · Back to the talk The whole landscape on one slide Job Examples Also look at Entry price Everyday assistant + agent Claude · ChatGPT · Gemini — free → ~$20/mo Page or app from a prompt Lovable v0, Bolt, Replit free → ~$25/mo Generated video Veo + Flow Higgsfield, Runway ~$15–20/mo Templated / data video HyperFrames — free (open source) Avatar presenter Synthesia HeyGen, D-ID free → $29/mo Voice & dubbing ElevenLabs — ~$5/mo (commercial) Music ElevenLabs Music (safest) Suno (check rights) ~$10/mo Images & design Canva Ideogram, Firefly, Midjourney free → ~$12/mo Decks Gamma Claude Design, Canva free → ~$10/mo Cited research Perplexity lab deep-research modes free → $20/mo Automation Zapier Make, n8n, Relay free → ~$30/mo Screenshot this one. Names churn; categories are stable — this is how you re-orient in six months. July 2026."
+    },
+    {
+      "slide": 15,
+      "label": "Story 2 · Ten years, two days",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Stories · supporting example ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Stories · supporting example",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "ai-toolbox.html"
+        ],
+        [
+          "ai-toolbox.html"
+        ]
+      ],
+      "source_text": "Reference · July 2026 snapshot · Back to the talk Stories · supporting example AI proposed a hypothesis. Scientists supplied the evidence. Hypothesis → validation Imperial College London spent a decade on how superbugs acquire resistance. Google's AI co-scientist, given the same question, ranked the correct — unpublished — answer first in two days. It also proposed a hypothesis the team had never considered. The researchers themselves went on record — this isn't vendor marketing. The honest caveat: the AI generated the hypothesis. Humans had spent the decade doing the lab work that proved it. A generated hypothesis still needs experimental validation.",
+      "output_text": "Stories · supporting example · Reference · July 2026 snapshot · Back to the talk AI proposed a hypothesis. Scientists supplied the evidence. Hypothesis → validation Imperial College London spent a decade on how superbugs acquire resistance. Google's AI co-scientist, given the same question, ranked the correct — unpublished — answer first in two days. It also proposed a hypothesis the team had never considered. The researchers themselves went on record — this isn't vendor marketing. The honest caveat: the AI generated the hypothesis. Humans had spent the decade doing the lab work that proved it. A generated hypothesis still needs experimental validation."
+    },
+    {
+      "slide": 16,
+      "label": "Story 3 · The exams",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Stories · supporting example ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Stories · supporting example",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "ai-toolbox.html"
+        ],
+        [
+          "ai-toolbox.html"
+        ]
+      ],
+      "source_text": "Reference · July 2026 snapshot · Back to the talk Stories · supporting example Gold medals, in minutes CFA Level III The hardest finance exam — essays included. Models passed a full mock in minutes (best ~79%). Humans train ~300 hours per level. Maths Olympiad gold Official IMO gold medal, certified by the organisers — 5 of 6 problems, standard conditions. Only ~1 in 10 human contestants got gold. The reframe: the exam-shaped part of professional work — recall, procedure, structured answers — is now cheap. Judgment, accountability, and knowing what to ask are not.",
+      "output_text": "Stories · supporting example · Reference · July 2026 snapshot · Back to the talk Gold medals, in minutes CFA Level III The hardest finance exam — essays included. Models passed a full mock in minutes (best ~79%). Humans train ~300 hours per level. Maths Olympiad gold Official IMO gold medal, certified by the organisers — 5 of 6 problems, standard conditions. Only ~1 in 10 human contestants got gold. The reframe: the exam-shaped part of professional work — recall, procedure, structured answers — is now cheap. Judgment, accountability, and knowing what to ask are not."
+    },
+    {
+      "slide": 17,
+      "label": "Story 4 · The security double",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Stories · supporting example ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Stories · supporting example",
+          "output": ""
+        },
+        {
+          "kind": "delete",
+          "source": "🛡",
+          "output": ""
+        },
+        {
+          "kind": "delete",
+          "source": "⚔",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "ai-toolbox.html"
+        ],
+        [
+          "ai-toolbox.html"
+        ]
+      ],
+      "source_text": "Reference · July 2026 snapshot · Back to the talk Stories · supporting example The same skill, both directions 🛡 Defence Google's Big Sleep agent found a flaw in software on billions of devices — one only attackers knew — and it was patched before they could strike. A first. ⚔ Offence Anthropic disclosed the first largely AI-orchestrated espionage campaign: a jailbroken coding agent ran ~80–90% of the attack autonomously (Nov 2025). It's the same loop introduced in the main talk doing both jobs. Which one it does is decided by the humans and guardrails around it — which is why the fine-print slides in this deck aren't decoration.",
+      "output_text": "Stories · supporting example · Reference · July 2026 snapshot · Back to the talk The same skill, both directions Defence Google's Big Sleep agent found a flaw in software on billions of devices — one only attackers knew — and it was patched before they could strike. A first. Offence Anthropic disclosed the first largely AI-orchestrated espionage campaign: a jailbroken coding agent ran ~80–90% of the attack autonomously (Nov 2025). It's the same loop introduced in the main talk doing both jobs. Which one it does is decided by the humans and guardrails around it — which is why the fine-print slides in this deck aren't decoration."
+    },
+    {
+      "slide": 18,
+      "label": "The ChatGPT side",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Plugging in · the chatgpt side ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Plugging in · the chatgpt side",
+          "output": ""
+        },
+        {
+          "kind": "delete",
+          "source": "⚠",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "ai-toolbox.html"
+        ],
+        [
+          "ai-toolbox.html"
+        ]
+      ],
+      "source_text": "Reference · July 2026 snapshot · Back to the talk Plugging in · the chatgpt side The ChatGPT side of the plug Connectors Link to Drive, Gmail, SharePoint, Slack… — it searches your actual documents, not just what you paste. Excel & Sheets add-in Official OpenAI add-in: narrates each step, cites cells, asks before writing. Built for financial workflows. Apps in ChatGPT Third-party tools inside the conversation — design in Canva, search hotels — without leaving the chat. ⚠ Region check: several consumer-tier features have been limited in the EEA/UK; business tiers get broader access. Verify on your tier, in your region, before promising a demo.",
+      "output_text": "Plugging in · the chatgpt side · Reference · July 2026 snapshot · Back to the talk The ChatGPT side of the plug Connectors Link to Drive, Gmail, SharePoint, Slack… — it searches your actual documents, not just what you paste. Excel & Sheets add-in Official OpenAI add-in: narrates each step, cites cells, asks before writing. Built for financial workflows. Apps in ChatGPT Third-party tools inside the conversation — design in Canva, search hotels — without leaving the chat. Region check: several consumer-tier features have been limited in the EEA/UK; business tiers get broader access. Verify on your tier, in your region, before promising a demo."
+    },
+    {
+      "slide": 19,
+      "label": "The built-ins",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Plugging in · the built-ins ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Plugging in · the built-ins",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "ai-toolbox.html"
+        ],
+        [
+          "ai-toolbox.html"
+        ]
+      ],
+      "source_text": "Reference · July 2026 snapshot · Back to the talk Plugging in · the built-ins Or use what's already in the building Microsoft 365 Copilot Agent mode in Word, Excel & PowerPoint — works on the document itself. ~$21–30/user/mo on top of M365. Fun fact: the Office agents run on Anthropic's models. Gemini in Workspace Now bundled into base plans (from ~$14/user) — Gmail, Docs, Meet. Star feature: =AI(\"prompt\", A2) in Sheets — an AI prompt as a formula, filled down 1,000 rows. The trade-off vs the add-ins: built-ins are the path of least resistance (and often the easiest compliance story) — the dedicated tools are usually better at the work itself. Prices July 2026.",
+      "output_text": "Plugging in · the built-ins · Reference · July 2026 snapshot · Back to the talk Or use what's already in the building Microsoft 365 Copilot Agent mode in Word, Excel & PowerPoint — works on the document itself. ~$21–30/user/mo on top of M365. Fun fact: the Office agents run on Anthropic's models. Gemini in Workspace Now bundled into base plans (from ~$14/user) — Gmail, Docs, Meet. Star feature: =AI(\"prompt\", A2) in Sheets — an AI prompt as a formula, filled down 1,000 rows. The trade-off vs the add-ins: built-ins are the path of least resistance (and often the easiest compliance story) — the dedicated tools are usually better at the work itself. Prices July 2026."
+    },
+    {
+      "slide": 20,
+      "label": "The universal adapter",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Plugging in · the universal adapter ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Plugging in · the universal adapter",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "ai-toolbox.html"
+        ],
+        [
+          "ai-toolbox.html"
+        ]
+      ],
+      "source_text": "Reference · July 2026 snapshot · Back to the talk Plugging in · the universal adapter The universal adapter for everything else No official connector for your tool? Zapier MCP: one connection exposes ~30,000 actions across 8,000+ apps to Claude or ChatGPT. Setup is paste-a-URL — then just say it: \"add this lead to the CRM and post a summary to the channel.\" Make offers the same on its visual canvas. Both need their own (cheap) plan + a paid AI plan. Expose the minimum The safety rule: plug in only the actions you need. The AI can only misuse what you've connected — keep the adapter's keyring short.",
+      "output_text": "Plugging in · the universal adapter · Reference · July 2026 snapshot · Back to the talk The universal adapter for everything else No official connector for your tool? Zapier MCP: one connection exposes ~30,000 actions across 8,000+ apps to Claude or ChatGPT. Setup is paste-a-URL — then just say it: \"add this lead to the CRM and post a summary to the channel.\" Make offers the same on its visual canvas. Both need their own (cheap) plan + a paid AI plan. Expose the minimum The safety rule: plug in only the actions you need. The AI can only misuse what you've connected — keep the adapter's keyring short."
+    },
+    {
+      "slide": 21,
+      "label": "Sources 1 of 2",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Sources · labs & plans ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Sources · labs & plans",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "ai-toolbox.html",
+          "https://claude.com/pricing",
+          "https://claude.com/product/cowork",
+          "https://www.anthropic.com/news/claude-design-anthropic-labs",
+          "https://claude.com/claude-for-microsoft-365",
+          "https://learn.chatgpt.com/docs/pricing",
+          "https://gemini.google/subscriptions/",
+          "https://blog.google/innovation-and-ai/products/gemini-notebook/notebooklm-gemini-notebook/",
+          "https://modelcontextprotocol.io",
+          "https://claude.com/blog/connectors-directory",
+          "https://openai.com/index/introducing-apps-in-chatgpt/",
+          "https://openai.com/index/chatgpt-for-excel/",
+          "https://zapier.com/mcp"
+        ],
+        [
+          "ai-toolbox.html",
+          "https://claude.com/pricing",
+          "https://claude.com/product/cowork",
+          "https://www.anthropic.com/news/claude-design-anthropic-labs",
+          "https://claude.com/claude-for-microsoft-365",
+          "https://learn.chatgpt.com/docs/pricing",
+          "https://gemini.google/subscriptions/",
+          "https://blog.google/innovation-and-ai/products/gemini-notebook/notebooklm-gemini-notebook/",
+          "https://modelcontextprotocol.io",
+          "https://claude.com/blog/connectors-directory",
+          "https://openai.com/index/introducing-apps-in-chatgpt/",
+          "https://openai.com/index/chatgpt-for-excel/",
+          "https://zapier.com/mcp"
+        ]
+      ],
+      "source_text": "Reference · July 2026 snapshot · Back to the talk Sources · labs & plans Sources & links (1/2) The big three Claude — plans & pricingclaude.com/pricing Claude Cowork — product pageclaude.com/product/cowork Claude Design — announcementanthropic.com/news · claude-design Claude for Microsoft 365claude.com/claude-for-microsoft-365 ChatGPT — pricing docslearn.chatgpt.com/docs/pricing Google AI — subscriptionsgemini.google/subscriptions Gemini Notebook (ex-NotebookLM)blog.google · gemini-notebook Connectors & MCP Model Context Protocol — spec & docsmodelcontextprotocol.io Claude — connectors directoryclaude.com/blog · connectors-directory OpenAI — apps in ChatGPTopenai.com · apps-in-chatgpt OpenAI — ChatGPT for Excelopenai.com · chatgpt-for-excel Zapier MCPzapier.com/mcp",
+      "output_text": "Sources · labs & plans · Reference · July 2026 snapshot · Back to the talk Sources & links (1/2) The big three Claude — plans & pricingclaude.com/pricing Claude Cowork — product pageclaude.com/product/cowork Claude Design — announcementanthropic.com/news · claude-design Claude for Microsoft 365claude.com/claude-for-microsoft-365 ChatGPT — pricing docslearn.chatgpt.com/docs/pricing Google AI — subscriptionsgemini.google/subscriptions Gemini Notebook (ex-NotebookLM)blog.google · gemini-notebook Connectors & MCP Model Context Protocol — spec & docsmodelcontextprotocol.io Claude — connectors directoryclaude.com/blog · connectors-directory OpenAI — apps in ChatGPTopenai.com · apps-in-chatgpt OpenAI — ChatGPT for Excelopenai.com · chatgpt-for-excel Zapier MCPzapier.com/mcp"
+    },
+    {
+      "slide": 22,
+      "label": "Sources 2 of 2",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Sources · tools & stories ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Sources · tools & stories",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "ai-toolbox.html",
+          "https://lovable.dev/pricing",
+          "https://runway.com/pricing",
+          "https://github.com/heygen-com/hyperframes",
+          "https://www.synthesia.io/pricing",
+          "https://elevenlabs.io/pricing",
+          "https://gamma.app",
+          "https://www.perplexity.ai",
+          "https://www.anthropic.com/research/project-vend-2",
+          "https://www.livescience.com/technology/artificial-intelligence/googles-ai-co-scientist-cracked-10-year-superbug-problem-in-just-2-days",
+          "https://www.cnbc.com/2025/09/24/ai-cfa-exam-pass-minutes-study.html",
+          "https://deepmind.google/blog/advanced-version-of-gemini-with-deep-think-officially-achieves-gold-medal-standard-at-the-international-mathematical-olympiad/",
+          "https://blog.google/innovation-and-ai/technology/safety-security/cybersecurity-updates-summer-2025/",
+          "https://www.anthropic.com/news/disrupting-AI-espionage",
+          "https://www.cnbc.com/2026/02/04/anthropic-no-ads-claude-chatbot-openai-chatgpt.html"
+        ],
+        [
+          "ai-toolbox.html",
+          "https://lovable.dev/pricing",
+          "https://runway.com/pricing",
+          "https://github.com/heygen-com/hyperframes",
+          "https://www.synthesia.io/pricing",
+          "https://elevenlabs.io/pricing",
+          "https://gamma.app",
+          "https://www.perplexity.ai",
+          "https://www.anthropic.com/research/project-vend-2",
+          "https://www.livescience.com/technology/artificial-intelligence/googles-ai-co-scientist-cracked-10-year-superbug-problem-in-just-2-days",
+          "https://www.cnbc.com/2025/09/24/ai-cfa-exam-pass-minutes-study.html",
+          "https://deepmind.google/blog/advanced-version-of-gemini-with-deep-think-officially-achieves-gold-medal-standard-at-the-international-mathematical-olympiad/",
+          "https://blog.google/innovation-and-ai/technology/safety-security/cybersecurity-updates-summer-2025/",
+          "https://www.anthropic.com/news/disrupting-AI-espionage",
+          "https://www.cnbc.com/2026/02/04/anthropic-no-ads-claude-chatbot-openai-chatgpt.html"
+        ]
+      ],
+      "source_text": "Reference · July 2026 snapshot · Back to the talk Sources · tools & stories Sources & links (2/2) Category leaders Lovable — pricinglovable.dev/pricing Runway — pricingrunway.com/pricing HyperFrames — open-source repogithub.com/heygen-com/hyperframes Synthesia — pricingsynthesia.io/pricing ElevenLabs — pricingelevenlabs.io/pricing Gammagamma.app Perplexityperplexity.ai The five stories Anthropic — Project Vend (phases 1 & 2)anthropic.com/research · project-vend AI co-scientist — the superbug resultlivescience.com CNBC — AI passes CFA Level III mockcnbc.com DeepMind — official IMO golddeepmind.google/blog Google — Big Sleep pre-empts an exploitblog.google Anthropic — disrupting AI-run espionageanthropic.com/news The Super Bowl campaign & resultscnbc.com All figures verified July 2026. This market moves monthly — re-check the vendor's page before quoting a price outside this room.",
+      "output_text": "Sources · tools & stories · Reference · July 2026 snapshot · Back to the talk Sources & links (2/2) Category leaders Lovable — pricinglovable.dev/pricing Runway — pricingrunway.com/pricing HyperFrames — open-source repogithub.com/heygen-com/hyperframes Synthesia — pricingsynthesia.io/pricing ElevenLabs — pricingelevenlabs.io/pricing Gammagamma.app Perplexityperplexity.ai The five stories Anthropic — Project Vend (phases 1 & 2)anthropic.com/research · project-vend AI co-scientist — the superbug resultlivescience.com CNBC — AI passes CFA Level III mockcnbc.com DeepMind — official IMO golddeepmind.google/blog Google — Big Sleep pre-empts an exploitblog.google Anthropic — disrupting AI-run espionageanthropic.com/news The Super Bowl campaign & resultscnbc.com All figures verified July 2026. This market moves monthly — re-check the vendor's page before quoting a price outside this room."
+    }
+  ]
+}

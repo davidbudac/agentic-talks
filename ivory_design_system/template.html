@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Deck title — subtitle</title>
+<link rel="stylesheet" href="ivory_design_system/styles.css">
+</head>
+<body>
+
+<!--
+  Ivory starter deck. Copy this file NEXT TO the ivory_design_system/ folder:
+
+    my-project/
+      ivory_design_system/   (the whole folder, unchanged)
+      my-deck.html           (this file)
+
+  Spec: ivory_design_system/DESIGN.md. Open the file in Chrome; ←/→ move,
+  N notes, P presenter window, F fullscreen.
+
+  Slide numbers: leave <span class="snum"></span> empty and deck.js writes
+  01, 02, … and the "/ TT" total. Writing a number by hand overrides it; to fix
+  the total by hand, add <style>:root{--deck-total:"30"}</style> in <head>.
+
+  Every slide: a <section class="slide"> with data-label and
+  data-speaker-notes, then .slide-head, one <h2> (max two lines), one .zone
+  holding exactly one component, and a one-line .note (optional .src).
+
+  Copy components from ivory_design_system/kitchen-sink.html (slide number):
+    01  title slide
+    02  template, one-line headline (grid overlay)      03  two-line headline
+    04  cards: three equal items                         05  cards: two items
+    06  before / after (.tile.was / .tile.key)           07  cards: four items (30px)
+    08  agenda (ol.bul.def.wide)                         09  definition rows (ol.bul.def)
+    10  plain rows (ul.bul) + inline link/code/bold      11  numbered steps (ol.bul)
+    12  table, two columns, 40px (.tbl.lg)               13  table, three columns (.tbl.c3)
+    14  hero number + to-scale bars + numeric table (.split.even, .hero, .tbl.num)
+    15  code panel, 40px (.code)                         16  code panel, 30px (.code.reg)
+    17  terminal trace (.code)                           18  split: rows + loop diagram (SVG)
+    19  split: rows + workflow diagram (SVG)             20  split: rows + video
+    21  split: rows + video, two-line headline           22  full-width figure with caption
+    23  full-width sequence diagram                      24  full-width to-scale stacked bars
+    25  sources (.links)                                 26  table, two-line headline (stress case)
+-->
+
+<deck-stage width="1920" height="1080">
+
+<section class="slide title-slide" data-label="Title" data-speaker-notes="What this talk is for and who it is for.">
+  <div class="slide-head"><span class="crumb">Audience or kicker</span><span class="snum"></span></div>
+  <h1>Deck<br>title</h1>
+  <p class="sub">What the audience leaves with, in one sentence.</p>
+  <div class="meta">
+    <div><span class="lab">Author</span>Your Name</div>
+    <div><span class="lab">Revised</span>Month Year</div>
+    <div><span class="lab">Length</span>2 slides</div>
+  </div>
+</section>
+
+<section class="slide" data-label="First point" data-speaker-notes="What to say on this slide.">
+  <div class="slide-head"><span class="crumb">Section label</span><span class="snum"></span></div>
+  <h2>A headline that states the point</h2>
+  <div class="zone">
+    <ol class="bul def">
+      <li><b>First:</b> one line of supporting text for this row.</li>
+      <li><b>Second:</b> rows share the zone height, with hairlines between them.</li>
+      <li><b>Third:</b> use three to five rows; beyond that, use a table.</li>
+    </ol>
+  </div>
+  <p class="note">Footnote: one line, in the speaker's voice or as a caveat.</p>
+</section>
+
+</deck-stage>
+<script src="ivory_design_system/deck-stage.js"></script>
+<script src="ivory_design_system/deck.js"></script>
+</body>
+</html>

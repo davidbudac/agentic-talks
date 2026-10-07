@@ -1,0 +1,39 @@
+Raw attribute/href/code comparison: source measuring-what-works-reference.html vs measuring-what-works-reference-ivory.html
+slide count 5 5
+01 data-label           OK
+01 data-origin-slide    OK
+01 data-speaker-notes   OK
+01 hrefs                OK ['measuring-what-works.html', 'measuring-what-works.html']
+02 data-label           OK
+02 data-origin-slide    OK
+02 data-speaker-notes   OK
+02 hrefs                OK ['measuring-what-works.html']
+03 data-label           OK
+03 data-origin-slide    OK
+03 data-speaker-notes   OK
+03 hrefs                OK ['measuring-what-works.html']
+03 code lines (byte)    OK  source 6 lines (2 blank), output 6 lines (2 blank); max len 56
+04 data-label           OK
+04 data-origin-slide    OK
+04 data-speaker-notes   OK
+04 hrefs                OK ['measuring-what-works.html']
+05 data-label           OK
+05 data-origin-slide    OK
+05 data-speaker-notes   OK
+05 hrefs                OK ['measuring-what-works.html']
+05 code lines (byte)    OK  source 6 lines (1 blank), output 5 lines (0 blank); max len 58
+
+Visible-text differences (from audit.json, explained):
+01  Same words reordered into the accepted cost/subagents-reference opener: crumb "Optional reference" (was .ts-top .k),
+    h2 "Measuring What Works / Reference", tile 1 subtitle + "Return to the main talk", tile 2 "David Budáč" + "Revised October 2026",
+    footer note "Optional reference · Back to the talk" (banner verbatim, both "Optional reference" occurrences kept).
+    Removed: the title .dot "." only (audit: "Reference." -> "Reference").
+02-05  Crumb "In practice" merged with the banner: "In practice · Optional reference · Back to the talk"
+    (one "·" added; audit reports this as the crumb moving to the front). Everything else identical.
+03  Code: 4 non-blank lines byte-identical incl. internal spaces; both source blank lines kept as empty .l lines
+    (precedent: agentic-engineering-reference-ivory, orchestrating-agents-reference-ivory). The source's own alignment
+    puts the second "=" one column left of the first (index 35 vs 36); preserved, not corrected.
+05  Code: 5 non-blank lines byte-identical; the 1 source blank line dropped, identical to the accepted main-deck twin
+    (measuring-what-works-ivory.html slide 17). No words lost.
+All Ember hand-written .snum digits 2/3/4/5 dropped; deck.js renders 01–05 / 05. Code line numbers are CSS decoration.
+Notes, data-label, data-origin-slide: byte-identical 5/5. Hrefs: identical in order and count 5/5.

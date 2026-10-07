@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Claude Best Practices — what Anthropic's own engineers do</title>
+<title>Claude Best Practices</title>
 
 <!-- Fonts: Space Grotesk (display) + IBM Plex Sans (body) + IBM Plex Mono (mono) — Ember design system -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -267,919 +267,120 @@ table.tbl tr:last-child td{border-bottom:none}
 .sub-h{font-family:var(--font-mono); font-size:var(--small-size); letter-spacing:var(--track-label); text-transform:uppercase; color:var(--s-accent); font-weight:var(--w-semibold); margin-bottom:10px}
 .codes{display:flex; flex-direction:column; gap:16px}
 </style>
+<style>
+/* Clarity batch 2: use the existing fixed canvas and Ember tokens. */
+.slide{--body-size:32px;--small-size:24px;--code-size:27px}
+.slide a{color:var(--s-text);text-decoration:underline;text-underline-offset:3px}
+.slide a:focus-visible{outline:2px solid var(--s-accent);outline-offset:4px}
+.reference-banner{position:absolute;top:20px;right:96px;z-index:2;font:20px/1.3 var(--font-body);color:var(--s-muted)}
+</style>
 </head>
 <body>
 
 
-<!--
-  ============================================================
-  Claude Best Practices — what Anthropic's own engineers do,
-  from the claude.dev blog. ~45-minute talk for advanced AI
-  engineers and vibe coders who already use Claude Code daily.
-  Eight chapters: 01 Context, 02 Skills, 03 Prompt cache,
-  04 Effort & cost, 05 Verification & evals, 06 Autonomy,
-  07 Multi-agent, 08 Make the harness yours.
-  Facts: the 13 claude.dev articles listed on the Sources slide,
-  as of October 2026. Model names are quoted as each article
-  spells them. No live demos.
-  Runs on the Ember deck-stage component: ←/→, Space, Home/End,
-  number keys; R resets; speaker notes live on each section
-  (press N for notes, P for the presenter window).
-  ============================================================
--->
+<!-- Revised clarity teaching path; see reviews/2026-10-03-clarity/. -->
 
 <deck-stage width="1920" height="1080">
 
-  <!-- TITLE -->
-  <section class="slide dark title-slide" data-label="Title"
-    data-speaker-notes="No basics in this talk. Everyone here already runs Claude Code daily, so nothing on what an agent is or what a context window is. The material is the claude.dev blog: thirteen posts from the Claude Code team and others at Anthropic, April to October 2026. Two audiences in the room. If you vibe-code, you get habits to change tomorrow morning. If you build agents, you also get the harness-level reasoning behind them. The through-line across the posts: give the model less to obey, a way to check itself, and a prompt cache it can live in. Every number is attributed on the slide. Model names are quoted the way each post spells them, so you will see Opus 4.8, Opus 5, Opus 5.5, Sonnet 5.5 and Fable 5.1 in different places.">
-    <div class="ts-top"><span class="k">Advanced · for daily Claude Code users · ~45 min</span><span class="meta">Talk · October 2026</span></div>
-    <div class="ts-hero">
-      <h1>Claude Best<br>Practices<span class="dot">.</span></h1>
-      <p class="ts-sub">What Anthropic's own engineers do, <b>from the claude.dev blog</b>: 13 posts, April to October 2026.</p>
-    </div>
-    <div class="ts-foot">
-      <div class="ts-author"><a href="https://davidbudac.cz" target="_blank" rel="noopener">David&nbsp;Budáč</a></div>
-      <div class="ts-loopline"><span class="w">context</span> <span class="a">→</span> <span class="w">skills</span> <span class="a">→</span> <span class="w">cache</span> <span class="a">→</span> <span class="w">effort</span> <span class="a">→</span> <span class="w">verify</span> <span class="a">→</span> <span class="w">autonomy</span> <span class="a">→</span> <span class="w">agents</span> <span class="a">→</span> <span class="w">harness</span></div>
-    </div>
-  </section>
+<section data-origin-slide="1" class="slide dark title-slide" data-label="Title" data-speaker-notes="Advanced · daily Claude Code users Revised October 2026. Worked examples are illustrative; no live run is required." ><div class="ts-top"><span class="k">Advanced · daily Claude Code users</span><span class="meta">Revised October 2026</span></div><div class="ts-hero"><h1>Claude<br>Best Practices<span class="dot">.</span></h1><p class="ts-sub">Practical lessons from Anthropic’s engineering posts, tested against your own work.</p></div><div class="ts-foot"><div class="ts-author">David Budáč</div></div></section>
 
-  <section class="slide light" data-label="Agenda"
-    data-speaker-notes="Eight chapters, about five minutes each. The order is deliberate: context first because everything else sits on it, then skills, then the prompt cache, because the cache punishes the habits people pick up in the first two. Effort and cost come next, then verification and evals, which is where the biggest wins in the posts were. Autonomy, multi-agent patterns and making the harness yours close it out. Third column is the point: one thing to do differently tomorrow per chapter. If a chapter does not change something on your machine, tell me. Caveats up front: facts are from the claude.dev articles as of October 2026, and the Terminal-Bench numbers in chapter 04 are Anthropic&#x27;s internal runs.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">2</span><div class="crumb"><b>Agenda</b> · ~45 minutes</div></div>
-      <h2 class="reveal">Eight chapters, <span class="o">eight habits</span></h2>
-      <table class="tbl reveal">
-        <thead><tr><th>#</th><th>Chapter</th><th>Try next</th></tr></thead>
-        <tbody>
-          <tr><td><b>01</b></td><td>Context</td><td>Run <span style="font-family:var(--font-m)">/doctor</span>. Remove outdated rules.</td></tr>
-          <tr><td><b>02</b></td><td>Skills</td><td>Save recurring corrections in a skill</td></tr>
-          <tr><td><b>03</b></td><td>Prompt cache</td><td>Stop changing model, tools and MCP servers mid-session</td></tr>
-          <tr><td><b>04</b></td><td>Effort &amp; cost</td><td>Build on low, verify on high, read <span style="font-family:var(--font-m)">/usage</span></td></tr>
-          <tr><td><b>05</b></td><td>Verification &amp; evals</td><td>Give every task a check the model can run</td></tr>
-          <tr><td><b>06</b></td><td>Autonomy</td><td>Name the finish line and put the stop rule in CLAUDE.md</td></tr>
-          <tr><td><b>07</b></td><td>Multi-agent</td><td>Use separate verifiers when the benefit justifies the cost</td></tr>
-          <tr><td><b>08</b></td><td>Make the harness yours</td><td>Ask for HTML with a copy-as-prompt button; try one mod</td></tr>
-        </tbody>
-      </table>
-      <p class="note reveal">Facts from claude.dev articles, <b>as of October 2026</b>. Model names are quoted as each post spells them. Sources on the last slide.</p>
-    </div>
-  </section>
-  <section class="slide dark divider" data-label="01 Context"
-    data-speaker-notes="Chapter one is the least intuitive one, so it goes first: the best context change in these posts was a deletion. Four slides: the headline number, the six shifts behind it, what a good CLAUDE.md looks like, and the audit you can run today.">
-    <div class="slide-content">
-      <div class="dnum reveal">01</div>
-      <h2 class="reveal">Context: <span class="o">remove outdated rules</span></h2>
-      <p class="dsub reveal">Anthropic removed over 80% of Claude Code's system prompt for its Claude 5 generation models. Review your CLAUDE.md too.</p>
-    </div>
-  </section>
-  <section class="slide light" data-label="Over 80% deleted"
-    data-speaker-notes="Start with the number. For models like Claude Opus 5 and Claude Fable 5, the Claude Code team removed over 80% of the system prompt and saw no measurable loss on their coding evaluations. Their diagnosis was overconstraint: transcripts showed three instructions fighting inside a single request. The system prompt said leave documentation as appropriate, another rule said do not add comments, and the user said just make it work like the old one. When instructions conflict, the model has to think harder to reconcile them. Rules written for the worst case of an older model become friction on a newer one. Tomorrow: run /doctor, which is claude doctor, and let it flag skills and CLAUDE.md files that are bigger than they need to be. If you build your own harness, the post is explicit that the system prompt is where you should spend your time.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">3</span><div class="crumb"><b>Context</b> · the number</div></div>
-      <h2 class="reveal">A shorter prompt, <span class="o">the same scores</span></h2>
-      <div class="split">
-        <div class="kcard reveal">
-          <div class="big" style="font-size:150px">&gt;80%</div>
-          <p>of Claude Code's system prompt deleted for Claude Opus 5 and Claude Fable 5, <b>“with no measurable loss on our coding evaluations.”</b></p>
-        </div>
-        <ul class="bul reveal">
-          <li>Their diagnosis: <b>“we were overconstraining Claude Code.”</b></li>
-          <li>One request combined conflicting rules: “leave documentation as appropriate” and “DO NOT add comments”.</li>
-          <li>Conflicting rules add work. Remove constraints that no longer help.</li>
-          <li><b>Tomorrow:</b> run <span style="font-family:var(--font-m)">/doctor</span> to rightsize your skills and CLAUDE.md.</li>
-        </ul>
-      </div>
-      <p class="src reveal">claude.dev · The new rules of context engineering for Claude 5 generation models · Jul 2026</p>
-    </div>
-  </section>
-  <section class="slide dark" data-label="Six shifts: then and now"
-    data-speaker-notes="These are the six myths from the post, as a table. Rules to judgement: the old prompt said never write multi-paragraph docstrings, the new one says write code that reads like the surrounding code. Examples to interfaces: the TodoWrite tool description shrank from about 9,100 characters of when-to-use lists and worked examples to one sentence plus a status enum. The post&#x27;s argument is that examples constrain exploration, and listing status as an enum hints at usage by itself. Upfront to progressive disclosure: verification and code review moved out of the system prompt into skills, and some tools only load when searched for. Repeat yourself to simple tool descriptions: older models needed repeated instructions, so put tool guidance in the tool description only. Memory: the old hash hotkey is replaced by auto-memory. Simple specs to rich references: HTML mockups, test suites, rubrics. Vibe coders: pick the row you are most guilty of. Agent builders: rows two and four are the interface-design rows.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">4</span><div class="crumb"><b>Context</b> · the six shifts</div></div>
-      <h2 class="reveal">How their <span class="o">instructions changed</span></h2>
-      <table class="tbl reveal">
-        <thead><tr><th>Then</th><th>Now</th><th>What it looks like</th></tr></thead>
-        <tbody>
-          <tr><td>Give rules</td><td><b>Describe the goal</b></td><td>“Write code that reads like the surrounding code: match its comment density, naming, and idiom.”</td></tr>
-          <tr><td>Give examples</td><td><b>Design interfaces</b></td><td>TodoWrite description: ~9,100 characters down to one line plus a <span style="font-family:var(--font-m)">status</span> enum</td></tr>
-          <tr><td>Put it all upfront</td><td><b>Progressive disclosure</b></td><td>Load verification and review skills when needed</td></tr>
-          <tr><td>Repeat yourself</td><td><b>Simple tool descriptions</b></td><td>Usage instructions live in the tool description only</td></tr>
-          <tr><td>Memory in CLAUDE.md</td><td><b>Auto-memory</b></td><td>Claude saves relevant memories itself</td></tr>
-          <tr><td>Simple specs</td><td><b>Rich references</b></td><td>HTML mockups, test suites, rubrics, code to port</td></tr>
-        </tbody>
-      </table>
-      <p class="src reveal">claude.dev · The new rules of context engineering for Claude 5 generation models · Jul 2026</p>
-    </div>
-  </section>
-  <section class="slide light dense" data-label="CLAUDE.md: gotchas, not the obvious"
-    data-speaker-notes="The CLAUDE.md advice from the same post: keep it lightweight, say briefly what the repo is for, then spend most of the tokens on gotchas. Their example gotcha is that all types live in one monolithic file, which Claude cannot guess from the file tree. Do not state what Claude can see by looking at the file system. Use progressive disclosure: verification instructions go in a verification skill that CLAUDE.md points at. The cost post adds a size target: its costs docs suggest staying under 200 lines, because CLAUDE.md loads every session. The snippet on the right is illustrative. I assembled it from examples in the posts, it is not a file from Anthropic. The gotcha lines come from the skills post, the stop rule is from the Opus 5.5 post and gets its own slide in chapter six. Exercise for tomorrow: open your CLAUDE.md and delete every line Claude could learn from ls or the README.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">5</span><div class="crumb"><b>Context</b> · CLAUDE.md</div></div>
-      <h2 class="reveal">CLAUDE.md: <span class="o">gotchas, not the obvious</span></h2>
-      <div class="split">
-        <ul class="bul reveal">
-          <li>Say briefly what the repo is for, then <b>“spend most of the tokens on gotchas.”</b></li>
-          <li>Skip what the repo already shows.</li>
-          <li>Point to a <b>verification skill</b> instead of pasting the procedure.</li>
-          <li>Size: the costs docs suggest <b>under 200 lines</b>. It loads every session.</li>
-        </ul>
-        <div class="code reveal" style="--code-size:21px"><span class="c"># Orders API</span>
-Checkout and invoicing service.
+<section data-origin-slide="2" class="slide light" data-label="Agenda" data-speaker-notes="Keep the practical outcome before the eight-topic catalogue. The sources are engineering reports, not guarantees for every repository."><div class="slide-content"><div class="slide-head reveal"><span class="snum">2</span><div class="crumb">In practice</div></div><h2 class="reveal">Start with three changes</h2><div class="cards c3 reveal"><div class="tile"><h3 class="k">Instructions</h3><p>Remove conflicting or obsolete rules; preserve real constraints.</p></div><div class="tile"><h3 class="k">Verification</h3><p>Make done depend on evidence tied to the task.</p></div><div class="tile"><h3 class="k">Measurement</h3><p>Compare configurations by outcomes, cost and review effort.</p></div></div><p class="note reveal">Skills, caching and delegation support these three habits.</p></div></section>
 
-<span class="c">## Gotchas</span>
-<span class="o">-</span> All types live in one monolithic file.
-<span class="o">-</span> The subscriptions table is append-only. Use the
-  highest version, not the latest created_at.
-<span class="o">-</span> Staging returns 200 even when the Stripe webhook
-  didn't process. Check payment_events.
+<section data-origin-slide="4" class="slide dark" data-label="Simplifying prompts" data-speaker-notes="This is a scoped report from Anthropic, not an instruction to delete eighty percent of every CLAUDE.md. Preserve constraints whose removal causes a meaningful failure."><div class="slide-content"><div class="slide-head reveal"><span class="snum">3</span><div class="crumb">In practice</div></div><h2 class="reveal">Use the reported result as a reason to test</h2><div class="cards c2 reveal"><div class="tile"><h3 class="k">Reported by Anthropic</h3><p>Its team removed over 80% of a system prompt for particular models without a measured drop on its coding evals.</p></div><div class="tile"><h3 class="k">Your next step</h3><p>Remove one obsolete instruction group, then rerun your own acceptance cases.</p></div></div><p class="note reveal"><a href="https://claude.dev/blog/the-new-rules-of-context-engineering-for-claude-5-generation-models/">Source: context engineering, July 2026</a></p></div></section>
 
-<span class="c">## Verification</span>
-<span class="o">-</span> Before calling anything done, use the
-  checkout-verifier skill.
-</div>
-      </div>
-      <p class="note reveal">Illustrative file based on the posts. Chapter 06 adds a stop rule. Apply the same approach to agent system prompts.</p>
-      <p class="src reveal">claude.dev · The new rules of context engineering for Claude 5 generation models · Jul 2026 + What a task costs on Opus 5.5 · Sep 2026</p>
-    </div>
-  </section>
-  <section class="slide dark" data-label="Delete the old workarounds"
-    data-speaker-notes="The audit slide. Instructions written for an older model can make Opus 5.5 write more and repeat tool calls. That is a direct quote from the cost post. The candidates: think carefully, think step by step, do not be lazy, refusal steering, tool-call retry shims, mandatory six-step procedures, scratchpad rules, verify-twice rules. The cost post ran claude-api prompt-audit on one benchmark of 44 customer-support tickets. Moving from Opus 4.8 to Opus 5.5 at low effort cut cost about 18 percent, and the prompt audit cut a further 9 percent, so roughly 25 percent below the starting point. The author is clear that this is one benchmark and an example, not a number to expect. The Opus 5.5 post reports the same on the chat side: removing think hard made replies start sooner with no clear drop in quality. Vibe coders: search your CLAUDE.md and saved prompts for these phrases tonight. Agent builders: the Sonnet 5.5 post says remove the workarounds and re-run your evals before tuning anything else, and re-run your effort sweep, because levels were recalibrated.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">6</span><div class="crumb"><b>Context</b> · prompt audit</div></div>
-      <h2 class="reveal">Remove <span class="o">outdated workarounds</span></h2>
-      <div class="split">
-        <ul class="bul reveal">
-          <li><b>“Instructions written for an older model can make Opus 5.5 write more and repeat tool calls.”</b></li>
-          <li>Review thinking prompts, retry workarounds, rigid procedures and duplicate checks.</li>
-          <li>Run <span style="font-family:var(--font-m)">/claude-api prompt-audit</span>: it audits skills, CLAUDE.md and app code.</li>
-          <li>One benchmark (44 support tickets): Opus 4.8 to Opus 5.5 at low effort <b>-18% cost</b>, the audit a further <b>-9%</b>. An example, not a promise.</li>
-        </ul>
-        <div class="cards reveal" style="grid-template-columns:1fr">
-          <div class="tile"><span class="k">Using Claude Code</span><p>Remove “think hard” and “think step by step” from saved prompts. Check whether quality holds.</p></div>
-          <div class="tile fill"><span class="k">Building agents</span><p>Remove old workarounds, rerun evals, then compare effort levels.</p></div>
-        </div>
-      </div>
-      <p class="src reveal">claude.dev · What a task costs on Opus 5.5 · Sep 2026 + Building with Claude Sonnet 5.5 · Sep 2026 + Getting the most out of Opus 5.5 in Claude and Claude Code · Sep 2026</p>
-    </div>
-  </section>
-  <section class="slide dark divider" data-label="02 Skills"
-    data-speaker-notes="Skills are the second half of the context story: instead of one big prompt, a tree of files that loads at the right time. This chapter is from the Claude Code team&#x27;s own skills post. Four slides: what a skill is and which kinds matter, the gotchas section, how to write for the model, and what else belongs in the folder.">
-    <div class="slide-content">
-      <div class="dnum reveal">02</div>
-      <h2 class="reveal">Skills: <span class="o">save what you learn</span></h2>
-      <p class="dsub reveal">Anthropic uses hundreds of skills. Many started with a few lines and one gotcha.</p>
-    </div>
-  </section>
-  <section class="slide light" data-label="A skill is a folder"
-    data-speaker-notes="The post opens by correcting a misconception: skills are not just markdown files, they are folders that can include scripts, assets and data. Anthropic catalogued their internal skills into nine types, and the claim is that the best skills fit cleanly into one type while the ones that try to do too much straddle several and confuse the agent. The sentence to remember is about verification: verification skills have had the most measurable impact on output quality internally, and it can be worth having an engineer spend a week making them excellent. Two tips from the post: have Claude record a video of its output, and enforce programmatic assertions on state at each step. Examples are playwright or tmux drivers, like a signup-flow driver or a checkout verifier. Tomorrow: pick the user flow you re-test by hand most often and make a verification skill for it. Agent builders: the same applies to your own agent&#x27;s eval harness.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">7</span><div class="crumb"><b>Skills</b> · nine types</div></div>
-      <h2 class="reveal">Start with <span class="o">verification skills</span></h2>
-      <div class="pills reveal" style="margin-bottom:26px">
-        <span class="pill">Library &amp; API reference</span><span class="pill live">Product verification</span><span class="pill">Data fetching &amp; analysis</span><span class="pill">Business process</span><span class="pill">Code scaffolding</span><span class="pill">Code quality &amp; review</span><span class="pill">CI/CD &amp; deployment</span><span class="pill">Runbooks</span><span class="pill">Infrastructure ops</span>
-      </div>
-      <div class="split">
-        <div class="kcard reveal">
-          <div class="big" style="font-size:44px">“Verification skills have had the most measurable impact on Claude's output quality internally.”</div>
-          <p>It can be worth having an engineer <b>spend a week</b> on them.</p>
-        </div>
-        <ul class="bul reveal">
-          <li>A skill is a <b>folder</b> of instructions, scripts, assets and data.</li>
-          <li>Give each skill <b>one clear purpose</b>.</li>
-          <li><b>Record the result</b> and check state at each step.</li>
-          <li><b>Tomorrow:</b> write one for the flow you re-test by hand.</li>
-        </ul>
-      </div>
-      <p class="src reveal">claude.dev · Lessons from building Claude Code: How we use skills · Jun 2026</p>
-    </div>
-  </section>
-  <section class="slide dark" data-label="Gotchas: the skill&#x27;s core"
-    data-speaker-notes="The post calls the gotchas section the highest-signal content in any skill. The principle is do not state the obvious. Claude already knows the general case, so spend the words on what pushes it out of its normal thinking. The frontend-design skill is the example: it exists to steer away from Inter and purple gradients. Read the three example gotchas aloud. Each one is something a smart newcomer would get wrong on day one: an append-only table where the newest row by timestamp is wrong, two ids that are the same value under different names, a staging environment that returns 200 even when the webhook did not process. The growth path matters more than the first draft: most of the best skills started as a few lines and a single gotcha, then people kept adding as Claude hit new edge cases. Tomorrow: the next time you correct Claude on something about your repo, stop typing the correction in chat and add it as a line in the skill. Vibe coders get the compounding benefit fastest here.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">8</span><div class="crumb"><b>Skills</b> · gotchas</div></div>
-      <h2 class="reveal">Write down <span class="o">the gotchas</span></h2>
-      <div class="split">
-        <div class="codes">
-          <div class="code reveal" style="--code-size:22px"><span class="c"># gotchas</span>
-<span class="o">-</span> Subscriptions is append-only. Use the highest version, not the latest created_at.</div>
-          <div class="code reveal" style="--code-size:22px"><span class="o">-</span> Staging returns 200 even if the Stripe webhook fails. Check payment_events.</div>
-        </div>
-        <ul class="bul reveal">
-          <li><b>“The highest-signal content in any skill.”</b></li>
-          <li>Document what Claude would otherwise get wrong.</li>
-          <li><b>Start small.</b> Add edge cases as they appear.</li>
-          <li><b>Next correction:</b> save it in the skill.</li>
-        </ul>
-      </div>
-      <div class="flow reveal" style="margin-top:30px"><div class="step">day 1 · one gotcha</div><div class="arrow">→</div><div class="step">week 2 · + each new edge case</div><div class="arrow">→</div><div class="step hot">month 3 · still growing</div></div>
-      <p class="src reveal">claude.dev · Lessons from building Claude Code: How we use skills · Jun 2026</p>
-    </div>
-  </section>
-  <section class="slide light" data-label="Write skills for the model"
-    data-speaker-notes="Three writing rules, as do and don&#x27;t. The description field is not a summary for humans, it is a description of when to trigger the skill. The bad example is a nice-sounding summary, the good one lists the words a person would actually say. Avoid railroading: state the goal and the constraints, not every step. Compare six numbered git commands with a three-sentence statement of intent for the cherry-pick. Memory and setup: give the skill an append-only log or a small database so the next run knows what changed since last time, and store user config in a config.json that the skill asks about if it is missing. The evals post adds a measurement angle in chapter five: you can hillclimb a skill description on trigger rate. Tomorrow: reread the description of your most-used skill and ask whether it says when to fire.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">9</span><div class="crumb"><b>Skills</b> · writing for the model</div></div>
-      <h2 class="reveal">Make skills <span class="o">easy to use</span></h2>
-      <table class="tbl reveal">
-        <thead><tr><th></th><th>Don't</th><th>Do</th></tr></thead>
-        <tbody>
-          <tr><td><b>Description</b></td><td>“A comprehensive tool for monitoring pull request status across the development lifecycle.”</td><td>“Monitors a PR until it merges. Trigger on 'babysit', 'watch CI', 'make sure this lands'.”</td></tr>
-          <tr><td><b>Steps</b></td><td>Six numbered git commands</td><td>“Cherry-pick the commit onto a clean branch. Resolve conflicts preserving intent. If it can't land cleanly, explain why.”</td></tr>
-          <tr><td><b>Memory</b></td><td>Rely on chat history</td><td>Keep a log (<span style="font-family:var(--font-m)">standups.log</span>) for the next run</td></tr>
-          <tr><td><b>Setup</b></td><td>Hard-code one person's settings</td><td>Keep a <span style="font-family:var(--font-m)">config.json</span> in the skill. If it's missing, have Claude ask.</td></tr>
-        </tbody>
-      </table>
-      <p class="note reveal">State when the skill should run, its goal and its constraints.</p>
-      <p class="src reveal">claude.dev · Lessons from building Claude Code: How we use skills · Jun 2026</p>
-    </div>
-  </section>
-  <section class="slide dark" data-label="Hub, spokes, scripts, hooks"
-    data-speaker-notes="Four more mechanics from the skills post. Use the file system: SKILL.md is the hub, and references, assets and runbook files are spokes. Tell Claude what files exist and it reads them at appropriate times. This is the same progressive disclosure idea as chapter one, and the animation shows the cost shape: the CLAUDE.md lane pays its full text every turn, the skill lane carries a one-line description until it triggers. Store scripts and generate code: ship a small helper library with gotchas in its docstrings and Claude composes one-off scripts for questions like what happened on Tuesday. The line in the post is that it lets Claude spend its turns on composition rather than reconstructing boilerplate. On-demand hooks: a skill can register hooks that are active only when it is invoked. Slash careful blocks rm -rf, DROP TABLE, force-push and kubectl delete. Slash freeze blocks edits outside one directory, built for the days when you keep accidentally fixing unrelated code. Agent builders: this is the cheapest way to ship guardrails that only apply when the situation calls for them.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">10</span><div class="crumb"><b>Skills</b> · structure</div></div>
-      <h2 class="reveal">Organize <span class="o">files, scripts and hooks</span></h2>
-      <div class="split">
-        <ul class="bul reveal">
-          <li><b>Start with SKILL.md.</b> Link to references, assets and runbooks so Claude can load them as needed.</li>
-          <li><b>Include helpers</b> with gotchas in their docstrings. Claude can reuse them in new scripts.</li>
-          <li><b>On-demand hooks</b>, active only when the skill runs: <span style="font-family:var(--font-m)">/careful</span> blocks <span style="font-family:var(--font-m)">rm -rf</span>, <span style="font-family:var(--font-m)">DROP TABLE</span>, force-push, <span style="font-family:var(--font-m)">kubectl delete</span>. <span style="font-family:var(--font-m)">/freeze</span> blocks edits outside one directory.</li>
-        </ul>
-        <div class="diagram reveal">
-          <!-- Remotion animation (remotion/src/ProgressiveDisclosure.tsx) -->
-          <video src="assets/anim/progressive-disclosure-dark.mp4" width="1176" height="700" autoplay muted loop playsinline aria-label="Across four turns, the CLAUDE.md lane re-sends its full text every turn while the skill lane carries only a one-line description and loads the full instructions once, on the turn that triggers it"></video>
-        </div>
-      </div>
-      <p class="src reveal">claude.dev · Lessons from building Claude Code: How we use skills · Jun 2026 + The new rules of context engineering for Claude 5 generation models · Jul 2026</p>
-    </div>
-  </section>
-  <section class="slide dark divider" data-label="03 Prompt cache"
-    data-speaker-notes="The caching chapter is the one that punishes habits from the first two chapters. The Claude Code team builds its whole harness around the cache and treats a low hit rate as an incident. Four slides: layout, the numbers, the do-and-don&#x27;t table, and compaction.">
-    <div class="slide-content">
-      <div class="dnum reveal">03</div>
-      <h2 class="reveal">Build around the <span class="o">cache</span></h2>
-      <p class="dsub reveal">Claude Code treats a low cache hit rate as an incident.</p>
-    </div>
-  </section>
-  <section class="slide light" data-label="Static first, dynamic last"
-    data-speaker-notes="Prompt caching is a prefix match. Any change anywhere in the prefix invalidates everything after it. That sentence is the chapter. The animation shows the append-only shape: everything already sent becomes cached prefix, only the new tail is fresh. Claude Code&#x27;s order is static system prompt and tools, which are cached globally, then CLAUDE.md per project, then session context like environment, MCP and output style, then the conversation. They also list breakages they actually shipped: a detailed timestamp in the static system prompt, tool definitions shuffled in a non-deterministic order, and changing the parameters of a tool, for example which agents the Agent tool can call. The fix for stale information is to leave the prompt alone and put an update in the next user message or tool result inside a system-reminder tag. Agent builders: this is a code-review checklist for your own harness. Vibe coders: it explains why the next slide&#x27;s habits matter.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">11</span><div class="crumb"><b>Prompt cache</b> · layout</div></div>
-      <h2 class="reveal">Static first, <span class="o">dynamic last</span></h2>
-      <div class="split">
-        <ul class="bul reveal">
-          <li><b>“Prompt caching is a prefix match. Any change anywhere in the prefix invalidates everything after it.”</b></li>
-          <li>Past cache breaks: timestamps in the system prompt, reordered tools and changed tool parameters.</li>
-          <li>Send updates in a <span style="font-family:var(--font-m)">&lt;system-reminder&gt;</span> in the next user message or tool result.</li>
-        </ul>
-        <div class="diagram reveal">
-          <!-- Remotion animation (remotion/src/KvCache.tsx) -->
-          <video src="assets/anim/kv-cache-light.mp4" width="1200" height="600" autoplay muted loop playsinline aria-label="Turn after turn, everything already sent becomes cached prefix (10x cheaper); only the appended tail of new tokens is fresh"></video>
-        </div>
-      </div>
-      <div class="flow reveal" style="margin-top:26px"><div class="step">static system prompt + tools</div><div class="arrow">→</div><div class="step">CLAUDE.md</div><div class="arrow">→</div><div class="step">session context</div><div class="arrow">→</div><div class="step hot">conversation</div></div>
-      <p class="src reveal">claude.dev · Lessons from building Claude Code: Prompt caching is everything · Apr 2026</p>
-    </div>
-  </section>
-  <section class="slide dark" data-label="Why they alert on it"
-    data-speaker-notes="Three numbers from the cost post to make the cache feel real. A cached read costs 5 percent of a fresh input token on Opus 5.5. Take a 40-turn task that grows from 20K to 120K context: the average turn sends about 70K tokens, so about 2.8 million input tokens. Uncached that is $11.20. At a 90 percent cache hit rate it is $1.62, and at 96 percent about 99 cents. That is why a few points of hit rate matter. Third: at 120K context a 5-minute cache write costs about 60 cents and a read about 2 cents, so one write costs as much as 25 reads. The post&#x27;s line: on an API key, a six-minute coffee break turns the next 2-cent read into a 60-cent write. Lifetime in Claude Code is one hour on a subscription and five minutes on an API key or a cloud provider, or once a subscription is drawing usage credits. So for vibe coders: your coffee break is a pricing event on an API key. For agent builders: this is what the alert threshold is protecting.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">12</span><div class="crumb"><b>Prompt cache</b> · the numbers</div></div>
-      <h2 class="reveal">Higher cache hit rates <span class="o">lower costs</span></h2>
-      <div class="cards c3 reveal">
-        <div class="kcard"><div class="big">5%</div><p>A cached read costs 5% of a fresh input token (Opus 5.5).</p></div>
-        <div class="kcard"><div class="big">$11.20 → $1.62</div><p>Same 2.8M input tokens: uncached vs 90% cache hits. At 96%, about $0.99.</p></div>
-        <div class="kcard"><div class="big">$0.02 vs $0.60</div><p>Read vs write at 120K context. An expired cache turns the next read into a write.</p></div>
-      </div>
-      <p class="note reveal">Example: a 40-turn task growing from 20K to 120K context. Cache lifetime in Claude Code: <b>1 hour on a subscription</b>, <b>5 minutes on an API key</b> or cloud provider.</p>
-      <p class="src reveal">claude.dev · What a task costs on Opus 5.5 · Sep 2026 + Lessons from building Claude Code: Prompt caching is everything · Apr 2026</p>
-    </div>
-  </section>
-  <section class="slide light" data-label="Don&#x27;t break the prefix"
-    data-speaker-notes="The do-and-don&#x27;t table from the caching post, with the user-side translation underneath. Don&#x27;t edit the system prompt: use a system-reminder in the next message. Don&#x27;t change models mid-session, because caches are per model. Their example: 100K tokens into a conversation with Opus, switching to Haiku for an easy question is more expensive than letting Opus answer, because of the cache rebuild. Hand off to a subagent instead, which is why Claude Code&#x27;s Explore agents use Haiku. Don&#x27;t add or remove tools. Plan mode is the design example: instead of swapping to a read-only tool set, all tools stay, EnterPlanMode and ExitPlanMode are tools themselves, and a system message explains the rules. Tool search follows the same logic: send lightweight stubs in the same order, with defer_loading true, and load full schemas only when selected. Effort: changing it mid-session in Claude Code keeps the cache on an API key or subscription, but on Bedrock, Google Cloud Agent Platform or a gateway it clears it. Bottom row: set up MCP servers, model and fast mode at session start and leave them alone. Agent builders: monitor hit rate like uptime.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">13</span><div class="crumb"><b>Prompt cache</b> · do and don't</div></div>
-      <h2 class="reveal">Keep the prefix <span class="o">stable</span></h2>
-      <table class="tbl reveal">
-        <thead><tr><th>Don't</th><th>Do instead</th></tr></thead>
-        <tbody>
-          <tr><td>Edit the system prompt when info goes stale</td><td>Add the update to the next message</td></tr>
-          <tr><td>Switch models mid-session. 100K tokens in, asking Haiku an easy question costs <b>more</b> than letting Opus answer.</td><td>Hand off to a subagent. Explore agents use Haiku.</td></tr>
-          <tr><td>Add or remove tools</td><td>Keep all tools. Model state as tools (<span style="font-family:var(--font-m)">EnterPlanMode</span>, <span style="font-family:var(--font-m)">ExitPlanMode</span>). Defer-load stubs.</td></tr>
-        </tbody>
-      </table>
-      <div class="cards c2 reveal" style="margin-top:26px"><div class="tile"><span class="k">Using Claude Code</span><p>Set the model, MCP servers and <span style="font-family:var(--font-m)">/fast</span> at session start. Changes and long pauses can break the cache.</p></div><div class="tile fill"><span class="k">Building agents</span><p><b>“Monitor your cache hit rate like you monitor uptime.”</b> Treat cache breaks as incidents.</p></div></div>
-      <p class="src reveal">claude.dev · Lessons from building Claude Code: Prompt caching is everything · Apr 2026 + What a task costs on Opus 5.5 · Sep 2026</p>
-    </div>
-  </section>
-  <section class="slide dark" data-label="Compaction without a cache miss"
-    data-speaker-notes="Compaction is where the cache gets lost most often. The naive version makes a separate summarize this call with a different system prompt and no tools. It diverges from the cached prefix at the first token, so you pay the full uncached price for the whole conversation, and the cost grows with conversation length. Cache-safe forking reuses the exact same system prompt, context and tool definitions, prepends the parent&#x27;s messages, and appends the compaction prompt as a new user message. The figure caption says a cache hit at one tenth the price. You must reserve a compaction buffer in the context window. The lesson in the post: fork operations need to share the parent&#x27;s prefix, which covers compaction, summarisation and skill execution. For Claude Code users, the cost post has the timing rule. Compacting at 150K tokens costs about 25 cents and saves about 2.5 cents per turn, so it pays back in about 10 turns. Compacting right before you finish costs more than it saves. After a cache-cold break at 150K on a five-minute cache, the input alone is about 75 cents. So: compact before a break, not after one. And tell it what to keep: compact, then the failing test names and the schema change.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">14</span><div class="crumb"><b>Prompt cache</b> · compaction</div></div>
-      <h2 class="reveal">Compact <span class="o">with the same prefix</span></h2>
-      <div class="split">
-        <div class="diagram reveal" style="--diag-h:440px">
-          <svg viewBox="0 0 640 340" role="img" aria-label="Naive compaction sends a different system prompt, so nothing matches the cache and the whole conversation is billed at full price. A cache-safe fork keeps the same system prompt, tools and parent messages and only appends the compaction prompt, so the prefix is a cache hit.">
-            <text class="dg-t acc" x="10" y="24" font-size="16">NAIVE · a separate “summarize this” call</text>
-            <rect class="dg-box hot" x="10" y="38" width="160" height="72" rx="8"/>
-            <text class="dg-t on" x="90" y="69" font-size="15" text-anchor="middle">different system</text>
-            <text class="dg-t on" x="90" y="90" font-size="15" text-anchor="middle">prompt, no tools</text>
-            <rect class="dg-box mid" x="180" y="38" width="290" height="72" rx="8"/>
-            <text class="dg-t" x="325" y="80" font-size="16" text-anchor="middle">whole conversation, re-sent</text>
-            <rect class="dg-box outer" x="480" y="38" width="150" height="72" rx="8"/>
-            <text class="dg-t acc" x="555" y="69" font-size="15" text-anchor="middle">full price,</text>
-            <text class="dg-t acc" x="555" y="90" font-size="15" text-anchor="middle">uncached</text>
-            <text class="dg-t acc" x="10" y="160" font-size="16">FORK · cache-safe compaction</text>
-            <rect class="dg-box" x="10" y="174" width="160" height="72" rx="8"/>
-            <text class="dg-t" x="90" y="205" font-size="15" text-anchor="middle">same system prompt</text>
-            <text class="dg-t" x="90" y="226" font-size="15" text-anchor="middle">same tools</text>
-            <rect class="dg-box" x="180" y="174" width="290" height="72" rx="8"/>
-            <text class="dg-t" x="325" y="216" font-size="16" text-anchor="middle">parent's messages, unchanged</text>
-            <rect class="dg-box hot" x="480" y="174" width="150" height="72" rx="8"/>
-            <text class="dg-t on" x="555" y="205" font-size="15" text-anchor="middle">+ compaction</text>
-            <text class="dg-t on" x="555" y="226" font-size="15" text-anchor="middle">prompt (new)</text>
-            <path class="dg-line dim" d="M10 262 L 470 262"/>
-            <text class="dg-t acc" x="240" y="292" font-size="16" text-anchor="middle">shared prefix: cache hit, “one tenth the price”</text>
-          </svg>
-        </div>
-        <ul class="bul reveal">
-          <li>A separate summary call can charge <b>full price for the conversation</b>.</li>
-          <li>Fork with the same prefix. Append the summary request as a user message.</li>
-          <li>Claude Code at 150K: compaction costs ~$0.25, saves ~$0.025 a turn, <b>pays back in ~10 turns</b>. Right before finishing, it costs more than it saves.</li>
-          <li><span style="font-family:var(--font-m)">/compact keep the failing test names and the schema change</span>. Tell it what to keep.</li>
-        </ul>
-      </div>
-      <p class="src reveal">claude.dev · Lessons from building Claude Code: Prompt caching is everything · Apr 2026 + What a task costs on Opus 5.5 · Sep 2026</p>
-    </div>
-  </section>
-  <section class="slide dark divider" data-label="04 Effort &amp; cost"
-    data-speaker-notes="Chapter four: what effort actually buys, a loop that uses it well, the order in which to escalate, and how to read your own bill. Terminal-Bench numbers here are Anthropic&#x27;s internal runs, so treat them as directional. Five slides.">
-    <div class="slide-content">
-      <div class="dnum reveal">04</div>
-      <h2 class="reveal">Choose <span class="o">the effort level</span></h2>
-      <p class="dsub reveal">Effort changes how much verification and edge-case testing Claude does. It is not a quality dial.</p>
-    </div>
-  </section>
-  <section class="slide light" data-label="The effort ladder"
-    data-speaker-notes="The rule of thumb from the effort post, as a ladder. Low is for quick in-the-loop responses: brainstorming, sketching, easy changes. Medium is most regular software engineering, such as implementing a feature, and it is the default on Opus 5.5 and the default in Claude Code for Sonnet 5.5. High is for when verification matters or there are many edge cases, like fixing a bug in a brownfield codebase. Max is for Claude operating fully autonomously on difficult problems, like an end-to-end app build with verification or hunting for vulnerabilities in critical software. The cost post also says xhigh and max are for hard problems and for one session. The right-hand column is one underspecified prompt, build a personal fitness and workout tracker app, on Opus 5.5: 1.5 minutes at low, 4 at medium, 11 at high, 67 at max. Higher effort gets more elaborate output, but Claude is making more choices along the way. Two warnings. Levels differ per model, so do not carry your Opus 5 setting over. And the post says you do not need this level of effort for every task. Command: slash effort, and you can change it mid-conversation.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">15</span><div class="crumb"><b>Effort &amp; cost</b> · the ladder</div></div>
-      <h2 class="reveal">Match effort <span class="o">to the task</span></h2>
-      <table class="tbl reveal">
-        <thead><tr><th>Level</th><th>Reach for it when</th><th>Fitness-tracker prompt</th></tr></thead>
-        <tbody>
-          <tr><td><b>low</b></td><td>Brainstorming, sketches and simple edits</td><td>1.5 min</td></tr>
-          <tr><td><b>medium</b> <span class="pill live">default</span></td><td>Everyday development, such as a new feature</td><td>4 min</td></tr>
-          <tr><td><b>high</b></td><td>Thorough checks or bugs in an existing codebase</td><td>11 min</td></tr>
-          <tr><td><b>xhigh</b></td><td>Hard problems, for one session</td><td>n/a</td></tr>
-          <tr><td><b>max</b></td><td>Fully autonomous work on difficult problems</td><td>67 min</td></tr>
-        </tbody>
-      </table>
-      <p class="note reveal"><span style="font-family:var(--font-m)">/effort low|medium|high|xhigh|max</span>, changeable mid-conversation. Don't carry over your Opus 5 setting: levels differ per model. Timings: Opus 5.5, one underspecified prompt.</p>
-      <p class="src reveal">claude.dev · Spending your effort · Sep 2026 + What a task costs on Opus 5.5 · Sep 2026 + Building with Claude Sonnet 5.5 · Sep 2026</p>
-    </div>
-  </section>
-  <section class="slide dark" data-label="What effort buys"
-    data-speaker-notes="This is the Terminal-Bench 3.0 evidence. Same 70 tasks for every model, five attempts per task, internal runs, so the numbers will not match the public leaderboard. Headline example: an HTML sanitizer task. Fable 5.1 went from 1 of 5 at low to 5 of 5 at xhigh. At low it spent about two minutes, one pass and one hand-written test page. At high it spent about 33 minutes: it adversarially reviewed its first draft, read the installed parser&#x27;s source, ran a standard XSS test suite and wrote a random-document fuzzer. Failure analysis across 370 attempts per setting on Fable 5.1: low passed 140, max passed 214. Failure kinds are judged by a model, so they are approximate. Bugs its tests missed fell from 40 to 14. Wrong or incomplete fix from 31 to 10. But picked the wrong reading went from 25 up to 47. Read that last row carefully. Effort buys thoroughness on a chosen approach. It does not fix a wrong approach. The post adds a thought on why high effort does better in autonomous runs: with a user in the loop Claude might have asked how to set up the problem, without one it has to dig itself.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">16</span><div class="crumb"><b>Effort &amp; cost</b> · what it buys</div></div>
-      <h2 class="reveal">More effort <span class="o">helps with edge cases</span></h2>
-      <div class="split">
-        <div class="kcard reveal">
-          <div class="big" style="font-size:96px">1/5 → 5/5</div>
-          <p>HTML sanitizer task, Fable 5.1, low to xhigh. Low: ~2 min, one pass. High: ~33 min, reviewed its own draft, read the parser source, ran an XSS suite, wrote a fuzzer.</p>
-        </div>
-        <div class="reveal">
-          <table class="tbl">
-            <thead><tr><th>Failure kind</th><th>low</th><th>max</th></tr></thead>
-            <tbody>
-              <tr><td>A bug its tests missed</td><td>40</td><td><b>14</b></td></tr>
-              <tr><td>Wrong or incomplete fix</td><td>31</td><td><b>10</b></td></tr>
-              <tr><td>Overfit to the examples</td><td>7</td><td><b>3</b></td></tr>
-              <tr><td>Picked the wrong reading</td><td>25</td><td><b>47</b></td></tr>
-            </tbody>
-          </table>
-          <p class="note">370 attempts per setting: 140 passed at low, 214 at max.</p>
-        </div>
-      </div>
-      <p class="note reveal">Terminal-Bench 3.0: Anthropic's <b>internal runs</b> (5 attempts per task), not the public leaderboard. Failure kinds are model-judged, so approximate. Effort “does not fix when the model has the wrong approach.”</p>
-      <p class="src reveal">claude.dev · Spending your effort · Sep 2026</p>
-    </div>
-  </section>
-  <section class="slide light" data-label="Low to build, high to verify"
-    data-speaker-notes="The author&#x27;s own feature-development loop, in four steps: give Claude a spec and ask it to interview you about missing details, implement on low, review that it got the gist and iterate on low, then verify and test on high. The experiments explain why. With an underspecified prompt, effort changes how many creative choices Claude makes. On a redesign of the Claude Code config menu, low took about a minute and gave an interactive sketch, max took 28 minutes and gave a polished mockup, and the author preferred low for understanding Claude&#x27;s vision. With a highly specified task, a spec from an in-depth interview, times were 16, 22, 33 and 79 minutes for low to max, and the outputs converged. So a detailed spec reduces what effort buys you. Split by audience. If you vibe-code, you have no spec, so exploring on low is cheap and fast, and you spend high at the end. If you build agents, there is no user in the loop to answer clarifying questions, so high effort does better.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">17</span><div class="crumb"><b>Effort &amp; cost</b> · the loop</div></div>
-      <h2 class="reveal">Low to build, <span class="o">high to verify</span></h2>
-      <div class="flow reveal">
-        <div class="step">1 · spec + interview</div><div class="arrow">→</div>
-        <div class="step hot">2 · build on low</div><div class="arrow">→</div>
-        <div class="step">3 · review and refine</div><div class="arrow">→</div>
-        <div class="step hot">4 · verify on high</div>
-      </div>
-      <table class="tbl reveal" style="margin-top:22px">
-        <thead><tr><th>Same task, Opus 5.5</th><th>low</th><th>medium</th><th>high</th><th>max</th></tr></thead>
-        <tbody>
-          <tr><td>Highly specified (spec from an interview)</td><td>16 min</td><td>22 min</td><td>33 min</td><td>79 min</td></tr>
-        </tbody>
-      </table>
-      <p class="note reveal">Detailed specs produced similar results across effort levels. Vague prompts left more decisions to Claude.</p>
-      <div class="cards c2 reveal" style="margin-top:26px"><div class="tile"><span class="k">Using Claude Code</span><p>Explore on low, refine the spec, then verify on high.</p></div><div class="tile fill"><span class="k">Building agents</span><p>For unsupervised work: “without a user in the loop, high effort does better.”</p></div></div>
-      <p class="src reveal">claude.dev · Spending your effort · Sep 2026</p>
-    </div>
-  </section>
-  <section class="slide dark" data-label="Check, then effort, then model"
-    data-speaker-notes="The escalation order from the cost post. First, a sign you need more effort: a fix that stops at one layer, like renaming an API field in the handler while the client still sends the old one. But before you raise effort, check whether the model has a way to check its work. A test run costs one turn and its output, and more effort adds thinking to every turn. If more effort and more checks do not work, switch to a bigger model. Fable 5.1 is for long unsupervised runs, problems with no existing pattern, and large many-subagent changes. The rule from the post is: if Opus 5.5 on xhigh hits the same problem twice, switch, and switch back once it is solved. Switch at a natural break, because the first turn on a new model pays a cache write on the whole conversation. Going down is only for lookups: search and summarise subagents, logs, where is this defined. Not code writing. Set model haiku in the subagent definition, or CLAUDE_CODE_SUBAGENT_MODEL for all of them. Prices are per million tokens as the posts print them. Sonnet 5.5 fits best when the task has a clear spec and a way to check the result. The opusplan alias is worth testing but the post says measure it on your own tasks before making it a default.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">18</span><div class="crumb"><b>Effort &amp; cost</b> · escalation</div></div>
-      <h2 class="reveal">Escalate in order: <span class="o">check, effort, model</span></h2>
-      <div class="split">
-        <ul class="bul reveal">
-          <li>Fix stops at one layer? First ask whether it can check its work: <b>“A test run costs one turn and its output. More effort adds thinking to every turn.”</b></li>
-          <li>If still stuck, raise effort, then try a stronger model.</li>
-          <li><b>“If Opus 5.5 on xhigh hits the same problem twice, switch, and switch back once it's solved.”</b> Switch at a natural break.</li>
-          <li>Use smaller models for search and summary subagents.</li>
-        </ul>
-        <table class="tbl reveal">
-          <thead><tr><th>Model</th><th>Use it for</th><th style="white-space:nowrap">$ in / out</th></tr></thead>
-          <tbody>
-            <tr><td><b>Sonnet 5.5</b></td><td>Clear spec and a way to check the result</td><td>2 / 10</td></tr>
-            <tr><td><b>Opus 5.5</b></td><td>Everyday supervised work</td><td>4 / 20</td></tr>
-            <tr><td><b>Fable 5.1</b></td><td>Long unsupervised runs, no existing pattern</td><td>10 / 50</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="note reveal">Prices per million tokens as printed in the posts. Subagent model: <span style="font-family:var(--font-m)">model: haiku</span> in the definition, or <span style="font-family:var(--font-m)">CLAUDE_CODE_SUBAGENT_MODEL</span>. <span style="font-family:var(--font-m)">opusplan</span>: “Measure it on your own tasks before you make it a default.”</p>
-      <p class="src reveal">claude.dev · What a task costs on Opus 5.5 · Sep 2026 + Building with Claude Sonnet 5.5 · Sep 2026</p>
-    </div>
-  </section>
-  <section class="slide light" data-label="Read your own bill"
-    data-speaker-notes="How to see what a task costs. A Claude Code task is a loop and each turn resends the whole conversation. The cost drivers are turns, cache reads, output tokens including thinking, and the model. Two models with the same price per token can cost very different amounts on the same task. On Opus 5.5 a fresh input token is 4 dollars per million, output is 20, cache read is 20 cents. So output is 5 times input and 100 times a cache read. The effort math: say high adds 20K thinking tokens across a task. On Opus 5.5 that is 40 cents. A ten-turn retry loop at 100K of cached context with 10K output costs about the same. So high pays for itself on a task where it saves one retry. Caveat on the 40 percent claim: the post says Opus 5.5 costs 40 percent less than Opus 5 for typical workloads at default settings, as Anthropic&#x27;s estimate. It is not a 40 percent cut to the token price. The pure price effect in their illustrative session is 31 percent. Baseline: about 13 dollars per developer per active day across enterprise deployments, with 90 percent of users below 30. Do this: run slash usage after one real task, and run the same task on two models. The closing line of the post: your own numbers are the ones to trust.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">19</span><div class="crumb"><b>Effort &amp; cost</b> · measure it</div></div>
-      <h2 class="reveal">Run one real task, <span class="o">read /usage</span></h2>
-      <div class="split">
-        <ul class="bul reveal">
-          <li><b>High effort pays for itself</b> when it saves a retry: 20K extra thinking tokens ≈ $0.40 on Opus 5.5, about what a ten-turn retry loop costs.</li>
-          <li>“Opus 5.5 costs 40% less to run than Opus 5” is Anthropic's <b>estimate</b> for typical workloads, “not a 40% cut to the price of a token.” Price alone: -31% in their example.</li>
-          <li>Baseline: ~$13 per developer per active day; 90% of users under $30.</li>
-        </ul>
-        <div class="reveal">
-          <table class="tbl">
-            <thead><tr><th>Opus 5.5, per M tokens</th><th>$</th></tr></thead>
-            <tbody>
-              <tr><td>Fresh input</td><td><b>4</b></td></tr>
-              <tr><td>Output (5× input)</td><td><b>20</b></td></tr>
-              <tr><td>Cache read (1/100 of output)</td><td><b>0.20</b></td></tr>
-            </tbody>
-          </table>
-          <p class="note">Read three things in <span style="font-family:var(--font-m)">/usage</span>: cache share, output vs input, total input vs conversation size.</p>
-        </div>
-      </div>
-      <div class="cards c2 reveal" style="margin-top:26px"><div class="tile"><span class="k">Using Claude Code</span><p>Compare two models on 3–4 tasks. Excess output may mean high effort or repeated retries.</p></div><div class="tile fill"><span class="k">Building agents</span><p>Track team usage with the Claude Code Analytics API and the Usage and Cost API.</p></div></div>
-      <p class="src reveal">claude.dev · What a task costs on Opus 5.5 · Sep 2026</p>
-    </div>
-  </section>
-  <section class="slide dark divider" data-label="05 Verification &amp; evals"
-    data-speaker-notes="Chapter five has the biggest results in the set. The claude.ai performance sprint is the case study for measurement as step one. The evals post is the how-to for building and hillclimbing your own. Five slides: the sprint, its guardrails, the real-check prompts, what makes an eval good, and hillclimbing.">
-    <div class="slide-content">
-      <div class="dnum reveal">05</div>
-      <h2 class="reveal">Measure, then <span class="o">improve</span></h2>
-      <p class="dsub reveal">“Anything we could count, Claude could climb.” The claude.ai team's lesson from a two-week sprint.</p>
-    </div>
-  </section>
-  <section class="slide light" data-label="A sprint measured, then climbed"
-    data-speaker-notes="The claude.ai performance sprint. Two weeks in August, about 3x faster core experience for claude.ai and the desktop app. They worked in one Slack channel with Claude in every thread, and humans set goals, made tradeoffs and approved every change. The headline: p75 time to a typeable page on a fresh load went from 3.1 seconds to 0.55. Over 3,000 changes merged without a single customer-facing incident or rollback, more than 150 threads at once, and 12 of the 13 targets hit by day three. Important caveat: Claude ran as an internal research model roughly comparable to Opus 5.5, through Claude Tag, which is in beta. It is not a generally available model, so do not expect your first week to look like this. The lesson in their words: with Claude, measuring something makes it tractable. Measurement used to be step zero, and now it is step one of the climb. The highest-leverage thing they did was find more things to measure.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>Verification &amp; evals</b> · claude.ai in two weeks</div></div>
-      <h2 class="reveal">Give Claude <span class="o">a measurable target</span></h2>
-      <div class="split">
-        <div class="kcard reveal">
-          <div class="big" style="font-size:112px">3.1 s → 0.55 s</div>
-          <p>p75 time to a typeable page on a fresh load, claude.ai.</p>
-        </div>
-        <ul class="bul reveal">
-          <li>Two weeks, one Slack channel, Claude in every thread. Humans set goals and approved every change.</li>
-          <li><b>&gt;3,000 changes</b> merged “without a single customer-facing incident or rollback.”</li>
-          <li>&gt;150 threads at once. 12 of 13 targets hit by day three.</li>
-          <li><b>“With Claude, measuring something makes it tractable.”</b></li>
-        </ul>
-      </div>
-      <p class="note reveal">Caveat: Claude was an internal research model “roughly comparable to Opus 5.5”, run through Claude Tag (beta). Not a generally available model.</p>
-      <p class="src reveal">claude.dev · How we made claude.ai 3x faster in two weeks · Sep 2026</p>
-    </div>
-  </section>
-  <section class="slide dark" data-label="Every benchmark gets two jobs"
-    data-speaker-notes="How they kept it safe while moving fast. Every benchmark got two jobs: a metric Claude can move in the lab, and a CI guardrail with a number that can only ratchet down. A daily job lowers the ceilings. They threw out flaky benchmarks, and the instruction to Claude was to prove that hillclimbing against each one produces measurable wall-clock wins, or they unship it. For CI gates they preferred deterministic proxies over noisy wall-clock: instruction counts, V8 call counts, React commits, style recalculations, DOM mutations. The proof it works: Valgrind instruction counts cut 48 and 31 percent on two hot paths, and wall-clock fell 78 and 44 percent. The guardrails came first: every PR got an automated review plus at least one human approval, unit tests always came before optimizations, user-visible changes shipped behind short-lived feature flags, and rollout was employees, then 1 percent, then everyone. About a third of the PRs added telemetry or guardrails. Vibe coders: you can run a tiny version of this. Pick one number, write the test first, and ask Claude to move it.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">21</span><div class="crumb"><b>Verification &amp; evals</b> · ratchets and guardrails</div></div>
-      <h2 class="reveal">Measure progress. <span class="o">Prevent regressions.</span></h2>
-      <div class="cards c2 reveal">
-        <div class="tile"><span class="k">The lab metric</span><p>Use <b>repeatable measurements</b>: instruction counts, React commits, style recalculations and DOM mutations.</p></div>
-        <div class="tile fill"><span class="k">The CI guardrail</span><p>“A number that could only ratchet down.” A daily job lowers the ceiling. Valgrind counts: -48% and -31% instructions, -78% and -44% wall-clock.</p></div>
-      </div>
-      <ul class="bul reveal" style="margin-top:26px">
-        <li>Keep a benchmark only if improving it produces <b>real speed gains</b>.</li>
-        <li>Guardrails first: tests before optimizations, automated review plus one human approval, feature flags, staged rollout (employees, 1%, everyone).</li>
-        <li>About a third of PRs added telemetry or guardrails.</li>
-      </ul>
-      <p class="src reveal">claude.dev · How we made claude.ai 3x faster in two weeks · Sep 2026</p>
-    </div>
-  </section>
-  <section class="slide light" data-label="Ask for a real check"
-    data-speaker-notes="Three prompts to copy. The first is from the Sonnet 5.5 post and is meant to work at low effort: when you change code that can be run, built or type-checked, run a real check that exercises the change before reporting it done, and a syntax-only check or a check that failed to start does not count. If no real check can run, say which one you did not run and why. The post trims it in the middle, and I kept the ellipsis. The second is the review prompt from the Opus 5.5 post: only list problems you would block the merge for, with file and line, why it is wrong and how to show it fails. One early tester reported that Opus 5.5 at the lowest effort caught more bugs than Opus 5 at high effort, with fewer false alarms. That is one tester&#x27;s claim. The third makes uncertainty explicit: mark anything you could not confirm, and say where you looked. Tie this to chapter two: product verification skills had the most measurable impact internally, and these prompts are the lightweight version. Tomorrow: paste the first one into your CLAUDE.md.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">22</span><div class="crumb"><b>Verification &amp; evals</b> · prompts to steal</div></div>
-      <h2 class="reveal">Check the change. <span class="o">Report what is unverified.</span></h2>
-      <div class="split" style="align-items:start">
-        <div class="reveal"><span class="extag">Real check, before “done”</span>
-        <div class="code" style="--code-size:22px">Before reporting done, run a test, build, type-check or command that exercises the change. Syntax checks and commands that fail to start don't count. If no real check can run, state what remains unverified and why.</div></div>
-        <div class="codes">
-          <div class="reveal"><span class="extag">Review before a human</span>
-          <div class="code" style="--code-size:22px">Review this branch against main. List merge blockers only: file, line, reason and how to reproduce.</div></div>
-          <div class="reveal"><span class="extag">Mark the unknowns</span>
-          <div class="code" style="--code-size:22px">Mark anything you couldn't confirm, and say where you looked.</div></div>
-        </div>
-      </div>
-      <p class="note reveal">One early tester said Opus 5.5 at lowest effort caught more bugs than Opus 5 at high effort, with fewer false alarms. One tester's claim, not a benchmark.</p>
-      <p class="src reveal">claude.dev · Building with Claude Sonnet 5.5 · Sep 2026 + Getting the most out of Opus 5.5 in Claude and Claude Code · Sep 2026</p>
-    </div>
-  </section>
-  <section class="slide dark" data-label="What makes an eval good"
-    data-speaker-notes="From the evals post. Four properties. Tasks mirror production, not just whatever is easy to generate and grade. Performance improves with stronger models and more thinking, and if it does not, ambiguous tasks or a miscalibrated grader are often the cause. There is headroom: the best model at top effort should be well below 100 percent, and a task that fails every run regardless of replicates is broken. And low run-to-run variance, which breaks on leftover state, such as git history handing the agent the answer, or inconsistent effort config. On sampling: do not pick cases because today&#x27;s model fails them. That samples the valleys of one model&#x27;s capability surface, its failure fingerprint. Pick cases because a human judged them hard, and include real failures from tickets and bugs. Do not blindly trust user traffic, which may skew easy. On graders: use the cheapest that fits. Programmatic if you can, otherwise an LLM judge with a rubric written as checkable claims, not a 1-to-5 scale. The judge should not be the model under test. Then the line to repeat: read a sample of scored transcripts before believing your evaluator. Tool: slash claude-api build-eval interviews you and builds the eval in your codebase, pausing for approval. Run claude update first.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">23</span><div class="crumb"><b>Verification &amp; evals</b> · a good eval</div></div>
-      <h2 class="reveal">Four checks <span class="o">for your eval</span></h2>
-      <div class="split">
-        <table class="tbl reveal">
-          <thead><tr><th>Property</th><th>Warning sign</th></tr></thead>
-          <tbody>
-            <tr><td><b>Mirrors production</b></td><td>Tasks chosen because they're easy to generate or grade</td></tr>
-            <tr><td><b>Scales with model and thinking</b></td><td>Doesn't? “ambiguous tasks or a miscalibrated grader”</td></tr>
-            <tr><td><b>Headroom</b></td><td>Top model at top effort near 100%, or a task that fails every run</td></tr>
-            <tr><td><b>Low variance</b></td><td>Leftover state, e.g. git history handing over the answer</td></tr>
-          </tbody>
-        </table>
-        <ul class="bul reveal">
-          <li><b>Graders:</b> programmatic first. Else an LLM judge with a rubric of <b>checkable claims</b>, not a 1-to-5 scale, and not the model under test.</li>
-          <li>Pick hard cases because <b>a human judged them hard</b>, not because today's model fails them.</li>
-          <li><b>“Read a sample of scored transcripts before believing your evaluator.”</b></li>
-          <li>Start: <span style="font-family:var(--font-m)">claude update</span>, then <span style="font-family:var(--font-m)">/claude-api build-eval</span>.</li>
-        </ul>
-      </div>
-      <p class="src reveal">claude.dev · Automating eval design and hillclimbing with Claude · Sep 2026</p>
-    </div>
-  </section>
-  <section class="slide light" data-label="Hillclimb, don&#x27;t overfit"
-    data-speaker-notes="The worked example from the evals post, a customer-support benchmark of 44 tickets, 30 for searching and 14 held out. Start: Opus 4.8 at default high effort, 74.4 percent decision accuracy at 4.6 cents a ticket. Opus 5.5 at low effort: 87.8 percent at 1.9 cents. Sonnet 5 at low effort: 88.9 percent at about a cent. Then they improved the prompt with routing rules and a refund-cap cross reference, and Sonnet 5 reached 98.9 percent at similar cost. On the 14 held-out tickets: 90.5 percent against the original 78.6, at about one fifth of the cost. Part of the saving is Opus 5.5 pricing, which the post notes. The rules that keep a hillclimb honest: split train and test, the hillclimber only sees train, and if train goes up while test stays flat you are overfitting. Never paste failures into the prompt. Keep answers structurally out of reach, because a harness that fetches the reference solution is reward hacking. One change per round, kept only if both train and test improve. If the gain is within noise, say so and recommend against merging. The second case: the claude-api skill&#x27;s own eval went from 66.1 to 87.9 percent in three phases. The 80 percent step was a table near the top mapping old API shapes to current ones, because Claude was writing older shapes from its priors. Commands: slash claude-api hillclimb.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">24</span><div class="crumb"><b>Verification &amp; evals</b> · hillclimbing</div></div>
-      <h2 class="reveal">Improve the score. <span class="o">Check for overfitting.</span></h2>
-      <div class="split">
-        <table class="tbl reveal">
-          <thead><tr><th>Setup</th><th>Accuracy</th><th>¢ / ticket</th></tr></thead>
-          <tbody>
-            <tr><td>Opus 4.8, default effort</td><td>74.4%</td><td>4.6</td></tr>
-            <tr><td>Opus 5.5, low effort</td><td>87.8%</td><td>1.9</td></tr>
-            <tr><td>Sonnet 5, low effort</td><td>88.9%</td><td>~1</td></tr>
-            <tr><td>+ routing rules in the prompt</td><td><b>98.9%</b></td><td>similar</td></tr>
-          </tbody>
-        </table>
-        <ul class="bul reveal">
-          <li>Held-out 14 tickets: <b>78.6% → 90.5% at about one fifth of the cost.</b></li>
-          <li>Split train and test. Train up, test flat: <b>overfitting</b>.</li>
-          <li><b>“Never paste failures into the prompt.”</b> Keep answers out of the harness's reach.</li>
-          <li>One change per round. Keep it only if train <b>and</b> test improve.</li>
-        </ul>
-      </div>
-      <p class="note reveal">44 tickets (30 search, 14 held out). Part of the saving is Opus 5.5's lower price. <span style="font-family:var(--font-m)">/claude-api hillclimb</span>. The same loop took the claude-api skill's own eval from 66.1% to 87.9%.</p>
-      <p class="src reveal">claude.dev · Automating eval design and hillclimbing with Claude · Sep 2026</p>
-    </div>
-  </section>
-  <section class="slide dark divider" data-label="06 Autonomy"
-    data-speaker-notes="Chapter six is about the human side of a long run: say where the finish line is, keep the state in a file, and steer the three things the agent will not. Three slides.">
-    <div class="slide-content">
-      <div class="dnum reveal">06</div>
-      <h2 class="reveal">Define <span class="o">done and when to stop</span></h2>
-      <p class="dsub reveal">Early testers ran Opus 5.5 on long coding tasks “for hours with little oversight”.</p>
-    </div>
-  </section>
-  <section class="slide light" data-label="Name the finish line"
-    data-speaker-notes="The first prompt in the Opus 5.5 post. Hand over the whole task in one message. Say what done looks like, and say when to stop and ask. Then leave it alone. The footer of the example is the whole practice: give the whole task in one message, name the finish line, then leave it alone. The second block goes into CLAUDE.md. Opus 5.5 sometimes stops to report: it writes a summary that names the next step without taking it, or offers to continue, or asks about a non-blocking choice. The stop rule fixes that. It also draws the line where it should stop: anything destructive, or outside this repository. Keep permission prompts on for destructive commands regardless. For pair programming say the opposite: ask for a one-line plan before and a short recap at the end. A tip for running tasks: you can type a follow-up and press Enter while Claude works, for example, also keep the old endpoint names as aliases. Vibe coders: tomorrow, rewrite your next big prompt so it has an explicit done means list. Agent builders: this is also the shape of a good stop condition in a loop.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">25</span><div class="crumb"><b>Autonomy</b> · done and stop</div></div>
-      <h2 class="reveal">Define the result. <span class="o">Set a stop rule.</span></h2>
-      <div class="split" style="align-items:start">
-        <div class="reveal"><span class="extag">One message, one finish line</span>
-        <div class="code" style="--code-size:25px">Migrate the payment endpoints from the old client to the new one. Done means: every endpoint uses the new client, the old client is deleted, and the test suite passes. Stop and ask me only if a test fails for a reason you can't explain.</div></div>
-        <div class="reveal"><span class="extag">CLAUDE.md stop rule</span>
-        <div class="code" style="--code-size:25px">When a step doesn't need my input, keep going. Put status notes in the same message as your next action. Stop and ask only when you can't continue without me, or before anything destructive: deleting data, force-pushing, or changing anything outside this repository.</div></div>
-      </div>
-      <p class="note reveal">Keep permission prompts <b>on</b> for destructive commands. Pair-programming instead? Ask for the opposite: a one-line plan before, a short recap after. Mid-run addition: type a follow-up and press Enter.</p>
-      <p class="src reveal">claude.dev · Getting the most out of Opus 5.5 in Claude and Claude Code · Sep 2026</p>
-    </div>
-  </section>
-  <section class="slide dark" data-label="State in files, handoff first"
-    data-speaker-notes="Three prompts for long runs, all from the Opus 5.5 post. Keep the task list in a file: a checklist in TASKS.md that Claude ticks as it goes and adds to. It survives compaction, and you read the file, not the scrollback. Ask for a handoff format: end every run with three headings, Blocked on me, Changed, Found. At the end of a long run, read what it needs from you first. Third, the subagent audit prompt: give each service to its own subagent, check each subagent&#x27;s evidence before accepting, and finish with one table. This uses the multi-agent idea from chapter seven in its simplest form. If you vibe-code, TASKS.md and the three headings are the two highest-value changes: you stop rereading the whole transcript. If you build agents, note that these are all state externalisation, the same idea as the append-only log in a skill.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>Autonomy</b> · files and handoffs</div></div>
-      <h2 class="reveal">Keep state in a file. <span class="o">Read the handoff first.</span></h2>
-      <div class="cards c3 reveal" style="align-items:start">
-        <div><span class="extag">Task list that survives compaction</span>
-        <div class="code" style="--code-size:23px">Keep a checklist in TASKS.md. Tick each item when it's done, and add anything new you find.</div></div>
-        <div><span class="extag">A handoff you can scan</span>
-        <div class="code" style="--code-size:23px">End every run with three headings: Blocked on me, Changed, Found.</div></div>
-        <div><span class="extag">One subagent per service</span>
-        <div class="code" style="--code-size:23px">Audit every service in services/ for the retry bug in the linked issue. Give each service to its own subagent. When a subagent reports back, check its evidence before you accept it. Finish with one table: service, affected yes or no, and the evidence.</div></div>
-      </div>
-      <p class="note reveal">When a long run ends, <b>read what it needs from you first</b>. Read the file, not the scrollback.</p>
-      <p class="src reveal">claude.dev · Getting the most out of Opus 5.5 in Claude and Claude Code · Sep 2026</p>
-    </div>
-  </section>
-  <section class="slide light" data-label="Humans steer three things"
-    data-speaker-notes="Back to the claude.ai sprint for what the humans did while Claude ran. Three jobs. Ambition: by default, Claude is careful about scope, it tickets findings, hedges on feasibility and pads its estimates. The human instruction that worked was please be braver, and the targets are not the stopping point, what is next, be ambitious. Taste: every thread had a named human owner. Claude supplied before-and-after recordings and humans ruled on perceptible tradeoffs. Direction: keep threads narrow, one benchmark or journey each, a hundred and fifty hammers seeking nails. Humans sequence, merge and close threads at diminishing returns. The example verdict: 2 ms per send is not worth the complexity of maintaining this build plugin. They also briefed the agent with standing instructions in the channel: its role, its responsibilities, and the goal of becoming as autonomous as possible. Vibe coders: you are the taste owner, and the first prompt to try is be braver. Agent builders: standing instructions plus a named owner per thread is the operating model.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">27</span><div class="crumb"><b>Autonomy</b> · what humans do</div></div>
-      <h2 class="reveal">What humans <span class="o">still decide</span></h2>
-      <div class="cards c3 reveal">
-        <div class="tile"><span class="k">Ambition</span><p>“By default, Claude is careful about scope. It tickets findings, hedges on feasibility, and pads its estimates.” Say <b>“please be braver.”</b></p></div>
-        <div class="tile fill"><span class="k">Taste</span><p>One human owner per thread reviews before-and-after recordings and decides <b>user-visible tradeoffs</b>.</p></div>
-        <div class="tile"><span class="k">Direction</span><p>One benchmark per thread. Humans prioritize, merge and stop work when gains become too small.</p></div>
-      </div>
-      <p class="note reveal">Example verdict: “2ms per send is not worth the complexity of maintaining this build plugin.” Standing instructions in the channel: a role, responsibilities, and the goal “become as autonomous as possible.”</p>
-      <p class="src reveal">claude.dev · How we made claude.ai 3x faster in two weeks · Sep 2026</p>
-    </div>
-  </section>
-  <section class="slide dark divider" data-label="07 Multi-agent"
-    data-speaker-notes="Chapter seven is the dynamic-workflows post. The framing is not more agents are better, it is that three specific failure modes of a single context have a specific fix. Four slides.">
-    <div class="slide-content">
-      <div class="dnum reveal">07</div>
-      <h2 class="reveal">Separate contexts <span class="o">must earn their cost</span></h2>
-      <p class="dsub reveal">Separate contexts can help with incomplete work, biased reviews and lost requirements. They also cost tokens.</p>
-    </div>
-  </section>
-  <section class="slide light" data-label="Why one context fails"
-    data-speaker-notes="Three failure modes of the default harness, which plans and executes in one context window, over long, parallel or adversarial tasks. Agentic laziness: it stops after partial progress and declares done, for example 35 of 50 items in a security review. Self-preferential bias: it prefers its own results when asked to verify or judge. Goal drift: gradual loss of fidelity to the objective, especially after compaction. The post&#x27;s sentence: each summarization step is lossy, and edge-case requirements or don&#x27;t-do-X constraints can get lost. The fix is orchestrating separate Claude subagents, each with its own context window and a focused, isolated goal. The animation shows the shape: messy work inside, a short summary back. Mechanism in one line: a dynamic workflow is a JavaScript file with agent, parallel and pipeline functions, and you can ask for one or use the trigger word ultracode. Interrupted workflows resume where they left off. The author&#x27;s caveat: best practices are still developing, and workflows often use more tokens and suit complex, high-value tasks.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">28</span><div class="crumb"><b>Multi-agent</b> · failure modes</div></div>
-      <h2 class="reveal">Three ways a single context <span class="o">fails</span></h2>
-      <div class="split">
-        <ul class="bul reveal">
-          <li><b>Incomplete work.</b> Stops after partial progress and declares done: 35 of 50 items in a security review.</li>
-          <li><b>Biased self-review.</b> Prefers its own results when asked to verify them.</li>
-          <li><b>Goal drift.</b> After compaction: “Each summarization step is lossy.” Edge cases and don't-do-X rules get lost.</li>
-          <li>Use subagents with <b>separate contexts</b> and focused goals.</li>
-        </ul>
-        <div class="diagram reveal">
-          <!-- Remotion animation (remotion/src/Subagents.tsx) -->
-          <video src="assets/anim/subagents-light.mp4" width="1176" height="756" autoplay muted loop playsinline aria-label="A main agent delegates messy work to sub-agents that have their own context and return only a short summary"></video>
-        </div>
-      </div>
-      <p class="note reveal">A dynamic workflow is a JS file using <span style="font-family:var(--font-m)">agent()</span>, <span style="font-family:var(--font-m)">parallel()</span>, <span style="font-family:var(--font-m)">pipeline()</span>. Ask for one, or say “ultracode”. “Best practices are still developing.”</p>
-      <p class="src reveal">claude.dev · A harness for every task: dynamic workflows in Claude Code · Jun 2026</p>
-    </div>
-  </section>
-  <section class="slide dark" data-label="Six patterns"
-    data-speaker-notes="The six patterns Claude composes in workflows. Classify-and-act: a classifier agent decides the task type, then routes to different agents or behaviour, or classifies the output at the end. Fan-out-and-synthesize: split into many small steps, one agent each with a clean context, then synthesise. The synthesise step is a barrier, it waits for all of them. Adversarial verification: for each spawned agent, a separate agent verifies its output against a rubric. Generate-and-filter: generate a number of ideas, then filter by rubric or verification, dedupe, and return only the best, tested ones. Tournament: do not divide the work, have N agents attempt the same task with different approaches and judge pairwise until there is a winner. Loop until done: for an unknown amount of work, keep spawning agents until a stop condition is met, such as no new findings, instead of a fixed number of passes. Most real workflows compose two or three of these. If you remember one, remember adversarial verification, because it attacks self-preferential bias directly.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">29</span><div class="crumb"><b>Multi-agent</b> · the six patterns</div></div>
-      <h2 class="reveal">Six <span class="o">workflow patterns</span></h2>
-      <div class="cards c3 reveal">
-        <div class="tile"><span class="k">Classify-and-act</span><p>Classify the task, then route it to the right agent.</p></div>
-        <div class="tile"><span class="k">Fan-out-and-synthesize</span><p>Split the work across fresh contexts. <b>Wait for all results</b>, then combine them.</p></div>
-        <div class="tile fill"><span class="k">Adversarial verification</span><p>A separate agent verifies each output against a rubric.</p></div>
-        <div class="tile"><span class="k">Generate-and-filter</span><p>Generate ideas, test them, remove duplicates and keep the best.</p></div>
-        <div class="tile"><span class="k">Tournament</span><p>N agents attempt the same task differently. A judging agent compares them pairwise.</p></div>
-        <div class="tile"><span class="k">Loop until done</span><p>Repeat until a stop condition is met, such as <b>no new findings</b>.</p></div>
-      </div>
-      <p class="src reveal">claude.dev · A harness for every task: dynamic workflows in Claude Code · Jun 2026</p>
-    </div>
-  </section>
-  <section class="slide light" data-label="Workflow prompts to steal"
-    data-speaker-notes="Four prompts straight from the post, each tagged with the pattern it uses. The flaky test prompt is loop-until-done with competing theories: do not stop until one theory survives the evidence. The sessions-mining prompt is the one I would run first tomorrow: go through your last 50 sessions, find the corrections you keep making, and turn the recurring ones into CLAUDE.md rules. The post describes this as clustering, adversarially verifying that a rule would have prevented a real mistake, and distilling. The blog-draft prompt is adversarial verification: check every technical claim against the codebase. The naming prompt is generate-and-filter plus a tournament. One more from the post: sorting. Do not sort 1,000 items in one prompt. Run a tournament of pairwise-comparison agents, because comparative judgment is more reliable than absolute scoring. Vibe coders can run all four without writing any code, just by saying using a workflow.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">30</span><div class="crumb"><b>Multi-agent</b> · prompts</div></div>
-      <h2 class="reveal">Four prompts <span class="o">you can paste</span></h2>
-      <div class="cards c2 reveal" style="align-items:start">
-        <div><span class="extag">Loop until done · competing theories</span>
-        <div class="code" style="--code-size:22px">This test fails maybe 1 in 50 runs. Set up a workflow to reproduce it. Form competing theories about the race, and don't stop until one theory survives the evidence.</div></div>
-        <div><span class="extag">Mine your own sessions</span>
-        <div class="code" style="--code-size:22px">Using a workflow, go through my last 50 sessions and mine them for corrections I keep making and turn the recurring ones into CLAUDE.md rules</div></div>
-        <div><span class="extag">Adversarial verification</span>
-        <div class="code" style="--code-size:22px">Go through my blog post draft and verify every technical claim against the codebase using a workflow, I don't want to ship anything wrong.</div></div>
-        <div><span class="extag">Generate-and-filter · tournament</span>
-        <div class="code" style="--code-size:22px">I need a name for this CLI tool. Use a workflow to brainstorm a bunch of options and run a tournament to pick the top 3.</div></div>
-      </div>
-      <p class="note reveal">Sorting 1,000+ items? Don't sort in one prompt. Run pairwise comparisons: “comparative judgment is more reliable than absolute scoring.”</p>
-      <p class="src reveal">claude.dev · A harness for every task: dynamic workflows in Claude Code · Jun 2026</p>
-    </div>
-  </section>
-  <section class="slide dark" data-label="Does it need more compute?"
-    data-speaker-notes="The cost warning that comes with every pattern on the previous slides. The post asks: does it really need more compute? Most traditional coding tasks do not need a panel of five reviewers. Parallelism and specialization have to earn their coordination cost. Numbers: the workflow panel in the post shows a review-changes run at 14 agents, 482K tokens and over 6 minutes, and a deep-research run at 22 agents, 1.1 million tokens and 11 minutes. Those are illustrative figures from the post&#x27;s UI screenshot, but they show the scale. From the cost post: agent teams, which are experimental, use roughly 7 times the tokens of a standard session when teammates are in plan mode. Controls: you can set a token budget in the prompt, use slash loop for recurring runs and slash goal for a hard completion requirement, and press s in the workflow menu to save a run to the workflows folder. The right-hand diagram is the quarantine pattern for agent builders, from the triage-at-scale use case: reader agents touch untrusted content with read-only tools and emit only structured summaries, and a separate privileged actor agent sees only those summaries. That is prompt-injection containment by design. Vibe coders can skip the diagram but keep the cost lesson.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">31</span><div class="crumb"><b>Multi-agent</b> · cost and safety</div></div>
-      <h2 class="reveal">More agents <span class="o">cost more tokens</span></h2>
-      <div class="split">
-        <table class="tbl reveal">
-          <thead><tr><th>Run</th><th>Agents</th><th>Tokens</th></tr></thead>
-          <tbody>
-            <tr><td>review-changes</td><td>14</td><td>482k</td></tr>
-            <tr><td>deep-research</td><td>22</td><td>1.1M</td></tr>
-            <tr><td>Agent teams (experimental)</td><td>n/a</td><td>~7× a standard session</td></tr>
-          </tbody>
-        </table>
-        <ul class="bul reveal">
-          <li><b>“Does it really need more compute?”</b> Most coding tasks “do not need a panel of 5 reviewers.”</li>
-          <li>Controls: a token budget in the prompt, <span style="font-family:var(--font-m)">/loop</span>, <span style="font-family:var(--font-m)">/goal</span>. Press <span style="font-family:var(--font-m)">s</span> to save a run.</li>
-        </ul>
-      </div>
-      <div class="diagram reveal" style="--diag-h:300px">
-        <svg viewBox="0 0 760 130" role="img" aria-label="Quarantine pattern: untrusted content goes to a reader agent with read-only tools, which passes only a structured summary to a separate privileged actor agent">
-          <defs><marker id="qa1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z"/></marker></defs>
-          <rect class="dg-box outer" x="10" y="30" width="170" height="64" rx="9"/>
-          <text class="dg-t" x="95" y="58" font-size="17" text-anchor="middle">untrusted content</text>
-          <text class="dg-t mut" x="95" y="77" font-size="14" text-anchor="middle">you don't control it</text>
-          <path class="dg-line" d="M184 62 L 238 62" marker-end="url(#qa1)"/>
-          <rect class="dg-box" x="244" y="30" width="190" height="64" rx="9"/>
-          <text class="dg-t" x="339" y="58" font-size="17" text-anchor="middle">reader agent</text>
-          <text class="dg-t mut" x="339" y="77" font-size="14" text-anchor="middle">read-only tools</text>
-          <path class="dg-line" d="M438 62 L 492 62" marker-end="url(#qa1)"/>
-          <text class="dg-t acc" x="465" y="48" font-size="13" text-anchor="middle">summary</text>
-          <rect class="dg-box hot" x="498" y="30" width="190" height="64" rx="9"/>
-          <text class="dg-t on" x="593" y="58" font-size="17" text-anchor="middle">actor agent</text>
-          <text class="dg-t on" x="593" y="77" font-size="14" text-anchor="middle">sees only summaries</text>
-          <text class="dg-t acc" x="350" y="122" font-size="15" text-anchor="middle">quarantine: the agent that acts never reads the raw text</text>
-        </svg>
-      </div>
-      <p class="src reveal">claude.dev · A harness for every task: dynamic workflows in Claude Code · Jun 2026 + What a task costs on Opus 5.5 · Sep 2026</p>
-    </div>
-  </section>
-  <section class="slide dark divider" data-label="08 Make the harness yours"
-    data-speaker-notes="The last chapter is about the surface you work on: how tools are designed, what format Claude writes plans in, and how to add behaviour to Claude Code itself. Three slides, then a cheat sheet and the recap.">
-    <div class="slide-content">
-      <div class="dnum reveal">08</div>
-      <h2 class="reveal">Make the harness <span class="o">yours</span></h2>
-      <p class="dsub reveal">Adapt the tools, output format and mods to your work.</p>
-    </div>
-  </section>
-  <section class="slide dark" data-label="Design tools from the model&#x27;s side"
-    data-speaker-notes="Four case studies from the Claude Code team on tool design. Ask-user-question: three attempts. Adding questions to the exit-plan tool confused the model. Changing the markdown output format was not reliable: it would append sentences, drop options or abandon the structure. The shipped version is a dedicated tool that blocks the loop until answered. The lesson: even the best designed tool does not work if Claude does not understand how to call it. Todos to tasks: the reminders every five turns that once kept Claude on track later made it stick to the list rather than adapt, and todos could not coordinate subagents. The quote is the one to keep: as capabilities increase, the tools that your models once needed might now be constraining them. Search: an early vector database for retrieval was replaced by a grep tool, and the lesson is that the most consequential tools are the ones that let Claude find its own context. The Guide agent: Claude Code has about 20 tools and the bar to add one is high. Docs search lives in a subagent that returns only the answer. Agent builders: audit your tool list each model generation. Vibe coders: audit your MCP servers and remove what you do not use.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">32</span><div class="crumb"><b>Harness</b> · tool design</div></div>
-      <h2 class="reveal">Revisit your tools <span class="o">every model generation</span></h2>
-      <div class="cards c2 reveal">
-        <div class="tile"><span class="k">AskUserQuestion</span><p>A dedicated question tool shipped on the third attempt. It pauses the loop until answered.</p></div>
-        <div class="tile"><span class="k">Todos to Tasks</span><p>Old reminders made Claude stick to the list. Better models needed more flexible task tools.</p></div>
-        <div class="tile"><span class="k">Vector DB to Grep</span><p>“The most consequential tools we've built are the ones that let Claude find its own context.”</p></div>
-        <div class="tile fill"><span class="k">The Guide subagent</span><p>Docs search runs in a subagent and returns only the answer, keeping the main tool list small.</p></div>
-      </div>
-      <p class="note reveal"><b>If you build agents:</b> list your tools and ask which ones the model has outgrown. <b>If you vibe-code:</b> <span style="font-family:var(--font-m)">/mcp</span> and disable the servers you don't use.</p>
-      <p class="src reveal">claude.dev · Seeing like an agent · Apr 2026 + What a task costs on Opus 5.5 · Sep 2026</p>
-    </div>
-  </section>
-  <section class="slide light" data-label="Ask for HTML, not Markdown"
-    data-speaker-notes="A flag first: this is the author&#x27;s personal opinion, and he says he is an HTML maximalist. The argument is practical. He finds it hard to read a Markdown file over about a hundred lines, he is mostly prompting Claude to edit these files anyway, and nobody else in his organisation will read a long one either. HTML gives density, visuals, sharing by link, and two-way interaction. The trick to steal is the throwaway editor: ask for a UI that ends with an export, a copy-as-prompt or copy-as-JSON button that turns what you did in the UI back into text for Claude Code. The example prompt, six different onboarding approaches in a grid with tradeoffs labelled, is a good first try. On token cost, the post says Markdown uses fewer tokens, but with the 1M context window in Opus 4.7 the extra usage is not really noticeable. Note the model name here is Opus 4.7, exactly as the post says. Right side is from the Opus 5.5 post, for design work: a general instruction like avoid a generic look mostly swaps one default for another. A list of specific patterns works much better. Fair warning, this deck itself breaks several of those example rules, which is a template accident, not a recommendation.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">33</span><div class="crumb"><b>Harness</b> · output format</div></div>
-      <h2 class="reveal">Ask for HTML. <span class="o">End with an export.</span></h2>
-      <div class="split" style="align-items:start">
-        <div>
-          <span class="extag reveal">The author's personal opinion</span>
-          <ul class="bul reveal">
-            <li>“I find it difficult to read a Markdown file of more than a hundred lines.”</li>
-            <li>Sliders and knobs, then a <b>copy-as-prompt</b> button: “always to end with an export.”</li>
-          </ul>
-          <div class="code reveal" style="--code-size:19px;margin-top:22px">Show six approaches in one HTML grid. Vary layout, tone and density. Label each tradeoff.</div>
-        </div>
-        <div class="cards reveal" style="grid-template-columns:1fr">
-          <div class="tile fill"><span class="k">Using Claude Code</span><p>Name specific design patterns to avoid. “Avoid a generic look” gives little direction.</p></div>
-          <div class="tile"><span class="k">Example list</span><p>No cream or off-white background, italic accent words in headings, numbered “01 / 02 / 03” labels, monospace labels, pill-shaped buttons.</p></div>
-        </div>
-      </div>
-      <p class="note reveal">Markdown is cheaper in tokens, but the author says that with Opus 4.7's 1M context window the difference is “not really noticeable.”</p>
-      <p class="src reveal">claude.dev · The unreasonable effectiveness of HTML · May 2026 + Getting the most out of Opus 5.5 in Claude and Claude Code · Sep 2026</p>
-    </div>
-  </section>
-  <section class="slide dark" data-label="Mods: hooks as middleware"
-    data-speaker-notes="Mods are the newest feature in the set, published today. A mod is a normal Claude Code plugin whose behaviour lives in a JS module of hooks. They can observe, rewrite or answer any event, and draw custom UI. It needs Claude Code 2.1.287 or later, and the API can change between releases, so treat the snippet as 2.1.287. The three moves: observe, where you call next and look at the result, rewrite, where you change the event and pass it on, and answer, where you return without calling next, for example a deny. The code on the left is the shape of the Blast Radius mod, which holds rm -rf, force-push and migrations until you confirm. I trimmed the middle. The shortcut: you do not need to know the API. Describe what you want to see, for example the token-weather prompt, and Claude writes it and enables hot reloading. Two warnings, both from the post. Blast Radius is a safety net, not a permission system, because it reads command text and $(...) or aliases get past it, so use permission rules for hard blocks. And a mod is code running with your access, written by its publisher, so install it like a package: read the repo first. Vibe coders: one prompt gets you a context meter. Agent builders: this is middleware for your own team&#x27;s conventions.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">34</span><div class="crumb"><b>Harness</b> · mods</div></div>
-      <h2 class="reveal">Mods: <span class="o">observe, rewrite, answer</span></h2>
-      <div class="split" style="align-items:start">
-        <div class="code reveal" style="--code-size:20px"><span class="o">on</span>(<span class="g">"tool.call"</span>, { tool: <span class="g">"Bash"</span> },
-   <span class="o">async</span> ($, e, next) =&gt; {
-  <span class="o">const</span> risk = classify(String(e.command ?? <span class="g">""</span>));
-  <span class="o">if</span> (risk === <span class="b">null</span>) <span class="o">return</span> next(e);
-  <span class="c">...</span>
-  <span class="o">return</span> { deny: <span class="g">`Blast Radius held this command: ...`</span> };
-});</div>
-        <div class="reveal">
-          <ul class="bul">
-            <li><b>Observe</b>: <span style="font-family:var(--font-m)">await next(e)</span>. <b>Rewrite</b>: <span style="font-family:var(--font-m)">next({...e})</span>. <b>Answer</b>: return without calling next.</li>
-            <li>You needn't know the API. Prompt: <b>“Make me a Claude Code mod called token-weather…”</b> Hot reload does the rest.</li>
-            <li>Blast Radius is “a safety net, not a permission system.” Use permission rules for a hard block.</li>
-            <li>Read the mod's repo before installing it.</li>
-          </ul>
-        </div>
-      </div>
-      <p class="note reveal">API as of Claude Code 2.1.287; it can change between releases. <span style="font-family:var(--font-m)">claude --plugin-dir ./token-weather</span> · <span style="font-family:var(--font-m)">claude plugin validate</span> · <span style="font-family:var(--font-m)">claude --debug</span></p>
-      <p class="src reveal">claude.dev · Getting started with Claude Code mods · Oct 2026</p>
-    </div>
-  </section>
-  <section class="slide light dense" data-label="Cheat sheet: commands"
-    data-speaker-notes="A slide to photograph. Six groups, every command from the posts that came up today. Context: clear between unrelated tasks, compact with a note on what to keep, rewind to drop a path while the cache is warm, autocompact to set the threshold, mcp to see and disable servers, doctor to rightsize. Effort and model: effort with a level, effort status, model, fast, and usage or cost. Evals and migration: claude update first, then the claude-api subcommands. Workflows: the ultracode trigger word, loop, goal, and s to save. Plugins and mods: the plugin flags. Other: Esc twice to edit your last message, feedback, and config. No need to read it out. Point at the two or three people will not have seen: doctor, claude-api prompt-audit and the usage prompt-cache line.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">35</span><div class="crumb"><b>Close</b> · cheat sheet</div></div>
-      <h2 class="reveal">Commands <span class="o">from the posts</span></h2>
-      <div class="cards c3 reveal" style="gap:20px">
-        <div class="tile"><span class="k" style="font-size:24px">Context</span><ul class="cmds">
-          <li><span class="cm">/clear</span>between tasks</li>
-          <li><span class="cm">/compact …</span>say what to keep</li>
-          <li><span class="cm">/rewind</span>drop a path</li>
-          <li><span class="cm">/autocompact</span>set threshold</li>
-          <li><span class="cm">/mcp</span>disable unused</li>
-          <li><span class="cm">/doctor</span>rightsize files</li></ul></div>
-        <div class="tile"><span class="k" style="font-size:24px">Effort &amp; model</span><ul class="cmds">
-          <li><span class="cm">/effort low…max</span>mid-session ok</li>
-          <li><span class="cm">/effort status</span></li>
-          <li><span class="cm">/model sonnet</span>scoped work</li>
-          <li><span class="cm">/fast</span>costs more</li>
-          <li><span class="cm">/usage</span>alias /cost</li></ul></div>
-        <div class="tile"><span class="k" style="font-size:24px">Evals &amp; migration</span><ul class="cmds">
-          <li><span class="cm">claude update</span>run first</li>
-          <li><span class="cm">/claude-api build-eval</span></li>
-          <li><span class="cm">/claude-api hillclimb</span></li>
-          <li><span class="cm">/claude-api prompt-audit</span></li>
-          <li><span class="cm">/claude-api migrate …</span></li></ul></div>
-        <div class="tile"><span class="k" style="font-size:24px">Workflows</span><ul class="cmds">
-          <li><span class="cm">ultracode</span>trigger word</li>
-          <li><span class="cm">/loop</span>recurring</li>
-          <li><span class="cm">/goal</span>hard finish line</li>
-          <li><span class="cm">s</span>save the run</li>
-          <li><span class="cm">/deep-research</span></li></ul></div>
-        <div class="tile"><span class="k" style="font-size:24px">Plugins &amp; mods</span><ul class="cmds">
-          <li><span class="cm">--plugin-dir ./x</span></li>
-          <li><span class="cm">claude plugin validate</span></li>
-          <li><span class="cm">claude plugin test</span></li>
-          <li><span class="cm">claude --debug</span></li>
-          <li><span class="cm">/reload-plugins</span></li></ul></div>
-        <div class="tile"><span class="k" style="font-size:24px">Other</span><ul class="cmds">
-          <li><span class="cm">Esc Esc</span>edit last message</li>
-          <li><span class="cm">/feedback</span></li>
-          <li><span class="cm">/config</span></li>
-          <li><span class="cm">CLAUDE_CODE_SUBAGENT_MODEL</span></li>
-          <li><span class="cm">TASKS.md</span>state in a file</li></ul></div>
-      </div>
-      <p class="note reveal">Names as printed in the posts, as of October 2026. Mods API: Claude Code 2.1.287.</p>
-    </div>
-  </section>
-  <section class="slide dark" data-label="Recap"
-    data-speaker-notes="Eight chapters, eight changes. Say each one as a verb. Delete: run doctor and prune the old-model rituals. Add a gotcha: the next time Claude trips, put it in the skill. Freeze the prefix: no mid-session model, tool or MCP changes. Escalate in order: check, effort, model, and low to build, high to verify. Give it a check: a real one, and a number it can climb. Name the finish line. Use separate verifiers, only where they earn it. And ask for HTML with an export button. Close on the line from the cost post, which applies to every number in this deck: your own numbers are the ones to trust. Run one real task and look at what usage reports.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">36</span><div class="crumb"><b>Close</b> · recap</div></div>
-      <h2 class="reveal">Eight changes <span class="o">for tomorrow</span></h2>
-      <div class="gloss reveal">
-        <div class="row"><span class="term">01 Context</span><span class="def">Run <span style="font-family:var(--font-m)">/doctor</span>. Remove outdated rules.</span></div>
-        <div class="row"><span class="term">02 Skills</span><span class="def">When Claude trips, add a gotcha to the skill.</span></div>
-        <div class="row"><span class="term">03 Cache</span><span class="def">No mid-session model, tool or MCP changes.</span></div>
-        <div class="row"><span class="term">04 Effort</span><span class="def">Low to build, high to verify. Check, effort, model.</span></div>
-        <div class="row"><span class="term">05 Verify</span><span class="def">Run a real check. Measure progress.</span></div>
-        <div class="row"><span class="term">06 Autonomy</span><span class="def">Name the finish line. Add the stop rule.</span></div>
-        <div class="row"><span class="term">07 Agents</span><span class="def">Use separate verifiers when worth the cost.</span></div>
-        <div class="row"><span class="term">08 Harness</span><span class="def">HTML with an export button. Try one mod.</span></div>
-      </div>
-      <p class="note reveal">“Your own numbers are the ones to trust.” Run one real task, then read <span style="font-family:var(--font-m)">/usage</span>. <span class="muted">(claude.dev · What a task costs on Opus 5.5 · Sep 2026)</span></p>
-    </div>
-  </section>
-  <section class="slide light dense" data-label="Sources"
-    data-speaker-notes="Every number in this talk comes from these thirteen posts and nothing else. The list is the full set on claude.dev as of the first of October 2026, newest first on the left. Caveats worth repeating: model names are as each post spells them, so older posts say Opus 4.7 or 4.8. Terminal-Bench figures are internal Anthropic runs and will not match the public leaderboard. The HTML post is one author&#x27;s opinion. The 40 percent cheaper claim is an estimate for typical workloads. The claude.ai sprint used an internal research model. The mods API is as of Claude Code 2.1.287. If you read only one, read the prompt caching post, then the effort post.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">37</span><div class="crumb"><b>Close</b> · sources</div></div>
-      <h2 class="reveal"><span class="o">Sources</span>: 13 claude.dev posts, as of October 2026</h2>
-      <div class="links reveal">
-        <div class="linkcol">
-          <h3>September to October 2026</h3>
-          <a href="https://claude.dev/blog/getting-started-with-claude-code-mods/" target="_blank" rel="noopener">Getting started with Claude Code mods · Oct 1<span class="u">https://claude.dev/blog/getting-started-with-claude-code-mods/</span></a>
-          <a href="https://claude.dev/blog/building-with-claude-sonnet-5-5/" target="_blank" rel="noopener">Building with Claude Sonnet 5.5 · Sep 28<span class="u">https://claude.dev/blog/building-with-claude-sonnet-5-5/</span></a>
-          <a href="https://claude.dev/blog/automating-eval-design-and-hillclimbing/" target="_blank" rel="noopener">Automating eval design and hillclimbing with Claude · Sep 28<span class="u">https://claude.dev/blog/automating-eval-design-and-hillclimbing/</span></a>
-          <a href="https://claude.dev/blog/what-a-task-costs-on-opus-5-5/" target="_blank" rel="noopener">What a task costs on Opus 5.5 · Sep 25<span class="u">https://claude.dev/blog/what-a-task-costs-on-opus-5-5/</span></a>
-          <a href="https://claude.dev/blog/spending-your-effort/" target="_blank" rel="noopener">Using Claude Code: Spending your effort · Sep 25<span class="u">https://claude.dev/blog/spending-your-effort/</span></a>
-          <a href="https://claude.dev/blog/how-we-made-claude-ai-faster/" target="_blank" rel="noopener">How we made claude.ai 3x faster in two weeks · Sep 23<span class="u">https://claude.dev/blog/how-we-made-claude-ai-faster/</span></a>
-          <a href="https://claude.dev/blog/getting-the-most-out-of-opus-5-5/" target="_blank" rel="noopener">Getting the most out of Opus 5.5 in Claude and Claude Code · Sep 22<span class="u">https://claude.dev/blog/getting-the-most-out-of-opus-5-5/</span></a>
-        </div>
-        <div class="linkcol">
-          <h3>April to July 2026</h3>
-          <a href="https://claude.dev/blog/the-new-rules-of-context-engineering-for-claude-5-generation-models/" target="_blank" rel="noopener">The new rules of context engineering for Claude 5 generation models · Jul 24<span class="u">https://claude.dev/blog/the-new-rules-of-context-engineering-for-claude-5-generation-models/</span></a>
-          <a href="https://claude.dev/blog/lessons-from-building-claude-code-how-we-use-skills/" target="_blank" rel="noopener">Lessons from building Claude Code: How we use skills · Jun 3<span class="u">https://claude.dev/blog/lessons-from-building-claude-code-how-we-use-skills/</span></a>
-          <a href="https://claude.dev/blog/a-harness-for-every-task-dynamic-workflows-in-claude-code/" target="_blank" rel="noopener">A harness for every task: dynamic workflows in Claude Code · Jun 2<span class="u">https://claude.dev/blog/a-harness-for-every-task-dynamic-workflows-in-claude-code/</span></a>
-          <a href="https://claude.dev/blog/using-claude-code-the-unreasonable-effectiveness-of-html/" target="_blank" rel="noopener">Using Claude Code: The unreasonable effectiveness of HTML · May 20<span class="u">https://claude.dev/blog/using-claude-code-the-unreasonable-effectiveness-of-html/</span></a>
-          <a href="https://claude.dev/blog/lessons-from-building-claude-code-prompt-caching-is-everything/" target="_blank" rel="noopener">Lessons from building Claude Code: Prompt caching is everything · Apr 30<span class="u">https://claude.dev/blog/lessons-from-building-claude-code-prompt-caching-is-everything/</span></a>
-          <a href="https://claude.dev/blog/seeing-like-an-agent/" target="_blank" rel="noopener">Seeing like an agent: how we design tools in Claude Code · Apr 10<span class="u">https://claude.dev/blog/seeing-like-an-agent/</span></a>
-        </div>
-      </div>
-      <p class="note reveal"><b>Caveats.</b> Model names are quoted as each post spells them. Terminal-Bench numbers are Anthropic's internal runs. The HTML post is the author's personal opinion. “40% cheaper” is Anthropic's estimate. The claude.ai speed-up used an internal research model. Mods API as of Claude Code 2.1.287.</p>
-    </div>
-  </section>
+<section data-origin-slide="6" class="slide light" data-label="Instruction file before and after" data-speaker-notes="Illustrative transformation. Some easily derived facts can still be useful navigation hints, so do not turn deletion into an absolute rule."><div class="slide-content"><div class="slide-head reveal"><span class="snum">4</span><div class="crumb">In practice</div></div><h2 class="reveal">Shorten the file while preserving its constraints</h2><div class="cards c2 reveal"><div class="tile"><h3 class="k">Before</h3><p>Long project history, duplicate style advice, VAT rules, test commands and an old incident log.</p></div><div class="tile"><h3 class="k">After</h3><p>Keep VAT source, rounding rule, test command and schema boundary. Link occasional procedures from a skill.</p></div></div><p class="note reveal">The acceptance check is unchanged behavior on the same tasks, not the smallest file.</p><p class="src reveal">Applied example · <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">supporting documentation</a></p></div></section>
+
+<section data-origin-slide="7" class="slide light" data-label="Instruction audit" data-speaker-notes="The example is our adaptation, not a quote. Remove stale workarounds only when the original failure is understood and covered. Do not automatically trust an audit command to determine the correct policy."><div class="slide-content"><div class="slide-head reveal"><span class="snum">5</span><div class="crumb">In practice</div></div><h2 class="reveal">Find conflicts before adding another rule</h2><div class="code reveal">Conflict in an illustrative project:
+“Never add comments.”
+“Document non-obvious tax rounding decisions.”
+
+Replacement:
+“Explain non-obvious rounding decisions near the code.”</div><p class="note reveal">Then check the task that originally required the rule.</p><p class="src reveal">Applied example · <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">supporting documentation</a></p></div></section>
+
+<section data-origin-slide="9" class="slide dark" data-label="A verification skill" data-speaker-notes="Keep the verification example consistent with the talk. A skill describes a repeatable procedure; it does not make the agent or the tests infallible. Discovery metadata and loaded content both have context costs. A concrete Claude Code file example is in the reference deck."><div class="slide-content"><div class="slide-head reveal"><span class="snum">6</span><div class="crumb">Make it repeatable</div></div><h2 class="reveal">Save the repeated invoice check as a skill</h2><div class="code reveal">invoice-check/
+  SKILL.md     when to use it + verification procedure
+  scripts/     optional deterministic checks
+  references/  VAT and rounding rules</div><p class="note reveal"><b>Procedure:</b> inspect the diff → run the cases → report evidence and gaps.</p><p class="src reveal">Applied example · <a href="https://code.claude.com/docs/en/skills">supporting documentation</a></p></div></section>
+
+<section data-origin-slide="11" class="slide dark" data-label="Skill interface" data-speaker-notes="A description aids discovery but is not a deterministic dispatch contract. Include a manual invocation path for important checks."><div class="slide-content"><div class="slide-head reveal"><span class="snum">7</span><div class="crumb">In practice</div></div><h2 class="reveal">Make the trigger and output specific</h2><div class="cards c2 reveal"><div class="tile"><h3 class="k">Trigger</h3><p>“Verify changes to invoice totals or CSV export.”</p></div><div class="tile"><h3 class="k">Result</h3><p>Findings with file references, check output and untested cases.</p></div></div><p class="note reveal">Test one matching request and one unrelated request. Revise the description if discovery is unreliable.</p><p class="src reveal">Applied example · <a href="https://code.claude.com/docs/en/skills">supporting documentation</a></p></div></section>
+
+<section data-origin-slide="12" class="slide light" data-label="Skill structure" data-speaker-notes="The skill is a folder, not just a wall of text. Preserve the specific gotcha in the relevant reference. A helper script can still be wrong; inspect and validate it."><div class="slide-content"><div class="slide-head reveal"><span class="snum">8</span><div class="crumb">In practice</div></div><h2 class="reveal">Keep the core procedure short</h2><div class="code reveal">invoice-check/
+  SKILL.md       trigger, steps, expected report
+  scripts/       deterministic parsing and checks
+  references/    rounding rules and exceptional cases</div><p class="note reveal">Load detail when useful. Review executable helpers and their permissions.</p><p class="src reveal">Applied example · <a href="https://code.claude.com/docs/en/skills">supporting documentation</a></p></div></section>
+
+<section data-origin-slide="14" class="slide light" data-label="Shared prefix example" data-speaker-notes="For this Claude example, tools precede system content, then messages. Breakpoints determine writes. Avoid timestamps or changing task text inside the intended shared prefix."><div class="slide-content"><div class="slide-head reveal"><span class="snum">9</span><div class="crumb">In practice</div></div><h2 class="reveal">Keep the shared material before the questions</h2><div class="code reveal">Shared eligible prefix
+  tools + stable instructions + invoice schema
+
+Request A: Where is VAT applied?
+Request B: Where is CSV escaping handled?
+
+Changing the question need not change the shared prefix.</div><p class="note reveal">A matching prefix must be eligible and already cached; stable text alone does not create a hit. <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">Caching docs</a></p><p class="src reveal">Applied example · <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">supporting documentation</a></p></div></section>
+
+<section data-origin-slide="15" class="slide dark" data-label="Worked cost example" data-speaker-notes="This example deliberately specifies an existing cache hit, no new cache-write tokens and no separate tool charges. Establishing the cache earlier also costs money. The original input line items summed to 22,709, not exactly 22,700; this version uses explicit rounded totals consistently. Compare a complete task, including cache warm-up and retries."><div class="slide-content"><div class="slide-head reveal"><span class="snum">10</span><div class="crumb">Worked arithmetic</div></div><h2 class="reveal">One cache-hit request: about five cents</h2><table class="tbl reveal"><thead><tr><th scope="col">Illustrative usage and rates</th><th scope="col">Cost</th></tr></thead><tbody><tr><td>19,000 cached input × $0.20 / million</td><td>$0.0038</td></tr><tr><td>3,700 new input × $4 / million</td><td>$0.0148</td></tr><tr><td>1,600 output × $20 / million</td><td>$0.0320</td></tr><tr><td>22,700 input + 1,600 output in total</td><td><b>$0.0506</b></td></tr></tbody></table><p class="note reveal">Assumed rates, not a measured bill. Without the cache hit: $0.0908 input + $0.0320 output = $0.1228.</p><p class="src reveal">Applied example · <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">supporting documentation</a></p></div></section>
+
+<section data-origin-slide="16" class="slide dark" data-label="Cache tradeoffs" data-speaker-notes="This replaces the blanket rule against mid-session model and tool changes. Cache invalidation is a cost to measure, not a veto on needed corrections."><div class="slide-content"><div class="slide-head reveal"><span class="snum">11</span><div class="crumb">In practice</div></div><h2 class="reveal">Preserve reuse when it serves the task</h2><div class="cards c2 reveal"><div class="tile"><h3 class="k">Avoid accidental churn</h3><p>Keep stable instructions and tool definitions stable where practical.</p></div><div class="tile"><h3 class="k">Make necessary changes</h3><p>Correct stale rules, change a failing configuration or compact when the task needs it.</p></div></div><p class="note reveal">A cache hit is valuable only when the resulting work is useful.</p><p class="src reveal">Applied example · <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">supporting documentation</a></p></div></section>
+
+<section data-origin-slide="17" class="slide light" data-label="Compaction" data-speaker-notes="Do not promise cache-safe compaction for every client or setting. Summarization changes what future calls can use even when earlier processing was cached."><div class="slide-content"><div class="slide-head reveal"><span class="snum">12</span><div class="crumb">In practice</div></div><h2 class="reveal">Preserve the state that explains the next step</h2><div class="code reveal">Handoff or compaction checklist
+Goal and acceptance cases
+Current files and actual check results
+Decisions, failed approaches and unresolved questions
+Permission boundary and next action</div><p class="note reveal">A matching prefix can help reuse where supported. Verify the summary’s completeness separately.</p><p class="src reveal">Applied example · <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">supporting documentation</a></p></div></section>
+
+<section data-origin-slide="19" class="slide dark" data-label="Effort comparison" data-speaker-notes="Remove the mixed model/effort benchmark table. More effort can change verification behavior, but the effect and optimum are task-specific."><div class="slide-content"><div class="slide-head reveal"><span class="snum">13</span><div class="crumb">In practice</div></div><h2 class="reveal">Change one setting at a time</h2><table class="tbl reveal"><thead><tr><th scope="col">Hold constant</th><th scope="col">Compare</th></tr></thead><tbody><tr><td>Task, starting files and acceptance cases</td><td>Supported effort settings for the same model.</td></tr><tr><td>Tools, permissions and budget</td><td>Successes, failures, time, usage and review effort.</td></tr></tbody></table><p class="note reveal">Record the exact settings; “high” is not necessarily equivalent across models or versions.</p><p class="src reveal">Applied example · <a href="https://claude.dev/blog/spending-your-effort/">supporting documentation</a></p></div></section>
+
+<section data-origin-slide="21" class="slide light" data-label="Build and verify" data-speaker-notes="This retains the useful practical suggestion without claiming it is the universal best default. The review phase needs actual checks, not only a request to think harder."><div class="slide-content"><div class="slide-head reveal"><span class="snum">14</span><div class="crumb">In practice</div></div><h2 class="reveal">Treat “low build, high verify” as a hypothesis</h2><div class="cards c2 reveal"><div class="tile"><h3 class="k">Proposed workflow</h3><p>Build with a lower-effort setting, then run a distinct review and verification phase.</p></div><div class="tile"><h3 class="k">Acceptance test</h3><p>Compare it with one configuration under the same overall budget and rubric.</p></div></div><p class="note reveal"><a href="https://claude.dev/blog/spending-your-effort/">Source: Spending your effort</a> describes the author’s workflow and experiments.</p></div></section>
+
+<section data-origin-slide="22" class="slide dark" data-label="Routing and escalation" data-speaker-notes="A larger model cannot recover a missing business rule by thinking harder. Use the invoice task to distinguish an omitted VAT rate from a difficult code path. Cache changes and extra review time belong in the comparison."><div class="slide-content"><div class="slide-head reveal"><span class="snum">15</span><div class="crumb">Model choice</div></div><h2 class="reveal">Escalate when the evidence points to a need</h2><ul class="bul reveal"><li><b>Start:</b> use a configuration that has met the acceptance bar on similar work.</li><li><b>Diagnose:</b> missing facts, a broken tool and hard reasoning call for different fixes.</li><li><b>Compare:</b> try supported effort or model changes against the same checks and budget.</li></ul><p class="note reveal">There is no universal “effort first” ladder. Re-evaluate defaults when the task or model changes.</p><p class="src reveal">Applied example · <a href="https://claude.dev/blog/spending-your-effort/">supporting documentation</a></p></div></section>
+
+<section data-origin-slide="23" class="slide light" data-label="Cost per accepted task" data-speaker-notes="Remove the old benchmark collage and the arithmetic implying that five times cheaper tokens become dearer merely by using three times as many. Separate success rate from spend per successful attempt so failed runs do not disappear from the comparison."><div class="slide-content"><div class="slide-head reveal"><span class="snum">16</span><div class="crumb">Model choice</div></div><h2 class="reveal">Measure the task, including the failed attempts</h2><div class="cards c3 reveal"><div class="tile"><h3 class="k">Same acceptance bar</h3><p>Use representative invoice cases and the same permissions and tools.</p></div><div class="tile"><h3 class="k">Whole run</h3><p>Record quality, elapsed time, all token categories, retries and review effort.</p></div><div class="tile"><h3 class="k">Repeat and compare</h3><p>Repeat representative cases before changing the default configuration.</p></div></div><p class="note reveal">A higher-priced model can finish in fewer attempts. Whether it costs less is a measurement, not a rule.</p><p class="src reveal">Applied example · <a href="https://claude.dev/blog/spending-your-effort/">supporting documentation</a></p></div></section>
+
+<section data-origin-slide="27" class="slide dark" data-label="Real verification" data-speaker-notes="Use the smallest check that actually exercises the relevant behavior, then the required regression suite. Do not expand testing merely to generate more output."><div class="slide-content"><div class="slide-head reveal"><span class="snum">17</span><div class="crumb">In practice</div></div><h2 class="reveal">Ask for evidence tied to the changed behavior</h2><div class="code reveal">Before calling the invoice fix done:
+1. Run the invoice acceptance cases.
+2. Inspect changed assertions and the final diff.
+3. Check the exported CSV values.
+4. Report commands, exit statuses, failures and gaps.</div><p class="note reveal">A syntax check cannot establish the VAT calculation. A command that never starts is not a passed test.</p><p class="src reveal">Applied example · <a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">supporting documentation</a></p></div></section>
+
+<section data-origin-slide="26" class="slide light" data-label="Progress and regression checks" data-speaker-notes="This replaces secondary sprint statistics with a concrete engineering example. The target can change intentionally, but changes must be reviewed and separated from performance claims."><div class="slide-content"><div class="slide-head reveal"><span class="snum">18</span><div class="crumb">In practice</div></div><h2 class="reveal">Use one metric for improvement and a guardrail for damage</h2><div class="cards c2 reveal"><div class="tile"><h3 class="k">Improvement target</h3><p>Reduce export latency on the same fixture and environment.</p></div><div class="tile"><h3 class="k">Regression guardrail</h3><p>Keep VAT correctness, CSV shape and memory use within the accepted limits.</p></div></div><p class="note reveal">Do not improve the score by weakening the workload or grader.</p><p class="src reveal">Applied example · <a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">supporting documentation</a></p></div></section>
+
+<section data-origin-slide="28" class="slide dark" data-label="Grading methods" data-speaker-notes="A model judge is useful for subjective dimensions but can favor style, verbosity or familiar outputs. Treat grader disagreement as evidence to inspect, not automatic model failure."><div class="slide-content"><div class="slide-head reveal"><span class="snum">19</span><div class="crumb">In practice</div></div><h2 class="reveal">Use the strongest practical check for each claim</h2><div class="cards c3 reveal"><div class="tile"><h3 class="k">Deterministic check</h3><p>Parse CSV, assert values and run regression tests.</p></div><div class="tile"><h3 class="k">Written rubric</h3><p>Assess explanation quality and completeness against named criteria.</p></div><div class="tile"><h3 class="k">Human calibration</h3><p>Check ambiguous cases and compare model-judge scores with human decisions.</p></div></div><p class="note reveal">A different judge model does not remove bias. Blind labels and vary answer order where practical.</p><p class="src reveal">Applied example · <a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">supporting documentation</a></p></div></section>
+
+<section data-origin-slide="29" class="slide dark" data-label="Avoid overfitting" data-speaker-notes="Retain the hillclimbing lesson without a long benchmark table. Repeat runs and preserve cases that protect against regressions."><div class="slide-content"><div class="slide-head reveal"><span class="snum">20</span><div class="crumb">In practice</div></div><h2 class="reveal">Keep some cases out of prompt tuning</h2><ul class="bul reveal"><li>Develop on cases that expose known failures.</li><li>Hold back different invoice variants for the final comparison.</li><li>Inspect grader mistakes and near-duplicate cases before celebrating a score.</li></ul><p class="note reveal">A better development score is evidence to investigate, not proof of general improvement.</p><p class="src reveal">Applied example · <a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">supporting documentation</a></p></div></section>
+
+<section data-origin-slide="31" class="slide light" data-label="A bounded task contract" data-speaker-notes="An illustrative request template, not a command to run in this repository. Do not publish, commit or deploy as an implicit consequence of passing tests. The checks must exist and assert the intended behavior before the loop is trusted."><div class="slide-content"><div class="slide-head reveal"><span class="snum">21</span><div class="crumb">The invoice task</div></div><h2 class="reveal">Make the acceptance contract explicit</h2><div class="code reveal">GOAL: export invoice net, VAT and gross values to CSV.
+SCOPE: invoice export code; preserve existing tests.
+VERIFY: pytest tests/test_export.py -q
+CASES: 21% VAT, zero VAT, rounding, quoted CSV fields.
+LIMIT: three repair attempts; then stop and report.
+EVIDENCE: diff, command, exit status, failures and gaps.</div><p class="note reveal">Pair this request with an enforced runtime budget and a review of the resulting artifact.</p><p class="src reveal">Applied example · <a href="https://code.claude.com/docs/en/sub-agents">supporting documentation</a></p></div></section>
+
+<section data-origin-slide="32" class="slide light" data-label="Handoff" data-speaker-notes="The prior slide mixed a session handoff with one-subagent-per-service instructions. They solve different problems. A task checklist can be stale; reconcile it with the files."><div class="slide-content"><div class="slide-head reveal"><span class="snum">22</span><div class="crumb">In practice</div></div><h2 class="reveal">Separate durable task state from delegation</h2><div class="code reveal">TASK STATE
+Goal; completed work; evidence; unresolved work; next check.
+
+HELPER TASK
+One scoped question; relevant inputs; permitted actions;
+required findings with evidence and uncertainty.</div><p class="note reveal">A new worker reads the handoff, verifies the current state, then continues.</p><p class="src reveal">Applied example · <a href="https://code.claude.com/docs/en/sub-agents">supporting documentation</a></p></div></section>
+
+<section data-origin-slide="33" class="slide dark" data-label="Human decisions" data-speaker-notes="Replace broad encouragement to be braver with explicit product and permission decisions."><div class="slide-content"><div class="slide-head reveal"><span class="snum">23</span><div class="crumb">In practice</div></div><h2 class="reveal">Keep ownership of scope and acceptance</h2><div class="cards c3 reveal"><div class="tile"><h3 class="k">Scope</h3><p>Decide what outcome and tradeoffs are worth pursuing.</p></div><div class="tile"><h3 class="k">Authority</h3><p>Set which actions require approval and enforce access boundaries.</p></div><div class="tile"><h3 class="k">Acceptance</h3><p>Review the result against requirements and user-visible behavior.</p></div></div><p class="note reveal">Delegation moves work; it does not remove accountability.</p><p class="src reveal">Applied example · <a href="https://code.claude.com/docs/en/sub-agents">supporting documentation</a></p></div></section>
+
+<section data-origin-slide="36" class="slide light" data-label="Two useful patterns" data-speaker-notes="Two patterns are enough for this talk. Advanced pattern catalogues remain in the original baseline; do not imply model diversity automatically removes bias."><div class="slide-content"><div class="slide-head reveal"><span class="snum">24</span><div class="crumb">In practice</div></div><h2 class="reveal">Use separate contexts for a clear reason</h2><div class="cards c2 reveal"><div class="tile"><h3 class="k">Investigate and combine</h3><p>Independent questions; evidence-bearing returns; one integration owner.</p></div><div class="tile"><h3 class="k">Build and review</h3><p>One worker produces a patch; a separate reviewer checks it against a rubric.</p></div></div><p class="note reveal">A second agent can miss the same issue. Keep deterministic checks and final acceptance.</p><p class="src reveal">Applied example · <a href="https://code.claude.com/docs/en/sub-agents">supporting documentation</a></p></div></section>
+
+<section data-origin-slide="38" class="slide dark" data-label="Cost and containment" data-speaker-notes="Removes anecdotal token counts and separates cost control from security containment."><div class="slide-content"><div class="slide-head reveal"><span class="snum">25</span><div class="crumb">In practice</div></div><h2 class="reveal">Two checks before adding workers</h2><div class="cards c2 reveal"><div class="tile"><h3 class="k">Will it help?</h3><p>Estimate coordination and review effort; measure cost per accepted result.</p></div><div class="tile"><h3 class="k">What may it touch?</h3><p>Configure filesystem, network and credential boundaries independently of context separation.</p></div></div><p class="note reveal">Enforce budgets in the harness. A token budget written in a prompt is a request, not necessarily a hard cap.</p><p class="src reveal">Applied example · <a href="https://code.claude.com/docs/en/sub-agents">supporting documentation</a></p></div></section>
+
+<section data-origin-slide="40" class="slide light" data-label="Tool interface" data-speaker-notes="This replaces a history of tool redesigns with a concrete interface. Structured fields make interpretation easier but do not guarantee correct model reasoning."><div class="slide-content"><div class="slide-head reveal"><span class="snum">26</span><div class="crumb">In practice</div></div><h2 class="reveal">Make tool outcomes easy to interpret</h2><div class="code reveal">Invoice verifier result
+status: failed
+case: zero VAT
+expected_gross: 100.00
+actual_gross: 121.00
+evidence: test output and fixture path</div><p class="note reveal">Use clear inputs, bounded outputs and explicit errors. Improve the tool from observed failure traces.</p><p class="src reveal">Applied example · <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">supporting documentation</a></p></div></section>
+
+<section data-origin-slide="41" class="slide dark" data-label="Useful HTML output" data-speaker-notes="Keep the HTML-output idea as a useful option, not a universal replacement for Markdown. The main outcome is a reviewable decision, not an impressive UI."><div class="slide-content"><div class="slide-head reveal"><span class="snum">27</span><div class="crumb">In practice</div></div><h2 class="reveal">Use an interactive view when it improves a decision</h2><div class="cards c2 reveal"><div class="tile"><h3 class="k">Compare</h3><p>Show invoice variants side by side with the changed fields highlighted.</p></div><div class="tile"><h3 class="k">Choose and export</h3><p>Let the reviewer record a decision and export the accepted specification.</p></div></div><p class="note reveal">Plain text is enough for a short finding. Choose the format from the review task.</p><p class="src reveal">Applied example · <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">supporting documentation</a></p></div></section>
+
+<section data-origin-slide="42" class="slide light" data-label="Hooks and extensions" data-speaker-notes="Replace unstable mods API code with a concrete outcome and current documentation. A prompt or hook alone is not a complete sandbox."><div class="slide-content"><div class="slide-head reveal"><span class="snum">28</span><div class="crumb">In practice</div></div><h2 class="reveal">Automate a specific control, then test it</h2><ul class="bul reveal"><li>Example: require the invoice check before an authorized release step.</li><li>Verify the hook’s actual event, inputs, failure behavior and scope.</li><li>Test allowed, denied and error cases in a disposable environment.</li></ul><p class="note reveal">A hook is only as strong as its placement and implementation. <a href="https://code.claude.com/docs/en/hooks">Hooks reference</a></p><p class="src reveal">Applied example · <a href="https://code.claude.com/docs/en/hooks">supporting documentation</a></p></div></section>
+
+<section data-origin-slide="44" class="slide dark" data-label="Tomorrow" data-speaker-notes="The close now returns to the opening three actions, not eight slogans."><div class="slide-content"><div class="slide-head reveal"><span class="snum">29</span><div class="crumb">In practice</div></div><h2 class="reveal">Start with one repeatable improvement</h2><ul class="bul reveal"><li>Remove one conflicting instruction and run its regression cases.</li><li>Save the invoice verification procedure as a small skill.</li><li>Measure the next completed task, including failures and review.</li></ul><p class="note reveal">Keep the change only when the evidence supports it.</p><p class="src reveal">Applied example · <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">supporting documentation</a></p><p class="note"><a href="best-practices-reference.html">Optional reference material</a></p></div></section>
+
+<section data-origin-slide="45" class="slide dark" data-label="Sources" data-speaker-notes="Leave the sources visible for questions. These links support the mechanisms and qualifications; the examples are teaching material, not benchmark measurements."><div class="slide-content"><div class="slide-head reveal"><span class="snum">30</span><div class="crumb">Sources</div></div><h2 class="reveal">Sources and further reading</h2><ul class="bul reveal"><li><a href="https://claude.dev/blog/the-new-rules-of-context-engineering-for-claude-5-generation-models/">Context engineering lessons</a></li><li><a href="https://claude.dev/blog/spending-your-effort/">Effort experiments</a></li><li><a href="https://claude.dev/blog/automating-eval-design-and-hillclimbing/">Evaluation and hillclimbing</a></li><li><a href="https://code.claude.com/docs/en/skills">Skills documentation</a></li></ul><p class="note reveal">Primary documentation checked 3 October 2026. Examples are illustrative unless explicitly attributed.</p></div></section>
 
 </deck-stage>
 <script src="ember_design_system/deck-stage.js"></script>
@@ -1251,7 +452,7 @@ Checkout and invoicing service.
   var notesEl = document.querySelector('.pui-notes');
   var nHead = notesEl.querySelector('.pui-nhead');
   var nBody = notesEl.querySelector('.pui-nbody');
-  var current = 0, presenter = null, mouseT = null;
+  var current = Math.max(0, Array.from(ds.querySelectorAll(':scope > section')).findIndex(function(s){ return s.hasAttribute('data-deck-active'); })), presenter = null, mouseT = null;
 
   function slides(){ return Array.prototype.slice.call(ds.querySelectorAll(':scope > section')); }
   function noteOf(s){ return s.getAttribute('data-speaker-notes') || 'No notes for this slide.'; }
@@ -1299,7 +500,7 @@ Checkout and invoicing service.
     }
     var pd = presenter.document;
     pd.open();
-    pd.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Presenter — ' + document.title.replace(/</g,'&lt;') + '</title><base href="' + document.baseURI + '"></head><body></body></html>');
+    pd.write('<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Presenter — ' + document.title.replace(/</g,'&lt;') + '</title><base href="' + document.baseURI + '"></head><body></body></html>');
     pd.close();
     /* carry the deck's stylesheets + tokens over so slide clones render 1:1 */
     document.head.querySelectorAll('link[rel="stylesheet"], link[rel="preconnect"], style').forEach(function(el){

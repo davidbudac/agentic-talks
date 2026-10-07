@@ -2,7 +2,7 @@
 
 Zero-build HTML slide decks — a general-audience tool landscape, a beginner
 intro to agentic AI, a developer follow-up, engineering deep dives, a workshop
-on working smarter with agents, and a Claude Design product tour. Same
+on working smarter with agents. Same
 template, same aesthetic. The
 key concepts are illustrated by short looping animations rendered with
 [Remotion](https://www.remotion.dev/) (in `assets/anim/`, sources in `remotion/`),
@@ -10,47 +10,31 @@ so keep those folders next to the `.html` files.
 
 Author: **David Budáč** · English
 
-- **[`ai-toolbox.html`](ai-toolbox.html)** — *The AI Toolbox* (a field guide for
-  everyone — no coding background assumed). The big three labs (Claude app / Code /
-  Cowork / Design, ChatGPT / Codex, Gemini / Notebook / Flow) → what agents can do →
-  the wider tool landscape by category (app builders, video, HyperFrames, avatars,
-  voice, music, images, decks, copy, research, automation) → five real-world stories →
-  plugging AI into Excel / PowerPoint & co. (connectors, MCP). Pricing runs through
-  every tool slide (July 2026 snapshot). 57 slides. **No live demos.**
-- **[`agentic-ai.html`](agentic-ai.html)** — *Intro to Agentic AI* (Claude Code for
-  beginners). Model / harness / agent, the loop, context, permissions, memory & MCP. 43 slides.
-- **[`agentic-engineering.html`](agentic-engineering.html)** — *Agentic Engineering*
-  (basics for developers). Told as an evolution story — each chapter fixes the previous
-  one's limitation: the predictor → thinking → hands (tool calls) → the loop → the bill
-  → split the work (routing & subagents) → make it stick (CLAUDE.md, skills, plugins).
-  One thread throughout: the context window. 60 slides. **No live demos.**
-- **[`subagents-prompt-caching.html`](subagents-prompt-caching.html)** — *Subagents &
-  Prompt Caching* (engineering deep dive, for developers & IT admins). Subagent
-  architecture and the four context crossings → parallel fan-out and its integration
-  constraint → the caching mechanism (exact-match prefixes, breakpoints, TTL & eviction)
-  and its economics → where the two reinforce each other → what's allowed under a
-  subscription vs an API key. 39 slides, ~30 min. **No live demos.**
-- **[`working-smarter.html`](working-smarter.html)** — *Working Smarter with
-  Agents* (WIP, half-day workshop with live demos, for engineers already using
-  Claude Code who want to level up). What agents really cost (tokens,
-  subscriptions, Bedrock) → efficient context work (CLAUDE.md, evals, traces) →
-  orchestration, local open-source models & alternative harnesses. ~85 slides.
-- **[`claude-design.html`](claude-design.html)** — *Claude Design* (WIP,
-  ~30-min product deep dive, no code or design background needed — any paid
-  Claude plan). The full tour behind deck 01's two teaser slides: the
-  chat-and-canvas interface, four starting points, the design-system/brand
-  feature (`/design-sync`), plans & shared usage → the craft (the iteration
-  loop, briefing, the three refinement channels, example briefs to steal, a
-  live five-minute build, pitfalls) → sharing, exports, and the Claude Code
-  handoff round trip. 25 slides. **Live demo included.**
-- **[`best-practices.html`](best-practices.html)** — *Claude Best Practices* (~45-min
-  talk for advanced AI engineers and vibe coders who already use Claude Code daily).
-  What Anthropic's own engineers do, from the 13 posts on the claude.dev blog: context
-  (delete, don't add) → skills (folders with gotchas) → the prompt cache → effort & cost
-  → verification & evals → autonomy → multi-agent patterns → making the harness yours
-  (tools, HTML, mods). Every slide carries a source line; a command cheat-sheet and a
-  sources slide close it. 45 slides. **No live demos.** Facts from claude.dev articles,
-  as of October 2026.
+- **[`ai-toolbox.html`](ai-toolbox.html)** — *The AI Toolbox* (no coding background
+  assumed). Choose a task → inspect an editable result → compare workflows → check
+  rights, data and costs → work inside files and connected apps. **31 slides**, no
+  live demo. [Optional reference deck](ai-toolbox-reference.html): **22 slides**,
+  retaining the July 2026 product/pricing snapshot; verify details before reuse.
+- **[`agentic-ai.html`](agentic-ai.html)** — *Intro to Agentic AI* (developers new
+  to agents). One invoice example connects the model/harness loop, context,
+  permissions, project rules, skills and tools. **26 slides**, optional bounded
+  demo with an illustrative trace as the teaching alternative.
+  [Optional reference deck](agentic-ai-reference.html): **13 slides**, including
+  terminology and the September 2026 product/pricing snapshot.
+- **[Agentic Engineering](agentic-engineering.html)** — Model and harness mechanics, bounded verification loops, worked cost arithmetic, context, delegation and reusable checks. **30 slides**.
+  [Optional reference](agentic-engineering-reference.html): **10 slides**. No live run required.
+- **[Subagents & Prompt Caching](subagents-prompt-caching.html)** — Fresh helpers versus forks, evidence-bearing returns, local/cloud boundaries, cache eligibility, warm-up and break-even arithmetic. **21 slides**.
+  [Optional reference](subagents-prompt-caching-reference.html): **4 slides**. No live run required.
+- **[Cost & Context](cost-and-context.html)** — A worked bill, access-route decisions, a before/after instruction file and an exercise that checks correctness as well as usage. **17 slides**.
+  [Optional reference](cost-and-context-reference.html): **4 slides**. No live run required.
+- **[Orchestrating Agents](orchestrating-agents.html)** — One ticket lifecycle, coordination versus containment, verification skills and an MCP/CLI comparison exercise. **19 slides**.
+  [Optional reference](orchestrating-agents-reference.html): **4 slides**. No live run required.
+- **[Measuring What Works](measuring-what-works.html)** — Invoice acceptance cases, graders, repeated trials, trace interpretation, a scoring worksheet and measured hardware choices. **19 slides**.
+  [Optional reference](measuring-what-works-reference.html): **5 slides**. No live run required.
+- **[Claude Best Practices](best-practices.html)** — Applied lessons from Anthropic engineering posts: instruction audits, verification skills, cache tradeoffs, measured effort and two delegation patterns. **30 slides**.
+  [Optional reference](best-practices-reference.html): **5 slides**. No live run required.
+- **[Working Smarter with Agents](working-smarter.html)** — A 210-minute workshop with timeboxes, participant outputs and self-contained invoice exercises. Optional live execution has explicit preparation requirements. **44 slides**.
+  [Optional reference](working-smarter-reference.html): **8 slides**. Static exercises work without paid accounts.
 
 ## View it
 
@@ -58,9 +42,8 @@ Author: **David Budáč** · English
   `open index.html` opens the chooser). `index.html` routes the reader to the
   right deck by audience — non-technical (01) → developers new to agents (02) →
   developers going deeper (03) → devs & IT admins on internals (04) → devs
-  levelling up on cost, orchestration & measurement (05–07, WIP) → daily Claude Code
-  users who want Anthropic's own practices (08, Claude Best Practices) → anyone
-  making visual work with Claude Design (08, WIP) — with
+  levelling up on cost, orchestration & measurement (05–07) → daily Claude Code
+  users who want Anthropic's own practices (08, Claude Best Practices) — with
   self-identification bullets per deck and a
   one-question fallback for the undecided.
 - **Online:** if GitHub Pages is enabled, the repo's Pages root serves the chooser.
@@ -71,73 +54,56 @@ Author: **David Budáč** · English
 - **Touch:** swipe up/down
 - **Mouse:** scroll, or click the nav dots on the right
 
-## Edit in the browser
+## Presenter controls
 
-The deck has a built-in editor (no build step):
-
-- Press **`E`** (or hover the top-left corner) to toggle edit mode, then click any text.
-- Edits **auto-save** to `localStorage`.
-- Bottom-right: **↺ Reset** (restore original) · **⬇ Export** (download a clean copy with edits baked in).
+The Ember stage scales a fixed 1920×1080 canvas to the available viewport.
+Use **N** for speaker notes, **P** for the presenter window, **F** for fullscreen,
+and **R** to return to the first slide. A URL ending in `#3` opens slide 3.
+The main decks link to their optional reference decks from the closing slide.
 
 ## What's covered
 
-**The AI Toolbox** — pricing literacy (subscription / credits / per-seat / API) ·
-chatbot vs agent, the loop, no memory (condensed core) · the big three labs plan by
-plan (Cowork, Claude Design, agent mode, Gemini Notebook, Veo/Flow) · product churn ·
-a week of real tasks · the wider landscape with a leader per category · the fine print
-(licences, public tiers, provenance, credit budgeting) · five documented stories
-(Project Vend, the superbug result, CFA/IMO, the security double, the Super Bowl
-twist) · connectors & MCP, Claude/ChatGPT × Office, M365 Copilot & Gemini Workspace,
-Zapier MCP.
+**The AI Toolbox** — an illustrative quarterly-review workflow · choosing by
+output · subscriptions and credits · representative examples for apps, video,
+voice, images and automation · review checkpoints · two real-world stories ·
+three integration routes: create a file, edit inside an app, connect another system.
 
-**Intro to Agentic AI** — model / harness / agent · the agent loop · reasoning /
-"thinking" · current SOTA models & harnesses · pricing (subscriptions vs API) ·
-context (context rot, caching, compaction, sub-agents) · permissions & safety ·
-memory (CLAUDE.md, skills, plugins) · APIs, CLIs & MCP · how to work with it well.
+**Intro to Agentic AI** — an illustrative invoice fix · model / harness / agent ·
+tool calls · reasoning and verification · useful context, caching and compaction ·
+fresh subagents versus forks · permissions · project rules, skills and external tools.
 
-**Agentic Engineering** — the machine (model / harness / client + a client-server
-sequence diagram) · next-token prediction & attention · context as the program ·
-statelessness, token cost & KV caching (with cache-lifetime economics) · the "dumb
-zone" · interactive projects to go build/see an LLM · model × reasoning-effort routing
-and Fable techniques (advisor & orchestrator patterns) · the agentic ladder · loops &
-verifiers (spiralling, reward-hacking) · dynamic workflows · skills & plugins.
-A single **context** thread ties the sections together (🧵 markers throughout).
+**Agentic Engineering** — Model and harness mechanics, bounded verification loops, worked cost arithmetic, context, delegation and reusable checks.
 
-**Working Smarter with Agents** *(WIP)* — what agents really cost (tokens,
-subscriptions, Bedrock) · efficient context work (CLAUDE.md, evals, traces) ·
-orchestration, local open-source models & alternative harnesses.
+**Subagents & Prompt Caching** — Fresh helpers versus forks, evidence-bearing returns, local/cloud boundaries, cache eligibility, warm-up and break-even arithmetic.
 
-**Claude Design** *(WIP)* — what it is (Anthropic Labs, April 2026, beta) ·
-chat left / canvas right · four starting points (text, DOCX/PPTX/XLSX, web
-capture, codebase) · the design-system feature & `/design-sync` · plans &
-shared usage · the craft: iterate (judge iteration 4, not 1), brief like a
-creative director, chat vs inline comments vs direct editing, briefs to steal
-· pitfalls · sharing, exports (PPTX/PDF/HTML/Canva/zip) & the Claude Code
-handoff round trip. Facts verified July 2026.
+**Cost & Context** — A worked bill, access-route decisions, a before/after instruction file and an exercise that checks correctness as well as usage.
 
-**Claude Best Practices** — context engineering (the >80% system-prompt cut, then/now
-shifts, CLAUDE.md gotchas, prompt audits) · skills (nine types, gotchas, descriptions
-as triggers, hub-and-spoke, on-demand hooks) · prompt-cache layout, numbers, do/don't
-and cache-safe compaction · the effort ladder, what effort buys (Terminal-Bench, internal
-runs), low-to-build/high-to-verify, check → effort → model, reading `/usage` ·
-measurement and evals (the claude.ai speed-up, ratchets, real-check prompts,
-good evals, hillclimbing) · autonomy (done means…, stop rule, TASKS.md, steering) ·
-dynamic-workflow patterns and their cost · tool design, HTML over Markdown, mods.
-Facts from claude.dev articles, as of October 2026.
+**Orchestrating Agents** — One ticket lifecycle, coordination versus containment, verification skills and an MCP/CLI comparison exercise.
 
-## Live demo (agentic-ai deck, optional; the WIP workshop deck also has live demos)
+**Measuring What Works** — Invoice acceptance cases, graders, repeated trials, trace interpretation, a scoring worksheet and measured hardware choices.
 
-The *Intro to Agentic AI* deck is built to run alongside a live agent. There's a **🔴 LIVE** anchor
-slide right after the hook, and **🔴 LIVE** callback markers on the loop,
-thinking, and context slides. A presenter quick-reference is in an HTML comment
-at the top of `agentic-ai.html`.
+**Claude Best Practices** — Applied lessons from Anthropic engineering posts: instruction audits, verification skills, cache tradeoffs, measured effort and two delegation patterns.
 
-- Before the talk, start Claude Code on a real task in **auto / accept-edits**
-  mode (so it won't block on a prompt mid-talk — which also demos the
-  permissions slides).
-- Good tasks (~3–8 min, several tool calls): *"add a `/health` endpoint with a
-  test, then run the tests"* or *"find & fix why test X fails."* Avoid anything
-  that finishes in ~20s or needs a login.
+**Working Smarter with Agents** — A 210-minute workshop with timeboxes, participant outputs and self-contained invoice exercises. Optional live execution has explicit preparation requirements.
+
+## Optional beginner demo
+
+Use a prepared, disposable invoice project with scoped file and command access.
+Show a failing test, ask for a bounded fix, then inspect the final test output and
+diff. Keep relevant permission prompts enabled. The adjacent illustrative trace
+can teach the same sequence if a live run is unavailable; it is not a recording or
+benchmark result. Later discussion can use the completed transcript.
+
+## Improvement work
+
+The clarity revision is tracked in
+[the implementation plan](reviews/2026-10-03-clarity/PLAN.md),
+[change log](reviews/2026-10-03-clarity/CHANGES.md),
+[slide map](reviews/2026-10-03-clarity/SLIDE-MAP.md), and
+[validation record](reviews/2026-10-03-clarity/VALIDATION.md).
+All nine main decks and their reference decks have completed the clarity pass.
+The workshop and deep dives share [exercise materials](reviews/2026-10-03-clarity/exercise-materials.md).
+Work remains local and uncommitted. No live provider benchmark is implied.
 
 ## Concept animations (Remotion)
 
@@ -146,14 +112,14 @@ rendered MP4s as muted loops that restart whenever you land on their slide:
 
 | Animation | Concept | Used on |
 |-----------|---------|---------|
-| `agent-loop` | the agent loop (propose → run → result → repeat) | toolbox s6 · intro s10 · eng s17 |
-| `stateless` | no memory: every call re-sends the whole history | toolbox s7 · intro s6 · eng s14 |
-| `next-token` | next-token prediction with sampled probabilities | eng s4 |
-| `quality` | quality vs. context fill — context rot / the dumb zone | intro s22 · eng s28 |
-| `kv-cache` | KV caching: cached prefix + fresh tail, append-only | eng s26 |
-| `subagents` | delegation: messy work inside, tiny summary back | intro s25 · eng s29 · cost s20 |
-| `context-lifecycle` | fixed overhead stamped into every turn; only the conversation grows | cost s14 |
-| `progressive-disclosure` | a skill's how-to loads on trigger; CLAUDE.md is paid every turn | orch s16 |
+| `agent-loop` | model proposes, harness runs, result returns | toolbox, intro, engineering |
+| `stateless` | conceptual request-history illustration | toolbox; original asset retained |
+| `next-token` | sampled next-token prediction | engineering |
+| `kv-cache` | matching-prefix reuse; on-slide caveats qualify the price label | engineering, subagents |
+| `subagents` | intermediate work stays in a helper context | intro, engineering, subagents, cost, workshop |
+| `quality` | original fixed quality curve | retained asset; omitted from revised teaching paths |
+| `context-lifecycle` | original context stack | retained asset; revised talks use scoped examples |
+| `progressive-disclosure` | loading supporting instructions when needed | retained asset; revised talks use the invoice skill |
 
 To tweak or re-render: `cd remotion && npm i`, then `npx remotion studio` to
 preview or `npx remotion render <composition-id> ../assets/anim/<id>.mp4` to
@@ -163,14 +129,14 @@ in the deck's light/dark theme variant as needed).
 ## Customize
 
 All styling is driven by CSS variables in the `:root` block of `agentic-ai.html`
-(`--card` is the accent color; `--font-*` set the typography). The Remotion
+(Ember color tokens and `--font-*` set the palette and typography). The Remotion
 animations read the same palette from `remotion/src/theme.ts`.
 
 ## Notes
 
-- Facts (model names, prices) are **verified as of July 2026** and labelled on-slide —
-  this space moves fast, so re-check the primary sources (see the deck's final two
-  "Sources" slides) before reusing.
+- Product claims have different snapshot dates across the series. The October
+  clarity edit is not a full refresh of vendor features or prices. Check primary
+  sources before quoting historical product details or planning a live demo.
 
 ## Files
 
@@ -178,11 +144,22 @@ animations read the same palette from `remotion/src/theme.ts`.
 |------|---------|
 | `ai-toolbox.html` | *The AI Toolbox* deck — tool landscape for everyone (no live demo). |
 | `agentic-ai.html` | *Intro to Agentic AI* deck — beginners. |
-| `agentic-engineering.html` | *Agentic Engineering* deck — developers (no live demo). |
-| `subagents-prompt-caching.html` | *Subagents & Prompt Caching* deck — engineering deep dive (no live demo). |
-| `working-smarter.html` | *Working Smarter with Agents* deck — half-day workshop on cost, context efficiency & orchestration (WIP, live demos). |
-| `claude-design.html` | *Claude Design* deck — ~30-min product deep dive on Anthropic's visual-creation tool (WIP, live demo, no code needed). |
-| `best-practices.html` | *Claude Best Practices* deck — ~45-min talk on what Anthropic's engineers do, from the claude.dev blog (no live demo; facts as of October 2026). |
+| `agentic-engineering.html` | Agentic Engineering — 30 slides; optional reference has 10. |
+| `subagents-prompt-caching.html` | Subagents & Prompt Caching — 21 slides; optional reference has 4. |
+| `working-smarter.html` | Working Smarter with Agents — 44 slides; optional reference has 8. |
+| `best-practices.html` | Claude Best Practices — 30 slides; optional reference has 5. |
+| `ai-toolbox-reference.html` | Optional toolbox catalogue and supporting examples; July 2026 snapshot. |
+| `agentic-ai-reference.html` | Optional terminology and product details; September 2026 snapshot. |
+| `cost-and-context.html` | Cost & Context — 17 slides; optional reference has 4. |
+| `orchestrating-agents.html` | Orchestrating Agents — 19 slides; optional reference has 4. |
+| `measuring-what-works.html` | Measuring What Works — 19 slides; optional reference has 5. |
+| `agentic-engineering-reference.html` | Optional supporting material for Agentic Engineering. |
+| `subagents-prompt-caching-reference.html` | Optional supporting material for Subagents & Prompt Caching. |
+| `cost-and-context-reference.html` | Optional supporting material for Cost & Context. |
+| `orchestrating-agents-reference.html` | Optional supporting material for Orchestrating Agents. |
+| `measuring-what-works-reference.html` | Optional supporting material for Measuring What Works. |
+| `best-practices-reference.html` | Optional supporting material for Claude Best Practices. |
+| `working-smarter-reference.html` | Optional supporting material for Working Smarter with Agents. |
 | `index.html` | Landing page routing readers to the right deck by audience (GitHub Pages root). |
 | `assets/anim/` | Rendered concept animations (MP4 loops) embedded by the decks. |
 | `remotion/` | Remotion project — sources for the animations. |

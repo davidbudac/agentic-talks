@@ -1,0 +1,27 @@
+Raw attribute + href/media comparison: subagents-prompt-caching.html -> subagents-prompt-caching-ivory.html
+slides 21 21
+01 origin= 1 'Title': slide=same; label=same; notes=same; hrefs=same
+02 origin= 2 'Agenda': slide=same; label=same; notes=same; hrefs=same
+03 origin= 6 'Local and cloud map': slide=same; label=same; notes=same; hrefs=same
+04 origin= 7 'Subagents': slide=same; label=same; notes=same; hrefs=same; media ['assets/anim/subagents-light.mp4'] -> ['assets/anim/subagents-ivory.mp4']
+05 origin= 9 'Delegation lifecycle': slide=same; label=same; notes=same; hrefs=same
+06 origin=10 'Fresh or forked': slide=same; label=same; notes=same; hrefs=same
+07 origin=11 'Return contract': slide=same; label=same; notes=same; hrefs=same
+08 origin=12 'Parallel work': slide=same; label=same; notes=same; hrefs=same
+09 origin=14 'Delegation economics': slide=same; label=same; notes=same; hrefs=same
+10 origin=16 'Call versus agent': slide=same; label=same; notes=same; hrefs=same
+11 origin=17 'Illustrative helper return': slide=same; label=same; notes=same; hrefs=same
+12 origin=22 'KV caching': slide=same; label=same; notes=same; hrefs=same; media ['assets/anim/kv-cache-light.mp4'] -> ['assets/anim/kv-cache-ivory.mp4']
+13 origin=25 'Shared prefix example': slide=same; label=same; notes=same; hrefs=same
+14 origin=27 'Token volume and cost': slide=same; label=same; notes=same; hrefs=same
+15 origin=28 'Cache break-even': slide=same; label=same; notes=same; hrefs=same
+16 origin=29 'Cache lifetime': slide=same; label=same; notes=same; hrefs=same
+17 origin=31 'Verify cache usage': slide=same; label=same; notes=same; hrefs=same
+18 origin=33 'Warm-up before fan-out': slide=same; label=same; notes=same; hrefs=same
+19 origin=35 'Choose authentication': slide=same; label=same; notes=same; hrefs=same
+20 origin=38 'Takeaways': slide=same; label=same; notes=same; hrefs=same
+21 origin=39 'Sources': slide=same; label=same; notes=same; hrefs=same
+
+audit.py visible-text changes (whitespace-normalized; all other slides: none):
+ 01 Title: errors=[] changes=[{'kind': 'replace', 'source': 'adminsRevised October 2026', 'output': 'admins'}, {'kind': 'replace', 'source': 'Caching.', 'output': 'Caching'}, {'kind': 'replace', 'source': 'David', 'output': 'AuthorDavid'}, {'kind': 'insert', 'source': '', 'output': 'RevisedOctober 2026'}]
+ 05 Delegation lifecycle: errors=[] changes=[{'kind': 'insert', 'source': '', 'output': '01'}, {'kind': 'insert', 'source': '', 'output': '02'}, {'kind': 'insert', 'source': '', 'output': '03'}]

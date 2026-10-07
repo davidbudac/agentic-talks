@@ -9,3 +9,6 @@ remotion/node_modules/
 
 # Office lock files
 ~$*
+
+# Mockup screenshots (regenerable)
+style-mockups/shots/

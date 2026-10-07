@@ -1,0 +1,545 @@
+{
+  "source": "agentic-ai-reference.html",
+  "output": "agentic-ai-reference-ivory.html",
+  "counts": [
+    13,
+    13
+  ],
+  "structural_errors": [],
+  "slides": [
+    {
+      "slide": 1,
+      "label": "Reference guide",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "agentic-ai.html"
+        ],
+        [
+          "agentic-ai.html"
+        ]
+      ],
+      "source_text": "Reference Reference material Use selectively Product details and supporting examples from the original September 2026 deck. Verify before reuse Check availability, prices and limits with the linked primary sources. Return to the main talk",
+      "output_text": "Reference Reference material Use selectively Product details and supporting examples from the original September 2026 deck. Verify before reuse Check availability, prices and limits with the linked primary sources. Return to the main talk"
+    },
+    {
+      "slide": 2,
+      "label": "Glossary",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Core · cheat sheet ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Core · cheat sheet",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "agentic-ai.html"
+        ],
+        [
+          "agentic-ai.html"
+        ]
+      ],
+      "source_text": "Reference · September 2026 snapshot · Back to the talk Core · cheat sheet Words you'll keep hearing TokenA chunk of text ≈ ¾ of a word (un·believ·able = 3). What models read & bill in. PromptThe text you send the model. ContextEverything the model sees in one call. Context windowThe max size of that context (1M tokens on today's top models). Tool callAn action the model asks the harness to run. HarnessThe program running the model + its tools. AgentModel + harness, doing things in a loop. SOTA\"State of the art\" — today's best. MCPModel Context Protocol — a standard plug for tools/data. Don't worry about memorising these — every one gets a slide of its own. This is just your map.",
+      "output_text": "Core · cheat sheet · Reference · September 2026 snapshot · Back to the talk Words you'll keep hearing TokenA chunk of text ≈ ¾ of a word (un·believ·able = 3). What models read & bill in. PromptThe text you send the model. ContextEverything the model sees in one call. Context windowThe max size of that context (1M tokens on today's top models). Tool callAn action the model asks the harness to run. HarnessThe program running the model + its tools. AgentModel + harness, doing things in a loop. SOTA\"State of the art\" — today's best. MCPModel Context Protocol — a standard plug for tools/data. Don't worry about memorising these — every one gets a slide of its own. This is just your map."
+    },
+    {
+      "slide": 3,
+      "label": "Today's models",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Landscape · models ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Landscape · models",
+          "output": ""
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "96% SWE-bench Verified — Opus 5 fixing real bugs in real code projects 2× the field ARC-AGI-3 — GPT‑6 Astra scores 63%, twice the next-best model, on puzzles built to resist memorising ~6 months how long \"what AI can't do\" assumptions stay true"
+        },
+        {
+          "kind": "delete",
+          "source": "96% SWE-bench Verified — Opus 5 fixing real bugs in real code projects 2× the field ARC-AGI-3 — GPT‑6 Astra scores 63%, twice the next-best model, on puzzles built to resist memorising ~6 months how long \"what AI can't do\" assumptions stay true",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "agentic-ai.html"
+        ],
+        [
+          "agentic-ai.html"
+        ]
+      ],
+      "source_text": "Reference · September 2026 snapshot · Back to the talk Landscape · models Today's best models Maker Flagship lineup (September 2026) Known for Anthropic Claude Fable 5.1 · Opus 5.5 · Sonnet 5 · Haiku 4.5 coding, agents, long context OpenAI GPT‑6 — Astra · Sol · Luna general reasoning, Codex Google Gemini 3.8 Flash · 3.5 Flash‑Lite (3.5 Pro still unreleased) multimodal, large context The same three tiers repeat everywhere: large (smartest, priciest) · medium (the sweet spot) · small (fast & cheap) — and Anthropic adds a frontier tier on top (Claude Fable 5.1). It reshuffles every few months, so treat any list as a snapshot. How fast does it move? — 96% SWE-bench Verified — Opus 5 fixing real bugs in real code projects 2× the field ARC-AGI-3 — GPT‑6 Astra scores 63%, twice the next-best model, on puzzles built to resist memorising ~6 months how long \"what AI can't do\" assumptions stay true",
+      "output_text": "Landscape · models · Reference · September 2026 snapshot · Back to the talk Today's best models Maker Flagship lineup (September 2026) Known for Anthropic Claude Fable 5.1 · Opus 5.5 · Sonnet 5 · Haiku 4.5 coding, agents, long context OpenAI GPT‑6 — Astra · Sol · Luna general reasoning, Codex Google Gemini 3.8 Flash · 3.5 Flash‑Lite (3.5 Pro still unreleased) multimodal, large context 96% SWE-bench Verified — Opus 5 fixing real bugs in real code projects 2× the field ARC-AGI-3 — GPT‑6 Astra scores 63%, twice the next-best model, on puzzles built to resist memorising ~6 months how long \"what AI can't do\" assumptions stay true The same three tiers repeat everywhere: large (smartest, priciest) · medium (the sweet spot) · small (fast & cheap) — and Anthropic adds a frontier tier on top (Claude Fable 5.1). It reshuffles every few months, so treat any list as a snapshot. How fast does it move? —"
+    },
+    {
+      "slide": 4,
+      "label": "Which tier when",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Landscape · picking a tier ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Landscape · picking a tier",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "agentic-ai.html"
+        ],
+        [
+          "agentic-ai.html"
+        ]
+      ],
+      "source_text": "Reference · September 2026 snapshot · Back to the talk Landscape · picking a tier Which tier when? Large · Opus Hard reasoning, tricky multi-file refactors, architecture. Pricier per word — but on hard work it gets there in fewer steps. Medium · Sonnet The daily driver. Most coding & agent work. Often beats last gen's flagship at a fraction of the cost. Small · Haiku High-volume, simple, fast: classification, quick edits, sub-agent grunt work. Example: a cheap Haiku sub-agent skims 200 files and summarises; the pricey Opus only does the actual design call. Cheap legwork, expensive thinking only where needed. But \"pricey\" is per word, not per job — that turns out to matter, and we come back to it in a few slides.",
+      "output_text": "Landscape · picking a tier · Reference · September 2026 snapshot · Back to the talk Which tier when? Large · Opus Hard reasoning, tricky multi-file refactors, architecture. Pricier per word — but on hard work it gets there in fewer steps. Medium · Sonnet The daily driver. Most coding & agent work. Often beats last gen's flagship at a fraction of the cost. Small · Haiku High-volume, simple, fast: classification, quick edits, sub-agent grunt work. Example: a cheap Haiku sub-agent skims 200 files and summarises; the pricey Opus only does the actual design call. Cheap legwork, expensive thinking only where needed. But \"pricey\" is per word, not per job — that turns out to matter, and we come back to it in a few slides."
+    },
+    {
+      "slide": 5,
+      "label": "Today's harnesses",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Landscape · harnesses ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Landscape · harnesses",
+          "output": ""
+        },
+        {
+          "kind": "replace",
+          "source": "Code Anthropic.",
+          "output": "CodeAnthropic."
+        },
+        {
+          "kind": "replace",
+          "source": "Codex OpenAI's",
+          "output": "CodexOpenAI's"
+        },
+        {
+          "kind": "replace",
+          "source": "Cursor An",
+          "output": "CursorAn"
+        },
+        {
+          "kind": "replace",
+          "source": "Copilot Agent",
+          "output": "CopilotAgent"
+        },
+        {
+          "kind": "replace",
+          "source": "Desktop Another",
+          "output": "DesktopAnother"
+        },
+        {
+          "kind": "replace",
+          "source": "Aider Open-source",
+          "output": "AiderOpen-source"
+        }
+      ],
+      "links": [
+        [
+          "agentic-ai.html"
+        ],
+        [
+          "agentic-ai.html"
+        ]
+      ],
+      "source_text": "Reference · September 2026 snapshot · Back to the talk Landscape · harnesses Today's best harnesses Claude Code Anthropic. CLI + IDE + web. Agentic coding over your whole repo. Codex OpenAI's coding agent on GPT‑6 — in your terminal, with a cloud option. Cursor An IDE built around an AI agent. GitHub Copilot Agent + autocomplete inside your editor. Devin Desktop Another agentic IDE (ex‑Windsurf). Aider Open-source terminal coding agent. The harness decides what the model can actually do — tools, sandboxing, memory, parallelism. At least as important as the model.",
+      "output_text": "Landscape · harnesses · Reference · September 2026 snapshot · Back to the talk Today's best harnesses Claude CodeAnthropic. CLI + IDE + web. Agentic coding over your whole repo. CodexOpenAI's coding agent on GPT‑6 — in your terminal, with a cloud option. CursorAn IDE built around an AI agent. GitHub CopilotAgent + autocomplete inside your editor. Devin DesktopAnother agentic IDE (ex‑Windsurf). AiderOpen-source terminal coding agent. The harness decides what the model can actually do — tools, sandboxing, memory, parallelism. At least as important as the model."
+    },
+    {
+      "slide": 6,
+      "label": "Lovable",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Landscape · beyond code ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Landscape · beyond code",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "agentic-ai.html"
+        ],
+        [
+          "agentic-ai.html"
+        ]
+      ],
+      "source_text": "Reference · September 2026 snapshot · Back to the talk Landscape · beyond code Lovable: describe an app, get an app You describe the app in plain language — Lovable builds a working web app: pages, database, login, hosting. Then you iterate by chat: \"make the header sticky\", \"add a monthly chart\" — it edits the live app. Underneath: the same agent loop we just saw, wrapped in a website. Same category: v0, Bolt, Replit. Example: \"Build an expense tracker: add expenses, a monthly chart, login.\" → minutes later, a running app on a shareable link — source code included.",
+      "output_text": "Landscape · beyond code · Reference · September 2026 snapshot · Back to the talk Lovable: describe an app, get an app You describe the app in plain language — Lovable builds a working web app: pages, database, login, hosting. Then you iterate by chat: \"make the header sticky\", \"add a monthly chart\" — it edits the live app. Underneath: the same agent loop we just saw, wrapped in a website. Same category: v0, Bolt, Replit. Example: \"Build an expense tracker: add expenses, a monthly chart, login.\" → minutes later, a running app on a shareable link — source code included."
+    },
+    {
+      "slide": 7,
+      "label": "Higgsfield",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Landscape · beyond code ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Landscape · beyond code",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "agentic-ai.html"
+        ],
+        [
+          "agentic-ai.html"
+        ]
+      ],
+      "source_text": "Reference · September 2026 snapshot · Back to the talk Landscape · beyond code Higgsfield: video from a prompt Text or image in → finished video out: cinematic camera moves, characters that stay consistent across shots. An AI director splits your idea into shots, generates each, stitches them — our loop again, different domain. Built for marketing & social — even \"product URL in → ready-made ad out\". Same category: Veo, Kling, Runway. Example: \"A 15-second ad for our mobile bank: phone in hand, city at dusk, upbeat.\" → storyboard → shots → rendered clip, ready for social.",
+      "output_text": "Landscape · beyond code · Reference · September 2026 snapshot · Back to the talk Higgsfield: video from a prompt Text or image in → finished video out: cinematic camera moves, characters that stay consistent across shots. An AI director splits your idea into shots, generates each, stitches them — our loop again, different domain. Built for marketing & social — even \"product URL in → ready-made ad out\". Same category: Veo, Kling, Runway. Example: \"A 15-second ad for our mobile bank: phone in hand, city at dusk, upbeat.\" → storyboard → shots → rendered clip, ready for social."
+    },
+    {
+      "slide": 8,
+      "label": "HyperFrames",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Landscape · beyond code ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Landscape · beyond code",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "agentic-ai.html"
+        ],
+        [
+          "agentic-ai.html"
+        ]
+      ],
+      "source_text": "Reference · September 2026 snapshot · Back to the talk Landscape · beyond code HyperFrames: agents that make video Open-source (HeyGen): a web page with timing attributes in → a pixel-perfect MP4 out. Built for agents: Claude Code installs it as a skill, then edits video by chat — the way it edits code. Same file in → same video out, every time — ideal for explainers, product demos, captions. Example: \"Turn this slide's diagram into a 20-second animated explainer.\" → the agent writes the HTML, renders it, hands you the MP4.",
+      "output_text": "Landscape · beyond code · Reference · September 2026 snapshot · Back to the talk HyperFrames: agents that make video Open-source (HeyGen): a web page with timing attributes in → a pixel-perfect MP4 out. Built for agents: Claude Code installs it as a skill, then edits video by chat — the way it edits code. Same file in → same video out, every time — ideal for explainers, product demos, captions. Example: \"Turn this slide's diagram into a 20-second animated explainer.\" → the agent writes the HTML, renders it, hands you the MP4."
+    },
+    {
+      "slide": 9,
+      "label": "Subscriptions",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Landscape · plans ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Landscape · plans",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "agentic-ai.html"
+        ],
+        [
+          "agentic-ai.html"
+        ]
+      ],
+      "source_text": "Reference · September 2026 snapshot · Back to the talk Landscape · plans Subscriptions (consumer) Tier Claude (Anthropic) ChatGPT (OpenAI) Free limited usage limited usage Entry Pro — ~$20/mo Go ~$8 · Plus ~$20/mo Power Max 5× ~$100 · Max 20× ~$200/mo Pro 5× ~$100 · Pro 20× ~$200/mo (20× sign-ups paused) Higher tiers buy more usage and priority access to the newest models. Prices as of September 2026 — they change often, so verify before quoting.",
+      "output_text": "Landscape · plans · Reference · September 2026 snapshot · Back to the talk Subscriptions (consumer) Tier Claude (Anthropic) ChatGPT (OpenAI) Free limited usage limited usage Entry Pro — ~$20/mo Go ~$8 · Plus ~$20/mo Power Max 5× ~$100 · Max 20× ~$200/mo Pro 5× ~$100 · Pro 20× ~$200/mo (20× sign-ups paused) Higher tiers buy more usage and priority access to the newest models. Prices as of September 2026 — they change often, so verify before quoting."
+    },
+    {
+      "slide": 10,
+      "label": "Cost per task",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Reference · task cost ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Reference · task cost",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "agentic-ai.html"
+        ],
+        [
+          "agentic-ai.html"
+        ]
+      ],
+      "source_text": "Reference · September 2026 snapshot · Back to the talk Reference · task cost Compare the cost of an accepted result Cheap tokens, many retries A low unit price can be offset by more tool calls, reasoning and failed attempts. Higher unit price, fewer attempts A more capable model can win on a difficult task. Measure rather than assuming it will. Compare the same task and acceptance check. Include all attempts, cached input, fresh input and output.",
+      "output_text": "Reference · task cost · Reference · September 2026 snapshot · Back to the talk Compare the cost of an accepted result Cheap tokens, many retries A low unit price can be offset by more tool calls, reasoning and failed attempts. Higher unit price, fewer attempts A more capable model can win on a difficult task. Measure rather than assuming it will. Compare the same task and acceptance check. Include all attempts, cached input, fresh input and output."
+    },
+    {
+      "slide": 11,
+      "label": "Unattended runs",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Reference · permissions ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Reference · permissions",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "agentic-ai.html"
+        ],
+        [
+          "agentic-ai.html"
+        ]
+      ],
+      "source_text": "Reference · September 2026 snapshot · Back to the talk Reference · permissions Isolation must restrict real access Use a disposable environment with only the files the task needs. Limit network destinations and remove production credentials. Apply a time or token budget and retain the final diff and logs. A project copy, worktree or CI runner is not automatically a security boundary. Keep approvals where the environment cannot safely contain the consequence.",
+      "output_text": "Reference · permissions · Reference · September 2026 snapshot · Back to the talk Isolation must restrict real access Use a disposable environment with only the files the task needs. Limit network destinations and remove production credentials. Apply a time or token budget and retain the final diff and logs. A project copy, worktree or CI runner is not automatically a security boundary. Keep approvals where the environment cannot safely contain the consequence."
+    },
+    {
+      "slide": 12,
+      "label": "Sources 1 of 2",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Sources · further reading ·"
+        },
+        {
+          "kind": "delete",
+          "source": "· further reading Sources",
+          "output": ""
+        },
+        {
+          "kind": "replace",
+          "source": "overviewplatform.claude.com/docs",
+          "output": "overview platform.claude.com/docs"
+        },
+        {
+          "kind": "replace",
+          "source": "pricingclaude.com/pricing",
+          "output": "pricing claude.com/pricing"
+        },
+        {
+          "kind": "replace",
+          "source": "(benchmarks)anthropic.com/news",
+          "output": "(benchmarks) anthropic.com/news"
+        },
+        {
+          "kind": "replace",
+          "source": "efficiencyanthropic.com/news",
+          "output": "efficiency anthropic.com/news"
+        },
+        {
+          "kind": "replace",
+          "source": "Luna)openai.com/index/gpt-6-astra",
+          "output": "Luna) openai.com/index/gpt-6-astra"
+        },
+        {
+          "kind": "replace",
+          "source": "leaderboardarcprize.org/leaderboard",
+          "output": "leaderboard arcprize.org/leaderboard"
+        },
+        {
+          "kind": "replace",
+          "source": "tierschatgpt.com/pricing",
+          "output": "tiers chatgpt.com/pricing"
+        },
+        {
+          "kind": "replace",
+          "source": "Flashblog.google",
+          "output": "Flash blog.google"
+        },
+        {
+          "kind": "replace",
+          "source": "CLAUDE.mdcode.claude.com/docs",
+          "output": "CLAUDE.md code.claude.com/docs"
+        },
+        {
+          "kind": "replace",
+          "source": "sub-agentscode.claude.com/docs",
+          "output": "sub-agents code.claude.com/docs"
+        },
+        {
+          "kind": "replace",
+          "source": "Codexopenai.com/codex",
+          "output": "Codex openai.com/codex"
+        },
+        {
+          "kind": "replace",
+          "source": "sourcegithub.com/openai/codex",
+          "output": "source github.com/openai/codex"
+        }
+      ],
+      "links": [
+        [
+          "agentic-ai.html",
+          "https://platform.claude.com/docs/en/models/overview",
+          "https://claude.com/pricing",
+          "https://www.anthropic.com/news/claude-opus-5",
+          "https://www.anthropic.com/news/claude-opus-4-5",
+          "https://openai.com/index/gpt-6-astra/",
+          "https://arcprize.org/leaderboard",
+          "https://chatgpt.com/pricing/",
+          "https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/",
+          "https://code.claude.com/docs/en/memory",
+          "https://code.claude.com/docs/en/sub-agents",
+          "https://openai.com/codex/",
+          "https://github.com/openai/codex"
+        ],
+        [
+          "agentic-ai.html",
+          "https://platform.claude.com/docs/en/models/overview",
+          "https://claude.com/pricing",
+          "https://www.anthropic.com/news/claude-opus-5",
+          "https://www.anthropic.com/news/claude-opus-4-5",
+          "https://openai.com/index/gpt-6-astra/",
+          "https://arcprize.org/leaderboard",
+          "https://chatgpt.com/pricing/",
+          "https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/",
+          "https://code.claude.com/docs/en/memory",
+          "https://code.claude.com/docs/en/sub-agents",
+          "https://openai.com/codex/",
+          "https://github.com/openai/codex"
+        ]
+      ],
+      "source_text": "Reference · September 2026 snapshot · Back to the talk Sources · further reading Sources & links (1/2) Models & pricing Anthropic — Claude models overviewplatform.claude.com/docs · models Claude — plans & pricingclaude.com/pricing Anthropic — Claude Opus 5 (benchmarks)anthropic.com/news · claude-opus-5 Anthropic — Opus 4.5: effort & token efficiencyanthropic.com/news · claude-opus-4-5 OpenAI — GPT-6 (Astra · Sol · Luna)openai.com/index/gpt-6-astra ARC Prize — ARC-AGI-3 leaderboardarcprize.org/leaderboard ChatGPT — pricing tierschatgpt.com/pricing Google — Gemini 3.8 Flashblog.google · 3-8-flash Harnesses Claude Code — memory & CLAUDE.mdcode.claude.com/docs · memory Claude Code — sub-agentscode.claude.com/docs · sub-agents OpenAI — Codexopenai.com/codex Codex CLI — sourcegithub.com/openai/codex",
+      "output_text": "Sources · further reading · Reference · September 2026 snapshot · Back to the talk Sources & links (1/2) Models & pricing Anthropic — Claude models overview platform.claude.com/docs · models Claude — plans & pricing claude.com/pricing Anthropic — Claude Opus 5 (benchmarks) anthropic.com/news · claude-opus-5 Anthropic — Opus 4.5: effort & token efficiency anthropic.com/news · claude-opus-4-5 OpenAI — GPT-6 (Astra · Sol · Luna) openai.com/index/gpt-6-astra ARC Prize — ARC-AGI-3 leaderboard arcprize.org/leaderboard ChatGPT — pricing tiers chatgpt.com/pricing Google — Gemini 3.8 Flash blog.google · 3-8-flash Harnesses Claude Code — memory & CLAUDE.md code.claude.com/docs · memory Claude Code — sub-agents code.claude.com/docs · sub-agents OpenAI — Codex openai.com/codex Codex CLI — source github.com/openai/codex"
+    },
+    {
+      "slide": 13,
+      "label": "Sources 2 of 2",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Sources · context, memory & MCP ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Sources · context, memory & MCP",
+          "output": ""
+        },
+        {
+          "kind": "replace",
+          "source": "engineeringanthropic.com/engineering",
+          "output": "engineering anthropic.com/engineering"
+        },
+        {
+          "kind": "replace",
+          "source": "study)trychroma.com/research/context-rot",
+          "output": "study) trychroma.com/research/context-rot"
+        },
+        {
+          "kind": "replace",
+          "source": "Middlearxiv.org/abs/2307.03172",
+          "output": "Middle arxiv.org/abs/2307.03172"
+        },
+        {
+          "kind": "replace",
+          "source": "cachingplatform.claude.com/docs",
+          "output": "caching platform.claude.com/docs"
+        },
+        {
+          "kind": "replace",
+          "source": "thinkingplatform.claude.com/docs",
+          "output": "thinking platform.claude.com/docs"
+        },
+        {
+          "kind": "replace",
+          "source": "thinkanthropic.com/research",
+          "output": "think anthropic.com/research"
+        },
+        {
+          "kind": "replace",
+          "source": "Skillsanthropic.com/engineering",
+          "output": "Skills anthropic.com/engineering"
+        },
+        {
+          "kind": "replace",
+          "source": "(SKILL.md)github.com/anthropics/skills",
+          "output": "(SKILL.md) github.com/anthropics/skills"
+        },
+        {
+          "kind": "replace",
+          "source": "MCPanthropic.com/news",
+          "output": "MCP anthropic.com/news"
+        },
+        {
+          "kind": "replace",
+          "source": "docsmodelcontextprotocol.io",
+          "output": "docs modelcontextprotocol.io"
+        }
+      ],
+      "links": [
+        [
+          "agentic-ai.html",
+          "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+          "https://www.trychroma.com/research/context-rot",
+          "https://arxiv.org/abs/2307.03172",
+          "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+          "https://platform.claude.com/docs/en/build-with-claude/thinking",
+          "https://www.anthropic.com/research/reasoning-models-dont-say-think",
+          "https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills",
+          "https://github.com/anthropics/skills",
+          "https://www.anthropic.com/news/model-context-protocol",
+          "https://modelcontextprotocol.io"
+        ],
+        [
+          "agentic-ai.html",
+          "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+          "https://www.trychroma.com/research/context-rot",
+          "https://arxiv.org/abs/2307.03172",
+          "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+          "https://platform.claude.com/docs/en/build-with-claude/thinking",
+          "https://www.anthropic.com/research/reasoning-models-dont-say-think",
+          "https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills",
+          "https://github.com/anthropics/skills",
+          "https://www.anthropic.com/news/model-context-protocol",
+          "https://modelcontextprotocol.io"
+        ]
+      ],
+      "source_text": "Reference · September 2026 snapshot · Back to the talk Sources · context, memory & MCP Sources & links (2/2) Context, caching & reasoning Anthropic — Effective context engineeringanthropic.com/engineering Chroma — Context Rot (18-model study)trychroma.com/research/context-rot Liu et al. — Lost in the Middlearxiv.org/abs/2307.03172 Anthropic — Prompt cachingplatform.claude.com/docs · prompt-caching Anthropic — Extended / adaptive thinkingplatform.claude.com/docs · thinking Anthropic — Reasoning models don't always say what they thinkanthropic.com/research · cot-faithfulness Skills, plugins & MCP Anthropic — Agent Skillsanthropic.com/engineering · agent-skills Anthropic — Skills repo (SKILL.md)github.com/anthropics/skills Anthropic — Introducing MCPanthropic.com/news · model-context-protocol Model Context Protocol — spec & docsmodelcontextprotocol.io All figures verified September 2026. Models & prices move fast — re-check the primary sources before quoting.",
+      "output_text": "Sources · context, memory & MCP · Reference · September 2026 snapshot · Back to the talk Sources & links (2/2) Context, caching & reasoning Anthropic — Effective context engineering anthropic.com/engineering Chroma — Context Rot (18-model study) trychroma.com/research/context-rot Liu et al. — Lost in the Middle arxiv.org/abs/2307.03172 Anthropic — Prompt caching platform.claude.com/docs · prompt-caching Anthropic — Extended / adaptive thinking platform.claude.com/docs · thinking Anthropic — Reasoning models don't always say what they think anthropic.com/research · cot-faithfulness Skills, plugins & MCP Anthropic — Agent Skills anthropic.com/engineering · agent-skills Anthropic — Skills repo (SKILL.md) github.com/anthropics/skills Anthropic — Introducing MCP anthropic.com/news · model-context-protocol Model Context Protocol — spec & docs modelcontextprotocol.io All figures verified September 2026. Models & prices move fast — re-check the primary sources before quoting."
+    }
+  ]
+}

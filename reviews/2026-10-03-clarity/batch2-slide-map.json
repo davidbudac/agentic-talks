@@ -1,0 +1,484 @@
+{
+  "agentic-engineering": [
+    {
+      "original": 1,
+      "label": "Title",
+      "main": 1,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    },
+    {
+      "original": 2,
+      "label": "The hook",
+      "main": 2,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    },
+    {
+      "original": 3,
+      "label": "Agenda",
+      "main": 3,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    },
+    {
+      "original": 4,
+      "label": "01 A machine that talks",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Removed divider; agenda supplies the route."
+    },
+    {
+      "original": 5,
+      "label": "Next-token prediction",
+      "main": 4,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    },
+    {
+      "original": 6,
+      "label": "Prediction 1.0",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Removed inaccurate one-word keyboard analogy; model explanation is main 4."
+    },
+    {
+      "original": 7,
+      "label": "Attention",
+      "main": 5,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    },
+    {
+      "original": 8,
+      "label": "Go play with one",
+      "main": null,
+      "reference": 2,
+      "action": "rewritten",
+      "reason": "Revised supporting example or recipe in optional reference."
+    },
+    {
+      "original": 9,
+      "label": "02 Teach it to think",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Reasoning transition merged into main 6."
+    },
+    {
+      "original": 10,
+      "label": "Reasoning: the example",
+      "main": 6,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    },
+    {
+      "original": 11,
+      "label": "Why thinking works",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Reasoning claims and effort merged into main 6; model-specific billing omitted."
+    },
+    {
+      "original": 12,
+      "label": "The effort dial",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Model-specific effort table replaced by main 6 and 21."
+    },
+    {
+      "original": 13,
+      "label": "03 Give it hands",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Tools transition merged into main 7."
+    },
+    {
+      "original": 14,
+      "label": "Model, harness, client",
+      "main": 7,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    },
+    {
+      "original": 15,
+      "label": "Anatomy of a tool call",
+      "main": 8,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    },
+    {
+      "original": 16,
+      "label": "Client and server",
+      "main": 9,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    },
+    {
+      "original": 17,
+      "label": "Why re-send everything",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Statelessness simplified and scoped in main 9."
+    },
+    {
+      "original": 18,
+      "label": "One turn's payload",
+      "main": null,
+      "reference": 3,
+      "action": "rewritten",
+      "reason": "Revised supporting example or recipe in optional reference."
+    },
+    {
+      "original": 19,
+      "label": "04 Close the loop",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Loop transition merged into main 10."
+    },
+    {
+      "original": 20,
+      "label": "Four levels",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Repeated ladder removed; practical workflow choices are main 24."
+    },
+    {
+      "original": 21,
+      "label": "The inner loop",
+      "main": 10,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    },
+    {
+      "original": 22,
+      "label": "From ralph to /goal",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Unbounded shell loop removed; bounded contract and reference pseudocode replace it."
+    },
+    {
+      "original": 23,
+      "label": "Never loop without a verifier",
+      "main": 11,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    },
+    {
+      "original": 24,
+      "label": "Two ways loops go wrong",
+      "main": 12,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    },
+    {
+      "original": 25,
+      "label": "Be annoyingly specific",
+      "main": 13,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    },
+    {
+      "original": 26,
+      "label": "05 The bill comes due",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Cost transition merged into main 14; quadratic cost claim corrected in reference 4."
+    },
+    {
+      "original": 27,
+      "label": "Context growth",
+      "main": 14,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    },
+    {
+      "original": 28,
+      "label": "The growing input",
+      "main": null,
+      "reference": 4,
+      "action": "rewritten",
+      "reason": "Revised supporting example or recipe in optional reference."
+    },
+    {
+      "original": 29,
+      "label": "Input vs output",
+      "main": 15,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    },
+    {
+      "original": 30,
+      "label": "Smarter is cheaper",
+      "main": 20,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    },
+    {
+      "original": 31,
+      "label": "Where the money goes",
+      "main": 16,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    },
+    {
+      "original": 32,
+      "label": "KV caching",
+      "main": 17,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    },
+    {
+      "original": 33,
+      "label": "Cache lifetime",
+      "main": null,
+      "reference": 5,
+      "action": "rewritten",
+      "reason": "Revised supporting example or recipe in optional reference."
+    },
+    {
+      "original": 34,
+      "label": "The dumb zone",
+      "main": 18,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    },
+    {
+      "original": 35,
+      "label": "06 Split the work",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Delegation transition merged into main 19."
+    },
+    {
+      "original": 36,
+      "label": "Subagents",
+      "main": 19,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    },
+    {
+      "original": 37,
+      "label": "The lineups",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Model catalogue removed; measurement replaces tier assumptions in main 20\u201322."
+    },
+    {
+      "original": 38,
+      "label": "How much better",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Unverified benchmark table removed; measure representative work in main 20."
+    },
+    {
+      "original": 39,
+      "label": "Model x effort",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Model/effort comparison merged into main 6 and 21."
+    },
+    {
+      "original": 40,
+      "label": "Three rules for routing",
+      "main": 21,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    },
+    {
+      "original": 41,
+      "label": "Fable is a tier",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Fixed vendor hierarchy removed; use measured worker/reviewer roles in main 22."
+    },
+    {
+      "original": 42,
+      "label": "Pattern 1 - the advisor",
+      "main": 22,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    },
+    {
+      "original": 43,
+      "label": "Pattern 2 - the orchestrator",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Orchestrator pattern merged into main 23."
+    },
+    {
+      "original": 44,
+      "label": "Pattern 2b - cross-vendor",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Cross-vendor wrapper recipe removed; not needed for the teaching outcome."
+    },
+    {
+      "original": 45,
+      "label": "Where to spend what",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Fixed role-to-tier table replaced by main 20\u201322."
+    },
+    {
+      "original": 46,
+      "label": "Workflows",
+      "main": 23,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    },
+    {
+      "original": 47,
+      "label": "Workflows in code",
+      "main": null,
+      "reference": 6,
+      "action": "rewritten",
+      "reason": "Revised supporting example or recipe in optional reference."
+    },
+    {
+      "original": 48,
+      "label": "Which tool, when",
+      "main": 24,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    },
+    {
+      "original": 49,
+      "label": "07 Make it stick",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Persistence transition merged into main 25."
+    },
+    {
+      "original": 50,
+      "label": "CLAUDE.md",
+      "main": 25,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    },
+    {
+      "original": 51,
+      "label": "Why skills",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Repeated skill motivation merged into main 26."
+    },
+    {
+      "original": 52,
+      "label": "Skill anatomy",
+      "main": 26,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    },
+    {
+      "original": 53,
+      "label": "Build a skill",
+      "main": null,
+      "reference": 7,
+      "action": "rewritten",
+      "reason": "Revised supporting example or recipe in optional reference."
+    },
+    {
+      "original": 54,
+      "label": "Skills at scale",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Skill-system overview merged into the concrete example in main 27."
+    },
+    {
+      "original": 55,
+      "label": "Worked example - Pocock",
+      "main": 27,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    },
+    {
+      "original": 56,
+      "label": "Worked example - Compound",
+      "main": null,
+      "reference": 8,
+      "action": "rewritten",
+      "reason": "Revised supporting example or recipe in optional reference."
+    },
+    {
+      "original": 57,
+      "label": "Plugin anatomy",
+      "main": 28,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    },
+    {
+      "original": 58,
+      "label": "Publish a plugin",
+      "main": null,
+      "reference": 9,
+      "action": "rewritten",
+      "reason": "Revised supporting example or recipe in optional reference."
+    },
+    {
+      "original": 59,
+      "label": "Recap",
+      "main": 29,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    },
+    {
+      "original": 60,
+      "label": "Thanks and sources",
+      "main": 30,
+      "reference": 10,
+      "action": "rewritten",
+      "reason": "Revised for the shorter spoken path."
+    }
+  ]
+}

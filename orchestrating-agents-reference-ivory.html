@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Orchestrating Agents — Reference</title>
+<link rel="stylesheet" href="ivory_design_system/styles.css">
+</head>
+<body>
+
+<!--
+  ============================================================
+  Orchestrating Agents — optional reference deck.
+  Supporting procedures and worksheets for orchestrating-agents.html.
+  Not part of the spoken path.
+  Ivory design system (DESIGN.md, ivory_design_system/).
+  Runs on the deck-stage component: ←/→, Space, Home/End,
+  number keys; R resets; N notes, P presenter window, F fullscreen;
+  speaker notes live on each section.
+  ============================================================
+-->
+
+<deck-stage width="1920" height="1080">
+
+<!-- 01 · Title (regular .slide, h2 + .cards.c2; banner → footer .note) -->
+<section data-origin-slide="0" class="slide" data-label="Title" data-speaker-notes="Optional reference Revised October 2026. Worked examples are illustrative; no live run is required.">
+  <div class="slide-head"><span class="crumb">Optional reference</span><span class="snum"></span></div>
+  <h2>Orchestrating Agents<br>Reference</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><p>Supporting procedures and worksheets. <a href="orchestrating-agents.html">Return to the main talk</a></p></div>
+      <div class="tile"><h3>David Budáč</h3><p>Revised October 2026</p></div>
+    </div>
+  </div>
+  <p class="note">Optional reference · <a href="orchestrating-agents.html">Back to the talk</a></p>
+</section>
+
+<!-- 02 · Tool examples (Ember ul.bul → ul.bul, 4 rows; equal tools, no clay) -->
+<section data-origin-slide="5" class="slide" data-label="Tool examples" data-speaker-notes="The brand biographies were removed from the spoken path. No product is assumed to implement every requirement from the talk.">
+  <div class="slide-head"><span class="crumb">In practice · Optional reference · <a href="orchestrating-agents.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Evaluate tools against the workflow requirements</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li><a href="https://herdr.org">Herdr</a> — inspect monitoring and coordination behavior.</li>
+      <li><a href="https://conductor.build">Conductor</a> — inspect workspace and review behavior.</li>
+      <li><a href="https://github.com/openai/symphony">Symphony</a> — inspect task lifecycle and tracker support.</li>
+      <li><a href="https://github.com/mattpocock/sandcastle">Sandcastle</a> — inspect its configured environment boundary.</li>
+    </ul>
+  </div>
+  <p class="note">Reference links, not a current product comparison. Check supported versions and integrations.</p>
+</section>
+
+<!-- 03 · Plugin publication recipe (Ember .code → .code.reg, one .l per line; same markup as the accepted agentic-engineering-reference twin, no clay) -->
+<section data-origin-slide="21" class="slide" data-label="Plugin publication recipe" data-speaker-notes="Claude Code example, checked 3 October 2026. This is a recipe to read; no publication is performed. A marketplace needs its own listing and valid source paths. Confirm team permissions and review hooks or integrations before distributing. Installation steps belong with the chosen channel.">
+  <div class="slide-head"><span class="crumb">Publication reference · Optional reference · <a href="orchestrating-agents.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Package, test, then share</h2>
+  <div class="zone">
+    <div class="code reg">
+      <span class="l">my-plugin/</span>
+      <span class="l">  .claude-plugin/plugin.json</span>
+      <span class="l">  skills/invoice-check/SKILL.md</span>
+      <span class="l"></span>
+      <span class="l">1. Give the manifest a name and version.</span>
+      <span class="l">2. Test locally: claude --plugin-dir ./my-plugin</span>
+      <span class="l">3. Review contents and pin the version to distribute.</span>
+      <span class="l">4. Publish through your team’s approved channel.</span>
+    </div>
+  </div>
+  <p class="note"><a href="https://code.claude.com/docs/en/plugins">Plugin overview</a> · <a href="https://code.claude.com/docs/en/plugin-marketplaces">Marketplace setup</a></p>
+</section>
+
+<!-- 04 · Interface comparison exercise (Ember .code → .code, one .l per line; same markup as the accepted main-deck twin, no clay) -->
+<section data-origin-slide="29" class="slide" data-label="Interface comparison exercise" data-speaker-notes="Do not manufacture a winning result. If one route lacks the same capability, record that as a capability difference before comparing costs.">
+  <div class="slide-head"><span class="crumb">In practice · Optional reference · <a href="orchestrating-agents.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Run the same read through both interfaces</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="k">Task:</span> retrieve the invoice ticket and its acceptance cases.</span>
+      <span class="l">Hold data, access scope and requested output constant.</span>
+      <span class="l">For CLI and MCP, record:</span>
+      <span class="l">  correctness; calls; failures; tokens; elapsed time</span>
+      <span class="l">Repeat after warm-up; report missing measurements.</span>
+    </div>
+  </div>
+  <p class="note">This is an experiment design, not a completed case study.</p>
+</section>
+
+</deck-stage>
+<script src="ivory_design_system/deck-stage.js"></script>
+<script src="ivory_design_system/deck.js"></script>
+</body>
+</html>

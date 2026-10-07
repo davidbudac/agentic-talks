@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>Style A3 — Ivory Technical</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shell.css">
+<style>
+/* ── Style A3 · Ivory Technical ── everything scoped under .slide ──
+   Grid: 1920 × 1080, 120px side margins, 12 columns × 118px, 24px gutters.
+   Column starts: 120 262 404 546 688 830 972 1114 1256 1398 1540 1682 (span n = 142n − 24).
+   Fixed: header text 64 · header rule 108 · headline top 172 · footer rule 960 · footnote 984.
+   Content zone: top = headline's last line + 72 (326 for one line, 408 for two); bottom = 888 (72 above the footer rule).
+   Content type steps: regular 30px, large 40px (sans and mono alike). Labels 20px mono. Footnote 26px. */
+.slide{
+  --ivory:#FAF9F5; --paper:#F0EEE6; --slate:#141413; --ink2:#5E5D59; --rule:#C9C3B4; --body:#2E2E2B;
+  --clay:#D97757; --clay-ink:#C6613F;
+  --sans:"Geist",system-ui,sans-serif; --mono:"Geist Mono",ui-monospace,monospace;
+  --gap:72px; --zone-bottom:888px;
+  --reg:30px; --lg:40px;
+
+  /* the headline flows; the zone below it takes whatever height is left down to --zone-bottom */
+  display:flex; flex-direction:column;
+  padding:172px 120px calc(1080px - var(--zone-bottom));
+  background:var(--ivory); color:var(--slate);
+  font-family:var(--sans); font-size:var(--reg); line-height:1.4;
+  font-variant-numeric:tabular-nums lining-nums;
+  -webkit-font-smoothing:antialiased;
+}
+.slide *{box-sizing:border-box;margin:0;padding:0}
+.slide svg{display:block;overflow:visible}
+.slide .lab{font:500 20px/24px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}
+.slide svg g[letter-spacing]{letter-spacing:1.6px}
+
+/* fixed chrome */
+.slide .hd{position:absolute;left:120px;right:120px;top:60px;height:48px;border-bottom:1px solid var(--rule);
+  display:flex;justify-content:space-between;align-items:flex-start;padding-top:4px}
+.slide .hd .no{color:var(--slate)}
+.slide h2{flex:none;width:1396px;font:600 78px/82px var(--sans);letter-spacing:-.034em;color:var(--slate);text-wrap:balance}
+.slide .cz{position:relative;flex:1 1 0;min-height:0;width:1680px;margin-top:var(--gap)}
+.slide .ft{position:absolute;left:120px;right:120px;top:960px;border-top:1px solid var(--rule);padding-top:22px;
+  font:400 26px/36px var(--sans);color:var(--ink2)}
+
+/* shared: items in cells (2, 6) — top hairline, full-height cells, vertical hairlines between, bottom hairline on the zone edge */
+/* rows shared by all cells (subgrid): label · free space · heading · text — so the text sits on the zone's bottom edge and headings line up */
+.slide .cells{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;grid-template-rows:auto 1fr auto auto;border-bottom:1px solid var(--rule)}
+.slide .cell{grid-row:1/-1;display:grid;grid-template-rows:subgrid;border-top:1px solid var(--rule);padding:22px 24px 0 0}
+.slide .cell+.cell{border-left:1px solid var(--rule);padding-left:24px}
+.slide .cell>.lab{grid-row:1}
+.slide .cell>h3{grid-row:3}
+.slide .cell>p{grid-row:4;margin-bottom:40px}
+
+/* 1 · Title */
+.s1 h1{position:absolute;left:120px;bottom:368px;width:1396px;
+  font:600 176px/.94 var(--sans);letter-spacing:-.055em;color:var(--slate)}
+.s1 .sub{position:absolute;left:120px;top:752px;width:970px;font:400 38px/1.32 var(--sans);color:var(--ink2);letter-spacing:-.005em}
+.s1 .hd .aud{color:var(--clay-ink)}
+.s1 .meta{position:absolute;left:120px;right:120px;top:960px;border-top:1px solid var(--rule);padding-top:22px;
+  display:grid;grid-template-columns:repeat(3,544px);column-gap:24px}
+.s1 .meta div{display:flex;align-items:baseline;gap:20px;font:400 28px/36px var(--sans);color:var(--slate)}
+.s1 .meta .lab{flex:0 0 auto}
+
+/* 2 · Three items — no accent: three equals */
+.s2 .it h3{font:600 var(--lg)/1.2 var(--sans);letter-spacing:-.022em}
+.s2 .it p{margin-top:10px;font:400 var(--lg)/1.36 var(--sans);letter-spacing:-.008em;color:var(--body);text-wrap:pretty}
+
+/* 3 · Code and 8 · Trace share one panel: all 12 columns, full zone height, lines spread evenly */
+.slide .panel{height:100%;background:var(--paper);border-radius:2px;padding:20px 0;display:flex}
+.slide .panel pre{flex:1;display:grid;grid-auto-rows:1fr;align-items:center;
+  font:400 var(--lg)/56px var(--mono);color:var(--slate);white-space:pre;counter-reset:ln}
+.slide .panel .l{display:block}
+.slide .panel .l::before{counter-increment:ln;content:counter(ln,decimal-leading-zero);display:inline-block;width:98px;margin-right:44px;text-align:right;
+  font:400 20px/56px var(--mono);color:#8A877E;letter-spacing:.04em;vertical-align:baseline}
+.s3 .k{font-weight:500}
+.s3 .k.c{color:var(--clay-ink)}
+.s8 .pass{color:var(--clay-ink);font-weight:500}
+.s8 .a{color:var(--ink2)}
+
+/* 4 · Numbers */
+.s4 .hero{position:absolute;left:0;top:-8px;font:500 168px/1 var(--sans);letter-spacing:-.05em;color:var(--slate)}
+.s4 .chart{position:absolute;left:0;bottom:0;width:828px}
+.s4 .chart text{font-family:var(--mono)}
+.s4 table{position:absolute;left:852px;top:0;width:828px;height:100%;border-collapse:collapse;
+  display:grid;grid-template-rows:auto repeat(4,1fr)}
+.s4 thead,.s4 tbody{display:contents}
+.s4 tr{display:grid;grid-template-columns:1fr auto;align-items:center;border-bottom:1px solid var(--rule)}
+.s4 thead tr{align-items:start;padding-bottom:18px;border-bottom:1.5px solid var(--slate)}
+.s4 tbody tr:nth-last-child(2){border-bottom:1.5px solid var(--slate)}
+.s4 th,.s4 td{display:block;text-align:left}
+.s4 th:last-child,.s4 td:last-child{text-align:right}
+.s4 td{font:400 var(--reg)/1.2 var(--sans);color:var(--body)}
+.s4 td:last-child{font:400 var(--reg)/1.2 var(--mono);color:var(--slate)}
+.s4 tr.tot td{color:var(--slate);font-weight:500}
+
+/* 5 · Diagram */
+.s5 ol{list-style:none;position:absolute;left:0;top:0;width:686px;height:100%;display:grid;grid-template-rows:repeat(4,1fr);border-bottom:1px solid var(--rule)}
+.s5 li{display:grid;grid-template-columns:142px 1fr;align-content:center;align-items:baseline;border-top:1px solid var(--rule);
+  font:400 var(--reg)/1.38 var(--sans);color:var(--body);text-wrap:pretty}
+.s5 li .lab{color:var(--slate)}
+.s5 li b{font-weight:500;color:var(--slate)}
+.s5 svg{position:absolute;left:852px;top:0;width:828px;height:100%}
+.s5 svg text{font-family:var(--mono)}
+
+/* 6 · Before / after — the after column carries the accent */
+.s6 .col.key{border-top:2px solid var(--clay);padding-top:21px}
+.s6 .col.key .lab{color:var(--clay-ink)}
+.s6 .col p{font:400 var(--lg)/1.36 var(--sans);letter-spacing:-.008em;max-width:760px;text-wrap:pretty}
+.s6 .col.was p{color:var(--ink2)}
+
+/* 7 · Bullets — no accent: three equal steps */
+.s7 .cz{display:grid;grid-template-rows:repeat(3,1fr);border-bottom:1px solid var(--rule)}
+.s7 .row{display:grid;grid-template-columns:142px 284px 1254px;align-content:center;align-items:baseline;border-top:1px solid var(--rule)}
+.s7 .row .lab{color:var(--slate)}
+.s7 .row b{font:600 var(--lg)/1.2 var(--sans);letter-spacing:-.022em}
+.s7 .row p{font:400 var(--reg)/1.4 var(--sans);color:var(--body)}
+
+/* 9 · Two-column table */
+.s9 table{width:1680px;height:100%;border-collapse:collapse;display:grid;grid-template-rows:auto repeat(2,1fr)}
+.s9 colgroup{display:none}
+.s9 thead,.s9 tbody{display:contents}
+.s9 tr{display:grid;grid-template-columns:852px 828px;align-content:center;align-items:baseline;border-bottom:1px solid var(--rule)}
+.s9 thead tr{align-content:start;padding-bottom:18px;border-bottom:1.5px solid var(--slate)}
+.s9 th,.s9 td{display:block;text-align:left}
+.s9 th.c{color:var(--clay-ink)}
+.s9 td{font:400 var(--lg)/1.36 var(--sans);letter-spacing:-.008em;max-width:760px;color:var(--slate);text-wrap:balance}
+</style>
+</head><body><main class="sheet">
+
+<header class="sheet-head">
+  <a class="back" href="index.html">← All styles</a>
+  <h1>A3 — Ivory Technical</h1>
+  <p class="why">A2 with Geist type kept its look but placed content at fixed coordinates, so short headlines left a hole, sparse slides stopped short of the footer and the accent sometimes landed on one of several equals; A3 fixes the content zone to the headline above and a hard edge below and lets every slide fill it.</p>
+  <div class="borrow">
+    <div><b>Accent</b>Clay marks the one element that is the point of the slide, and only when there is one. Slides of equal items carry no clay.</div>
+    <div><b>Zone top</b>The content zone starts 72px below the headline’s last line, so one- and two-line headlines get the same gap.</div>
+    <div><b>Zone bottom</b>Content fills the zone to a fixed edge 72px above the footer rule: rows share its height, columns and panels run its full height and width.</div>
+  </div>
+  <div class="swatches">
+    <span style="background:#FAF9F5">#FAF9F5</span>
+    <span style="background:#F0EEE6">#F0EEE6</span>
+    <span style="background:#C9C3B4">#C9C3B4</span>
+    <span style="background:#5E5D59;color:#fff">#5E5D59</span>
+    <span style="background:#141413;color:#FAF9F5">#141413</span>
+    <span style="background:#D97757">#D97757</span>
+    <span style="background:#C6613F;color:#fff">#C6613F</span>
+  </div>
+</header>
+
+<!-- 1 · Title -->
+<div class="frame"><section class="slide s1">
+  <div class="hd"><span class="lab aud">Advanced · daily Claude Code users</span><span class="lab no">01 / 30</span></div>
+  <h1>Claude Best<br>Practices</h1>
+  <p class="sub">Practical lessons from Anthropic’s engineering posts, tested against your own work.</p>
+  <div class="meta">
+    <div><span class="lab">Author</span>David Budáč</div>
+    <div><span class="lab">Revised</span>October 2026</div>
+    <div><span class="lab">Length</span>30 slides</div>
+  </div>
+</section></div><p class="cap">1 · Title</p>
+
+<!-- 2 · Three items -->
+<div class="frame"><section class="slide s2">
+  <div class="hd"><span class="lab">In practice</span><span class="lab no">02 / 30</span></div>
+  <h2>Start with three changes</h2>
+  <div class="cz cells">
+    <div class="cell it"><span class="lab">01</span><h3>Instructions</h3><p>Remove conflicting or obsolete rules; preserve real constraints.</p></div>
+    <div class="cell it"><span class="lab">02</span><h3>Verification</h3><p>Make done depend on evidence tied to the task.</p></div>
+    <div class="cell it"><span class="lab">03</span><h3>Measurement</h3><p>Compare configurations by outcomes, cost and review effort.</p></div>
+  </div>
+  <div class="ft">Skills, caching and delegation support these three habits.</div>
+</section></div><p class="cap">2 · Three items</p>
+
+<!-- 3 · Code -->
+<div class="frame"><section class="slide s3">
+  <div class="hd"><span class="lab">The invoice task</span><span class="lab no">21 / 30</span></div>
+  <h2>Make the acceptance contract explicit</h2>
+  <div class="cz">
+    <div class="panel"><pre><span class="l"><span class="k">GOAL:</span> export invoice net, VAT and gross values to CSV.</span><span class="l"><span class="k">SCOPE:</span> invoice export code; preserve existing tests.</span><span class="l"><span class="k c">VERIFY:</span> pytest tests/test_export.py -q</span><span class="l"><span class="k">CASES:</span> 21% VAT, zero VAT, rounding, quoted CSV fields.</span><span class="l"><span class="k">LIMIT:</span> three repair attempts; then stop and report.</span><span class="l"><span class="k">EVIDENCE:</span> diff, command, exit status, failures and gaps.</span></pre></div>
+  </div>
+  <div class="ft">Pair this request with an enforced runtime budget and a review of the resulting artifact.</div>
+</section></div><p class="cap">3 · Code</p>
+
+<!-- 4 · Numbers -->
+<div class="frame"><section class="slide s4">
+  <div class="hd"><span class="lab">Worked arithmetic</span><span class="lab no">10 / 30</span></div>
+  <h2>One cache-hit request: about five cents</h2>
+  <div class="cz">
+    <div class="hero">$0.0506</div>
+    <!-- to scale: 828px = $0.15 → 5520 px per dollar -->
+    <svg class="chart" viewBox="0 0 828 230" aria-hidden="true">
+      <g font-size="20" letter-spacing="1.6" fill="#5E5D59" font-weight="500">
+        <text x="0" y="16">WITH THE CACHE HIT</text>
+        <text x="0" y="104">WITHOUT IT</text>
+      </g>
+      <rect x="0" y="32" width="279.3" height="20" fill="#D97757"/>
+      <rect x="0" y="120" width="677.9" height="20" fill="#141413"/>
+      <g font-size="24" fill="#141413">
+        <text x="297" y="50">$0.0506</text>
+        <text x="696" y="138">$0.1228</text>
+      </g>
+      <g stroke="#141413" stroke-width="1.5">
+        <line x1="0" y1="176" x2="828" y2="176"/>
+        <line x1="0.75" y1="176" x2="0.75" y2="186"/><line x1="276" y1="176" x2="276" y2="186"/>
+        <line x1="552" y1="176" x2="552" y2="186"/><line x1="827.25" y1="176" x2="827.25" y2="186"/>
+      </g>
+      <g font-size="20" fill="#5E5D59">
+        <text x="0" y="216">$0.00</text>
+        <text x="276" y="216" text-anchor="middle">$0.05</text>
+        <text x="552" y="216" text-anchor="middle">$0.10</text>
+        <text x="828" y="216" text-anchor="end">$0.15</text>
+      </g>
+    </svg>
+    <table>
+      <thead><tr><th class="lab">Illustrative usage and rates</th><th class="lab">Cost</th></tr></thead>
+      <tbody>
+        <tr><td>19,000 cached input × $0.20 / million</td><td>$0.0038</td></tr>
+        <tr><td>3,700 new input × $4 / million</td><td>$0.0148</td></tr>
+        <tr><td>1,600 output × $20 / million</td><td>$0.0320</td></tr>
+        <tr class="tot"><td>22,700 input + 1,600 output in total</td><td>$0.0506</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="ft">Assumed rates, not a measured bill. Without the cache hit: $0.0908 input + $0.0320 output = $0.1228.</div>
+</section></div><p class="cap">4 · Numbers</p>
+
+<!-- 5 · Diagram -->
+<div class="frame"><section class="slide s5">
+  <div class="hd"><span class="lab">Agent · the loop</span><span class="lab no">09 / 30</span></div>
+  <h2>An agent is a loop</h2>
+  <div class="cz">
+    <ol>
+      <li><span class="lab">01</span><span><b>Propose:</b> the model chooses the next action.</span></li>
+      <li><span class="lab">02</span><span><b>Run:</b> the harness executes it under the configured permissions.</span></li>
+      <li><span class="lab">03</span><span><b>Observe:</b> the result returns as context for the next step.</span></li>
+      <li><span class="lab">04</span><span><b>Check:</b> stop when the task is verified, or ask when blocked.</span></li>
+    </ol>
+    <!-- drawn for the one-line-headline zone: 828 × 562 -->
+    <svg viewBox="0 0 828 562" aria-hidden="true">
+      <defs>
+        <marker id="a3-arr" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto">
+          <path d="M0,0 L12,6 L0,12 Z" fill="#D97757"/>
+        </marker>
+      </defs>
+      <!-- the loop: one clay path in two orthogonal legs -->
+      <g fill="none" stroke="#D97757" stroke-width="2" stroke-linejoin="miter">
+        <path d="M130,211 V72 H698 V210" marker-end="url(#a3-arr)"/>
+        <path d="M698,351 V490 H130 V352" marker-end="url(#a3-arr)"/>
+      </g>
+      <!-- two components -->
+      <g fill="#FAF9F5" stroke="#141413" stroke-width="2">
+        <rect x="1" y="211" width="259" height="140" rx="2"/>
+        <rect x="568" y="211" width="259" height="140" rx="2"/>
+      </g>
+      <g font-size="26" font-weight="500" fill="#141413" letter-spacing="1.6" text-anchor="middle">
+        <text x="130" y="277">MODEL</text>
+        <text x="698" y="277">HARNESS</text>
+      </g>
+      <g font-size="20" fill="#5E5D59" letter-spacing="1.6" text-anchor="middle">
+        <text x="130" y="315">04 CHECK</text>
+        <text x="698" y="315">02 RUN</text>
+        <text x="414" y="54">01 PROPOSE</text>
+        <text x="414" y="526">03 OBSERVE</text>
+      </g>
+    </svg>
+  </div>
+  <div class="ft">In a live run or a finished transcript, point to one tool call and its result. That is one lap of the loop.</div>
+</section></div><p class="cap">5 · Diagram</p>
+
+<!-- 6 · Before / after -->
+<div class="frame"><section class="slide s6">
+  <div class="hd"><span class="lab">In practice</span><span class="lab no">04 / 30</span></div>
+  <h2>Shorten the file while preserving its constraints</h2>
+  <div class="cz cells">
+    <div class="cell col was"><span class="lab">Before</span><p>Long project history, duplicate style advice, VAT rules, test commands and an old incident log.</p></div>
+    <div class="cell col key"><span class="lab">After</span><p>Keep VAT source, rounding rule, test command and schema boundary. Link occasional procedures from a skill.</p></div>
+  </div>
+  <div class="ft">The acceptance check is unchanged behavior on the same tasks, not the smallest file.</div>
+</section></div><p class="cap">6 · Before / after</p>
+
+<!-- 7 · Bullets -->
+<div class="frame"><section class="slide s7">
+  <div class="hd"><span class="lab">Model choice</span><span class="lab no">15 / 30</span></div>
+  <h2>Escalate when the evidence points to a need</h2>
+  <div class="cz">
+    <div class="row"><span class="lab">01</span><b>Start:</b><p>use a configuration that has met the acceptance bar on similar work.</p></div>
+    <div class="row"><span class="lab">02</span><b>Diagnose:</b><p>missing facts, a broken tool and hard reasoning call for different fixes.</p></div>
+    <div class="row"><span class="lab">03</span><b>Compare:</b><p>try supported effort or model changes against the same checks and budget.</p></div>
+  </div>
+  <div class="ft">There is no universal “effort first” ladder. Re-evaluate defaults when the task or model changes.</div>
+</section></div><p class="cap">7 · Bullets</p>
+
+<!-- 8 · Terminal trace -->
+<div class="frame"><section class="slide s8">
+  <div class="hd"><span class="lab">The loop</span><span class="lab no">10 / 30</span></div>
+  <h2>The invoice fix, step by step</h2>
+  <div class="cz">
+    <div class="panel"><pre><span class="l">run tests     <span class="a">→</span> FAIL: expected 121, got 100</span><span class="l">read invoice  <span class="a">→</span> VAT is missing from the total</span><span class="l">edit code     <span class="a">→</span> apply the order’s 21% VAT rate</span><span class="l">run tests     <span class="a">→</span> <span class="pass">PASS</span></span><span class="l">review diff   <span class="a">→</span> check scope and edge cases</span></pre></div>
+  </div>
+  <div class="ft">Illustrative trace. The model requests the actions; the harness runs them and returns the results.</div>
+</section></div><p class="cap">8 · Terminal trace</p>
+
+<!-- 9 · Two-column table -->
+<div class="frame"><section class="slide s9">
+  <div class="hd"><span class="lab">In practice</span><span class="lab no">13 / 30</span></div>
+  <h2>Change one setting at a time</h2>
+  <div class="cz">
+    <table>
+      <colgroup><col><col></colgroup>
+      <thead><tr><th class="lab">Hold constant</th><th class="lab c">Compare</th></tr></thead>
+      <tbody>
+        <tr><td>Task, starting files and acceptance cases</td><td>Supported effort settings for the same model.</td></tr>
+        <tr><td>Tools, permissions and budget</td><td>Successes, failures, time, usage and review effort.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="ft">Record the exact settings; “high” is not necessarily equivalent across models or versions.</div>
+</section></div><p class="cap">9 · Two-column table</p>
+
+</main><script src="shell.js"></script></body></html>

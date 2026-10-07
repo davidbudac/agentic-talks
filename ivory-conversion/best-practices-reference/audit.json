@@ -1,0 +1,181 @@
+{
+  "source": "best-practices-reference.html",
+  "output": "best-practices-reference-ivory.html",
+  "counts": [
+    5,
+    5
+  ],
+  "structural_errors": [],
+  "slides": [
+    {
+      "slide": 1,
+      "label": "Title",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "delete",
+          "source": "· Back to the talk Optional referenceRevised October 2026",
+          "output": ""
+        },
+        {
+          "kind": "replace",
+          "source": "Reference.",
+          "output": "Reference"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Revised October 2026 Optional reference · Back to the talk"
+        }
+      ],
+      "links": [
+        [
+          "best-practices.html",
+          "best-practices.html"
+        ],
+        [
+          "best-practices.html",
+          "best-practices.html"
+        ]
+      ],
+      "source_text": "Optional reference · Back to the talk Optional referenceRevised October 2026 Claude Best Practices Reference. Supporting procedures and worksheets. Return to the main talk David Budáč",
+      "output_text": "Optional reference Claude Best Practices Reference Supporting procedures and worksheets. Return to the main talk David Budáč Revised October 2026 Optional reference · Back to the talk"
+    },
+    {
+      "slide": 2,
+      "label": "Command reference",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "In practice ·"
+        },
+        {
+          "kind": "delete",
+          "source": "In practice",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "best-practices.html",
+          "https://code.claude.com/docs/en/interactive-mode"
+        ],
+        [
+          "best-practices.html",
+          "https://code.claude.com/docs/en/interactive-mode"
+        ]
+      ],
+      "source_text": "Optional reference · Back to the talk In practice Find the command in the installed version Need Check Inspect session context and usage Installed help for context and cost/usage commands. Change model or effort Supported settings for that client and model. Manage skills, hooks and plugins Current documentation and versioned configuration. Interactive-mode reference",
+      "output_text": "In practice · Optional reference · Back to the talk Find the command in the installed version Need Check Inspect session context and usage Installed help for context and cost/usage commands. Change model or effort Supported settings for that client and model. Manage skills, hooks and plugins Current documentation and versioned configuration. Interactive-mode reference"
+    },
+    {
+      "slide": 3,
+      "label": "Sources",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Sources ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Sources",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "best-practices.html",
+          "https://claude.dev/blog/getting-started-with-claude-code-mods/",
+          "https://claude.dev/blog/building-with-claude-sonnet-5-5/",
+          "https://claude.dev/blog/automating-eval-design-and-hillclimbing/",
+          "https://claude.dev/blog/what-a-task-costs-on-opus-5-5/",
+          "https://claude.dev/blog/spending-your-effort/"
+        ],
+        [
+          "best-practices.html",
+          "https://claude.dev/blog/getting-started-with-claude-code-mods/",
+          "https://claude.dev/blog/building-with-claude-sonnet-5-5/",
+          "https://claude.dev/blog/automating-eval-design-and-hillclimbing/",
+          "https://claude.dev/blog/what-a-task-costs-on-opus-5-5/",
+          "https://claude.dev/blog/spending-your-effort/"
+        ]
+      ],
+      "source_text": "Optional reference · Back to the talk Sources Sources and further reading Getting started with Claude Code mods · Oct 1 Building with Claude Sonnet 5.5 · Sep 28 Automating eval design and hillclimbing with Claude · Sep 28 What a task costs on Opus 5.5 · Sep 25 Using Claude Code: Spending your effort · Sep 25 Original article bibliography · April–October 2026. Retained for attribution; only claims used in the revision were refreshed.",
+      "output_text": "Sources · Optional reference · Back to the talk Sources and further reading Getting started with Claude Code mods · Oct 1 Building with Claude Sonnet 5.5 · Sep 28 Automating eval design and hillclimbing with Claude · Sep 28 What a task costs on Opus 5.5 · Sep 25 Using Claude Code: Spending your effort · Sep 25 Original article bibliography · April–October 2026. Retained for attribution; only claims used in the revision were refreshed."
+    },
+    {
+      "slide": 4,
+      "label": "Sources",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Sources ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Sources",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "best-practices.html",
+          "https://claude.dev/blog/how-we-made-claude-ai-faster/",
+          "https://claude.dev/blog/getting-the-most-out-of-opus-5-5/",
+          "https://claude.dev/blog/the-new-rules-of-context-engineering-for-claude-5-generation-models/",
+          "https://claude.dev/blog/lessons-from-building-claude-code-how-we-use-skills/",
+          "https://claude.dev/blog/a-harness-for-every-task-dynamic-workflows-in-claude-code/"
+        ],
+        [
+          "best-practices.html",
+          "https://claude.dev/blog/how-we-made-claude-ai-faster/",
+          "https://claude.dev/blog/getting-the-most-out-of-opus-5-5/",
+          "https://claude.dev/blog/the-new-rules-of-context-engineering-for-claude-5-generation-models/",
+          "https://claude.dev/blog/lessons-from-building-claude-code-how-we-use-skills/",
+          "https://claude.dev/blog/a-harness-for-every-task-dynamic-workflows-in-claude-code/"
+        ]
+      ],
+      "source_text": "Optional reference · Back to the talk Sources Sources and further reading How we made claude.ai 3x faster in two weeks · Sep 23 Getting the most out of Opus 5.5 in Claude and Claude Code · Sep 22 The new rules of context engineering for Claude 5 generation models · Jul 24 Lessons from building Claude Code: How we use skills · Jun 3 A harness for every task: dynamic workflows in Claude Code · Jun 2 Original article bibliography · April–October 2026. Retained for attribution; only claims used in the revision were refreshed.",
+      "output_text": "Sources · Optional reference · Back to the talk Sources and further reading How we made claude.ai 3x faster in two weeks · Sep 23 Getting the most out of Opus 5.5 in Claude and Claude Code · Sep 22 The new rules of context engineering for Claude 5 generation models · Jul 24 Lessons from building Claude Code: How we use skills · Jun 3 A harness for every task: dynamic workflows in Claude Code · Jun 2 Original article bibliography · April–October 2026. Retained for attribution; only claims used in the revision were refreshed."
+    },
+    {
+      "slide": 5,
+      "label": "Sources",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Sources ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Sources",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "best-practices.html",
+          "https://claude.dev/blog/using-claude-code-the-unreasonable-effectiveness-of-html/",
+          "https://claude.dev/blog/lessons-from-building-claude-code-prompt-caching-is-everything/",
+          "https://claude.dev/blog/seeing-like-an-agent/"
+        ],
+        [
+          "best-practices.html",
+          "https://claude.dev/blog/using-claude-code-the-unreasonable-effectiveness-of-html/",
+          "https://claude.dev/blog/lessons-from-building-claude-code-prompt-caching-is-everything/",
+          "https://claude.dev/blog/seeing-like-an-agent/"
+        ]
+      ],
+      "source_text": "Optional reference · Back to the talk Sources Sources and further reading Using Claude Code: The unreasonable effectiveness of HTML · May 20 Lessons from building Claude Code: Prompt caching is everything · Apr 30 Seeing like an agent: how we design tools in Claude Code · Apr 10 Original article bibliography · April–October 2026. Retained for attribution; only claims used in the revision were refreshed.",
+      "output_text": "Sources · Optional reference · Back to the talk Sources and further reading Using Claude Code: The unreasonable effectiveness of HTML · May 20 Lessons from building Claude Code: Prompt caching is everything · Apr 30 Seeing like an agent: how we design tools in Claude Code · Apr 10 Original article bibliography · April–October 2026. Retained for attribution; only claims used in the revision were refreshed."
+    }
+  ]
+}

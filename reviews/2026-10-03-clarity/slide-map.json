@@ -1,0 +1,806 @@
+{
+  "agentic-ai": [
+    {
+      "original": 1,
+      "label": "Title",
+      "main": 1,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 2,
+      "label": "The hook",
+      "main": 2,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 3,
+      "label": "Chatbot vs agent",
+      "main": 3,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 4,
+      "label": "Live demo anchor",
+      "main": 8,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 5,
+      "label": "Agenda",
+      "main": 4,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 6,
+      "label": "Three building blocks",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Architecture merged into original 10."
+    },
+    {
+      "original": 7,
+      "label": "Glossary",
+      "main": null,
+      "reference": 2,
+      "action": "retained",
+      "reason": "Optional reference; original snapshot date retained."
+    },
+    {
+      "original": 8,
+      "label": "The model has no memory",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Memory explanation taught by original 9."
+    },
+    {
+      "original": 9,
+      "label": "No memory in practice",
+      "main": 6,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 10,
+      "label": "Model in the cloud",
+      "main": 5,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 11,
+      "label": "What one turn sends",
+      "main": 7,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 12,
+      "label": "The agent loop",
+      "main": 9,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 13,
+      "label": "The loop, worked example",
+      "main": 10,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 14,
+      "label": "Thinking",
+      "main": 11,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 15,
+      "label": "Thinking in the loop",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Thinking tradeoff and caveat merged into original 14."
+    },
+    {
+      "original": 16,
+      "label": "What it is good for",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "General use-case grid removed to keep the invoice thread."
+    },
+    {
+      "original": 17,
+      "label": "The landscape",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Landscape detail moved out of the beginner teaching sequence."
+    },
+    {
+      "original": 18,
+      "label": "Today's models",
+      "main": null,
+      "reference": 3,
+      "action": "retained",
+      "reason": "Landscape detail moved out of the beginner teaching sequence."
+    },
+    {
+      "original": 19,
+      "label": "Which tier when",
+      "main": null,
+      "reference": 4,
+      "action": "retained",
+      "reason": "Landscape detail moved out of the beginner teaching sequence."
+    },
+    {
+      "original": 20,
+      "label": "Today's harnesses",
+      "main": null,
+      "reference": 5,
+      "action": "retained",
+      "reason": "Landscape detail moved out of the beginner teaching sequence."
+    },
+    {
+      "original": 21,
+      "label": "Front doors",
+      "main": 12,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Landscape detail moved out of the beginner teaching sequence."
+    },
+    {
+      "original": 22,
+      "label": "Lovable",
+      "main": null,
+      "reference": 6,
+      "action": "retained",
+      "reason": "Landscape detail moved out of the beginner teaching sequence."
+    },
+    {
+      "original": 23,
+      "label": "Higgsfield",
+      "main": null,
+      "reference": 7,
+      "action": "retained",
+      "reason": "Landscape detail moved out of the beginner teaching sequence."
+    },
+    {
+      "original": 24,
+      "label": "HyperFrames",
+      "main": null,
+      "reference": 8,
+      "action": "retained",
+      "reason": "Landscape detail moved out of the beginner teaching sequence."
+    },
+    {
+      "original": 25,
+      "label": "Subscriptions",
+      "main": null,
+      "reference": 9,
+      "action": "retained",
+      "reason": "Landscape detail moved out of the beginner teaching sequence."
+    },
+    {
+      "original": 26,
+      "label": "Subscription vs API",
+      "main": 13,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Landscape detail moved out of the beginner teaching sequence."
+    },
+    {
+      "original": 27,
+      "label": "Smarter can be cheaper",
+      "main": null,
+      "reference": 10,
+      "action": "rewritten",
+      "reason": "Landscape detail moved out of the beginner teaching sequence."
+    },
+    {
+      "original": 28,
+      "label": "What context is",
+      "main": 14,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 29,
+      "label": "Context rot",
+      "main": 15,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Replaced fixed quality curve with task-specific symptoms; no universal threshold."
+    },
+    {
+      "original": 30,
+      "label": "Keep it lean",
+      "main": 16,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Removed 40–50% rule and live timing dependency."
+    },
+    {
+      "original": 31,
+      "label": "Caching and compaction",
+      "main": 17,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 32,
+      "label": "Sub-agents",
+      "main": 18,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 33,
+      "label": "Permissions",
+      "main": 19,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 34,
+      "label": "Bypass mode",
+      "main": null,
+      "reference": 11,
+      "action": "rewritten",
+      "reason": "Optional reference; original snapshot date retained."
+    },
+    {
+      "original": 35,
+      "label": "Back to no memory",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Repeated memory transition removed."
+    },
+    {
+      "original": 36,
+      "label": "CLAUDE.md and memory",
+      "main": 20,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 37,
+      "label": "Skills and plugins",
+      "main": 21,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 38,
+      "label": "Touching other systems",
+      "main": 22,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 39,
+      "label": "MCP",
+      "main": 23,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 40,
+      "label": "Three things to remember",
+      "main": 24,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 41,
+      "label": "Summary",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Closing summary merged into original 40."
+    },
+    {
+      "original": 42,
+      "label": "Sources 1 of 2",
+      "main": 25,
+      "reference": 12,
+      "action": "retained",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 43,
+      "label": "Sources 2 of 2",
+      "main": 26,
+      "reference": 13,
+      "action": "retained",
+      "reason": "Retained in main talk."
+    }
+  ],
+  "ai-toolbox": [
+    {
+      "original": 1,
+      "label": "Title",
+      "main": 1,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 2,
+      "label": "The hook",
+      "main": 2,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 3,
+      "label": "Agenda",
+      "main": 3,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 4,
+      "label": "Reading a price tag",
+      "main": 14,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 5,
+      "label": "Chatbot vs agent",
+      "main": 5,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 6,
+      "label": "The agent loop",
+      "main": 6,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 7,
+      "label": "The model has no memory",
+      "main": 7,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 8,
+      "label": "Glossary",
+      "main": null,
+      "reference": 2,
+      "action": "retained",
+      "reason": "Optional reference; original snapshot date retained."
+    },
+    {
+      "original": 9,
+      "label": "What agents are good for",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Use-case grid merged into original 22."
+    },
+    {
+      "original": 10,
+      "label": "The big three",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Vendor section divider removed."
+    },
+    {
+      "original": 11,
+      "label": "Today's models",
+      "main": null,
+      "reference": 3,
+      "action": "retained",
+      "reason": "Optional reference; original snapshot date retained."
+    },
+    {
+      "original": 12,
+      "label": "The Claude family",
+      "main": null,
+      "reference": 4,
+      "action": "retained",
+      "reason": "Optional reference; original snapshot date retained."
+    },
+    {
+      "original": 13,
+      "label": "Claude Code and Codex",
+      "main": null,
+      "reference": 5,
+      "action": "retained",
+      "reason": "Optional reference; original snapshot date retained."
+    },
+    {
+      "original": 14,
+      "label": "Claude Cowork",
+      "main": 11,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 15,
+      "label": "Claude Design",
+      "main": 12,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 16,
+      "label": "The ChatGPT family",
+      "main": null,
+      "reference": 6,
+      "action": "retained",
+      "reason": "Optional reference; original snapshot date retained."
+    },
+    {
+      "original": 17,
+      "label": "The Gemini family",
+      "main": 13,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 18,
+      "label": "The $20 question",
+      "main": 10,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 19,
+      "label": "The plan ladder",
+      "main": null,
+      "reference": 7,
+      "action": "retained",
+      "reason": "Optional reference; original snapshot date retained."
+    },
+    {
+      "original": 20,
+      "label": "Products churn fast",
+      "main": 15,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 21,
+      "label": "What can you actually do",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Tasks divider removed; worked example moved to opening."
+    },
+    {
+      "original": 22,
+      "label": "A week of tasks",
+      "main": 9,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 23,
+      "label": "One task, agent-style",
+      "main": 4,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 24,
+      "label": "Deep research",
+      "main": null,
+      "reference": 8,
+      "action": "retained",
+      "reason": "Optional reference; original snapshot date retained."
+    },
+    {
+      "original": 25,
+      "label": "The human stays in the loop",
+      "main": 8,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 26,
+      "label": "The wider landscape",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Catalogue divider removed."
+    },
+    {
+      "original": 27,
+      "label": "Prompt-to-app builders",
+      "main": 16,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Category detail condensed into a task/output/review example."
+    },
+    {
+      "original": 28,
+      "label": "AI video generation",
+      "main": 17,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Category detail condensed into a task/output/review example."
+    },
+    {
+      "original": 29,
+      "label": "HyperFrames",
+      "main": 18,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Category detail condensed into a task/output/review example."
+    },
+    {
+      "original": 30,
+      "label": "AI avatars",
+      "main": null,
+      "reference": 9,
+      "action": "retained",
+      "reason": "Optional reference; original snapshot date retained."
+    },
+    {
+      "original": 31,
+      "label": "ElevenLabs",
+      "main": 19,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Category detail condensed into a task/output/review example."
+    },
+    {
+      "original": 32,
+      "label": "Music and easy editing",
+      "main": null,
+      "reference": 10,
+      "action": "rewritten",
+      "reason": "Optional reference; original snapshot date retained."
+    },
+    {
+      "original": 33,
+      "label": "Images and design",
+      "main": 20,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Category detail condensed into a task/output/review example."
+    },
+    {
+      "original": 34,
+      "label": "Presentations",
+      "main": null,
+      "reference": 11,
+      "action": "retained",
+      "reason": "Optional reference; original snapshot date retained."
+    },
+    {
+      "original": 35,
+      "label": "Copy platforms",
+      "main": null,
+      "reference": 12,
+      "action": "rewritten",
+      "reason": "Optional reference; original snapshot date retained."
+    },
+    {
+      "original": 36,
+      "label": "Perplexity",
+      "main": null,
+      "reference": 13,
+      "action": "retained",
+      "reason": "Optional reference; original snapshot date retained."
+    },
+    {
+      "original": 37,
+      "label": "Automation glue",
+      "main": 21,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Category detail condensed into a task/output/review example."
+    },
+    {
+      "original": 38,
+      "label": "The fine print",
+      "main": 22,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 39,
+      "label": "Cheat sheet",
+      "main": null,
+      "reference": 14,
+      "action": "rewritten",
+      "reason": "Optional reference; original snapshot date retained."
+    },
+    {
+      "original": 40,
+      "label": "Five wild stories",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Five-story block reduced to two integrated examples."
+    },
+    {
+      "original": 41,
+      "label": "Story 1 · Project Vend",
+      "main": 23,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 42,
+      "label": "Story 2 · Ten years, two days",
+      "main": null,
+      "reference": 15,
+      "action": "rewritten",
+      "reason": "Optional reference; original snapshot date retained."
+    },
+    {
+      "original": 43,
+      "label": "Story 3 · The exams",
+      "main": null,
+      "reference": 16,
+      "action": "retained",
+      "reason": "Optional reference; original snapshot date retained."
+    },
+    {
+      "original": 44,
+      "label": "Story 4 · The security double",
+      "main": null,
+      "reference": 17,
+      "action": "retained",
+      "reason": "Optional reference; original snapshot date retained."
+    },
+    {
+      "original": 45,
+      "label": "Story 5 · The Super Bowl twist",
+      "main": 24,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 46,
+      "label": "Plugging it in",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Integration divider replaced by original 53 decision slide."
+    },
+    {
+      "original": 47,
+      "label": "MCP",
+      "main": 28,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 48,
+      "label": "Claude inside Office",
+      "main": 27,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 49,
+      "label": "Files straight from chat",
+      "main": 26,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 50,
+      "label": "The ChatGPT side",
+      "main": null,
+      "reference": 18,
+      "action": "retained",
+      "reason": "Optional reference; original snapshot date retained."
+    },
+    {
+      "original": 51,
+      "label": "The built-ins",
+      "main": null,
+      "reference": 19,
+      "action": "retained",
+      "reason": "Optional reference; original snapshot date retained."
+    },
+    {
+      "original": 52,
+      "label": "The universal adapter",
+      "main": null,
+      "reference": 20,
+      "action": "retained",
+      "reason": "Optional reference; original snapshot date retained."
+    },
+    {
+      "original": 53,
+      "label": "Which route when",
+      "main": 25,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 54,
+      "label": "Three things to remember",
+      "main": 29,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 55,
+      "label": "Summary",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Second recap merged into original 54."
+    },
+    {
+      "original": 56,
+      "label": "Sources 1 of 2",
+      "main": 30,
+      "reference": 21,
+      "action": "retained",
+      "reason": "Retained in main talk."
+    },
+    {
+      "original": 57,
+      "label": "Sources 2 of 2",
+      "main": 31,
+      "reference": 22,
+      "action": "retained",
+      "reason": "Retained in main talk."
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "baseline": "51f2e9a3479a864bf1901aa9c8e3bfa4961bcac0",
+  "outputs": {
+    "agentic-engineering.html": "c467a6c9d4df4266ce5a55b1bbb62bc5335be24b433deaed1a146f30cd9c2498",
+    "agentic-engineering-reference.html": "ac1ff6300b6a4af874f184d1f1e32306646ff81b63fbb9c042602cb8859d2253"
+  },
+  "metrics": {
+    "agentic-engineering": {
+      "before_slides": 60,
+      "after_slides": 30,
+      "reference_slides": 10
+    }
+  },
+  "maps": "batch2-slide-map.json"
+}

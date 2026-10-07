@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Agentic Ai — Reference</title>
+<link rel="stylesheet" href="ivory_design_system/styles.css">
+</head>
+<body>
+
+<!--
+  ============================================================
+  Agentic AI — optional reference deck.
+  Product details and supporting examples from the original
+  September 2026 deck (agentic-ai.html). Not part of the spoken path.
+  Ivory design system (DESIGN.md, ivory_design_system/).
+  Runs on the deck-stage component: ←/→, Space, Home/End,
+  number keys; R resets; N notes, P presenter window, F fullscreen;
+  speaker notes live on each section.
+  ============================================================
+-->
+
+<deck-stage width="1920" height="1080">
+
+<!-- 01 · Reference guide -->
+<section class="slide" data-label="Reference guide" data-speaker-notes="This is an optional reference deck, not a continuation of the presentation. The original snapshot date is shown on each page. Omitted slides remain recoverable from the baseline Git commit.">
+  <div class="slide-head"><span class="crumb">Reference</span><span class="snum"></span></div>
+  <h2>Reference material</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><h3>Use selectively</h3><p>Product details and supporting examples from the original September 2026 deck.</p></div>
+      <div class="tile"><h3>Verify before reuse</h3><p>Check availability, prices and limits with the linked primary sources.</p></div>
+    </div>
+  </div>
+  <p class="note"><a href="agentic-ai.html">Return to the main talk</a></p>
+</section>
+
+<!-- 02 · Glossary (Ember .gloss → ul.bul.def.wide) -->
+<section data-origin-slide="7" class="slide" data-label="Glossary"
+    data-speaker-notes="REFERENCE ONLY. Product details reflect the original September 2026 snapshot and need verification before reuse. Do not read all nine — read Token, Context and Agent, and tell them the rest each get their own slide later. This exists so nobody spends the next twenty minutes quietly wondering what a token is. Say it out loud: this is a map, not a memory test.">
+  <div class="slide-head"><span class="crumb">Core · cheat sheet · Reference · September 2026 snapshot · <a href="agentic-ai.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Words you'll keep hearing</h2>
+  <div class="zone">
+    <ul class="bul def wide">
+      <li><b>Token</b><span>A chunk of text ≈ ¾ of a word (<i>un·believ·able</i> = 3). What models read &amp; bill in.</span></li>
+      <li><b>Prompt</b><span>The text you send the model.</span></li>
+      <li><b>Context</b><span>Everything the model sees in one call.</span></li>
+      <li><b>Context window</b><span>The max size of that context (1M tokens on today's top models).</span></li>
+      <li><b>Tool call</b><span>An action the model asks the harness to run.</span></li>
+      <li><b>Harness</b><span>The program running the model + its tools.</span></li>
+      <li><b>Agent</b><span>Model + harness, doing things in a loop.</span></li>
+      <li><b>SOTA</b><span>"State of the art" — today's best.</span></li>
+      <li><b>MCP</b><span>Model Context Protocol — a standard plug for tools/data.</span></li>
+    </ul>
+  </div>
+  <p class="note">Don't worry about memorising these — every one gets a slide of its own. This is just your map.</p>
+</section>
+
+<!-- 03 · Today's models (table + three .stat tiles → one .tbl.c3; each stat is a cell of a 4th row, value as an inline mono label) -->
+<section data-origin-slide="18" class="slide" data-label="Today's models"
+    data-speaker-notes="REFERENCE ONLY. Product details reflect the original September 2026 snapshot and need verification before reuse. Do not read the table row by row — the pattern below it is the actual content. The same three tiers repeat at every maker: large, medium, small, plus a frontier tier on top lately. Say clearly that this reshuffles every few months, so treat any such list as a snapshot rather than a recommendation. Then the three stat tiles, left to right: SWE-bench Verified means fixing a real bug in a real repo; ARC-AGI-3 is deliberately built so it can&#x27;t be memorised, and GPT-6 Astra scores twice the next-best model on it; so six-month-old assumptions about what AI can&#x27;t do are usually wrong.">
+  <div class="slide-head"><span class="crumb">Landscape · models · Reference · September 2026 snapshot · <a href="agentic-ai.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Today's best models</h2>
+  <div class="zone">
+    <table class="tbl c3">
+      <thead><tr><th>Maker</th><th>Flagship lineup (September 2026)</th><th>Known for</th></tr></thead>
+      <tbody>
+        <tr><td><b>Anthropic</b></td><td>Claude Fable 5.1 · <b>Opus 5.5</b> · Sonnet 5 · Haiku 4.5</td><td>coding, agents, long context</td></tr>
+        <tr><td><b>OpenAI</b></td><td>GPT‑6 — Astra · Sol · Luna</td><td>general reasoning, Codex</td></tr>
+        <tr><td><b>Google</b></td><td>Gemini 3.8 Flash · 3.5 Flash‑Lite <span class="mut">(3.5 Pro still unreleased)</span></td><td>multimodal, large context</td></tr>
+        <tr><td><span class="lab">96%</span> <b>SWE-bench Verified</b> — Opus 5 fixing real bugs in real code projects</td><td><span class="lab">2× the field</span> <b>ARC-AGI-3</b> — GPT‑6 Astra scores <b>63%</b>, twice the next-best model, on puzzles built to resist memorising</td><td><span class="lab">~6 months</span> how long "what AI <b>can't</b> do" assumptions stay true</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">The same three tiers repeat everywhere: <b>large</b> (smartest, priciest) · <b>medium</b> (the sweet spot) · <b>small</b> (fast &amp; cheap) — and Anthropic adds a <b>frontier tier on top</b> (Claude Fable 5.1). It reshuffles every few months, so treat any list as a snapshot. How fast does it move? —</p>
+</section>
+
+<!-- 04 · Which tier when (three equal tiers → no clay) -->
+<section data-origin-slide="19" class="slide" data-label="Which tier when"
+    data-speaker-notes="REFERENCE ONLY. Product details reflect the original September 2026 snapshot and need verification before reuse. Give them the practical version: medium is the daily driver, large is for when it really matters, small is for volume. The example at the bottom is the one to dwell on — cheap legwork by a small model, expensive thinking only where it counts. Mention that today&#x27;s medium often beats last year&#x27;s flagship, which is why defaults keep shifting.">
+  <div class="slide-head"><span class="crumb">Landscape · picking a tier · Reference · September 2026 snapshot · <a href="agentic-ai.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Which tier when?</h2>
+  <div class="zone">
+    <div class="cards c3">
+      <div class="tile"><h3>Large · Opus</h3><p>Hard reasoning, tricky multi-file refactors, architecture. Pricier per word — but on hard work it gets there in <b>fewer steps.</b></p></div>
+      <div class="tile"><h3>Medium · Sonnet</h3><p>The daily driver. Most coding &amp; agent work. Often beats last gen's flagship at a fraction of the cost.</p></div>
+      <div class="tile"><h3>Small · Haiku</h3><p>High-volume, simple, fast: classification, quick edits, sub-agent grunt work.</p></div>
+    </div>
+  </div>
+  <p class="note"><b>Example:</b> a cheap Haiku sub-agent skims 200 files and summarises; the pricey Opus only does the actual design call. Cheap legwork, expensive thinking only where needed. <b>But "pricey" is per word, not per job</b> — that turns out to matter, and we come back to it in a few slides.</p>
+</section>
+
+<!-- 05 · Today's harnesses (six tiles → ul.bul.def.wide; equal list → no clay) -->
+<section data-origin-slide="20" class="slide" data-label="Today's harnesses"
+    data-speaker-notes="REFERENCE ONLY. Product details reflect the original September 2026 snapshot and need verification before reuse. Name the two most people will meet — Claude Code and Codex — and treat the rest as a list, not a review. The line that matters is underneath: the harness decides what the model can actually do, so it is at least as important as the model. If someone asks which to pick, say most models run in most harnesses and the choice is mostly about how you like to work.">
+  <div class="slide-head"><span class="crumb">Landscape · harnesses · Reference · September 2026 snapshot · <a href="agentic-ai.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Today's best harnesses</h2>
+  <div class="zone">
+    <ul class="bul def wide">
+      <li><b>Claude Code</b><span>Anthropic. CLI + IDE + web. Agentic coding over your whole repo.</span></li>
+      <li><b>Codex</b><span>OpenAI's coding agent on GPT‑6 — in your terminal, with a cloud option.</span></li>
+      <li><b>Cursor</b><span>An IDE built around an AI agent.</span></li>
+      <li><b>GitHub Copilot</b><span>Agent + autocomplete inside your editor.</span></li>
+      <li><b>Devin Desktop</b><span>Another agentic IDE (ex‑Windsurf).</span></li>
+      <li><b>Aider</b><span>Open-source terminal coding agent.</span></li>
+    </ul>
+  </div>
+  <p class="note">The harness decides what the model can <b>actually do</b> — tools, sandboxing, memory, parallelism. At least as important as the model.</p>
+</section>
+
+<!-- 06 · Lovable (image first → .split.flip) -->
+<section data-origin-slide="22" class="slide" data-label="Lovable"
+    data-speaker-notes="REFERENCE ONLY. Product details reflect the original September 2026 snapshot and need verification before reuse. First of three quick looks beyond coding. Lovable is the poster child of prompt-to-app: describe what you want in plain language, get a working web app with pages, a database and login, then keep iterating by chat. Land the connection out loud — it is the same model-plus-harness loop from earlier, just wrapped in a friendly website instead of a terminal. Name-drop v0 and Bolt as the same category so nobody thinks it is one magic product.">
+  <div class="slide-head"><span class="crumb">Landscape · beyond code · Reference · September 2026 snapshot · <a href="agentic-ai.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Lovable: describe an app, get an app</h2>
+  <div class="zone">
+    <div class="split flip">
+      <div class="fig"><img src="assets/tools/lovable.png" width="1600" height="1000" alt="Lovable's homepage: 'Build something Lovable — create apps and websites by chatting with AI', with a single prompt box"></div>
+      <ul class="bul">
+        <li>You <b>describe</b> the app in plain language — Lovable builds a <b>working web app</b>: pages, database, login, hosting.</li>
+        <li>Then you <b>iterate by chat</b>: "make the header sticky", "add a monthly chart" — it edits the live app.</li>
+        <li>Underneath: <b>the same agent loop</b> we just saw, wrapped in a website. Same category: <b>v0, Bolt, Replit.</b></li>
+      </ul>
+    </div>
+  </div>
+  <p class="note"><b>Example:</b> "Build an expense tracker: add expenses, a monthly chart, login." → minutes later, a running app on a shareable link — source code included.</p>
+</section>
+
+<!-- 07 · Higgsfield (bullets + image → .split) -->
+<section data-origin-slide="23" class="slide" data-label="Higgsfield"
+    data-speaker-notes="REFERENCE ONLY. Product details reflect the original September 2026 snapshot and need verification before reuse. Second stop: video generation. Higgsfield turns text or image prompts into finished clips — cinematic camera moves, characters that stay consistent across shots, many generation models under one roof. The agentic part to point at is the AI director: it splits your idea into shots, generates each, and stitches them — our loop again, different domain. It is aimed squarely at marketing and social content; the product-URL-to-ready-ad flow usually gets a reaction. Keep expectations honest: short punchy clips, not feature films.">
+  <div class="slide-head"><span class="crumb">Landscape · beyond code · Reference · September 2026 snapshot · <a href="agentic-ai.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Higgsfield: video from a prompt</h2>
+  <div class="zone">
+    <div class="split">
+      <ul class="bul">
+        <li>Text or image in → <b>finished video out</b>: cinematic camera moves, characters that stay <b>consistent</b> across shots.</li>
+        <li>An <b>AI director</b> splits your idea into shots, generates each, stitches them — <b>our loop again</b>, different domain.</li>
+        <li>Built for <b>marketing &amp; social</b> — even "product URL in → ready-made ad out". Same category: <b>Veo, Kling, Runway.</b></li>
+      </ul>
+      <div class="fig"><img src="assets/tools/higgsfield.png" width="1600" height="1000" alt="Higgsfield's explore page with tiles for Cinema Studio, Seedance 2.0, and other video generation tools"></div>
+    </div>
+  </div>
+  <p class="note"><b>Example:</b> "A 15-second ad for our mobile bank: phone in hand, city at dusk, upbeat." → storyboard → shots → rendered clip, ready for social.</p>
+</section>
+
+<!-- 08 · HyperFrames (image first → .split.flip) -->
+<section data-origin-slide="24" class="slide" data-label="HyperFrames"
+    data-speaker-notes="REFERENCE ONLY. Product details reflect the original September 2026 snapshot and need verification before reuse. Close the trio with HyperFrames and connect it back to the deck: it renders video from an ordinary web page, deterministically — and writing web pages is exactly what coding agents are good at. Claude Code installs it as a skill (that word gets its own slide later) and then edits video the way it edits code, by chat. Same file in, same video out, which is what makes it automatable. If anyone asks: this deck&#x27;s own animations are the same video-from-code idea.">
+  <div class="slide-head"><span class="crumb">Landscape · beyond code · Reference · September 2026 snapshot · <a href="agentic-ai.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>HyperFrames: agents that make video</h2>
+  <div class="zone">
+    <div class="split flip">
+      <div class="fig"><img src="assets/tools/hyperframes.png" width="1600" height="1000" alt="HyperFrames homepage: 'HyperFrames lets AI agents compose videos by writing HTML, CSS and JS' — an HTML file on the left rendering to a video on the right"></div>
+      <ul class="bul">
+        <li>Open-source (HeyGen): a <b>web page</b> with timing attributes in → a pixel-perfect <b>MP4</b> out.</li>
+        <li>Built <b>for agents</b>: Claude Code installs it as a skill, then <b>edits video by chat</b> — the way it edits code.</li>
+        <li>Same file in → <b>same video out, every time</b> — ideal for explainers, product demos, captions.</li>
+      </ul>
+    </div>
+  </div>
+  <p class="note"><b>Example:</b> "Turn this slide's diagram into a 20-second animated explainer." → the agent writes the HTML, renders it, hands you the MP4.</p>
+</section>
+
+<!-- 09 · Subscriptions -->
+<section data-origin-slide="25" class="slide" data-label="Subscriptions"
+    data-speaker-notes="REFERENCE ONLY. Product details reflect the original September 2026 snapshot and need verification before reuse. Keep this brisk: free, roughly twenty a month for entry, roughly a hundred or two hundred for heavy use. What the higher tiers buy is more usage and earlier access to the newest models, not a different product. Flag the date, prices move, so verify before quoting any of this outside the room.">
+  <div class="slide-head"><span class="crumb">Landscape · plans · Reference · September 2026 snapshot · <a href="agentic-ai.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Subscriptions (consumer)</h2>
+  <div class="zone">
+    <table class="tbl c3">
+      <thead><tr><th>Tier</th><th>Claude (Anthropic)</th><th>ChatGPT (OpenAI)</th></tr></thead>
+      <tbody>
+        <tr><td><b>Free</b></td><td>limited usage</td><td>limited usage</td></tr>
+        <tr><td><b>Entry</b></td><td>Pro — ~$20/mo</td><td>Go ~$8 · Plus ~$20/mo</td></tr>
+        <tr><td><b>Power</b></td><td>Max 5× ~$100 · Max 20× ~$200/mo</td><td>Pro 5× ~$100 · Pro 20× ~$200/mo <span class="mut">(20× sign-ups paused)</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Higher tiers buy <b>more usage</b> and <b>priority access</b> to the newest models. Prices as of September 2026 — they change often, so verify before quoting.</p>
+</section>
+
+<!-- 10 · Cost per task (two equal options → no clay) -->
+<section data-origin-slide="27" class="slide" data-label="Cost per task" data-speaker-notes="REFERENCE ONLY. Product details reflect the original September 2026 snapshot and need verification before reuse. This replaces the crowded benchmark collection. No new measurement is claimed. For simple work, a smaller model can remain the better choice.">
+  <div class="slide-head"><span class="crumb">Reference · task cost · Reference · September 2026 snapshot · <a href="agentic-ai.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Compare the cost of an accepted result</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><h3>Cheap tokens, many retries</h3><p>A low unit price can be offset by more tool calls, reasoning and failed attempts.</p></div>
+      <div class="tile"><h3>Higher unit price, fewer attempts</h3><p>A more capable model can win on a difficult task. Measure rather than assuming it will.</p></div>
+    </div>
+  </div>
+  <p class="note">Compare the same task and acceptance check. Include all attempts, cached input, fresh input and output.</p>
+</section>
+
+<!-- 11 · Unattended runs -->
+<section data-origin-slide="34" class="slide" data-label="Unattended runs" data-speaker-notes="REFERENCE ONLY. Product details reflect the original September 2026 snapshot and need verification before reuse. Reference guidance for discussing unattended runs. Never recommend bypass mode merely because work is in a separate folder or on CI.">
+  <div class="slide-head"><span class="crumb">Reference · permissions · Reference · September 2026 snapshot · <a href="agentic-ai.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Isolation must restrict real access</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li>Use a disposable environment with only the files the task needs.</li>
+      <li>Limit network destinations and remove production credentials.</li>
+      <li>Apply a time or token budget and retain the final diff and logs.</li>
+      <li>A project copy, worktree or CI runner is not automatically a security boundary.</li>
+    </ul>
+  </div>
+  <p class="note">Keep approvals where the environment cannot safely contain the consequence.</p>
+</section>
+
+<!-- 12 · Sources 1 of 2 (same .tbl.num layout as accepted agentic-ai-ivory.html 25/26) -->
+<section data-origin-slide="42" class="slide" data-label="Sources 1 of 2"
+    data-speaker-notes="REFERENCE ONLY. Product details reflect the original September 2026 snapshot and need verification before reuse. Leave this up while questions run rather than reading it. Point out the two most useful starting places for a beginner — the Claude models overview and the pricing page — and say the rest are there for anyone who wants the primary source. Mention the deck lives in the repo, so nobody needs to photograph the links.">
+  <div class="slide-head"><span class="crumb">Sources · further reading · Reference · September 2026 snapshot · <a href="agentic-ai.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Sources &amp; links (1/2)</h2>
+  <div class="zone">
+    <table class="tbl num">
+      <thead><tr><th scope="col">Models &amp; pricing</th><th scope="col"></th></tr></thead>
+      <tbody>
+        <tr><td><a href="https://platform.claude.com/docs/en/models/overview" target="_blank" rel="noopener">Anthropic — Claude models overview</a></td><td><span class="mut">platform.claude.com/docs · models</span></td></tr>
+        <tr><td><a href="https://claude.com/pricing" target="_blank" rel="noopener">Claude — plans &amp; pricing</a></td><td><span class="mut">claude.com/pricing</span></td></tr>
+        <tr><td><a href="https://www.anthropic.com/news/claude-opus-5" target="_blank" rel="noopener">Anthropic — Claude Opus 5 (benchmarks)</a></td><td><span class="mut">anthropic.com/news · claude-opus-5</span></td></tr>
+        <tr><td><a href="https://www.anthropic.com/news/claude-opus-4-5" target="_blank" rel="noopener">Anthropic — Opus 4.5: effort &amp; token efficiency</a></td><td><span class="mut">anthropic.com/news · claude-opus-4-5</span></td></tr>
+        <tr><td><a href="https://openai.com/index/gpt-6-astra/" target="_blank" rel="noopener">OpenAI — GPT-6 (Astra · Sol · Luna)</a></td><td><span class="mut">openai.com/index/gpt-6-astra</span></td></tr>
+        <tr><td><a href="https://arcprize.org/leaderboard" target="_blank" rel="noopener">ARC Prize — ARC-AGI-3 leaderboard</a></td><td><span class="mut">arcprize.org/leaderboard</span></td></tr>
+        <tr><td><a href="https://chatgpt.com/pricing/" target="_blank" rel="noopener">ChatGPT — pricing tiers</a></td><td><span class="mut">chatgpt.com/pricing</span></td></tr>
+        <tr><td><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/" target="_blank" rel="noopener">Google — Gemini 3.8 Flash</a></td><td><span class="mut">blog.google · 3-8-flash</span></td></tr>
+        <tr><th scope="rowgroup">Harnesses</th><th></th></tr>
+        <tr><td><a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">Claude Code — memory &amp; CLAUDE.md</a></td><td><span class="mut">code.claude.com/docs · memory</span></td></tr>
+        <tr><td><a href="https://code.claude.com/docs/en/sub-agents" target="_blank" rel="noopener">Claude Code — sub-agents</a></td><td><span class="mut">code.claude.com/docs · sub-agents</span></td></tr>
+        <tr><td><a href="https://openai.com/codex/" target="_blank" rel="noopener">OpenAI — Codex</a></td><td><span class="mut">openai.com/codex</span></td></tr>
+        <tr><td><a href="https://github.com/openai/codex" target="_blank" rel="noopener">Codex CLI — source</a></td><td><span class="mut">github.com/openai/codex</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 13 · Sources 2 of 2 (same .tbl.num layout as accepted agentic-ai-ivory.html 25/26) -->
+<section data-origin-slide="43" class="slide" data-label="Sources 2 of 2"
+    data-speaker-notes="REFERENCE ONLY. Product details reflect the original September 2026 snapshot and need verification before reuse. These are the papers behind the claims made earlier — context rot, lost in the middle, and the reasoning-faithfulness research from the thinking section. Point at them if anyone challenges a number. Repeat the closing caveat: everything here was verified in September 2026 and moves fast, so re-check before quoting.">
+  <div class="slide-head"><span class="crumb">Sources · context, memory &amp; MCP · Reference · September 2026 snapshot · <a href="agentic-ai.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Sources &amp; links (2/2)</h2>
+  <div class="zone">
+    <table class="tbl num">
+      <thead><tr><th scope="col">Context, caching &amp; reasoning</th><th scope="col"></th></tr></thead>
+      <tbody>
+        <tr><td><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">Anthropic — Effective context engineering</a></td><td><span class="mut">anthropic.com/engineering</span></td></tr>
+        <tr><td><a href="https://www.trychroma.com/research/context-rot" target="_blank" rel="noopener">Chroma — Context Rot (18-model study)</a></td><td><span class="mut">trychroma.com/research/context-rot</span></td></tr>
+        <tr><td><a href="https://arxiv.org/abs/2307.03172" target="_blank" rel="noopener">Liu et al. — Lost in the Middle</a></td><td><span class="mut">arxiv.org/abs/2307.03172</span></td></tr>
+        <tr><td><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noopener">Anthropic — Prompt caching</a></td><td><span class="mut">platform.claude.com/docs · prompt-caching</span></td></tr>
+        <tr><td><a href="https://platform.claude.com/docs/en/build-with-claude/thinking" target="_blank" rel="noopener">Anthropic — Extended / adaptive thinking</a></td><td><span class="mut">platform.claude.com/docs · thinking</span></td></tr>
+        <tr><td><a href="https://www.anthropic.com/research/reasoning-models-dont-say-think" target="_blank" rel="noopener">Anthropic — Reasoning models don't always say what they think</a></td><td><span class="mut">anthropic.com/research · cot-faithfulness</span></td></tr>
+        <tr><th scope="rowgroup">Skills, plugins &amp; MCP</th><th></th></tr>
+        <tr><td><a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills" target="_blank" rel="noopener">Anthropic — Agent Skills</a></td><td><span class="mut">anthropic.com/engineering · agent-skills</span></td></tr>
+        <tr><td><a href="https://github.com/anthropics/skills" target="_blank" rel="noopener">Anthropic — Skills repo (SKILL.md)</a></td><td><span class="mut">github.com/anthropics/skills</span></td></tr>
+        <tr><td><a href="https://www.anthropic.com/news/model-context-protocol" target="_blank" rel="noopener">Anthropic — Introducing MCP</a></td><td><span class="mut">anthropic.com/news · model-context-protocol</span></td></tr>
+        <tr><td><a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">Model Context Protocol — spec &amp; docs</a></td><td><span class="mut">modelcontextprotocol.io</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">All figures verified September 2026. Models &amp; prices move fast — re-check the primary sources before quoting.</p>
+</section>
+
+</deck-stage>
+<script src="ivory_design_system/deck-stage.js"></script>
+<script src="ivory_design_system/deck.js"></script>
+</body>
+</html>

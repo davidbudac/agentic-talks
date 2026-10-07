@@ -1,0 +1,73 @@
+{
+  "chooser": [
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "cards": 9,
+      "overflow": false
+    },
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "cards": 9,
+      "overflow": false
+    },
+    {
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "cards": 9,
+      "overflow": false
+    }
+  ],
+  "roundTrips": [
+    {
+      "deck": "agentic-engineering",
+      "mainToReference": true,
+      "referenceToMain": true
+    },
+    {
+      "deck": "subagents-prompt-caching",
+      "mainToReference": true,
+      "referenceToMain": true
+    },
+    {
+      "deck": "cost-and-context",
+      "mainToReference": true,
+      "referenceToMain": true
+    },
+    {
+      "deck": "orchestrating-agents",
+      "mainToReference": true,
+      "referenceToMain": true
+    },
+    {
+      "deck": "measuring-what-works",
+      "mainToReference": true,
+      "referenceToMain": true
+    },
+    {
+      "deck": "best-practices",
+      "mainToReference": true,
+      "referenceToMain": true
+    },
+    {
+      "deck": "working-smarter",
+      "mainToReference": true,
+      "referenceToMain": true
+    }
+  ],
+  "screenshots": [
+    "agentic-engineering-16-1920.png",
+    "subagents-prompt-caching-3-1920.png",
+    "working-smarter-2-1920.png",
+    "measuring-what-works-12-1920.png",
+    "subagent-video-midpoint.png"
+  ],
+  "errors": []
+}

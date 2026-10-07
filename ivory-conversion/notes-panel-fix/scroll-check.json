@@ -1,0 +1,49 @@
+{
+  "records": [
+    {
+      "width": 1920,
+      "height": 1080,
+      "before": {
+        "bodyBottom": 1008,
+        "controlsTop": 1030,
+        "clientHeight": 293,
+        "scrollHeight": 553,
+        "scrollTop": 0,
+        "panelHeight": 410.390625,
+        "viewportHeight": 1080
+      },
+      "after": {
+        "bodyBottom": 1008,
+        "controlsTop": 1030,
+        "clientHeight": 293,
+        "scrollHeight": 553,
+        "scrollTop": 260,
+        "panelHeight": 410.390625,
+        "viewportHeight": 1080
+      }
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "before": {
+        "bodyBottom": 648,
+        "controlsTop": 670,
+        "clientHeight": 157,
+        "scrollHeight": 794,
+        "scrollTop": 0,
+        "panelHeight": 273.59375,
+        "viewportHeight": 720
+      },
+      "after": {
+        "bodyBottom": 648,
+        "controlsTop": 670,
+        "clientHeight": 157,
+        "scrollHeight": 794,
+        "scrollTop": 637,
+        "panelHeight": 273.59375,
+        "viewportHeight": 720
+      }
+    }
+  ],
+  "errors": []
+}

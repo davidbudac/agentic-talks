@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cost &amp; Context</title>
+<link rel="stylesheet" href="ivory_design_system/styles.css">
+</head>
+<body>
+
+<!--
+  Cost & Context — Ivory conversion of cost-and-context.html (17 slides).
+  Design-only port: wording, slide order, data-label, data-origin-slide and
+  data-speaker-notes are unchanged. Revised clarity teaching path; see
+  reviews/2026-10-03-clarity/.
+  Ivory design system (DESIGN.md, ivory_design_system/).
+  Runs on the deck-stage component: ←/→, Space, Home/End,
+  number keys; R resets; N notes, P presenter window, F fullscreen.
+-->
+
+<deck-stage width="1920" height="1080">
+
+<!-- 01 · Title -->
+<section data-origin-slide="1" class="slide title-slide" data-label="Title" data-speaker-notes="Deep dive · developers Revised October 2026. Worked examples are illustrative; no live run is required.">
+  <div class="slide-head"><span class="crumb">Deep dive · developers</span><span class="snum"></span></div>
+  <h1>Cost &amp; Context</h1>
+  <p class="sub">Measure a whole task.<br>Keep the information that helps it finish.</p>
+  <div class="meta">
+    <div><span class="lab">Author</span>David&nbsp;Budáč</div>
+    <div><span class="lab">Revised</span>October 2026</div>
+  </div>
+</section>
+
+<!-- 02 · Agenda (Ember: .cards.c3 used as an agenda → ol.bul.def.wide) -->
+<section data-origin-slide="2" class="slide" data-label="Agenda" data-speaker-notes="Optional live comparison requires a prepared repository, two instruction variants and usage capture. The static exercise works without accounts.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Make one change you can measure</h2>
+  <div class="zone">
+    <ol class="bul def wide">
+      <li><b>Cost</b><span>Separate billing categories and choose a suitable access route.</span></li>
+      <li><b>Context</b><span>Trim repeated instructions without losing behavior.</span></li>
+      <li><b>Exercise</b><span>Compare correctness as well as tokens.</span></li>
+    </ol>
+  </div>
+  <p class="note">Use the invoice task throughout. No paid live run is required.</p>
+</section>
+
+<!-- 03 · Choose the route -->
+<section data-origin-slide="13" class="slide" data-label="Choose the route" data-speaker-notes="Avoid declaring a winner by team size alone. A subscription and an API have different limits and billing; neither guarantees unlimited work.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Start with how the work will run</h2>
+  <div class="zone">
+    <table class="tbl lg">
+      <thead><tr><th scope="col">Need</th><th scope="col">Check before choosing</th></tr></thead>
+      <tbody>
+        <tr><td>Daily interactive work</td><td>Native client, plan limits and actual monthly usage.</td></tr>
+        <tr><td>Custom service, batch or CI</td><td>Supported API authentication, rate limits and a budget.</td></tr>
+        <tr><td>Organizational controls</td><td>Identity, data handling, audit, residency and procurement requirements.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Compare current offers against these requirements. Detailed shopping questions are in reference material.</p>
+</section>
+
+<!-- 04 · Token volume and cost -->
+<section data-origin-slide="4" class="slide" data-label="Token volume and cost" data-speaker-notes="Input volume alone cannot establish the dominant cost. Output rates, reasoning usage, cache writes, cache hits, retries and tools all matter. Use provider usage records and avoid counting cached input twice. Subscription limits are a different accounting model.">
+  <div class="slide-head"><span class="crumb">Count the work</span><span class="snum"></span></div>
+  <h2>Count each billing category separately</h2>
+  <div class="zone">
+    <table class="tbl lg">
+      <thead><tr><th scope="col">Category</th><th scope="col">What to record</th></tr></thead>
+      <tbody>
+        <tr><td>Uncached input</td><td>New input processed at its applicable input rate.</td></tr>
+        <tr><td>Cache writes and reads</td><td>Separate token counts and the configured cache rates.</td></tr>
+        <tr><td>Generated output</td><td>Output usage, including billable reasoning where applicable.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Bill = sum of each category’s tokens × its rate, plus any separate tool or service fees.</p>
+</section>
+
+<!-- 05 · Output cost -->
+<section data-origin-slide="5" class="slide" data-label="Output cost" data-speaker-notes="Do not say output always dominates or cost and latency are the same lever. Queues, tools, input processing and generation can all contribute.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>High input volume does not identify the largest cost</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li>Generated output may use a higher token rate than input.</li>
+      <li>Cached input may be much cheaper than newly processed input.</li>
+      <li>Reasoning, retries, cache writes and tool fees can change the balance.</li>
+    </ul>
+  </div>
+  <p class="note">Use the usage record and elapsed time; a shorter visible answer alone does not prove less computation.</p>
+</section>
+
+<!-- 06 · Worked cost example -->
+<section data-origin-slide="6" class="slide" data-label="Worked cost example" data-speaker-notes="This example deliberately specifies an existing cache hit, no new cache-write tokens and no separate tool charges. Establishing the cache earlier also costs money. The original input line items summed to 22,709, not exactly 22,700; this version uses explicit rounded totals consistently. Compare a complete task, including cache warm-up and retries.">
+  <div class="slide-head"><span class="crumb">Worked arithmetic</span><span class="snum"></span></div>
+  <h2>One cache-hit request: about five cents</h2>
+  <div class="zone">
+    <table class="tbl num">
+      <thead><tr><th scope="col">Illustrative usage and rates</th><th scope="col">Cost</th></tr></thead>
+      <tbody>
+        <tr><td>19,000 cached input × $0.20 / million</td><td>$0.0038</td></tr>
+        <tr><td>3,700 new input × $4 / million</td><td>$0.0148</td></tr>
+        <tr><td>1,600 output × $20 / million</td><td>$0.0320</td></tr>
+        <tr class="tot"><td>22,700 input + 1,600 output in total</td><td><b class="key">$0.0506</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Assumed rates, not a measured bill. Without the cache hit: $0.0908 input + $0.0320 output = $0.1228.</p>
+</section>
+
+<!-- 07 · Useful context -->
+<section data-origin-slide="15" class="slide" data-label="Useful context" data-speaker-notes="Long-context performance varies by task, model, positions and distractors. Attention weights summing to one do not establish a single fixed reasoning budget. A handoff or compacted summary can omit important details: check that the acceptance contract and evidence survive.">
+  <div class="slide-head"><span class="crumb">Context quality</span><span class="snum"></span></div>
+  <h2>Keep the facts that the next decision needs</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile key"><span class="lab">Keep</span><p>The invoice rule, failing case, relevant code, decisions and latest test result.</p></div>
+      <div class="tile"><span class="lab">Summarize or remove</span><p>Duplicate file dumps, stale logs and abandoned approaches, once their useful findings are captured.</p></div>
+    </div>
+  </div>
+  <p class="note">Watch for missed requirements and repeated work. There is no universal “dumb zone” or safe fill percentage.</p>
+</section>
+
+<!-- 08 · Request anatomy -->
+<section data-origin-slide="17" class="slide" data-label="Request anatomy" data-speaker-notes="The former twenty-thousand-token breakdown was an illustration presented as an actual harness turn. This version teaches which categories to inspect without asserting measured sizes.">
+  <div class="slide-head"><span class="crumb">Context reference</span><span class="snum"></span></div>
+  <h2>Inspect what actually enters a request</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li>Standing instructions and applicable project rules.</li>
+      <li>Tool definitions and relevant skill content.</li>
+      <li>Retained conversation, selected files and tool results.</li>
+      <li>The current user message.</li>
+    </ul>
+  </div>
+  <p class="note">Use a request inspector or provider token counters for real sizes. Avoid summing overlapping categories.</p>
+</section>
+
+<!-- 09 · Project instructions -->
+<section data-origin-slide="18" class="slide" data-label="Project instructions" data-speaker-notes="Examples include CLAUDE.md and AGENTS.md, but discovery and precedence differ by harness. Do not claim a universal fallback or import rule. A file only helps when its relevant instructions enter the active context.">
+  <div class="slide-head"><span class="crumb">Make it repeatable</span><span class="snum"></span></div>
+  <h2>Store the rules needed on most tasks</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="c"># Project instructions — illustrative invoice repository</span></span>
+      <span class="l">- Test with: pytest tests/test_invoice.py -q</span>
+      <span class="l">- VAT rates come from the order record.</span>
+      <span class="l">- Preserve existing assertions; explain test changes.</span>
+      <span class="l">- Ask before changing the stored invoice schema.</span>
+    </div>
+  </div>
+  <p class="note">Use the instruction-file convention your harness actually loads. Keep standing rules short and specific.</p>
+</section>
+
+<!-- 10 · Instruction file before and after -->
+<section data-origin-slide="19" class="slide" data-label="Instruction file before and after" data-speaker-notes="Illustrative transformation. Some easily derived facts can still be useful navigation hints, so do not turn deletion into an absolute rule.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Shorten the file while preserving its constraints</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile was"><span class="lab">Before</span><p>Long project history, duplicate style advice, VAT rules, test commands and an old incident log.</p></div>
+      <div class="tile key"><span class="lab">After</span><p>Keep VAT source, rounding rule, test command and schema boundary. Link occasional procedures from a skill.</p></div>
+    </div>
+  </div>
+  <p class="note">The acceptance check is unchanged behavior on the same tasks, not the smallest file.</p>
+</section>
+
+<!-- 11 · Continue or reset -->
+<section data-origin-slide="21" class="slide" data-label="Continue or reset" data-speaker-notes="Claude Code provides clear and compact commands; consult installed help for current behavior. Do not reset a live task without preserving needed state.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Choose from the state of the task</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Unrelated next task</span><p>Start fresh with its own scope and needed project context.</p></div>
+      <div class="tile"><span class="lab">Same task, long history</span><p>Summarize the goal, evidence, decisions, failed attempts and next check.</p></div>
+    </div>
+  </div>
+  <p class="note">Check what survives compaction. Neither a fresh session nor a summary has zero context cost.</p>
+</section>
+
+<!-- 12 · Subagents -->
+<section data-origin-slide="22" class="slide" data-label="Subagents"
+    data-speaker-notes="The animation shows separation of intermediate output, not a guarantee of empty input context. Fresh agents also receive system instructions and tool definitions. Worktrees separate edits, not security boundaries. Avoid delegating a trivial step when coordination costs more than the work.">
+  <div class="slide-head"><span class="crumb">Split the work · subagents</span><span class="snum"></span></div>
+  <h2>Delegate a question; ask for evidence back</h2>
+  <div class="zone">
+    <div class="split">
+      <ul class="bul">
+        <li>Fresh helpers need a self-contained task and relevant inputs. Forks can inherit existing history.</li>
+        <li>Keep intermediate investigation in the helper’s context; return findings with file references.</li>
+        <li>Review the result. Delegation adds coordination cost and does not itself isolate filesystem access.</li>
+      </ul>
+      <div class="fig">
+        <!-- Remotion animation (remotion/src/Subagents.tsx), ivory render -->
+        <video src="assets/anim/subagents-ivory.mp4" width="1176" height="756" autoplay muted loop playsinline aria-label="A main agent delegates messy work to sub-agents that have their own context and return only a short summary"></video>
+      </div>
+    </div>
+  </div>
+  <p class="note">Example return: VAT calculation locations, the failing path, supporting lines and unresolved questions.</p>
+</section>
+
+<!-- 13 · Read selectively -->
+<section data-origin-slide="23" class="slide" data-label="Read selectively" data-speaker-notes="Avoid optimizing raw read counts at the expense of understanding. The appropriate scope depends on the code and the bug.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Find the relevant span, then enough surrounding context</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li>Search for the invoice entry point and failing test.</li>
+      <li>Read the function, its callers and relevant rules before editing.</li>
+      <li>Delegate broad investigation only when the returned evidence justifies the overhead.</li>
+    </ul>
+  </div>
+  <p class="note">A repeated read can be useful after a file changes. Diagnose before calling it waste.</p>
+</section>
+
+<!-- 14 · Compare instruction variants -->
+<section data-origin-slide="24" class="slide" data-label="Compare instruction variants" data-speaker-notes="An optional live run must use disposable copies and approved credentials. With no runtime, use the next static worksheet and discuss what still needs measurement.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Exercise · compare two versions fairly</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="c">10 minutes</span></span>
+      <span class="l"><span class="k">A:</span> the long instruction file. <span class="k">B:</span> the shorter version.</span>
+      <span class="l">Use identical task inputs, repo state, model and tools.</span>
+      <span class="l"><span class="k">Record:</span> acceptance results, all usage, time and retries.</span>
+      <span class="l">Repeat runs if available; inspect failures before choosing.</span>
+    </div>
+  </div>
+  <p class="note">Output: a comparison worksheet and one justified decision. A smaller prompt that drops the VAT rule loses.</p>
+</section>
+
+<!-- 15 · Static comparison worksheet -->
+<section data-origin-slide="25" class="slide" data-label="Static comparison worksheet" data-speaker-notes="This replaces the empty recorded-run placeholder. Ask participants to identify a measurable acceptance condition for each retained rule. Leave measured fields explicitly not run.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>No runtime? Check the proposed rewrite on paper</h2>
+  <div class="zone">
+    <table class="tbl c3">
+      <thead><tr><th scope="col">Requirement</th><th scope="col">A</th><th scope="col">B</th></tr></thead>
+      <tbody>
+        <tr><td>VAT from order + rounding rule</td><td>present</td><td>verify preserved</td></tr>
+        <tr><td>Exact invoice test command</td><td>present</td><td>verify preserved</td></tr>
+        <tr><td>Schema change approval</td><td>present</td><td>verify preserved</td></tr>
+        <tr><td>Measured task usage and results</td><td>not run</td><td>not run</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Discuss what B removed and which regression case would expose a lost rule. No savings are claimed.</p>
+</section>
+
+<!-- 16 · Next task (Ember: two .note paragraphs → .note + .src) -->
+<section data-origin-slide="26" class="slide" data-label="Next task" data-speaker-notes="Merge the previous two recaps into one action. The outcome may be better clarity, lower cost, both, or neither.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Measure, trim, then verify again</h2>
+  <div class="zone">
+    <ol class="bul">
+      <li>Record a baseline task outcome and full usage.</li>
+      <li>Remove one stale or repetitive instruction group.</li>
+      <li>Repeat the acceptance cases and keep the change only if the tradeoff holds.</li>
+    </ol>
+  </div>
+  <p class="note">Keep the task evidence with the instruction change.</p>
+  <p class="src"><a href="cost-and-context-reference.html">Optional reference material</a></p>
+</section>
+
+<!-- 17 · Sources -->
+<section data-origin-slide="28" class="slide" data-label="Sources" data-speaker-notes="Leave the sources visible for questions. These links support the mechanisms and qualifications; the examples are teaching material, not benchmark measurements.">
+  <div class="slide-head"><span class="crumb">Sources</span><span class="snum"></span></div>
+  <h2>Sources and further reading</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Context engineering</a></li>
+      <li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">Prompt caching and billing categories</a></li>
+      <li><a href="https://code.claude.com/docs/en/monitoring-usage">Claude Code usage monitoring</a></li>
+    </ul>
+  </div>
+  <p class="note">Primary documentation checked 3 October 2026. Examples are illustrative unless explicitly attributed.</p>
+</section>
+
+</deck-stage>
+<script src="ivory_design_system/deck-stage.js"></script>
+<script src="ivory_design_system/deck.js"></script>
+</body>
+</html>

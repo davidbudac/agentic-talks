@@ -1,7 +1,7 @@
 import React from "react";
 import { AbsoluteFill, useCurrentFrame, useVideoConfig, interpolate } from "remotion";
-import { themes, ThemeName } from "./theme";
-import { fontB, fontD, fontM } from "./fonts";
+import { themes, ThemeName, rad, sw } from "./theme";
+import { fontsFor } from "./fonts";
 import { loopFade, prog } from "./helpers";
 
 // KV caching: turn after turn, everything already sent becomes cached prefix
@@ -16,6 +16,10 @@ const TURNS = [
 
 export const KvCache: React.FC<{ theme: ThemeName }> = ({ theme }) => {
   const t = themes[theme];
+  const { fontB, fontD, fontM } = fontsFor(theme);
+  const lab = (x: string) => (t.upperLabels ? x.toUpperCase() : x);
+  // Geist ships no ✓ or → glyph: drop them rather than fall back to another font.
+  const glyph = (x: string) => (t.geistGlyphs ? x.replace(/ ?✓/g, "").replace(/ ?→/g, "") : x);
   const frame = useCurrentFrame();
   const { durationInFrames } = useVideoConfig();
 
@@ -44,22 +48,22 @@ export const KvCache: React.FC<{ theme: ThemeName }> = ({ theme }) => {
         height="100%"
         style={{ opacity: loopFade(frame, durationInFrames) }}
       >
-        <text x={20} y={50} fontSize={12} fill={t.muted} fontFamily={fontB} fontWeight={500} opacity={prog(frame, 4, 18)}>
-          one turn's input →
+        <text x={20} y={50} fontSize={t.upperLabels ? 11 : 12} fill={t.muted} fontFamily={t.upperLabels ? fontM : fontB} fontWeight={t.upperLabels ? t.monoWeight : 500} letterSpacing={t.monoTracking} opacity={prog(frame, 4, 18)}>
+          {lab(glyph("one turn's input →"))}
         </text>
         {/* bar frame */}
-        <rect x={20} y={60} width={360} height={70} rx={10} fill={t.midFill} stroke={t.midStroke} strokeWidth={1.5} opacity={prog(frame, 0, 14)} />
+        <rect x={20} y={60} width={360} height={70} rx={rad(t, 10)} fill={t.midFill} stroke={t.midStroke} strokeWidth={sw(t, 1.5)} opacity={prog(frame, 0, 14)} />
         {/* cached prefix (green) */}
         {cachedW > 0 ? (
           <g>
-            <rect x={30} y={70} width={cachedW} height={50} rx={6} fill={t.positive} opacity={0.85} />
+            <rect x={30} y={70} width={cachedW} height={50} rx={rad(t, 6)} fill={t.positive} opacity={t.flat ? 1 : 0.85} />
             {cachedW > 130 ? (
-              <text x={30 + cachedW / 2} y={100} fontSize={12} textAnchor="middle" fill={theme === "dark" ? t.bg : "#ffffff"} fontFamily={fontB} fontWeight={600}>
-                cached ✓ ~10× cheaper
+              <text x={30 + cachedW / 2} y={100} fontSize={12} textAnchor="middle" fill={t.onPositive} fontFamily={fontB} fontWeight={600}>
+                {glyph("cached ✓ ~10× cheaper")}
               </text>
             ) : cachedW > 40 ? (
-              <text x={30 + cachedW / 2} y={100} fontSize={12} textAnchor="middle" fill={theme === "dark" ? t.bg : "#ffffff"} fontFamily={fontB} fontWeight={600}>
-                cached ✓
+              <text x={30 + cachedW / 2} y={100} fontSize={12} textAnchor="middle" fill={t.onPositive} fontFamily={fontB} fontWeight={600}>
+                {glyph("cached ✓")}
               </text>
             ) : null}
           </g>
@@ -67,7 +71,7 @@ export const KvCache: React.FC<{ theme: ThemeName }> = ({ theme }) => {
         {/* fresh tail (coral) */}
         {newW > 0 ? (
           <g>
-            <rect x={newX} y={70} width={newW} height={50} rx={6} fill={t.coral} />
+            <rect x={newX} y={70} width={newW} height={50} rx={rad(t, 6)} fill={t.coral} />
             {newW > 30 ? (
               <text x={newX + newW / 2} y={98} fontSize={10.5} textAnchor="middle" fill={t.onHot} fontFamily={fontB} fontWeight={600}>
                 new
@@ -78,13 +82,13 @@ export const KvCache: React.FC<{ theme: ThemeName }> = ({ theme }) => {
         {/* per-turn caption */}
         {TURNS.map((turn, i) =>
           i === activeTurn ? (
-            <text key={i} x={200} y={155} fontSize={11.5} textAnchor="middle" fill={t.muted} fontFamily={fontM} fontWeight={500} opacity={prog(frame, turn.from + 6, turn.from + 20)}>
-              {turn.label}
+            <text key={i} x={200} y={155} fontSize={11.5} textAnchor="middle" fill={t.muted} fontFamily={fontM} fontWeight={t.monoWeight} letterSpacing={t.monoTracking} opacity={prog(frame, turn.from + 6, turn.from + 20)}>
+              {lab(glyph(turn.label))}
             </text>
           ) : null,
         )}
         {/* closing rule */}
-        <text x={200} y={182} fontSize={13} textAnchor="middle" fill={t.accent} fontFamily={fontD} fontWeight={700} opacity={prog(frame, 236, 254)}>
+        <text x={200} y={182} fontSize={13} textAnchor="middle" fill={t.caption} fontFamily={fontD} fontWeight={t.captionWeight} opacity={prog(frame, 236, 254)}>
           append, never rewrite — same bytes, cheap forever
         </text>
       </svg>

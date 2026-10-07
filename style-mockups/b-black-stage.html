@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>Style B — Black Stage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400..600&family=Instrument+Serif:ital@0;1&display=block" rel="stylesheet">
+<link rel="stylesheet" href="shell.css">
+<style>
+/* ── Black Stage tokens ─────────────────────────────── */
+.slide{
+  --stage:#030303;
+  --ivory:#FAF9F5;
+  --grey:#A39E93;      /* warm secondary */
+  --dim:#6E6A62;       /* warm tertiary */
+  --line:rgba(250,249,245,.14);
+  --line-2:rgba(250,249,245,.24);
+  --clay:#D97757;
+  --kraft:#D4A27F;
+  --fig:#C46686;
+  --amber:#C9782A;
+  --mx:120px;
+  background:var(--stage);
+  color:var(--ivory);
+  font-family:"Geist",system-ui,sans-serif;
+  font-weight:400;
+  font-feature-settings:"ss01","tnum" 0;
+  -webkit-font-smoothing:antialiased;
+}
+.slide *{box-sizing:border-box}
+
+/* light blooms: blurred radial gradients, plus a grain layer to stop banding */
+.slide .stage{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.slide .bloom{position:absolute;border-radius:50%;filter:blur(70px);mix-blend-mode:screen}
+.slide .stage::after{content:"";position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode:overlay;opacity:.55}
+
+/* system chrome shared by every slide */
+.slide .top{position:absolute;left:var(--mx);right:var(--mx);top:68px;display:flex;justify-content:space-between;align-items:center;z-index:2}
+.slide .chip{display:inline-flex;align-items:center;gap:14px;height:52px;padding:0 26px 0 22px;border:1px solid var(--line-2);border-radius:999px;
+  background:rgba(250,249,245,.04);font-size:22px;letter-spacing:-.005em;color:var(--ivory)}
+.slide .chip i{width:10px;height:10px;border-radius:50%;background:var(--dot,var(--clay));box-shadow:0 0 14px var(--dot,var(--clay))}
+.slide .num{display:flex;align-items:center;gap:22px;font-size:22px;color:var(--dim);font-variant-numeric:tabular-nums;letter-spacing:-.005em}
+.slide .num b{display:grid;place-items:center;min-width:52px;height:52px;padding:0 16px;border-radius:999px;border:1px solid var(--line-2);background:rgba(3,3,3,.45);color:var(--ivory);font-weight:500}
+
+.slide h2{position:absolute;left:var(--mx);top:176px;margin:0;font-weight:500;font-size:100px;line-height:1;letter-spacing:-.045em;z-index:2}
+.slide .em{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;font-size:1.14em;letter-spacing:-.012em;line-height:.8}
+.slide .foot{position:absolute;left:var(--mx);bottom:68px;margin:0;font-size:26px;line-height:1.35;color:var(--grey);letter-spacing:-.005em;z-index:2}
+
+/* ── 1 · Title ─────────────────────────────── */
+.s1 .b-a{width:1500px;height:1100px;left:1060px;top:520px;background:radial-gradient(closest-side,rgba(217,119,87,.95),rgba(217,119,87,0))}
+.s1 .b-b{width:1000px;height:820px;left:760px;top:760px;background:radial-gradient(closest-side,rgba(196,102,134,.75),rgba(196,102,134,0))}
+.s1 .b-c{width:820px;height:700px;left:1500px;top:240px;background:radial-gradient(closest-side,rgba(201,120,42,.6),rgba(201,120,42,0))}
+.s1 .b-d{width:520px;height:380px;left:1460px;top:760px;background:radial-gradient(closest-side,rgba(240,200,160,.55),rgba(240,200,160,0));filter:blur(50px)}
+.s1 .meta{font-size:22px;color:var(--grey)}
+.s1 h1{position:absolute;left:var(--mx);top:262px;margin:0;font-weight:500;font-size:212px;line-height:.9;letter-spacing:-.055em;z-index:2}
+.s1 h1 .em{display:block;font-size:1.2em;letter-spacing:-.02em;line-height:.86;margin-left:4px}
+.s1 .sub{position:absolute;left:var(--mx);top:752px;width:980px;margin:0;font-size:40px;line-height:1.28;letter-spacing:-.02em;color:var(--grey);z-index:2}
+.s1 .author{position:absolute;left:var(--mx);bottom:68px;display:flex;align-items:center;gap:20px;font-size:30px;font-weight:500;letter-spacing:-.015em;z-index:2}
+.s1 .author::before{content:"";width:56px;height:1px;background:var(--line-2)}
+
+/* ── 2 · Three cards ─────────────────────────────── */
+.s2 .b-a{width:1200px;height:760px;left:820px;top:-520px;background:radial-gradient(closest-side,rgba(201,120,42,.8),rgba(201,120,42,0))}
+.s2 .b-b{width:820px;height:520px;left:1080px;top:-330px;background:radial-gradient(closest-side,rgba(212,162,127,.6),rgba(212,162,127,0))}
+.s2 .b-c{width:900px;height:500px;left:-300px;top:900px;background:radial-gradient(closest-side,rgba(196,102,134,.35),rgba(196,102,134,0))}
+.s2 .cards{position:absolute;left:var(--mx);right:var(--mx);top:392px;display:grid;grid-template-columns:repeat(3,1fr);gap:32px;z-index:2}
+.s2 .card{position:relative;height:468px;padding:56px 52px 0;border:1px solid var(--line);border-radius:40px;overflow:hidden;
+  background:linear-gradient(180deg,rgba(250,249,245,.055),rgba(250,249,245,.015))}
+.s2 .card::before{content:"";position:absolute;left:40px;right:40px;top:-1px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--h) 30%,var(--h) 50%,transparent)}
+.s2 .card::after{content:"";position:absolute;left:24px;top:22px;width:150px;height:150px;border-radius:50%;
+  background:radial-gradient(closest-side,var(--h),transparent);opacity:.45;filter:blur(18px)}
+.s2 .card>*{position:relative;z-index:1}
+.s2 .glyph{width:72px;height:72px;border-radius:50%;border:1px solid var(--line-2);display:grid;place-items:center;margin-bottom:68px;background:rgba(3,3,3,.55)}
+.s2 .card h3{margin:0 0 22px;font-weight:500;font-size:56px;letter-spacing:-.035em;line-height:1}
+.s2 .card p{margin:0;text-wrap:pretty;font-size:32px;line-height:1.32;color:var(--grey);letter-spacing:-.012em}
+
+/* ── 3 · Code ─────────────────────────────── */
+.s3 .b-a{width:1200px;height:900px;left:980px;top:-140px;background:radial-gradient(closest-side,rgba(196,102,134,.85),rgba(196,102,134,0))}
+.s3 .b-b{width:1000px;height:760px;left:1240px;top:420px;background:radial-gradient(closest-side,rgba(217,119,87,.8),rgba(217,119,87,0))}
+.s3 .b-c{width:900px;height:520px;left:1000px;top:980px;background:radial-gradient(closest-side,rgba(201,120,42,.45),rgba(201,120,42,0))}
+.s3 h2{width:560px;font-size:88px;line-height:1.02}
+.s3 .panel{position:absolute;left:668px;top:176px;width:1132px;z-index:2;border-radius:36px;border:1px solid var(--line-2);
+  background:linear-gradient(180deg,rgba(18,15,14,.72),rgba(8,7,7,.82));
+  backdrop-filter:blur(40px) saturate(1.2);-webkit-backdrop-filter:blur(40px) saturate(1.2);
+  box-shadow:inset 0 1px 0 rgba(250,249,245,.10),0 40px 120px rgba(0,0,0,.55)}
+.s3 .bar{display:flex;align-items:center;justify-content:space-between;height:88px;padding:0 32px 0 36px;border-bottom:1px solid var(--line)}
+.s3 .bar .chip{height:46px;font-size:20px;padding:0 22px 0 18px;background:rgba(250,249,245,.05)}
+.s3 .bar .hint{font-size:20px;color:var(--dim)}
+.s3 pre{margin:0;padding:44px 36px 50px 0;font-family:"Geist Mono",ui-monospace,monospace;font-size:30px;line-height:2.25;letter-spacing:-.01em;color:var(--ivory);counter-reset:ln}
+.s3 pre span.l{display:block;counter-increment:ln;white-space:pre}
+.s3 pre span.l::before{content:counter(ln);display:inline-block;width:76px;padding-right:26px;text-align:right;color:#4E4A44}
+.s3 .k{color:var(--kraft)}
+.s3 .cmd{color:#F4B79E;background:rgba(217,119,87,.14);border-radius:10px;padding:4px 10px;margin:0 -2px}
+
+/* ── 4 · Numbers ─────────────────────────────── */
+.s4 .b-a{width:1200px;height:800px;left:-840px;top:300px;background:radial-gradient(closest-side,rgba(201,120,42,.9),rgba(201,120,42,0))}
+.s4 .b-b{width:1000px;height:560px;left:640px;top:1000px;background:radial-gradient(closest-side,rgba(217,119,87,.6),rgba(217,119,87,0))}
+.s4 .b-c{width:700px;height:520px;left:1500px;top:-300px;background:radial-gradient(closest-side,rgba(212,162,127,.28),rgba(212,162,127,0))}
+.s4 h2{width:1100px}
+.s4 .hero{position:absolute;left:var(--mx);top:452px;z-index:2}
+.s4 .hero .lab{font-size:24px;color:var(--grey);margin:0 0 6px 6px}
+.s4 .big{font-weight:400;font-size:236px;line-height:.9;letter-spacing:-.065em;font-variant-numeric:tabular-nums;margin:0}
+.s4 .big small{font-size:.5em;vertical-align:.62em;color:var(--grey);letter-spacing:-.02em;margin-right:10px}
+.s4 .cmp{margin-top:46px;width:780px;display:grid;gap:20px}
+.s4 .row{display:grid;grid-template-columns:1fr auto;align-items:center;row-gap:10px;font-size:22px;color:var(--grey)}
+.s4 .row b{font-weight:500;color:var(--ivory);font-size:26px;font-variant-numeric:tabular-nums}
+.s4 .track{grid-column:1/-1;height:12px;border-radius:999px;background:rgba(250,249,245,.07);overflow:hidden}
+.s4 .track i{display:block;height:100%;border-radius:999px}
+.s4 .row.with .track i{width:41.2%;background:linear-gradient(90deg,var(--amber),var(--clay))}
+.s4 .row.without .track i{width:100%;background:rgba(250,249,245,.28)}
+.s4 table{position:absolute;left:1036px;top:452px;width:764px;border-collapse:collapse;z-index:2;font-variant-numeric:tabular-nums}
+.s4 th{font-weight:400;font-size:20px;color:var(--dim);text-align:left;padding:0 0 22px;border-bottom:1px solid var(--line-2)}
+.s4 th:last-child,.s4 td:last-child{text-align:right}
+.s4 td{font-size:27px;padding:27px 0;border-bottom:1px solid var(--line);color:var(--grey);letter-spacing:-.012em}
+.s4 td:last-child{color:var(--ivory);font-size:30px;padding-left:24px;letter-spacing:-.02em}
+.s4 tr.total td{border-bottom:0;color:var(--ivory);font-weight:500;padding-top:30px}
+.s4 tr.total td:last-child{color:#F2B38E;font-size:34px}
+.s4 tr.total{border-top:1px solid var(--line-2)}
+.s4 .foot{width:1500px}
+
+/* ── 5 · Diagram ─────────────────────────────── */
+.s5 .b-a{width:640px;height:420px;left:214px;top:420px;background:radial-gradient(closest-side,rgba(232,140,100,.7),rgba(217,119,87,0));filter:blur(50px)}
+.s5 .b-b{width:800px;height:560px;left:1500px;top:820px;background:radial-gradient(closest-side,rgba(196,102,134,.42),rgba(196,102,134,0))}
+.s5 .b-c{width:700px;height:500px;left:-260px;top:-260px;background:radial-gradient(closest-side,rgba(212,162,127,.22),rgba(212,162,127,0))}
+.s5 svg.loop{position:absolute;left:84px;top:318px;width:900px;z-index:2;overflow:visible}
+.s5 .steps{position:absolute;left:1030px;top:352px;width:770px;margin:0;padding:0;list-style:none;z-index:2}
+.s5 .steps li{display:grid;grid-template-columns:12px 1fr;column-gap:28px;text-wrap:pretty;padding:28px 0;border-top:1px solid var(--line);font-size:28px;line-height:1.3;color:var(--grey);letter-spacing:-.012em}
+.s5 .steps li:last-child{border-bottom:1px solid var(--line)}
+.s5 .steps li::before{content:"";width:12px;height:12px;border-radius:50%;margin-top:12px;background:var(--c);box-shadow:0 0 16px var(--c)}
+.s5 .steps b{font-weight:500;color:var(--ivory)}
+.s5 .foot{width:1600px}
+</style>
+</head><body><main class="sheet">
+<header class="sheet-head">
+  <a class="back" href="index.html">← All styles</a>
+  <h1>B — Black Stage</h1>
+  <p class="why">A product-keynote stage: true black, big confident grotesque type and soft warm stage light as the only imagery. On a projector, black disappears into the room, so the words and numbers float and the audience reads one idea at a time.</p>
+  <div class="borrow">
+    <div><b>From OpenAI</b>DevDay-style black stage, very large tight type, out-of-focus light blooms, pill chips, 1px translucent outlines, glassy code panel, hero numbers.</div>
+    <div><b>From Anthropic</b>Warmth: clay, kraft, fig and amber light instead of blue and green, ivory text, warm greys, and one serif-italic phrase per heading.</div>
+    <div><b>Type</b>Geist (display and body), Instrument Serif italic (emphasis), Geist Mono (code).</div>
+  </div>
+  <div class="swatches"><span style="background:#030303;color:#A39E93">#030303</span><span style="background:#FAF9F5;color:#030303">#FAF9F5</span><span style="background:#A39E93;color:#030303">#A39E93</span><span style="background:#D97757;color:#030303">#D97757</span><span style="background:#D4A27F;color:#030303">#D4A27F</span><span style="background:#C46686;color:#030303">#C46686</span><span style="background:#C9782A;color:#030303">#C9782A</span></div>
+</header>
+
+<!-- 1 · Title -->
+<div class="frame"><section class="slide s1">
+  <div class="stage"><div class="bloom b-c"></div><div class="bloom b-b"></div><div class="bloom b-a"></div><div class="bloom b-d"></div></div>
+  <div class="top"><span class="chip"><i></i>Advanced · daily Claude Code users</span><span class="meta">Revised October 2026</span></div>
+  <h1>Claude Best <span class="em">Practices</span></h1>
+  <p class="sub">Practical lessons from Anthropic’s engineering posts, tested against your own work.</p>
+  <div class="author">David Budáč</div>
+</section></div><p class="cap">1 · Title</p>
+
+<!-- 2 · Three cards -->
+<div class="frame"><section class="slide s2">
+  <div class="stage"><div class="bloom b-a"></div><div class="bloom b-b"></div><div class="bloom b-c"></div></div>
+  <div class="top"><span class="chip" style="--dot:var(--amber)"><i></i>In practice</span><span class="num"><b>2</b></span></div>
+  <h2>Start with <span class="em">three changes</span></h2>
+  <div class="cards">
+    <article class="card" style="--h:var(--clay)">
+      <div class="glyph"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#D97757" stroke-width="2" stroke-linecap="round"><path d="M5 8h18M5 14h12M5 20h7"/></svg></div>
+      <h3>Instructions</h3>
+      <p>Remove conflicting or obsolete rules; preserve real constraints.</p>
+    </article>
+    <article class="card" style="--h:var(--kraft)">
+      <div class="glyph"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#D4A27F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 14.5l6 6L23 8"/></svg></div>
+      <h3>Verification</h3>
+      <p>Make done depend on evidence tied to the task.</p>
+    </article>
+    <article class="card" style="--h:var(--fig)">
+      <div class="glyph"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#C46686" stroke-width="2" stroke-linecap="round"><path d="M6 22V15M14 22V6M22 22V11"/></svg></div>
+      <h3>Measurement</h3>
+      <p>Compare configurations by outcomes, cost and review effort.</p>
+    </article>
+  </div>
+  <p class="foot">Skills, caching and delegation support these three habits.</p>
+</section></div><p class="cap">2 · Three cards</p>
+
+<!-- 3 · Code -->
+<div class="frame"><section class="slide s3">
+  <div class="stage"><div class="bloom b-a"></div><div class="bloom b-b"></div><div class="bloom b-c"></div></div>
+  <div class="top"><span class="chip" style="--dot:var(--fig)"><i></i>The invoice task</span><span class="num"><b>21</b></span></div>
+  <h2>Make the acceptance contract <span class="em">explicit</span></h2>
+  <div class="panel">
+    <div class="bar"><span class="chip" style="--dot:var(--kraft)"><i></i>request to Claude</span><span class="hint">6 lines</span></div>
+<pre><span class="l"><span class="k">GOAL:</span> export invoice net, VAT and gross values to CSV.</span><span class="l"><span class="k">SCOPE:</span> invoice export code; preserve existing tests.</span><span class="l"><span class="k">VERIFY:</span> <span class="cmd">pytest tests/test_export.py -q</span></span><span class="l"><span class="k">CASES:</span> 21% VAT, zero VAT, rounding, quoted CSV fields.</span><span class="l"><span class="k">LIMIT:</span> three repair attempts; then stop and report.</span><span class="l"><span class="k">EVIDENCE:</span> diff, command, exit status, failures and gaps.</span></pre>
+  </div>
+  <p class="foot">Pair this request with an enforced runtime budget and a review of the resulting artifact.</p>
+</section></div><p class="cap">3 · Code</p>
+
+<!-- 4 · Numbers -->
+<div class="frame"><section class="slide s4">
+  <div class="stage"><div class="bloom b-a"></div><div class="bloom b-b"></div><div class="bloom b-c"></div></div>
+  <div class="top"><span class="chip" style="--dot:var(--kraft)"><i></i>Worked arithmetic</span><span class="num"><b>10</b></span></div>
+  <h2>One cache-hit request: <span class="em">about five cents</span></h2>
+  <div class="hero">
+    <p class="big"><small>$</small>0.0506</p>
+    <div class="cmp">
+      <div class="row with"><span>With the cache hit</span><b>$0.0506</b><span class="track"><i></i></span></div>
+      <div class="row without"><span>Without it</span><b>$0.1228</b><span class="track"><i></i></span></div>
+    </div>
+  </div>
+  <table>
+    <thead><tr><th>Illustrative usage and rates</th><th>Cost</th></tr></thead>
+    <tbody>
+      <tr><td>19,000 cached input × $0.20 / million</td><td>$0.0038</td></tr>
+      <tr><td>3,700 new input × $4 / million</td><td>$0.0148</td></tr>
+      <tr><td>1,600 output × $20 / million</td><td>$0.0320</td></tr>
+      <tr class="total"><td>22,700 input + 1,600 output in total</td><td>$0.0506</td></tr>
+    </tbody>
+  </table>
+  <p class="foot">Assumed rates, not a measured bill. Without the cache hit: $0.0908 input + $0.0320 output = $0.1228.</p>
+</section></div><p class="cap">4 · Numbers</p>
+
+<!-- 5 · Diagram -->
+<div class="frame"><section class="slide s5">
+  <div class="stage"><div class="bloom b-a"></div><div class="bloom b-b"></div><div class="bloom b-c"></div></div>
+  <div class="top"><span class="chip" style="--dot:var(--clay)"><i></i>Agent · the loop</span><span class="num"><b>9</b></span></div>
+  <h2>An agent is a <span class="em">loop</span></h2>
+  <svg class="loop" viewBox="0 0 1000 640" role="img" aria-label="A loop: the model proposes, the harness runs, the result is observed, the model checks, then the loop repeats">
+    <defs>
+      <linearGradient id="b5ring" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#D4A27F"/><stop offset=".35" stop-color="#D97757"/><stop offset=".7" stop-color="#C46686"/><stop offset="1" stop-color="#C9782A"/>
+      </linearGradient>
+      <filter id="b5glow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="14"/></filter>
+      <radialGradient id="b5node" cx=".5" cy=".35" r=".7">
+        <stop offset="0" stop-color="#1c1714"/><stop offset="1" stop-color="#070606"/>
+      </radialGradient>
+    </defs>
+    <!-- the orbit: soft glow + crisp line -->
+    <ellipse cx="500" cy="320" rx="400" ry="262" fill="none" stroke="url(#b5ring)" stroke-width="16" opacity=".45" filter="url(#b5glow)"/>
+    <ellipse cx="500" cy="320" rx="400" ry="262" fill="none" stroke="url(#b5ring)" stroke-width="2.5"/>
+    <!-- direction chevrons, clockwise -->
+    <g fill="none" stroke="#FAF9F5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M-9 -11 L5 0 L-9 11" transform="translate(217.2 134.7) rotate(-33.2)"/>
+      <path d="M-9 -11 L5 0 L-9 11" transform="translate(782.8 134.7) rotate(33.2)"/>
+      <path d="M-9 -11 L5 0 L-9 11" transform="translate(782.8 505.3) rotate(146.8)"/>
+      <path d="M-9 -11 L5 0 L-9 11" transform="translate(217.2 505.3) rotate(-146.8)"/>
+    </g>
+    <!-- the two actors -->
+    <g font-family="Geist, sans-serif" text-anchor="middle">
+      <circle cx="330" cy="320" r="122" fill="url(#b5node)" stroke="rgba(250,249,245,.26)" stroke-width="1.5"/>
+      <text x="330" y="333" font-size="40" font-weight="500" fill="#FAF9F5" letter-spacing="-1.4">Model</text>
+      <circle cx="670" cy="320" r="122" fill="url(#b5node)" stroke="rgba(250,249,245,.26)" stroke-width="1.5"/>
+      <text x="670" y="333" font-size="40" font-weight="500" fill="#FAF9F5" letter-spacing="-1.4">Harness</text>
+    </g>
+    <!-- step pills sitting on the orbit -->
+    <g font-family="Geist, sans-serif" font-size="27" font-weight="500" text-anchor="middle" fill="#FAF9F5">
+      <g transform="translate(500 58)"><rect x="-86" y="-29" width="172" height="58" rx="29" fill="#0b0908" stroke="#D97757" stroke-width="1.5"/><text y="9">Propose</text></g>
+      <g transform="translate(900 320)"><rect x="-58" y="-29" width="116" height="58" rx="29" fill="#0b0908" stroke="#D4A27F" stroke-width="1.5"/><text y="9">Run</text></g>
+      <g transform="translate(500 582)"><rect x="-86" y="-29" width="172" height="58" rx="29" fill="#0b0908" stroke="#C46686" stroke-width="1.5"/><text y="9">Observe</text></g>
+      <g transform="translate(100 320)"><rect x="-70" y="-29" width="140" height="58" rx="29" fill="#0b0908" stroke="#C9782A" stroke-width="1.5"/><text y="9">Check</text></g>
+    </g>
+  </svg>
+  <ul class="steps">
+    <li style="--c:var(--clay)"><span><b>Propose:</b> the model chooses the next action.</span></li>
+    <li style="--c:var(--kraft)"><span><b>Run:</b> the harness executes it under the configured permissions.</span></li>
+    <li style="--c:var(--fig)"><span><b>Observe:</b> the result returns as context for the next step.</span></li>
+    <li style="--c:var(--amber)"><span><b>Check:</b> stop when the task is verified, or ask when blocked.</span></li>
+  </ul>
+  <p class="foot">In a live run or a finished transcript, point to one tool call and its result. That is one lap of the loop.</p>
+</section></div><p class="cap">5 · Diagram</p>
+
+</main><script src="shell.js"></script></body></html>

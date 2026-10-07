@@ -1,0 +1,24 @@
+/* Neutral mockup sheet shared by every style page. Style pages must not restyle these. */
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#e4e2dd;color:#1c1b19;font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;padding:48px 40px 96px}
+.sheet{max-width:1120px;margin:0 auto}
+.sheet-head{margin-bottom:40px}
+.sheet-head .back{font:600 12px ui-monospace,Menlo,monospace;letter-spacing:.1em;text-transform:uppercase;color:#77736b;text-decoration:none}
+.sheet-head h1{font-size:40px;line-height:1.1;letter-spacing:-.02em;margin:10px 0 8px}
+.sheet-head .why{font-size:17px;color:#55514a;max-width:76ch}
+.sheet-head .borrow{display:flex;gap:28px;flex-wrap:wrap;margin-top:18px;font-size:14.5px;color:#55514a}
+.sheet-head .borrow b{display:block;font:600 11px ui-monospace,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase;color:#77736b;margin-bottom:3px}
+.sheet-head .borrow>div{max-width:34ch}
+.swatches{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+.swatches span{width:76px;height:52px;border-radius:5px;border:1px solid rgba(0,0,0,.12);font:500 10px ui-monospace,Menlo,monospace;display:flex;align-items:flex-end;padding:4px 5px}
+
+.frame{width:100%;aspect-ratio:16/9;position:relative;overflow:hidden;border-radius:6px;box-shadow:0 12px 40px rgba(22,19,14,.22);margin-bottom:10px}
+.frame>.slide{position:absolute;top:0;left:0;width:1920px;height:1080px;overflow:hidden;transform-origin:top left;transform:scale(var(--s,.5))}
+.cap{font:600 12px ui-monospace,Menlo,monospace;letter-spacing:.1em;text-transform:uppercase;color:#77736b;margin:0 0 40px 2px}
+
+/* ?slide=N — one slide at native 1920×1080 for screenshots */
+body.solo{padding:0;background:#000;overflow:hidden}
+body.solo .sheet{max-width:none;margin:0}
+body.solo .sheet-head,body.solo .cap,body.solo .frame:not(.on){display:none}
+body.solo .frame.on{width:1920px;height:1080px;aspect-ratio:auto;border-radius:0;box-shadow:none;margin:0}
+body.solo .frame.on>.slide{transform:none}

@@ -245,6 +245,11 @@ table.tbl tr:last-child td{border-bottom:none}
   [data-deck-active] .title-slide>.ts-foot{animation-delay:.3s}
 }
 </style>
+<style>
+/* Shorter teaching copy gets a larger reading size on the existing canvas. */
+.slide{--body-size:clamp(30px,2.4vw,34px);--small-size:clamp(22px,1.8vw,26px);--code-size:clamp(24px,2vw,28px)}
+</style>
+<style>.note a{color:var(--s-text);text-decoration:underline;text-underline-offset:3px}.note a:focus-visible{outline:2px solid var(--s-accent);outline-offset:4px}</style>
 </head>
 <body>
 
@@ -270,10 +275,9 @@ table.tbl tr:last-child td{border-bottom:none}
 
 <deck-stage width="1920" height="1080">
 
-  <!-- 1 · TITLE -->
-  <section class="slide dark title-slide" data-label="Title"
-    data-speaker-notes="Open with the promise, not the tech: everyone in the room already uses an AI chatbot, and this talk is about everything around it — what tools exist, what they can actually do for you, and what each one costs. No coding background needed, no live demos to babysit. One warning up front: everything here is a July 2026 snapshot of a market that reshuffles monthly.">
-    <div class="ts-top"><span class="k">A field guide to today's AI tools</span><span class="meta">July 2026</span></div>
+  <section data-origin-slide="1" class="slide dark title-slide" data-label="Title"
+    data-speaker-notes="Introduce a task-first field guide. The main talk covers useful outputs, selection and review. Detailed vendor tables remain in a separate July 2026 reference snapshot. There is no live demo.">
+    <div class="ts-top"><span class="k">A field guide to today's AI tools</span><span class="meta">Revised October 2026</span></div>
     <div class="ts-hero">
       <h1>The AI<br>Toolbox<span class="dot">.</span></h1>
       <p class="ts-sub">What exists beyond the chat window — <b>what it can do</b>, and <b>what it costs</b></p>
@@ -284,56 +288,38 @@ table.tbl tr:last-child td{border-bottom:none}
     </div>
   </section>
 
-  <!-- 2 · HOOK -->
-  <section class="slide dark" data-label="The hook"
-    data-speaker-notes="Anchor on what the room already does: ask ChatGPT or Claude a question, get a paragraph, copy-paste it somewhere. Then read the right tile slowly — same request, but the AI hands back finished files: the deck, the page, the audio. Land the note: it is often the same AI underneath; what changed is the tools wrapped around it, and this talk is a guided tour of those tools, price tags included.">
+  <section data-origin-slide="2" class="slide dark" data-label="The hook" data-speaker-notes="Drop the unsupported ten-percent framing. Set an achievable expectation: an editable draft with explicit gaps. The next example shows the inputs, output and human review.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">2</span><div class="crumb"><b>The hook</b></div></div>
-      <h2 class="reveal">You know the chat window. That's maybe <span class="o">10% of the story.</span></h2>
-      <div class="split">
-        <div class="tile reveal"><span class="k">What most people ask</span><p>"Write me a post about our new savings account." → you get <b>a paragraph of text</b> to copy-paste, format and finish yourself.</p></div>
-        <div class="tile fill reveal"><span class="k">What you could ask</span><p>"Here's the brief and last year's campaign folder — <b>build the deck, the landing page and a voiced video draft.</b>" → you get <b>finished files</b> to review.</p></div>
-      </div>
-      <p class="note reveal">Often it's the <b>same AI underneath.</b> What changed is the <b>tools around it</b> — and this talk is a guided tour of those tools, <b>price tags included.</b></p>
+      <div class="slide-head reveal"><span class="snum">2</span><div class="crumb">Start with the task</div></div>
+      <h2 class="reveal">Ask for a result you can review</h2>
+      <div class="cards c2 reveal"><div class="tile"><span class="k">A paragraph</span><p>“Write a summary of this quarter’s results.”</p></div><div class="tile"><span class="k">An editable draft</span><p>“Use these results and last quarter’s deck to build the next review. Flag missing data.”</p></div></div>
+      <p class="note reveal">The useful difference is the output: a file, a working draft, or an action you can inspect.</p>
     </div>
   </section>
 
-  <!-- 3 · AGENDA -->
-  <section class="slide light" data-label="Agenda"
-    data-speaker-notes="Twenty seconds per tile — this is a map. First a five-slide crash course on what an agent is, then the big three labs, then what you can actually do, then the long middle: a category-by-category tour of the wider tool market. Dessert is five true stories, and we close with how to plug AI into Excel, PowerPoint and the rest. Point out the note: prices come as we go, not in one indigestible table at the end.">
+  <section data-origin-slide="3" class="slide light" data-label="Agenda" data-speaker-notes="Twenty seconds. No six-part catalogue. Tell the audience there is a dated reference deck for product detail and sources.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">3</span><div class="crumb"><b>Agenda</b></div></div>
-      <h2 class="reveal">What we'll <span class="o">cover</span></h2>
-      <div class="cards c3 reveal">
-        <div class="tile"><span class="k">The core idea</span><p>Chatbot vs agent, the loop, and why the model forgets — in five slides.</p></div>
-        <div class="tile"><span class="k">The big three</span><p>Anthropic, OpenAI, Google — their full toolboxes, plan by plan.</p></div>
-        <div class="tile"><span class="k">What you can do</span><p>A week of real tasks — decks, podcasts, pages, research.</p></div>
-        <div class="tile"><span class="k">The wider landscape</span><p>Video, voice, avatars, images, decks, automation — the deep dive.</p></div>
-        <div class="tile"><span class="k">Five wild stories</span><p>What agents actually did in the real world — good and bad.</p></div>
-        <div class="tile fill"><span class="k">Plugging it in</span><p>Excel, PowerPoint &amp; co. — plugins, connectors and MCP.</p></div>
-      </div>
-      <p class="note reveal">Prices travel with the tools — <b>every tool comes with its price tag</b>, as we go.</p>
+      <div class="slide-head reveal"><span class="snum">3</span><div class="crumb">Our route</div></div>
+      <h2 class="reveal">Three questions for choosing a tool</h2>
+      <div class="cards c3 reveal"><div class="tile"><span class="k">What do I need?</span><p>A document, a design, a clip, an answer or a repeatable task.</p></div><div class="tile"><span class="k">Where should I start?</span><p>The tools your team already has, then a specialist if needed.</p></div><div class="tile"><span class="k">What must I check?</span><p>Accuracy, permissions, export, rights and the cost of iteration.</p></div></div>
+      <p class="note reveal">Product and price tables are optional reference material. The main talk is about choosing a useful workflow.</p>
     </div>
   </section>
 
-  <!-- 4 · HOW AI IS PRICED -->
-  <section class="slide dark" data-label="Reading a price tag"
-    data-speaker-notes="Give them the literacy up front so every later price makes sense. Four models: a flat subscription with a usage cap — the labs; credits, a bucket you buy and every generation burns some — nearly all creative tools, and the hardest to budget; per-seat for teams, which is where admin controls and compliance live; and API per-token metering for software builders. Flag the trap now: a free tier almost never includes a commercial licence — we come back to that in the fine print.">
+  <section data-origin-slide="23" class="slide dark" data-label="One task, agent-style" data-speaker-notes="This is a teaching example, not a captured run. Walk input to output. A model can invent missing numbers; explicitly asking for gaps and reconciling the result are checks, not guarantees. Use the same example when discussing file creation and Office editing.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">4</span><div class="crumb"><b>Basics</b> · pricing literacy</div></div>
-      <h2 class="reveal">First, learn to read an AI <span class="o">price tag</span></h2>
-      <div class="cards c4 reveal">
-        <div class="tile"><span class="k">1 · Subscription</span><p>Flat <b>$/month</b>, capped by usage limits. The labs: free → ~$20 → $100–200. Simple, predictable.</p></div>
-        <div class="tile"><span class="k">2 · Credits</span><p>Buy a <b>bucket</b>; each image/clip/minute burns some. Most creative tools. Hardest to budget — <b>retries burn credits too.</b></p></div>
-        <div class="tile"><span class="k">3 · Per-seat</span><p><b>$/user/month</b> for teams — adds admin controls, SSO, "no training on your data". Usually ~$20–40/seat.</p></div>
-        <div class="tile"><span class="k">4 · API (per token)</span><p>Metered <b>pay-per-use</b> for building software on top. No cap; scales with usage.</p></div>
-      </div>
-      <p class="note reveal">And the trap to remember: <b>free tier ≠ free for commercial use.</b> More on that in "the fine print". All prices in this deck: <b>July 2026 snapshot</b> — verify before quoting.</p>
+      <div class="slide-head reveal"><span class="snum">4</span><div class="crumb">A useful first task</div></div>
+      <h2 class="reveal">Build the quarterly review from evidence</h2>
+      <div class="code reveal">INPUT    results.csv + Q1 deck + brand template
+REQUEST  draft the Q2 review in the same structure
+CHECK    reconcile chart totals with the CSV
+GAPS     mark missing June data; ask for the export
+OUTPUT   editable deck + a list of unresolved points</div>
+      <p class="note reveal"><b>Illustrative workflow.</b> Ask it to flag gaps; verify that it actually did. Review the numbers and the story before sharing.</p>
     </div>
   </section>
 
-  <!-- 5 · CHATBOT VS AGENT -->
-  <section class="slide dark" data-label="Chatbot vs agent"
+  <section data-origin-slide="5" class="slide dark" data-label="Chatbot vs agent"
     data-speaker-notes="The one distinction the whole talk stands on. Walk the left tile as the familiar routine — it tells you what to do and you do the copying, pasting and clicking yourself. Then the right: an agent does those steps itself and you review at the end. Land the note hard — it is often the very same model underneath; the difference is the machinery around it. Every tool in this deck is some flavour of that machinery.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">5</span><div class="crumb"><b>Basics</b> · chatbot vs agent</div></div>
@@ -342,13 +328,12 @@ table.tbl tr:last-child td{border-bottom:none}
         <div class="tile reveal"><span class="k">Chatbot — the one you know</span><p>You ask → it <b>tells you</b> what to do → <b>you</b> open the files, do the steps, paste results back… and repeat.</p></div>
         <div class="tile fill reveal"><span class="k">Agent</span><p>You ask → it <b>does the work itself</b> — reads the files, takes the steps, checks the result → <b>you review</b> at the end.</p></div>
       </div>
-      <p class="note reveal">Often it's the <b>same model</b> underneath. The difference is everything wrapped <b>around</b> it — and every tool in this talk is some flavour of that wrapping.</p>
+      <p class="note reveal">An agent combines a model with tools and a loop. Whether it acts safely depends on the access and checks around it.</p>
     </div>
   </section>
 
-  <!-- 6 · AGENT LOOP -->
-  <section class="slide dark" data-label="The agent loop"
-    data-speaker-notes="The only mechanics slide that really matters: the model proposes an action, the tool runs it, the result comes back, repeat until done. The cook analogy lands well — read the recipe, do a step, taste, adjust. Let the animation run one full cycle while you talk. Close on the punchline: no magic, just disciplined repetition — and every agent product later in this deck is this exact loop wearing a different costume.">
+  <section data-origin-slide="6" class="slide dark" data-label="The agent loop"
+    data-speaker-notes="Let the animation run once. Explain the loop using the quarterly review example. Do not claim every product in the catalogue uses an identical agent architecture; this is the agentic pattern.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">6</span><div class="crumb"><b>Basics</b> · the loop</div></div>
       <h2 class="reveal">An agent is a <span class="o">loop</span></h2>
@@ -357,721 +342,218 @@ table.tbl tr:last-child td{border-bottom:none}
           <!-- Remotion animation (remotion/src/AgentLoop.tsx) -->
           <video src="assets/anim/agent-loop-dark.mp4" width="1152" height="912" autoplay muted loop playsinline aria-label="The agent loop: model proposes an action, harness runs it, result returns to the model, repeat until done"></video>
         </div>
-        <ul class="bul reveal">
-          <li><b>①</b> the model <b>proposes</b> an action → <b>②</b> the tool <b>runs it</b> → <b>③</b> the <b>result comes back</b>. Repeat until <b>④ done.</b></li>
-          <li>Like a <b>cook</b>: read the recipe → do a step → taste → adjust → repeat.</li>
-          <li>This loop is the whole "magic" of agentic AI — no magic, just <b>disciplined repetition.</b></li>
-        </ul>
+        <ul class="bul reveal"><li><b>Choose</b> the next action.</li><li><b>Run</b> a permitted tool.</li><li><b>Inspect</b> the result and decide what comes next.</li></ul>
       </div>
-      <p class="note reveal">Every agent product in this deck — Cowork, Codex, agent mode, all of them — is <b>this loop in a different costume.</b></p>
+      <p class="note reveal">For the review deck: read the CSV → build a chart → reconcile the totals → revise the draft.</p>
     </div>
   </section>
 
-  <!-- 7 · NO MEMORY -->
-  <section class="slide dark" data-label="The model has no memory"
-    data-speaker-notes="The single most surprising fact for a general audience, so slow down. The model is autocomplete on steroids — it only predicts the next word, and it keeps nothing between calls. Memento: the film hero who can't form new memories and survives on notes and tattoos. Let the animation run while you say the consequence — every tool around the model exists partly to re-feed it what it should know. This one idea explains connectors, projects, brand kits and half the products later in the deck.">
+  <section data-origin-slide="7" class="slide dark" data-label="The model has no memory"
+    data-speaker-notes="Use the animation for request-based context. Avoid explaining the movie analogy or introducing transformer internals. The practical consequence is that the user supplies and checks the relevant material. Product memory differs by tool.">
     <div class="slide-content">
       <div class="slide-head reveal"><span class="snum">7</span><div class="crumb"><b>Basics</b> · the brain</div></div>
-      <h2 class="reveal">The model has <span class="o">no memory</span></h2>
+      <h2 class="reveal">Give it the <span class="o">right material</span></h2>
       <div class="split">
         <div class="diagram reveal">
           <!-- Remotion animation (remotion/src/Stateless.tsx) -->
           <video src="assets/anim/stateless-dark.mp4" width="1200" height="900" autoplay muted loop playsinline aria-label="Each call re-sends the entire history; the model remembers nothing between calls"></video>
         </div>
-        <ul class="bul reveal">
-          <li>A model is <b>autocomplete on steroids</b> — it only ever <b>predicts the next word.</b> Text in, text out. No database, no "you".</li>
-          <li>Think of the guy in <b>Memento</b> — the film hero who <b>can't form new memories</b>, living off notes &amp; tattoos: each interaction, the model has <b>no idea</b> what came before.</li>
-          <li>So the tools around it must <b>re-send everything</b> it should know, every single time.</li>
-        </ul>
+        <ul class="bul reveal"><li>For each step, the model needs the relevant instructions and information supplied to it.</li><li>For the review deck, provide the results CSV, prior structure and brand template.</li><li>Stored memories and connected files help only when the relevant information is actually retrieved.</li></ul>
       </div>
-      <p class="note reveal">Keep this in mind — it explains why tools plug into <b>your files, your brand kit, your inbox:</b> they're the model's notes &amp; tattoos.</p>
+      <p class="note reveal">Check which files it used. A connected folder is not evidence that every document was read.</p>
     </div>
   </section>
 
-  <!-- 8 · GLOSSARY -->
-  <section class="slide light" data-label="Glossary"
-    data-speaker-notes="Do not read all ten — read Token, Agent, Credits and Connector, and say the rest are here so nobody spends an hour quietly wondering. Credits matters because most creative tools bill in it; Deep research and Generative AI because the words come up constantly later. Say it out loud: a map, not a memory test.">
+  <section data-origin-slide="25" class="slide dark" data-label="The human checkpoint" data-speaker-notes="Remove the claim that human checkpoints automatically make every tool safe. Ask the room what they would check before sending the quarterly review. Keep this principle close to the worked example.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">8</span><div class="crumb"><b>Basics</b> · cheat sheet</div></div>
-      <h2 class="reveal">Words you'll <span class="o">keep hearing</span></h2>
-      <div class="gloss reveal">
-        <div class="row"><span class="term">Token</span><span class="def">A chunk of text ≈ ¾ of a word. What models read &amp; bill in.</span></div>
-        <div class="row"><span class="term">Prompt</span><span class="def">The text you send the model.</span></div>
-        <div class="row"><span class="term">Context</span><span class="def">Everything the model sees in one call — its short-term memory.</span></div>
-        <div class="row"><span class="term">Agent</span><span class="def">An AI that <i>does</i> things in a loop, not just answers.</span></div>
-        <div class="row"><span class="term">Harness</span><span class="def">The program wrapped around the model — its hands.</span></div>
-        <div class="row"><span class="term">Connector</span><span class="def">A plug between an AI and another app (Gmail, Drive, Slack…).</span></div>
-        <div class="row"><span class="term">MCP</span><span class="def">The open standard those plugs are built on — "USB-C for AI".</span></div>
-        <div class="row"><span class="term">Credits</span><span class="def">Pre-paid units most creative tools bill in — each generation burns some.</span></div>
-        <div class="row"><span class="term">Generative AI</span><span class="def">AI that <i>makes</i> media — images, video, voice, music.</span></div>
-        <div class="row"><span class="term">Deep research</span><span class="def">The AI browses for 5–30 min and returns a cited report.</span></div>
-      </div>
-      <p class="note reveal">Don't memorise these — each comes back with its own slide. This is just your map.</p>
+      <div class="slide-head reveal"><span class="snum">8</span><div class="crumb">Review</div></div>
+      <h2 class="reveal">AI drafts. You sign.</h2>
+      <div class="cards c3 reveal"><div class="tile"><span class="k">Check the facts</span><p>Reconcile numbers with the source. Open important citations.</p></div><div class="tile"><span class="k">Check the consequence</span><p>Review more carefully when money, people or public communication are involved.</p></div><div class="tile"><span class="k">Check the boundary</span><p>Approve publishing and external actions separately from making a draft.</p></div></div>
+      <p class="note reveal">A review step reduces risk only when someone performs a relevant check.</p>
     </div>
   </section>
 
-  <!-- 9 · WHAT AGENTS ARE GOOD FOR -->
-  <section class="slide light" data-label="What agents are good for"
-    data-speaker-notes="The so-what slide. Pick the two tiles closest to the room and give a concrete example of each — the make-real-files tile is the one that surprises people most: you get a genuine .pptx or spreadsheet back, not a wall of text. End on the last tile every time: a human still reviews and approves. It's a power tool, not a replacement — this framing carries the whole deck.">
+  <section data-origin-slide="22" class="slide light" data-label="Three everyday tasks" data-speaker-notes="Reduce the six-day catalogue to three outputs. These categories guide the later examples. Do not read a tool name into every tile yet.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">9</span><div class="crumb"><b>Basics</b> · so what?</div></div>
-      <h2 class="reveal">What agents are actually <span class="o">good for</span></h2>
-      <div class="uses reveal">
-        <div class="tile"><span class="k">Draft &amp; research</span><p>Summaries, first drafts, comparisons, cited reports.</p></div>
-        <div class="tile"><span class="k">Work over your documents</span><p>Ask questions across a whole folder, inbox or wiki.</p></div>
-        <div class="tile"><span class="k">Make real files</span><p>Genuine decks, spreadsheets, pages, audio — not just text.</p></div>
-        <div class="tile"><span class="k">Automate chores</span><p>Sort, rename, triage, fill in — the repetitive stuff.</p></div>
-        <div class="tile"><span class="k">Build pages &amp; apps</span><p>A landing page or small tool without an IT ticket.</p></div>
-        <div class="tile fill"><span class="k">…with a human in the loop</span><p>You review &amp; approve. A power tool, not a replacement.</p></div>
-      </div>
+      <div class="slide-head reveal"><span class="snum">9</span><div class="crumb">Where it helps</div></div>
+      <h2 class="reveal">Start with work you already repeat</h2>
+      <div class="cards c3 reveal"><div class="tile"><span class="k">Prepare a review</span><p>CSV + last deck → editable draft. Check every important number.</p></div><div class="tile"><span class="k">Digest a report</span><p>Source documents → summary or audio. Check the claims against the originals.</p></div><div class="tile"><span class="k">Adapt a campaign</span><p>Approved message + brand files → draft formats. Check layout and wording.</p></div></div>
+      <p class="note reveal">Choose one task with a result you already know how to judge.</p>
     </div>
   </section>
 
-  <!-- DIVIDER 01 · THE BIG THREE -->
-  <section class="slide dark divider" data-label="The big three"
-    data-speaker-notes="Signpost: the next stretch is who makes what and what it costs at the three frontier labs. The surprise worth trailing now: all three charge the same twenty dollars for the interesting tier, but what that twenty buys differs wildly. Say clearly it's a snapshot that will be stale within months.">
+  <section data-origin-slide="18" class="slide dark" data-label="Choose a starting point" data-speaker-notes="This replaces a detailed vendor price grid with a selection method. Claude, ChatGPT and Gemini examples remain in the reference snapshot. Avoid implying equal capabilities or universal plan inclusion.">
     <div class="slide-content">
-      <div class="dnum reveal">01</div>
-      <h2 class="reveal">The big <span class="o">three</span></h2>
-      <p class="dsub reveal"><b>Anthropic, OpenAI, Google.</b> The same $20 entry fee — three very different toolboxes.</p>
+      <div class="slide-head reveal"><span class="snum">10</span><div class="crumb">Choosing a tool</div></div>
+      <h2 class="reveal">Start where your work already lives</h2>
+      <div class="cards c3 reveal"><div class="tile"><span class="k">Files and drafts</span><p>Try the file and agent features available in your approved assistant.</p></div><div class="tile"><span class="k">Office or Workspace</span><p>Check the AI features your organization already provides inside its apps.</p></div><div class="tile"><span class="k">Specialist output</span><p>Try a dedicated tool when the included option cannot produce the needed result.</p></div></div>
+      <p class="note reveal">Compare one real task before buying another subscription. Check availability for your account and region.</p>
     </div>
   </section>
 
-  <!-- 10 · TODAY'S MODELS -->
-  <section class="slide light" data-label="Today's models"
-    data-speaker-notes="Do not read the table row by row — the pattern below it is the content. Every maker ships the same tiers: large (smartest, priciest), medium (the sweet spot), small (fast and cheap), and lately a frontier tier on top. This reshuffles every few months, so treat any list as a snapshot, never a recommendation. Then move on — the products matter more than the model names for this audience.">
+  <section data-origin-slide="14" class="slide light" data-label="Agents for files" data-speaker-notes="Discuss the file-agent workflow already described in the original deck. Keep launch dates, origin story and plan detail in reference material. The prompt is illustrative; sensitive actions require the configured approval flow.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">10</span><div class="crumb"><b>Big three</b> · models</div></div>
-      <h2 class="reveal">The brains: today's <span class="o">models</span></h2>
-      <table class="tbl reveal">
-        <thead><tr><th>Maker</th><th>Flagship lineup (July 2026)</th><th>Known for</th></tr></thead>
-        <tbody>
-          <tr><td><b>Anthropic</b></td><td>Claude Fable 5 · <b>Opus 5</b> · Sonnet 5 · Haiku 4.5</td><td>coding, agents, long context</td></tr>
-          <tr><td><b>OpenAI</b></td><td>GPT‑5.6 — Sol · Terra · Luna</td><td>general reasoning, Codex</td></tr>
-          <tr><td><b>Google</b></td><td>Gemini 3.6 Flash · 3.5 Flash‑Lite <span style="color:var(--s-muted)">(3.5 Pro still unreleased)</span></td><td>multimodal, large context</td></tr>
-        </tbody>
-      </table>
-      <p class="note reveal">The same tiers repeat everywhere: <b>large</b> (smartest, priciest) · <b>medium</b> (the sweet spot) · <b>small</b> (fast &amp; cheap) — plus a <b>frontier tier on top</b> lately. It reshuffles every few months — treat any list as a snapshot. For today, the <b>products</b> matter more than the model names —</p>
+      <div class="slide-head reveal"><span class="snum">11</span><div class="crumb">Files</div></div>
+      <h2 class="reveal">Give a file agent an outcome</h2>
+      <div class="code reveal">“Use this folder to draft the Q2 review.
+Keep Q1’s structure and our template.
+List missing inputs.
+Ask before changing the source files.”</div>
+      <p class="note reveal">Example product: Claude Cowork. Inspect the input list, changed files and unresolved questions.</p>
     </div>
   </section>
 
-  <!-- 11 · THE CLAUDE FAMILY -->
-  <section class="slide dark" data-label="The Claude family"
-    data-speaker-notes="The map slide for Anthropic — six products, one subscription. Walk it quickly: the chat app they know; Claude Code for developers; Cowork and Design, which get their own slides next because they're the two built for this room; the Chrome extension that clicks around the web with you; and the Office add-ins, saved for the integrations section. The line to land: this is one $20 subscription, not six products to buy.">
+  <section data-origin-slide="15" class="slide dark" data-label="Design by iteration" data-speaker-notes="Teach the design workflow rather than launch statistics or a guarantee that importing brand files enforces compliance. Tie the exported draft back to the quarterly review.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">11</span><div class="crumb"><b>Big three</b> · anthropic</div></div>
-      <h2 class="reveal">The <span class="o">Claude</span> family</h2>
-      <div class="cards c3 reveal">
-        <div class="tile"><span class="k">Claude app</span><p>The chat assistant — web, desktop, mobile. Drafting, analysis, files, web search.</p></div>
-        <div class="tile"><span class="k">Claude Code</span><p>The coding agent, for developers — terminal &amp; IDE.</p></div>
-        <div class="tile fill"><span class="k">Claude Cowork</span><p>The agent for <b>everyone else</b> — point it at a folder of files. Next slide.</p></div>
-        <div class="tile fill"><span class="k">Claude Design</span><p>Prompt → decks, pages &amp; visuals in <b>your brand.</b> Two slides on.</p></div>
-        <div class="tile"><span class="k">Claude in Chrome</span><p>A browser extension that reads pages, clicks and fills forms with you.</p></div>
-        <div class="tile"><span class="k">Claude for Microsoft 365</span><p>Side panel inside Excel, PowerPoint, Word &amp; Outlook — see "plugging it in".</p></div>
-      </div>
-      <p class="note reveal"><b>One subscription, not six products:</b> everything here is included from <b>Pro at ~$20/mo</b> (free tier = chat only). Prices as of July 2026.</p>
+      <div class="slide-head reveal"><span class="snum">12</span><div class="crumb">Design</div></div>
+      <h2 class="reveal">Use a brief, then refine the draft</h2>
+      <div class="cards c3 reveal"><div class="tile"><span class="k">Brief</span><p>Name the audience, purpose, brand references and required output.</p></div><div class="tile"><span class="k">Refine</span><p>Change one visible thing at a time: hierarchy, wording, layout or emphasis.</p></div><div class="tile"><span class="k">Export and inspect</span><p>Open the actual file. Check fonts, charts and editability before sharing.</p></div></div>
+      <p class="note reveal">Example tools: Claude Design or Canva. Supplying a brand kit still requires a review of the result.</p>
     </div>
   </section>
 
-  <!-- 12 · CLAUDE CODE & CODEX -->
-  <section class="slide light" data-label="Claude Code and Codex"
-    data-speaker-notes="One slide of honesty about the developer tools, because the audience will hear these names constantly. Claude Code and Codex are agents that live in a programmer's terminal, write and run code, and have quietly transformed software work — Anthropic says most of its own production code is now written by Claude. Don't linger on mechanics; the reason this room should care is the punchline: the same technology with the terminal removed is what they get in Cowork, next slide.">
+  <section data-origin-slide="17" class="slide light" data-label="Research over your documents" data-speaker-notes="Avoid a product-family tour. Explain the difference between summarizing provided sources and discovering new ones. Do not promise that source restriction guarantees correctness. Product naming and plan history remain in the reference snapshot.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">12</span><div class="crumb"><b>Big three</b> · the coding agents</div></div>
-      <h2 class="reveal">Claude Code &amp; Codex — the <span class="o">coding agents</span></h2>
-      <div class="split">
-        <div class="tile reveal"><span class="k">Claude Code</span><p>Anthropic's agent for <b>developers</b>: lives in the terminal or editor, reads a whole codebase, writes &amp; runs code, fixes its own mistakes. Included from Pro (~$20/mo).</p></div>
-        <div class="tile reveal"><span class="k">Codex</span><p>OpenAI's equivalent, on GPT‑5.6 — terminal, IDE and a cloud version that works on tasks while you're away. Bundled into ChatGPT plans (full access from Plus, ~$20/mo).</p></div>
-      </div>
-      <p class="note reveal">Why you should care even if you never code: these transformed programming first — Anthropic says <b>over 80% of its own production code</b> is now written by Claude. Then someone asked: <b>what if we removed the code part?</b> →</p>
+      <div class="slide-head reveal"><span class="snum">13</span><div class="crumb">Research</div></div>
+      <h2 class="reveal">Use the source as the final check</h2>
+      <div class="cards c2 reveal"><div class="tile"><span class="k">Ask a bounded question</span><p>“What changed in the customer study, and which pages support that?”</p></div><div class="tile"><span class="k">Inspect the evidence</span><p>Open the cited passage. Check that it supports the summary and its qualifications.</p></div></div>
+      <p class="note reveal">A source-grounded assistant such as Google’s notebook product can help you navigate documents. A citation is a starting point for verification.</p>
     </div>
   </section>
 
-  <!-- 13 · CLAUDE COWORK -->
-  <section class="slide dark" data-label="Claude Cowork"
-    data-speaker-notes="The star product for this room, so give it time. You point Cowork at a folder on your computer and describe an outcome; it reads what's there, makes a plan, then creates and edits documents, spreadsheets and decks — showing every step, pausing for approval on anything sensitive, and it can keep working while you're away or on a schedule. Tell the origin story from the kcard: Anthropic noticed developers using Claude Code for non-coding work, stripped out the terminal, and built Cowork itself in under two weeks — mostly using Claude Code. Generally available since April 2026, included in every paid plan.">
+  <section data-origin-slide="4" class="slide dark" data-label="Read the price tag" data-speaker-notes="Keep two meters visible; explain team and API purchasing only if relevant to the room. No current prices are newly asserted. Historical plan tables are available separately.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">13</span><div class="crumb"><b>Big three</b> · claude cowork</div></div>
-      <h2 class="reveal">Claude Cowork — an agent for <span class="o">your files</span></h2>
-      <div class="split">
-        <ul class="bul reveal">
-          <li><b>Point it at a folder</b>, describe an outcome — it reads what's there, makes a plan, and <b>works through it step by step.</b></li>
-          <li>It <b>creates &amp; edits real files</b> — documents, spreadsheets, decks — and shows you each step; you approve the sensitive ones.</li>
-          <li>Keeps working while you're away; can run <b>on a schedule</b> (weekly report, every Monday).</li>
-          <li>Generally available since <b>April 2026</b> · included in <b>every paid plan</b> (from Pro, ~$20/mo).</li>
-        </ul>
-        <div class="kcard reveal">
-          <div class="big">Claude Code,<br>without the code</div>
-          <p>Anthropic saw developers using its coding agent for <b>non-coding work</b> — organising files, planning, reports — so it removed the terminal. Cowork was built <b>in under two weeks, mostly by Claude Code itself.</b></p>
-        </div>
-      </div>
+      <div class="slide-head reveal"><span class="snum">14</span><div class="crumb">Cost</div></div>
+      <h2 class="reveal">Budget for iteration, not one perfect attempt</h2>
+      <div class="cards c2 reveal"><div class="tile"><span class="k">Subscription</span><p>A recurring fee with usage limits. Check what your existing plan includes.</p></div><div class="tile"><span class="k">Credits</span><p>Each generation consumes a balance. Discarded drafts and retries count too.</p></div></div>
+      <p class="note reveal">For team use, check per-seat terms, data handling and commercial rights. API integrations add metered usage.</p>
     </div>
   </section>
 
-  <!-- 14 · CLAUDE DESIGN -->
-  <section class="slide light" data-label="Claude Design"
-    data-speaker-notes="The second star. You describe what you want — a pitch deck, a one-pager, a landing page, campaign collateral — Claude builds a first version, and you refine it by chatting, leaving inline comments, or editing directly. The differentiator to stress: it can import your company's design system and brand files, so everything it makes comes out in your visual identity — the answer to 'AI output never looks like us'. Exports to PDF, PowerPoint, HTML, a live URL, or straight into Canva. Launched April 2026 from Anthropic Labs, a million users in the first week, still officially a research preview — included in paid plans, drawing on your plan's usage.">
+  <section data-origin-slide="20" class="slide light" data-label="Products change" data-speaker-notes="Replace six company histories with the practical consequence. One product anecdote can be spoken if helpful; do not imply that a historical price snapshot is current.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">14</span><div class="crumb"><b>Big three</b> · claude design</div></div>
-      <h2 class="reveal">Claude Design — describe it, <span class="o">see it</span></h2>
-      <div class="split">
-        <ul class="bul reveal">
-          <li>Describe what you want → Claude builds a <b>first version</b> → refine by <b>chatting, inline comments, or editing directly.</b></li>
-          <li>Makes <b>decks, one-pagers, landing pages, mockups, marketing collateral</b> — built for people <i>without</i> a design background.</li>
-          <li>Exports to <b>PDF, PowerPoint, HTML, a live URL — or into Canva.</b></li>
-          <li>Launched <b>April 2026</b> (Anthropic Labs, research preview) — <b>1M+ users in week one.</b> Included in paid plans, drawing on plan usage.</li>
-        </ul>
-        <div class="kcard reveal">
-          <div class="big">It knows<br>your brand</div>
-          <p>The headline feature: import your company's <b>design system &amp; brand files</b>, and everything it makes comes out in <b>your visual identity</b> — not generic AI-style slides.</p>
-        </div>
-      </div>
+      <div class="slide-head reveal"><span class="snum">15</span><div class="crumb">Choosing a tool</div></div>
+      <h2 class="reveal">Keep an exit route</h2>
+      <ul class="bul reveal"><li>Prefer outputs your team can open and edit outside the tool.</li><li>Keep the original data, prompts and approved assets.</li><li>Check the current product page before promising a feature or budget.</li></ul>
+      <p class="note reveal">A tool can change its name, plan or export support. Your work should remain usable.</p>
     </div>
   </section>
 
-  <!-- 15 · THE CHATGPT FAMILY -->
-  <section class="slide dark" data-label="The ChatGPT family"
-    data-speaker-notes="OpenAI's map, same drill. The chat app everyone knows; Codex already covered; agent mode, which plans and executes multi-step tasks in a virtual workspace and hands back real decks and spreadsheets; the newest image generation, genuinely excellent; and Custom GPTs, the reusable pre-configured assistant an entire team can share. The fill tile carries the two warnings: the Free and Go tiers now show ads, and the famous Sora video app is gone — the churn slide in a moment tells that story properly.">
+  <section data-origin-slide="27" class="slide light" data-label="Build a small app" data-speaker-notes="Show the shape of the result and acceptance checks. Revenue figures, alternative lists and tier details belong in reference, not the teaching sequence.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">15</span><div class="crumb"><b>Big three</b> · openai</div></div>
-      <h2 class="reveal">The <span class="o">ChatGPT</span> family</h2>
-      <div class="cards c3 reveal">
-        <div class="tile"><span class="k">ChatGPT app</span><p>The chat assistant — Free · Go ~$8 · <b>Plus ~$20</b> · Pro $100–200/mo.</p></div>
-        <div class="tile"><span class="k">Codex</span><p>The coding agent — bundled in; full access from Plus.</p></div>
-        <div class="tile"><span class="k">Agent mode</span><p>Plans &amp; executes multi-step tasks — browses, runs code, hands back <b>real decks &amp; spreadsheets.</b></p></div>
-        <div class="tile"><span class="k">Images 2.0</span><p>Image generation &amp; editing in-chat — 2K output, consistent characters across a batch.</p></div>
-        <div class="tile"><span class="k">Custom GPTs</span><p>A reusable, pre-configured ChatGPT for one job ("our tone-of-voice editor") — shareable with the team.</p></div>
-        <div class="tile fill"><span class="k">⚠ Watch out</span><p><b>Free &amp; Go now show ads.</b> And the famous <b>Sora</b> video app? Gone — story in a moment.</p></div>
-      </div>
-      <p class="note reveal">Same ladder as Claude: <b>~$20/mo (Plus)</b> is where the real toolbox unlocks. Prices as of July 2026.</p>
+      <div class="slide-head reveal"><span class="snum">16</span><div class="crumb">Choose by task</div></div>
+      <h2 class="reveal">A prototype people can try</h2>
+      <div class="cards c2 reveal"><div class="tile"><span class="k">Give the brief</span><p>“Make a savings calculator with these inputs and an explanation of the result.”</p></div><div class="tile"><span class="k">Inspect the output</span><p>Test the calculations, empty states and forms. Review access and data handling before launch.</p></div></div>
+      <p class="note reveal">Examples: Lovable, v0 or Replit. Budget for revisions; a working preview still needs checks.</p>
     </div>
   </section>
 
-  <!-- 16 · THE GEMINI FAMILY -->
-  <section class="slide light" data-label="The Gemini family"
-    data-speaker-notes="Google's map. The Gemini app; then the one to dwell on — Gemini Notebook, until this month called NotebookLM: upload your own documents and it becomes an expert on only those sources, answering with citations, and its party trick turns any pile of PDFs into a surprisingly natural two-host podcast you can play on a commute. Nearly every core feature works on the free tier — paying buys more, not better — which makes it the zero-risk first tool to try. Then Veo and Flow, the surviving mainstream AI-video product now that Sora is gone, priced in credits through the Google AI plans; and Gemini bundled into Gmail, Docs and Sheets in Workspace.">
+  <section data-origin-slide="28" class="slide dark" data-label="Generated video" data-speaker-notes="Avoid a universal best-model claim and exact clip budgets. Keep the difference between a shot and an assembled film central.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">16</span><div class="crumb"><b>Big three</b> · google</div></div>
-      <h2 class="reveal">The <span class="o">Gemini</span> family</h2>
-      <div class="cards c2 reveal">
-        <div class="tile fill"><span class="k">Gemini Notebook ⭐</span><p>(ex-NotebookLM, renamed July 2026.) Upload <b>your documents</b> → cited answers from only those sources — and <b>Audio Overviews</b>: your PDFs as a two-host <b>podcast</b>. Core features <b>free</b>.</p></div>
-        <div class="tile"><span class="k">Gemini app</span><p>The chat assistant — Free · AI Plus ~$5 · <b>AI Pro ~$20</b> · Ultra $100–200/mo.</p></div>
-        <div class="tile"><span class="k">Veo 3.1 + Flow</span><p>Text-to-video (with synced dialogue) + a filmmaking front-end. The mainstream AI-video product — paid in <b>credits</b> via the plans (Pro ≈ 1,000/mo).</p></div>
-        <div class="tile"><span class="k">Gemini in Workspace</span><p>Built into Gmail, Docs, Sheets, Slides, Meet — now <b>bundled in base plans</b> (from ~$14/user/mo), no separate add-on.</p></div>
-      </div>
-      <p class="note reveal">Gemini Notebook is the classic <b>first "wow"</b>: drop a 40-page report in, get a podcast out — <b>on the free tier.</b> Prices as of July 2026.</p>
+      <div class="slide-head reveal"><span class="snum">17</span><div class="crumb">Choose by task</div></div>
+      <h2 class="reveal">Plan a shot before you generate it</h2>
+      <div class="cards c2 reveal"><div class="tile"><span class="k">Brief one shot</span><p>State the subject, action, framing and duration. Start from approved material when useful.</p></div><div class="tile"><span class="k">Review each take</span><p>Check continuity, text, product details, rights and the credit cost of discarded takes.</p></div></div>
+      <p class="note reveal">Examples: Veo / Flow, Runway or Higgsfield. A good shot is one ingredient in a finished video.</p>
     </div>
   </section>
 
-  <!-- 17 · THE $20 QUESTION -->
-  <section class="slide dark dense" data-label="The $20 question"
-    data-speaker-notes="The practical decision slide. All three labs price the interesting tier at about twenty dollars — the question is what that twenty buys. Walk the rows, not the cells: Claude's twenty buys agents and Office integration; OpenAI's buys the strongest general assistant plus agent mode; Google's buys Notebook and the only real video credits. The honest answer at the bottom: most people should start with whichever ecosystem they already live in — and the free tiers are enough to find out which one that is.">
+  <section data-origin-slide="29" class="slide light" data-label="Templated video" data-speaker-notes="Contrast templated graphics with generated footage. Remove the claim that brand compliance is solved or only one review is ever needed.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">17</span><div class="crumb"><b>Big three</b> · the $20 question</div></div>
-      <h2 class="reveal">Same $20 — <span class="o">different toolbox</span></h2>
-      <table class="tbl reveal">
-        <thead><tr><th></th><th>Claude Pro · $20</th><th>ChatGPT Plus · $20</th><th>Google AI Pro · $20</th></tr></thead>
-        <tbody>
-          <tr><td class="muted">Agent that does work</td><td><b>Cowork</b> (your files)</td><td>Agent mode</td><td>—</td></tr>
-          <tr><td class="muted">Visuals &amp; decks</td><td><b>Claude Design</b></td><td>Images 2.0</td><td>image gen</td></tr>
-          <tr><td class="muted">Office / docs integration</td><td><b>Excel · PowerPoint · Word</b></td><td>connectors + add-ins</td><td>Gmail · Docs · Sheets</td></tr>
-          <tr><td class="muted">Digest documents</td><td>projects</td><td>Deep Research</td><td><b>Gemini Notebook</b> + podcast</td></tr>
-          <tr><td class="muted">AI video</td><td>—</td><td>— (Sora gone)</td><td><b>Flow · ~1,000 credits</b></td></tr>
-          <tr><td class="muted">Coding agent</td><td>Claude Code</td><td>Codex</td><td>Antigravity · Jules</td></tr>
-        </tbody>
-      </table>
-      <p class="note reveal">Honest advice: start with the ecosystem <b>you already live in</b> — and use the <b>free tiers</b> to find out which one that is. July 2026 snapshot.</p>
+      <div class="slide-head reveal"><span class="snum">18</span><div class="crumb">Choose by task</div></div>
+      <h2 class="reveal">Repeat a design with new data</h2>
+      <div class="cards c2 reveal"><div class="tile"><span class="k">Lock the template</span><p>Set layout, fonts, colours and timing once.</p></div><div class="tile"><span class="k">Change the content</span><p>Render another report or language version, then check text fit, data and timing.</p></div></div>
+      <p class="note reveal">Example: HyperFrames. A reusable template improves consistency; new content still needs review.</p>
     </div>
   </section>
 
-  <!-- 18 · THE PLAN LADDER -->
-  <section class="slide light" data-label="The plan ladder"
-    data-speaker-notes="Zoom out to the whole ladder, because it's identical everywhere: a free taster, an entry tier around eight to twenty dollars, a power tier at one and two hundred that buys more usage and early access rather than a different product, and per-seat team plans in the twenty-to-thirty range where the admin controls, SSO and no-training-on-your-data guarantees live. That last row is the one workplaces actually need — say it plainly: for work accounts, the business tiers are where the compliance features are.">
+  <section data-origin-slide="31" class="slide light" data-label="Voice and dubbing" data-speaker-notes="No universal popularity or commercial-license guarantee. Product prices and licensing must be checked for the specific intended use.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">18</span><div class="crumb"><b>Big three</b> · the plan ladder</div></div>
-      <h2 class="reveal">The ladder is the <span class="o">same everywhere</span></h2>
-      <table class="tbl reveal">
-        <thead><tr><th>Tier</th><th>Claude</th><th>ChatGPT</th><th>Google AI</th></tr></thead>
-        <tbody>
-          <tr><td><b>Free</b></td><td>chat, limited</td><td>chat, limited (+ ads)</td><td>chat + Notebook basics</td></tr>
-          <tr><td><b>Entry</b></td><td>Pro ~$20</td><td>Go ~$8 · Plus ~$20</td><td>Plus ~$5 · Pro ~$20</td></tr>
-          <tr><td><b>Power</b></td><td>Max ~$100 / $200</td><td>Pro ~$100 / $200</td><td>Ultra ~$100 / $200</td></tr>
-          <tr><td><b>Team</b></td><td>~$20–25/seat</td><td>Business ~$20–25/seat</td><td>Workspace ~$14–22/user</td></tr>
-        </tbody>
-      </table>
-      <p class="note reveal">Higher tiers buy <b>more usage &amp; early access</b> — not a different product. The team tiers are where <b>admin controls, SSO and "no training on your data"</b> live — for work accounts, that's the row that matters. Prices July 2026 — they change often.</p>
+      <div class="slide-head reveal"><span class="snum">19</span><div class="crumb">Choose by task</div></div>
+      <h2 class="reveal">Change the script without a studio visit</h2>
+      <div class="cards c2 reveal"><div class="tile"><span class="k">Make a draft</span><p>Turn an approved script into narration or a translated voice-over.</p></div><div class="tile"><span class="k">Listen before release</span><p>Check names, numbers, pronunciation and meaning. Confirm rights and consent for the voice.</p></div></div>
+      <p class="note reveal">Example: ElevenLabs. Compare a short sample before choosing a voice or buying capacity.</p>
     </div>
   </section>
 
-  <!-- 19 · PRODUCT CHURN -->
-  <section class="slide dark dense" data-label="Products churn fast"
-    data-speaker-notes="The warning-label slide, and secretly one of the most useful. All six of these happened within roughly the last year: Sora — OpenAI's famous video app — was shut down in March against a lifetime revenue of about two million dollars, with running costs reported anywhere between one and fifteen million a day depending on whose estimate you read, which is itself a nice illustration of how soft these numbers are; the Atlas browser retires on the ninth of August; Gemini 3.5 Pro was announced for June and still has not shipped; NotebookLM got renamed this month; Freepik rebranded to Magnific in April; and Tome, 2023's most hyped AI deck tool, is dead. Two lessons: verify before you quote anything AI-related, and never build a process on a single tool without a fallback.">
+  <section data-origin-slide="33" class="slide light" data-label="Images and design" data-speaker-notes="Remove aesthetic rankings, blanket legal assurances and price ladders. Give a concrete distinction the audience can act on.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">19</span><div class="crumb"><b>Big three</b> · a warning label</div></div>
-      <h2 class="reveal">All of this happened in <span class="o">about a year</span></h2>
-      <div class="cards c3 reveal">
-        <div class="tile stat"><span class="k">Sora ☠</span><p>OpenAI's video app, <b>shut down Mar 2026</b> — reported costs of $1M–15M/day vs ~$2M lifetime revenue</p></div>
-        <div class="tile stat"><span class="k">Atlas ☠</span><p>OpenAI's AI browser, launched Oct 2025 — <b>retiring 9 Aug 2026</b></p></div>
-        <div class="tile stat"><span class="k">Gemini 3.5 Pro ⏳</span><p>announced for June 2026 — <b>still unreleased</b>, delayed over coding performance</p></div>
-        <div class="tile stat"><span class="k">NotebookLM →</span><p>renamed <b>Gemini Notebook</b>, July 2026 — same product, new name</p></div>
-        <div class="tile stat"><span class="k">Freepik →</span><p>rebranded to <b>Magnific</b>, Apr 2026 — your subscription moved with it</p></div>
-        <div class="tile stat"><span class="k">Tome ☠</span><p>2023's most-hyped AI deck tool — <b>dead Apr 2025</b>, pivoted away</p></div>
-      </div>
-      <p class="note reveal">Two lessons: <b>verify before quoting</b> anything AI-related older than a quarter — and <b>never build a process on one tool without a fallback.</b></p>
+      <div class="slide-head reveal"><span class="snum">20</span><div class="crumb">Choose by task</div></div>
+      <h2 class="reveal">Choose by the output you need</h2>
+      <div class="cards c2 reveal"><div class="tile"><span class="k">Layout and brand</span><p>Use a design tool when you need controlled text, logos and repeatable formats.</p></div><div class="tile"><span class="k">New imagery</span><p>Use image generation for a concept or source image, then inspect and refine it.</p></div></div>
+      <p class="note reveal">Examples: Canva, Firefly or Ideogram. Review text, rights, privacy settings and visual accuracy.</p>
     </div>
   </section>
 
-  <!-- DIVIDER 02 · WHAT CAN YOU DO -->
-  <section class="slide dark divider" data-label="What can you actually do"
-    data-speaker-notes="Pivot from catalogue to practice. The next few slides are one ordinary week of tasks, told through a running example — someone in marketing, though every task translates to other jobs. The point of the section: none of this is futuristic; each tile is a tool from the previous section doing its day job.">
+  <section data-origin-slide="37" class="slide light" data-label="Repeatable automation" data-speaker-notes="Self-hosting an orchestrator does not by itself keep connected AI/API data local. Do not imply otherwise. Show the review boundary in the example; no messages are sent by this deck.">
     <div class="slide-content">
-      <div class="dnum reveal">02</div>
-      <h2 class="reveal">What can you actually <span class="o">do</span> with this?</h2>
-      <p class="dsub reveal">One ordinary week of tasks — running example: <b>a marketing person.</b> Every task translates to other jobs.</p>
+      <div class="slide-head reveal"><span class="snum">21</span><div class="crumb">Choose by task</div></div>
+      <h2 class="reveal">Put a checkpoint in the workflow</h2>
+      <div class="cards c2 reveal"><div class="tile"><span class="k">Trigger and draft</span><p>A form arrives → prepare a follow-up and a proposed CRM update.</p></div><div class="tile"><span class="k">Approve and act</span><p>A person checks the draft → send and record only the approved changes.</p></div></div>
+      <p class="note reveal">Examples: Zapier, Make or n8n. Check the actual data flow, permissions and failure handling.</p>
     </div>
   </section>
 
-  <!-- 20 · A WEEK OF TASKS -->
-  <section class="slide light" data-label="A week of tasks"
-    data-speaker-notes="Read two or three tiles as literal prompts, in a normal speaking voice — that's the point, you just ask. Monday: results CSV plus last quarter's deck in, this quarter's review deck out. Tuesday: a forty-page study becomes a ten-minute podcast for the commute. The rest can be gestured at. Each tile names the tool quietly in the corner; all of them come back in detail in the landscape section.">
+  <section data-origin-slide="38" class="slide dark" data-label="Before real use" data-speaker-notes="Keep the practical checklist and remove categorical legal recommendations. Have participants apply these grouped checks to one tool they already use, without vendor absolutes.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>In practice</b> · a week of tasks</div></div>
-      <h2 class="reveal">A week of <span class="o">real tasks</span></h2>
-      <div class="uses reveal">
-        <div class="tile"><span class="k">Mon · the review deck</span><p>"Results CSV + last quarter's deck → <b>this quarter's 12-slide review.</b>" <i class="muted">(Cowork / agent mode)</i></p></div>
-        <div class="tile"><span class="k">Tue · the podcast</span><p>"This 40-page study → a <b>10-min podcast</b> for the commute." <i class="muted">(Gemini Notebook)</i></p></div>
-        <div class="tile"><span class="k">Wed · the formats</span><p>"One key visual → <b>every social format</b>, on brand." <i class="muted">(Canva)</i></p></div>
-        <div class="tile"><span class="k">Thu · the microsite</span><p>"A <b>landing page</b> for the promo — today, without a ticket." <i class="muted">(Claude Design / Lovable)</i></p></div>
-        <div class="tile"><span class="k">Fri · the research</span><p>"Competitors' pricing → a <b>cited comparison table.</b>" <i class="muted">(Perplexity / deep research)</i></p></div>
-        <div class="tile fill"><span class="k">Any day · the voice-over</span><p>"This script in <b>three languages — same voice.</b>" <i class="muted">(ElevenLabs)</i></p></div>
-      </div>
-      <p class="note reveal">None of this is futuristic — every tile is a tool from the last section <b>doing its day job.</b> Each returns in detail in a minute.</p>
+      <div class="slide-head reveal"><span class="snum">22</span><div class="crumb">Before adoption</div></div>
+      <h2 class="reveal">Check the terms, access and result</h2>
+      <div class="cards c3 reveal"><div class="tile"><span class="k">Rights and privacy</span><p>Can you use the output commercially? Are inputs or outputs public?</p></div><div class="tile"><span class="k">Data and access</span><p>Where does the data go, and which actions can the tool perform?</p></div><div class="tile"><span class="k">Cost and review</span><p>What do retries cost? Who checks the result before it is used?</p></div></div>
+      <p class="note reveal">Check the actual plan and intended use. A paid tier alone does not establish permission, privacy or suitability.</p>
     </div>
   </section>
 
-  <!-- 21 · ONE TASK, AGENT-STYLE -->
-  <section class="slide dark" data-label="One task, agent-style"
-    data-speaker-notes="Take Monday's task and slow it down, because this is the loop from slide six wearing office clothes. Read the transcript top to bottom: it reads the folder, proposes a structure and waits — first checkpoint; builds the deck; then flags what it could not find instead of inventing it — that's the behaviour you want; you fill the gap and review. Nobody typed anything between the checkpoints. Land the closing line: your job moved from making the deck to directing and reviewing it.">
+  <section data-origin-slide="41" class="slide light" data-label="Story: Project Vend" data-speaker-notes="Retain one failure-and-improvement story. Explain the mechanism rather than memorable purchase details or exact profit figures. The source links remain on the sources slide.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">21</span><div class="crumb"><b>In practice</b> · worked example</div></div>
-      <h2 class="reveal">Monday's deck, <span class="o">step by step</span></h2>
-      <div class="code reveal"><span class="o">you ›</span> <span class="b">"build the Q2 review deck from this folder, same structure as Q1"</span>
-
-<span class="c">…the agent, on its own:</span>
-  ✓ read the folder          <span class="c">14 files — results CSV, Q1 deck, brand template</span>
-  ✓ proposed a structure     <span class="c">12 slides, mirroring Q1 — waits for your OK</span>
-  ✓ built Q2-review.pptx     <span class="c">charts from the CSV, your template &amp; fonts</span>
-  ⚠ flagged two gaps         <span class="c">"no June numbers for channel X — placeholder"</span>
-<span class="o">you ›</span> add the June export… <span class="g">review, tweak two slides, done ✓</span></div>
-      <p class="note reveal">Notice what it <b>didn't</b> do: invent the missing numbers. And notice your role — you moved from <b>making</b> the deck to <b>directing &amp; reviewing</b> it.</p>
+      <div class="slide-head reveal"><span class="snum">23</span><div class="crumb">A real-world lesson</div></div>
+      <h2 class="reveal">An agent’s operating setup changes the result</h2>
+      <div class="cards c2 reveal"><div class="tile"><span class="k">The experiment</span><p>Claude ran a snack shop: ordering stock, setting prices and talking to customers.</p></div><div class="tile"><span class="k">The lesson</span><p>Early failures exposed weak inventory and decision controls. Later iterations added tools and operating structure.</p></div></div>
+      <p class="note reveal">A bounded experiment, not evidence that an agent can run any business unattended. Source: Anthropic, Project Vend.</p>
     </div>
   </section>
 
-  <!-- 22 · DEEP RESEARCH -->
-  <section class="slide light" data-label="Deep research"
-    data-speaker-notes="The feature every lab now ships under roughly the same name: one question in, the AI browses dozens of sources for five to thirty minutes, and a multi-page cited report comes out. It's the single biggest time-saver in this deck for anyone who does analysis or strategy. Then take the kcard seriously and say it without hedging: these reports look authoritative and still contain errors — treat them as a well-organised starting point with a reading list, never a finished document you forward.">
+  <section data-origin-slide="45" class="slide dark" data-label="Story: the craft still matters" data-speaker-notes="Remove the unsupported best-ad ranking, the comparative clip count and the claim that AI has not raised a ceiling. Keep the audience-relevant decision: craft and the brief determine the production method.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">22</span><div class="crumb"><b>In practice</b> · deep research</div></div>
-      <h2 class="reveal">Deep research: one question, <span class="o">a full report</span></h2>
-      <div class="split">
-        <ul class="bul reveal">
-          <li>Ask one question → the AI <b>browses dozens of sources</b> for 5–30 minutes → returns a <b>multi-page, cited report.</b></li>
-          <li>Shipped by all three labs (and Perplexity) under roughly this name; included from the ~$20 tiers.</li>
-          <li>Ideal for: market landscapes, competitor teardowns, "what does the research actually say?"</li>
-        </ul>
-        <div class="kcard reveal">
-          <div class="big">Looks right ≠ is right</div>
-          <p>These reports <b>look authoritative and still contain errors.</b> Treat them as a well-organised <b>starting point with a reading list</b> — never a finished document you forward.</p>
-        </div>
-      </div>
+      <div class="slide-head reveal"><span class="snum">24</span><div class="crumb">A real-world lesson</div></div>
+      <h2 class="reveal">Judge the finished work</h2>
+      <div class="cards c2 reveal"><div class="tile"><span class="k">One campaign choice</span><p>Anthropic’s Super Bowl campaign used human performers and a conventional production team.</p></div><div class="tile"><span class="k">Your choice</span><p>Use AI where it helps the brief. A lower production barrier does not decide the best creative approach.</p></div></div>
+      <p class="note reveal">One campaign is an example, not proof of a universal ceiling on AI-generated work. Campaign sources are in the reference list.</p>
     </div>
   </section>
 
-  <!-- 23 · HUMAN IN THE LOOP -->
-  <section class="slide dark" data-label="The human stays in the loop"
-    data-speaker-notes="Close the section with the operating principle before diving into forty tools. AI drafts, you sign — and the amount of review should scale with how much the output can hurt: an internal brainstorm needs a skim, anything public, legal or financial needs a real review. This isn't a compliance disclaimer; it's why the tools are safe to adopt at all. Then bridge: so which tool for which job? That's the rest of the talk.">
+  <section data-origin-slide="53" class="slide light" data-label="Three integration routes" data-speaker-notes="This decision slide now comes before the examples. Avoid repeating the vendor comparison or exact pricing. The quarterly review uses each route for a different purpose.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">23</span><div class="crumb"><b>In practice</b> · the rule</div></div>
-      <h2 class="reveal">AI drafts. <span class="o">You sign.</span></h2>
-      <div class="split">
-        <div class="kcard reveal">
-          <div class="big">Review scales<br>with risk</div>
-          <p>An internal brainstorm needs a <b>skim.</b> Anything <b>public, legal or financial</b> needs a real review. The tool drafts fast precisely <i>so that</i> you can afford to review well.</p>
-        </div>
-        <ul class="bul reveal">
-          <li>Every tool in this deck assumes a <b>human checkpoint</b> — that's what makes them safe to adopt.</li>
-          <li>The failure mode isn't "AI made a mistake" — it's <b>"nobody looked."</b></li>
-          <li>So: which tool for which job? That's the rest of this talk →</li>
-        </ul>
-      </div>
+      <div class="slide-head reveal"><span class="snum">25</span><div class="crumb">Working in your apps</div></div>
+      <h2 class="reveal">Where should the work happen?</h2>
+      <div class="cards c3 reveal"><div class="tile"><span class="k">Create a new file</span><p>Upload the source material in chat and download an editable draft.</p></div><div class="tile"><span class="k">Edit an existing file</span><p>Use an approved assistant inside the document or spreadsheet.</p></div><div class="tile"><span class="k">Connect another system</span><p>Give access to the specific records or actions the task needs.</p></div></div>
+      <p class="note reveal">Start with the route that fits the task. Check your organization’s approved tools and permissions.</p>
     </div>
   </section>
 
-  <!-- DIVIDER 03 · THE WIDER LANDSCAPE -->
-  <section class="slide dark divider" data-label="The wider landscape"
-    data-speaker-notes="The long middle of the talk: the market beyond the big labs, one category at a time — app builders, video, avatars, voice, music, images, presentations, copy, research, automation. Set the format so the room can relax: every slide is the same shape — what the category does in plain language, who leads it, a concrete use case, and the price. Encourage note-taking by category, not by tool name; the names churn, the categories stay.">
+  <section data-origin-slide="49" class="slide dark" data-label="Files from chat" data-speaker-notes="A file download is not proof of correctness. Show the output inspection as part of the workflow. No add-in is needed for this route when supported by the chosen tool.">
     <div class="slide-content">
-      <div class="dnum reveal">03</div>
-      <h2 class="reveal">Beyond the labs: the <span class="o">wider landscape</span></h2>
-      <p class="dsub reveal">Ten categories, one slide each: <b>what it does · who leads · a real use case · the price.</b> Tool names churn — the categories stay.</p>
+      <div class="slide-head reveal"><span class="snum">26</span><div class="crumb">Route 1 · create</div></div>
+      <h2 class="reveal">For a new draft, start with the source files</h2>
+      <div class="code reveal">UPLOAD   results.csv + Q1.pptx + brand template
+ASK      create an editable Q2 review
+DOWNLOAD open the actual presentation file
+CHECK    chart data, layout, fonts and missing inputs</div>
+      <p class="note reveal">Confirm that your tool supports the required file type and that the downloaded output remains editable.</p>
     </div>
   </section>
 
-  <!-- 24 · VIBE CODING / APP BUILDERS -->
-  <section class="slide light dense" data-label="Prompt-to-app builders"
-    data-speaker-notes="First category: describe a web page or small app in a chat box and a working, hosted, shareable site comes out. Lovable is the runaway leader — a five-hundred-million-dollar annual run-rate as of June, barely two years in, up from two hundred million last autumn. v0 is the design-quality pick, especially from a Figma file. The realistic use case is not production software: it's campaign microsites, calculators and above all clickable prototypes to align stakeholders before real work starts. Two caveats: credit models burn fast when you iterate, and anything public-facing still needs a proper security review — these tools produce real code handling real data.">
+  <section data-origin-slide="48" class="slide light" data-label="Edit inside the app" data-speaker-notes="Do not promise formulas cannot break or conversations universally sync across apps. Teach the review workflow. Product-specific installation and plan detail remains in reference material.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">24</span><div class="crumb"><b>Landscape</b> · prompt-to-app</div></div>
-      <h2 class="reveal">Describe an app, <span class="o">get an app</span></h2>
-      <div class="cards c3 reveal">
-        <div class="tile fill"><span class="k">Lovable</span><p><b>The leader</b> (~$500M annual run-rate, June 2026). Chat → a real, hosted site with forms &amp; a database. Free · Pro ~$25 · Business ~$50/mo, credit-based.</p></div>
-        <div class="tile"><span class="k">v0 · Vercel</span><p>The <b>design-quality</b> pick — polished pages from a prompt or a <b>Figma file</b>. Free · Premium ~$20/mo.</p></div>
-        <div class="tile"><span class="k">The rest</span><p><b>Bolt.new</b> (friendliest free tier) · <b>Replit</b> (real backends, ~$20) · <b>Figma Make</b> (inside Figma seats).</p></div>
-      </div>
-      <ul class="bul reveal" style="margin-top:var(--content-gap)">
-        <li><b>Use case:</b> a campaign microsite, a savings calculator, a quiz — or a <b>clickable prototype</b> that aligns stakeholders in a day instead of a month.</li>
-        <li><b>Caveats:</b> credits burn fast when you iterate — and anything public-facing still needs a <b>security review</b>: this is real code handling real data.</li>
-      </ul>
-      <p class="note reveal">Prices ~July 2026, credit-based — verify before budgeting.</p>
+      <div class="slide-head reveal"><span class="snum">27</span><div class="crumb">Route 2 · edit</div></div>
+      <h2 class="reveal">For an existing file, keep the review nearby</h2>
+      <div class="cards c2 reveal"><div class="tile"><span class="k">Make a scoped request</span><p>“Update this chart from the new data. Preserve the formulas and template.”</p></div><div class="tile"><span class="k">Inspect the changes</span><p>Check the affected cells or slides. Recalculate, compare with the source, and review the final file.</p></div></div>
+      <p class="note reveal">Use an approved Office or Workspace integration. Availability and permissions depend on your account and organization.</p>
     </div>
   </section>
 
-  <!-- 25 · AI VIDEO -->
-  <section class="slide dark dense" data-label="AI video generation"
-    data-speaker-notes="Type a sentence or upload a product photo, get a video clip — but calibrate expectations first: these generate five-to-ten-second shots, not films; you still edit clips together. Google's Veo with the Flow front-end leads on quality and is the only one generating synchronised dialogue — and with Sora dead it's the mainstream option, paid in credits through the Google plans. Higgsfield is the pragmatic pick for a team: one subscription, fifteen-plus models under one roof, try the same prompt across three of them. Runway is the professional editor's tool. The reality check to say out loud: a fifteen-dollar Runway month is roughly four to six finished ten-second clips — credits burn on the takes you throw away too.">
+  <section data-origin-slide="47" class="slide dark" data-label="MCP"
+    data-speaker-notes="Use the connection diagram as a conceptual illustration. Do not claim every connector is implemented using MCP, or that every server works with every client. The practical issue is supported access to the right data, with the right permission boundary.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">25</span><div class="crumb"><b>Landscape</b> · ai video</div></div>
-      <h2 class="reveal">Type a sentence, get a <span class="o">shot</span> — not a film</h2>
-      <div class="cards c3 reveal">
-        <div class="tile fill"><span class="k">Veo 3.1 + Flow</span><p><b>The leader.</b> Best fidelity, the only one with <b>synced dialogue.</b> Via Google plans: ~$20/mo ≈ 1,000 credits (≈ 10 top-quality clips).</p></div>
-        <div class="tile"><span class="k">Higgsfield</span><p><b>The aggregator</b> — 15+ models under one subscription, preset cinematic camera moves. Tiers ~$15 / $39 / $99/mo.</p></div>
-        <div class="tile"><span class="k">Runway</span><p><b>The editor's tool</b> — generation + a real editing suite. $15 / $35 / $95/mo. Standard ≈ 4–6 finished 10-sec clips/mo.</p></div>
-      </div>
-      <table class="tbl reveal" style="margin-top:18px">
-        <tbody>
-          <tr><td><b>Kling</b></td><td>best value, strongest motion — from ~$7/mo</td><td class="muted">Chinese vendor — check data policies</td></tr>
-          <tr><td><b>Pika</b></td><td>playful effects for social — from ~$10/mo</td><td class="muted">scroll-stoppers, not polish</td></tr>
-          <tr><td><b>Luma</b></td><td>smooth, dreamlike motion — from ~$30/mo</td><td class="muted">mood loops &amp; abstract brand visuals</td></tr>
-        </tbody>
-      </table>
-      <p class="note reveal"><b>Reality check:</b> 5–10-second shots, credits burn on discarded takes too. Use for b-roll, social clips, animating an approved still. Prices ~July 2026.</p>
-    </div>
-  </section>
-
-  <!-- 26 · HYPERFRAMES -->
-  <section class="slide light" data-label="HyperFrames"
-    data-speaker-notes="One tool gets its own slide because it's the opposite of everything on the last one. HyperFrames — open source, from HeyGen — renders video from code: you build the video like a web page, and it produces exactly what you designed, identically, every time. Generative video dreams up footage you can't fully control; HyperFrames is a factory. That's why the use cases are different: two hundred personalised variants from one template, monthly data videos where numbers change but design doesn't, locked brand compliance the reviewers approve once, localisation by swapping text. Free to use — Apache licence, render on your own machine; optional cloud rendering priced by HeyGen. Framing for a non-technical room: ask a technical colleague to set it up once, then it runs as a pipeline.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>Landscape</b> · hyperframes</div></div>
-      <h2 class="reveal">HyperFrames — video as <span class="o">code</span></h2>
-      <div class="split">
-        <ul class="bul reveal">
-          <li>Open-source (by <b>HeyGen</b>): you build a video <b>like a web page</b> — and it renders <b>exactly what you designed, every time.</b></li>
-          <li><b>Use cases:</b> 200 personalised variants from one template · monthly <b>data videos</b> (numbers change, design doesn't) · localisation by swapping text.</li>
-          <li><b>Brand compliance, solved:</b> fonts, colours, logo are locked in code — reviewers approve the template <b>once</b>, not every output.</li>
-          <li><b>Price:</b> the framework is <b>free</b> (Apache 2.0, render on your own machine); optional cloud rendering billed per minute by HeyGen.</li>
-        </ul>
-        <div class="kcard reveal">
-          <div class="big">Generative dreams.<br>This one obeys.</div>
-          <p>Veo &amp; Runway <b>imagine</b> footage — you can't fully control the result. HyperFrames is a <b>factory</b>: same template, new data, a thousand on-brand videos. Ask a technical colleague to set it up once.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 27 · AI AVATARS -->
-  <section class="slide dark" data-label="AI avatars"
-    data-speaker-notes="Type a script, and a realistic human presenter says it on camera — no studio, no crew, no actor's day rate. Two leaders with a clean split: Synthesia is the corporate pick — training and product explainers in 160-plus languages, and when a rule or rate changes you edit the script and re-render instead of re-shooting; HeyGen leans marketing, and its party trick is video translation with lip-sync — the original speaker appears to genuinely speak another language, mouth movements matched. That translated-exec-video demo is the one that drops jaws. D-ID is the budget one-liner: it animates a still photo.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">27</span><div class="crumb"><b>Landscape</b> · avatars</div></div>
-      <h2 class="reveal">A presenter who <span class="o">never books a studio</span></h2>
-      <div class="split">
-        <div class="tile reveal"><span class="k">Synthesia — corporate</span><p>Script → presenter in <b>160+ languages.</b> Training &amp; explainers you <b>re-render, not re-shoot</b>, when things change. Free 10 min/mo · Starter $29 · Creator $89/mo.</p></div>
-        <div class="tile fill reveal"><span class="k">HeyGen — marketing</span><p>Its party trick: <b>video translation with lip-sync</b> — the original speaker appears to speak another language, mouth matched. Free 3 videos · from ~$29/mo.</p></div>
-      </div>
-      <p class="note reveal"><b>D-ID</b> is the budget option (~$16/mo): animates a <b>still photo</b> into a talking head. Rule of thumb: Synthesia for training, HeyGen for marketing &amp; localisation. Prices July 2026.</p>
-    </div>
-  </section>
-
-  <!-- 28 · ELEVENLABS -->
-  <section class="slide light" data-label="ElevenLabs"
-    data-speaker-notes="The star of the audio world, and the cheapest wow in the whole deck. Best-in-class text-to-speech; voice cloning — a synthetic copy of a consenting speaker's voice; and dubbing that re-narrates a video in twenty-nine-plus languages while keeping the speaker's vocal character. Use cases land themselves: re-record a voice-over instantly when legal changes one word, one consistent brand voice across all channels, audio versions of long content. Pricing is the important nuance: the free tier explicitly excludes commercial use, watermarks the audio and requires you to credit ElevenLabs — the five-dollar Starter is where the commercial licence begins, and a thousand credits is roughly a minute of audio. One detail worth getting right if someone asks: Starter includes instant voice cloning, but the higher-quality professional cloning starts at Creator, at twenty-two.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">28</span><div class="crumb"><b>Landscape</b> · voice</div></div>
-      <h2 class="reveal">ElevenLabs — the <span class="o">voice</span> everyone uses</h2>
-      <div class="split">
-        <ul class="bul reveal">
-          <li><b>Text-to-speech</b> that genuinely sounds human · <b>voice cloning</b> (a synthetic copy of a consenting speaker) · <b>dubbing</b> into 29+ languages that keeps the speaker's vocal character.</li>
-          <li><b>Use cases:</b> re-record a voice-over <b>instantly</b> when one word changes · one consistent brand voice everywhere · audio versions of articles &amp; reports.</li>
-          <li>Rule of thumb: <b>~1,000 credits ≈ 1 minute</b> of audio.</li>
-        </ul>
-        <div class="kcard reveal">
-          <div class="big">$5 buys the licence</div>
-          <p>Free: 10 min/mo — <b>no commercial licence</b>, watermarked, attribution required. Starter <b>~$5/mo</b>: commercial licence + instant voice cloning. Creator ~$22 (adds <b>professional</b> cloning) · Pro ~$99/mo. The cheapest professional "wow" in this deck.</p>
-        </div>
-      </div>
-      <p class="note reveal">Prices July 2026 — credit-based, shared across speech, dubbing &amp; effects.</p>
-    </div>
-  </section>
-
-  <!-- 29 · MUSIC + EASY EDITING -->
-  <section class="slide dark" data-label="Music and easy editing"
-    data-speaker-notes="Two half-categories. Music: Suno turns a one-line description into a finished song with vocals for about ten dollars with commercial rights — but its training data is in active litigation, so legal should look before paid media; Udio settled with the labels and is rebuilding as a licensed walled garden with downloads currently disabled — a tool that can't export isn't a tool yet; ElevenLabs Music licensed its catalogue properly and is the legally safest route. Then Descript, the sleeper hit of the whole deck: edit video and podcasts by editing the transcript — delete the sentence in the text, it's cut from the video, plus one-click filler-word removal. The highest ROI per hour of learning of anything in this talk.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">29</span><div class="crumb"><b>Landscape</b> · music &amp; editing</div></div>
-      <h2 class="reveal">Soundtracks &amp; the <span class="o">sleeper hit</span></h2>
-      <div class="cards c3 reveal">
-        <div class="tile"><span class="k">Suno</span><p>Describe a song → <b>finished track with vocals.</b> Pro ~$10/mo incl. commercial rights — but training data is in <b>litigation</b>: legal check before paid media.</p></div>
-        <div class="tile"><span class="k">Udio</span><p>Settled with the labels; rebuilding as a licensed "walled garden" — <b>downloads currently disabled.</b> A tool that can't export isn't a tool yet.</p></div>
-        <div class="tile"><span class="k">ElevenLabs Music</span><p>Licensed catalogue (Merlin/Kobalt, royalties paid) — the <b>legally safest</b> AI music route.</p></div>
-      </div>
-      <div class="kcard reveal" style="margin-top:18px">
-        <div class="big">Descript — edit video like a document</div>
-        <p>It transcribes your recording; <b>delete a sentence in the text and it's cut from the video.</b> One-click "um" removal, studio-sound cleanup. ~$16–24/mo — the highest ROI per hour of learning in this entire deck.</p>
-      </div>
-      <p class="note reveal">Prices ~July 2026.</p>
-    </div>
-  </section>
-
-  <!-- 30 · IMAGES & DESIGN -->
-  <section class="slide light dense" data-label="Images and design"
-    data-speaker-notes="Order matters on this slide. Canva first because it's what most teams will actually use tomorrow — AI woven into the design tool they already know, with the brand kit enforcing fonts, colours and logo. Ideogram second because it solves the pain everyone feels weekly: it's the model that gets legible text inside images right — posters, banners, packaging mockups with real copy on them. Firefly is the compliance answer — trained on licensed content with enterprise indemnification, the one legal signs off without a fight. Midjourney last: the highest aesthetic ceiling, but no free tier and — say this clearly — on the cheaper tiers your prompts and images are public. The Freepik-is-now-Magnific footnote catches anyone with an old subscription.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">30</span><div class="crumb"><b>Landscape</b> · images &amp; design</div></div>
-      <h2 class="reveal">Images: pick by <span class="o">job</span>, not by hype</h2>
-      <div class="cards c4 reveal">
-        <div class="tile fill"><span class="k">Canva Magic Studio</span><p><b>The daily driver.</b> AI inside the tool teams already use — layouts, image gen, magic resize, <b>brand kit enforced.</b> Free tier genuinely usable · Pro ~$12–18/mo.</p></div>
-        <div class="tile"><span class="k">Ideogram</span><p>The one that gets <b>text inside images</b> right — posters, banners, packaging with real copy. From ~$8/mo, commercial use on paid tiers.</p></div>
-        <div class="tile"><span class="k">Adobe Firefly</span><p><b>The one legal signs off:</b> trained on licensed content, enterprise indemnification. In Photoshop too. From ~$10/mo.</p></div>
-        <div class="tile"><span class="k">Midjourney</span><p><b>Highest aesthetic ceiling</b> — concepts &amp; mood boards. $10–120/mo, <b>no free tier</b> — and cheaper tiers are <b>public</b>: never paste unreleased work.</p></div>
-      </div>
-      <p class="note reveal">Footnote: <b>Freepik is now Magnific</b> (Apr 2026) — stock + AI + a best-in-class upscaler, from ~€6/mo. Prices ~July 2026.</p>
-    </div>
-  </section>
-
-  <!-- 31 · PRESENTATIONS -->
-  <section class="slide dark" data-label="Presentations"
-    data-speaker-notes="The category everyone in any room feels weekly. Gamma leads: type a topic or paste a document, get a designed deck that exports to PowerPoint or publishes as a web page — free to try, roughly ten-to-twenty-five a month paid. Canva's presentations are already included if the team has Canva, with better brand control. Beautiful.ai is enterprise-priced with no free tier and hard to justify against the other two. And Tome — 2023's most hyped AI deck tool — is the churn lesson made flesh. Remind them Claude Design from earlier also plays in this category.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">31</span><div class="crumb"><b>Landscape</b> · presentations</div></div>
-      <h2 class="reveal">Decks from a <span class="o">prompt</span></h2>
-      <div class="cards c3 reveal">
-        <div class="tile fill"><span class="k">Gamma</span><p><b>The leader.</b> Topic or document in → designed deck out; exports to <b>PowerPoint</b>, publishes as a <b>website.</b> Free to try · paid ~$10–25/mo.</p></div>
-        <div class="tile"><span class="k">Canva presentations</span><p>Already included if you have Canva — better <b>brand control</b>, good presenter mode.</p></div>
-        <div class="tile"><span class="k">Beautiful.ai</span><p>"Smart slides" that keep layouts tidy — but <b>$40/user/mo, no free tier.</b> Hard to justify vs the other two.</p></div>
-      </div>
-      <p class="note reveal">Also in this race: <b>Claude Design</b> (slide 14) and ChatGPT's agent mode. And <b>Tome</b> — 2023's most-hyped deck tool — is <b>dead</b>: the churn lesson, again. Prices ~July 2026.</p>
-    </div>
-  </section>
-
-  <!-- 32 · COPY PLATFORMS -->
-  <section class="slide light" data-label="Copy platforms"
-    data-speaker-notes="The honest slide, and audiences respect it. This category — AI copywriting platforms — was built when general chatbots wrote badly. They no longer do, and the category got eaten: Jasper's revenue roughly halved; Copy.ai pivoted out of copywriting entirely. What survives is governance, not writing: Writer sells brand-and-compliance enforcement — it can flag copy that breaks your rules before human review, which regulated industries genuinely need; Notion AI is useful as AI over your own wiki. The takeaway line is on the slide: for the writing itself, your twenty-dollar general assistant is as good — pay only for governance at scale.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">32</span><div class="crumb"><b>Landscape</b> · copywriting</div></div>
-      <h2 class="reveal">The category the chatbots <span class="o">ate</span></h2>
-      <div class="cards c4 reveal">
-        <div class="tile"><span class="k">Jasper</span><p>The old category king — revenue roughly <b>halved</b>. Survives on <b>brand-voice consistency</b> across big teams. ~$39–69/mo.</p></div>
-        <div class="tile"><span class="k">Copy.ai</span><p><b>Left the category</b> — pivoted to sales automation. Agents from ~$249/mo. The pivot tells the story.</p></div>
-        <div class="tile"><span class="k">Writer</span><p>The <b>governance</b> play: flags copy that breaks brand or compliance rules <b>before</b> human review. ~$39/user · enterprise.</p></div>
-        <div class="tile"><span class="k">Notion AI</span><p>AI over <b>your own wiki</b> — "summarise every campaign retro mentioning X." Now needs Business, ~$20/user/mo.</p></div>
-      </div>
-      <p class="note reveal"><b>The takeaway:</b> for writing itself, the $20 general assistant is now as good. Pay for these only for <b>governance at scale.</b> Prices ~July 2026.</p>
-    </div>
-  </section>
-
-  <!-- 33 · RESEARCH & SEARCH -->
-  <section class="slide dark" data-label="Perplexity"
-    data-speaker-notes="Perplexity is search rebuilt around answers: ask a question, get prose with citations and live sources instead of ten blue links — and the citations are the point, because you can verify every claim. Pro at twenty dollars adds twenty deep-research runs a day. Comet, its browser with the assistant built in, went free worldwide in October 2025 after launching gated behind the two-hundred-dollar Max tier. Then deliver the kcard warning seriously: an AI browser that can act on pages you're logged into is a documented prompt-injection risk — a hidden instruction on a malicious page can steer it — so keep agentic browsers away from sensitive logged-in systems.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">33</span><div class="crumb"><b>Landscape</b> · research &amp; search</div></div>
-      <h2 class="reveal">Perplexity — search that <span class="o">shows its sources</span></h2>
-      <div class="split">
-        <ul class="bul reveal">
-          <li>Ask a question → an answer in prose <b>with citations to live sources</b> — every claim verifiable, not ten blue links.</li>
-          <li><b>Pro ~$20/mo:</b> unlimited pro search + <b>20 deep-research runs a day.</b> Enterprise ~$40/seat.</li>
-          <li><b>Comet</b> — its browser with the assistant built in — went <b>free worldwide</b> in October 2025 (before that, gated behind the $200 Max tier).</li>
-        </ul>
-        <div class="kcard reveal">
-          <div class="big">Careful where it clicks</div>
-          <p>An AI browser acting on pages <b>you're logged into</b> is a documented <b>prompt-injection</b> risk — a hidden instruction on a page can steer it. Keep agentic browsers <b>away from sensitive logged-in systems.</b></p>
-        </div>
-      </div>
-      <p class="note reveal">Prices ~July 2026.</p>
-    </div>
-  </section>
-
-  <!-- 34 · AUTOMATION GLUE -->
-  <section class="slide light dense" data-label="Automation glue"
-    data-speaker-notes="Last category: the plumbing that connects tools so routine work happens by itself — and the AI layer means you now describe the automation in plain language instead of configuring it. Zapier is the easy leader with eight-thousand-plus apps; Make does the same for roughly a third the cost with a visual canvas and a steeper curve. Then two names to drop for the questions you'll get: n8n is open-source and self-hostable — the answer when data must not leave your infrastructure; Relay.app builds human approval steps into the flow — the AI drafts, the workflow pauses for sign-off, then publishes. Lindy for 'AI employees' that own a whole inbox.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">34</span><div class="crumb"><b>Landscape</b> · automation</div></div>
-      <h2 class="reveal">The <span class="o">glue</span>: when X happens, do Y</h2>
-      <div class="cards c4 reveal">
-        <div class="tile fill"><span class="k">Zapier</span><p><b>The leader</b> — 8,000+ apps; describe the automation in plain English. Free 100 tasks/mo · from ~$30/mo.</p></div>
-        <div class="tile"><span class="k">Make</span><p>Visual drag-and-drop canvas, <b>~3–5× cheaper</b> per operation (~$10–34/mo, per workspace). Steeper curve.</p></div>
-        <div class="tile"><span class="k">n8n</span><p>Open-source, <b>self-hostable</b> — the answer when data must not leave your own infrastructure. Free to self-host.</p></div>
-        <div class="tile"><span class="k">Relay.app · Lindy</span><p>Relay: built-in <b>human approval steps</b> — AI drafts, pauses for sign-off. Lindy: "AI employees" for a whole inbox. From ~$19–20/mo.</p></div>
-      </div>
-      <p class="note reveal"><b>Example flow:</b> form submitted → AI drafts the follow-up → <b>pauses for your approval</b> → sends, logs to the CRM, posts to the channel. Prices ~July 2026.</p>
-    </div>
-  </section>
-
-  <!-- 35 · THE FINE PRINT -->
-  <section class="slide dark" data-label="The fine print"
-    data-speaker-notes="The slide that saves someone real trouble — deliver it slowly. One: free tiers almost never include a commercial licence — ElevenLabs, Suno and Ideogram all put it behind the first paid tier; using free-tier output in a paid campaign is a genuine legal problem. Two: cheap tiers are often public by default — Midjourney below Pro shows your prompts and images to everyone; unreleased campaign work must not go there. Three: provenance — Firefly and ElevenLabs Music trained on licensed content and are the defensible picks; several others are in active litigation. Four: credit pricing makes budgets slippery — start on fixed plans with auto-top-up off. And the date on everything: July 2026.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">35</span><div class="crumb"><b>Landscape</b> · the fine print</div></div>
-      <h2 class="reveal">Before you use any of it <span class="o">for real</span></h2>
-      <div class="cards c4 reveal">
-        <div class="tile"><span class="k">① Licence</span><p><b>Free tier ≠ commercial use.</b> ElevenLabs, Suno, Ideogram: the commercial licence starts at the first <b>paid</b> tier.</p></div>
-        <div class="tile"><span class="k">② Privacy</span><p>Cheap tiers are often <b>public by default</b> — Midjourney below Pro shows your prompts &amp; images to everyone. No unreleased work.</p></div>
-        <div class="tile"><span class="k">③ Provenance</span><p>Where did the training data come from? <b>Firefly &amp; ElevenLabs Music</b> are licensed — the defensible picks. Others are in litigation.</p></div>
-        <div class="tile"><span class="k">④ Budget</span><p>Credit pricing is slippery — <b>retries burn credits.</b> Start on fixed plans, auto-top-up <b>off.</b></p></div>
-      </div>
-      <p class="note reveal">And once more: every price in this deck is a <b>July 2026 snapshot.</b> Check the vendor's page before you commit a budget.</p>
-    </div>
-  </section>
-
-  <!-- 36 · CHEAT SHEET -->
-  <section class="slide light tight" data-label="Cheat sheet"
-    data-speaker-notes="The screenshot-me slide — say exactly that and pause so people can photograph it. One row per category: the leader, the alternative, and the entry price. Don't read it; just remind them the names churn but the categories are stable, so this table is how to re-orient in six months when half the logos have changed.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">36</span><div class="crumb"><b>Landscape</b> · cheat sheet</div></div>
-      <h2 class="reveal">The whole landscape on <span class="o">one slide</span></h2>
-      <table class="tbl reveal" style="font-size:21px">
-        <thead><tr><th>Job</th><th>Leader</th><th>Also look at</th><th>Entry price</th></tr></thead>
-        <tbody>
-          <tr><td class="muted">Everyday assistant + agent</td><td><b>Claude · ChatGPT · Gemini</b></td><td>—</td><td>free → ~$20/mo</td></tr>
-          <tr><td class="muted">Page or app from a prompt</td><td><b>Lovable</b></td><td>v0, Bolt, Replit</td><td>free → ~$25/mo</td></tr>
-          <tr><td class="muted">Generated video</td><td><b>Veo + Flow</b></td><td>Higgsfield, Runway</td><td>~$15–20/mo</td></tr>
-          <tr><td class="muted">Templated / data video</td><td><b>HyperFrames</b></td><td>—</td><td>free (open source)</td></tr>
-          <tr><td class="muted">Avatar presenter</td><td><b>Synthesia</b></td><td>HeyGen, D-ID</td><td>free → $29/mo</td></tr>
-          <tr><td class="muted">Voice &amp; dubbing</td><td><b>ElevenLabs</b></td><td>—</td><td>~$5/mo (commercial)</td></tr>
-          <tr><td class="muted">Music</td><td><b>ElevenLabs Music</b> (safest)</td><td>Suno (check legal)</td><td>~$10/mo</td></tr>
-          <tr><td class="muted">Images &amp; design</td><td><b>Canva</b></td><td>Ideogram, Firefly, Midjourney</td><td>free → ~$12/mo</td></tr>
-          <tr><td class="muted">Decks</td><td><b>Gamma</b></td><td>Claude Design, Canva</td><td>free → ~$10/mo</td></tr>
-          <tr><td class="muted">Cited research</td><td><b>Perplexity</b></td><td>lab deep-research modes</td><td>free → $20/mo</td></tr>
-          <tr><td class="muted">Automation</td><td><b>Zapier</b></td><td>Make, n8n, Relay</td><td>free → ~$30/mo</td></tr>
-        </tbody>
-      </table>
-      <p class="note reveal"><b>Screenshot this one.</b> Names churn; categories are stable — this is how you re-orient in six months. July 2026.</p>
-    </div>
-  </section>
-
-  <!-- DIVIDER 04 · FIVE WILD STORIES -->
-  <section class="slide dark divider" data-label="Five wild stories"
-    data-speaker-notes="Change of pace before the last technical section: five true stories of what this technology actually did in the real world — funny, impressive, and in one case genuinely alarming. Every one is documented; sources are on the closing slides. The arc to keep in mind as you tell them: capability keeps surprising in both directions.">
-    <div class="slide-content">
-      <div class="dnum reveal">04</div>
-      <h2 class="reveal">Five <span class="o">wild stories</span></h2>
-      <p class="dsub reveal">True, documented, recent — what agents <b>actually did</b> out in the world. Good and bad.</p>
-    </div>
-  </section>
-
-  <!-- 37 · STORY 1: PROJECT VEND -->
-  <section class="slide dark" data-label="Story 1 · Project Vend"
-    data-speaker-notes="The funniest and most instructive story available. Anthropic gave Claude a real snack shop in its office — buying stock, setting prices, chatting with customers on Slack. It lost about two hundred dollars in a month: employees sweet-talked it into discounts, it hallucinated inventory, and at one point it ordered tungsten cubes because someone asked. Then phase two: same idea, but with proper tools, a CRM, and guardrails — and the losing weeks largely disappeared. The lesson writes itself and it's the thesis of this deck: the raw model is powerful and naive; tools and guardrails are what turn it into a worker.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">37</span><div class="crumb"><b>Stories</b> · 1 of 5</div></div>
-      <h2 class="reveal">Claude ran a shop — and went <span class="o">broke</span></h2>
-      <div class="split">
-        <ul class="bul reveal">
-          <li>Anthropic's <b>Project Vend</b>: Claude ran a real snack shop in the office — buying stock, setting prices, chatting with customers on Slack.</li>
-          <li>Month one: <b>−$200.</b> Employees <b>sweet-talked it into discounts</b>, it hallucinated inventory — and once ordered <b>tungsten cubes</b> because someone asked.</li>
-          <li>Phase two — proper tools, a CRM, guardrails, an "AI CEO" — and the <b>losing weeks largely disappeared.</b></li>
-        </ul>
-        <div class="kcard reveal">
-          <div class="big">Powerful<br>and naive</div>
-          <p>The raw model was <b>both at once.</b> What turned it from a pushover into a business? <b>Tools and guardrails</b> — the thesis of this entire deck.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 38 · STORY 2: TEN YEARS, TWO DAYS -->
-  <section class="slide light" data-label="Story 2 · Ten years, two days"
-    data-speaker-notes="The awe story. A team at Imperial College London spent ten years working out how certain superbugs acquire antibiotic resistance. They gave the same question to Google's AI co-scientist, and in two days its top-ranked hypothesis matched their unpublished conclusion — plus it proposed one they'd never considered. Deliver the honesty caveat with equal weight: the AI generated the hypothesis; humans had spent the decade doing the lab work that proved it. The one-liner: it didn't replace ten years of science — it means the next question might not need them.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">38</span><div class="crumb"><b>Stories</b> · 2 of 5</div></div>
-      <h2 class="reveal">Ten years of research. <span class="o">Two days.</span></h2>
-      <div class="split">
-        <div class="kcard reveal">
-          <div class="big">10 yrs → 2 days</div>
-          <p>Imperial College London spent a <b>decade</b> on how superbugs acquire resistance. Google's <b>AI co-scientist</b>, given the same question, ranked the correct — <b>unpublished</b> — answer first in <b>two days.</b></p>
-        </div>
-        <ul class="bul reveal">
-          <li>It also proposed a hypothesis the team had <b>never considered.</b> The researchers themselves went on record — this isn't vendor marketing.</li>
-          <li><b>The honest caveat:</b> the AI generated the <i>hypothesis</i>. Humans had spent the decade doing the lab work that <b>proved</b> it.</li>
-          <li>The point: it didn't replace ten years of science — it means the <b>next</b> question might not need them.</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- 39 · STORY 3: THE EXAMS -->
-  <section class="slide dark" data-label="Story 3 · The exams"
-    data-speaker-notes="Two exam results, one lesson. In 2025 AI models passed a full mock of CFA Level III — the hardest finance exam, including the essay section that used to defeat them — in minutes; humans typically train three hundred hours per level. The same summer, Google's model won an official gold medal at the International Mathematical Olympiad, certified by the organisers, solving five of six problems — only about one in ten human contestants managed gold. The reframe matters more than the numbers: the exam-shaped part of professional work — recall, procedure, structured answers — is now cheap. Judgment, accountability and knowing what to ask are not.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">39</span><div class="crumb"><b>Stories</b> · 3 of 5</div></div>
-      <h2 class="reveal">Gold medals, <span class="o">in minutes</span></h2>
-      <div class="cards c2 reveal">
-        <div class="tile"><span class="k">CFA Level III</span><p>The hardest finance exam — essays included. Models <b>passed a full mock in minutes</b> (best ~79%). Humans train <b>~300 hours per level.</b></p></div>
-        <div class="tile"><span class="k">Maths Olympiad gold</span><p>Official IMO <b>gold medal</b>, certified by the organisers — 5 of 6 problems, standard conditions. Only ~1 in 10 human contestants got gold.</p></div>
-      </div>
-      <p class="note reveal" style="margin-top:24px">The reframe: the <b>exam-shaped part</b> of professional work — recall, procedure, structured answers — is now cheap. <b>Judgment, accountability, and knowing what to ask</b> are not.</p>
-    </div>
-  </section>
-
-  <!-- 40 · STORY 4: THE SECURITY DOUBLE -->
-  <section class="slide light" data-label="Story 4 · The security double"
-    data-speaker-notes="The serious one — same capability, both directions, months apart. Defence: Google's Big Sleep agent autonomously found a flaw in SQLite — software running on billions of devices — that only attackers knew about, and it was patched before they could strike: believed to be the first time an AI pre-empted an exploit in the wild. Offence: Anthropic disclosed the first largely AI-orchestrated espionage campaign — attackers jailbroke a coding agent by disguising the work as security testing, and the AI performed an estimated eighty to ninety percent of the attack autonomously. Close evenly: the same loop from slide six is doing both jobs; which one it does is decided by the humans and guardrails around it.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">40</span><div class="crumb"><b>Stories</b> · 4 of 5</div></div>
-      <h2 class="reveal">The same skill, <span class="o">both directions</span></h2>
-      <div class="split">
-        <div class="tile reveal"><span class="k">🛡 Defence</span><p>Google's <b>Big Sleep</b> agent found a flaw in software on <b>billions of devices</b> — one only attackers knew — and it was patched <b>before they could strike.</b> A first.</p></div>
-        <div class="tile fill reveal"><span class="k">⚔ Offence</span><p>Anthropic disclosed the first largely <b>AI-orchestrated espionage campaign</b>: a jailbroken coding agent ran <b>~80–90% of the attack</b> autonomously (Nov 2025).</p></div>
-      </div>
-      <p class="note reveal">It's the <b>same loop</b> from slide 6 doing both jobs. Which one it does is decided by the <b>humans and guardrails</b> around it — which is why the fine-print slides in this deck aren't decoration.</p>
-    </div>
-  </section>
-
-  <!-- 41 · STORY 5: THE SUPER BOWL TWIST -->
-  <section class="slide dark" data-label="Story 5 · The Super Bowl twist"
-    data-speaker-notes="End the stories on the twist this audience will argue about at lunch. The best-performing AI ad of 2026 — Anthropic's Super Bowl campaign, tagline 'Ads are coming to AI. But not to Claude.' — was made entirely the old-fashioned way: human agency, human director, real actors. It lifted daily active users eleven percent and pushed Claude into the top ten free iPhone apps. Meanwhile Coca-Cola's AI-generated Christmas ad reportedly took around seventy thousand generated clips and a hundred people to assemble two finished spots. The honest conclusion: AI raised the floor of what a small team can produce — it hasn't raised the ceiling. Craft still wins.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">41</span><div class="crumb"><b>Stories</b> · 5 of 5</div></div>
-      <h2 class="reveal">The best AI ad of 2026 was <span class="o">made by humans</span></h2>
-      <div class="split">
-        <ul class="bul reveal">
-          <li>Anthropic's Super Bowl debut — <i>"Ads are coming to AI. But not to Claude."</i> — was made <b>the old-fashioned way</b>: human agency, human director, real actors.</li>
-          <li>Result: daily active users <b>+11%</b>, Claude into the <b>top-10 free iPhone apps.</b></li>
-          <li>Meanwhile Coca-Cola's AI-generated Christmas ad reportedly took <b>~70,000 generated clips</b> and ~100 people to assemble two finished spots.</li>
-        </ul>
-        <div class="kcard reveal">
-          <div class="big">Floor, not ceiling</div>
-          <p>AI raised the <b>floor</b> — what a small team can produce. It hasn't raised the <b>ceiling.</b> Craft, taste and a real idea still win.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- DIVIDER 05 · PLUGGING IT IN -->
-  <section class="slide dark divider" data-label="Plugging it in"
-    data-speaker-notes="Last section: a chat window is a silo until it can reach the tools where work actually lives — Excel, PowerPoint, mail, drives, CRMs. The next slides cover the standard that makes connections possible, then the concrete options: add-ins inside Office, files straight from chat, the built-in copilots, and the universal adapter for everything else.">
-    <div class="slide-content">
-      <div class="dnum reveal">05</div>
-      <h2 class="reveal">Plugging it into <span class="o">your tools</span></h2>
-      <p class="dsub reveal">A chat window is a silo. The real power arrives when AI reaches <b>Excel, PowerPoint, mail and your drives</b> — safely.</p>
-    </div>
-  </section>
-
-  <!-- 42 · MCP -->
-  <section class="slide dark" data-label="MCP"
-    data-speaker-notes="Point at the left half first — every AI needing custom glue to every tool, N times M integrations — then the right, where each side connects once through a shared standard. MCP, the Model Context Protocol: Anthropic open-sourced it in late 2024, OpenAI, Google and Microsoft all adopted it in 2025, and in December it was donated to the Agentic AI Foundation, a new fund under the Linux Foundation — it belongs to nobody now, with over ten thousand servers. The practical takeaway for this room: every 'connector' or 'app' on the next slides is one of these under the hood — you never see it, but it's why all the assistants can suddenly reach the same tools.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">42</span><div class="crumb"><b>Plugging in</b> · mcp</div></div>
+      <div class="slide-head reveal"><span class="snum">28</span><div class="crumb"><b>Plugging in</b> · mcp</div></div>
       <h2 class="reveal">MCP = <span class="o">"USB-C for AI"</span></h2>
       <div class="split">
         <div class="diagram reveal">
@@ -1100,155 +582,24 @@ table.tbl tr:last-child td{border-bottom:none}
             </g>
           </svg>
         </div>
-        <ul class="bul reveal">
-          <li>Before: a <b>custom connector for every AI × every tool.</b> MCP is the standard plug: build once, works everywhere.</li>
-          <li>Anthropic open-sourced it (Nov 2024) → <b>OpenAI, Google &amp; Microsoft adopted it</b> (2025) → donated to the Linux Foundation's new <b>Agentic AI Foundation</b> (Dec 2025). <b>10,000+ servers</b> exist.</li>
-          <li>Every "connector" or "app" on the next slides is <b>this, under the hood.</b> You never see it — it just makes the plugs fit.</li>
-        </ul>
+        <ul class="bul reveal"><li>For the review deck, connect the approved source and inspect which records were retrieved.</li><li>MCP is one standard for tool access. Compatibility, authentication and permissions depend on the integration.</li><li>Expose only the records and actions needed. Review a proposed write before it happens.</li></ul>
       </div>
     </div>
   </section>
 
-  <!-- 43 · CLAUDE INSIDE OFFICE -->
-  <section class="slide light" data-label="Claude inside Office"
-    data-speaker-notes="The integration most likely to matter day one. Claude as a side panel inside real Excel, PowerPoint and Word, with Outlook in beta: it builds and fixes spreadsheet models without breaking formula dependencies, tracks every change at cell level, makes decks in your own template, edits documents with tracked changes. The differentiator: one shared conversation across all four apps — change an assumption in Excel and the deck built on it already knows. Practicalities: installed from Microsoft's add-in marketplace, included in any paid Claude plan from twenty dollars, needs a work or school Microsoft 365 account — and note that company admins can block add-ins, so at work this usually starts with a conversation with IT.">
+  <section data-origin-slide="54" class="slide dark" data-label="Choose one task" data-speaker-notes="End the spoken talk here. Ask the audience to name their task and acceptance check. Sources follow; there is no second recap. The reference deck is a dated snapshot, not a newly verified buying guide.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">43</span><div class="crumb"><b>Plugging in</b> · claude × office</div></div>
-      <h2 class="reveal">Claude <span class="o">inside</span> Excel, PowerPoint &amp; Word</h2>
-      <div class="split">
-        <ul class="bul reveal">
-          <li>A <b>side panel inside the real apps</b> — not copy-paste from a chat tab.</li>
-          <li><b>Excel:</b> builds &amp; fixes models <b>without breaking formulas</b>, tracks every change per cell · <b>PowerPoint:</b> decks in <b>your template</b> · <b>Word:</b> tracked changes · <b>Outlook:</b> beta.</li>
-          <li>Install from the Microsoft add-in marketplace · included in <b>any paid Claude plan</b> (~$20+) · needs a work/school Microsoft&nbsp;365 account.</li>
-        </ul>
-        <div class="kcard reveal">
-          <div class="big">One thread,<br>four apps</div>
-          <p>The differentiator: a <b>shared conversation across all four apps.</b> Change an assumption in Excel — open the deck built on it, and Claude <b>already knows.</b></p>
-        </div>
-      </div>
-      <p class="note reveal">At work, admins can block add-ins — expect this to start with <b>a conversation with IT.</b></p>
+      <div class="slide-head reveal"><span class="snum">29</span><div class="crumb">Try this next</div></div>
+      <h2 class="reveal">Try one useful workflow this week</h2>
+      <ul class="bul reveal"><li><b>Choose:</b> a recurring task with a result you know how to judge.</li><li><b>Start:</b> with an approved tool you already have.</li><li><b>Review:</b> the facts, file and permissions before using the output.</li></ul>
+      <p class="note reveal"><a href="ai-toolbox-reference.html">Optional reference: product tables and supporting examples</a> · <a href="index.html">All talks</a></p>
     </div>
   </section>
 
-  <!-- 44 · FILES STRAIGHT FROM CHAT -->
-  <section class="slide dark" data-label="Files straight from chat"
-    data-speaker-notes="The zero-setup alternative people overlook: no add-in needed at all. Claude and ChatGPT can both produce genuine PowerPoint, Excel and Word files directly in the chat — you describe what you want, optionally upload source data, and download a real editable file, not a wall of text to reformat. Make the distinction cleanly, it prevents a common confusion: the add-ins from the last slide work inside a file you already have; the chat produces a new file. For many people this alone — decks and spreadsheets from a paragraph — is the biggest single upgrade in the talk, and it needs nothing installed.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">44</span><div class="crumb"><b>Plugging in</b> · files from chat</div></div>
-      <h2 class="reveal">Real files, <span class="o">straight from the chat</span></h2>
-      <div class="split">
-        <div class="tile reveal"><span class="k">No add-in needed</span><p>Claude &amp; ChatGPT both produce <b>genuine .pptx / .xlsx / .docx</b> in the chat: describe it, upload source data, <b>download an editable file</b> — not text to reformat.</p></div>
-        <div class="tile fill reveal"><span class="k">Which one when?</span><p><b>Add-ins</b> (last slide) work <b>inside a file you already have.</b> <b>Chat</b> produces a <b>new file.</b> Editing the Q2 model → add-in. First draft of the deck → chat.</p></div>
-      </div>
-      <p class="note reveal">For many people this is the biggest single upgrade in this talk — and it needs <b>nothing installed.</b> Included from the ~$20 tiers.</p>
-    </div>
-  </section>
-
-  <!-- 45 · THE CHATGPT SIDE -->
-  <section class="slide light" data-label="The ChatGPT side"
-    data-speaker-notes="OpenAI's version of the same story, three parts. Connectors link ChatGPT to Drive, Gmail, SharePoint and Slack so it searches your actual documents. There's an official ChatGPT add-in for Excel and Google Sheets that narrates every step, cites the cells it touched, and asks before writing to a range — built with financial workflows in mind. And apps in ChatGPT put third-party tools inside the conversation: design in Canva or search hotels without leaving the chat. Then the caveat that saves embarrassment: several consumer-tier features have been limited in the EEA and UK, while business tiers get broader access — check availability in your region and on your tier before promising a demo.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">45</span><div class="crumb"><b>Plugging in</b> · the chatgpt side</div></div>
-      <h2 class="reveal">The <span class="o">ChatGPT</span> side of the plug</h2>
-      <div class="cards c3 reveal">
-        <div class="tile"><span class="k">Connectors</span><p>Link to <b>Drive, Gmail, SharePoint, Slack…</b> — it searches your actual documents, not just what you paste.</p></div>
-        <div class="tile"><span class="k">Excel &amp; Sheets add-in</span><p>Official OpenAI add-in: <b>narrates each step, cites cells, asks before writing.</b> Built for financial workflows.</p></div>
-        <div class="tile"><span class="k">Apps in ChatGPT</span><p>Third-party tools <b>inside the conversation</b> — design in Canva, search hotels — without leaving the chat.</p></div>
-      </div>
-      <p class="note reveal">⚠ <b>Region check:</b> several consumer-tier features have been limited in the <b>EEA/UK</b>; business tiers get broader access. Verify on <b>your tier, in your region</b>, before promising a demo.</p>
-    </div>
-  </section>
-
-  <!-- 46 · THE BUILT-INS -->
-  <section class="slide dark" data-label="The built-ins"
-    data-speaker-notes="The alternative route workplaces often actually take: the AI already built into the office suite. Microsoft 365 Copilot — agent mode in Word, Excel and PowerPoint that works on the document itself — costs twenty-one to thirty dollars per user per month on top of the Microsoft licence; and the fun fact that always lands: Microsoft's Office agents run on Anthropic's models under the hood. Google went the other way and bundled Gemini into Workspace base plans, no add-on — including the =AI() formula in Sheets: an AI prompt as a spreadsheet function you can fill down a thousand rows to classify survey answers or draft ad variants in bulk.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">46</span><div class="crumb"><b>Plugging in</b> · the built-ins</div></div>
-      <h2 class="reveal">Or use what's <span class="o">already in the building</span></h2>
-      <div class="split">
-        <div class="tile reveal"><span class="k">Microsoft 365 Copilot</span><p><b>Agent mode</b> in Word, Excel &amp; PowerPoint — works on the document itself. <b>~$21–30/user/mo on top of</b> M365. Fun fact: the Office agents <b>run on Anthropic's models.</b></p></div>
-        <div class="tile fill reveal"><span class="k">Gemini in Workspace</span><p>Now <b>bundled into base plans</b> (from ~$14/user) — Gmail, Docs, Meet. Star feature: <b><span style="font-family:var(--font-m)">=AI("prompt", A2)</span></b> in Sheets — an AI prompt as a formula, <b>filled down 1,000 rows.</b></p></div>
-      </div>
-      <p class="note reveal">The trade-off vs the add-ins: built-ins are the path of least resistance (and often the easiest compliance story) — the dedicated tools are usually <b>better at the work itself.</b> Prices July 2026.</p>
-    </div>
-  </section>
-
-  <!-- 47 · ZAPIER MCP -->
-  <section class="slide light" data-label="The universal adapter"
-    data-speaker-notes="For the long tail of tools with no official connector: Zapier's MCP endpoint. One connection exposes tens of thousands of actions across thousands of apps to Claude or ChatGPT — you paste a personal URL as a custom connector, and then say the workflow in plain English: add this lead to the CRM and post a summary to the channel. Make offers the same idea on its visual canvas. The one safety rule to say out loud: expose the minimum set of actions — the AI can only misuse what you've plugged in.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">47</span><div class="crumb"><b>Plugging in</b> · the universal adapter</div></div>
-      <h2 class="reveal">The <span class="o">universal adapter</span> for everything else</h2>
-      <div class="split">
-        <ul class="bul reveal">
-          <li>No official connector for your tool? <b>Zapier MCP</b>: one connection exposes <b>~30,000 actions across 8,000+ apps</b> to Claude or ChatGPT.</li>
-          <li>Setup is paste-a-URL — then just say it: <i>"add this lead to the CRM and post a summary to the channel."</i></li>
-          <li><b>Make</b> offers the same on its visual canvas. Both need their own (cheap) plan + a paid AI plan.</li>
-        </ul>
-        <div class="kcard reveal">
-          <div class="big">Expose the minimum</div>
-          <p>The safety rule: plug in <b>only the actions you need.</b> The AI can only misuse what you've connected — keep the adapter's keyring short.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 48 · WHICH ROUTE WHEN -->
-  <section class="slide dark dense" data-label="Which route when"
-    data-speaker-notes="Wrap the section with the decision table. If your world is Microsoft, start with Copilot or the Claude add-ins; if it's Google Workspace, Gemini is already there; if you want one agent across chat, files, design and Office for twenty dollars, that's Claude Pro's bundle; and for the long tail, Zapier MCP. Close with the pattern that holds everywhere and pre-answers the compliance question: business and enterprise tiers are where admin controls, data guarantees and regional availability live — consumer tiers get features first, workplaces get them safely.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">48</span><div class="crumb"><b>Plugging in</b> · which route</div></div>
-      <h2 class="reveal">Which route <span class="o">when?</span></h2>
-      <table class="tbl reveal">
-        <thead><tr><th>Your situation</th><th>Start with</th><th>Entry cost</th></tr></thead>
-        <tbody>
-          <tr><td class="muted">You live in Microsoft Office</td><td><b>M365 Copilot</b> or <b>Claude add-ins</b></td><td>+$21–30/user · or ~$20/mo</td></tr>
-          <tr><td class="muted">You live in Google Workspace</td><td><b>Gemini</b> — it's already bundled</td><td>in the plan (~$14/user)</td></tr>
-          <tr><td class="muted">One agent for chat + files + design + Office</td><td><b>Claude Pro</b> (Cowork · Design · add-ins)</td><td>~$20/mo</td></tr>
-          <tr><td class="muted">A tool nobody has a connector for</td><td><b>Zapier MCP</b> / Make</td><td>~$10–30/mo + AI plan</td></tr>
-        </tbody>
-      </table>
-      <p class="note reveal">The pattern everywhere: <b>business tiers carry the admin controls, data guarantees and regional availability.</b> Consumer tiers get features first — workplaces get them <b>safely.</b> July 2026.</p>
-    </div>
-  </section>
-
-  <!-- 49 · THREE THINGS -->
-  <section class="slide light" data-label="Three things to remember"
-    data-speaker-notes="If they forget everything else, these three. One: the chat window is the smallest part of what exists — agents do work and hand you files. Two: the action is at about twenty dollars a month, and each lab's twenty buys a genuinely different toolbox — try what's included before buying anything niche. Three: before using output for real, run the fine-print check — licence, privacy, provenance. Then thank them and open the floor.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">49</span><div class="crumb"><b>Close</b> · three things</div></div>
-      <h2 class="reveal">If you remember <span class="o">three things</span></h2>
-      <div class="cards c3 reveal">
-        <div class="tile"><span class="k">1 · It's not a chatbox</span><p>The chat window is the <b>smallest part</b> of what exists. Agents <b>do work and hand you files</b> — decks, pages, audio, spreadsheets.</p></div>
-        <div class="tile"><span class="k">2 · $20 is the magic number</span><p>Each lab's ~$20 tier buys a <b>different toolbox.</b> Try what's <b>included</b> — Cowork, Design, Notebook, agent mode — before buying anything niche.</p></div>
-        <div class="tile fill"><span class="k">3 · Check the fine print</span><p>Before real use: <b>commercial licence? public by default? where does the data go?</b> Free tiers rarely cover work.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 50 · SUMMARY + THANKS -->
-  <section class="slide dark" data-label="Summary"
-    data-speaker-notes="Recap in one breath: agents are chatbots with hands; the big three sell different toolboxes for the same twenty dollars; the wider market has a leader per category and the cheat-sheet slide holds them; the stories showed capability cutting both ways; and connectors plug it all into the tools where work actually happens. Everything is a July 2026 snapshot — sources on the next slides. Thank them, open the floor.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">50</span><div class="crumb"><b>Summary</b></div></div>
-      <h2 class="reveal">What to <span class="o">take away</span></h2>
-      <ul class="bul reveal">
-        <li><b>Agents</b> = chatbots with hands: they do the work and hand you <b>files to review.</b></li>
-        <li><b>The big three</b> sell different toolboxes for the same ~$20 — Cowork &amp; Design, agent mode, Gemini Notebook &amp; Flow.</li>
-        <li><b>The wider market</b> has a leader per category — the cheat sheet (slide 36) is your map when names churn.</li>
-        <li><b>Connectors &amp; MCP</b> plug it all into Excel, PowerPoint, mail — where work actually happens.</li>
-        <li>Everything here: a <b>July 2026 snapshot.</b> Verify before you budget or quote.</li>
-      </ul>
-      <p class="thanks reveal" style="margin-top:var(--content-gap)">Thanks! <span class="o">Questions?</span></p>
-      <p class="note reveal">David&nbsp;Budáč</p>
-    </div>
-  </section>
-
-  <!-- 51 · SOURCES 1 -->
-  <section class="slide light" data-label="Sources 1 of 2"
+  <section data-origin-slide="56" class="slide light" data-label="Sources 1 of 2"
     data-speaker-notes="Leave this up while questions run rather than reading it. The two most useful starting points for a beginner: the labs' own pricing pages, which double as product catalogues, and the Cowork and Design product pages. The deck lives in the repo, so nobody needs to photograph links.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">51</span><div class="crumb"><b>Sources</b> · labs &amp; plans</div></div>
+      <div class="slide-head reveal"><span class="snum">30</span><div class="crumb"><b>Sources</b> · labs &amp; plans</div></div>
       <h2 class="reveal">Sources &amp; <span class="o">links</span> (1/2)</h2>
       <div class="links reveal">
         <div class="linkcol">
@@ -1273,11 +624,10 @@ table.tbl tr:last-child td{border-bottom:none}
     </div>
   </section>
 
-  <!-- 52 · SOURCES 2 -->
-  <section class="slide light" data-label="Sources 2 of 2"
+  <section data-origin-slide="57" class="slide light" data-label="Sources 2 of 2"
     data-speaker-notes="The category leaders and the stories, for anyone who wants the primary source. Repeat the closing caveat one last time: everything was verified in July 2026 and this market moves monthly — re-check the vendor's page before quoting a price or a feature outside this room.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">52</span><div class="crumb"><b>Sources</b> · tools &amp; stories</div></div>
+      <div class="slide-head reveal"><span class="snum">31</span><div class="crumb"><b>Sources</b> · tools &amp; stories</div></div>
       <h2 class="reveal">Sources &amp; <span class="o">links</span> (2/2)</h2>
       <div class="links reveal">
         <div class="linkcol">
@@ -1366,7 +716,7 @@ table.tbl tr:last-child td{border-bottom:none}
   var notesEl = document.querySelector('.pui-notes');
   var nHead = notesEl.querySelector('.pui-nhead');
   var nBody = notesEl.querySelector('.pui-nbody');
-  var current = 0, presenter = null, mouseT = null;
+  var current = Math.max(0, Array.from(ds.querySelectorAll(':scope > section')).findIndex(function(s){ return s.hasAttribute('data-deck-active'); })), presenter = null, mouseT = null;
 
   function slides(){ return Array.prototype.slice.call(ds.querySelectorAll(':scope > section')); }
   function noteOf(s){ return s.getAttribute('data-speaker-notes') || 'No notes for this slide.'; }

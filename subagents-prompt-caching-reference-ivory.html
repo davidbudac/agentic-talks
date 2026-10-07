@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Subagents &amp; Prompt Caching — Reference</title>
+<link rel="stylesheet" href="ivory_design_system/styles.css">
+</head>
+<body>
+
+<!--
+  ============================================================
+  Subagents & Prompt Caching — optional reference deck.
+  Supporting procedures for subagents-prompt-caching.html.
+  Not part of the spoken path.
+  Ivory design system (DESIGN.md, ivory_design_system/).
+  Runs on the deck-stage component: ←/→, Space, Home/End,
+  number keys; R resets; N notes, P presenter window, F fullscreen;
+  speaker notes live on each section.
+  ============================================================
+-->
+
+<deck-stage width="1920" height="1080">
+
+<!-- 01 · Title (r2: regular .slide, h2 + .cards.c2; banner → footer .note) -->
+<section data-origin-slide="0" class="slide" data-label="Title" data-speaker-notes="Optional reference Revised October 2026. Worked examples are illustrative; no live run is required.">
+  <div class="slide-head"><span class="crumb">Optional reference</span><span class="snum"></span></div>
+  <h2>Subagents &amp; Prompt Caching<br>Reference</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><p>Supporting procedures and worksheets. <a href="subagents-prompt-caching.html">Return to the main talk</a></p></div>
+      <div class="tile"><h3>David Budáč</h3><p>Revised October 2026</p></div>
+    </div>
+  </div>
+  <p class="note">Optional reference · <a href="subagents-prompt-caching.html">Back to the talk</a></p>
+</section>
+
+<!-- 02 · Cache block (Ember .code → .code, one .l per line; clay on the marker) -->
+<section data-origin-slide="23" class="slide" data-label="Cache block" data-speaker-notes="Valid JSON example with no inline comment. Place the marker using the current API rules and inspect actual usage; the short text displayed alone is below many model minimums.">
+  <div class="slide-head"><span class="crumb">In practice · Optional reference · <a href="subagents-prompt-caching.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>A cache marker is not a cache guarantee</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l">{</span>
+      <span class="l">  &quot;type&quot;: &quot;text&quot;,</span>
+      <span class="l">  &quot;text&quot;: &quot;stable invoice rules and schema&quot;,</span>
+      <span class="l">  <span class="key">&quot;cache_control&quot;</span>: {&quot;type&quot;: &quot;ephemeral&quot;}</span>
+      <span class="l">}</span>
+    </div>
+  </div>
+  <p class="note">Claude block example. Eligibility, placement, earlier writes and lifetime still matter.</p>
+</section>
+
+<!-- 03 · Multiple breakpoints (Ember ul.bul → ul.bul) -->
+<section data-origin-slide="30" class="slide" data-label="Multiple breakpoints" data-speaker-notes="The original implied stable earlier blocks always hit. Reuse requires stored entries and a supported lookup path, not just unchanged text.">
+  <div class="slide-head"><span class="crumb">In practice · Optional reference · <a href="subagents-prompt-caching.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Place breakpoints around real reuse</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li>Mark stable boundaries that requests actually share.</li>
+      <li>A later change can preserve an earlier cached entry if a write exists there.</li>
+      <li>Do not assume lookup creates earlier entries that were never written.</li>
+    </ul>
+  </div>
+  <p class="note">See <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">the current lookup and breakpoint limits</a>.</p>
+</section>
+
+<!-- 04 · Choose authentication (Ember .cards.c2 → .cards.c2; equal alternatives, no clay) -->
+<section data-origin-slide="36" class="slide" data-label="Choose authentication" data-speaker-notes="Documentation checked 3 October 2026. Native-client use remains subject to plan limits and agreements. Do not extract, collect or relay subscription credentials into a custom client. This slide summarizes the documented paths; it does not grant blanket approval for all unattended use.">
+  <div class="slide-head"><span class="crumb">In practice · Optional reference · <a href="subagents-prompt-caching.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Choose the supported client and credential path</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><h3>Native Claude Code use</h3><p>Sign in through the official flow under the applicable plan and usage rules.</p></div>
+      <div class="tile"><h3>Your product or service</h3><p>Use API-key authentication or a supported cloud-provider route.</p></div>
+    </div>
+  </div>
+  <p class="note">The boundary is not simply “human at keyboard” versus “automation”. <a href="https://code.claude.com/docs/en/legal-and-compliance">Current authentication guidance</a></p>
+</section>
+
+</deck-stage>
+<script src="ivory_design_system/deck-stage.js"></script>
+<script src="ivory_design_system/deck.js"></script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Working Smarter with Agents — Reference</title>
+<link rel="stylesheet" href="ivory_design_system/styles.css">
+</head>
+<body>
+
+<!--
+  ============================================================
+  Working Smarter with Agents — optional reference deck.
+  Supporting procedures and worksheets for working-smarter.html.
+  Not part of the spoken path.
+  Ivory design system (DESIGN.md, ivory_design_system/).
+  Runs on the deck-stage component: ←/→, Space, Home/End,
+  number keys; R resets; N notes, P presenter window, F fullscreen;
+  speaker notes live on each section.
+  ============================================================
+-->
+
+<deck-stage width="1920" height="1080">
+
+<!-- 01 · Title (regular .slide, h2 + .cards.c2; banner → footer .note; same structure as the accepted subagents/cost references) -->
+<section data-origin-slide="0" class="slide" data-label="Title" data-speaker-notes="Optional reference Revised October 2026. Worked examples are illustrative; no live run is required.">
+  <div class="slide-head"><span class="crumb">Optional reference</span><span class="snum"></span></div>
+  <h2>Working Smarter with Agents<br>Reference</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><p>Supporting procedures and worksheets. <a href="working-smarter.html">Return to the main talk</a></p></div>
+      <div class="tile"><h3>David Budáč</h3><p>Revised October 2026</p></div>
+    </div>
+  </div>
+  <p class="note">Optional reference · <a href="working-smarter.html">Back to the talk</a></p>
+</section>
+
+<!-- 02 · Plan comparison worksheet (Ember table.tbl → .tbl, 4 rows at 30px; same markup as the accepted cost-and-context-reference twin, no clay) -->
+<section data-origin-slide="7" class="slide" data-label="Plan comparison worksheet" data-speaker-notes="This replaces volatile price grids and research chatter. It is a worksheet, not a current price audit.">
+  <div class="slide-head"><span class="crumb">In practice · Optional reference · <a href="working-smarter.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Compare current offers using your workload</h2>
+  <div class="zone">
+    <table class="tbl">
+      <thead><tr><th scope="col">Record</th><th scope="col">Question</th></tr></thead>
+      <tbody>
+        <tr><td>Price and usage limits</td><td>Which work is included, capped or separately billed?</td></tr>
+        <tr><td>Authentication and automation</td><td>Does the intended client and deployment use a supported path?</td></tr>
+        <tr><td>Governance</td><td>Which retention, identity and audit controls are configured?</td></tr>
+        <tr><td>Actual workload</td><td>What is the cost at your observed volume and success rate?</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Verify the current plan pages before purchase. <a href="https://claude.com/pricing">Claude plans</a></p>
+</section>
+
+<!-- 03 · Cloud route worksheet (Ember ul.bul → ul.bul; same markup as the accepted cost-and-context-reference twin, no clay) -->
+<section data-origin-slide="11" class="slide" data-label="Cloud route worksheet" data-speaker-notes="This replaces unqualified Bedrock residency and governance claims. The organization must assess its actual endpoints, policies and agreements.">
+  <div class="slide-head"><span class="crumb">In practice · Optional reference · <a href="working-smarter.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Verify the configured boundary</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li>Identify the provider, region and any cross-region inference routing.</li>
+      <li>Confirm the relevant retention, logging and identity settings.</li>
+      <li>Check model availability, quotas, pricing and your organization’s agreement.</li>
+    </ul>
+  </div>
+  <p class="note">A cloud brand alone does not establish residency or prevent data from leaving a region.</p>
+</section>
+
+<!-- 04 · Tool examples (Ember ul.bul of links → ul.bul; same markup as the accepted orchestrating-agents-reference twin, no clay) -->
+<section data-origin-slide="29" class="slide" data-label="Tool examples" data-speaker-notes="The brand biographies were removed from the spoken path. No product is assumed to implement every requirement from the talk.">
+  <div class="slide-head"><span class="crumb">In practice · Optional reference · <a href="working-smarter.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Evaluate tools against the workflow requirements</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li><a href="https://herdr.org">Herdr</a> — inspect monitoring and coordination behavior.</li>
+      <li><a href="https://conductor.build">Conductor</a> — inspect workspace and review behavior.</li>
+      <li><a href="https://github.com/openai/symphony">Symphony</a> — inspect task lifecycle and tracker support.</li>
+      <li><a href="https://github.com/mattpocock/sandcastle">Sandcastle</a> — inspect its configured environment boundary.</li>
+    </ul>
+  </div>
+  <p class="note">Reference links, not a current product comparison. Check supported versions and integrations.</p>
+</section>
+
+<!-- 05 · Plugin publication recipe (Ember .code → .code.reg, one .l per line, blank line kept; same markup as the accepted orchestrating-agents/agentic-engineering reference twins, no clay) -->
+<section data-origin-slide="45" class="slide" data-label="Plugin publication recipe" data-speaker-notes="Claude Code example, checked 3 October 2026. This is a recipe to read; no publication is performed. A marketplace needs its own listing and valid source paths. Confirm team permissions and review hooks or integrations before distributing. Installation steps belong with the chosen channel.">
+  <div class="slide-head"><span class="crumb">Publication reference · Optional reference · <a href="working-smarter.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Package, test, then share</h2>
+  <div class="zone">
+    <div class="code reg">
+      <span class="l">my-plugin/</span>
+      <span class="l">  .claude-plugin/plugin.json</span>
+      <span class="l">  skills/invoice-check/SKILL.md</span>
+      <span class="l"></span>
+      <span class="l">1. Give the manifest a name and version.</span>
+      <span class="l">2. Test locally: claude --plugin-dir ./my-plugin</span>
+      <span class="l">3. Review contents and pin the version to distribute.</span>
+      <span class="l">4. Publish through your team’s approved channel.</span>
+    </div>
+  </div>
+  <p class="note"><a href="https://code.claude.com/docs/en/plugins">Plugin overview</a> · <a href="https://code.claude.com/docs/en/plugin-marketplaces">Marketplace setup</a></p>
+</section>
+
+<!-- 06 · Configuration worksheet (Ember table.tbl → .tbl, 4 rows at 30px; same markup as the accepted measuring-what-works-reference twin, no clay) -->
+<section data-origin-slide="68" class="slide" data-label="Configuration worksheet" data-speaker-notes="Replaces the alternative-model catalogue with a reproducible comparison record. Published model cards and exact runtime docs belong with any actual experiment.">
+  <div class="slide-head"><span class="crumb">In practice · Optional reference · <a href="working-smarter.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Record what you are comparing</h2>
+  <div class="zone">
+    <table class="tbl">
+      <thead><tr><th scope="col">Layer</th><th scope="col">Record before running</th></tr></thead>
+      <tbody>
+        <tr><td>Model</td><td>Exact identifier, effort and generation settings.</td></tr>
+        <tr><td>Harness</td><td>Version, prompts, tools, permissions and retry logic.</td></tr>
+        <tr><td>Routing service</td><td>Provider selection, fallback behavior and data path.</td></tr>
+        <tr><td>Local runtime</td><td>Quantization, hardware, context and concurrency.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">A changed harness can change the result even with the same model.</p>
+</section>
+
+<!-- 07 · Repeated-run probabilities (Ember .code → .code, one .l per line, blank lines and alignment kept; same markup as the accepted measuring-what-works-reference twin: clay on the assumption the headline names) -->
+<section data-origin-slide="52" class="slide" data-label="Repeated-run probabilities" data-speaker-notes="Estimate probabilities from appropriate repeated runs across representative cases. Shared state, identical systematic errors and adaptation between attempts can violate the assumptions.">
+  <div class="slide-head"><span class="crumb">In practice · Optional reference · <a href="working-smarter.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>The independence assumption matters</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l">If each trial succeeds <span class="key">independently</span> with probability p:</span>
+      <span class="l"></span>
+      <span class="l">P(at least one success in k trials) = 1 − (1 − p)^k</span>
+      <span class="l">P(all k trials succeed)            = p^k</span>
+      <span class="l"></span>
+      <span class="l">For p = 0.8 and k = 3: 0.992 versus 0.512.</span>
+    </div>
+  </div>
+  <p class="note">These are mathematical examples, not measured model results. Correlated failures can invalidate the simple model.</p>
+</section>
+
+<!-- 08 · Local model memory (Ember ul.bul → ul.bul; same markup as the accepted measuring-what-works-reference twin, no clay) -->
+<section data-origin-slide="76" class="slide" data-label="Local model memory" data-speaker-notes="For mixture-of-experts models, few parameters may be active per token while many expert weights still need storage. Example: 35 billion parameters at four bits is about 17.5 decimal GB before metadata and runtime overhead; it is not a three-billion-parameter memory footprint.">
+  <div class="slide-head"><span class="crumb">In practice · Optional reference · <a href="working-smarter.html">Back to the talk</a></span><span class="snum"></span></div>
+  <h2>Active parameters are not the RAM requirement</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li>Stored weights depend on total parameters, representation and quantization.</li>
+      <li>Inference also needs a KV cache, activations, runtime buffers and overhead.</li>
+      <li>Offloading can move weights to CPU memory or disk, trading memory for transfer time.</li>
+    </ul>
+  </div>
+  <p class="note">Approximate weight storage: parameters × bits per weight ÷ 8. This is a lower-bound estimate, not a fit guarantee.</p>
+</section>
+
+</deck-stage>
+<script src="ivory_design_system/deck-stage.js"></script>
+<script src="ivory_design_system/deck.js"></script>
+</body>
+</html>

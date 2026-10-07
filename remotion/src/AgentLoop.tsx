@@ -1,7 +1,7 @@
 import React from "react";
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
-import { themes, ThemeName } from "./theme";
-import { fontB, fontD } from "./fonts";
+import { themes, ThemeName, rad, sw } from "./theme";
+import { fontsFor } from "./fonts";
 import { loopFade, prog, pulse } from "./helpers";
 
 // The agent loop: ① model proposes → ② harness runs it → ③ result back → ④ repeat.
@@ -19,10 +19,10 @@ interface Node {
 }
 
 const NODES: Node[] = [
-  { x: 140, y: 14, w: 200, h: 60, lines: ["① Model proposes", "an action"] },
-  { x: 332, y: 160, w: 138, h: 60, lines: ["② Harness", "runs it"], hot: true },
-  { x: 140, y: 306, w: 200, h: 60, lines: ["③ Result back", "to the model"] },
-  { x: 10, y: 160, w: 138, h: 60, lines: ["④ Repeat", "until done"] },
+  { x: 140, y: 14, w: 200, h: 60, lines: ["@1 Model proposes", "an action"] },
+  { x: 332, y: 160, w: 138, h: 60, lines: ["@2 Harness", "runs it"], hot: true },
+  { x: 140, y: 306, w: 200, h: 60, lines: ["@3 Result back", "to the model"] },
+  { x: 10, y: 160, w: 138, h: 60, lines: ["@4 Repeat", "until done"] },
 ];
 
 // Clockwise arcs, arc i goes from node i to node i+1.
@@ -43,6 +43,8 @@ const HEADS: { x: number; y: number; r: number }[] = [
 
 export const AgentLoop: React.FC<{ theme: ThemeName }> = ({ theme }) => {
   const t = themes[theme];
+  const { fontB, fontD } = fontsFor(theme);
+  const num = (circled: string, plain: string) => (t.geistGlyphs ? plain : circled);
   const frame = useCurrentFrame();
   const { durationInFrames } = useVideoConfig();
   const stage = Math.floor(frame / STAGE) % 4;
@@ -63,7 +65,7 @@ export const AgentLoop: React.FC<{ theme: ThemeName }> = ({ theme }) => {
             d={d}
             fill="none"
             stroke={t.lineStrong}
-            strokeWidth={1.5}
+            strokeWidth={sw(t, 1.5)}
           />
         ))}
         {/* active arc draws over its stage */}
@@ -81,8 +83,8 @@ export const AgentLoop: React.FC<{ theme: ThemeName }> = ({ theme }) => {
               key={`hot-${i}`}
               d={d}
               fill="none"
-              stroke={t.coral}
-              strokeWidth={2.8}
+              stroke={t.strokeHot}
+              strokeWidth={sw(t, 2.8)}
               pathLength={1}
               strokeDasharray={1}
               strokeDashoffset={1 - draw}
@@ -103,7 +105,7 @@ export const AgentLoop: React.FC<{ theme: ThemeName }> = ({ theme }) => {
             <path
               key={`head-${i}`}
               d="M0,-5 L9,0 L0,5 Z"
-              fill={t.coral}
+              fill={t.strokeHot}
               opacity={on}
               transform={`translate(${h.x} ${h.y}) rotate(${h.r})`}
             />
@@ -119,8 +121,9 @@ export const AgentLoop: React.FC<{ theme: ThemeName }> = ({ theme }) => {
             ? Math.max(prog(inStage, 0, 10), 1) - prog(inStage, 46, 60) * 0.35
             : arriving * 0.65;
           const scale = 1 + 0.05 * activeAmt + 0.02 * pulse(inStage, 0, 26) * (isActive ? 1 : 0);
-          const stroke = isActive || arriving > 0 ? t.coral : n.hot ? t.coral : t.cardBorder;
-          const strokeW = isActive ? 3 : 1.5;
+          const hotFill = n.hot && t.hotFilled;
+          const stroke = isActive || arriving > 0 ? t.strokeHot : hotFill ? t.coral : t.cardBorder;
+          const strokeW = sw(t, isActive ? 3 : 1.5);
           return (
             <g key={`node-${i}`} transform={`translate(${cx} ${cy}) scale(${scale}) translate(${-cx} ${-cy})`}>
               <rect
@@ -128,18 +131,18 @@ export const AgentLoop: React.FC<{ theme: ThemeName }> = ({ theme }) => {
                 y={n.y}
                 width={n.w}
                 height={n.h}
-                rx={12}
-                fill={n.hot ? t.coral : t.cardBg}
+                rx={rad(t, 12)}
+                fill={hotFill ? t.coral : t.cardBg}
                 stroke={stroke}
                 strokeWidth={strokeW}
               />
-              {isActive ? (
+              {isActive && !t.flat ? (
                 <rect
                   x={n.x - 5}
                   y={n.y - 5}
                   width={n.w + 10}
                   height={n.h + 10}
-                  rx={16}
+                  rx={rad(t, 16)}
                   fill="none"
                   stroke={t.coral}
                   strokeWidth={2}
@@ -153,11 +156,11 @@ export const AgentLoop: React.FC<{ theme: ThemeName }> = ({ theme }) => {
                   y={n.y + 26 + li * 19}
                   fontSize={15}
                   textAnchor="middle"
-                  fill={n.hot ? t.onHot : t.text}
+                  fill={hotFill ? t.onHot : t.text}
                   fontFamily={fontB}
                   fontWeight={600}
                 >
-                  {line}
+                  {line.replace(/^@(\d)/, (_, d) => num("①②③④"[Number(d) - 1], `0${d}`))}
                 </text>
               ))}
             </g>
@@ -165,10 +168,10 @@ export const AgentLoop: React.FC<{ theme: ThemeName }> = ({ theme }) => {
         })}
         {/* center label with a soft breathing pulse */}
         <g opacity={0.85 + 0.15 * Math.sin((frame / durationInFrames) * Math.PI * 8)}>
-          <text x={240} y={185} fontSize={16} textAnchor="middle" fill={t.accent} fontFamily={fontD} fontWeight={700}>
+          <text x={240} y={185} fontSize={16} textAnchor="middle" fill={t.quiet} fontFamily={fontD} fontWeight={t.bold}>
             THE
           </text>
-          <text x={240} y={206} fontSize={16} textAnchor="middle" fill={t.accent} fontFamily={fontD} fontWeight={700}>
+          <text x={240} y={206} fontSize={16} textAnchor="middle" fill={t.quiet} fontFamily={fontD} fontWeight={t.bold}>
             LOOP
           </text>
         </g>
