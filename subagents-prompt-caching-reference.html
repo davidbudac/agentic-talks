@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Cost &amp; Context</title>
+<title>Subagents &amp; Prompt Caching — Reference</title>
 
 <!-- Fonts: Space Grotesk (display) + IBM Plex Sans (body) + IBM Plex Mono (mono) — Ember design system -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,11 +13,12 @@
 <style>deck-stage:not(:defined){visibility:hidden}</style>
 <style>
 /* ═══════════════════════════════════════════════════════════════════
-   Working Smarter with Agents — Ember design system, token-driven.
+   Agentic Engineering — Ember design system, token-driven.
    Fixed 1920×1080 canvas: sizes are px, colours/spacing are tokens.
    ═══════════════════════════════════════════════════════════════════ */
 :root{
   --ease:cubic-bezier(.16,1,.3,1);
+  /* short aliases the slide markup uses inline */
   --font-d:var(--font-display); --font-b:var(--font-body); --font-m:var(--font-mono);
 }
 *{margin:0;padding:0;box-sizing:border-box}
@@ -136,7 +137,6 @@ table.tbl tr:last-child td{border-bottom:none}
 .pill{font-family:var(--font-mono); border:var(--bw-hair) solid var(--coral); color:var(--s-accent);
   border-radius:var(--radius-pill); padding:4px 16px; font-size:var(--small-size);
   font-weight:var(--w-semibold); letter-spacing:var(--track-label); white-space:nowrap}
-.pill.live{background:var(--coral); color:var(--ink); border-color:var(--coral)}
 
 /* ── CODE ────────────────────────────────────────────────────────── */
 .code{background:var(--code-bg); border:var(--bw) solid var(--s-line); border-left:3px solid var(--coral);
@@ -188,28 +188,7 @@ table.tbl tr:last-child td{border-bottom:none}
 .dg-cap{text-align:center; font-size:var(--small-size); color:var(--s-muted); margin-top:10px}
 .dg-cap b{color:var(--s-text)}
 .diagram marker path{fill:var(--s-accent)}
-
-/* flow: HTML/CSS step chain used instead of video diagrams */
-.flow{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
-.flow .step{border:var(--bw) solid var(--s-card-border); background:var(--s-card-bg); border-radius:var(--radius-md);
-  padding:16px 20px; font-family:var(--font-mono); font-size:var(--small-size); color:var(--s-text); text-align:center; min-width:120px}
-.flow .step.hot{background:var(--s-callout-bg); border-color:var(--coral); color:var(--s-accent); font-weight:var(--w-semibold)}
-.flow .arrow{color:var(--s-faint); font-size:22px}
-
-/* ── DEMO / FALLBACK ─────────────────────────────────────────────── */
-.demo-badge{display:inline-flex; align-items:center; gap:8px; font-family:var(--font-mono); font-weight:var(--w-bold);
-  font-size:var(--small-size); letter-spacing:var(--track-label); text-transform:uppercase; color:var(--coral);
-  border:var(--bw) solid var(--coral); border-radius:var(--radius-pill); padding:6px 18px 6px 14px; margin-bottom:16px}
-.demo-badge::before{content:"\1F534"; font-size:.85em}
-.fallback-box{border:2px dashed var(--s-card-border); border-radius:var(--radius-lg); background:var(--s-card-bg);
-  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; padding:40px; min-height:0}
-.fallback-box .fb-icon{font-family:var(--font-mono); font-size:64px; color:var(--s-faint)}
-.fallback-box .fb-caption{font-family:var(--font-mono); font-size:var(--small-size); color:var(--s-muted); text-align:center; max-width:48ch}
-
-/* ── WIP badge (title slide) ─────────────────────────────────────── */
-.wip-badge{display:inline-flex; align-items:center; gap:10px; font-family:var(--font-mono); font-weight:700;
-  font-size:16px; letter-spacing:.14em; text-transform:uppercase; color:var(--coral);
-  border:1.5px solid var(--coral); border-radius:var(--radius-pill); padding:6px 18px; margin-bottom:20px}
+#sq2 path,#ad2 path{fill:var(--s-faint)}
 
 /* ── TITLE SLIDE ─────────────────────────────────────────────────── */
 .title-slide{display:flex; flex-direction:column; justify-content:space-between; background:var(--ink);
@@ -218,10 +197,10 @@ table.tbl tr:last-child td{border-bottom:none}
   letter-spacing:var(--track-eyebrow); text-transform:uppercase}
 .ts-top .k{color:var(--coral)}
 .ts-top .meta{color:var(--on-dark-faint); font-weight:500}
-.ts-hero h1{font-family:var(--font-display); font-weight:var(--w-bold); letter-spacing:-.035em; line-height:.94;
-  color:var(--on-dark); font-size:132px}
+.ts-hero h1{font-family:var(--font-display); font-weight:var(--w-bold); letter-spacing:-.035em; line-height:.9;
+  color:var(--on-dark); font-size:186px}
 .ts-hero h1 .dot{color:var(--coral)}
-.ts-sub{font-size:34px; color:var(--on-dark-muted); margin-top:36px; font-weight:400; max-width:34ch}
+.ts-sub{font-size:38px; color:var(--on-dark-muted); margin-top:44px; font-weight:400}
 .ts-sub b{color:var(--on-dark); font-weight:600}
 .ts-foot{border-top:var(--bw-hair) solid var(--line-dark); margin:0 -96px; padding:34px 96px 40px;
   display:flex; justify-content:space-between; align-items:center}
@@ -240,12 +219,15 @@ table.tbl tr:last-child td{border-bottom:none}
 .links{display:grid; grid-template-columns:1fr 1fr; gap:var(--space-7)}
 .linkcol h3{color:var(--s-accent); font-family:var(--font-display); font-weight:var(--w-semibold);
   margin-bottom:12px; font-size:26px; letter-spacing:var(--track-snug)}
-.linkcol a{display:block; color:var(--s-text); text-decoration:none; font-size:19px; line-height:1.3;
-  padding:6px 0; border-bottom:var(--bw-hair) solid var(--s-line)}
+.linkcol a{display:block; color:var(--s-text); text-decoration:none; font-size:21px; line-height:1.32;
+  padding:7px 0; border-bottom:var(--bw-hair) solid var(--s-line)}
 .linkcol a:hover{color:var(--s-accent)}
-.linkcol a .u{display:block; color:var(--s-muted); font-family:var(--font-mono); font-size:.8em; margin-top:.08em}
+.linkcol a .u{display:block; color:var(--s-muted); font-family:var(--font-mono); font-size:.82em; margin-top:.08em}
 
-/* ── ENTRANCE MOTION ─────────────────────────────────────────────── */
+/* ── ENTRANCE MOTION ─────────────────────────────────────────────────
+   Visible end-state is the base style; we animate FROM hidden, only on
+   the active slide and only when motion is welcome. Print + reduced
+   motion therefore always show the finished slide. ─────────────────── */
 @keyframes ae-rise{from{opacity:0; transform:translateY(22px)} to{opacity:1; transform:none}}
 @media (prefers-reduced-motion:no-preference){
   [data-deck-active] .reveal{animation:ae-rise .5s var(--ease) both}
@@ -272,79 +254,25 @@ table.tbl tr:last-child td{border-bottom:none}
 
 <deck-stage width="1920" height="1080">
 
-<section data-origin-slide="1" class="slide dark title-slide" data-label="Title" data-speaker-notes="Deep dive · developers Revised October 2026. Worked examples are illustrative; no live run is required." ><div class="ts-top"><span class="k">Deep dive · developers</span><span class="meta">Revised October 2026</span></div><div class="ts-hero"><h1>Cost &amp; Context<span class="dot">.</span></h1><p class="ts-sub">Measure a whole task. Keep the information that helps it finish.</p></div><div class="ts-foot"><div class="ts-author">David Budáč</div></div></section>
+<section data-origin-slide="0" class="slide dark title-slide" data-label="Title" data-speaker-notes="Optional reference Revised October 2026. Worked examples are illustrative; no live run is required." ><div class="reference-banner">Optional reference · <a href="subagents-prompt-caching.html">Back to the talk</a></div><div class="ts-top"><span class="k">Optional reference</span><span class="meta">Revised October 2026</span></div><div class="ts-hero"><h1>Subagents & Prompt Caching<br>Reference<span class="dot">.</span></h1><p class="ts-sub">Supporting procedures and worksheets. <a href="subagents-prompt-caching.html">Return to the main talk</a></p></div><div class="ts-foot"><div class="ts-author">David Budáč</div></div></section>
 
-<section data-origin-slide="2" class="slide light" data-label="Agenda" data-speaker-notes="Optional live comparison requires a prepared repository, two instruction variants and usage capture. The static exercise works without accounts."><div class="slide-content"><div class="slide-head reveal"><span class="snum">2</span><div class="crumb">In practice</div></div><h2 class="reveal">Make one change you can measure</h2><div class="cards c3 reveal"><div class="tile"><h3 class="k">Cost</h3><p>Separate billing categories and choose a suitable access route.</p></div><div class="tile"><h3 class="k">Context</h3><p>Trim repeated instructions without losing behavior.</p></div><div class="tile"><h3 class="k">Exercise</h3><p>Compare correctness as well as tokens.</p></div></div><p class="note reveal">Use the invoice task throughout. No paid live run is required.</p></div></section>
+<section data-origin-slide="23" class="slide light" data-label="Cache block" data-speaker-notes="Valid JSON example with no inline comment. Place the marker using the current API rules and inspect actual usage; the short text displayed alone is below many model minimums."><div class="reference-banner">Optional reference · <a href="subagents-prompt-caching.html">Back to the talk</a></div><div class="slide-content"><div class="slide-head reveal"><span class="snum">2</span><div class="crumb">In practice</div></div><h2 class="reveal">A cache marker is not a cache guarantee</h2><div class="code reveal">{
+  &quot;type&quot;: &quot;text&quot;,
+  &quot;text&quot;: &quot;stable invoice rules and schema&quot;,
+  &quot;cache_control&quot;: {&quot;type&quot;: &quot;ephemeral&quot;}
+}</div><p class="note reveal">Claude block example. Eligibility, placement, earlier writes and lifetime still matter.</p></div></section>
 
-<section data-origin-slide="13" class="slide light" data-label="Choose the route" data-speaker-notes="Avoid declaring a winner by team size alone. A subscription and an API have different limits and billing; neither guarantees unlimited work."><div class="slide-content"><div class="slide-head reveal"><span class="snum">3</span><div class="crumb">In practice</div></div><h2 class="reveal">Start with how the work will run</h2><table class="tbl reveal"><thead><tr><th scope="col">Need</th><th scope="col">Check before choosing</th></tr></thead><tbody><tr><td>Daily interactive work</td><td>Native client, plan limits and actual monthly usage.</td></tr><tr><td>Custom service, batch or CI</td><td>Supported API authentication, rate limits and a budget.</td></tr><tr><td>Organizational controls</td><td>Identity, data handling, audit, residency and procurement requirements.</td></tr></tbody></table><p class="note reveal">Compare current offers against these requirements. Detailed shopping questions are in reference material.</p></div></section>
+<section data-origin-slide="30" class="slide light" data-label="Multiple breakpoints" data-speaker-notes="The original implied stable earlier blocks always hit. Reuse requires stored entries and a supported lookup path, not just unchanged text."><div class="reference-banner">Optional reference · <a href="subagents-prompt-caching.html">Back to the talk</a></div><div class="slide-content"><div class="slide-head reveal"><span class="snum">3</span><div class="crumb">In practice</div></div><h2 class="reveal">Place breakpoints around real reuse</h2><ul class="bul reveal"><li>Mark stable boundaries that requests actually share.</li><li>A later change can preserve an earlier cached entry if a write exists there.</li><li>Do not assume lookup creates earlier entries that were never written.</li></ul><p class="note reveal">See <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">the current lookup and breakpoint limits</a>.</p></div></section>
 
-<section data-origin-slide="4" class="slide light" data-label="Token volume and cost" data-speaker-notes="Input volume alone cannot establish the dominant cost. Output rates, reasoning usage, cache writes, cache hits, retries and tools all matter. Use provider usage records and avoid counting cached input twice. Subscription limits are a different accounting model."><div class="slide-content"><div class="slide-head reveal"><span class="snum">4</span><div class="crumb">Count the work</div></div><h2 class="reveal">Count each billing category separately</h2><table class="tbl reveal"><thead><tr><th scope="col">Category</th><th scope="col">What to record</th></tr></thead><tbody><tr><td>Uncached input</td><td>New input processed at its applicable input rate.</td></tr><tr><td>Cache writes and reads</td><td>Separate token counts and the configured cache rates.</td></tr><tr><td>Generated output</td><td>Output usage, including billable reasoning where applicable.</td></tr></tbody></table><p class="note reveal">Bill = sum of each category’s tokens × its rate, plus any separate tool or service fees.</p></div></section>
-
-<section data-origin-slide="5" class="slide dark" data-label="Output cost" data-speaker-notes="Do not say output always dominates or cost and latency are the same lever. Queues, tools, input processing and generation can all contribute."><div class="slide-content"><div class="slide-head reveal"><span class="snum">5</span><div class="crumb">In practice</div></div><h2 class="reveal">High input volume does not identify the largest cost</h2><ul class="bul reveal"><li>Generated output may use a higher token rate than input.</li><li>Cached input may be much cheaper than newly processed input.</li><li>Reasoning, retries, cache writes and tool fees can change the balance.</li></ul><p class="note reveal">Use the usage record and elapsed time; a shorter visible answer alone does not prove less computation.</p></div></section>
-
-<section data-origin-slide="6" class="slide dark" data-label="Worked cost example" data-speaker-notes="This example deliberately specifies an existing cache hit, no new cache-write tokens and no separate tool charges. Establishing the cache earlier also costs money. The original input line items summed to 22,709, not exactly 22,700; this version uses explicit rounded totals consistently. Compare a complete task, including cache warm-up and retries."><div class="slide-content"><div class="slide-head reveal"><span class="snum">6</span><div class="crumb">Worked arithmetic</div></div><h2 class="reveal">One cache-hit request: about five cents</h2><table class="tbl reveal"><thead><tr><th scope="col">Illustrative usage and rates</th><th scope="col">Cost</th></tr></thead><tbody><tr><td>19,000 cached input × $0.20 / million</td><td>$0.0038</td></tr><tr><td>3,700 new input × $4 / million</td><td>$0.0148</td></tr><tr><td>1,600 output × $20 / million</td><td>$0.0320</td></tr><tr><td>22,700 input + 1,600 output in total</td><td><b>$0.0506</b></td></tr></tbody></table><p class="note reveal">Assumed rates, not a measured bill. Without the cache hit: $0.0908 input + $0.0320 output = $0.1228.</p></div></section>
-
-<section data-origin-slide="15" class="slide dark" data-label="Useful context" data-speaker-notes="Long-context performance varies by task, model, positions and distractors. Attention weights summing to one do not establish a single fixed reasoning budget. A handoff or compacted summary can omit important details: check that the acceptance contract and evidence survive."><div class="slide-content"><div class="slide-head reveal"><span class="snum">7</span><div class="crumb">Context quality</div></div><h2 class="reveal">Keep the facts that the next decision needs</h2><div class="cards c2 reveal"><div class="tile"><h3 class="k">Keep</h3><p>The invoice rule, failing case, relevant code, decisions and latest test result.</p></div><div class="tile"><h3 class="k">Summarize or remove</h3><p>Duplicate file dumps, stale logs and abandoned approaches, once their useful findings are captured.</p></div></div><p class="note reveal">Watch for missed requirements and repeated work. There is no universal “dumb zone” or safe fill percentage.</p></div></section>
-
-<section data-origin-slide="17" class="slide dark" data-label="Request anatomy" data-speaker-notes="The former twenty-thousand-token breakdown was an illustration presented as an actual harness turn. This version teaches which categories to inspect without asserting measured sizes."><div class="slide-content"><div class="slide-head reveal"><span class="snum">8</span><div class="crumb">Context reference</div></div><h2 class="reveal">Inspect what actually enters a request</h2><ul class="bul reveal"><li>Standing instructions and applicable project rules.</li><li>Tool definitions and relevant skill content.</li><li>Retained conversation, selected files and tool results.</li><li>The current user message.</li></ul><p class="note reveal">Use a request inspector or provider token counters for real sizes. Avoid summing overlapping categories.</p></div></section>
-
-<section data-origin-slide="18" class="slide light" data-label="Project instructions" data-speaker-notes="Examples include CLAUDE.md and AGENTS.md, but discovery and precedence differ by harness. Do not claim a universal fallback or import rule. A file only helps when its relevant instructions enter the active context."><div class="slide-content"><div class="slide-head reveal"><span class="snum">9</span><div class="crumb">Make it repeatable</div></div><h2 class="reveal">Store the rules needed on most tasks</h2><div class="code reveal"># Project instructions — illustrative invoice repository
-- Test with: pytest tests/test_invoice.py -q
-- VAT rates come from the order record.
-- Preserve existing assertions; explain test changes.
-- Ask before changing the stored invoice schema.</div><p class="note reveal">Use the instruction-file convention your harness actually loads. Keep standing rules short and specific.</p></div></section>
-
-<section data-origin-slide="19" class="slide light" data-label="Instruction file before and after" data-speaker-notes="Illustrative transformation. Some easily derived facts can still be useful navigation hints, so do not turn deletion into an absolute rule."><div class="slide-content"><div class="slide-head reveal"><span class="snum">10</span><div class="crumb">In practice</div></div><h2 class="reveal">Shorten the file while preserving its constraints</h2><div class="cards c2 reveal"><div class="tile"><h3 class="k">Before</h3><p>Long project history, duplicate style advice, VAT rules, test commands and an old incident log.</p></div><div class="tile"><h3 class="k">After</h3><p>Keep VAT source, rounding rule, test command and schema boundary. Link occasional procedures from a skill.</p></div></div><p class="note reveal">The acceptance check is unchanged behavior on the same tasks, not the smallest file.</p></div></section>
-
-<section data-origin-slide="21" class="slide dark" data-label="Continue or reset" data-speaker-notes="Claude Code provides clear and compact commands; consult installed help for current behavior. Do not reset a live task without preserving needed state."><div class="slide-content"><div class="slide-head reveal"><span class="snum">11</span><div class="crumb">In practice</div></div><h2 class="reveal">Choose from the state of the task</h2><div class="cards c2 reveal"><div class="tile"><h3 class="k">Unrelated next task</h3><p>Start fresh with its own scope and needed project context.</p></div><div class="tile"><h3 class="k">Same task, long history</h3><p>Summarize the goal, evidence, decisions, failed attempts and next check.</p></div></div><p class="note reveal">Check what survives compaction. Neither a fresh session nor a summary has zero context cost.</p></div></section>
-
-<section data-origin-slide="22" class="slide light" data-label="Subagents"
-    data-speaker-notes="The animation shows separation of intermediate output, not a guarantee of empty input context. Fresh agents also receive system instructions and tool definitions. Worktrees separate edits, not security boundaries. Avoid delegating a trivial step when coordination costs more than the work.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">12</span><div class="crumb"><b>Split the work</b> · subagents</div></div>
-      <h2 class="reveal">Delegate a question; ask for evidence back</h2>
-      <div class="split">
-        <ul class="bul reveal"><li>Fresh helpers need a self-contained task and relevant inputs. Forks can inherit existing history.</li><li>Keep intermediate investigation in the helper’s context; return findings with file references.</li><li>Review the result. Delegation adds coordination cost and does not itself isolate filesystem access.</li></ul>
-        <div class="diagram reveal">
-          <!-- Remotion animation (remotion/src/Subagents.tsx) -->
-          <video src="assets/anim/subagents-light.mp4" width="1176" height="756" autoplay muted loop playsinline aria-label="A main agent delegates messy work to sub-agents that have their own context and return only a short summary"></video>
-        </div>
-      </div>
-      <p class="note reveal">Example return: VAT calculation locations, the failing path, supporting lines and unresolved questions.</p>
-    </div>
-  </section>
-
-<section data-origin-slide="23" class="slide light" data-label="Read selectively" data-speaker-notes="Avoid optimizing raw read counts at the expense of understanding. The appropriate scope depends on the code and the bug."><div class="slide-content"><div class="slide-head reveal"><span class="snum">13</span><div class="crumb">In practice</div></div><h2 class="reveal">Find the relevant span, then enough surrounding context</h2><ul class="bul reveal"><li>Search for the invoice entry point and failing test.</li><li>Read the function, its callers and relevant rules before editing.</li><li>Delegate broad investigation only when the returned evidence justifies the overhead.</li></ul><p class="note reveal">A repeated read can be useful after a file changes. Diagnose before calling it waste.</p></div></section>
-
-<section data-origin-slide="24" class="slide dark" data-label="Compare instruction variants" data-speaker-notes="An optional live run must use disposable copies and approved credentials. With no runtime, use the next static worksheet and discuss what still needs measurement."><div class="slide-content"><div class="slide-head reveal"><span class="snum">14</span><div class="crumb">In practice</div></div><h2 class="reveal">Exercise · compare two versions fairly</h2><div class="code reveal">10 minutes
-A: the long instruction file. B: the shorter version.
-Use identical task inputs, repo state, model and tools.
-Record: acceptance results, all usage, time and retries.
-Repeat runs if available; inspect failures before choosing.</div><p class="note reveal">Output: a comparison worksheet and one justified decision. A smaller prompt that drops the VAT rule loses.</p></div></section>
-
-<section data-origin-slide="25" class="slide light" data-label="Static comparison worksheet" data-speaker-notes="This replaces the empty recorded-run placeholder. Ask participants to identify a measurable acceptance condition for each retained rule. Leave measured fields explicitly not run."><div class="slide-content"><div class="slide-head reveal"><span class="snum">15</span><div class="crumb">In practice</div></div><h2 class="reveal">No runtime? Check the proposed rewrite on paper</h2><table class="tbl reveal"><thead><tr><th scope="col">Requirement</th><th scope="col">A</th><th scope="col">B</th></tr></thead><tbody><tr><td>VAT from order + rounding rule</td><td>present</td><td>verify preserved</td></tr><tr><td>Exact invoice test command</td><td>present</td><td>verify preserved</td></tr><tr><td>Schema change approval</td><td>present</td><td>verify preserved</td></tr><tr><td>Measured task usage and results</td><td>not run</td><td>not run</td></tr></tbody></table><p class="note reveal">Discuss what B removed and which regression case would expose a lost rule. No savings are claimed.</p></div></section>
-
-<section data-origin-slide="26" class="slide dark" data-label="Next task" data-speaker-notes="Merge the previous two recaps into one action. The outcome may be better clarity, lower cost, both, or neither."><div class="slide-content"><div class="slide-head reveal"><span class="snum">16</span><div class="crumb">In practice</div></div><h2 class="reveal">Measure, trim, then verify again</h2><ul class="bul reveal"><li>Record a baseline task outcome and full usage.</li><li>Remove one stale or repetitive instruction group.</li><li>Repeat the acceptance cases and keep the change only if the tradeoff holds.</li></ul><p class="note reveal">Keep the task evidence with the instruction change.</p><p class="note"><a href="cost-and-context-reference.html">Optional reference material</a></p></div></section>
-
-<section data-origin-slide="28" class="slide dark" data-label="Sources" data-speaker-notes="Leave the sources visible for questions. These links support the mechanisms and qualifications; the examples are teaching material, not benchmark measurements."><div class="slide-content"><div class="slide-head reveal"><span class="snum">17</span><div class="crumb">Sources</div></div><h2 class="reveal">Sources and further reading</h2><ul class="bul reveal"><li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Context engineering</a></li><li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">Prompt caching and billing categories</a></li><li><a href="https://code.claude.com/docs/en/monitoring-usage">Claude Code usage monitoring</a></li></ul><p class="note reveal">Primary documentation checked 3 October 2026. Examples are illustrative unless explicitly attributed.</p></div></section>
+<section data-origin-slide="36" class="slide light" data-label="Choose authentication" data-speaker-notes="Documentation checked 3 October 2026. Native-client use remains subject to plan limits and agreements. Do not extract, collect or relay subscription credentials into a custom client. This slide summarizes the documented paths; it does not grant blanket approval for all unattended use."><div class="reference-banner">Optional reference · <a href="subagents-prompt-caching.html">Back to the talk</a></div><div class="slide-content"><div class="slide-head reveal"><span class="snum">4</span><div class="crumb">In practice</div></div><h2 class="reveal">Choose the supported client and credential path</h2><div class="cards c2 reveal"><div class="tile"><h3 class="k">Native Claude Code use</h3><p>Sign in through the official flow under the applicable plan and usage rules.</p></div><div class="tile"><h3 class="k">Your product or service</h3><p>Use API-key authentication or a supported cloud-provider route.</p></div></div><p class="note reveal">The boundary is not simply “human at keyboard” versus “automation”. <a href="https://code.claude.com/docs/en/legal-and-compliance">Current authentication guidance</a></p></div></section>
 
 </deck-stage>
-
 <script src="ember_design_system/deck-stage.js"></script>
 <script>
-  /* Re-trigger .reveal animations + restart any <video> on slide change */
-  document.addEventListener('DOMContentLoaded', function () {
-    var ds = document.querySelector('deck-stage');
-    if (!ds) return;
-    ds.addEventListener('slidechange', function (e) {
-      var s = e.detail && e.detail.slide;
-      if (!s) return;
-      s.querySelectorAll('.reveal').forEach(function (el) {
-        el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
-      });
-      var v = s.querySelector('video');
-      if (v) { v.currentTime = 0; var p = v.play(); if (p && p.catch) p.catch(function(){}); }
-    });
+  /* restart embedded explainer videos when their slide becomes active */
+  document.querySelector('deck-stage').addEventListener('slidechange', function(e){
+    var v = e.detail.slide && e.detail.slide.querySelector('video');
+    if (v) { v.currentTime = 0; var p = v.play(); if (p && p.catch) p.catch(function(){}); }
   });
 </script>
 

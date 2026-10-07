@@ -1,0 +1,715 @@
+{
+  "date": "2026-10-03",
+  "viewports": [
+    {
+      "file": "agentic-engineering.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "slides": 30,
+      "bounds": []
+    },
+    {
+      "file": "agentic-engineering-reference.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "slides": 10,
+      "bounds": []
+    },
+    {
+      "file": "subagents-prompt-caching.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "slides": 21,
+      "bounds": []
+    },
+    {
+      "file": "subagents-prompt-caching-reference.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "slides": 4,
+      "bounds": []
+    },
+    {
+      "file": "cost-and-context.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "slides": 17,
+      "bounds": []
+    },
+    {
+      "file": "cost-and-context-reference.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "slides": 4,
+      "bounds": []
+    },
+    {
+      "file": "orchestrating-agents.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "slides": 19,
+      "bounds": []
+    },
+    {
+      "file": "orchestrating-agents-reference.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "slides": 4,
+      "bounds": []
+    },
+    {
+      "file": "measuring-what-works.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "slides": 19,
+      "bounds": []
+    },
+    {
+      "file": "measuring-what-works-reference.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "slides": 5,
+      "bounds": []
+    },
+    {
+      "file": "best-practices.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "slides": 30,
+      "bounds": []
+    },
+    {
+      "file": "best-practices-reference.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "slides": 5,
+      "bounds": []
+    },
+    {
+      "file": "working-smarter.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "slides": 44,
+      "bounds": []
+    },
+    {
+      "file": "working-smarter-reference.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "slides": 8,
+      "bounds": []
+    },
+    {
+      "file": "agentic-engineering.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "slides": 30,
+      "bounds": []
+    },
+    {
+      "file": "agentic-engineering-reference.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "slides": 10,
+      "bounds": []
+    },
+    {
+      "file": "subagents-prompt-caching.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "slides": 21,
+      "bounds": []
+    },
+    {
+      "file": "subagents-prompt-caching-reference.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "slides": 4,
+      "bounds": []
+    },
+    {
+      "file": "cost-and-context.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "slides": 17,
+      "bounds": []
+    },
+    {
+      "file": "cost-and-context-reference.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "slides": 4,
+      "bounds": []
+    },
+    {
+      "file": "orchestrating-agents.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "slides": 19,
+      "bounds": []
+    },
+    {
+      "file": "orchestrating-agents-reference.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "slides": 4,
+      "bounds": []
+    },
+    {
+      "file": "measuring-what-works.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "slides": 19,
+      "bounds": []
+    },
+    {
+      "file": "measuring-what-works-reference.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "slides": 5,
+      "bounds": []
+    },
+    {
+      "file": "best-practices.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "slides": 30,
+      "bounds": []
+    },
+    {
+      "file": "best-practices-reference.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "slides": 5,
+      "bounds": []
+    },
+    {
+      "file": "working-smarter.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "slides": 44,
+      "bounds": []
+    },
+    {
+      "file": "working-smarter-reference.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "slides": 8,
+      "bounds": []
+    }
+  ],
+  "errors": [],
+  "screenshots": [
+    "agentic-engineering-01-1280.png",
+    "agentic-engineering-04-1280.png",
+    "agentic-engineering-07-1280.png",
+    "agentic-engineering-10-1280.png",
+    "agentic-engineering-15-1280.png",
+    "agentic-engineering-29-1280.png",
+    "agentic-engineering-reference-01-1280.png",
+    "agentic-engineering-reference-03-1280.png",
+    "agentic-engineering-reference-08-1280.png",
+    "subagents-prompt-caching-01-1280.png",
+    "subagents-prompt-caching-04-1280.png",
+    "subagents-prompt-caching-07-1280.png",
+    "subagents-prompt-caching-10-1280.png",
+    "subagents-prompt-caching-15-1280.png",
+    "subagents-prompt-caching-20-1280.png",
+    "subagents-prompt-caching-reference-01-1280.png",
+    "subagents-prompt-caching-reference-02-1280.png",
+    "subagents-prompt-caching-reference-03-1280.png",
+    "cost-and-context-01-1280.png",
+    "cost-and-context-04-1280.png",
+    "cost-and-context-07-1280.png",
+    "cost-and-context-10-1280.png",
+    "cost-and-context-15-1280.png",
+    "cost-and-context-16-1280.png",
+    "cost-and-context-reference-01-1280.png",
+    "cost-and-context-reference-02-1280.png",
+    "cost-and-context-reference-03-1280.png",
+    "orchestrating-agents-01-1280.png",
+    "orchestrating-agents-04-1280.png",
+    "orchestrating-agents-07-1280.png",
+    "orchestrating-agents-10-1280.png",
+    "orchestrating-agents-15-1280.png",
+    "orchestrating-agents-18-1280.png",
+    "orchestrating-agents-reference-01-1280.png",
+    "orchestrating-agents-reference-02-1280.png",
+    "orchestrating-agents-reference-03-1280.png",
+    "measuring-what-works-01-1280.png",
+    "measuring-what-works-04-1280.png",
+    "measuring-what-works-07-1280.png",
+    "measuring-what-works-10-1280.png",
+    "measuring-what-works-15-1280.png",
+    "measuring-what-works-18-1280.png",
+    "measuring-what-works-reference-01-1280.png",
+    "measuring-what-works-reference-03-1280.png",
+    "best-practices-01-1280.png",
+    "best-practices-04-1280.png",
+    "best-practices-07-1280.png",
+    "best-practices-10-1280.png",
+    "best-practices-15-1280.png",
+    "best-practices-29-1280.png",
+    "best-practices-reference-01-1280.png",
+    "best-practices-reference-03-1280.png",
+    "working-smarter-01-1280.png",
+    "working-smarter-04-1280.png",
+    "working-smarter-07-1280.png",
+    "working-smarter-10-1280.png",
+    "working-smarter-15-1280.png",
+    "working-smarter-43-1280.png",
+    "working-smarter-reference-01-1280.png",
+    "working-smarter-reference-03-1280.png",
+    "working-smarter-reference-06-1280.png"
+  ],
+  "checks": [
+    {
+      "file": "agentic-engineering.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "agentic-engineering-reference.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "subagents-prompt-caching.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "subagents-prompt-caching-reference.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "cost-and-context.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "cost-and-context-reference.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "orchestrating-agents.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "orchestrating-agents-reference.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "measuring-what-works.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "measuring-what-works-reference.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "best-practices.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "best-practices-reference.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "working-smarter.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "working-smarter-reference.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "agentic-engineering.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "agentic-engineering-reference.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "subagents-prompt-caching.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "subagents-prompt-caching-reference.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "cost-and-context.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "cost-and-context-reference.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "orchestrating-agents.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "orchestrating-agents-reference.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "measuring-what-works.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "measuring-what-works-reference.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "best-practices.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "best-practices-reference.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "working-smarter.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "working-smarter-reference.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    }
+  ]
+}
