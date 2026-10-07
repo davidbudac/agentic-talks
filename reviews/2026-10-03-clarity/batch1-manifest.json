@@ -1,0 +1,25 @@
+{
+  "baseline": "51f2e9a3479a864bf1901aa9c8e3bfa4961bcac0",
+  "outputs": {
+    "agentic-ai.html": "521d6cf5a74e1ddd4ceaf265cecddab4442dffbb6e26de7f5b6377ea1d8bf716",
+    "agentic-ai-reference.html": "9bd1d2930f430d7526a14d1232f7d09a6c8dae050bb0103bd4fc5a626b1c676a",
+    "ai-toolbox.html": "48cdf7ccc4040bf4976525bedc1e157a81bee42dde44cdf76f2817743a3e934f",
+    "ai-toolbox-reference.html": "d91e88455136939c613156327e434282aebc0b170e4b9a53d4a4020ee757c863"
+  },
+  "metrics": {
+    "agentic-ai": {
+      "before_slides": 43,
+      "after_slides": 26,
+      "reference_slides": 13,
+      "before_words": 3817,
+      "after_words": 1811
+    },
+    "ai-toolbox": {
+      "before_slides": 57,
+      "after_slides": 31,
+      "reference_slides": 22,
+      "before_words": 5750,
+      "after_words": 1926
+    }
+  }
+}

@@ -1,0 +1,2078 @@
+{
+  "subagents-prompt-caching": [
+    {
+      "original": 1,
+      "label": "Title",
+      "main": 1,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 2,
+      "label": "Agenda",
+      "main": 2,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 3,
+      "label": "01 Subagents",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Repeated transition or secondary catalogue removed; original retained in baseline Git."
+    },
+    {
+      "original": 4,
+      "label": "Like a helper",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Helper analogy consolidated into main 3\u20134."
+    },
+    {
+      "original": 5,
+      "label": "Stays clear",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Repeated clean-desk explanation consolidated into delegation example."
+    },
+    {
+      "original": 6,
+      "label": "Where (harness)",
+      "main": 3,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 7,
+      "label": "Mental model",
+      "main": 4,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 8,
+      "label": "Why isolation matters",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Removed unmeasured permanent-clutter figures; main explains scoped history."
+    },
+    {
+      "original": 9,
+      "label": "Four crossings",
+      "main": 5,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 10,
+      "label": "The spawn",
+      "main": 6,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 11,
+      "label": "The return",
+      "main": 7,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 12,
+      "label": "Parallel fan-out",
+      "main": 8,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 13,
+      "label": "Integration constraint",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Universal no-messaging claim removed; integration taught with parallel roles."
+    },
+    {
+      "original": 14,
+      "label": "Token economics",
+      "main": 9,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 15,
+      "label": "When to use",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Repeated transition or secondary catalogue removed; original retained in baseline Git."
+    },
+    {
+      "original": 16,
+      "label": "Code: subagent",
+      "main": 10,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 17,
+      "label": "In Claude Code",
+      "main": 11,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 18,
+      "label": "02 Prompt Caching",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Repeated transition or secondary catalogue removed; original retained in baseline Git."
+    },
+    {
+      "original": 19,
+      "label": "Read once",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Repeated cache analogy merged into shared-prefix example."
+    },
+    {
+      "original": 20,
+      "label": "The one catch",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Exact-prefix condition taught beside cache example."
+    },
+    {
+      "original": 21,
+      "label": "Where (cloud)",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Local/cloud map consolidated into main 3."
+    },
+    {
+      "original": 22,
+      "label": "Core idea",
+      "main": 12,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 23,
+      "label": "What gets cached",
+      "main": null,
+      "reference": 2,
+      "action": "rewritten",
+      "reason": "Optional supporting material."
+    },
+    {
+      "original": 24,
+      "label": "Exact-match",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Exact-match condition merged with main cache example."
+    },
+    {
+      "original": 25,
+      "label": "Ordering",
+      "main": 13,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 26,
+      "label": "Lookup path",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Lookup detail consolidated into usage and reference breakpoints."
+    },
+    {
+      "original": 27,
+      "label": "Pricing model",
+      "main": 14,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 28,
+      "label": "Break-even",
+      "main": 15,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 29,
+      "label": "TTL & eviction",
+      "main": 16,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 30,
+      "label": "Multiple breakpoints",
+      "main": null,
+      "reference": 3,
+      "action": "rewritten",
+      "reason": "Optional supporting material."
+    },
+    {
+      "original": 31,
+      "label": "Code: caching",
+      "main": 17,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 32,
+      "label": "In Claude Code",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Invented cost transcript removed; inspect real usage in main."
+    },
+    {
+      "original": 33,
+      "label": "Where they reinforce",
+      "main": 18,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 34,
+      "label": "03 Subscription",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Subscription divider removed."
+    },
+    {
+      "original": 35,
+      "label": "Who's talking?",
+      "main": 19,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 36,
+      "label": "Allowed vs not",
+      "main": null,
+      "reference": 4,
+      "action": "rewritten",
+      "reason": "Optional supporting material."
+    },
+    {
+      "original": 37,
+      "label": "What to do instead",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Credential paths and limits reconciled into main authentication slide."
+    },
+    {
+      "original": 38,
+      "label": "Takeaways",
+      "main": 20,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 39,
+      "label": "Close",
+      "main": 21,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    }
+  ],
+  "cost-and-context": [
+    {
+      "original": 1,
+      "label": "Title",
+      "main": 1,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 2,
+      "label": "Agenda",
+      "main": 2,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 3,
+      "label": "01 What agents really cost",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Repeated transition or secondary catalogue removed; original retained in baseline Git."
+    },
+    {
+      "original": 4,
+      "label": "Tokens 101, priced",
+      "main": 4,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 5,
+      "label": "Why output dominates",
+      "main": 5,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 6,
+      "label": "Anatomy of a session's bill",
+      "main": 6,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 7,
+      "label": "Subscriptions today",
+      "main": null,
+      "reference": 2,
+      "action": "rewritten",
+      "reason": "Optional supporting material."
+    },
+    {
+      "original": 8,
+      "label": "API pricing across the family",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Price catalogue replaced by route worksheet."
+    },
+    {
+      "original": 9,
+      "label": "Subscription vs API",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Subscription/API decision merged into main route choice."
+    },
+    {
+      "original": 10,
+      "label": "Teams & Enterprise",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Organizational requirements included in route worksheet."
+    },
+    {
+      "original": 11,
+      "label": "Why Bedrock",
+      "main": null,
+      "reference": 3,
+      "action": "rewritten",
+      "reason": "Optional supporting material."
+    },
+    {
+      "original": 12,
+      "label": "Cursor pricing & routing",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Product pricing biography removed; use current-offer worksheet."
+    },
+    {
+      "original": 13,
+      "label": "Which plan, which team",
+      "main": 3,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 14,
+      "label": "02 Efficient work with context",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Repeated transition or secondary catalogue removed; original retained in baseline Git."
+    },
+    {
+      "original": 15,
+      "label": "Context is the scarce resource",
+      "main": 7,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 16,
+      "label": "The context lifecycle",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Repeated context stack merged into request anatomy."
+    },
+    {
+      "original": 17,
+      "label": "What's resent every turn",
+      "main": 8,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 18,
+      "label": "CLAUDE.md: what belongs",
+      "main": 9,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 19,
+      "label": "CLAUDE.md: what doesn't",
+      "main": 10,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 20,
+      "label": "Measuring CLAUDE.md changes",
+      "main": null,
+      "reference": 4,
+      "action": "rewritten",
+      "reason": "Optional supporting material."
+    },
+    {
+      "original": 21,
+      "label": "/clear vs /compact",
+      "main": 11,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 22,
+      "label": "Subagents as context firewalls",
+      "main": 12,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 23,
+      "label": "Reading selectively",
+      "main": 13,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 24,
+      "label": "Live demo: bloated vs lean CLAUDE.md",
+      "main": 14,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 25,
+      "label": "Fallback: CLAUDE.md demo",
+      "main": 15,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 26,
+      "label": "Context hygiene checklist",
+      "main": 16,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 27,
+      "label": "Recap: cost \u2192 context",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Closing recap merged into original 26."
+    },
+    {
+      "original": 28,
+      "label": "Sources",
+      "main": 17,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    }
+  ],
+  "orchestrating-agents": [
+    {
+      "original": 1,
+      "label": "Title",
+      "main": 1,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 2,
+      "label": "Agenda",
+      "main": 2,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 3,
+      "label": "01 The tool landscape & orchestration",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Repeated transition or secondary catalogue removed; original retained in baseline Git."
+    },
+    {
+      "original": 4,
+      "label": "Map of the ecosystem",
+      "main": 3,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 5,
+      "label": "Herdr",
+      "main": null,
+      "reference": 2,
+      "action": "rewritten",
+      "reason": "Optional supporting material."
+    },
+    {
+      "original": 6,
+      "label": "Conductor",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Product choice consolidated into reference links."
+    },
+    {
+      "original": 7,
+      "label": "Backlog-driven orchestration patterns",
+      "main": 5,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 8,
+      "label": "Live demo: Symphony",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Live service dependency replaced by static ticket walkthrough."
+    },
+    {
+      "original": 9,
+      "label": "Fallback: Symphony demo",
+      "main": 6,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 10,
+      "label": "Sandboxing agents",
+      "main": 7,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 11,
+      "label": "Sandcastle walkthrough",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "SDK recipe replaced by concrete boundary requirements."
+    },
+    {
+      "original": 12,
+      "label": "Failure modes: runaway loops",
+      "main": 8,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 13,
+      "label": "Failure modes: merge conflicts",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Conflict handling incorporated into ownership and review controls."
+    },
+    {
+      "original": 14,
+      "label": "Failure modes: review bottlenecks",
+      "main": 9,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 15,
+      "label": "Orchestration decision table",
+      "main": 4,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 16,
+      "label": "02 Skills & plugins",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Repeated transition or secondary catalogue removed; original retained in baseline Git."
+    },
+    {
+      "original": 17,
+      "label": "Skills: anatomy",
+      "main": 10,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 18,
+      "label": "Progressive disclosure vs CLAUDE.md",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Progressive disclosure consolidated into the invoice skill."
+    },
+    {
+      "original": 19,
+      "label": "Skill vs CLAUDE.md vs MCP",
+      "main": 11,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 20,
+      "label": "Plugins: bundling for a team",
+      "main": 12,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 21,
+      "label": "Distribution inside an org",
+      "main": null,
+      "reference": 3,
+      "action": "rewritten",
+      "reason": "Optional supporting material."
+    },
+    {
+      "original": 22,
+      "label": "Live demo: author a skill",
+      "main": 13,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 23,
+      "label": "Fallback: skill demo",
+      "main": 14,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 24,
+      "label": "03 MCP vs CLI",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Repeated transition or secondary catalogue removed; original retained in baseline Git."
+    },
+    {
+      "original": 25,
+      "label": "Two ways to give an agent capabilities",
+      "main": 15,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 26,
+      "label": "Benefits of MCP",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "MCP benefits scoped in main comparison."
+    },
+    {
+      "original": 27,
+      "label": "Benefits of CLI",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "CLI benefits and overhead scoped in main comparison."
+    },
+    {
+      "original": 28,
+      "label": "Token cost of tool definitions",
+      "main": 16,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 29,
+      "label": "Decision heuristic",
+      "main": null,
+      "reference": 4,
+      "action": "rewritten",
+      "reason": "Optional supporting material."
+    },
+    {
+      "original": 30,
+      "label": "Case study: same tool, both ways",
+      "main": 17,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 31,
+      "label": "Recap",
+      "main": 18,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 32,
+      "label": "Sources",
+      "main": 19,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    }
+  ],
+  "measuring-what-works": [
+    {
+      "original": 1,
+      "label": "Title",
+      "main": 1,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 2,
+      "label": "Agenda",
+      "main": 2,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 3,
+      "label": "01 Measuring what works: evals & traces",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Repeated transition or secondary catalogue removed; original retained in baseline Git."
+    },
+    {
+      "original": 4,
+      "label": "Why vibes don't scale",
+      "main": 3,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 5,
+      "label": "Eval type: task-completion suites",
+      "main": 4,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 6,
+      "label": "Eval type: LLM-as-judge",
+      "main": 5,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 7,
+      "label": "Eval type: pass@k",
+      "main": 6,
+      "reference": 3,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 8,
+      "label": "Traces: capturing transcripts",
+      "main": 7,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 9,
+      "label": "Traces: reading for waste",
+      "main": 8,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 10,
+      "label": "Trace tooling",
+      "main": 9,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 11,
+      "label": "A minimal eval loop",
+      "main": 10,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 12,
+      "label": "Live demo: mini eval",
+      "main": 11,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 13,
+      "label": "Fallback: eval demo",
+      "main": 12,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 14,
+      "label": "02 Alternative harnesses, models & APIs",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Catalogue divider removed."
+    },
+    {
+      "original": 15,
+      "label": "Why not monoculture",
+      "main": 13,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 16,
+      "label": "Cursor as a harness",
+      "main": null,
+      "reference": 2,
+      "action": "rewritten",
+      "reason": "Optional supporting material."
+    },
+    {
+      "original": 17,
+      "label": "OpenRouter",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Routing-provider claims replaced by configuration worksheet."
+    },
+    {
+      "original": 18,
+      "label": "Pi",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Minimal-harness pricing claims replaced by configuration worksheet."
+    },
+    {
+      "original": 19,
+      "label": "State of open-source models",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Unqualified frontier-gap claim removed."
+    },
+    {
+      "original": 20,
+      "label": "Gemma 4",
+      "main": 14,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 21,
+      "label": "Qwen 3.6",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Active-parameter inference corrected in main memory explanation."
+    },
+    {
+      "original": 22,
+      "label": "Live demo: local models on small hardware",
+      "main": 15,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 23,
+      "label": "Fallback: local model demo",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Empty local-demo recording replaced by hardware experiment."
+    },
+    {
+      "original": 24,
+      "label": "Colibri for GLM-5.2",
+      "main": null,
+      "reference": 4,
+      "action": "rewritten",
+      "reason": "Optional supporting material."
+    },
+    {
+      "original": 25,
+      "label": "When local makes sense",
+      "main": 16,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 26,
+      "label": "03 Day-to-day tips & closing",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Closing divider removed."
+    },
+    {
+      "original": 27,
+      "label": "Voice mode",
+      "main": 17,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 28,
+      "label": "Fallback: voice demo",
+      "main": null,
+      "reference": 5,
+      "action": "rewritten",
+      "reason": "Optional supporting material."
+    },
+    {
+      "original": 29,
+      "label": "Grab-bag of daily habits",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Generic habit list replaced by a concrete evaluation action."
+    },
+    {
+      "original": 30,
+      "label": "Recap ladder",
+      "main": 18,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 31,
+      "label": "Sources",
+      "main": 19,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    }
+  ],
+  "best-practices": [
+    {
+      "original": 1,
+      "label": "Title",
+      "main": 1,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 2,
+      "label": "Agenda",
+      "main": 2,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 3,
+      "label": "01 Context",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Repeated transition or secondary catalogue removed; original retained in baseline Git."
+    },
+    {
+      "original": 4,
+      "label": "Over 80% deleted",
+      "main": 3,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 5,
+      "label": "Six shifts: then and now",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Six-shift table merged into instruction audit and verification skill."
+    },
+    {
+      "original": 6,
+      "label": "CLAUDE.md: gotchas, not the obvious",
+      "main": 4,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 7,
+      "label": "Delete the old workarounds",
+      "main": 5,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 8,
+      "label": "02 Skills",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Repeated transition or secondary catalogue removed; original retained in baseline Git."
+    },
+    {
+      "original": 9,
+      "label": "A skill is a folder",
+      "main": 6,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 10,
+      "label": "Gotchas: the skill's core",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Duplicate gotcha example merged into verification skill."
+    },
+    {
+      "original": 11,
+      "label": "Write skills for the model",
+      "main": 7,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 12,
+      "label": "Hub, spokes, scripts, hooks",
+      "main": 8,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 13,
+      "label": "03 Prompt cache",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Repeated transition or secondary catalogue removed; original retained in baseline Git."
+    },
+    {
+      "original": 14,
+      "label": "Static first, dynamic last",
+      "main": 9,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 15,
+      "label": "Why they alert on it",
+      "main": 10,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 16,
+      "label": "Don't break the prefix",
+      "main": 11,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 17,
+      "label": "Compaction without a cache miss",
+      "main": 12,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 18,
+      "label": "04 Effort & cost",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Effort divider removed."
+    },
+    {
+      "original": 19,
+      "label": "The effort ladder",
+      "main": 13,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 20,
+      "label": "What effort buys",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Secondary effort statistics replaced by controlled comparison."
+    },
+    {
+      "original": 21,
+      "label": "Low to build, high to verify",
+      "main": 14,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 22,
+      "label": "Check, then effort, then model",
+      "main": 15,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 23,
+      "label": "Read your own bill",
+      "main": 16,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 24,
+      "label": "05 Verification & evals",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Evaluation divider removed."
+    },
+    {
+      "original": 25,
+      "label": "A sprint measured, then climbed",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Sprint statistics replaced by concrete progress/guardrail example."
+    },
+    {
+      "original": 26,
+      "label": "Every benchmark gets two jobs",
+      "main": 18,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 27,
+      "label": "Ask for a real check",
+      "main": 17,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 28,
+      "label": "What makes an eval good",
+      "main": 19,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 29,
+      "label": "Hillclimb, don't overfit",
+      "main": 20,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 30,
+      "label": "06 Autonomy",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Autonomy divider removed."
+    },
+    {
+      "original": 31,
+      "label": "Name the finish line",
+      "main": 21,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 32,
+      "label": "State in files, handoff first",
+      "main": 22,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 33,
+      "label": "Humans steer three things",
+      "main": 23,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 34,
+      "label": "07 Multi-agent",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Multi-agent divider removed."
+    },
+    {
+      "original": 35,
+      "label": "Why one context fails",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Failure claims converted into bounded tasks and two patterns."
+    },
+    {
+      "original": 36,
+      "label": "Six patterns",
+      "main": 24,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 37,
+      "label": "Workflow prompts to steal",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Prompt catalogue replaced by the two role patterns."
+    },
+    {
+      "original": 38,
+      "label": "Does it need more compute?",
+      "main": 25,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 39,
+      "label": "08 Make the harness yours",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Harness divider removed."
+    },
+    {
+      "original": 40,
+      "label": "Design tools from the model's side",
+      "main": 26,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 41,
+      "label": "Ask for HTML, not Markdown",
+      "main": 27,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 42,
+      "label": "Mods: hooks as middleware",
+      "main": 28,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 43,
+      "label": "Cheat sheet: commands",
+      "main": null,
+      "reference": 2,
+      "action": "rewritten",
+      "reason": "Optional supporting material."
+    },
+    {
+      "original": 44,
+      "label": "Recap",
+      "main": 29,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 45,
+      "label": "Sources",
+      "main": 30,
+      "reference": 3,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    }
+  ],
+  "working-smarter": [
+    {
+      "original": 1,
+      "label": "Title",
+      "main": 1,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 2,
+      "label": "Agenda",
+      "main": 2,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 3,
+      "label": "01 What agents really cost",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Divider removed; measurement now precedes cost."
+    },
+    {
+      "original": 4,
+      "label": "Tokens 101, priced",
+      "main": 12,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 5,
+      "label": "Why output dominates",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Output-dominance claim replaced by full-category bill."
+    },
+    {
+      "original": 6,
+      "label": "Anatomy of a session's bill",
+      "main": 13,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 7,
+      "label": "Subscriptions today",
+      "main": null,
+      "reference": 2,
+      "action": "rewritten",
+      "reason": "Optional supporting material."
+    },
+    {
+      "original": 8,
+      "label": "API pricing across the family",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Price grid replaced by optional current-offer worksheet."
+    },
+    {
+      "original": 9,
+      "label": "Subscription vs API",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Access route decision included in main."
+    },
+    {
+      "original": 10,
+      "label": "Teams & Enterprise",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Governance requirements included in optional cloud worksheet."
+    },
+    {
+      "original": 11,
+      "label": "Why Bedrock",
+      "main": null,
+      "reference": 3,
+      "action": "rewritten",
+      "reason": "Optional supporting material."
+    },
+    {
+      "original": 12,
+      "label": "Cursor pricing & routing",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Vendor-price grid removed."
+    },
+    {
+      "original": 13,
+      "label": "Which plan, which team",
+      "main": 14,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 14,
+      "label": "02 Efficient work with context",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Context divider removed."
+    },
+    {
+      "original": 15,
+      "label": "Context is the scarce resource",
+      "main": 15,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 16,
+      "label": "The context lifecycle",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Repeated context lifecycle merged into context choices."
+    },
+    {
+      "original": 17,
+      "label": "What's resent every turn",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Unmeasured overhead figures removed."
+    },
+    {
+      "original": 18,
+      "label": "CLAUDE.md: what belongs",
+      "main": 16,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 19,
+      "label": "CLAUDE.md: what doesn't",
+      "main": 17,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 20,
+      "label": "Measuring CLAUDE.md changes",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Measurement included in instruction-variant exercise."
+    },
+    {
+      "original": 21,
+      "label": "/clear vs /compact",
+      "main": 20,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 22,
+      "label": "Subagents as context firewalls",
+      "main": 21,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 23,
+      "label": "Reading selectively",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Selective reading included in context discussion."
+    },
+    {
+      "original": 24,
+      "label": "Live demo: bloated vs lean CLAUDE.md",
+      "main": 18,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 25,
+      "label": "Fallback: CLAUDE.md demo",
+      "main": 19,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 26,
+      "label": "Context hygiene checklist",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Checklist consolidated into closing experiment plan."
+    },
+    {
+      "original": 27,
+      "label": "03 The tool landscape & orchestration",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Orchestration divider removed."
+    },
+    {
+      "original": 28,
+      "label": "Map of the ecosystem",
+      "main": 22,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 29,
+      "label": "Herdr",
+      "main": null,
+      "reference": 4,
+      "action": "rewritten",
+      "reason": "Optional supporting material."
+    },
+    {
+      "original": 30,
+      "label": "Conductor",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Product biography consolidated into reference links."
+    },
+    {
+      "original": 31,
+      "label": "Backlog-driven orchestration patterns",
+      "main": 23,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 32,
+      "label": "Live demo: Symphony",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Live orchestrator dependency replaced by tabletop ticket walkthrough."
+    },
+    {
+      "original": 33,
+      "label": "Fallback: Symphony demo",
+      "main": 24,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 34,
+      "label": "Sandboxing agents",
+      "main": 25,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 35,
+      "label": "Sandcastle walkthrough",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Runtime-specific SDK recipe replaced by explicit boundary design."
+    },
+    {
+      "original": 36,
+      "label": "Failure modes: runaway loops",
+      "main": 26,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 37,
+      "label": "Failure modes: merge conflicts",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Merge conflicts included in ownership and integration controls."
+    },
+    {
+      "original": 38,
+      "label": "Failure modes: review bottlenecks",
+      "main": 27,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 39,
+      "label": "Orchestration decision table",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Tool-choice table replaced by workflow requirements."
+    },
+    {
+      "original": 40,
+      "label": "04 Skills & plugins",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Skills divider removed."
+    },
+    {
+      "original": 41,
+      "label": "Skills: anatomy",
+      "main": 29,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 42,
+      "label": "Progressive disclosure vs CLAUDE.md",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Progressive disclosure included in verification skill."
+    },
+    {
+      "original": 43,
+      "label": "Skill vs CLAUDE.md vs MCP",
+      "main": 28,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 44,
+      "label": "Plugins: bundling for a team",
+      "main": 32,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 45,
+      "label": "Distribution inside an org",
+      "main": null,
+      "reference": 5,
+      "action": "rewritten",
+      "reason": "Optional supporting material."
+    },
+    {
+      "original": 46,
+      "label": "Live demo: author a skill",
+      "main": 30,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 47,
+      "label": "Fallback: skill demo",
+      "main": 31,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 48,
+      "label": "05 Measuring what works: evals & traces",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Evaluation divider removed; evaluation moved to opening."
+    },
+    {
+      "original": 49,
+      "label": "Why vibes don't scale",
+      "main": 3,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 50,
+      "label": "Eval type: task-completion suites",
+      "main": 4,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 51,
+      "label": "Eval type: LLM-as-judge",
+      "main": 5,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 52,
+      "label": "Eval type: pass@k",
+      "main": 6,
+      "reference": 7,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 53,
+      "label": "Traces: capturing transcripts",
+      "main": 7,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 54,
+      "label": "Traces: reading for waste",
+      "main": 8,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 55,
+      "label": "Trace tooling",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Telemetry distinction taught in observable trace slide."
+    },
+    {
+      "original": 56,
+      "label": "A minimal eval loop",
+      "main": 9,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 57,
+      "label": "Live demo: mini eval",
+      "main": 10,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 58,
+      "label": "Fallback: eval demo",
+      "main": 11,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 59,
+      "label": "06 MCP vs CLI",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Interface divider removed."
+    },
+    {
+      "original": 60,
+      "label": "Two ways to give an agent capabilities",
+      "main": 33,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 61,
+      "label": "Benefits of MCP",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "MCP benefits scoped in comparison."
+    },
+    {
+      "original": 62,
+      "label": "Benefits of CLI",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "CLI benefits scoped in comparison."
+    },
+    {
+      "original": 63,
+      "label": "Token cost of tool definitions",
+      "main": 34,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 64,
+      "label": "Decision heuristic",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Absolute interface heuristic replaced by comparison experiment."
+    },
+    {
+      "original": 65,
+      "label": "Case study: same tool, both ways",
+      "main": 35,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 66,
+      "label": "07 Alternative harnesses, models & APIs",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Model catalogue divider removed."
+    },
+    {
+      "original": 67,
+      "label": "Why not monoculture",
+      "main": 36,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 68,
+      "label": "Cursor as a harness",
+      "main": null,
+      "reference": 6,
+      "action": "rewritten",
+      "reason": "Optional supporting material."
+    },
+    {
+      "original": 69,
+      "label": "OpenRouter",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Routing service details moved to configuration worksheet."
+    },
+    {
+      "original": 70,
+      "label": "Pi",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Harness product biography replaced by reproducible configuration fields."
+    },
+    {
+      "original": 71,
+      "label": "State of open-source models",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Unqualified open-model trend removed."
+    },
+    {
+      "original": 72,
+      "label": "Gemma 4",
+      "main": 37,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 73,
+      "label": "Qwen 3.6",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Active-parameter/RAM inference corrected in main."
+    },
+    {
+      "original": 74,
+      "label": "Live demo: local models on small hardware",
+      "main": 38,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 75,
+      "label": "Fallback: local model demo",
+      "main": 39,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 76,
+      "label": "Colibri for GLM-5.2",
+      "main": null,
+      "reference": 8,
+      "action": "rewritten",
+      "reason": "Optional supporting material."
+    },
+    {
+      "original": 77,
+      "label": "When local makes sense",
+      "main": 40,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 78,
+      "label": "08 Day-to-day tips & closing",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Closing divider removed."
+    },
+    {
+      "original": 79,
+      "label": "Voice mode",
+      "main": 41,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 80,
+      "label": "Fallback: voice demo",
+      "main": 42,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 81,
+      "label": "Grab-bag of daily habits",
+      "main": null,
+      "reference": null,
+      "action": "merged/removed",
+      "reason": "Habit catalogue replaced by participant experiment plan."
+    },
+    {
+      "original": 82,
+      "label": "Recap ladder",
+      "main": 43,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    },
+    {
+      "original": 83,
+      "label": "Sources",
+      "main": 44,
+      "reference": null,
+      "action": "rewritten",
+      "reason": "Revised teaching example."
+    }
+  ]
+}

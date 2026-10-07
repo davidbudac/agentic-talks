@@ -123,7 +123,9 @@
       <span class="sep">———</span>
       <span class="step"><b>05–07</b> Deep dives: cost · orchestration · measurement</span>
       <span class="sep">———</span>
-      <span class="step"><b>08</b> Advanced: Anthropic's own practices</span>
+      <span class="step"><b>08</b> Advanced: applied practices</span>
+      <span class="sep">———</span>
+      <span class="step"><b>09</b> Half-day workshop</span>
     </div>
 
     <div class="cards">
@@ -137,8 +139,8 @@
           <li>You don't write code — and don't plan to</li>
           <li>You want to know what things cost before you ask for a licence</li>
         </ul>
-        <p class="covers"><b>You'll leave with</b> A map of the big three labs, a leader per category (video, voice, avatars, decks, research, automation), five real stories, and how to plug AI into Excel &amp; PowerPoint.</p>
-        <p class="meta">57 slides · no code · prices included</p>
+        <p class="covers"><b>You'll leave with</b> A practical way to choose tools by task, review their output, and work with files or connected apps. Product tables are in a separate reference deck.</p>
+        <p class="meta">31 slides · no code · reference deck included</p>
       </a>
 
       <a class="card" href="./agentic-ai.html">
@@ -150,86 +152,71 @@
           <li>You want the mental model: model, harness, agent, the loop</li>
           <li>You want to know what it's allowed to touch, and how to teach it your project</li>
         </ul>
-        <p class="covers"><b>You'll leave with</b> The agent loop, context and why it rots, permissions &amp; safety, memory (CLAUDE.md), skills, plugins and MCP — plus how to work with it well.</p>
-        <p class="meta">43 slides · live demo included</p>
+        <p class="covers"><b>You'll leave with</b> One invoice example that explains the agent loop, context, permissions, project rules and tools — ending with a task you can verify.</p>
+        <p class="meta">26 slides · optional demo · reference deck included</p>
       </a>
 
       <a class="card" href="./agentic-engineering.html">
         <span class="badge"><span class="num">03</span><span class="lvl">For developers · the deep end</span></span>
         <span class="t">Agentic Engineering <span class="arw">→</span></span>
-        <p class="who">You already use agents daily. Now you want to know why they fail — and how to stop it.</p>
-        <ul class="fit">
-          <li>You want the internals: next-token prediction, attention, statelessness</li>
-          <li>Context engineering is the job — caching, cost, compaction, the dumb zone</li>
-          <li>You're building loops, verifiers, subagents and workflows, not just prompting</li>
-        </ul>
-        <p class="covers"><b>You'll leave with</b> Context as the program, token cost &amp; KV-cache economics, model × reasoning-effort routing, the agentic ladder, loops &amp; verifiers (and reward hacking), dynamic workflows.</p>
-        <p class="meta">60 slides · no live demo</p>
+        <p class="who">You use agents and want to understand their machinery and failure modes.</p>
+        <ul class="fit"><li>Connect the model, harness and tool results</li><li>Define verifiers and enforce bounded loops</li><li>Measure context, cost and delegation choices</li></ul>
+        <p class="covers"><b>You'll leave with</b> Model and harness mechanics, bounded verification loops, worked cost arithmetic, context, delegation and reusable checks.</p>
+        <p class="meta">30 slides · 10-slide reference · no live run required</p>
       </a>
 
       <a class="card" href="./subagents-prompt-caching.html">
-        <span class="badge"><span class="num">04</span><span class="lvl">Deep dive · one topic</span></span>
+        <span class="badge"><span class="num">04</span><span class="lvl">Deep dive · internals</span></span>
         <span class="t">Subagents &amp; Prompt Caching <span class="arw">→</span></span>
-        <p class="who">You've done the deep end. Now you want the two primitives that decide what an agent costs.</p>
-        <ul class="fit">
-          <li>You spawn subagents and want to know exactly what crosses the boundary</li>
-          <li>Your token bill is the problem, not the model</li>
-          <li>You run this on a subscription and need to know what's allowed</li>
-        </ul>
-        <p class="covers"><b>You'll leave with</b> Subagent isolation and the four context crossings, parallel fan-out and its limits, cache breakpoints, exact-match prefixes, TTL &amp; eviction, break-even math — and the subscription-vs-API-key rules.</p>
-        <p class="meta">39 slides · devs &amp; IT admins · 30 min</p>
+        <p class="who">You want to know what helpers inherit and when cached input saves work.</p>
+        <ul class="fit"><li>Distinguish fresh contexts from conversation forks</li><li>Design task inputs and evidence-bearing returns</li><li>Calculate cache reuse, warm-up and break-even</li></ul>
+        <p class="covers"><b>You'll leave with</b> Fresh helpers versus forks, evidence-bearing returns, local/cloud boundaries, cache eligibility, warm-up and break-even arithmetic.</p>
+        <p class="meta">21 slides · 4-slide reference · no live run required</p>
       </a>
 
-      <a class="card wip-card" href="./cost-and-context.html">
-        <span class="badge"><span class="num">05</span><span class="lvl">Deep dive · level up</span><span class="wip">WIP</span></span>
+      <a class="card" href="./cost-and-context.html">
+        <span class="badge"><span class="num">05</span><span class="lvl">Deep dive · cost</span></span>
         <span class="t">Cost &amp; Context <span class="arw">→</span></span>
-        <p class="who">You already use Claude Code every day. Now find out what it actually bills — and stop wasting the window.</p>
-        <ul class="fit">
-          <li>You want the real numbers — tokens, subscriptions, API, Bedrock</li>
-          <li>You've never traced what one session costs, line by line</li>
-          <li>Your CLAUDE.md has grown and nobody's measured it</li>
-        </ul>
-        <p class="covers"><b>You'll leave with</b> Three pricing meters, a which-plan-for-which-team table, the context lifecycle, CLAUDE.md hygiene, /clear vs /compact — and a live bloated-vs-lean demo.</p>
-        <p class="meta">28 slides · experienced devs · ~30 min</p>
+        <p class="who">You want to measure a complete task and simplify its instructions.</p>
+        <ul class="fit"><li>Read uncached input, cache and output usage separately</li><li>Choose an access route from actual requirements</li><li>Compare instruction variants without losing correctness</li></ul>
+        <p class="covers"><b>You'll leave with</b> A worked bill, access-route decisions, a before/after instruction file and an exercise that checks correctness as well as usage.</p>
+        <p class="meta">17 slides · 4-slide reference · no live run required</p>
       </a>
 
-      <a class="card wip-card" href="./orchestrating-agents.html">
-        <span class="badge"><span class="num">06</span><span class="lvl">Deep dive · level up</span><span class="wip">WIP</span></span>
+      <a class="card" href="./orchestrating-agents.html">
+        <span class="badge"><span class="num">06</span><span class="lvl">Deep dive · coordination</span></span>
         <span class="t">Orchestrating Agents <span class="arw">→</span></span>
-        <p class="who">One agent is table stakes. Run several — safely — and give them the right capabilities.</p>
-        <ul class="fit">
-          <li>You're juggling agent terminals and want a dashboard, worktrees, or a backlog-driven fleet</li>
-          <li>You want sandboxing before you let agents run unattended</li>
-          <li>You keep debating skills vs CLAUDE.md vs MCP vs CLI</li>
-        </ul>
-        <p class="covers"><b>You'll leave with</b> A map of the orchestration ecosystem, the three failure modes of parallel agents, skills &amp; plugins for teams, and a per-capability MCP-vs-CLI heuristic.</p>
-        <p class="meta">32 slides · experienced devs · ~30 min</p>
+        <p class="who">You need clear ownership, boundaries and review when work is delegated.</p>
+        <ul class="fit"><li>Follow one ticket through claim, work and review</li><li>Separate workspaces from security containment</li><li>Compare skills, tools and interface choices in context</li></ul>
+        <p class="covers"><b>You'll leave with</b> One ticket lifecycle, coordination versus containment, verification skills and an MCP/CLI comparison exercise.</p>
+        <p class="meta">19 slides · 4-slide reference · no live run required</p>
       </a>
 
-      <a class="card wip-card" href="./measuring-what-works.html">
-        <span class="badge"><span class="num">07</span><span class="lvl">Deep dive · level up</span><span class="wip">WIP</span></span>
+      <a class="card" href="./measuring-what-works.html">
+        <span class="badge"><span class="num">07</span><span class="lvl">Deep dive · evaluation</span></span>
         <span class="t">Measuring What Works <span class="arw">→</span></span>
-        <p class="who">Stop arguing about prompts from vibes. Measure — then route models and harnesses by the numbers.</p>
-        <ul class="fit">
-          <li>Your team tweaks CLAUDE.md and prompts with no way to compare</li>
-          <li>You want to read traces for wasted turns and real cost</li>
-          <li>You're curious about open-weight models, local inference &amp; alternative harnesses</li>
-        </ul>
-        <p class="covers"><b>You'll leave with</b> A minimal eval loop you can start this week, trace-reading skills, the July-2026 open-model landscape (Gemma 4, Qwen 3.6, GLM-5.2), and daily habits that compound.</p>
-        <p class="meta">31 slides · experienced devs · ~30 min</p>
+        <p class="who">You want evidence that a prompt, model or workflow change helped.</p>
+        <ul class="fit"><li>Define cases, graders and repeated trials</li><li>Inspect traces without assuming every repeat is waste</li><li>Compare complete results, including failures and cost</li></ul>
+        <p class="covers"><b>You'll leave with</b> Invoice acceptance cases, graders, repeated trials, trace interpretation, a scoring worksheet and measured hardware choices.</p>
+        <p class="meta">19 slides · 5-slide reference · no live run required</p>
       </a>
 
       <a class="card" href="./best-practices.html">
         <span class="badge"><span class="num">08</span><span class="lvl">Advanced · practices</span></span>
         <span class="t">Claude Best Practices <span class="arw">→</span></span>
-        <p class="who">You use Claude Code daily. Now copy what Anthropic's own engineers actually do.</p>
-        <ul class="fit">
-          <li>You vibe-code or build agents, and you're past the basics</li>
-          <li>Your CLAUDE.md, skills or token bill grew and nobody pruned them</li>
-          <li>You want habits to change tomorrow, not a tour of features</li>
-        </ul>
-        <p class="covers"><b>You'll leave with</b> Deletion-first context, skills with gotchas, cache-safe habits, an effort ladder, verification and eval loops, autonomy prompts, six multi-agent patterns, and a command cheat sheet. All from 13 claude.dev posts.</p>
-        <p class="meta">45 slides · advanced devs &amp; vibe coders · ~45 min · no live demo</p>
+        <p class="who">You use Claude Code daily and want practices to test in your own repository.</p>
+        <ul class="fit"><li>Audit conflicting and outdated instructions</li><li>Build a useful verification skill</li><li>Measure effort, caching and delegation tradeoffs</li></ul>
+        <p class="covers"><b>You'll leave with</b> Applied lessons from Anthropic engineering posts: instruction audits, verification skills, cache tradeoffs, measured effort and two delegation patterns.</p>
+        <p class="meta">30 slides · 5-slide reference · no live run required</p>
+      </a>
+
+      <a class="card" href="./working-smarter.html">
+        <span class="badge"><span class="num">09</span><span class="lvl">Half-day workshop</span></span>
+        <span class="t">Working Smarter with Agents <span class="arw">→</span></span>
+        <p class="who">You want hands-on exercises that work with or without a live agent.</p>
+        <ul class="fit"><li>Define and score invoice acceptance cases</li><li>Revise instructions and design a ticket contract</li><li>Write a verification skill and your next experiment</li></ul>
+        <p class="covers"><b>You'll leave with</b> A 210-minute workshop with timeboxes, participant outputs and self-contained invoice exercises. Optional live execution has explicit preparation requirements.</p>
+        <p class="meta">44 slides · 8-slide reference · 210 minutes · static exercises included</p>
       </a>
 
     </div>
@@ -246,24 +233,24 @@
           <dd>Not yet → <a href="./agentic-ai.html">Intro to Agentic AI</a></dd>
         </div>
         <div>
-          <dt>Do you know why a long chat gets dumber?</dt>
+          <dt>Do you know how an agent uses its context?</dt>
           <dd>No, and I want to → <a href="./agentic-engineering.html">Agentic Engineering</a></dd>
         </div>
         <div>
-          <dt>Do you know why a cache hit is 10× cheaper?</dt>
+          <dt>Do you know when a prompt cache saves money?</dt>
           <dd>Not exactly → <a href="./subagents-prompt-caching.html">Subagents &amp; Prompt Caching</a></dd>
         </div>
         <div>
           <dt>Know what your agent sessions actually bill?</dt>
-          <dd>Not really → <a class="wip-link" href="./cost-and-context.html">Cost &amp; Context</a> <span class="wip-note">WIP</span></dd>
+          <dd>Not really → <a href="./cost-and-context.html">Cost &amp; Context</a></dd>
         </div>
         <div>
           <dt>Ever run more than one agent at once?</dt>
-          <dd>Want to → <a class="wip-link" href="./orchestrating-agents.html">Orchestrating Agents</a> <span class="wip-note">WIP</span></dd>
+          <dd>Want to → <a href="./orchestrating-agents.html">Orchestrating Agents</a></dd>
         </div>
         <div>
           <dt>Still judging prompt changes by feel?</dt>
-          <dd>Yes → <a class="wip-link" href="./measuring-what-works.html">Measuring What Works</a> <span class="wip-note">WIP</span></dd>
+          <dd>Yes → <a href="./measuring-what-works.html">Measuring What Works</a></dd>
         </div>
         <div>
           <dt>Want the habits Anthropic's own engineers use?</dt>

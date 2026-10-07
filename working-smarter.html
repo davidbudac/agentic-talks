@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Working Smarter with Agents — cost, context, orchestration, measurement</title>
+<title>Working Smarter with Agents</title>
 
 <!-- Fonts: Space Grotesk (display) + IBM Plex Sans (body) + IBM Plex Mono (mono) — Ember design system -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -255,1159 +255,176 @@ table.tbl tr:last-child td{border-bottom:none}
   [data-deck-active] .title-slide>.ts-foot{animation-delay:.3s}
 }
 </style>
+<style>
+/* Clarity batch 2: use the existing fixed canvas and Ember tokens. */
+.slide{--body-size:32px;--small-size:24px;--code-size:27px}
+.slide a{color:var(--s-text);text-decoration:underline;text-underline-offset:3px}
+.slide a:focus-visible{outline:2px solid var(--s-accent);outline-offset:4px}
+.reference-banner{position:absolute;top:20px;right:96px;z-index:2;font:20px/1.3 var(--font-body);color:var(--s-muted)}
+</style>
 </head>
 <body>
 
-<!--
-  ============================================================
-  Working Smarter with Agents — half-day workshop for engineers
-  already using Claude Code. No intro material. Eight parts:
-  01 cost, 02 context (the most important part), 03 tooling &
-  orchestration, 04 skills & plugins, 05 evals & traces (the
-  most important part for every engineer), 06 MCP vs CLI,
-  07 alternative harnesses/models/APIs, 08 day-to-day + close.
-  All pricing/product claims sourced from deck05-facts.md
-  (July 2026 research pass) — see the closing Sources slide.
-  Status: WIP / DRAFT — flagged on the title slide.
-  Runs on the Ember deck-stage component: ←/→, Space, Home/End,
-  number keys; R resets; speaker notes live on each section.
-  ============================================================
--->
+<!-- Revised clarity teaching path; see reviews/2026-10-03-clarity/. -->
 
 <deck-stage width="1920" height="1080">
 
-  <!-- TITLE -->
-  <section class="slide dark title-slide" data-label="Title"
-    data-speaker-notes="Open straight into the material — no intro, this room is already running Claude Code daily. Say the four-word spine out loud: cost, context, orchestration, measurement. Flag out loud that this is a work-in-progress deck and you want their pushback on the ordering and the demos as much as the content.">
-    <div class="ts-top"><span class="k">Half-day workshop · advanced topics</span><span class="meta">Internal talk · July 2026</span></div>
-    <div class="ts-hero">
-      <div class="wip-badge">WIP — draft</div>
-      <h1>Working Smarter<br>with Agents<span class="dot">.</span></h1>
-      <p class="ts-sub">What it <b>costs</b>, how to spend <b>context</b> well, how to <b>orchestrate</b> more than one agent, and how to <b>measure</b> whether any of it worked.</p>
-    </div>
-    <div class="ts-foot">
-      <div class="ts-author"><a href="https://davidbudac.cz" target="_blank" rel="noopener">David&nbsp;Budáč</a></div>
-      <div class="ts-loopline"><span class="w">cost</span> <span class="a">→</span> <span class="w">context</span> <span class="a">→</span> <span class="w">orchestration</span> <span class="a">→</span> <span class="w">measurement</span></div>
-    </div>
-  </section>
+<section data-origin-slide="1" class="slide dark title-slide" data-label="Title" data-speaker-notes="Workshop · developers Revised October 2026. Worked examples are illustrative; no live run is required." ><div class="ts-top"><span class="k">Workshop · developers</span><span class="meta">Revised October 2026</span></div><div class="ts-hero"><h1>Working Smarter<br>with Agents<span class="dot">.</span></h1><p class="ts-sub">A half-day workshop: define, measure, improve and verify one workflow.</p></div><div class="ts-foot"><div class="ts-author">David Budáč</div></div></section>
 
-  <!-- AGENDA -->
-  <section class="slide light" data-label="Agenda"
-    data-speaker-notes="This is a working session, not an intro talk, so move fast: eight parts, roughly half a day, breaks between parts. Call out the two parts flagged as most important — context hygiene in part two and evals in part five — since if the room only remembers two things, those are the two. Mention demos are live with a runbook and a fallback slide behind each one.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">2</span><div class="crumb"><b>Agenda</b></div></div>
-      <h2 class="reveal">Eight parts, <span class="o">half a day</span></h2>
-      <table class="tbl reveal">
-        <thead><tr><th>Part</th><th>Topic</th><th>Note</th></tr></thead>
-        <tbody>
-          <tr><td><b>01</b></td><td>What agents really cost</td><td>subscriptions, API, Bedrock</td></tr>
-          <tr><td><b>02</b></td><td>Efficient work with context</td><td><b>most important part</b> · live demo</td></tr>
-          <tr><td><b>03</b></td><td>Tool landscape & orchestration</td><td>live demo</td></tr>
-          <tr><td><b>04</b></td><td>Skills & plugins</td><td>live demo</td></tr>
-          <tr><td><b>05</b></td><td>Measuring what works: evals & traces</td><td><b>most important for every engineer</b> · live demo</td></tr>
-          <tr><td><b>06</b></td><td>MCP vs CLI</td><td>—</td></tr>
-          <tr><td><b>07</b></td><td>Alternative harnesses, models & APIs</td><td>live demo</td></tr>
-          <tr><td><b>08</b></td><td>Day-to-day tips & close</td><td>live demo</td></tr>
-        </tbody>
-      </table>
-      <p class="note reveal">All pricing and product claims are date-stamped <b>July 2026</b> and sourced — see the closing Sources slide.</p>
-    </div>
-  </section>
+<section data-origin-slide="2" class="slide light" data-label="Workshop route" data-speaker-notes="Facilitator uses the self-contained invoice exercise. No paid accounts are required for the static route. With a runtime, use disposable copies and approved access. Keep the participant output visible in each block."><div class="slide-content"><div class="slide-head reveal"><span class="snum">2</span><div class="crumb">In practice</div></div><h2 class="reveal">Leave with five concrete artifacts</h2><table class="tbl reveal"><thead><tr><th scope="col">Block</th><th scope="col">Time</th><th scope="col">Participant output</th></tr></thead><tbody><tr><td>Define and evaluate</td><td>50 min</td><td>Acceptance cases + scored worksheet</td></tr><tr><td>Cost and context</td><td>45 min</td><td>Usage sheet + revised instructions</td></tr><tr><td>Break</td><td>15 min</td><td></td></tr><tr><td>Coordinate and package</td><td>55 min</td><td>Ticket contract + verification skill</td></tr><tr><td>Choose tools and next experiment</td><td>45 min</td><td>Comparison design + next action</td></tr></tbody></table><p class="note reveal">Total: 210 minutes. Includes discussion; live execution is optional.</p></div></section>
 
-  <!-- ============ PART 01 — WHAT AGENTS REALLY COST ============ -->
-  <section class="slide dark divider" data-label="01 What agents really cost"
-    data-speaker-notes="Set up the part as plumbing, not sales: most engineers in this room have never looked at what a session actually bills. Promise a real traced session, the current subscription and API landscape, and a decision table at the end for which plan fits which team. Two sentences and move on.">
-    <div class="slide-content">
-      <div class="dnum reveal">01</div>
-      <h2 class="reveal">What agents <span class="o">really cost</span></h2>
-      <p class="dsub reveal">Tokens, priced. One real session's bill, traced line by line. Then: <b>which plan for which team.</b></p>
-    </div>
-  </section>
+<section data-origin-slide="49" class="slide light" data-label="What an eval measures" data-speaker-notes="This is an illustrative task definition. Other cases cover zero VAT, rounding and CSV quoting. The grader can have a bug too; inspect it against known correct and incorrect outputs."><div class="slide-content"><div class="slide-head reveal"><span class="snum">3</span><div class="crumb">In practice</div></div><h2 class="reveal">Separate the case, the grader and the trial</h2><div class="cards c3 reveal"><div class="tile"><h3 class="k">Test case</h3><p>Export a net-100 invoice with 21% VAT.</p></div><div class="tile"><h3 class="k">Grader</h3><p>Parse the CSV and check that net, VAT and gross are 100, 21 and 121.</p></div><div class="tile"><h3 class="k">Trial</h3><p>One fresh attempt with a recorded model, prompt, tools and environment.</p></div></div><p class="note reveal">Evaluate the resulting artifact. A message saying “done” is not the outcome.</p></div></section>
 
-  <section class="slide light" data-label="Tokens 101, priced"
-    data-speaker-notes="Quick refresher but priced this time: input, output, and cached input are three different meters. Point at the facts table and be explicit that these are July 2026 numbers from third-party trackers, not the pricing page itself — tell the room to spot-check before quoting exact figures externally.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">3</span><div class="crumb"><b>Cost</b> · tokens, priced</div></div>
-      <h2 class="reveal">Three meters, <span class="o">not one</span></h2>
-      <div class="cards c3 reveal">
-        <div class="tile"><span class="k">Input</span><p>Everything sent with the request — prompt, files, tool results, history. Cheapest per-token meter.</p></div>
-        <div class="tile"><span class="k">Output</span><p>Everything the model generates — including thinking tokens. The priciest meter, often 5× input.</p></div>
-        <div class="tile fill"><span class="k">Cached input</span><p>Repeated context (system prompt, CLAUDE.md, tool schemas) served from cache — up to <b>~90% cheaper</b>.</p></div>
-      </div>
-      <p class="note reveal">July 2026 rates, e.g. Sonnet 5: <b>$3/M input · $15/M output</b> (introductory $2/$10 through Aug 31, 2026). Spot-check <span class="muted">platform.claude.com/docs/en/pricing</span> before quoting externally.</p>
-    </div>
-  </section>
+<section data-origin-slide="50" class="slide light" data-label="Acceptance cases" data-speaker-notes="These exact examples are synthetic teaching fixtures, not universal tax advice. Use decimal arithmetic in the grader. The CSV test should parse fields, not merely search for a comma."><div class="slide-content"><div class="slide-head reveal"><span class="snum">4</span><div class="crumb">In practice</div></div><h2 class="reveal">Make the expected behavior explicit</h2><table class="tbl reveal"><thead><tr><th scope="col">Case</th><th scope="col">Expected result</th></tr></thead><tbody><tr><td>Net 100.00; VAT 21%</td><td>VAT 21.00; gross 121.00</td></tr><tr><td>Net 100.00; VAT 0%</td><td>VAT 0.00; gross 100.00</td></tr><tr><td>Net 0.05; VAT 10%; half-up cents</td><td>VAT 0.01; gross 0.06</td></tr><tr><td>Customer name: ACME, Ltd</td><td>One customer field after CSV parsing</td></tr></tbody></table><p class="note reveal">For this exercise, round VAT half up to cents, then add it to net. The business rule must come from the task.</p></div></section>
 
-  <section class="slide dark" data-label="Why output dominates"
-    data-speaker-notes="The point that surprises people: output tokens are the ones you don't see coming, because thinking tokens are output too. A verbose agent that re-explains its plan five times is burning the expensive meter, not the cheap one. Tie it back to the effort dial from deck 03 — xhigh reasoning is real spend, not free.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">4</span><div class="crumb"><b>Cost</b> · output dominates</div></div>
-      <h2 class="reveal">Why <span class="o">output</span> tokens dominate</h2>
-      <ul class="bul reveal">
-        <li><b>Thinking tokens are output tokens.</b> The effort dial (deck 03) trades quality for real, billed spend — xhigh is not free.</li>
-        <li>Output is typically <b>5× the price</b> of input per token — a verbose agent that narrates every step pays a premium for it.</li>
-        <li>Latency follows the same meter: output tokens are generated <b>one at a time</b>; input is processed in parallel. Long output = slow turn.</li>
-        <li>Practical lever: shorter, more decisive final answers and tighter thinking budgets cut both cost and wait time together.</li>
-      </ul>
-      <p class="note reveal">Cost and latency are the <b>same lever</b> here — trimming output tokens helps both at once.</p>
-    </div>
-  </section>
+<section data-origin-slide="51" class="slide dark" data-label="Grading methods" data-speaker-notes="A model judge is useful for subjective dimensions but can favor style, verbosity or familiar outputs. Treat grader disagreement as evidence to inspect, not automatic model failure."><div class="slide-content"><div class="slide-head reveal"><span class="snum">5</span><div class="crumb">In practice</div></div><h2 class="reveal">Use the strongest practical check for each claim</h2><div class="cards c3 reveal"><div class="tile"><h3 class="k">Deterministic check</h3><p>Parse CSV, assert values and run regression tests.</p></div><div class="tile"><h3 class="k">Written rubric</h3><p>Assess explanation quality and completeness against named criteria.</p></div><div class="tile"><h3 class="k">Human calibration</h3><p>Check ambiguous cases and compare model-judge scores with human decisions.</p></div></div><p class="note reveal">A different judge model does not remove bias. Blind labels and vary answer order where practical.</p></div></section>
 
-  <section class="slide light" data-label="Anatomy of a session's bill"
-    data-speaker-notes="Walk this as a real trace, not a hypothetical: system prompt and tool schemas load once and get cached, every file read adds input tokens, every re-read of the same file (because context was lost) pays again. The punchline is that re-reads are the single biggest avoidable line item in most sessions — that is exactly what part two is about.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">5</span><div class="crumb"><b>Cost</b> · one session's bill</div></div>
-      <h2 class="reveal">Anatomy of a <span class="o">session's bill</span></h2>
-      <div class="code reveal"><span class="c"># a real agentic session, traced turn by turn</span>
-  <span class="o">system prompt + tool schemas ›</span> <span class="g">cached after turn 1</span>
-  <span class="o">CLAUDE.md ›</span>                  <span class="g">cached, resent every turn</span>
-  <span class="o">file reads (×12) ›</span>          <span class="b">input — the biggest line item</span>
-  <span class="o">re-reads of same file (×4) ›</span> <span class="c">avoidable — context got dropped</span>
-  <span class="o">thinking + final answer ›</span>   <span class="b">output — priciest per token</span></div>
-      <p class="note reveal">The single biggest avoidable cost in most sessions is <b>re-reading the same file</b> because context was already lost or cleared badly — part 02's whole subject.</p>
-    </div>
-  </section>
+<section data-origin-slide="52" class="slide light" data-label="Repeated trials" data-speaker-notes="Explain pass@k as probability of at least one success within k attempts and pass^k as probability all k succeed. This row illustrates the events, not a reliable estimate of either probability. Retries cost time and tokens."><div class="slide-content"><div class="slide-head reveal"><span class="snum">6</span><div class="crumb">In practice</div></div><h2 class="reveal">One success answers a different question</h2><div class="code reveal">Illustrative outcomes for one case: fail fail pass fail fail
 
-  <section class="slide dark" data-label="Subscriptions today"
-    data-speaker-notes="Give the current landscape plainly: Pro at twenty a month, Max at two tiers of five and twenty times the usage. Explicitly say you found no confirmed announcement of a new subscription direction beyond this — don't let anyone repeat a rumor as fact.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">6</span><div class="crumb"><b>Cost</b> · subscriptions today</div></div>
-      <h2 class="reveal">Pro, Max — <span class="o">and no confirmed "next"</span></h2>
-      <table class="tbl reveal">
-        <thead><tr><th>Plan</th><th>Price</th><th>Usage</th></tr></thead>
-        <tbody>
-          <tr><td><b>Pro</b></td><td>$20/mo (~$17/mo annual)</td><td>baseline</td></tr>
-          <tr><td><b>Max 5×</b></td><td>$100/mo</td><td>5× Pro's limits</td></tr>
-          <tr><td><b>Max 20×</b></td><td>$200/mo</td><td>20× Pro's limits, extended context, priority support</td></tr>
-        </tbody>
-      </table>
-      <p class="note reveal">No confirmed statement of a new subscription "direction" beyond Pro/Max/Team/Enterprise as of July 2026 — treat any such claim as <b>unconfirmed</b>. Pricing moves periodically; verify at claude.com/pricing before presenting exact numbers.</p>
-    </div>
-  </section>
+At least one success in five attempts: yes
+All five attempts successful: no
+Observed single-attempt success rate: 1 / 5</div><p class="note reveal">This small sample does not establish production reliability. Report task coverage, repeats and uncertainty.</p></div></section>
 
-  <section class="slide light" data-label="API pricing across the family"
-    data-speaker-notes="This is the table people photograph, so give it room. Read the per-million rates and be explicit about the Sonnet introductory pricing expiry on August 31st, 2026 — that date matters for anyone budgeting past summer. Mention prompt caching's roughly ninety percent discount and the batch API's flat fifty percent, since both change the real number a lot.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">7</span><div class="crumb"><b>Cost</b> · API pricing, family-wide</div></div>
-      <h2 class="reveal">API pricing across the <span class="o">model family</span></h2>
-      <table class="tbl reveal">
-        <thead><tr><th>Model</th><th>Input /M</th><th>Output /M</th><th>Notes</th></tr></thead>
-        <tbody>
-          <tr><td><b>Fable 5</b></td><td>$10</td><td>$50</td><td>highest-cost self-serve tier</td></tr>
-          <tr><td><b>Opus 5</b></td><td>$5</td><td>$25</td><td>complex agentic coding, enterprise</td></tr>
-          <tr><td><b>Sonnet 5</b></td><td>$3</td><td>$15</td><td>$2/$10 intro through Aug 31, 2026</td></tr>
-          <tr><td><b>Haiku 4.5</b></td><td>$1</td><td>$5</td><td>classification, extraction, routing</td></tr>
-        </tbody>
-      </table>
-      <p class="note reveal">Prompt caching: up to <b>~90% off</b> cached input. Batch API: flat <b>50% off</b>. Third-party trackers agree here, but spot-check the Anthropic pricing page directly before quoting on stage.</p>
-    </div>
-  </section>
+<section data-origin-slide="53" class="slide dark" data-label="Trace evidence" data-speaker-notes="Avoid promising every reasoning block. Capture what the harness and provider expose with appropriate redaction. The environment’s final artifact matters more than the agent’s description of it."><div class="slide-content"><div class="slide-head reveal"><span class="snum">7</span><div class="crumb">In practice</div></div><h2 class="reveal">Record the observable run</h2><ul class="bul reveal"><li>Inputs, configuration, tool requests, results and timestamps.</li><li>Final files or external state, check output and exit statuses.</li><li>Usage categories, retries, failures and any unavailable evidence.</li></ul><p class="note reveal">Telemetry is not a full transcript, and neither guarantees access to hidden model reasoning.</p></div></section>
 
-  <section class="slide dark" data-label="Subscription vs API"
-    data-speaker-notes="Give the room a rule of thumb rather than a spreadsheet: steady daily coding use inside the usage caps favors a subscription, bursty or programmatic use — CI, batch, evals — favors raw API. The Cursor-style credit-pool model is a hybrid worth naming since it will come up again in part seven.">
+<section data-origin-slide="54" class="slide light" data-label="Annotated trace" data-speaker-notes="Replaces the assertion that half an illustrative trace was waste. The counterfactual is whether omitting the step preserves correctness and reduces work."><div class="slide-content"><div class="slide-head reveal"><span class="snum">8</span><div class="crumb">In practice</div></div><h2 class="reveal">A repeated step is a question to investigate</h2><table class="tbl reveal"><thead><tr><th scope="col">Observed step</th><th scope="col">What to ask</th></tr></thead><tbody><tr><td>Read calc.py; edit it; read it again</td><td>Did the second read inspect the changed code?</td></tr><tr><td>Repeat a failed tool call</td><td>Did the environment or arguments change?</td></tr><tr><td>Restate the plan after a handoff</td><td>Did this restore missing requirements?</td></tr></tbody></table><p class="note reveal">Label a step waste only after checking its purpose and effect.</p></div></section>
+
+<section data-origin-slide="56" class="slide light" data-label="Results worksheet" data-speaker-notes="Use the same starting repository for each trial and prevent artifacts leaking between variants. Separate development cases from held-out checks."><div class="slide-content"><div class="slide-head reveal"><span class="snum">9</span><div class="crumb">In practice</div></div><h2 class="reveal">Keep failed runs in the comparison</h2><table class="tbl reveal"><thead><tr><th scope="col">Per trial</th><th scope="col">Record</th></tr></thead><tbody><tr><td>Identity</td><td>Case, variant, run number and versioned environment.</td></tr><tr><td>Outcome</td><td>Acceptance checks, rubric scores and evidence paths.</td></tr><tr><td>Work</td><td>Uncached input, cache writes/reads, output and retries.</td></tr><tr><td>Operational result</td><td>Time, total cost, review effort and error reason.</td></tr></tbody></table><p class="note reveal">Aggregate success rate and total spend over all trials. Do not report only successful attempts.</p></div></section>
+
+<section data-origin-slide="57" class="slide dark" data-label="Grading exercise" data-speaker-notes="A fails zero VAT. B fails the comma-containing customer field. Rounding is untested in both, so mark unknown rather than inventing a pass. See exercise-materials.md for the synthetic CSV fixtures."><div class="slide-content"><div class="slide-head reveal"><span class="snum">10</span><div class="crumb">In practice</div></div><h2 class="reveal">Score two synthetic outputs</h2><div class="code reveal">10 minutes — no model call needed
+
+A: net=100, VAT=21, gross=121 for BOTH 21% and 0% orders.
+B: correct totals for both; customer ACME, Ltd is unquoted.
+
+Grade against the four cases. Which outputs fail?
+What evidence is still missing?</div><p class="note reveal">Output: a scored worksheet with explanations. Neither candidate is ready to accept.</p></div></section>
+
+<section data-origin-slide="58" class="slide light" data-label="Exercise debrief" data-speaker-notes="A single missing critical case is enough to block acceptance. The next experiment should exercise rounding and repair the known failures. Avoid choosing B simply because it has more passes; it still fails a requirement."><div class="slide-content"><div class="slide-head reveal"><span class="snum">11</span><div class="crumb">In practice</div></div><h2 class="reveal">A good report includes unknowns</h2><table class="tbl reveal"><thead><tr><th scope="col">Check</th><th scope="col">A</th><th scope="col">B</th></tr></thead><tbody><tr><td>21% VAT totals</td><td>pass</td><td>pass</td></tr><tr><td>Zero VAT totals</td><td>fail</td><td>pass</td></tr><tr><td>Half-up rounding</td><td>not tested</td><td>not tested</td></tr><tr><td>CSV quoting</td><td>not tested</td><td>fail</td></tr></tbody></table><p class="note reveal">No measured speed or token-cost result exists for these synthetic outputs.</p></div></section>
+
+<section data-origin-slide="4" class="slide light" data-label="Token volume and cost" data-speaker-notes="Input volume alone cannot establish the dominant cost. Output rates, reasoning usage, cache writes, cache hits, retries and tools all matter. Use provider usage records and avoid counting cached input twice. Subscription limits are a different accounting model."><div class="slide-content"><div class="slide-head reveal"><span class="snum">12</span><div class="crumb">Count the work</div></div><h2 class="reveal">Count each billing category separately</h2><table class="tbl reveal"><thead><tr><th scope="col">Category</th><th scope="col">What to record</th></tr></thead><tbody><tr><td>Uncached input</td><td>New input processed at its applicable input rate.</td></tr><tr><td>Cache writes and reads</td><td>Separate token counts and the configured cache rates.</td></tr><tr><td>Generated output</td><td>Output usage, including billable reasoning where applicable.</td></tr></tbody></table><p class="note reveal">Bill = sum of each category’s tokens × its rate, plus any separate tool or service fees.</p></div></section>
+
+<section data-origin-slide="6" class="slide dark" data-label="Worked cost example" data-speaker-notes="This example deliberately specifies an existing cache hit, no new cache-write tokens and no separate tool charges. Establishing the cache earlier also costs money. The original input line items summed to 22,709, not exactly 22,700; this version uses explicit rounded totals consistently. Compare a complete task, including cache warm-up and retries."><div class="slide-content"><div class="slide-head reveal"><span class="snum">13</span><div class="crumb">Worked arithmetic</div></div><h2 class="reveal">One cache-hit request: about five cents</h2><table class="tbl reveal"><thead><tr><th scope="col">Illustrative usage and rates</th><th scope="col">Cost</th></tr></thead><tbody><tr><td>19,000 cached input × $0.20 / million</td><td>$0.0038</td></tr><tr><td>3,700 new input × $4 / million</td><td>$0.0148</td></tr><tr><td>1,600 output × $20 / million</td><td>$0.0320</td></tr><tr><td>22,700 input + 1,600 output in total</td><td><b>$0.0506</b></td></tr></tbody></table><p class="note reveal">Assumed rates, not a measured bill. Without the cache hit: $0.0908 input + $0.0320 output = $0.1228.</p></div></section>
+
+<section data-origin-slide="13" class="slide light" data-label="Choose the route" data-speaker-notes="Avoid declaring a winner by team size alone. A subscription and an API have different limits and billing; neither guarantees unlimited work."><div class="slide-content"><div class="slide-head reveal"><span class="snum">14</span><div class="crumb">In practice</div></div><h2 class="reveal">Start with how the work will run</h2><table class="tbl reveal"><thead><tr><th scope="col">Need</th><th scope="col">Check before choosing</th></tr></thead><tbody><tr><td>Daily interactive work</td><td>Native client, plan limits and actual monthly usage.</td></tr><tr><td>Custom service, batch or CI</td><td>Supported API authentication, rate limits and a budget.</td></tr><tr><td>Organizational controls</td><td>Identity, data handling, audit, residency and procurement requirements.</td></tr></tbody></table><p class="note reveal">Compare current offers against these requirements. Detailed shopping questions are in reference material.</p></div></section>
+
+<section data-origin-slide="15" class="slide dark" data-label="Useful context" data-speaker-notes="Long-context performance varies by task, model, positions and distractors. Attention weights summing to one do not establish a single fixed reasoning budget. A handoff or compacted summary can omit important details: check that the acceptance contract and evidence survive."><div class="slide-content"><div class="slide-head reveal"><span class="snum">15</span><div class="crumb">Context quality</div></div><h2 class="reveal">Keep the facts that the next decision needs</h2><div class="cards c2 reveal"><div class="tile"><h3 class="k">Keep</h3><p>The invoice rule, failing case, relevant code, decisions and latest test result.</p></div><div class="tile"><h3 class="k">Summarize or remove</h3><p>Duplicate file dumps, stale logs and abandoned approaches, once their useful findings are captured.</p></div></div><p class="note reveal">Watch for missed requirements and repeated work. There is no universal “dumb zone” or safe fill percentage.</p></div></section>
+
+<section data-origin-slide="18" class="slide light" data-label="Project instructions" data-speaker-notes="Examples include CLAUDE.md and AGENTS.md, but discovery and precedence differ by harness. Do not claim a universal fallback or import rule. A file only helps when its relevant instructions enter the active context."><div class="slide-content"><div class="slide-head reveal"><span class="snum">16</span><div class="crumb">Make it repeatable</div></div><h2 class="reveal">Store the rules needed on most tasks</h2><div class="code reveal"># Project instructions — illustrative invoice repository
+- Test with: pytest tests/test_invoice.py -q
+- VAT rates come from the order record.
+- Preserve existing assertions; explain test changes.
+- Ask before changing the stored invoice schema.</div><p class="note reveal">Use the instruction-file convention your harness actually loads. Keep standing rules short and specific.</p></div></section>
+
+<section data-origin-slide="19" class="slide light" data-label="Instruction file before and after" data-speaker-notes="Illustrative transformation. Some easily derived facts can still be useful navigation hints, so do not turn deletion into an absolute rule."><div class="slide-content"><div class="slide-head reveal"><span class="snum">17</span><div class="crumb">In practice</div></div><h2 class="reveal">Shorten the file while preserving its constraints</h2><div class="cards c2 reveal"><div class="tile"><h3 class="k">Before</h3><p>Long project history, duplicate style advice, VAT rules, test commands and an old incident log.</p></div><div class="tile"><h3 class="k">After</h3><p>Keep VAT source, rounding rule, test command and schema boundary. Link occasional procedures from a skill.</p></div></div><p class="note reveal">The acceptance check is unchanged behavior on the same tasks, not the smallest file.</p></div></section>
+
+<section data-origin-slide="24" class="slide dark" data-label="Compare instruction variants" data-speaker-notes="An optional live run must use disposable copies and approved credentials. With no runtime, use the next static worksheet and discuss what still needs measurement."><div class="slide-content"><div class="slide-head reveal"><span class="snum">18</span><div class="crumb">In practice</div></div><h2 class="reveal">Exercise · compare two versions fairly</h2><div class="code reveal">10 minutes
+A: the long instruction file. B: the shorter version.
+Use identical task inputs, repo state, model and tools.
+Record: acceptance results, all usage, time and retries.
+Repeat runs if available; inspect failures before choosing.</div><p class="note reveal">Output: a comparison worksheet and one justified decision. A smaller prompt that drops the VAT rule loses.</p></div></section>
+
+<section data-origin-slide="25" class="slide light" data-label="Static comparison worksheet" data-speaker-notes="This replaces the empty recorded-run placeholder. Ask participants to identify a measurable acceptance condition for each retained rule. Leave measured fields explicitly not run."><div class="slide-content"><div class="slide-head reveal"><span class="snum">19</span><div class="crumb">In practice</div></div><h2 class="reveal">No runtime? Check the proposed rewrite on paper</h2><table class="tbl reveal"><thead><tr><th scope="col">Requirement</th><th scope="col">A</th><th scope="col">B</th></tr></thead><tbody><tr><td>VAT from order + rounding rule</td><td>present</td><td>verify preserved</td></tr><tr><td>Exact invoice test command</td><td>present</td><td>verify preserved</td></tr><tr><td>Schema change approval</td><td>present</td><td>verify preserved</td></tr><tr><td>Measured task usage and results</td><td>not run</td><td>not run</td></tr></tbody></table><p class="note reveal">Discuss what B removed and which regression case would expose a lost rule. No savings are claimed.</p></div></section>
+
+<section data-origin-slide="21" class="slide dark" data-label="Continue or reset" data-speaker-notes="Claude Code provides clear and compact commands; consult installed help for current behavior. Do not reset a live task without preserving needed state."><div class="slide-content"><div class="slide-head reveal"><span class="snum">20</span><div class="crumb">In practice</div></div><h2 class="reveal">Choose from the state of the task</h2><div class="cards c2 reveal"><div class="tile"><h3 class="k">Unrelated next task</h3><p>Start fresh with its own scope and needed project context.</p></div><div class="tile"><h3 class="k">Same task, long history</h3><p>Summarize the goal, evidence, decisions, failed attempts and next check.</p></div></div><p class="note reveal">Check what survives compaction. Neither a fresh session nor a summary has zero context cost.</p></div></section>
+
+<section data-origin-slide="22" class="slide light" data-label="Subagents"
+    data-speaker-notes="The animation shows separation of intermediate output, not a guarantee of empty input context. Fresh agents also receive system instructions and tool definitions. Worktrees separate edits, not security boundaries. Avoid delegating a trivial step when coordination costs more than the work.">
     <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">8</span><div class="crumb"><b>Cost</b> · subscription vs API</div></div>
-      <h2 class="reveal">When a subscription <span class="o">beats API</span> — and vice versa</h2>
+      <div class="slide-head reveal"><span class="snum">21</span><div class="crumb"><b>Split the work</b> · subagents</div></div>
+      <h2 class="reveal">Delegate a question; ask for evidence back</h2>
       <div class="split">
-        <div class="tile fill"><span class="k">Subscription wins</span><p>Steady daily interactive coding, one person, usage inside the plan's cap. Predictable monthly bill.</p></div>
-        <div class="tile"><span class="k">API wins</span><p>Bursty or programmatic use — CI runs, batch jobs, evals, multi-agent fleets. Pay exactly for what runs.</p></div>
-      </div>
-      <p class="note reveal">Hybrid credit-pool models (Cursor's Auto mode, part 07) sit in between: subscription price, usage-aware routing underneath.</p>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="Teams & Enterprise"
-    data-speaker-notes="Walk the admin surface quickly: Team gives SSO and central controls, Enterprise stacks SCIM, fine-grained roles, IP allowlisting, audit logs, and spend limits on top, and it's annual-only at twenty per seat plus API-rate usage. This is the slide procurement people in the room actually need.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">9</span><div class="crumb"><b>Cost</b> · Team & Enterprise</div></div>
-      <h2 class="reveal">Team → <span class="o">Enterprise</span></h2>
-      <div class="split">
-        <ul class="bul reveal">
-          <li><b>Team:</b> SSO plus central admin controls for connectors and desktop deployment.</li>
-          <li><b>Enterprise:</b> $20/seat/month + usage billed at API rates, annual only.</li>
-        </ul>
-        <ul class="bul reveal">
-          <li>Adds on top of Team: SAML 2.0/OIDC SSO with domain capture, SCIM provisioning, fine-grained roles, IP allowlisting, audit logs, custom retention, org/user spend limits.</li>
-        </ul>
-      </div>
-      <p class="note reveal">Verified SSO paths: Okta, Microsoft Entra ID, Google Workspace.</p>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="Why Bedrock"
-    data-speaker-notes="Explain Bedrock as a procurement and governance answer, not a different product: same models, but data stays inside AWS, regional inference profiles cover residency requirements, and an existing AWS spend commitment can retire against it. Flag the ten percent premium on single-region endpoints so nobody is surprised by the invoice.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">10</span><div class="crumb"><b>Cost</b> · Claude on AWS Bedrock</div></div>
-      <h2 class="reveal">Why an org reaches for <span class="o">Bedrock</span></h2>
-      <ul class="bul reveal">
-        <li>Data stays inside AWS infrastructure — not shared with Anthropic or third parties; regional inference profiles cover US/EU/JP/AU residency.</li>
-        <li>Single AWS bill, existing IAM/CloudTrail, and the ability to retire committed AWS spend (Enterprise Discount Program) against Claude usage.</li>
-        <li><b>Regional (single-region) endpoints carry a 10% pricing premium</b> over global endpoints.</li>
-        <li>Reach for it when: AWS data-boundary requirements, Guardrails/Knowledge Bases, strict regional residency, unified AWS governance.</li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="Cursor pricing & routing"
-    data-speaker-notes="Cursor is worth a slide here because its pricing model is philosophically different: a credit pool for premium models plus an Auto mode that routes for free and doesn't touch the pool. Preview Cursor Router briefly — it's new as of July 22nd — and flag the sixty percent savings figure explicitly as Cursor's own marketing claim, not independently verified. Full harness comparison comes back in part 07.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">11</span><div class="crumb"><b>Cost</b> · Cursor's model</div></div>
-      <h2 class="reveal">Cursor: <span class="o">credit pool + Auto routing</span></h2>
-      <ul class="bul reveal">
-        <li>Four tiers: <b>Hobby</b> (free), <b>Pro</b> ($20/mo, $20 credit pool), <b>Pro+</b> ($60/mo), <b>Ultra</b> ($200/mo).</li>
-        <li><b>Auto mode:</b> Cursor picks the model per request; unlimited on paid plans, doesn't draw from the credit pool.</li>
-        <li><b>Cursor Router</b> (Teams/Enterprise, launched Jul 22, 2026): a decision layer that picks per-request which model runs — not a new model itself.</li>
-      </ul>
-      <p class="note reveal">Cursor claims up to <b>60% cost savings</b> vs. running everything on Opus — that number is <b>Cursor's own marketing claim</b>, not independently verified.</p>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="Which plan, which team"
-    data-speaker-notes="Close the part with the decision table people actually came for. Walk each row: a solo daily coder wants a subscription, a CI pipeline wants raw API with batch discounts where possible, a regulated team wants Bedrock, a team wanting model diversity per task wants Cursor or OpenRouter (part 07). Keep it a reference slide, don't over-narrate.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">12</span><div class="crumb"><b>Cost</b> · takeaway</div></div>
-      <h2 class="reveal">Which plan or channel — <span class="o">for which team</span></h2>
-      <table class="tbl reveal">
-        <thead><tr><th>Team shape</th><th>Reach for</th></tr></thead>
-        <tbody>
-          <tr><td>Solo engineer, daily interactive coding</td><td>Pro or Max, by usage volume</td></tr>
-          <tr><td>CI, batch jobs, scheduled evals</td><td>raw API + batch discount (50% off)</td></tr>
-          <tr><td>Regulated data / AWS-committed org</td><td>Claude on Bedrock (regional endpoint)</td></tr>
-          <tr><td>Team needing SSO/audit/spend limits</td><td>Team or Enterprise</td></tr>
-          <tr><td>Wants routing across model vendors</td><td>Cursor Router or OpenRouter (part 07)</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- ============ PART 02 — EFFICIENT WORK WITH CONTEXT ============ -->
-  <section class="slide dark divider" data-label="02 Efficient work with context"
-    data-speaker-notes="This is the part to slow down for — say out loud that if the workshop is remembered for one thing, this is it. Context is the scarce resource: it degrades as it fills, it costs on every turn, and careless clearing invalidates the cache you just paid for. The live demo at the end makes this concrete with numbers, not just vibes.">
-    <div class="slide-content">
-      <div class="dnum reveal">02</div>
-      <h2 class="reveal">Efficient work <span class="o">with context</span></h2>
-      <p class="dsub reveal">The <b>most important part</b> of today. Context is the scarce resource — spend it like one.</p>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="Context is the scarce resource"
-    data-speaker-notes="Frame the three failure modes together: quality degrades as the window fills even before the hard limit, every turn re-sends (and re-bills) most of what's there, and any edit near the start of the conversation invalidates the prefix cache for everything after it. This is the thesis slide for the whole part.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">13</span><div class="crumb"><b>Context</b> · the scarce resource</div></div>
-      <h2 class="reveal">Context is <span class="o">scarce</span> — spend it like it</h2>
-      <ul class="bul reveal">
-        <li><b>Degrades with fill.</b> Quality starts slipping well before the hard token limit — a full window is not a healthy window.</li>
-        <li><b>Costs on every turn.</b> Most of what's in the window gets resent (and mostly re-billed) each time you send a message.</li>
-        <li><b>Cache invalidation.</b> Edit anything near the start of the conversation and the prefix cache for everything after it is gone.</li>
-      </ul>
-      <p class="note reveal">Three separate failure modes, one fix: be deliberate about what stays in the window.</p>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="The context lifecycle"
-    data-speaker-notes="Walk the flow left to right: system prompt loads once, CLAUDE.md loads once and is resent every turn, tool schemas load once, then the conversation itself grows unbounded. Point out that only the conversation portion is genuinely dynamic — everything before it is fixed overhead you pay repeatedly.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">14</span><div class="crumb"><b>Context</b> · the lifecycle</div></div>
-      <h2 class="reveal">The context lifecycle of a <span class="o">session</span></h2>
-      <div class="flow reveal">
-        <div class="step">system prompt</div><div class="arrow">→</div>
-        <div class="step">CLAUDE.md</div><div class="arrow">→</div>
-        <div class="step">tool schemas</div><div class="arrow">→</div>
-        <div class="step hot">conversation (grows every turn)</div>
-      </div>
-      <p class="note reveal">Everything left of "conversation" is fixed overhead, resent and re-billed every turn (cached, but not free). Only the conversation genuinely grows — and it's the part you control least by default.</p>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="What's resent every turn"
-    data-speaker-notes="Make this concrete with a number: a session with a bloated CLAUDE.md and a dozen tool schemas can be paying several thousand tokens of fixed overhead before the user has typed a single word. Cached, so cheaper than raw input — but not zero, and it compounds across every message in a long session.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">15</span><div class="crumb"><b>Context</b> · what's resent</div></div>
-      <h2 class="reveal">What gets <span class="o">resent every turn</span></h2>
-      <div class="code reveal"><span class="c"># turn N of a real session — before the user has typed anything:</span>
-  <span class="o">system prompt ›</span>   <span class="b">~1–2K tokens</span>  <span class="c">(cached)</span>
-  <span class="o">CLAUDE.md ›</span>       <span class="b">variable</span>     <span class="c">(cached — but size still matters, see next slides)</span>
-  <span class="o">tool schemas ›</span>   <span class="b">~1–5K tokens</span> <span class="c">(cached, scales with tool/MCP count)</span>
-  <span class="o">conversation ›</span>   <span class="b">grows every turn</span> <span class="c">(the part you actually control turn-to-turn)</span></div>
-      <p class="note reveal">Caching makes this cheaper, not free — and a cache miss (from any upstream edit) means the <b>full</b> price, every time.</p>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="CLAUDE.md: what belongs"
-    data-speaker-notes="Give a positive checklist: constraints the repo can't express on its own, the exact commands to run, and conventions that would otherwise need to be re-explained every session. The test is 'could this live as a comment or a README instead' — if yes, it usually shouldn't be in CLAUDE.md.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">16</span><div class="crumb"><b>Context</b> · CLAUDE.md, what belongs</div></div>
-      <h2 class="reveal">CLAUDE.md: what <span class="o">belongs</span></h2>
-      <ul class="bul reveal">
-        <li><b>Constraints the repo can't express:</b> "never touch the payments schema without a migration review."</li>
-        <li><b>Commands the agent needs every session:</b> exact test runner, lint command, deploy steps.</li>
-        <li><b>Conventions that aren't derivable from code:</b> naming rules, review process, who owns what.</li>
-      </ul>
-      <p class="note reveal">Test: could this live as a code comment or README instead? If yes, it usually shouldn't be here.</p>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="CLAUDE.md: what doesn't"
-    data-speaker-notes="Give the negative list just as directly: anything the agent can already derive by reading the code, one-off notes from a single incident, and long essays explaining rationale nobody needs turn to turn. Every line in CLAUDE.md is paid for on every single turn of every session forever — say that sentence slowly.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">17</span><div class="crumb"><b>Context</b> · CLAUDE.md, what doesn't</div></div>
-      <h2 class="reveal">CLAUDE.md: what <span class="o">doesn't belong</span></h2>
-      <ul class="bul reveal">
-        <li><b>Anything derivable from the code.</b> The agent can read the file; don't pre-digest it for every session, forever.</li>
-        <li><b>One-off notes.</b> "Fixed the flaky test on Tuesday" belongs in a commit message, not a file resent every turn.</li>
-        <li><b>Essays.</b> Rationale nobody needs turn-to-turn is a cost with no ongoing return.</li>
-      </ul>
-      <p class="note reveal">Every line in CLAUDE.md is paid for <b>on every turn, of every session, forever.</b> Treat additions like you'd treat a hot-path dependency.</p>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="Measuring CLAUDE.md changes"
-    data-speaker-notes="This bridges into part 05: don't just eyeball a CLAUDE.md diff, measure it. Token overhead per session is a direct number from the API response. Set up the demo: you're about to run the same task twice, once with each version, and compare turns, tokens, and outcome live.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">18</span><div class="crumb"><b>Context</b> · measuring changes</div></div>
-      <h2 class="reveal">Measure the effect — <span class="o">don't guess it</span></h2>
-      <ul class="bul reveal">
-        <li><b>Token overhead per session:</b> read it straight off the API usage response — before/after a CLAUDE.md change.</li>
-        <li><b>Behavioral spot-checks:</b> does the agent still follow the constraint you kept, and stop repeating the one you cut?</li>
-        <li><b>Before/after evals on a fixed task set:</b> the rigorous version — same tasks, same rubric, two CLAUDE.md variants (full method in part 05).</li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="/clear vs /compact"
-    data-speaker-notes="Give the practical rule: /clear when the task is genuinely done and you're starting something unrelated — full reset, no baggage. /compact when you're mid-task and the window is filling but you still need the thread — it summarizes and keeps going. Using the wrong one either loses context you needed or drags dead weight into a new task.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">19</span><div class="crumb"><b>Context</b> · hygiene</div></div>
-      <h2 class="reveal"><span class="o">/clear</span> vs <span class="o">/compact</span></h2>
-      <div class="cards c2 reveal">
-        <div class="tile"><span class="k">/clear</span><p>Full reset. Use when the task is genuinely done and the next one is unrelated — don't drag dead context into a fresh task.</p></div>
-        <div class="tile fill"><span class="k">/compact</span><p>Summarize and continue. Use mid-task when the window is filling but you still need the thread.</p></div>
-      </div>
-      <p class="note reveal">Wrong choice either direction costs you: <b>/clear</b> too early loses context you needed; <b>/compact</b> too rarely drags a bloated window into every remaining turn.</p>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="Subagents as context firewalls"
-    data-speaker-notes="Link back to deck 04 explicitly rather than re-teaching it: a subagent does its exploration in its own window and returns only a distilled report, so the parent session's context never absorbs the raw search noise. That's the mechanism, not just a feature — it's context hygiene applied at the architecture level.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">20</span><div class="crumb"><b>Context</b> · subagents as firewalls</div></div>
-      <h2 class="reveal">Subagents as <span class="o">context firewalls</span></h2>
-      <ul class="bul reveal">
-        <li>A subagent explores, searches, or reads in its <b>own context window</b> — the parent session never absorbs the raw noise.</li>
-        <li>Only the <b>distilled report</b> comes back. Ten files read in a subagent cost the parent session one summary.</li>
-        <li>Full mechanics: deck 04, <i>Subagents & Prompt Caching</i>.</li>
-      </ul>
-      <p class="note reveal">This is context hygiene applied at the architecture level, not just a discipline you have to remember mid-session.</p>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="Reading selectively"
-    data-speaker-notes="Simple habit slide: grep or search for the relevant span before reading a whole file, use line ranges on large files, and let subagents do broad exploration. The alternative — reading entire files 'just in case' — is exactly the re-read pattern that showed up as the biggest line item on the cost-anatomy slide.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">21</span><div class="crumb"><b>Context</b> · reading selectively</div></div>
-      <h2 class="reveal">Read <span class="o">selectively</span></h2>
-      <ul class="bul reveal">
-        <li>Grep or search for the relevant span <b>before</b> reading a whole file.</li>
-        <li>Use line ranges on large files instead of loading them whole.</li>
-        <li>Push broad, exploratory reading into a subagent (previous slide) rather than the main thread.</li>
-      </ul>
-      <p class="note reveal">"Read the whole file just in case" is exactly the re-read pattern that was the biggest avoidable cost line item back in part 01.</p>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="Live demo: bloated vs lean CLAUDE.md"
-    data-speaker-notes="RUNBOOK: two terminal panes side by side, same repo, same task prompt. Left pane has today's actual bloated CLAUDE.md; right pane has a trimmed version prepared in advance (same constraints, no essays, no derivable content). Run the identical task in both, live. Call out turn count, total tokens from each session's usage summary, and whether the outcome differs. If either session runs long, narrate the delta so far and cut to the fallback screenshot rather than waiting it out.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">22</span><div class="crumb"><b>Context</b> · live demo</div></div>
-      <div class="demo-badge reveal">Live</div>
-      <h2 class="reveal">Same task, <span class="o">two CLAUDE.md files</span></h2>
-      <ul class="bul reveal">
-        <li>Left: today's <b>bloated</b> CLAUDE.md. Right: a <b>lean</b> rewrite — same constraints, none of the derivable or one-off content.</li>
-        <li>Identical prompt, run live in both. Compare <b>turns, total tokens, and outcome.</b></li>
-      </ul>
-      <p class="note reveal"><span class="pill live">Live</span> Watch the token counters, not just the transcripts — the difference is usually bigger than it feels.</p>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="Fallback: CLAUDE.md demo"
-    data-speaker-notes="Use only if the live run stalls, the network drops, or time runs short. Narrate from the prepared screenshot/recording: describe the turn-count and token-count delta you captured in rehearsal, and the qualitative outcome difference. Keep it brief and move on to the recap.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">23</span><div class="crumb"><b>Context</b> · fallback</div></div>
-      <h2 class="reveal">Fallback: <span class="o">recorded run</span></h2>
-      <div class="fallback-box reveal">
-        <div class="fb-icon">▢</div>
-        <div class="fb-caption">Placeholder — screenshot or recording of the bloated-vs-lean CLAUDE.md comparison (turn count, token totals, outcome) goes here.</div>
-      </div>
-      <p class="note reveal">Use only if the live run stalls. Narrate the captured turn/token delta from rehearsal, then move on.</p>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="Context hygiene checklist"
-    data-speaker-notes="Close the part with a checklist people can screenshot: trim CLAUDE.md to what can't be derived, clear or compact deliberately rather than by habit, push broad exploration into subagents, and read selectively. Say the thesis one more time before moving to part 03 — this is the highest-leverage change most of the room can make this week.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">24</span><div class="crumb"><b>Context</b> · recap</div></div>
-      <h2 class="reveal">Context hygiene: <span class="o">the checklist</span></h2>
-      <ul class="bul reveal">
-        <li>Trim CLAUDE.md to what the repo genuinely can't express.</li>
-        <li>Choose <b>/clear</b> or <b>/compact</b> deliberately, not by habit.</li>
-        <li>Push broad exploration into subagents — keep the parent thread distilled.</li>
-        <li>Read selectively; grep before you load a whole file.</li>
-      </ul>
-      <p class="note reveal">If this workshop changes one habit, make it this one — it's the highest-leverage change available to most engineers this week.</p>
-    </div>
-  </section>
-
-  <!-- ============ PART 03 — TOOL LANDSCAPE & ORCHESTRATION ============ -->
-  <section class="slide dark divider" data-label="03 The tool landscape & orchestration"
-    data-speaker-notes="Map the ecosystem before naming individual tools: single-agent CLIs the room already knows, orchestrators that run several agents at once, and sandboxes that isolate what an agent can touch. Two live segments in this part — Symphony for issue-to-PR flow, and Sandcastle for sandboxing — plus a hard look at what goes wrong when agents run in parallel.">
-    <div class="slide-content">
-      <div class="dnum reveal">03</div>
-      <h2 class="reveal">The tool landscape & <span class="o">orchestration</span></h2>
-      <p class="dsub reveal">Beyond one agent, one terminal: multiplexers, parallel workspaces, backlog-driven flow, and the sandboxes that make it safe.</p>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="Map of the ecosystem"
-    data-speaker-notes="Three categories, not a product list yet: single-agent CLIs (Claude Code, Codex CLI — what everyone here uses daily), orchestrators that coordinate multiple agent instances, and sandboxes that isolate what any one agent can touch. The next few slides go one level deeper into each.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">25</span><div class="crumb"><b>Orchestration</b> · the map</div></div>
-      <h2 class="reveal">Single agent → <span class="o">orchestrator → sandbox</span></h2>
-      <div class="cards c3 reveal">
-        <div class="tile"><span class="k">Single-agent CLI</span><p>One agent, one terminal. Claude Code, Codex CLI — what most of this room runs daily.</p></div>
-        <div class="tile"><span class="k">Orchestrator</span><p>Coordinates multiple agent instances at once — multiplexers, parallel worktree dashboards, backlog-driven fleets.</p></div>
-        <div class="tile fill"><span class="k">Sandbox</span><p>Isolates what an agent can touch — filesystem, network, git branch — so autonomy doesn't mean risk.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="Herdr"
-    data-speaker-notes="Herdr is a local, single-binary multiplexer — no cloud component. It runs and monitors several coding agents (Claude Code, Codex, Gemini CLI, and others) in one terminal, auto-detecting each one's state — blocked, working, done, idle — and exposing a local socket API so agents can hand off to each other. Position it as the tool for someone who already runs three terminal tabs and wants one dashboard instead.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">26</span><div class="crumb"><b>Orchestration</b> · Herdr</div></div>
-      <h2 class="reveal">Herdr: an <span class="o">agent multiplexer</span></h2>
-      <ul class="bul reveal">
-        <li>Terminal-native, Rust, single binary, runs fully <b>local</b> — no cloud component.</li>
-        <li>Spawns and monitors multiple coding agents (Claude Code, Codex, Gemini CLI, and others) in one terminal.</li>
-        <li>Auto-detects each agent's state — blocked / working / done / idle — plus a local socket API for agent-to-agent handoff.</li>
-      </ul>
-      <p class="note reveal">Earns its place when you're already running three terminal tabs of agents and want one dashboard instead of three.</p>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="Conductor"
-    data-speaker-notes="Conductor is a native macOS app from Melty Labs: each agent runs in its own isolated git worktree, with a dashboard for monitoring, a diff-first review flow, and one-click PR shipping. It's free and bring-your-own-subscription. Position it as the visual, review-centric alternative to Herdr's terminal-native approach.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">27</span><div class="crumb"><b>Orchestration</b> · Conductor</div></div>
-      <h2 class="reveal">Conductor: <span class="o">parallel worktrees</span>, one dashboard</h2>
-      <ul class="bul reveal">
-        <li>Native macOS app (Melty Labs) — runs multiple Claude Code / Codex agents in parallel, each in its own <b>isolated git worktree</b>.</li>
-        <li>Dashboard for monitoring, <b>diff-first review</b>, and PR shipping.</li>
-        <li>Free app; bring your own Claude/Codex subscription.</li>
-      </ul>
-      <p class="note reveal">Earns its place when review quality matters more than terminal muscle memory — the diff-first flow is the differentiator.</p>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="Backlog-driven orchestration patterns"
-    data-speaker-notes="Set up the pattern the demo will show live: agents pull tickets from a backlog instead of a human typing each prompt, and a human reviews the resulting PR instead of writing the code. This flips the loop — the human's job becomes triage and review, not authorship.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">28</span><div class="crumb"><b>Orchestration</b> · backlog-driven patterns</div></div>
-      <h2 class="reveal">Agents that <span class="o">pull from a backlog</span></h2>
-      <div class="flow reveal">
-        <div class="step">ticket ready</div><div class="arrow">→</div>
-        <div class="step hot">agent picks it up</div><div class="arrow">→</div>
-        <div class="step">isolated workspace</div><div class="arrow">→</div>
-        <div class="step">PR opened</div><div class="arrow">→</div>
-        <div class="step">human reviews</div>
-      </div>
-      <p class="note reveal">The human's job shifts from <b>authorship to triage and review</b> — the agent does the first draft of the whole ticket, not just a function.</p>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="Live demo: Symphony"
-    data-speaker-notes="RUNBOOK: have a Linear board with one ready ticket pre-seeded (Symphony currently only supports Linear as its tracker — GitHub Issues is roadmap, not shipped). Kick off Symphony's poller live, show it claim the ticket, create an isolated workspace, dispatch the coding agent, and update the ticket on completion. Name it clearly as an OpenAI project — open-source, Apache 2.0 — not an Anthropic one; the coding agent it dispatches is pluggable. If the poll cycle is slow, narrate what's happening and cut to fallback.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">29</span><div class="crumb"><b>Orchestration</b> · live demo</div></div>
-      <div class="demo-badge reveal">Live</div>
-      <h2 class="reveal">Symphony: <span class="o">issue → PR</span>, end to end</h2>
-      <ul class="bul reveal">
-        <li>Open-source orchestrator (Apache 2.0) that polls an issue tracker, creates an isolated workspace per ready task, dispatches an agent, updates the issue on completion.</li>
-        <li><b>Linear is currently the only supported tracker</b> in the released implementation; GitHub Issues is on the roadmap.</li>
-        <li>Agent-agnostic — the coding agent it dispatches is pluggable.</li>
-      </ul>
-      <p class="note reveal"><span class="pill live">Live</span> This is an <b>OpenAI</b> project, not Anthropic's — worth saying out loud since the coding agent underneath is swappable.</p>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="Fallback: Symphony demo"
-    data-speaker-notes="Use if the Linear poll cycle is too slow to show live or the network is uncooperative. Narrate from the recording: ticket claimed, workspace created, agent dispatched, PR opened, ticket updated. Keep the OpenAI/Linear-only caveats in the narration even from the fallback.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">30</span><div class="crumb"><b>Orchestration</b> · fallback</div></div>
-      <h2 class="reveal">Fallback: <span class="o">recorded run</span></h2>
-      <div class="fallback-box reveal">
-        <div class="fb-icon">▢</div>
-        <div class="fb-caption">Placeholder — screenshot or recording of Symphony claiming a Linear ticket through to opened PR goes here.</div>
-      </div>
-      <p class="note reveal">Use only if the poll cycle stalls live. Keep the "OpenAI project, Linear-only today" caveat in the narration.</p>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="Sandboxing agents"
-    data-speaker-notes="Make the case before the tool: an agent picking up tickets unattended is untrusted autonomy by definition, and untrusted autonomy needs isolation — filesystem, network, and the git history it can touch. This is the argument Sandcastle answers on the next slide.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">31</span><div class="crumb"><b>Orchestration</b> · why sandbox</div></div>
-      <h2 class="reveal">Untrusted autonomy needs <span class="o">isolation</span></h2>
-      <ul class="bul reveal">
-        <li>An agent that picks up tickets and opens PRs unattended is, by definition, running with <b>untrusted autonomy.</b></li>
-        <li>Isolation means containing what it can touch: filesystem, network, and which git history/branches it can affect.</li>
-        <li>The goal isn't distrust of the model — it's bounding the blast radius of a bad tool call or a runaway loop.</li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="Sandcastle walkthrough"
-    data-speaker-notes="Sandcastle is a TypeScript SDK, MIT licensed, built around a single sandcastle.run() call. It supports pluggable sandbox providers — Docker, Podman, Vercel, custom — manages git branch strategy and worktrees, and merges the agent's commits back automatically. Note there are at least two similarly named forks in the wild, so point at the specific repo if anyone wants to try it.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">32</span><div class="crumb"><b>Orchestration</b> · Sandcastle</div></div>
-      <h2 class="reveal">Sandcastle: <span class="o">one call, isolated run</span></h2>
-      <div class="code reveal"><span class="c">// TypeScript SDK — MIT license</span>
-  <span class="o">import</span> { sandcastle } <span class="o">from</span> <span class="g">"sandcastle"</span>;
-  <span class="o">await</span> sandcastle.run({
-    provider: <span class="g">"docker"</span>,  <span class="c">// or podman, vercel, custom</span>
-    agent: <span class="g">"claude-code"</span>,
-    branch: <span class="g">"auto"</span>       <span class="c">// worktree + branch strategy managed for you</span>
-  });</div>
-      <p class="note reveal">Manages sandbox provider, git branch/worktree strategy, and merges commits back automatically. What's isolated: filesystem and process. What escapes: anything the provider itself exposes (e.g. a mounted network).</p>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="Failure modes: runaway loops"
-    data-speaker-notes="Name the failure plainly: an agent that keeps retrying a failing approach without escalating burns tokens and time with nothing to show for it. The fix is a hard turn or token budget per task, enforced by the orchestrator, not left to the agent's own judgment.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">33</span><div class="crumb"><b>Orchestration</b> · failure modes</div></div>
-      <h2 class="reveal">Failure mode: <span class="o">runaway loops</span></h2>
-      <ul class="bul reveal">
-        <li>An agent keeps retrying a failing approach without escalating — tokens and time burn with nothing to show.</li>
-        <li>Fix: a hard turn or token budget per task, enforced by the <b>orchestrator</b>, not left to the agent's own judgment.</li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="Failure modes: merge conflicts"
-    data-speaker-notes="The second failure mode is structural: several agents working in parallel worktrees on overlapping files will produce conflicting diffs, and nobody notices until merge time. Isolated worktrees (Conductor, Sandcastle) reduce this but don't eliminate it when tasks genuinely overlap — that still needs a human to sequence.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">34</span><div class="crumb"><b>Orchestration</b> · failure modes</div></div>
-      <h2 class="reveal">Failure mode: <span class="o">merge conflicts between agents</span></h2>
-      <ul class="bul reveal">
-        <li>Parallel agents on overlapping files produce conflicting diffs — nobody notices until merge time.</li>
-        <li>Isolated worktrees reduce this but don't eliminate it when tasks genuinely overlap — that still needs a human to sequence the work.</li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="Failure modes: review bottlenecks"
-    data-speaker-notes="The third failure mode is the one teams underestimate: orchestration multiplies the number of PRs, not the number of reviewers. If review capacity doesn't scale alongside agent throughput, the backlog just moves from 'unwritten code' to 'unreviewed PRs' — no net gain.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">35</span><div class="crumb"><b>Orchestration</b> · failure modes</div></div>
-      <h2 class="reveal">Failure mode: <span class="o">review bottlenecks</span></h2>
-      <ul class="bul reveal">
-        <li>Orchestration multiplies <b>PRs</b>, not <b>reviewers.</b></li>
-        <li>Without review capacity scaling too, the backlog just moves from "unwritten code" to "unreviewed PRs" — no net gain.</li>
-      </ul>
-      <p class="note reveal">Orchestration is a throughput tool for writing code, not a substitute for review capacity.</p>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="Orchestration decision table"
-    data-speaker-notes="Close with a reference table mapping situation to tool, so people leave with a concrete next step rather than a list of names. Keep the narration light — this is a slide to photograph, not to read aloud line by line.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">36</span><div class="crumb"><b>Orchestration</b> · takeaway</div></div>
-      <h2 class="reveal">Which tool, <span class="o">for which situation</span></h2>
-      <table class="tbl reveal">
-        <thead><tr><th>Situation</th><th>Reach for</th></tr></thead>
-        <tbody>
-          <tr><td>Already running 3 agent terminals</td><td>Herdr</td></tr>
-          <tr><td>Want visual diff-first review of parallel runs</td><td>Conductor</td></tr>
-          <tr><td>Backlog-driven, unattended issue → PR</td><td>Symphony (Linear today)</td></tr>
-          <tr><td>Need real isolation for unattended runs</td><td>Sandcastle</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- ============ PART 04 — SKILLS & PLUGINS ============ -->
-  <section class="slide dark divider" data-label="04 Skills & plugins"
-    data-speaker-notes="This part is short and hands-on: skills are packaged instructions plus scripts, loaded only when relevant, and plugins bundle several skills/agents/hooks for a whole team. The live demo authors a real skill on stage in a few minutes to prove how low the bar is.">
-    <div class="slide-content">
-      <div class="dnum reveal">04</div>
-      <h2 class="reveal">Skills & <span class="o">plugins</span></h2>
-      <p class="dsub reveal">Packaged instructions that load only when needed — and how a team distributes them.</p>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="Skills: anatomy"
-    data-speaker-notes="A skill is a directory with a SKILL.md description, plus optional scripts and reference files. The key mechanism is progressive disclosure: the short description is always in context, but the full instructions only load when the skill is actually triggered — unlike CLAUDE.md, which is resent every turn regardless of relevance.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">37</span><div class="crumb"><b>Skills</b> · anatomy of a SKILL.md</div></div>
-      <h2 class="reveal">A skill: <span class="o">instructions + scripts</span></h2>
-      <div class="code reveal"><span class="c">my-skill/</span>
-  <span class="o">├── SKILL.md</span>       <span class="c"># short description (always in context) + full how-to (loads on trigger)</span>
-  <span class="o">├── scripts/</span>       <span class="c"># optional helper scripts the skill can invoke</span>
-  <span class="o">└── reference/</span>     <span class="c"># optional deep-dive docs, loaded only if needed</span></div>
-      <p class="note reveal">Only the description sits in context by default — the rest loads <b>on trigger</b>, not on every turn.</p>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="Progressive disclosure vs CLAUDE.md"
-    data-speaker-notes="This is the direct payoff of part 02's context argument: a CLAUDE.md line is paid on every turn forever, but a skill's full instructions are paid only when the skill actually fires. Anything that's needed occasionally but verbosely is a skill candidate, not a CLAUDE.md candidate.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">38</span><div class="crumb"><b>Skills</b> · progressive disclosure</div></div>
-      <h2 class="reveal">Progressive disclosure <span class="o">vs stuffing CLAUDE.md</span></h2>
-      <div class="cards c2 reveal">
-        <div class="tile"><span class="k">CLAUDE.md</span><p>Paid on <b>every turn, every session</b> — regardless of whether it's relevant right now.</p></div>
-        <div class="tile fill"><span class="k">Skill</span><p>Description always present; full instructions load <b>only when triggered.</b></p></div>
-      </div>
-      <p class="note reveal">Occasional-but-verbose knowledge belongs in a skill, not CLAUDE.md — this is part 02's cost argument applied directly.</p>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="Skill vs CLAUDE.md vs MCP"
-    data-speaker-notes="Give a decision heuristic: a CLAUDE.md line for something needed every turn regardless of task, a skill for packaged know-how triggered by topic, an MCP server for a capability that needs auth, real state, or a typed API surface. Part 06 goes deeper on MCP specifically.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">39</span><div class="crumb"><b>Skills</b> · decision heuristic</div></div>
-      <h2 class="reveal">Skill beats CLAUDE.md beats <span class="o">MCP server</span> — when?</h2>
-      <table class="tbl reveal">
-        <thead><tr><th>Need</th><th>Reach for</th></tr></thead>
-        <tbody>
-          <tr><td>Needed every turn, regardless of task</td><td>CLAUDE.md</td></tr>
-          <tr><td>Packaged know-how, triggered by topic</td><td>a skill</td></tr>
-          <tr><td>Needs auth, live state, typed API surface</td><td>an MCP server (part 06)</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="Plugins: bundling for a team"
-    data-speaker-notes="A plugin bundles skills, subagents, hooks, and MCP server configs into one distributable unit for a team — install once, everyone gets the same toolkit and conventions. This is the org-wide analogue of an individual's CLAUDE.md and skills folder.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">40</span><div class="crumb"><b>Skills</b> · plugins</div></div>
-      <h2 class="reveal">Plugins: <span class="o">bundle it for a team</span></h2>
-      <ul class="bul reveal">
-        <li>A plugin packages <b>skills + subagents + hooks + MCP configs</b> into one distributable unit.</li>
-        <li>Install once — everyone on the team gets the same toolkit and conventions, not a folder of individually copy-pasted skills.</li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="Distribution inside an org"
-    data-speaker-notes="Close the non-demo content with the practical distribution question: a plugin lives in a repo the team can pull from, versioned like any other shared config, so updates propagate the same way a shared lint config would. This sets up the live demo that follows.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">41</span><div class="crumb"><b>Skills</b> · distribution</div></div>
-      <h2 class="reveal">Distribution <span class="o">inside an org</span></h2>
-      <ul class="bul reveal">
-        <li>A plugin lives in a repo the team pulls from — versioned like any other shared config.</li>
-        <li>Updates propagate the same way a shared lint config would: pull, don't copy-paste.</li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="Live demo: author a skill"
-    data-speaker-notes="RUNBOOK: create a fresh skill directory live, write a short SKILL.md description and one instruction file for a real repeatable task from this team's own workflow, then trigger it in a new session and show it fire. Keep the whole demo under five minutes — the point is that the barrier to entry is a text file, not a framework. If typing live eats too much time, have the SKILL.md pre-written in a scratch file to paste in.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">42</span><div class="crumb"><b>Skills</b> · live demo</div></div>
-      <div class="demo-badge reveal">Live</div>
-      <h2 class="reveal">Author a skill, <span class="o">trigger it, done</span></h2>
-      <ul class="bul reveal">
-        <li>Write a short SKILL.md — description plus one instruction file — for a real task from this team's workflow.</li>
-        <li>Start a fresh session and trigger it by name or by describing the task.</li>
-      </ul>
-      <p class="note reveal"><span class="pill live">Live</span> The point: the barrier to entry is a text file, not a framework.</p>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="Fallback: skill demo"
-    data-speaker-notes="Use if live typing runs long or the trigger doesn't fire as expected. Narrate from the prepared recording: the SKILL.md content, the trigger phrase, and the moment it fires in a fresh session.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">43</span><div class="crumb"><b>Skills</b> · fallback</div></div>
-      <h2 class="reveal">Fallback: <span class="o">recorded run</span></h2>
-      <div class="fallback-box reveal">
-        <div class="fb-icon">▢</div>
-        <div class="fb-caption">Placeholder — screenshot or recording of authoring a SKILL.md and triggering it in a fresh session goes here.</div>
-      </div>
-      <p class="note reveal">Use only if live authoring runs long. Narrate the SKILL.md content and the trigger moment from rehearsal.</p>
-    </div>
-  </section>
-
-  <!-- ============ PART 05 — MEASURING WHAT WORKS ============ -->
-  <section class="slide dark divider" data-label="05 Measuring what works: evals & traces"
-    data-speaker-notes="Say plainly this is the most important part for every engineer, not just for leads. Vibes don't scale past one person's intuition — evals are how a team makes changes to CLAUDE.md, prompts, or models without arguing from anecdotes. The live demo closes the part by actually running a small eval on stage.">
-    <div class="slide-content">
-      <div class="dnum reveal">05</div>
-      <h2 class="reveal">Measuring what works: <span class="o">evals & traces</span></h2>
-      <p class="dsub reveal">The <b>most important part for every engineer</b> in this room — evals are the core skill, not a nice-to-have.</p>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="Why vibes don't scale"
-    data-speaker-notes="Make the case directly: 'this feels better' does not survive a team of ten people all tweaking the same CLAUDE.md or prompt independently. Evals turn a feeling into a number two people can agree on without a meeting. Position evals as the core AI skill for an engineer in 2026, on par with writing tests.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">44</span><div class="crumb"><b>Evals</b> · why vibes don't scale</div></div>
-      <h2 class="reveal">"Feels better" <span class="o">doesn't scale</span></h2>
-      <ul class="bul reveal">
-        <li>One person's intuition about a prompt or CLAUDE.md change doesn't survive a team of ten making changes independently.</li>
-        <li>An eval turns a feeling into a <b>number two people can agree on</b> without a meeting.</li>
-        <li>This is the core AI skill for an engineer in 2026 — on par with writing tests.</li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="Eval type: task-completion suites"
-    data-speaker-notes="The most direct eval type: a fixed set of real tasks with a pass/fail or scored check, run against whatever variant you're testing. Cheap to build once you have five or ten representative tasks from actual work, not synthetic toy problems.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">45</span><div class="crumb"><b>Evals</b> · eval types</div></div>
-      <h2 class="reveal">Task-completion <span class="o">suites</span></h2>
-      <ul class="bul reveal">
-        <li>A fixed set of real tasks, each with a pass/fail or scored check.</li>
-        <li>Build it from <b>actual past work</b> — five to ten representative tasks beat fifty synthetic ones.</li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="Eval type: LLM-as-judge"
-    data-speaker-notes="For tasks without a clean pass/fail — writing quality, code style, explanation clarity — use a second model as judge against a written rubric. Warn about the known failure mode: a judge model tends to prefer its own outputs, so rotate judges or use a different model family than the one being evaluated.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">46</span><div class="crumb"><b>Evals</b> · eval types</div></div>
-      <h2 class="reveal"><span class="o">LLM-as-judge</span></h2>
-      <ul class="bul reveal">
-        <li>For tasks with no clean pass/fail — writing quality, code style, clarity — score output against a written rubric using a second model.</li>
-        <li>Known failure mode: a judge tends to prefer its own family's outputs. Use a different model as judge than the one being evaluated.</li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="Eval type: pass@k"
-    data-speaker-notes="Pass@k runs the same task k times and checks whether at least one attempt succeeds — useful for agentic work where variance run-to-run is real and a single run can mislead. On a fixed repo task set, it's the honest way to compare two configurations when either one occasionally fails by chance.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">47</span><div class="crumb"><b>Evals</b> · eval types</div></div>
-      <h2 class="reveal"><span class="o">Pass@k</span> on a fixed repo task set</h2>
-      <ul class="bul reveal">
-        <li>Run the same task <b>k times</b>; check whether at least one attempt succeeds.</li>
-        <li>Accounts for run-to-run variance in agentic work — a single run can mislead either direction.</li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="Traces: capturing transcripts"
-    data-speaker-notes="A trace is the full agent transcript — every tool call, every token of reasoning, every turn. Capturing it is the raw material for the next slide's analysis, and it's also what makes a failed run debuggable after the fact instead of just 'it didn't work.'">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">48</span><div class="crumb"><b>Evals</b> · traces</div></div>
-      <h2 class="reveal">Traces: capture the <span class="o">full transcript</span></h2>
-      <ul class="bul reveal">
-        <li>Every tool call, every turn, every reasoning block — the raw material for analysis.</li>
-        <li>Also what turns a failed run from "it didn't work" into something debuggable.</li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="Traces: reading for waste"
-    data-speaker-notes="The skill is reading a trace looking specifically for wasted turns — a file read twice, a plan restated three times, a tool call that failed silently and got retried blind. This is where the cost anatomy from part 01 and the context hygiene from part 02 become directly actionable on a real session.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">49</span><div class="crumb"><b>Evals</b> · traces</div></div>
-      <h2 class="reveal">Reading traces for <span class="o">wasted turns</span></h2>
-      <ul class="bul reveal">
-        <li>Look for: a file read twice, a plan restated repeatedly, a failed tool call retried blind.</li>
-        <li>This is where part 01's cost anatomy and part 02's context hygiene become <b>actionable on a real session.</b></li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="Trace tooling"
-    data-speaker-notes="Name the tooling category without over-selling any one vendor: OTel-based observability stacks capture agent traces the same way they'd capture microservice traces, and most model providers now ship their own usage/trace dashboards. Point people at whichever their org already has before reaching for a new tool.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">50</span><div class="crumb"><b>Evals</b> · tooling</div></div>
-      <h2 class="reveal">Tools: <span class="o">OTel & provider dashboards</span></h2>
-      <ul class="bul reveal">
-        <li><b>OTel-based observability:</b> capture agent traces the same way you'd capture microservice traces.</li>
-        <li><b>Provider dashboards:</b> most model providers now ship usage/trace views out of the box — check what your org already has before adding a new tool.</li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="A minimal eval loop"
-    data-speaker-notes="Give the version any team can start this week with zero new tooling: a handful of fixed prompts representative of real work, a short written rubric, and a spreadsheet to score runs against it. This is deliberately unglamorous — the point is that the bar to start is nearly zero, and the demo shows exactly this.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">51</span><div class="crumb"><b>Evals</b> · the minimal loop</div></div>
-      <h2 class="reveal">A minimal eval loop, <span class="o">this week</span></h2>
-      <div class="flow reveal">
-        <div class="step">fixed prompts</div><div class="arrow">→</div>
-        <div class="step">written rubric</div><div class="arrow">→</div>
-        <div class="step hot">score in a spreadsheet</div><div class="arrow">→</div>
-        <div class="step">compare variants</div>
-      </div>
-      <p class="note reveal">Deliberately unglamorous — the bar to start is nearly zero, no new tooling required.</p>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="Live demo: mini eval"
-    data-speaker-notes="RUNBOOK: use the same task set from the earlier CLAUDE.md demo (or a small fixed set of 3-5 tasks) and run it against two variants live — either the two CLAUDE.md versions again, or two different models on the identical prompt. Score each run against the pre-written rubric on screen, tally in a spreadsheet, and show the final comparison number. Keep total run time under five minutes by having tasks that finish fast; cut to fallback if a run hangs.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">52</span><div class="crumb"><b>Evals</b> · live demo</div></div>
-      <div class="demo-badge reveal">Live</div>
-      <h2 class="reveal">Run a small eval, <span class="o">live</span></h2>
-      <ul class="bul reveal">
-        <li>Fixed task set, two variants — two CLAUDE.md versions, or two models on the identical prompt.</li>
-        <li>Score each run against a written rubric, tally in a spreadsheet on screen.</li>
-      </ul>
-      <p class="note reveal"><span class="pill live">Live</span> Same method as the minimal loop — no special tooling, just discipline.</p>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="Fallback: eval demo"
-    data-speaker-notes="Use if a live run hangs or takes too long to score on stage. Narrate from the prepared spreadsheet screenshot: the two variants, the rubric scores, and which one won and why.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">53</span><div class="crumb"><b>Evals</b> · fallback</div></div>
-      <h2 class="reveal">Fallback: <span class="o">recorded run</span></h2>
-      <div class="fallback-box reveal">
-        <div class="fb-icon">▢</div>
-        <div class="fb-caption">Placeholder — screenshot of the scored spreadsheet comparing two variants goes here.</div>
-      </div>
-      <p class="note reveal">Use only if a live run stalls or scoring runs long. Narrate the rubric scores and the winning variant from rehearsal.</p>
-    </div>
-  </section>
-
-  <!-- ============ PART 06 — MCP VS CLI ============ -->
-  <section class="slide dark divider" data-label="06 MCP vs CLI"
-    data-speaker-notes="Set up the tension: two legitimate ways to give an agent a capability, typed MCP servers versus plain CLI tools with docs, and most teams default to one without weighing the tradeoff. Give a heuristic and a real measured example, since this is the kind of decision that's easy to make by habit.">
-    <div class="slide-content">
-      <div class="dnum reveal">06</div>
-      <h2 class="reveal"><span class="o">MCP</span> vs <span class="o">CLI</span></h2>
-      <p class="dsub reveal">Two ways to give an agent capabilities — most teams default to one without weighing the tradeoff.</p>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="Two ways to give an agent capabilities"
-    data-speaker-notes="Frame both options as legitimate, not one obviously better: MCP servers expose typed, authenticated tools over a protocol; plain CLI tools plus documentation let the agent use the same Unix commands it already understands. Both slides that follow build the actual decision case.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">54</span><div class="crumb"><b>MCP vs CLI</b> · two options</div></div>
-      <h2 class="reveal">Two ways to give an agent <span class="o">capabilities</span></h2>
-      <div class="cards c2 reveal">
-        <div class="tile"><span class="k">MCP server</span><p>Typed, authenticated tools exposed over a protocol. Works in shell and non-shell surfaces alike.</p></div>
-        <div class="tile fill"><span class="k">CLI + docs</span><p>Plain command-line tools the agent already knows how to compose, with documentation in context.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="Benefits of MCP"
-    data-speaker-notes="MCP's real strengths: typed schemas mean the agent doesn't have to guess a command's arguments, auth is handled by the protocol rather than embedded in a shell command, and it works in surfaces without a shell at all — desktop apps, web clients. That last point matters more than people expect once an org has non-terminal Claude surfaces.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">55</span><div class="crumb"><b>MCP vs CLI</b> · MCP's strengths</div></div>
-      <h2 class="reveal">Benefits of <span class="o">MCP</span></h2>
-      <ul class="bul reveal">
-        <li><b>Typed schemas</b> — the agent doesn't have to guess a command's arguments.</li>
-        <li><b>Auth handled by the protocol</b>, not embedded in a shell command or a stored token.</li>
-        <li>Works in <b>non-shell surfaces</b> — desktop app, web client — where a CLI simply isn't available.</li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="Benefits of CLI"
-    data-speaker-notes="CLI's real strengths: composability with pipes and Unix idioms the model already deeply understands from training, no schema definitions to write or maintain, and a much lower token cost since a CLI's help text is far leaner than a full tool schema. That last point ties straight back to part 02's cost-per-turn argument.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">56</span><div class="crumb"><b>MCP vs CLI</b> · CLI's strengths</div></div>
-      <h2 class="reveal">Benefits of <span class="o">CLI</span></h2>
-      <ul class="bul reveal">
-        <li><b>Composability</b> — pipes and Unix idioms the model already deeply understands from training.</li>
-        <li><b>No schema overhead</b> — no tool definitions to write or maintain.</li>
-        <li>Agents already know Unix — a CLI's help text is usually far leaner in tokens than a full MCP tool schema.</li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="Token cost of tool definitions"
-    data-speaker-notes="This ties MCP vs CLI directly to part 01's economics: every MCP tool schema loaded into a session is fixed input-token overhead paid on every turn, same as CLAUDE.md. A handful of MCP servers with verbose schemas can add up to real per-session cost before a single tool call happens.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">57</span><div class="crumb"><b>MCP vs CLI</b> · token cost</div></div>
-      <h2 class="reveal">Token cost of <span class="o">tool definitions</span></h2>
-      <ul class="bul reveal">
-        <li>Every MCP tool schema loaded into a session is <b>fixed input-token overhead</b>, paid every turn — same mechanism as CLAUDE.md (part 02).</li>
-        <li>A handful of MCP servers with verbose schemas adds up before a single tool call happens.</li>
-        <li>A CLI's equivalent "definition" is often just a one-line description plus <code>--help</code> on demand — much cheaper by default.</li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="Decision heuristic"
-    data-speaker-notes="Give the rule of thumb directly: interactive, authenticated, or remote capabilities lean MCP; local, scriptable, chainable capabilities lean CLI. Most teams end up with both, and that's fine — the point is choosing deliberately per capability instead of defaulting to whichever pattern the team learned first.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">58</span><div class="crumb"><b>MCP vs CLI</b> · heuristic</div></div>
-      <h2 class="reveal">The <span class="o">decision heuristic</span></h2>
-      <table class="tbl reveal">
-        <thead><tr><th>Capability is…</th><th>Reach for</th></tr></thead>
-        <tbody>
-          <tr><td>Interactive, authenticated, or remote</td><td>MCP</td></tr>
-          <tr><td>Local, scriptable, chainable</td><td>CLI</td></tr>
-        </tbody>
-      </table>
-      <p class="note reveal">Most teams end up with both — choose deliberately per capability, not by habit.</p>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="Case study: same tool, both ways"
-    data-speaker-notes="Ground this in your own setup: name one internal tool exposed both as an MCP server and as a CLI, and give the measured token/latency difference between the two paths for the same task. This is the slide that makes part 06's argument concrete instead of theoretical — fill in your team's actual numbers before presenting.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">59</span><div class="crumb"><b>MCP vs CLI</b> · case study</div></div>
-      <h2 class="reveal">One tool, <span class="o">both ways</span> — measured</h2>
-      <ul class="bul reveal">
-        <li>Pick one internal tool exposed both as an MCP server and as a CLI in your own setup.</li>
-        <li>Compare token overhead and latency for the identical task run through each path.</li>
-      </ul>
-      <p class="note reveal">[TODO: fill in your team's own measured tool + numbers before presenting — this slide is a template.]</p>
-    </div>
-  </section>
-
-  <!-- ============ PART 07 — ALTERNATIVE HARNESSES, MODELS & APIs ============ -->
-  <section class="slide dark divider" data-label="07 Alternative harnesses, models & APIs"
-    data-speaker-notes="Reprise the presenter's own model-picking table from the cost deck: routing tasks by cost, intelligence, and taste is the same discipline whether you're picking a Claude model or a harness or an open-weight model. This part covers Cursor as a harness, OpenRouter and Pi, the open-model landscape, and closes with a live demo running local models on modest hardware.">
-    <div class="slide-content">
-      <div class="dnum reveal">07</div>
-      <h2 class="reveal">Alternative <span class="o">harnesses, models & APIs</span></h2>
-      <p class="dsub reveal">Why not monoculture: route by cost, intelligence, and taste — the same discipline at every layer.</p>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="Why not monoculture"
-    data-speaker-notes="State the thesis plainly: no single model or harness wins on cost, intelligence, and taste simultaneously, so routing by task is the same discipline as the presenter's own model-picking table — cheap and fast for bulk work, smarter for unsupervised hard problems, highest-taste only where UI/copy quality is the bottleneck.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">60</span><div class="crumb"><b>Alt. harnesses</b> · why not monoculture</div></div>
-      <h2 class="reveal">Route by <span class="o">cost, intelligence, taste</span></h2>
-      <ul class="bul reveal">
-        <li>No single model or harness wins on all three axes at once.</li>
-        <li>Cheap and fast for bulk, mechanical work; smarter models for hard unsupervised problems; highest-taste models only where UI/copy quality is the actual bottleneck.</li>
-      </ul>
-      <p class="note reveal">This is the same discipline at every layer — model choice, harness choice, even open-vs-hosted choice.</p>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="Cursor as a harness"
-    data-speaker-notes="Cursor is worth its own slide as a harness, not just a pricing model (part 01): its IDE-native integration and Auto/Router model selection make it a genuine alternative to a terminal agent for engineers who live in an editor. It earns its place when routing quality matters more than terminal-native workflows like git worktrees.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">61</span><div class="crumb"><b>Alt. harnesses</b> · Cursor</div></div>
-      <h2 class="reveal">Cursor as a <span class="o">harness</span></h2>
-      <ul class="bul reveal">
-        <li>IDE-native, not terminal-native — strongest for engineers who live in an editor rather than a terminal.</li>
-        <li>Auto mode and Cursor Router (part 01) route per-request across models automatically.</li>
-        <li>Beats a terminal agent when routing quality and IDE integration matter more than terminal-native workflows.</li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="OpenRouter"
-    data-speaker-notes="OpenRouter is one API key over 315-plus models from every major vendor, with a roughly 5.5% fee on credit purchases rather than a heavy per-token markup — use that framing over the inconsistent '30-60% markup' figure some trackers cite. Flag the real caveat: failover is a feature, but it also means a request can silently land on a different provider than you expected.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">62</span><div class="crumb"><b>Alt. harnesses</b> · OpenRouter</div></div>
-      <h2 class="reveal">OpenRouter: <span class="o">one API, many models</span></h2>
-      <ul class="bul reveal">
-        <li><b>315+ models</b> from Anthropic, OpenAI, Google, DeepSeek, Meta, Mistral, xAI, and others — one key, one bill.</li>
-        <li>Pay-per-token; roughly a <b>5.5% fee on credit purchases</b> rather than a heavy per-token markup on most models.</li>
-        <li>Caveat: failover is a feature, but it means a request can silently route to a different provider than expected.</li>
-      </ul>
-      <p class="note reveal">Some trackers cite a "30-60% markup in some cases" — that figure is inconsistent across sources; the 5.5% credit-fee framing is the more defensible one.</p>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="Pi"
-    data-speaker-notes="Pi is Mario Zechner's minimal terminal harness — under a thousand tokens of system prompt, now under Earendil Inc, supporting 15-plus providers including local models via Ollama. The tradeoff to flag: running Claude models through Pi bills at raw API rates, so someone already on Claude Max is effectively paying twice — the payoff is a lighter harness and broader model choice.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">63</span><div class="crumb"><b>Alt. harnesses</b> · Pi</div></div>
-      <h2 class="reveal">Pi: a <span class="o">minimal</span> harness</h2>
-      <ul class="bul reveal">
-        <li>Terminal coding-agent harness by Mario Zechner (now Earendil Inc) — system prompt under ~1,000 tokens.</li>
-        <li>Supports 15+ providers/hundreds of models, plus local models via Ollama for zero-cost inference.</li>
-        <li>Tradeoff: using Claude models through Pi bills at <b>raw API rates</b> — a Claude Max subscriber effectively pays twice.</li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="State of open-source models"
-    data-speaker-notes="Frame the headline claim carefully: the frontier gap for coding tasks is closing, not closed. The next several slides give specific, verified evidence — Gemma 4, Qwen 3.6, GLM-5.2 — rather than asserting the trend in the abstract.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">64</span><div class="crumb"><b>Alt. harnesses</b> · open models, July 2026</div></div>
-      <h2 class="reveal">The frontier gap is <span class="o">closing</span> — for coding</h2>
-      <ul class="bul reveal">
-        <li>Several open-weight releases in 2026 close in on frontier coding-benchmark scores at a fraction of the parameter count or cost.</li>
-        <li>Closing, not closed — the next slides give specific, verified examples rather than the trend in the abstract.</li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="Gemma 4"
-    data-speaker-notes="Gemma 4 arrived around March 2026 in five sizes from 2B up to 31B dense; the 12B unified multimodal variant, added June 2026, runs comfortably on a 16GB laptop at Q4_0 quantization and nearly matches the 26B model's benchmarks at less than half the memory. This is real evidence that local, laptop-class inference is viable, not aspirational.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">65</span><div class="crumb"><b>Alt. harnesses</b> · Gemma 4</div></div>
-      <h2 class="reveal">Gemma 4: <span class="o">laptop-viable</span></h2>
-      <ul class="bul reveal">
-        <li>Google, arrived ~March 2026. Sizes: E2B, E4B, a 12B unified multimodal (June 2026), a 26B MoE (3.8B active), a 31B dense.</li>
-        <li>The <b>12B model runs on a 16GB laptop</b> (e.g. 16GB MacBook Air) at Q4_0 quantization — nearly matching the 26B model at under half the memory.</li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="Qwen 3.6"
-    data-speaker-notes="Qwen 3.6 is Alibaba's Apache-2.0 family, with two April 2026 flagship releases: a 27B dense model and a 35B-A3B mixture-of-experts model with only 3B active parameters per token. The MoE variant's low active-parameter count is the realistic local-laptop pick; exact RAM requirements weren't independently verified in the fact-check pass, so say that out loud rather than guessing a number.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">66</span><div class="crumb"><b>Alt. harnesses</b> · Qwen 3.6</div></div>
-      <h2 class="reveal">Qwen 3.6: <span class="o">dense and MoE flagships</span></h2>
-      <ul class="bul reveal">
-        <li>Alibaba, Apache 2.0. Two April 2026 flagships: <b>27B dense</b> and <b>35B-A3B MoE</b> (only 3B active params/token).</li>
-        <li>Native 256K context, extensible to ~1M via YaRN; reportedly outperforms a 397B MoE model on agentic coding benchmarks.</li>
-        <li>The 35B-A3B MoE is the realistic local-laptop pick given its low active-parameter count. <span class="muted">[exact laptop RAM requirements not independently verified]</span></li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="Live demo: local models on small hardware"
-    data-speaker-notes="RUNBOOK: on the presenter's own laptop, run Gemma 4 (12B) or Qwen 3.6 (35B-A3B) locally via Ollama, feed it a real coding task from this team's repo, and let it run to completion on screen. The message is 'absolutely viable even on modest hardware,' not 'as good as the frontier' — don't oversell it. If local inference is too slow to finish live, narrate progress and cut to the fallback recording rather than waiting out a slow generation.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">67</span><div class="crumb"><b>Alt. harnesses</b> · live demo</div></div>
-      <div class="demo-badge reveal">Live</div>
-      <h2 class="reveal">Local models, <span class="o">small hardware</span></h2>
-      <ul class="bul reveal">
-        <li>Gemma 4 (12B) or Qwen 3.6 (35B-A3B) running locally on the presenter's own laptop via Ollama.</li>
-        <li>A real coding task from this team's repo, run to completion on screen.</li>
-      </ul>
-      <p class="note reveal"><span class="pill live">Live</span> Message: <b>absolutely viable</b> even on modest hardware — not "as good as the frontier."</p>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="Fallback: local model demo"
-    data-speaker-notes="Use if local generation is too slow to finish live. Narrate from the recording: which model, which task, how long it took, and the final result — keep the honest framing that it's slower than a hosted frontier model but genuinely usable.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">68</span><div class="crumb"><b>Alt. harnesses</b> · fallback</div></div>
-      <h2 class="reveal">Fallback: <span class="o">recorded run</span></h2>
-      <div class="fallback-box reveal">
-        <div class="fb-icon">▢</div>
-        <div class="fb-caption">Placeholder — screenshot or recording of a local Gemma 4 / Qwen 3.6 run completing a real coding task goes here.</div>
-      </div>
-      <p class="note reveal">Use only if the live run is too slow to finish on stage. Keep the honest framing: slower than hosted, genuinely usable.</p>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="Colibri for GLM-5.2"
-    data-speaker-notes="GLM-5.2 is Z.ai's open-weight MoE coding model at roughly 753 billion total parameters — sources disagree slightly, some say 744B, treat the exact figure as approximate. Colibri is the piece that makes it runnable on ordinary hardware with no GPU: a ~2,400-line pure-C inference engine that keeps the dense parameters in RAM and streams routed experts from disk, running the full model on about 25GB of RAM. Be upfront that speed is very slow, roughly 0.05 to 1 token per second — the value is running it at all, not running it fast.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">69</span><div class="crumb"><b>Alt. harnesses</b> · Colibri + GLM-5.2</div></div>
-      <h2 class="reveal">Colibri: GLM-5.2 <span class="o">without a GPU</span></h2>
-      <ul class="bul reveal">
-        <li><b>GLM-5.2</b> (Z.ai): open-weight MoE, ~753B total params (~40B active), 1M context. Reportedly matches/beats GPT-5.5 on several long-horizon coding tasks. <span class="muted">[total param count varies 744B–753B across sources]</span></li>
-        <li><b>Colibri</b>: a ~2,400-line pure-C inference engine — keeps ~17B dense params in RAM (int4), streams routed experts from disk via an LRU cache.</li>
-        <li>Runs on ordinary hardware, <b>no GPU</b>, about <b>25GB RAM.</b> Speed: ~0.05–1 tokens/sec — value is running it at all, not fast.</li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="When local makes sense"
-    data-speaker-notes="Close the open-model thread with a balanced decision: local makes sense for privacy-sensitive or air-gapped environments, for driving marginal cost toward zero, and where latency requirements are loose enough to tolerate it. It doesn't make sense when you need frontier quality or fast turnaround, or when the hardware/ops overhead outweighs the savings.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">70</span><div class="crumb"><b>Alt. harnesses</b> · when local makes sense</div></div>
-      <h2 class="reveal">When local makes sense — <span class="o">and when it doesn't</span></h2>
-      <div class="cards c2 reveal">
-        <div class="tile fill"><span class="k">Makes sense</span><p>Privacy-sensitive or air-gapped work, driving marginal cost toward zero, latency requirements loose enough to tolerate it.</p></div>
-        <div class="tile"><span class="k">Doesn't</span><p>Need frontier quality or fast turnaround; hardware/ops overhead outweighs the savings.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ PART 08 — DAY-TO-DAY TIPS & CLOSING ============ -->
-  <section class="slide dark divider" data-label="08 Day-to-day tips & closing"
-    data-speaker-notes="Land the plane with the most immediately actionable part: voice mode, daily habits, then the four-word recap ladder from the title slide, then sources. Keep the pace brisk — this part is meant to send people out with concrete next actions, not new concepts.">
-    <div class="slide-content">
-      <div class="dnum reveal">08</div>
-      <h2 class="reveal">Day-to-day tips & <span class="o">closing</span></h2>
-      <p class="dsub reveal">The habits that compound daily — then the recap, then the sources.</p>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="Voice mode"
-    data-speaker-notes="Claude Code's native /voice dictation shipped around March 3rd 2026 and is confirmed real: Hold and Tap modes, tuned for coding vocabulary. Be explicit and careful about 'Hlas' — it could not be verified as a real named product in the fact-check pass; it may be a generic reference to Czech-language dictation rather than a specific tool. Ask the presenter to confirm the exact name/spelling before using it live, or cut the reference. The live demo should showcase Claude Code's own /voice command, which is solidly verified, regardless of how the Hlas question resolves.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">71</span><div class="crumb"><b>Day-to-day</b> · voice mode</div></div>
-      <div class="demo-badge reveal">Live</div>
-      <h2 class="reveal">Voice mode: <span class="o">dictate, don't type</span></h2>
-      <ul class="bul reveal">
-        <li>Claude Code shipped native <code>/voice</code> dictation ~March 2026 — <b>Hold</b> (default) and <b>Tap</b> modes, tuned for coding vocabulary (regex, OAuth, JSON, localhost).</li>
-        <li>Hands-free review: dictate a prompt, keep typing while speaking, review output without touching the keyboard.</li>
-      </ul>
-      <p class="note reveal"><span class="pill live">Live</span> "Hlas" (Czech voice tooling per earlier notes) <span class="muted">[TODO: verify tool name — could not confirm as a real product; may be a generic reference]</span>. Demo Claude Code's own <code>/voice</code> command instead, which is solidly verified.</p>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="Fallback: voice demo"
-    data-speaker-notes="Use if live dictation is unreliable on the venue's microphone setup. Narrate from the recording: the /voice command, Hold vs Tap, and a real prompt dictated and executed.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">72</span><div class="crumb"><b>Day-to-day</b> · fallback</div></div>
-      <h2 class="reveal">Fallback: <span class="o">recorded run</span></h2>
-      <div class="fallback-box reveal">
-        <div class="fb-icon">▢</div>
-        <div class="fb-caption">Placeholder — screenshot or recording of Claude Code's /voice command dictating and executing a real prompt goes here.</div>
-      </div>
-      <p class="note reveal">Use only if the venue's microphone makes live dictation unreliable.</p>
-    </div>
-  </section>
-
-  <section class="slide light" data-label="Grab-bag of daily habits"
-    data-speaker-notes="Quick list of habits that compound: keyboard-first navigation instead of reaching for the mouse, running several sessions in parallel on unrelated tasks, kicking off background/async tasks and checking back later, and checkpointing progress with small git commits so an agent's mid-task state is never the only copy.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">73</span><div class="crumb"><b>Day-to-day</b> · habits</div></div>
-      <h2 class="reveal">Habits that <span class="o">compound daily</span></h2>
-      <ul class="bul reveal">
-        <li><b>Keyboard-first</b> — fewer context switches to the mouse.</li>
-        <li><b>Parallel sessions</b> on unrelated tasks instead of waiting serially.</li>
-        <li><b>Background/async tasks</b> — kick off, check back later.</li>
-        <li><b>Checkpoint with git</b> — small commits so an agent's mid-task state is never the only copy.</li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="slide dark" data-label="Recap ladder"
-    data-speaker-notes="Close the content with the same four-word ladder from the title slide: cost, context, orchestration, measurement. Say it once more, slowly, and connect each word to the part that covered it — this is the sentence you want the room repeating tomorrow.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">74</span><div class="crumb"><b>Day-to-day</b> · recap</div></div>
-      <h2 class="reveal">Cost → context → <span class="o">orchestration → measurement</span></h2>
-      <div class="flow reveal">
-        <div class="step">01 cost</div><div class="arrow">→</div>
-        <div class="step hot">02 context</div><div class="arrow">→</div>
-        <div class="step">03–04 orchestration</div><div class="arrow">→</div>
-        <div class="step hot">05 measurement</div>
-      </div>
-      <p class="note reveal">Two words carry more weight than the rest: <b>context</b> (part 02) and <b>measurement</b> (part 05) — that's what to act on first.</p>
-    </div>
-  </section>
-
-  <!-- SOURCES -->
-  <section class="slide light dense" data-label="Sources"
-    data-speaker-notes="Close on sources, matching series convention: all pricing and product claims are date-stamped July 2026 and come from the fact-check pass. Point out the two explicitly unverified items — Hlas, and the 'new subscription direction' claim — one more time so nobody repeats either as confirmed.">
-    <div class="slide-content">
-      <div class="slide-head reveal"><span class="snum">75</span><div class="crumb"><b>Close</b> · sources</div></div>
-      <h2 class="reveal"><span class="o">Sources</span> — all claims dated July 2026</h2>
-      <div class="links reveal">
-        <div class="linkcol">
-          <h3>Pricing & plans</h3>
-          <a href="https://claude.com/pricing" target="_blank" rel="noopener">Claude pricing<span class="u">claude.com/pricing</span></a>
-          <a href="https://platform.claude.com/docs/en/pricing" target="_blank" rel="noopener">Claude API pricing docs<span class="u">platform.claude.com/docs/en/pricing</span></a>
-          <a href="https://aws.amazon.com/claude-platform/" target="_blank" rel="noopener">Claude on AWS Bedrock<span class="u">aws.amazon.com/claude-platform</span></a>
-          <a href="https://www.nxcode.io/resources/news/cursor-ai-pricing-plans-guide-2026" target="_blank" rel="noopener">Cursor pricing guide 2026<span class="u">nxcode.io</span></a>
-        </div>
-        <div class="linkcol">
-          <h3>Tools & models</h3>
-          <a href="https://herdr.org/" target="_blank" rel="noopener">Herdr<span class="u">herdr.org</span></a>
-          <a href="https://github.com/mattpocock/sandcastle" target="_blank" rel="noopener">Sandcastle<span class="u">github.com/mattpocock/sandcastle</span></a>
-          <a href="https://github.com/QwenLM/Qwen3.6" target="_blank" rel="noopener">Qwen 3.6<span class="u">github.com/QwenLM/Qwen3.6</span></a>
-          <a href="https://www.nist.gov/news-events/news/2026/07/caisi-assessment-zais-glm-52" target="_blank" rel="noopener">NIST CAISI assessment of GLM-5.2<span class="u">nist.gov</span></a>
+        <ul class="bul reveal"><li>Fresh helpers need a self-contained task and relevant inputs. Forks can inherit existing history.</li><li>Keep intermediate investigation in the helper’s context; return findings with file references.</li><li>Review the result. Delegation adds coordination cost and does not itself isolate filesystem access.</li></ul>
+        <div class="diagram reveal">
+          <!-- Remotion animation (remotion/src/Subagents.tsx) -->
+          <video src="assets/anim/subagents-light.mp4" width="1176" height="756" autoplay muted loop playsinline aria-label="A main agent delegates messy work to sub-agents that have their own context and return only a short summary"></video>
         </div>
       </div>
-      <p class="note reveal">Full source list with per-claim citations: <span class="muted">deck05-facts.md</span> (internal research doc). Two items flagged unverified: <b>"Hlas"</b> as a named product, and any claim of a <b>new announced subscription direction</b> beyond Pro/Max/Team/Enterprise.</p>
+      <p class="note reveal">Example return: VAT calculation locations, the failing path, supporting lines and unresolved questions.</p>
     </div>
   </section>
+
+<section data-origin-slide="28" class="slide dark" data-label="Coordination and containment" data-speaker-notes="Preserve the local/environment distinction. Real containment depends on the configured runtime and permissions, not the number of agents."><div class="slide-content"><div class="slide-head reveal"><span class="snum">22</span><div class="crumb">In practice</div></div><h2 class="reveal">Two separate design decisions</h2><div class="cards c2 reveal"><div class="tile"><h3 class="k">Orchestration</h3><p>Who gets a task, what it depends on and who integrates the result.</p></div><div class="tile"><h3 class="k">Isolation</h3><p>What files, credentials, processes and network endpoints the tools can access.</p></div></div><p class="note reveal">A dashboard or Git worktree does not by itself enforce a security boundary.</p></div></section>
+
+<section data-origin-slide="31" class="slide light" data-label="Ticket lifecycle" data-speaker-notes="A lease or equivalent ownership control prevents duplicate claims. Persist task state. A real integration still needs authentication, idempotency and recovery; this is a teaching lifecycle."><div class="slide-content"><div class="slide-head reveal"><span class="snum">23</span><div class="crumb">In practice</div></div><h2 class="reveal">One ticket, explicit state transitions</h2><div class="code reveal">Ready: invoice rule + scope + acceptance cases
+Claimed: one owner + lease + retry budget
+Working: permitted workspace + progress evidence
+Review: patch + checks + unresolved gaps
+Accepted: reviewer confirms the requested behavior</div><p class="note reveal">Failed or blocked work returns with evidence. A green tool run does not automatically publish a change.</p></div></section>
+
+<section data-origin-slide="33" class="slide dark" data-label="Static ticket walkthrough" data-speaker-notes="Replaces the empty Symphony recording placeholder. This is a tabletop exercise, not a trace from an orchestrator."><div class="slide-content"><div class="slide-head reveal"><span class="snum">24</span><div class="crumb">In practice</div></div><h2 class="reveal">Walk the invoice ticket without a live service</h2><table class="tbl reveal"><thead><tr><th scope="col">Event</th><th scope="col">Expected state or action</th></tr></thead><tbody><tr><td>Worker finds missing VAT rule</td><td>Blocked; request the rule before changing behavior.</td></tr><tr><td>Two workers claim the same ticket</td><td>One claim wins; the other does not start editing.</td></tr><tr><td>Tests pass but escaping is untested</td><td>Review records the gap and adds an acceptance check.</td></tr></tbody></table><p class="note reveal">Exercise: explain who owns each decision and what evidence is attached.</p></div></section>
+
+<section data-origin-slide="34" class="slide light" data-label="Tool boundary" data-speaker-notes="The old sandbox diagram implied a worktree constrained Git and filesystem access. Make the enforcement mechanism explicit and test it before unattended runs."><div class="slide-content"><div class="slide-head reveal"><span class="snum">25</span><div class="crumb">In practice</div></div><h2 class="reveal">Specify the environment the worker receives</h2><ul class="bul reveal"><li>Allow the repository paths and commands required by the ticket.</li><li>Scope credentials and network access to the necessary services.</li><li>Use separate edit workspaces; enforce time, attempt and spend limits outside the prompt.</li></ul><p class="note reveal">Review mounts, egress and permissions in the actual runtime.</p></div></section>
+
+<section data-origin-slide="36" class="slide dark" data-label="Loop failure controls" data-speaker-notes="The original called both failures spec bugs. Failures can also arise from model behavior, tools or environment. Do not promise an ungameable prompt. The controls reduce risk and make failure detectable."><div class="slide-content"><div class="slide-head reveal"><span class="snum">26</span><div class="crumb">Define done</div></div><h2 class="reveal">Match each failure to a control</h2><table class="tbl reveal"><thead><tr><th scope="col">Failure</th><th scope="col">Concrete control</th></tr></thead><tbody><tr><td>Repeats the same failed repair</td><td>Limit attempts; require a new hypothesis before retrying.</td></tr><tr><td>Weakens tests to make them pass</td><td>Review the test diff; run independent acceptance checks.</td></tr><tr><td>Changes unrelated behavior</td><td>Scope allowed paths; inspect the complete diff.</td></tr></tbody></table><p class="note reveal">Prompts help communicate these rules. Enforce the important boundaries in tools, permissions and review.</p></div></section>
+
+<section data-origin-slide="38" class="slide dark" data-label="Review capacity" data-speaker-notes="Do not equate PR count with throughput. A small concurrency limit can outperform unconstrained generation when integration dominates."><div class="slide-content"><div class="slide-head reveal"><span class="snum">27</span><div class="crumb">In practice</div></div><h2 class="reveal">Limit work in progress to what can be reviewed</h2><div class="cards c3 reveal"><div class="tile"><h3 class="k">Before starting</h3><p>Assign the reviewer and agree on the return format.</p></div><div class="tile"><h3 class="k">While work runs</h3><p>Stop filling the queue when review capacity is exhausted.</p></div><div class="tile"><h3 class="k">At acceptance</h3><p>Inspect the integrated result, including interactions between patches.</p></div></div><p class="note reveal">More workers can move the queue downstream. Measure completed, accepted work.</p></div></section>
+
+<section data-origin-slide="43" class="slide light" data-label="Rules, procedure and tool" data-speaker-notes="Keep one example across rules, skills and tools. MCP is an interface option, not a synonym for authentication."><div class="slide-content"><div class="slide-head reveal"><span class="snum">28</span><div class="crumb">In practice</div></div><h2 class="reveal">Give each part of the invoice workflow one job</h2><table class="tbl reveal"><thead><tr><th scope="col">Need</th><th scope="col">Where it belongs</th></tr></thead><tbody><tr><td>VAT rate comes from the order</td><td>Short project instruction.</td></tr><tr><td>How to verify an invoice export</td><td>Skill with cases and a reporting procedure.</td></tr><tr><td>Read the invoice specification ticket</td><td>An authorized CLI, API or MCP tool.</td></tr></tbody></table><p class="note reveal">A procedure teaches how to use access. It does not grant that access.</p></div></section>
+
+<section data-origin-slide="41" class="slide dark" data-label="A verification skill" data-speaker-notes="Keep the verification example consistent with the talk. A skill describes a repeatable procedure; it does not make the agent or the tests infallible. Discovery metadata and loaded content both have context costs. A concrete Claude Code file example is in the reference deck."><div class="slide-content"><div class="slide-head reveal"><span class="snum">29</span><div class="crumb">Make it repeatable</div></div><h2 class="reveal">Save the repeated invoice check as a skill</h2><div class="code reveal">invoice-check/
+  SKILL.md     when to use it + verification procedure
+  scripts/     optional deterministic checks
+  references/  VAT and rounding rules</div><p class="note reveal"><b>Procedure:</b> inspect the diff → run the cases → report evidence and gaps.</p></div></section>
+
+<section data-origin-slide="46" class="slide dark" data-label="Skill exercise" data-speaker-notes="Use the static example next if no agent runtime is available. Do not claim a file was triggered merely because its YAML parses."><div class="slide-content"><div class="slide-head reveal"><span class="snum">30</span><div class="crumb">In practice</div></div><h2 class="reveal">Write a verification skill you can test</h2><div class="code reveal">10 minutes
+Define the trigger: invoice or CSV export changes.
+Write four checks: VAT, zero VAT, rounding, escaping.
+Name the command and required evidence.
+Test with one matching task and one unrelated task.</div><p class="note reveal">Output: a small skill file and evidence that it is used when appropriate.</p></div></section>
+
+<section data-origin-slide="47" class="slide dark" data-label="Skill file example" data-speaker-notes="The paths and frontmatter are Claude Code examples checked against its skills documentation. Description-based discovery is not guaranteed on every phrasing. Invoke the skill explicitly if needed and test its behavior. This slide does not create or run a skill."><div class="slide-content"><div class="slide-head reveal"><span class="snum">31</span><div class="crumb">Skill reference</div></div><h2 class="reveal">An invoice-check skill for Claude Code</h2><div class="code reveal">---
+name: invoice-check
+description: Verify changes to invoice totals or CSV export.
+---
+1. Read the invoice rule and inspect the proposed diff.
+2. Run the invoice and export tests; keep the actual output.
+3. Check VAT, rounding and CSV escaping coverage.
+4. Report findings, exit status and untested cases.</div><p class="note reveal">Example path: <code>.claude/skills/invoice-check/SKILL.md</code>. Check discovery in a fresh session.</p></div></section>
+
+<section data-origin-slide="44" class="slide dark" data-label="Share the procedure" data-speaker-notes="The concrete publication recipe is optional reference material. Keep this explanation independent of a particular marketplace layout. A plugin can distribute more than skills; supported component types depend on the host."><div class="slide-content"><div class="slide-head reveal"><span class="snum">32</span><div class="crumb">Make it repeatable</div></div><h2 class="reveal">Package useful checks for the team</h2><div class="cards c2 reveal"><div class="tile"><h3 class="k">Skill</h3><p>The repeatable invoice-check procedure and supporting files.</p></div><div class="tile"><h3 class="k">Plugin or shared package</h3><p>A versioned way to distribute the procedure and supported integrations.</p></div></div><p class="note reveal">Test discovery and behavior in a clean session before sharing. Installation does not replace review or permission boundaries.</p></div></section>
+
+<section data-origin-slide="60" class="slide light" data-label="MCP and CLI" data-speaker-notes="Do not equate MCP with remote and CLI with local. A CLI can call a remote service, and an MCP server can run locally."><div class="slide-content"><div class="slide-head reveal"><span class="snum">33</span><div class="crumb">In practice</div></div><h2 class="reveal">Compare the complete interaction</h2><div class="cards c2 reveal"><div class="tile"><h3 class="k">MCP</h3><p>Tools exposed through a client/server protocol, with structured inputs and supported authentication paths.</p></div><div class="tile"><h3 class="k">CLI</h3><p>Commands executed by a shell tool, with help, arguments, output and error handling.</p></div></div><p class="note reveal">Both can reach local or remote services. Both need appropriate credentials, permissions and review.</p></div></section>
+
+<section data-origin-slide="63" class="slide dark" data-label="Tool overhead" data-speaker-notes="Deferred tool loading can change the comparison substantially. Do not claim it is universally opt-in or always enabled."><div class="slide-content"><div class="slide-head reveal"><span class="snum">34</span><div class="crumb">In practice</div></div><h2 class="reveal">Definitions are only one part of the cost</h2><ul class="bul reveal"><li>MCP schemas may be loaded eagerly or discovered on demand, depending on the client.</li><li>CLI use also consumes shell definitions, help text, command output and repair attempts.</li><li>Compare successful completion, tool failures, total usage and latency.</li></ul><p class="note reveal">Measure the actual client configuration. There is no universal cheaper interface.</p></div></section>
+
+<section data-origin-slide="65" class="slide light" data-label="Interface comparison exercise" data-speaker-notes="Do not manufacture a winning result. If one route lacks the same capability, record that as a capability difference before comparing costs."><div class="slide-content"><div class="slide-head reveal"><span class="snum">35</span><div class="crumb">In practice</div></div><h2 class="reveal">Run the same read through both interfaces</h2><div class="code reveal">Task: retrieve the invoice ticket and its acceptance cases.
+Hold data, access scope and requested output constant.
+For CLI and MCP, record:
+  correctness; calls; failures; tokens; elapsed time
+Repeat after warm-up; report missing measurements.</div><p class="note reveal">This is an experiment design, not a completed case study.</p></div></section>
+
+<section data-origin-slide="67" class="slide light" data-label="Cost per accepted task" data-speaker-notes="Remove the old benchmark collage and the arithmetic implying that five times cheaper tokens become dearer merely by using three times as many. Separate success rate from spend per successful attempt so failed runs do not disappear from the comparison."><div class="slide-content"><div class="slide-head reveal"><span class="snum">36</span><div class="crumb">Model choice</div></div><h2 class="reveal">Measure the task, including the failed attempts</h2><div class="cards c3 reveal"><div class="tile"><h3 class="k">Same acceptance bar</h3><p>Use representative invoice cases and the same permissions and tools.</p></div><div class="tile"><h3 class="k">Whole run</h3><p>Record quality, elapsed time, all token categories, retries and review effort.</p></div><div class="tile"><h3 class="k">Repeat and compare</h3><p>Repeat representative cases before changing the default configuration.</p></div></div><p class="note reveal">A higher-priced model can finish in fewer attempts. Whether it costs less is a measurement, not a rule.</p></div></section>
+
+<section data-origin-slide="72" class="slide dark" data-label="Local model memory" data-speaker-notes="For mixture-of-experts models, few parameters may be active per token while many expert weights still need storage. Example: 35 billion parameters at four bits is about 17.5 decimal GB before metadata and runtime overhead; it is not a three-billion-parameter memory footprint."><div class="slide-content"><div class="slide-head reveal"><span class="snum">37</span><div class="crumb">In practice</div></div><h2 class="reveal">Active parameters are not the RAM requirement</h2><ul class="bul reveal"><li>Stored weights depend on total parameters, representation and quantization.</li><li>Inference also needs a KV cache, activations, runtime buffers and overhead.</li><li>Offloading can move weights to CPU memory or disk, trading memory for transfer time.</li></ul><p class="note reveal">Approximate weight storage: parameters × bits per weight ÷ 8. This is a lower-bound estimate, not a fit guarantee.</p></div></section>
+
+<section data-origin-slide="74" class="slide light" data-label="Hardware experiment" data-speaker-notes="This replaces an unconditional laptop-viability demo. Any optional rehearsal must record exact hardware and environment. Local inference still uses electricity, hardware and operator time."><div class="slide-content"><div class="slide-head reveal"><span class="snum">38</span><div class="crumb">In practice</div></div><h2 class="reveal">Measure on the machine and task you intend to use</h2><table class="tbl reveal"><thead><tr><th scope="col">Record</th><th scope="col">Why</th></tr></thead><tbody><tr><td>Model, quantization and runtime</td><td>Defines the actual workload and implementation.</td></tr><tr><td>Context size and concurrency</td><td>Changes KV cache and memory demand.</td></tr><tr><td>Peak memory and elapsed time</td><td>Reveals fit and practical responsiveness.</td></tr><tr><td>Acceptance results</td><td>Shows whether it did the task correctly.</td></tr></tbody></table><p class="note reveal">No model download or hardware benchmark is required for this talk.</p></div></section>
+
+<section data-origin-slide="75" class="slide dark" data-label="Static hardware exercise" data-speaker-notes="The weight-only figure already exceeds sixteen decimal GB. Offloading may permit execution with weights elsewhere, but this does not prove acceptable latency or quality. No laptop benchmark result is claimed."><div class="slide-content"><div class="slide-head reveal"><span class="snum">39</span><div class="crumb">In practice</div></div><h2 class="reveal">Estimate storage, then list what is missing</h2><div class="code reveal">10 minutes — illustrative hardware scenario
+35B total parameters; 3B active per token; four-bit weights.
+Weight-only storage ≈ 35B × 4 / 8 = 17.5 GB.
+
+Would a machine with 16 GB available memory fit it?
+What could offloading change? What must you measure?</div><p class="note reveal">Output: a qualified feasibility note. Include KV cache, buffers, quantization overhead and speed.</p></div></section>
+
+<section data-origin-slide="77" class="slide dark" data-label="Local or hosted" data-speaker-notes="A deployment decision needs real measurements and organization-specific requirements. A small active parameter count or benchmark headline is insufficient."><div class="slide-content"><div class="slide-head reveal"><span class="snum">40</span><div class="crumb">In practice</div></div><h2 class="reveal">Choose from constraints and observed results</h2><div class="cards c2 reveal"><div class="tile"><h3 class="k">Local may fit</h3><p>You can meet the quality, latency and memory requirements in an approved local environment.</p></div><div class="tile"><h3 class="k">Hosted may fit</h3><p>Its capability and operations meet your requirements, and the data path and commercial terms are acceptable.</p></div></div><p class="note reveal">Inspect the whole workflow: local inference does not stop tools or telemetry from using the network.</p></div></section>
+
+<section data-origin-slide="79" class="slide light" data-label="Voice input" data-speaker-notes="Removes the unverified Hlas note and version-specific voice demo claims. Any available dictation tool can support this static example. No microphone or recorded run is required."><div class="slide-content"><div class="slide-head reveal"><span class="snum">41</span><div class="crumb">In practice</div></div><h2 class="reveal">Review dictated requirements before execution</h2><div class="code reveal">Spoken: “Export invoices without changing stored records.”
+
+Check the transcription for:
+- negation: WITHOUT changing records
+- exact file names and amounts
+- scope and permission boundaries</div><p class="note reveal">A voice interface changes input convenience, not the acceptance checks.</p></div></section>
+
+<section data-origin-slide="80" class="slide light" data-label="Static voice exercise" data-speaker-notes="This replaces the sixth empty demo fallback. Participants can perform it by reading; no microphone, voice product or external service is required."><div class="slide-content"><div class="slide-head reveal"><span class="snum">42</span><div class="crumb">In practice</div></div><h2 class="reveal">Find the transcription error before sending</h2><div class="cards c2 reveal"><div class="tile"><h3 class="k">Intended request</h3><p>“Export the invoices without changing stored records.”</p></div><div class="tile"><h3 class="k">Faulty transcript</h3><p>“Export the invoices, changing stored records.”</p></div></div><p class="note reveal">3 minutes: restore the missing boundary and state the acceptance check.</p></div></section>
+
+<section data-origin-slide="82" class="slide dark" data-label="Workshop close" data-speaker-notes="Use the final discussion to check whether each participant has a feasible experiment. Do not require a model purchase, deployment or organization change to complete the workshop."><div class="slide-content"><div class="slide-head reveal"><span class="snum">43</span><div class="crumb">In practice</div></div><h2 class="reveal">Choose one experiment to take back</h2><div class="code reveal">My task and acceptance cases:
+The one change I will compare:
+What I will keep constant:
+Evidence I will record:
+Budget and stop condition:
+Who reviews the result:</div><p class="note reveal">Output: one experiment plan with a clear owner and review date.</p><p class="note"><a href="working-smarter-reference.html">Optional reference material</a></p></div></section>
+
+<section data-origin-slide="83" class="slide dark" data-label="Sources" data-speaker-notes="Leave the sources visible for questions. These links support the mechanisms and qualifications; the examples are teaching material, not benchmark measurements."><div class="slide-content"><div class="slide-head reveal"><span class="snum">44</span><div class="crumb">Sources</div></div><h2 class="reveal">Sources and further reading</h2><ul class="bul reveal"><li><a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Agent evaluation</a></li><li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Context engineering</a></li><li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">Prompt caching</a></li><li><a href="https://code.claude.com/docs/en/skills">Skills</a></li><li><a href="https://modelcontextprotocol.io/docs/learn/architecture">MCP architecture</a></li></ul><p class="note reveal">Primary documentation checked 3 October 2026. Examples are illustrative unless explicitly attributed.</p></div></section>
 
 </deck-stage>
 
@@ -1480,7 +497,7 @@ table.tbl tr:last-child td{border-bottom:none}
   var notesEl = document.querySelector('.pui-notes');
   var nHead = notesEl.querySelector('.pui-nhead');
   var nBody = notesEl.querySelector('.pui-nbody');
-  var current = 0, presenter = null, mouseT = null;
+  var current = Math.max(0, Array.from(ds.querySelectorAll(':scope > section')).findIndex(function(s){ return s.hasAttribute('data-deck-active'); })), presenter = null, mouseT = null;
 
   function slides(){ return Array.prototype.slice.call(ds.querySelectorAll(':scope > section')); }
   function noteOf(s){ return s.getAttribute('data-speaker-notes') || 'No notes for this slide.'; }
@@ -1528,7 +545,7 @@ table.tbl tr:last-child td{border-bottom:none}
     }
     var pd = presenter.document;
     pd.open();
-    pd.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Presenter — ' + document.title.replace(/</g,'&lt;') + '</title><base href="' + document.baseURI + '"></head><body></body></html>');
+    pd.write('<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Presenter — ' + document.title.replace(/</g,'&lt;') + '</title><base href="' + document.baseURI + '"></head><body></body></html>');
     pd.close();
     /* carry the deck's stylesheets + tokens over so slide clones render 1:1 */
     document.head.querySelectorAll('link[rel="stylesheet"], link[rel="preconnect"], style').forEach(function(el){

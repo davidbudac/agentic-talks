@@ -1,0 +1,151 @@
+{
+  "results": [
+    {
+      "file": "agentic-ai.html",
+      "slides": 26,
+      "local_resources": true,
+      "notes": true,
+      "numbering": true,
+      "script_syntax": true
+    },
+    {
+      "file": "agentic-ai-reference.html",
+      "slides": 13,
+      "local_resources": true,
+      "notes": true,
+      "numbering": true,
+      "script_syntax": true
+    },
+    {
+      "file": "ai-toolbox.html",
+      "slides": 31,
+      "local_resources": true,
+      "notes": true,
+      "numbering": true,
+      "script_syntax": true
+    },
+    {
+      "file": "ai-toolbox-reference.html",
+      "slides": 22,
+      "local_resources": true,
+      "notes": true,
+      "numbering": true,
+      "script_syntax": true
+    },
+    {
+      "file": "agentic-engineering.html",
+      "slides": 30,
+      "local_resources": true,
+      "notes": true,
+      "numbering": true,
+      "script_syntax": true
+    },
+    {
+      "file": "agentic-engineering-reference.html",
+      "slides": 10,
+      "local_resources": true,
+      "notes": true,
+      "numbering": true,
+      "script_syntax": true
+    },
+    {
+      "file": "subagents-prompt-caching-reference.html",
+      "slides": 4,
+      "local_resources": true,
+      "notes": true,
+      "numbering": true,
+      "script_syntax": true
+    },
+    {
+      "file": "subagents-prompt-caching.html",
+      "slides": 21,
+      "local_resources": true,
+      "notes": true,
+      "numbering": true,
+      "script_syntax": true
+    },
+    {
+      "file": "cost-and-context-reference.html",
+      "slides": 4,
+      "local_resources": true,
+      "notes": true,
+      "numbering": true,
+      "script_syntax": true
+    },
+    {
+      "file": "cost-and-context.html",
+      "slides": 17,
+      "local_resources": true,
+      "notes": true,
+      "numbering": true,
+      "script_syntax": true
+    },
+    {
+      "file": "orchestrating-agents-reference.html",
+      "slides": 4,
+      "local_resources": true,
+      "notes": true,
+      "numbering": true,
+      "script_syntax": true
+    },
+    {
+      "file": "orchestrating-agents.html",
+      "slides": 19,
+      "local_resources": true,
+      "notes": true,
+      "numbering": true,
+      "script_syntax": true
+    },
+    {
+      "file": "measuring-what-works-reference.html",
+      "slides": 5,
+      "local_resources": true,
+      "notes": true,
+      "numbering": true,
+      "script_syntax": true
+    },
+    {
+      "file": "measuring-what-works.html",
+      "slides": 19,
+      "local_resources": true,
+      "notes": true,
+      "numbering": true,
+      "script_syntax": true
+    },
+    {
+      "file": "best-practices-reference.html",
+      "slides": 5,
+      "local_resources": true,
+      "notes": true,
+      "numbering": true,
+      "script_syntax": true
+    },
+    {
+      "file": "best-practices.html",
+      "slides": 30,
+      "local_resources": true,
+      "notes": true,
+      "numbering": true,
+      "script_syntax": true
+    },
+    {
+      "file": "working-smarter-reference.html",
+      "slides": 8,
+      "local_resources": true,
+      "notes": true,
+      "numbering": true,
+      "script_syntax": true
+    },
+    {
+      "file": "working-smarter.html",
+      "slides": 44,
+      "local_resources": true,
+      "notes": true,
+      "numbering": true,
+      "script_syntax": true
+    }
+  ],
+  "errors": [],
+  "shared_runtime_unchanged": true,
+  "arithmetic": "passed"
+}

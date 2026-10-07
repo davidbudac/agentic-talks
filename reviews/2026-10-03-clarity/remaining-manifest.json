@@ -1,0 +1,50 @@
+{
+  "baseline": "51f2e9a3479a864bf1901aa9c8e3bfa4961bcac0",
+  "outputs": {
+    "subagents-prompt-caching-reference.html": "e47be1fccdc348137b4cbc2402960df6865d01376260d9c63a3a76fcff23fbb8",
+    "subagents-prompt-caching.html": "824f28f0b7e89c5da270b8c8d0d59917e3894d63c5db51d8d2ae15fd942e7ea2",
+    "cost-and-context-reference.html": "5a2b85f5d7f0750d5aac7f9436e180433d88a0c35c3158ea7d771e564585366c",
+    "cost-and-context.html": "9d053a6ef442136560a4f1e855fc7299f9772824e2419c49863b0bb45a922b63",
+    "orchestrating-agents-reference.html": "bb362435a4cf7d5e7a377112e0f9d0739327d7c37dd662b3e17398418f15e48a",
+    "orchestrating-agents.html": "5b5609026a8e37bad1204a9d6ac9cc8d512870a8015412b42b2ffcec4c0dc3cc",
+    "measuring-what-works-reference.html": "a2ab9561506a67efee5034b84aeec198e05e26efb34136bfb47c1a5d4f1c4c48",
+    "measuring-what-works.html": "12197ebb3a94124b672c801a466db7bda668e5fe8461473b7edc0fd52c37f2fe",
+    "best-practices-reference.html": "cd361213d3a4aabd56008c70237ed2376cbd683ed218f5df0558d44b317b466e",
+    "best-practices.html": "9eb4253461b5479ea2abe16e3cd0915151b0fcae1bf4a992638c24409b6c1f05",
+    "working-smarter-reference.html": "51a2f4e859cf349476d2a6133492ab800801c76c734b1b2262ccbdb6193d2993",
+    "working-smarter.html": "cdb5df9a22d13cb9b8f42c87c8674e239d0be4bcf3abcdf3beb3d4d2916f231c"
+  },
+  "metrics": {
+    "subagents-prompt-caching": {
+      "before_slides": 39,
+      "after_slides": 21,
+      "reference_slides": 4
+    },
+    "cost-and-context": {
+      "before_slides": 28,
+      "after_slides": 17,
+      "reference_slides": 4
+    },
+    "orchestrating-agents": {
+      "before_slides": 32,
+      "after_slides": 19,
+      "reference_slides": 4
+    },
+    "measuring-what-works": {
+      "before_slides": 31,
+      "after_slides": 19,
+      "reference_slides": 5
+    },
+    "best-practices": {
+      "before_slides": 45,
+      "after_slides": 30,
+      "reference_slides": 5
+    },
+    "working-smarter": {
+      "before_slides": 83,
+      "after_slides": 44,
+      "reference_slides": 8
+    }
+  },
+  "maps": "remaining-slide-map.json"
+}

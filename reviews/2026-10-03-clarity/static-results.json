@@ -1,0 +1,48 @@
+{
+  "results": [
+    {
+      "file": "agentic-ai.html",
+      "slides": 26,
+      "links_inspected": 32,
+      "notes": true,
+      "numbering": true,
+      "script_syntax": true
+    },
+    {
+      "file": "agentic-ai-reference.html",
+      "slides": 13,
+      "links_inspected": 43,
+      "notes": true,
+      "numbering": true,
+      "script_syntax": true
+    },
+    {
+      "file": "ai-toolbox.html",
+      "slides": 31,
+      "links_inspected": 36,
+      "notes": true,
+      "numbering": true,
+      "script_syntax": true
+    },
+    {
+      "file": "ai-toolbox-reference.html",
+      "slides": 22,
+      "links_inspected": 53,
+      "notes": true,
+      "numbering": true,
+      "script_syntax": true
+    }
+  ],
+  "unchanged_files": [
+    "agentic-engineering.html",
+    "subagents-prompt-caching.html",
+    "cost-and-context.html",
+    "orchestrating-agents.html",
+    "measuring-what-works.html",
+    "best-practices.html",
+    "working-smarter.html",
+    "ember_design_system/deck-stage.js",
+    "ember_design_system/styles.css"
+  ],
+  "errors": []
+}

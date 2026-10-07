@@ -1,0 +1,506 @@
+{
+  "agentic-ai": [
+    {
+      "original": 1,
+      "label": "Title",
+      "sha256": "1c8256b3485c0c30b59803f8c01174334457b614725d65166ea6349d359bbc12"
+    },
+    {
+      "original": 2,
+      "label": "The hook",
+      "sha256": "3a52db6d40c4c1625af3b76f8e02024ecc51add824084dc28a37a94f789ac57b"
+    },
+    {
+      "original": 3,
+      "label": "Chatbot vs agent",
+      "sha256": "f7ccde24d5e55e9674115d9ac7d959ae2d74ab70a86c0bcb110b5b5a76ddcbc9"
+    },
+    {
+      "original": 4,
+      "label": "Live demo anchor",
+      "sha256": "e3f40411d037c911c62fc23118a8e144ea820792cd30689dd1d76a8ecda762d7"
+    },
+    {
+      "original": 5,
+      "label": "Agenda",
+      "sha256": "f4c020b97949cf8b87b81fdd3e0a49d1c527306fb61709ce1a642ecf824944f9"
+    },
+    {
+      "original": 6,
+      "label": "Three building blocks",
+      "sha256": "503ca282030d6b4d65725df740ddc05edf1bfcfb6d0d1940cf03c36b5126ffd1"
+    },
+    {
+      "original": 7,
+      "label": "Glossary",
+      "sha256": "8cbe9be9f236767cc06a3d8bf2e615e9558ec5e81b3dcd85aa6b02585ed74703"
+    },
+    {
+      "original": 8,
+      "label": "The model has no memory",
+      "sha256": "1da6a5f7746385dba7d6cd130fd4c635bd4353c4baa00ab497d85021bba90e06"
+    },
+    {
+      "original": 9,
+      "label": "No memory in practice",
+      "sha256": "f33b48710122eb5305bf887150ac6ebb23497bc887fc87c8158fa4325d358834"
+    },
+    {
+      "original": 10,
+      "label": "Model in the cloud",
+      "sha256": "301693b3bfe4641bf2f5551b0c033853f914c79a1cdb489b6a7ba219e98e300a"
+    },
+    {
+      "original": 11,
+      "label": "What one turn sends",
+      "sha256": "5a260686c925fe801cc0edc345c2ad83ae2d7e040f3cc00250ab22566997cd9d"
+    },
+    {
+      "original": 12,
+      "label": "The agent loop",
+      "sha256": "75fe5eabf313fad561089406772b1c709b659b1b2c08e8e1855252035fda0350"
+    },
+    {
+      "original": 13,
+      "label": "The loop, worked example",
+      "sha256": "0157d59fbe053279845e9b32896960af29269a63295aa8bf4ead903ddfe226f0"
+    },
+    {
+      "original": 14,
+      "label": "Thinking",
+      "sha256": "3eb4f79d5d85a620f705adc4d9f8e2162e9c4ed3c4ea604e2c097585e87c887c"
+    },
+    {
+      "original": 15,
+      "label": "Thinking in the loop",
+      "sha256": "50b84cb99b94a2196e0ad35f5ea321eca603b5e5976967b4862387bb02fb5467"
+    },
+    {
+      "original": 16,
+      "label": "What it is good for",
+      "sha256": "f19b71b865373e3137ce97e92f64ff615e17ce19e45bdbb122ea49b78880c95c"
+    },
+    {
+      "original": 17,
+      "label": "The landscape",
+      "sha256": "e5f261cd3788810a163df59515e2e826c8be3ee526ce476f619ed8c21a9f2098"
+    },
+    {
+      "original": 18,
+      "label": "Today's models",
+      "sha256": "dfbd9adccb470568840c8ca497f82d818bfbbb73c5e7a33838a8f955cf11aff4"
+    },
+    {
+      "original": 19,
+      "label": "Which tier when",
+      "sha256": "3d79e27bc3db62ef72fc72f97f5bb4613c8a9325421b77d42cefb754eb133a67"
+    },
+    {
+      "original": 20,
+      "label": "Today's harnesses",
+      "sha256": "91a16149f25cee0d4092a28632d574e3b432e47e1c3713cdda584e335726de25"
+    },
+    {
+      "original": 21,
+      "label": "Front doors",
+      "sha256": "03e309e61a5b5edc160ebcb567a7ce129f33dd6950014c07d69c9c647292e5b6"
+    },
+    {
+      "original": 22,
+      "label": "Lovable",
+      "sha256": "18a80da8b6cb9e032f8507f3a1d00ac597b4abb57c0dca657dee7bfddd9b298d"
+    },
+    {
+      "original": 23,
+      "label": "Higgsfield",
+      "sha256": "aa629598f2174053238916009ca38076903660f7c7ba35dcfd48aeb1215170a7"
+    },
+    {
+      "original": 24,
+      "label": "HyperFrames",
+      "sha256": "99d20e49931c17ad742df7f0d6cb539da3a2fc64b903b6ef67c0189d7b2a5a55"
+    },
+    {
+      "original": 25,
+      "label": "Subscriptions",
+      "sha256": "49fb6e14dcdcff7890fd36dda250a9b7d581fdc0e68fb16c092c8698b90284d8"
+    },
+    {
+      "original": 26,
+      "label": "Subscription vs API",
+      "sha256": "4ea0632696127f42146912f47174bd5b24f08ed817c2b8e97e090945a5b5a515"
+    },
+    {
+      "original": 27,
+      "label": "Smarter can be cheaper",
+      "sha256": "587b9876bae8aa6b56f5886b398c6b512772e97cbd577500690f177d3af1be2c"
+    },
+    {
+      "original": 28,
+      "label": "What context is",
+      "sha256": "6bb3c3e534926b81e5ad59527a20e7e35a23a9fac6585a90f15139779eeef820"
+    },
+    {
+      "original": 29,
+      "label": "Context rot",
+      "sha256": "7281d325ede89825691f360ae80988e6aac5e83d4c39ec2aed0a44f52ffe9bd3"
+    },
+    {
+      "original": 30,
+      "label": "Keep it lean",
+      "sha256": "b8e17676de4139d42a6798a2938fbdc2e73f75bf2292789ed5f7fb3cf0244c9b"
+    },
+    {
+      "original": 31,
+      "label": "Caching and compaction",
+      "sha256": "99658b6a82361d02fa4a522d666abd9d7fa492f6ad03bc8a10fc7f58e79f54ba"
+    },
+    {
+      "original": 32,
+      "label": "Sub-agents",
+      "sha256": "19370bc1bfe08994bbba153b46f38e31d70172081d486f5ad00034ab36ad81e7"
+    },
+    {
+      "original": 33,
+      "label": "Permissions",
+      "sha256": "e7d46a38e6da9c2865881f80c83145b13c8ca9f9267e9268e13c391712006c1b"
+    },
+    {
+      "original": 34,
+      "label": "Bypass mode",
+      "sha256": "ee686d68542be1e663c577b1d0a6291870e230add8d56e7992fe753b6bee748f"
+    },
+    {
+      "original": 35,
+      "label": "Back to no memory",
+      "sha256": "e2b20c694af8662fcd7ecd8a4698c45cf89d0246ec76af46025df7ca3a934b07"
+    },
+    {
+      "original": 36,
+      "label": "CLAUDE.md and memory",
+      "sha256": "6ad6fef7bc50a54821a1aa11fe7ed9aac1d4c818dcd3d2b312c2f2fefbf4500c"
+    },
+    {
+      "original": 37,
+      "label": "Skills and plugins",
+      "sha256": "4e7987414f125f349b403252b43187156b308dfbbd9b3e50cc491719467d59dd"
+    },
+    {
+      "original": 38,
+      "label": "Touching other systems",
+      "sha256": "6d78cb4c66b82084dbfdd197cb12f972993b279784b2cadeede5949a0e137aaf"
+    },
+    {
+      "original": 39,
+      "label": "MCP",
+      "sha256": "fc05a2df910514cc44b0701132ea2ca7e5c7a2384eb89a771d54a939fc395763"
+    },
+    {
+      "original": 40,
+      "label": "Three things to remember",
+      "sha256": "93a7bb818c7608de544a568b9e6664c5401762adfd85cca5be0ff2b84e32b110"
+    },
+    {
+      "original": 41,
+      "label": "Summary",
+      "sha256": "dc6be57d368c770b38af525259143c0dc90e97402f2510a58bed152f6ba84a50"
+    },
+    {
+      "original": 42,
+      "label": "Sources 1 of 2",
+      "sha256": "10f4e4e56bab0ec6c434651b4703e673bdf8ca9bd35904d0d5553ad613d8e075"
+    },
+    {
+      "original": 43,
+      "label": "Sources 2 of 2",
+      "sha256": "b466ebfec098e9f5305b5b2d4e82f98d50b48f3f3785fc1cbe6e987e89911779"
+    }
+  ],
+  "ai-toolbox": [
+    {
+      "original": 1,
+      "label": "Title",
+      "sha256": "3e34d34230baf843234867fc052ac52e6dfd931d3881c74a67d3788f81f6254a"
+    },
+    {
+      "original": 2,
+      "label": "The hook",
+      "sha256": "c7dc6ea3b2dab1d1edcac01c8f3fb2463609b42cc4e4f256dda398a6302f5c8a"
+    },
+    {
+      "original": 3,
+      "label": "Agenda",
+      "sha256": "7b208c36dbe2485bbe213586ad244816fba20fde65b545b4b22d19a210ef1d6e"
+    },
+    {
+      "original": 4,
+      "label": "Reading a price tag",
+      "sha256": "9a4360594f49c6c7b888b760cdeec6192ac614d2fa7d2f0c07e920053bff11fe"
+    },
+    {
+      "original": 5,
+      "label": "Chatbot vs agent",
+      "sha256": "bc5b02c9658130b40e877549308ac6cb39a7aff4e63a5bace4a923ec733226c3"
+    },
+    {
+      "original": 6,
+      "label": "The agent loop",
+      "sha256": "8b96c9d0ce771a1ee37467e5880bd5dfca618b9a912dc74d5d3af36f9309ee19"
+    },
+    {
+      "original": 7,
+      "label": "The model has no memory",
+      "sha256": "842626e00de48cc37d76bb77d5195a8fe0b55f83a90f5173c173de0a22498ac8"
+    },
+    {
+      "original": 8,
+      "label": "Glossary",
+      "sha256": "818c5745060158eb2b7a7191ecceb80eb171417f1029e847b1a67daf331d2c55"
+    },
+    {
+      "original": 9,
+      "label": "What agents are good for",
+      "sha256": "4e7a1b061eaaf4397d7bc2e8e08e1e6a7a72836ebbcf326aa986ec3bf7cdd1e9"
+    },
+    {
+      "original": 10,
+      "label": "The big three",
+      "sha256": "266ee620f29c47c2bf4cbc065ee34e41149bc8ca43b20199614a64358d86d0eb"
+    },
+    {
+      "original": 11,
+      "label": "Today's models",
+      "sha256": "7e8fd5f7384fc55ffa8c9acff0f7bcbd60faf0e35a73a7313dffd4812e69a7af"
+    },
+    {
+      "original": 12,
+      "label": "The Claude family",
+      "sha256": "618ea8c38a1d87d5e9836017d02d7465fd09fa3a7c0d74301fa35d8760e2d330"
+    },
+    {
+      "original": 13,
+      "label": "Claude Code and Codex",
+      "sha256": "3e8f8121544d1b958ec4066aeba037a38e8cd277e2c0784c0c26a7414a9ad8fb"
+    },
+    {
+      "original": 14,
+      "label": "Claude Cowork",
+      "sha256": "34a42a5ff8778e58cf6794a9d87ee48d186731ce03c9fd144642040111cc433e"
+    },
+    {
+      "original": 15,
+      "label": "Claude Design",
+      "sha256": "c252d3c646b3668447252142ec172bea9a4800b91e64352d97cfdb2c7fb00244"
+    },
+    {
+      "original": 16,
+      "label": "The ChatGPT family",
+      "sha256": "b3cfd61b5bbd4675c7776eb64dba08824da7f20c8c6531c8e336dd32da246b13"
+    },
+    {
+      "original": 17,
+      "label": "The Gemini family",
+      "sha256": "841a405e2d4211a290904b0c4e58c1ade9f2ca302a060a33bdb953764185603d"
+    },
+    {
+      "original": 18,
+      "label": "The $20 question",
+      "sha256": "372293fd891c8e01f096c10288441aba02142dc8e004afe0e804284748285a78"
+    },
+    {
+      "original": 19,
+      "label": "The plan ladder",
+      "sha256": "8ed757637a3b1f238dcf8fdd2f45f3fa53b4539f71bfcd9db5a9b7eb50933930"
+    },
+    {
+      "original": 20,
+      "label": "Products churn fast",
+      "sha256": "f0508844dc0db7db03198eecb2dbb60ba97df57c66c011e65aae32aece5608f0"
+    },
+    {
+      "original": 21,
+      "label": "What can you actually do",
+      "sha256": "89a529f483398ad013a75c8ea65dd035e9d52a918cc710d2165a777da8f4f7a2"
+    },
+    {
+      "original": 22,
+      "label": "A week of tasks",
+      "sha256": "139684f6f1cd4027443e5e1702c877d8e51351a2d90b3f7f6bb219fe83f3f955"
+    },
+    {
+      "original": 23,
+      "label": "One task, agent-style",
+      "sha256": "9d45a92f28212d7ddd6984ba4b49845731f07a5d7358e1d057e3173de6208560"
+    },
+    {
+      "original": 24,
+      "label": "Deep research",
+      "sha256": "0d57269e03ca3a9edbf3b16a44702d58238fd62d7e61b42ce909d4509305860b"
+    },
+    {
+      "original": 25,
+      "label": "The human stays in the loop",
+      "sha256": "0dabd4cda49280c11ede04b39b2c8286ae3be423c456f252ff46a76014cb0bfa"
+    },
+    {
+      "original": 26,
+      "label": "The wider landscape",
+      "sha256": "3008811b3a346a6a52034795f541928ca89e73fe502acf3bd648f38bcd6382b9"
+    },
+    {
+      "original": 27,
+      "label": "Prompt-to-app builders",
+      "sha256": "8873ee55044284a6715c4c2325ec87b480bcf94a537f1bc8a46f103b4492c6c8"
+    },
+    {
+      "original": 28,
+      "label": "AI video generation",
+      "sha256": "cd8ecd56b4e5bda0d5ec54d7e9202087ce8abbf509c58cc29d5039fcce02b87c"
+    },
+    {
+      "original": 29,
+      "label": "HyperFrames",
+      "sha256": "0db8150b02d7f34a93b0b3ce851b502ca749b59f590797040636d5e5c70981b6"
+    },
+    {
+      "original": 30,
+      "label": "AI avatars",
+      "sha256": "3e55b21be66bd536edae66e4044e033b6ab6eed3fe61283e22e588531a308707"
+    },
+    {
+      "original": 31,
+      "label": "ElevenLabs",
+      "sha256": "240c65c9cac78addd18672ee74e9241e9c02c308d9dbaae11b57ed1e8556dc6a"
+    },
+    {
+      "original": 32,
+      "label": "Music and easy editing",
+      "sha256": "7f9f8606e4bb8fe033438312f484fb9dbbfb5499698f90fc4340179469943198"
+    },
+    {
+      "original": 33,
+      "label": "Images and design",
+      "sha256": "3970a683b32c2efb70d056d6c05a02b3917a66e9aa740a214d5193742f120542"
+    },
+    {
+      "original": 34,
+      "label": "Presentations",
+      "sha256": "ebd16e3388589e1154977cd975f6fd66b0c1447a48bdb4d018d5d54e0a5f8f85"
+    },
+    {
+      "original": 35,
+      "label": "Copy platforms",
+      "sha256": "21ec53cd5dab4836bf62b2b9b8b0216d2fef59427bfaf527ee88d8238c023f58"
+    },
+    {
+      "original": 36,
+      "label": "Perplexity",
+      "sha256": "922fb6c8e30c82413adbf4a60eaae20a643c0d698c422e8455f6370084a7173d"
+    },
+    {
+      "original": 37,
+      "label": "Automation glue",
+      "sha256": "3af599e1566817000f76a5d936282d0776b0659de82135ea58745caebaef0de2"
+    },
+    {
+      "original": 38,
+      "label": "The fine print",
+      "sha256": "a505bf17d38ba802e4a0405c9ba205f0185ae6445f6b24d17ec709c4fb02de5b"
+    },
+    {
+      "original": 39,
+      "label": "Cheat sheet",
+      "sha256": "65f498f967b91b543cea4e4b26d2d34dfb436dfd02a0ba2dfbb16480d0ace03c"
+    },
+    {
+      "original": 40,
+      "label": "Five wild stories",
+      "sha256": "886a7fdb73c4a85dfb2bf621ee07f172bbed8e086d3271cf448651a0060e58d9"
+    },
+    {
+      "original": 41,
+      "label": "Story 1 · Project Vend",
+      "sha256": "8c28000b5450989f9a74252f9620e17d85440029877b855c673394ccac1ecc15"
+    },
+    {
+      "original": 42,
+      "label": "Story 2 · Ten years, two days",
+      "sha256": "976ff7a15e7fcf48c79cba19bf58b72a81bdd589582db94277785e5ef4fd0d3b"
+    },
+    {
+      "original": 43,
+      "label": "Story 3 · The exams",
+      "sha256": "0322fcc2c0d4a453b875014170c5c544aa1da52a6a16b22ea8d36345689c0225"
+    },
+    {
+      "original": 44,
+      "label": "Story 4 · The security double",
+      "sha256": "ee31918fd947dfd7b4fd5e90480c05c5624449dae74b39820712226ad98319b7"
+    },
+    {
+      "original": 45,
+      "label": "Story 5 · The Super Bowl twist",
+      "sha256": "6d27bf4ae1c02a8ba6db76eb969dbfd6b9f0f45c2e88558205676b5e5f9aac6a"
+    },
+    {
+      "original": 46,
+      "label": "Plugging it in",
+      "sha256": "c9b7f9a5702dc7b58666068d293e4b2b6974315f642c329016853cc12d6e3a44"
+    },
+    {
+      "original": 47,
+      "label": "MCP",
+      "sha256": "7185043637883bd0a761f59ab532b38b1e5d7e7fb260ce0e1ae81f236f653d91"
+    },
+    {
+      "original": 48,
+      "label": "Claude inside Office",
+      "sha256": "aadfe9bdf1c5c8d6cbf570c3dffdf0977ec7cf7ce0bf6b6c94988e29011d707d"
+    },
+    {
+      "original": 49,
+      "label": "Files straight from chat",
+      "sha256": "228dbf252bad6a6ba8530ff2277816f1bd55364e2160581caa19927b17182d0a"
+    },
+    {
+      "original": 50,
+      "label": "The ChatGPT side",
+      "sha256": "d54e50a1578f0369dce73d80c149b3d30b7de9b2ba249aa8002261298b57ba99"
+    },
+    {
+      "original": 51,
+      "label": "The built-ins",
+      "sha256": "317e13d68fe62fcae0f28375515c3b4193d62dcc19ac1e1cb91c6ebcf7ae6f53"
+    },
+    {
+      "original": 52,
+      "label": "The universal adapter",
+      "sha256": "8a9bde733b74951646107ca0d315d1ce1f9b40dd8e743613539995b9bcb38229"
+    },
+    {
+      "original": 53,
+      "label": "Which route when",
+      "sha256": "0cca1148f1d7294dfce3a7837686742834db23280f7240cd144b7023d323657e"
+    },
+    {
+      "original": 54,
+      "label": "Three things to remember",
+      "sha256": "036e804aa769f22704c37312d69e39235b04b7c0313d037c84d2e2b4e41b4268"
+    },
+    {
+      "original": 55,
+      "label": "Summary",
+      "sha256": "faffa62acd845276d6e00ff5cf3f852e4546e2f74b7e1dbcda6806ce901beaba"
+    },
+    {
+      "original": 56,
+      "label": "Sources 1 of 2",
+      "sha256": "27613acd0ee22ace9e1186241f259617567027a02766e50e10105f35a5651039"
+    },
+    {
+      "original": 57,
+      "label": "Sources 2 of 2",
+      "sha256": "4ccc3e5ba0654cd1fb37aa65ee2abf4cc8248e5195445028ef563ea4dc978ee8"
+    }
+  ]
+}
