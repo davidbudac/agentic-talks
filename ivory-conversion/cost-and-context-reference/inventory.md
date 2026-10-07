@@ -1,0 +1,12 @@
+# Cost & Context Reference: inventory and mapping
+
+Source: `cost-and-context-reference.html` (working tree, untracked, only read; mtime 3 Oct 21:59, unchanged). Output: `cost-and-context-reference-ivory.html`. 4 slides → 4 slides, same order. No media, no SVG, no video.
+
+| # | origin | data-label | Ember pattern | Text | Links | Ivory component | Clay |
+|---|---|---|---|---|---|---|---|
+| 01 | 0 | Title | `.slide.dark.title-slide`: `.reference-banner`, `.ts-top` (`.k` "Optional reference", `.meta` "Revised October 2026"), `.ts-hero h1` "Cost & Context<br>Reference" + `.dot`, `.ts-sub` + link, `.ts-foot .ts-author` | Title, subtitle, author, date, banner | `cost-and-context.html` ×2 (banner, subtitle) | Accepted subagents-reference opener: regular `.slide`, crumb "Optional reference", `h2` (2 lines, `<br>` kept), `.cards.c2` (tile 1 = subtitle + "Return to the main talk"; tile 2 = `h3` author + `p` "Revised October 2026"), footer `.note` = banner verbatim | None |
+| 02 | 7 | Plan comparison worksheet | `.slide.light`: banner, `.slide-head` (snum 2, crumb "In practice"), `h2`, `table.tbl` 2 cols × 4 rows, `.note` + link | 4 rows, short cells | `cost-and-context.html` (banner), `https://claude.com/pricing` (note) | Crumb merged with banner by `·`; `table.tbl` (default 30px; 4 rows → 30px per §4) | None (equal rows) |
+| 03 | 11 | Cloud route worksheet | `.slide.dark`: banner, head, `h2`, `ul.bul` 3 items, `.note` | 3 one-line bullets | `cost-and-context.html` (banner) | Crumb + banner; `ul.bul` | None (equal checks) |
+| 04 | 20 | Compare instruction variants | `.slide.dark`: banner, head, `h2`, `.code` with 5 raw text lines, `.note` | 5 code lines, max 59 chars | `cost-and-context.html` (banner) | Crumb + banner; `.code` (40px, ≤64 chars), one `.l` per line; same markup as the accepted main-deck twin in `cost-and-context-ivory.html` ("10 minutes" `.c`; "A:", "B:", "Record:" `.k`) | None (as in the main-deck twin) |
+
+Ember classes removed: `dark`, `light`, `title-slide`, `ts-*`, `.dot`, `slide-content`, `reveal`, `reference-banner`, hand-written `.snum` digits, all `<style>` blocks, the inline reveal/video script, the presenter-UI style/markup/script, Google Fonts links, `ember_design_system/*`. No `.ts-loopline`, `.lead`, `.gloss`, `.kcard`, `.fill`, `.stat`, `.big`, `.row`, `.shot`, `dg-*`, `.dense`, `.tight`, `.muted`, `.outer` or `.c4` were present in this source.

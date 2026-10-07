@@ -1,0 +1,28 @@
+Raw attribute/href comparison: source cost-and-context-reference.html vs cost-and-context-reference-ivory.html
+slide count 4 4
+01 label  OK
+01 origin OK
+01 notes  OK
+01 hrefs  OK
+02 label  OK
+02 origin OK
+02 notes  OK
+02 hrefs  OK
+03 label  OK
+03 origin OK
+03 notes  OK
+03 hrefs  OK
+04 label  OK
+04 origin OK
+04 notes  OK
+04 hrefs  OK
+
+Visible-text differences (from audit.json, explained):
+01  Same words reordered into the accepted subagents-reference opener: crumb "Optional reference" (was .ts-top .k),
+    h2 "Cost & Context / Reference", tile 1 subtitle + "Return to the main talk", tile 2 "David Budáč" + "Revised October 2026",
+    footer note "Optional reference · Back to the talk" (banner verbatim, both "Optional reference" occurrences kept).
+    Removed: the title .dot "." only.
+02-04  Crumb "In practice" merged with the banner: "In practice · Optional reference · Back to the talk"
+    (one "·" added; audit reports this as the crumb moving to the front). Everything else identical.
+All   Ember hand-written .snum digits 2/3/4 dropped; deck.js renders 01–04 / 04. Code line numbers 01–05 on slide 04 are CSS decoration.
+Notes, data-label, data-origin-slide: byte-identical 4/4. Hrefs: identical in order and count 4/4.

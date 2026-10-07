@@ -1,0 +1,138 @@
+{
+  "source": "orchestrating-agents-reference.html",
+  "output": "orchestrating-agents-reference-ivory.html",
+  "counts": [
+    4,
+    4
+  ],
+  "structural_errors": [],
+  "slides": [
+    {
+      "slide": 1,
+      "label": "Title",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "delete",
+          "source": "· Back to the talk Optional referenceRevised October 2026",
+          "output": ""
+        },
+        {
+          "kind": "replace",
+          "source": "Reference.",
+          "output": "Reference"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Revised October 2026 Optional reference · Back to the talk"
+        }
+      ],
+      "links": [
+        [
+          "orchestrating-agents.html",
+          "orchestrating-agents.html"
+        ],
+        [
+          "orchestrating-agents.html",
+          "orchestrating-agents.html"
+        ]
+      ],
+      "source_text": "Optional reference · Back to the talk Optional referenceRevised October 2026 Orchestrating Agents Reference. Supporting procedures and worksheets. Return to the main talk David Budáč",
+      "output_text": "Optional reference Orchestrating Agents Reference Supporting procedures and worksheets. Return to the main talk David Budáč Revised October 2026 Optional reference · Back to the talk"
+    },
+    {
+      "slide": 2,
+      "label": "Tool examples",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "In practice ·"
+        },
+        {
+          "kind": "delete",
+          "source": "In practice",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "orchestrating-agents.html",
+          "https://herdr.org",
+          "https://conductor.build",
+          "https://github.com/openai/symphony",
+          "https://github.com/mattpocock/sandcastle"
+        ],
+        [
+          "orchestrating-agents.html",
+          "https://herdr.org",
+          "https://conductor.build",
+          "https://github.com/openai/symphony",
+          "https://github.com/mattpocock/sandcastle"
+        ]
+      ],
+      "source_text": "Optional reference · Back to the talk In practice Evaluate tools against the workflow requirements Herdr — inspect monitoring and coordination behavior. Conductor — inspect workspace and review behavior. Symphony — inspect task lifecycle and tracker support. Sandcastle — inspect its configured environment boundary. Reference links, not a current product comparison. Check supported versions and integrations.",
+      "output_text": "In practice · Optional reference · Back to the talk Evaluate tools against the workflow requirements Herdr — inspect monitoring and coordination behavior. Conductor — inspect workspace and review behavior. Symphony — inspect task lifecycle and tracker support. Sandcastle — inspect its configured environment boundary. Reference links, not a current product comparison. Check supported versions and integrations."
+    },
+    {
+      "slide": 3,
+      "label": "Plugin publication recipe",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Publication reference ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Publication reference",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "orchestrating-agents.html",
+          "https://code.claude.com/docs/en/plugins",
+          "https://code.claude.com/docs/en/plugin-marketplaces"
+        ],
+        [
+          "orchestrating-agents.html",
+          "https://code.claude.com/docs/en/plugins",
+          "https://code.claude.com/docs/en/plugin-marketplaces"
+        ]
+      ],
+      "source_text": "Optional reference · Back to the talk Publication reference Package, test, then share my-plugin/ .claude-plugin/plugin.json skills/invoice-check/SKILL.md 1. Give the manifest a name and version. 2. Test locally: claude --plugin-dir ./my-plugin 3. Review contents and pin the version to distribute. 4. Publish through your team’s approved channel. Plugin overview · Marketplace setup",
+      "output_text": "Publication reference · Optional reference · Back to the talk Package, test, then share my-plugin/ .claude-plugin/plugin.json skills/invoice-check/SKILL.md 1. Give the manifest a name and version. 2. Test locally: claude --plugin-dir ./my-plugin 3. Review contents and pin the version to distribute. 4. Publish through your team’s approved channel. Plugin overview · Marketplace setup"
+    },
+    {
+      "slide": 4,
+      "label": "Interface comparison exercise",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "In practice ·"
+        },
+        {
+          "kind": "delete",
+          "source": "In practice",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "orchestrating-agents.html"
+        ],
+        [
+          "orchestrating-agents.html"
+        ]
+      ],
+      "source_text": "Optional reference · Back to the talk In practice Run the same read through both interfaces Task: retrieve the invoice ticket and its acceptance cases. Hold data, access scope and requested output constant. For CLI and MCP, record: correctness; calls; failures; tokens; elapsed time Repeat after warm-up; report missing measurements. This is an experiment design, not a completed case study.",
+      "output_text": "In practice · Optional reference · Back to the talk Run the same read through both interfaces Task: retrieve the invoice ticket and its acceptance cases. Hold data, access scope and requested output constant. For CLI and MCP, record: correctness; calls; failures; tokens; elapsed time Repeat after warm-up; report missing measurements. This is an experiment design, not a completed case study."
+    }
+  ]
+}

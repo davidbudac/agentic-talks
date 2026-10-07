@@ -1,0 +1,56 @@
+Content comparison: agentic-ai-reference.html -> agentic-ai-reference-ivory.html
+Generated from ivory-conversion/audit.py (audit.json in this folder; exit 0, no structural
+errors, no per-slide errors) plus the human review below.
+Slides: 13 -> 13, order unchanged.
+
+data-label, data-origin-slide and the RAW data-speaker-notes attribute bytes are identical on all
+13 slides (section opening tags copied byte for byte; only class="..." replaced by "slide").
+<img> src and alt values identical (3 images); width/height attributes added (decoded size
+1600x1000), class "shot" dropped.
+
+01 Reference guide [no origin attr in either]: same; hrefs same [agentic-ai.html]; text identical
+02 Glossary [7]          : same; hrefs same; text: crumb merge (A)
+03 Today's models [18]   : same; hrefs same; text: crumb merge (A); note moved after stats (C)
+04 Which tier when [19]  : same; hrefs same; text: crumb merge (A)
+05 Today's harnesses [20]: same; hrefs same; text: crumb merge (A); def-row join artifact (D)
+06 Lovable [22]          : same; hrefs same; text: crumb merge (A)
+07 Higgsfield [23]       : same; hrefs same; text: crumb merge (A)
+08 HyperFrames [24]      : same; hrefs same; text: crumb merge (A)
+09 Subscriptions [25]    : same; hrefs same; text: crumb merge (A)
+10 Cost per task [27]    : same; hrefs same; text: crumb merge (A)
+11 Unattended runs [34]  : same; hrefs same; text: crumb merge (A)
+12 Sources 1 of 2 [42]   : same; hrefs same (13); text: crumb merge (A); title/URL join artifact (E)
+13 Sources 2 of 2 [43]   : same; hrefs same (11); text: crumb merge (A); title/URL join artifact (E)
+
+Hrefs per slide (identical ordered list in source and output; audit "links" field):
+  01-11: agentic-ai.html (link to the original Ember main deck, kept exactly; 01 in the note
+         "Return to the main talk", 02-11 in the crumb "Back to the talk")
+  12: agentic-ai.html + 12 source URLs (8 + 4), target="_blank" rel="noopener" kept
+  13: agentic-ai.html + 10 source URLs (6 + 4), target="_blank" rel="noopener" kept
+
+Explained differences
+A. Slides 02-13. Source DOM order was: banner "Reference · September 2026 snapshot · Back to the
+   talk", then crumb (e.g. "Core · cheat sheet"). Output: one crumb "Core · cheat sheet ·
+   Reference · September 2026 snapshot · Back to the talk". Same words and link. One "·"
+   separator is added, and the order changes (banner after crumb). On 12 the source snum/crumb
+   order makes the comparator see "· further reading Sources"; the text is the same.
+   The crumb <b> wrapper was dropped (text kept). It is uppercased by CSS (display only).
+B. Snum digits: the source hand-wrote 1-13. The output has empty .snum and deck.js renders 01-13
+   (the comparator ignores snum; allowed numbering change).
+C. Slide 03. Source order: table -> long note -> three stat tiles. Output: table (stats are its
+   4th row) -> note in the footer. The note text is unchanged and now follows the stats
+   visually. Its closing "How fast does it move? —" was a lead-in to the stats, which now sit
+   above it. Wording unchanged; the stat values "96%", "2× the field" and "~6 months" are now
+   mono labels (uppercased by CSS) at the start of each stat cell, instead of big tile figures.
+D. Slide 05. A def-row term and its definition are adjacent inline elements (<b>Term</b><span>…),
+   so the comparator joins them ("CodeAnthropic."). The source had them in separate block tiles.
+   Comparator artifact, not a text change (same as toolbox-reference D).
+E. Slides 12/13. The source put the URL label inside the link (<a>Title<span class="u">url</span>);
+   the accepted twin layout puts it in its own table cell. The comparator now sees a space between
+   title and URL label ("overview platform.claude.com/docs"). Words, link targets, target/rel
+   unchanged. The URL label is no longer part of the clickable text (same as the accepted
+   agentic-ai-ivory.html 25/26).
+
+Removed source text: none. No emoji, no title .dot and no .ts-loopline in this source; nothing was
+moved to the speaker notes.
+Added text: none beyond the crumb "·" separators (A).

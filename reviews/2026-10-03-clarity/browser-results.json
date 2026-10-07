@@ -1,0 +1,218 @@
+{
+  "date": "2026-10-03",
+  "viewports": [
+    {
+      "file": "agentic-ai.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "slides": 26,
+      "bounds": []
+    },
+    {
+      "file": "ai-toolbox.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "slides": 31,
+      "bounds": []
+    },
+    {
+      "file": "agentic-ai-reference.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "slides": 13,
+      "bounds": []
+    },
+    {
+      "file": "ai-toolbox-reference.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "slides": 22,
+      "bounds": []
+    },
+    {
+      "file": "agentic-ai.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "slides": 26,
+      "bounds": []
+    },
+    {
+      "file": "ai-toolbox.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "slides": 31,
+      "bounds": []
+    },
+    {
+      "file": "agentic-ai-reference.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "slides": 13,
+      "bounds": []
+    },
+    {
+      "file": "ai-toolbox-reference.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "slides": 22,
+      "bounds": []
+    }
+  ],
+  "errors": [],
+  "screenshots": [
+    "agentic-ai-01-1280.png",
+    "agentic-ai-04-1280.png",
+    "agentic-ai-05-1280.png",
+    "agentic-ai-07-1280.png",
+    "agentic-ai-10-1280.png",
+    "agentic-ai-11-1280.png",
+    "agentic-ai-15-1280.png",
+    "agentic-ai-19-1280.png",
+    "agentic-ai-24-1280.png",
+    "ai-toolbox-01-1280.png",
+    "ai-toolbox-04-1280.png",
+    "ai-toolbox-05-1280.png",
+    "ai-toolbox-07-1280.png",
+    "ai-toolbox-10-1280.png",
+    "ai-toolbox-11-1280.png",
+    "ai-toolbox-15-1280.png",
+    "ai-toolbox-19-1280.png",
+    "ai-toolbox-24-1280.png",
+    "agentic-ai-reference-01-1280.png",
+    "agentic-ai-reference-03-1280.png",
+    "agentic-ai-reference-11-1280.png",
+    "ai-toolbox-reference-01-1280.png",
+    "ai-toolbox-reference-03-1280.png",
+    "ai-toolbox-reference-20-1280.png"
+  ],
+  "checks": [
+    {
+      "file": "agentic-ai.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "ai-toolbox.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "agentic-ai-reference.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "ai-toolbox-reference.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "agentic-ai.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "ai-toolbox.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "agentic-ai-reference.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    },
+    {
+      "file": "ai-toolbox-reference.html",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "keyboard": true,
+      "deepLink": true,
+      "notes": true,
+      "presenter": true,
+      "fullscreen": true,
+      "media": true,
+      "ids": true
+    }
+  ]
+}

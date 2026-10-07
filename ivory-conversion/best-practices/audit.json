@@ -1,0 +1,586 @@
+{
+  "source": "best-practices.html",
+  "output": "best-practices-ivory.html",
+  "counts": [
+    30,
+    30
+  ],
+  "structural_errors": [],
+  "slides": [
+    {
+      "slide": 1,
+      "label": "Title",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "replace",
+          "source": "usersRevised October 2026",
+          "output": "users"
+        },
+        {
+          "kind": "replace",
+          "source": "Practices.",
+          "output": "Practices"
+        },
+        {
+          "kind": "replace",
+          "source": "David",
+          "output": "AuthorDavid"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "RevisedOctober 2026"
+        }
+      ],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Advanced · daily Claude Code usersRevised October 2026 Claude Best Practices. Practical lessons from Anthropic’s engineering posts, tested against your own work. David Budáč",
+      "output_text": "Advanced · daily Claude Code users Claude Best Practices Practical lessons from Anthropic’s engineering posts, tested against your own work. AuthorDavid Budáč RevisedOctober 2026"
+    },
+    {
+      "slide": 2,
+      "label": "Agenda",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "replace",
+          "source": "Instructions Remove",
+          "output": "InstructionsRemove"
+        },
+        {
+          "kind": "replace",
+          "source": "Verification Make",
+          "output": "VerificationMake"
+        },
+        {
+          "kind": "replace",
+          "source": "Measurement Compare",
+          "output": "MeasurementCompare"
+        }
+      ],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Start with three changes Instructions Remove conflicting or obsolete rules; preserve real constraints. Verification Make done depend on evidence tied to the task. Measurement Compare configurations by outcomes, cost and review effort. Skills, caching and delegation support these three habits.",
+      "output_text": "In practice Start with three changes InstructionsRemove conflicting or obsolete rules; preserve real constraints. VerificationMake done depend on evidence tied to the task. MeasurementCompare configurations by outcomes, cost and review effort. Skills, caching and delegation support these three habits."
+    },
+    {
+      "slide": 3,
+      "label": "Simplifying prompts",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://claude.dev/blog/the-new-rules-of-context-engineering-for-claude-5-generation-models/"
+        ],
+        [
+          "https://claude.dev/blog/the-new-rules-of-context-engineering-for-claude-5-generation-models/"
+        ]
+      ],
+      "source_text": "In practice Use the reported result as a reason to test Reported by Anthropic Its team removed over 80% of a system prompt for particular models without a measured drop on its coding evals. Your next step Remove one obsolete instruction group, then rerun your own acceptance cases. Source: context engineering, July 2026",
+      "output_text": "In practice Use the reported result as a reason to test Reported by Anthropic Its team removed over 80% of a system prompt for particular models without a measured drop on its coding evals. Your next step Remove one obsolete instruction group, then rerun your own acceptance cases. Source: context engineering, July 2026"
+    },
+    {
+      "slide": 4,
+      "label": "Instruction file before and after",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
+        ],
+        [
+          "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
+        ]
+      ],
+      "source_text": "In practice Shorten the file while preserving its constraints Before Long project history, duplicate style advice, VAT rules, test commands and an old incident log. After Keep VAT source, rounding rule, test command and schema boundary. Link occasional procedures from a skill. The acceptance check is unchanged behavior on the same tasks, not the smallest file. Applied example · supporting documentation",
+      "output_text": "In practice Shorten the file while preserving its constraints Before Long project history, duplicate style advice, VAT rules, test commands and an old incident log. After Keep VAT source, rounding rule, test command and schema boundary. Link occasional procedures from a skill. The acceptance check is unchanged behavior on the same tasks, not the smallest file. Applied example · supporting documentation"
+    },
+    {
+      "slide": 5,
+      "label": "Instruction audit",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
+        ],
+        [
+          "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
+        ]
+      ],
+      "source_text": "In practice Find conflicts before adding another rule Conflict in an illustrative project: “Never add comments.” “Document non-obvious tax rounding decisions.” Replacement: “Explain non-obvious rounding decisions near the code.” Then check the task that originally required the rule. Applied example · supporting documentation",
+      "output_text": "In practice Find conflicts before adding another rule Conflict in an illustrative project: “Never add comments.” “Document non-obvious tax rounding decisions.” Replacement: “Explain non-obvious rounding decisions near the code.” Then check the task that originally required the rule. Applied example · supporting documentation"
+    },
+    {
+      "slide": 6,
+      "label": "A verification skill",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://code.claude.com/docs/en/skills"
+        ],
+        [
+          "https://code.claude.com/docs/en/skills"
+        ]
+      ],
+      "source_text": "Make it repeatable Save the repeated invoice check as a skill invoice-check/ SKILL.md when to use it + verification procedure scripts/ optional deterministic checks references/ VAT and rounding rules Procedure: inspect the diff → run the cases → report evidence and gaps. Applied example · supporting documentation",
+      "output_text": "Make it repeatable Save the repeated invoice check as a skill invoice-check/ SKILL.md when to use it + verification procedure scripts/ optional deterministic checks references/ VAT and rounding rules Procedure: inspect the diff → run the cases → report evidence and gaps. Applied example · supporting documentation"
+    },
+    {
+      "slide": 7,
+      "label": "Skill interface",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://code.claude.com/docs/en/skills"
+        ],
+        [
+          "https://code.claude.com/docs/en/skills"
+        ]
+      ],
+      "source_text": "In practice Make the trigger and output specific Trigger “Verify changes to invoice totals or CSV export.” Result Findings with file references, check output and untested cases. Test one matching request and one unrelated request. Revise the description if discovery is unreliable. Applied example · supporting documentation",
+      "output_text": "In practice Make the trigger and output specific Trigger “Verify changes to invoice totals or CSV export.” Result Findings with file references, check output and untested cases. Test one matching request and one unrelated request. Revise the description if discovery is unreliable. Applied example · supporting documentation"
+    },
+    {
+      "slide": 8,
+      "label": "Skill structure",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://code.claude.com/docs/en/skills"
+        ],
+        [
+          "https://code.claude.com/docs/en/skills"
+        ]
+      ],
+      "source_text": "In practice Keep the core procedure short invoice-check/ SKILL.md trigger, steps, expected report scripts/ deterministic parsing and checks references/ rounding rules and exceptional cases Load detail when useful. Review executable helpers and their permissions. Applied example · supporting documentation",
+      "output_text": "In practice Keep the core procedure short invoice-check/ SKILL.md trigger, steps, expected report scripts/ deterministic parsing and checks references/ rounding rules and exceptional cases Load detail when useful. Review executable helpers and their permissions. Applied example · supporting documentation"
+    },
+    {
+      "slide": 9,
+      "label": "Shared prefix example",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+          "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        ],
+        [
+          "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+          "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        ]
+      ],
+      "source_text": "In practice Keep the shared material before the questions Shared eligible prefix tools + stable instructions + invoice schema Request A: Where is VAT applied? Request B: Where is CSV escaping handled? Changing the question need not change the shared prefix. A matching prefix must be eligible and already cached; stable text alone does not create a hit. Caching docs Applied example · supporting documentation",
+      "output_text": "In practice Keep the shared material before the questions Shared eligible prefix tools + stable instructions + invoice schema Request A: Where is VAT applied? Request B: Where is CSV escaping handled? Changing the question need not change the shared prefix. A matching prefix must be eligible and already cached; stable text alone does not create a hit. Caching docs Applied example · supporting documentation"
+    },
+    {
+      "slide": 10,
+      "label": "Worked cost example",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        ],
+        [
+          "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        ]
+      ],
+      "source_text": "Worked arithmetic One cache-hit request: about five cents Illustrative usage and rates Cost 19,000 cached input × $0.20 / million $0.0038 3,700 new input × $4 / million $0.0148 1,600 output × $20 / million $0.0320 22,700 input + 1,600 output in total $0.0506 Assumed rates, not a measured bill. Without the cache hit: $0.0908 input + $0.0320 output = $0.1228. Applied example · supporting documentation",
+      "output_text": "Worked arithmetic One cache-hit request: about five cents Illustrative usage and rates Cost 19,000 cached input × $0.20 / million $0.0038 3,700 new input × $4 / million $0.0148 1,600 output × $20 / million $0.0320 22,700 input + 1,600 output in total $0.0506 Assumed rates, not a measured bill. Without the cache hit: $0.0908 input + $0.0320 output = $0.1228. Applied example · supporting documentation"
+    },
+    {
+      "slide": 11,
+      "label": "Cache tradeoffs",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        ],
+        [
+          "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        ]
+      ],
+      "source_text": "In practice Preserve reuse when it serves the task Avoid accidental churn Keep stable instructions and tool definitions stable where practical. Make necessary changes Correct stale rules, change a failing configuration or compact when the task needs it. A cache hit is valuable only when the resulting work is useful. Applied example · supporting documentation",
+      "output_text": "In practice Preserve reuse when it serves the task Avoid accidental churn Keep stable instructions and tool definitions stable where practical. Make necessary changes Correct stale rules, change a failing configuration or compact when the task needs it. A cache hit is valuable only when the resulting work is useful. Applied example · supporting documentation"
+    },
+    {
+      "slide": 12,
+      "label": "Compaction",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        ],
+        [
+          "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        ]
+      ],
+      "source_text": "In practice Preserve the state that explains the next step Handoff or compaction checklist Goal and acceptance cases Current files and actual check results Decisions, failed approaches and unresolved questions Permission boundary and next action A matching prefix can help reuse where supported. Verify the summary’s completeness separately. Applied example · supporting documentation",
+      "output_text": "In practice Preserve the state that explains the next step Handoff or compaction checklist Goal and acceptance cases Current files and actual check results Decisions, failed approaches and unresolved questions Permission boundary and next action A matching prefix can help reuse where supported. Verify the summary’s completeness separately. Applied example · supporting documentation"
+    },
+    {
+      "slide": 13,
+      "label": "Effort comparison",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://claude.dev/blog/spending-your-effort/"
+        ],
+        [
+          "https://claude.dev/blog/spending-your-effort/"
+        ]
+      ],
+      "source_text": "In practice Change one setting at a time Hold constant Compare Task, starting files and acceptance cases Supported effort settings for the same model. Tools, permissions and budget Successes, failures, time, usage and review effort. Record the exact settings; “high” is not necessarily equivalent across models or versions. Applied example · supporting documentation",
+      "output_text": "In practice Change one setting at a time Hold constant Compare Task, starting files and acceptance cases Supported effort settings for the same model. Tools, permissions and budget Successes, failures, time, usage and review effort. Record the exact settings; “high” is not necessarily equivalent across models or versions. Applied example · supporting documentation"
+    },
+    {
+      "slide": 14,
+      "label": "Build and verify",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://claude.dev/blog/spending-your-effort/"
+        ],
+        [
+          "https://claude.dev/blog/spending-your-effort/"
+        ]
+      ],
+      "source_text": "In practice Treat “low build, high verify” as a hypothesis Proposed workflow Build with a lower-effort setting, then run a distinct review and verification phase. Acceptance test Compare it with one configuration under the same overall budget and rubric. Source: Spending your effort describes the author’s workflow and experiments.",
+      "output_text": "In practice Treat “low build, high verify” as a hypothesis Proposed workflow Build with a lower-effort setting, then run a distinct review and verification phase. Acceptance test Compare it with one configuration under the same overall budget and rubric. Source: Spending your effort describes the author’s workflow and experiments."
+    },
+    {
+      "slide": 15,
+      "label": "Routing and escalation",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://claude.dev/blog/spending-your-effort/"
+        ],
+        [
+          "https://claude.dev/blog/spending-your-effort/"
+        ]
+      ],
+      "source_text": "Model choice Escalate when the evidence points to a need Start: use a configuration that has met the acceptance bar on similar work. Diagnose: missing facts, a broken tool and hard reasoning call for different fixes. Compare: try supported effort or model changes against the same checks and budget. There is no universal “effort first” ladder. Re-evaluate defaults when the task or model changes. Applied example · supporting documentation",
+      "output_text": "Model choice Escalate when the evidence points to a need Start: use a configuration that has met the acceptance bar on similar work. Diagnose: missing facts, a broken tool and hard reasoning call for different fixes. Compare: try supported effort or model changes against the same checks and budget. There is no universal “effort first” ladder. Re-evaluate defaults when the task or model changes. Applied example · supporting documentation"
+    },
+    {
+      "slide": 16,
+      "label": "Cost per accepted task",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "01"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "02"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "03"
+        }
+      ],
+      "links": [
+        [
+          "https://claude.dev/blog/spending-your-effort/"
+        ],
+        [
+          "https://claude.dev/blog/spending-your-effort/"
+        ]
+      ],
+      "source_text": "Model choice Measure the task, including the failed attempts Same acceptance bar Use representative invoice cases and the same permissions and tools. Whole run Record quality, elapsed time, all token categories, retries and review effort. Repeat and compare Repeat representative cases before changing the default configuration. A higher-priced model can finish in fewer attempts. Whether it costs less is a measurement, not a rule. Applied example · supporting documentation",
+      "output_text": "Model choice Measure the task, including the failed attempts 01 Same acceptance bar Use representative invoice cases and the same permissions and tools. 02 Whole run Record quality, elapsed time, all token categories, retries and review effort. 03 Repeat and compare Repeat representative cases before changing the default configuration. A higher-priced model can finish in fewer attempts. Whether it costs less is a measurement, not a rule. Applied example · supporting documentation"
+    },
+    {
+      "slide": 17,
+      "label": "Real verification",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+        ],
+        [
+          "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+        ]
+      ],
+      "source_text": "In practice Ask for evidence tied to the changed behavior Before calling the invoice fix done: 1. Run the invoice acceptance cases. 2. Inspect changed assertions and the final diff. 3. Check the exported CSV values. 4. Report commands, exit statuses, failures and gaps. A syntax check cannot establish the VAT calculation. A command that never starts is not a passed test. Applied example · supporting documentation",
+      "output_text": "In practice Ask for evidence tied to the changed behavior Before calling the invoice fix done: 1. Run the invoice acceptance cases. 2. Inspect changed assertions and the final diff. 3. Check the exported CSV values. 4. Report commands, exit statuses, failures and gaps. A syntax check cannot establish the VAT calculation. A command that never starts is not a passed test. Applied example · supporting documentation"
+    },
+    {
+      "slide": 18,
+      "label": "Progress and regression checks",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+        ],
+        [
+          "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+        ]
+      ],
+      "source_text": "In practice Use one metric for improvement and a guardrail for damage Improvement target Reduce export latency on the same fixture and environment. Regression guardrail Keep VAT correctness, CSV shape and memory use within the accepted limits. Do not improve the score by weakening the workload or grader. Applied example · supporting documentation",
+      "output_text": "In practice Use one metric for improvement and a guardrail for damage Improvement target Reduce export latency on the same fixture and environment. Regression guardrail Keep VAT correctness, CSV shape and memory use within the accepted limits. Do not improve the score by weakening the workload or grader. Applied example · supporting documentation"
+    },
+    {
+      "slide": 19,
+      "label": "Grading methods",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "01"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "02"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "03"
+        }
+      ],
+      "links": [
+        [
+          "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+        ],
+        [
+          "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+        ]
+      ],
+      "source_text": "In practice Use the strongest practical check for each claim Deterministic check Parse CSV, assert values and run regression tests. Written rubric Assess explanation quality and completeness against named criteria. Human calibration Check ambiguous cases and compare model-judge scores with human decisions. A different judge model does not remove bias. Blind labels and vary answer order where practical. Applied example · supporting documentation",
+      "output_text": "In practice Use the strongest practical check for each claim 01 Deterministic check Parse CSV, assert values and run regression tests. 02 Written rubric Assess explanation quality and completeness against named criteria. 03 Human calibration Check ambiguous cases and compare model-judge scores with human decisions. A different judge model does not remove bias. Blind labels and vary answer order where practical. Applied example · supporting documentation"
+    },
+    {
+      "slide": 20,
+      "label": "Avoid overfitting",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+        ],
+        [
+          "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+        ]
+      ],
+      "source_text": "In practice Keep some cases out of prompt tuning Develop on cases that expose known failures. Hold back different invoice variants for the final comparison. Inspect grader mistakes and near-duplicate cases before celebrating a score. A better development score is evidence to investigate, not proof of general improvement. Applied example · supporting documentation",
+      "output_text": "In practice Keep some cases out of prompt tuning Develop on cases that expose known failures. Hold back different invoice variants for the final comparison. Inspect grader mistakes and near-duplicate cases before celebrating a score. A better development score is evidence to investigate, not proof of general improvement. Applied example · supporting documentation"
+    },
+    {
+      "slide": 21,
+      "label": "A bounded task contract",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://code.claude.com/docs/en/sub-agents"
+        ],
+        [
+          "https://code.claude.com/docs/en/sub-agents"
+        ]
+      ],
+      "source_text": "The invoice task Make the acceptance contract explicit GOAL: export invoice net, VAT and gross values to CSV. SCOPE: invoice export code; preserve existing tests. VERIFY: pytest tests/test_export.py -q CASES: 21% VAT, zero VAT, rounding, quoted CSV fields. LIMIT: three repair attempts; then stop and report. EVIDENCE: diff, command, exit status, failures and gaps. Pair this request with an enforced runtime budget and a review of the resulting artifact. Applied example · supporting documentation",
+      "output_text": "The invoice task Make the acceptance contract explicit GOAL: export invoice net, VAT and gross values to CSV. SCOPE: invoice export code; preserve existing tests. VERIFY: pytest tests/test_export.py -q CASES: 21% VAT, zero VAT, rounding, quoted CSV fields. LIMIT: three repair attempts; then stop and report. EVIDENCE: diff, command, exit status, failures and gaps. Pair this request with an enforced runtime budget and a review of the resulting artifact. Applied example · supporting documentation"
+    },
+    {
+      "slide": 22,
+      "label": "Handoff",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://code.claude.com/docs/en/sub-agents"
+        ],
+        [
+          "https://code.claude.com/docs/en/sub-agents"
+        ]
+      ],
+      "source_text": "In practice Separate durable task state from delegation TASK STATE Goal; completed work; evidence; unresolved work; next check. HELPER TASK One scoped question; relevant inputs; permitted actions; required findings with evidence and uncertainty. A new worker reads the handoff, verifies the current state, then continues. Applied example · supporting documentation",
+      "output_text": "In practice Separate durable task state from delegation TASK STATE Goal; completed work; evidence; unresolved work; next check. HELPER TASK One scoped question; relevant inputs; permitted actions; required findings with evidence and uncertainty. A new worker reads the handoff, verifies the current state, then continues. Applied example · supporting documentation"
+    },
+    {
+      "slide": 23,
+      "label": "Human decisions",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "01"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "02"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "03"
+        }
+      ],
+      "links": [
+        [
+          "https://code.claude.com/docs/en/sub-agents"
+        ],
+        [
+          "https://code.claude.com/docs/en/sub-agents"
+        ]
+      ],
+      "source_text": "In practice Keep ownership of scope and acceptance Scope Decide what outcome and tradeoffs are worth pursuing. Authority Set which actions require approval and enforce access boundaries. Acceptance Review the result against requirements and user-visible behavior. Delegation moves work; it does not remove accountability. Applied example · supporting documentation",
+      "output_text": "In practice Keep ownership of scope and acceptance 01 Scope Decide what outcome and tradeoffs are worth pursuing. 02 Authority Set which actions require approval and enforce access boundaries. 03 Acceptance Review the result against requirements and user-visible behavior. Delegation moves work; it does not remove accountability. Applied example · supporting documentation"
+    },
+    {
+      "slide": 24,
+      "label": "Two useful patterns",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://code.claude.com/docs/en/sub-agents"
+        ],
+        [
+          "https://code.claude.com/docs/en/sub-agents"
+        ]
+      ],
+      "source_text": "In practice Use separate contexts for a clear reason Investigate and combine Independent questions; evidence-bearing returns; one integration owner. Build and review One worker produces a patch; a separate reviewer checks it against a rubric. A second agent can miss the same issue. Keep deterministic checks and final acceptance. Applied example · supporting documentation",
+      "output_text": "In practice Use separate contexts for a clear reason Investigate and combine Independent questions; evidence-bearing returns; one integration owner. Build and review One worker produces a patch; a separate reviewer checks it against a rubric. A second agent can miss the same issue. Keep deterministic checks and final acceptance. Applied example · supporting documentation"
+    },
+    {
+      "slide": 25,
+      "label": "Cost and containment",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://code.claude.com/docs/en/sub-agents"
+        ],
+        [
+          "https://code.claude.com/docs/en/sub-agents"
+        ]
+      ],
+      "source_text": "In practice Two checks before adding workers Will it help? Estimate coordination and review effort; measure cost per accepted result. What may it touch? Configure filesystem, network and credential boundaries independently of context separation. Enforce budgets in the harness. A token budget written in a prompt is a request, not necessarily a hard cap. Applied example · supporting documentation",
+      "output_text": "In practice Two checks before adding workers Will it help? Estimate coordination and review effort; measure cost per accepted result. What may it touch? Configure filesystem, network and credential boundaries independently of context separation. Enforce budgets in the harness. A token budget written in a prompt is a request, not necessarily a hard cap. Applied example · supporting documentation"
+    },
+    {
+      "slide": 26,
+      "label": "Tool interface",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
+        ],
+        [
+          "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
+        ]
+      ],
+      "source_text": "In practice Make tool outcomes easy to interpret Invoice verifier result status: failed case: zero VAT expected_gross: 100.00 actual_gross: 121.00 evidence: test output and fixture path Use clear inputs, bounded outputs and explicit errors. Improve the tool from observed failure traces. Applied example · supporting documentation",
+      "output_text": "In practice Make tool outcomes easy to interpret Invoice verifier result status: failed case: zero VAT expected_gross: 100.00 actual_gross: 121.00 evidence: test output and fixture path Use clear inputs, bounded outputs and explicit errors. Improve the tool from observed failure traces. Applied example · supporting documentation"
+    },
+    {
+      "slide": 27,
+      "label": "Useful HTML output",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
+        ],
+        [
+          "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
+        ]
+      ],
+      "source_text": "In practice Use an interactive view when it improves a decision Compare Show invoice variants side by side with the changed fields highlighted. Choose and export Let the reviewer record a decision and export the accepted specification. Plain text is enough for a short finding. Choose the format from the review task. Applied example · supporting documentation",
+      "output_text": "In practice Use an interactive view when it improves a decision Compare Show invoice variants side by side with the changed fields highlighted. Choose and export Let the reviewer record a decision and export the accepted specification. Plain text is enough for a short finding. Choose the format from the review task. Applied example · supporting documentation"
+    },
+    {
+      "slide": 28,
+      "label": "Hooks and extensions",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://code.claude.com/docs/en/hooks",
+          "https://code.claude.com/docs/en/hooks"
+        ],
+        [
+          "https://code.claude.com/docs/en/hooks",
+          "https://code.claude.com/docs/en/hooks"
+        ]
+      ],
+      "source_text": "In practice Automate a specific control, then test it Example: require the invoice check before an authorized release step. Verify the hook’s actual event, inputs, failure behavior and scope. Test allowed, denied and error cases in a disposable environment. A hook is only as strong as its placement and implementation. Hooks reference Applied example · supporting documentation",
+      "output_text": "In practice Automate a specific control, then test it Example: require the invoice check before an authorized release step. Verify the hook’s actual event, inputs, failure behavior and scope. Test allowed, denied and error cases in a disposable environment. A hook is only as strong as its placement and implementation. Hooks reference Applied example · supporting documentation"
+    },
+    {
+      "slide": 29,
+      "label": "Tomorrow",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "·"
+        }
+      ],
+      "links": [
+        [
+          "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+          "best-practices-reference.html"
+        ],
+        [
+          "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+          "best-practices-reference.html"
+        ]
+      ],
+      "source_text": "In practice Start with one repeatable improvement Remove one conflicting instruction and run its regression cases. Save the invoice verification procedure as a small skill. Measure the next completed task, including failures and review. Keep the change only when the evidence supports it. Applied example · supporting documentation Optional reference material",
+      "output_text": "In practice Start with one repeatable improvement Remove one conflicting instruction and run its regression cases. Save the invoice verification procedure as a small skill. Measure the next completed task, including failures and review. Keep the change only when the evidence supports it. Applied example · supporting documentation · Optional reference material"
+    },
+    {
+      "slide": 30,
+      "label": "Sources",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://claude.dev/blog/the-new-rules-of-context-engineering-for-claude-5-generation-models/",
+          "https://claude.dev/blog/spending-your-effort/",
+          "https://claude.dev/blog/automating-eval-design-and-hillclimbing/",
+          "https://code.claude.com/docs/en/skills"
+        ],
+        [
+          "https://claude.dev/blog/the-new-rules-of-context-engineering-for-claude-5-generation-models/",
+          "https://claude.dev/blog/spending-your-effort/",
+          "https://claude.dev/blog/automating-eval-design-and-hillclimbing/",
+          "https://code.claude.com/docs/en/skills"
+        ]
+      ],
+      "source_text": "Sources Sources and further reading Context engineering lessons Effort experiments Evaluation and hillclimbing Skills documentation Primary documentation checked 3 October 2026. Examples are illustrative unless explicitly attributed.",
+      "output_text": "Sources Sources and further reading Context engineering lessons Effort experiments Evaluation and hillclimbing Skills documentation Primary documentation checked 3 October 2026. Examples are illustrative unless explicitly attributed."
+    }
+  ]
+}

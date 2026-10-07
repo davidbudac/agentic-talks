@@ -1,0 +1,497 @@
+{
+  "source": "ai-toolbox.html",
+  "output": "ai-toolbox-ivory.html",
+  "counts": [
+    31,
+    31
+  ],
+  "structural_errors": [],
+  "slides": [
+    {
+      "slide": 1,
+      "label": "Title",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "replace",
+          "source": "toolsRevised October 2026",
+          "output": "tools"
+        },
+        {
+          "kind": "replace",
+          "source": "Toolbox.",
+          "output": "Toolbox"
+        },
+        {
+          "kind": "replace",
+          "source": "David",
+          "output": "AuthorDavid"
+        },
+        {
+          "kind": "replace",
+          "source": "chat → agent → toolbox ↺",
+          "output": "RevisedOctober 2026"
+        }
+      ],
+      "links": [
+        [
+          "https://davidbudac.cz"
+        ],
+        [
+          "https://davidbudac.cz"
+        ]
+      ],
+      "source_text": "A field guide to today's AI toolsRevised October 2026 The AI Toolbox. What exists beyond the chat window — what it can do, and what it costs David Budáč chat → agent → toolbox ↺",
+      "output_text": "A field guide to today's AI tools The AI Toolbox What exists beyond the chat window — what it can do, and what it costs AuthorDavid Budáč RevisedOctober 2026"
+    },
+    {
+      "slide": 2,
+      "label": "The hook",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Start with the task Ask for a result you can review A paragraph “Write a summary of this quarter’s results.” An editable draft “Use these results and last quarter’s deck to build the next review. Flag missing data.” The useful difference is the output: a file, a working draft, or an action you can inspect.",
+      "output_text": "Start with the task Ask for a result you can review A paragraph “Write a summary of this quarter’s results.” An editable draft “Use these results and last quarter’s deck to build the next review. Flag missing data.” The useful difference is the output: a file, a working draft, or an action you can inspect."
+    },
+    {
+      "slide": 3,
+      "label": "Agenda",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "replace",
+          "source": "need? A",
+          "output": "need?A"
+        },
+        {
+          "kind": "replace",
+          "source": "start? The",
+          "output": "start?The"
+        },
+        {
+          "kind": "replace",
+          "source": "check? Accuracy,",
+          "output": "check?Accuracy,"
+        }
+      ],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Our route Three questions for choosing a tool What do I need? A document, a design, a clip, an answer or a repeatable task. Where should I start? The tools your team already has, then a specialist if needed. What must I check? Accuracy, permissions, export, rights and the cost of iteration. Product and price tables are optional reference material. The main talk is about choosing a useful workflow.",
+      "output_text": "Our route Three questions for choosing a tool What do I need?A document, a design, a clip, an answer or a repeatable task. Where should I start?The tools your team already has, then a specialist if needed. What must I check?Accuracy, permissions, export, rights and the cost of iteration. Product and price tables are optional reference material. The main talk is about choosing a useful workflow."
+    },
+    {
+      "slide": 4,
+      "label": "One task, agent-style",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "A useful first task Build the quarterly review from evidence INPUT results.csv + Q1 deck + brand template REQUEST draft the Q2 review in the same structure CHECK reconcile chart totals with the CSV GAPS mark missing June data; ask for the export OUTPUT editable deck + a list of unresolved points Illustrative workflow. Ask it to flag gaps; verify that it actually did. Review the numbers and the story before sharing.",
+      "output_text": "A useful first task Build the quarterly review from evidence INPUT results.csv + Q1 deck + brand template REQUEST draft the Q2 review in the same structure CHECK reconcile chart totals with the CSV GAPS mark missing June data; ask for the export OUTPUT editable deck + a list of unresolved points Illustrative workflow. Ask it to flag gaps; verify that it actually did. Review the numbers and the story before sharing."
+    },
+    {
+      "slide": 5,
+      "label": "Chatbot vs agent",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Basics · chatbot vs agent A chatbot answers. An agent acts. Chatbot — the one you know You ask → it tells you what to do → you open the files, do the steps, paste results back… and repeat. Agent You ask → it does the work itself — reads the files, takes the steps, checks the result → you review at the end. An agent combines a model with tools and a loop. Whether it acts safely depends on the access and checks around it.",
+      "output_text": "Basics · chatbot vs agent A chatbot answers. An agent acts. Chatbot — the one you know You ask → it tells you what to do → you open the files, do the steps, paste results back… and repeat. Agent You ask → it does the work itself — reads the files, takes the steps, checks the result → you review at the end. An agent combines a model with tools and a loop. Whether it acts safely depends on the access and checks around it."
+    },
+    {
+      "slide": 6,
+      "label": "The agent loop",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Basics · the loop An agent is a loop Choose the next action. Run a permitted tool. Inspect the result and decide what comes next. For the review deck: read the CSV → build a chart → reconcile the totals → revise the draft.",
+      "output_text": "Basics · the loop An agent is a loop Choose the next action. Run a permitted tool. Inspect the result and decide what comes next. For the review deck: read the CSV → build a chart → reconcile the totals → revise the draft."
+    },
+    {
+      "slide": 7,
+      "label": "The model has no memory",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Basics · the brain Give it the right material For each step, the model needs the relevant instructions and information supplied to it. For the review deck, provide the results CSV, prior structure and brand template. Stored memories and connected files help only when the relevant information is actually retrieved. Check which files it used. A connected folder is not evidence that every document was read.",
+      "output_text": "Basics · the brain Give it the right material For each step, the model needs the relevant instructions and information supplied to it. For the review deck, provide the results CSV, prior structure and brand template. Stored memories and connected files help only when the relevant information is actually retrieved. Check which files it used. A connected folder is not evidence that every document was read."
+    },
+    {
+      "slide": 8,
+      "label": "The human checkpoint",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Review AI drafts. You sign. Check the facts Reconcile numbers with the source. Open important citations. Check the consequence Review more carefully when money, people or public communication are involved. Check the boundary Approve publishing and external actions separately from making a draft. A review step reduces risk only when someone performs a relevant check.",
+      "output_text": "Review AI drafts. You sign. Check the facts Reconcile numbers with the source. Open important citations. Check the consequence Review more carefully when money, people or public communication are involved. Check the boundary Approve publishing and external actions separately from making a draft. A review step reduces risk only when someone performs a relevant check."
+    },
+    {
+      "slide": 9,
+      "label": "Three everyday tasks",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Where it helps Start with work you already repeat Prepare a review CSV + last deck → editable draft. Check every important number. Digest a report Source documents → summary or audio. Check the claims against the originals. Adapt a campaign Approved message + brand files → draft formats. Check layout and wording. Choose one task with a result you already know how to judge.",
+      "output_text": "Where it helps Start with work you already repeat Prepare a review CSV + last deck → editable draft. Check every important number. Digest a report Source documents → summary or audio. Check the claims against the originals. Adapt a campaign Approved message + brand files → draft formats. Check layout and wording. Choose one task with a result you already know how to judge."
+    },
+    {
+      "slide": 10,
+      "label": "Choose a starting point",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Choosing a tool Start where your work already lives Files and drafts Try the file and agent features available in your approved assistant. Office or Workspace Check the AI features your organization already provides inside its apps. Specialist output Try a dedicated tool when the included option cannot produce the needed result. Compare one real task before buying another subscription. Check availability for your account and region.",
+      "output_text": "Choosing a tool Start where your work already lives Files and drafts Try the file and agent features available in your approved assistant. Office or Workspace Check the AI features your organization already provides inside its apps. Specialist output Try a dedicated tool when the included option cannot produce the needed result. Compare one real task before buying another subscription. Check availability for your account and region."
+    },
+    {
+      "slide": 11,
+      "label": "Agents for files",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Files Give a file agent an outcome “Use this folder to draft the Q2 review. Keep Q1’s structure and our template. List missing inputs. Ask before changing the source files.” Example product: Claude Cowork. Inspect the input list, changed files and unresolved questions.",
+      "output_text": "Files Give a file agent an outcome “Use this folder to draft the Q2 review. Keep Q1’s structure and our template. List missing inputs. Ask before changing the source files.” Example product: Claude Cowork. Inspect the input list, changed files and unresolved questions."
+    },
+    {
+      "slide": 12,
+      "label": "Design by iteration",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Design Use a brief, then refine the draft Brief Name the audience, purpose, brand references and required output. Refine Change one visible thing at a time: hierarchy, wording, layout or emphasis. Export and inspect Open the actual file. Check fonts, charts and editability before sharing. Example tools: Claude Design or Canva. Supplying a brand kit still requires a review of the result.",
+      "output_text": "Design Use a brief, then refine the draft Brief Name the audience, purpose, brand references and required output. Refine Change one visible thing at a time: hierarchy, wording, layout or emphasis. Export and inspect Open the actual file. Check fonts, charts and editability before sharing. Example tools: Claude Design or Canva. Supplying a brand kit still requires a review of the result."
+    },
+    {
+      "slide": 13,
+      "label": "Research over your documents",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Research Use the source as the final check Ask a bounded question “What changed in the customer study, and which pages support that?” Inspect the evidence Open the cited passage. Check that it supports the summary and its qualifications. A source-grounded assistant such as Google’s notebook product can help you navigate documents. A citation is a starting point for verification.",
+      "output_text": "Research Use the source as the final check Ask a bounded question “What changed in the customer study, and which pages support that?” Inspect the evidence Open the cited passage. Check that it supports the summary and its qualifications. A source-grounded assistant such as Google’s notebook product can help you navigate documents. A citation is a starting point for verification."
+    },
+    {
+      "slide": 14,
+      "label": "Read the price tag",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Cost Budget for iteration, not one perfect attempt Subscription A recurring fee with usage limits. Check what your existing plan includes. Credits Each generation consumes a balance. Discarded drafts and retries count too. For team use, check per-seat terms, data handling and commercial rights. API integrations add metered usage.",
+      "output_text": "Cost Budget for iteration, not one perfect attempt Subscription A recurring fee with usage limits. Check what your existing plan includes. Credits Each generation consumes a balance. Discarded drafts and retries count too. For team use, check per-seat terms, data handling and commercial rights. API integrations add metered usage."
+    },
+    {
+      "slide": 15,
+      "label": "Products change",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Choosing a tool Keep an exit route Prefer outputs your team can open and edit outside the tool. Keep the original data, prompts and approved assets. Check the current product page before promising a feature or budget. A tool can change its name, plan or export support. Your work should remain usable.",
+      "output_text": "Choosing a tool Keep an exit route Prefer outputs your team can open and edit outside the tool. Keep the original data, prompts and approved assets. Check the current product page before promising a feature or budget. A tool can change its name, plan or export support. Your work should remain usable."
+    },
+    {
+      "slide": 16,
+      "label": "Build a small app",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Choose by task A prototype people can try Give the brief “Make a savings calculator with these inputs and an explanation of the result.” Inspect the output Test the calculations, empty states and forms. Review access and data handling before launch. Examples: Lovable, v0 or Replit. Budget for revisions; a working preview still needs checks.",
+      "output_text": "Choose by task A prototype people can try Give the brief “Make a savings calculator with these inputs and an explanation of the result.” Inspect the output Test the calculations, empty states and forms. Review access and data handling before launch. Examples: Lovable, v0 or Replit. Budget for revisions; a working preview still needs checks."
+    },
+    {
+      "slide": 17,
+      "label": "Generated video",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Choose by task Plan a shot before you generate it Brief one shot State the subject, action, framing and duration. Start from approved material when useful. Review each take Check continuity, text, product details, rights and the credit cost of discarded takes. Examples: Veo / Flow, Runway or Higgsfield. A good shot is one ingredient in a finished video.",
+      "output_text": "Choose by task Plan a shot before you generate it Brief one shot State the subject, action, framing and duration. Start from approved material when useful. Review each take Check continuity, text, product details, rights and the credit cost of discarded takes. Examples: Veo / Flow, Runway or Higgsfield. A good shot is one ingredient in a finished video."
+    },
+    {
+      "slide": 18,
+      "label": "Templated video",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Choose by task Repeat a design with new data Lock the template Set layout, fonts, colours and timing once. Change the content Render another report or language version, then check text fit, data and timing. Example: HyperFrames. A reusable template improves consistency; new content still needs review.",
+      "output_text": "Choose by task Repeat a design with new data Lock the template Set layout, fonts, colours and timing once. Change the content Render another report or language version, then check text fit, data and timing. Example: HyperFrames. A reusable template improves consistency; new content still needs review."
+    },
+    {
+      "slide": 19,
+      "label": "Voice and dubbing",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Choose by task Change the script without a studio visit Make a draft Turn an approved script into narration or a translated voice-over. Listen before release Check names, numbers, pronunciation and meaning. Confirm rights and consent for the voice. Example: ElevenLabs. Compare a short sample before choosing a voice or buying capacity.",
+      "output_text": "Choose by task Change the script without a studio visit Make a draft Turn an approved script into narration or a translated voice-over. Listen before release Check names, numbers, pronunciation and meaning. Confirm rights and consent for the voice. Example: ElevenLabs. Compare a short sample before choosing a voice or buying capacity."
+    },
+    {
+      "slide": 20,
+      "label": "Images and design",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Choose by task Choose by the output you need Layout and brand Use a design tool when you need controlled text, logos and repeatable formats. New imagery Use image generation for a concept or source image, then inspect and refine it. Examples: Canva, Firefly or Ideogram. Review text, rights, privacy settings and visual accuracy.",
+      "output_text": "Choose by task Choose by the output you need Layout and brand Use a design tool when you need controlled text, logos and repeatable formats. New imagery Use image generation for a concept or source image, then inspect and refine it. Examples: Canva, Firefly or Ideogram. Review text, rights, privacy settings and visual accuracy."
+    },
+    {
+      "slide": 21,
+      "label": "Repeatable automation",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Choose by task Put a checkpoint in the workflow Trigger and draft A form arrives → prepare a follow-up and a proposed CRM update. Approve and act A person checks the draft → send and record only the approved changes. Examples: Zapier, Make or n8n. Check the actual data flow, permissions and failure handling.",
+      "output_text": "Choose by task Put a checkpoint in the workflow Trigger and draft A form arrives → prepare a follow-up and a proposed CRM update. Approve and act A person checks the draft → send and record only the approved changes. Examples: Zapier, Make or n8n. Check the actual data flow, permissions and failure handling."
+    },
+    {
+      "slide": 22,
+      "label": "Before real use",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Before adoption Check the terms, access and result Rights and privacy Can you use the output commercially? Are inputs or outputs public? Data and access Where does the data go, and which actions can the tool perform? Cost and review What do retries cost? Who checks the result before it is used? Check the actual plan and intended use. A paid tier alone does not establish permission, privacy or suitability.",
+      "output_text": "Before adoption Check the terms, access and result Rights and privacy Can you use the output commercially? Are inputs or outputs public? Data and access Where does the data go, and which actions can the tool perform? Cost and review What do retries cost? Who checks the result before it is used? Check the actual plan and intended use. A paid tier alone does not establish permission, privacy or suitability."
+    },
+    {
+      "slide": 23,
+      "label": "Story: Project Vend",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "A real-world lesson An agent’s operating setup changes the result The experiment Claude ran a snack shop: ordering stock, setting prices and talking to customers. The lesson Early failures exposed weak inventory and decision controls. Later iterations added tools and operating structure. A bounded experiment, not evidence that an agent can run any business unattended. Source: Anthropic, Project Vend.",
+      "output_text": "A real-world lesson An agent’s operating setup changes the result The experiment Claude ran a snack shop: ordering stock, setting prices and talking to customers. The lesson Early failures exposed weak inventory and decision controls. Later iterations added tools and operating structure. A bounded experiment, not evidence that an agent can run any business unattended. Source: Anthropic, Project Vend."
+    },
+    {
+      "slide": 24,
+      "label": "Story: the craft still matters",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "A real-world lesson Judge the finished work One campaign choice Anthropic’s Super Bowl campaign used human performers and a conventional production team. Your choice Use AI where it helps the brief. A lower production barrier does not decide the best creative approach. One campaign is an example, not proof of a universal ceiling on AI-generated work. Campaign sources are in the reference list.",
+      "output_text": "A real-world lesson Judge the finished work One campaign choice Anthropic’s Super Bowl campaign used human performers and a conventional production team. Your choice Use AI where it helps the brief. A lower production barrier does not decide the best creative approach. One campaign is an example, not proof of a universal ceiling on AI-generated work. Campaign sources are in the reference list."
+    },
+    {
+      "slide": 25,
+      "label": "Three integration routes",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Working in your apps Where should the work happen? Create a new file Upload the source material in chat and download an editable draft. Edit an existing file Use an approved assistant inside the document or spreadsheet. Connect another system Give access to the specific records or actions the task needs. Start with the route that fits the task. Check your organization’s approved tools and permissions.",
+      "output_text": "Working in your apps Where should the work happen? Create a new file Upload the source material in chat and download an editable draft. Edit an existing file Use an approved assistant inside the document or spreadsheet. Connect another system Give access to the specific records or actions the task needs. Start with the route that fits the task. Check your organization’s approved tools and permissions."
+    },
+    {
+      "slide": 26,
+      "label": "Files from chat",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Route 1 · create For a new draft, start with the source files UPLOAD results.csv + Q1.pptx + brand template ASK create an editable Q2 review DOWNLOAD open the actual presentation file CHECK chart data, layout, fonts and missing inputs Confirm that your tool supports the required file type and that the downloaded output remains editable.",
+      "output_text": "Route 1 · create For a new draft, start with the source files UPLOAD results.csv + Q1.pptx + brand template ASK create an editable Q2 review DOWNLOAD open the actual presentation file CHECK chart data, layout, fonts and missing inputs Confirm that your tool supports the required file type and that the downloaded output remains editable."
+    },
+    {
+      "slide": 27,
+      "label": "Edit inside the app",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Route 2 · edit For an existing file, keep the review nearby Make a scoped request “Update this chart from the new data. Preserve the formulas and template.” Inspect the changes Check the affected cells or slides. Recalculate, compare with the source, and review the final file. Use an approved Office or Workspace integration. Availability and permissions depend on your account and organization.",
+      "output_text": "Route 2 · edit For an existing file, keep the review nearby Make a scoped request “Update this chart from the new data. Preserve the formulas and template.” Inspect the changes Check the affected cells or slides. Recalculate, compare with the source, and review the final file. Use an approved Office or Workspace integration. Availability and permissions depend on your account and organization."
+    },
+    {
+      "slide": 28,
+      "label": "MCP",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "delete",
+          "source": "without MCP — N×M glue with MCP — connect once MCP",
+          "output": ""
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "without MCP — N×M glue with MCP — connect once MCP"
+        }
+      ],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Plugging in · mcp MCP = \"USB-C for AI\" without MCP — N×M glue with MCP — connect once MCP For the review deck, connect the approved source and inspect which records were retrieved. MCP is one standard for tool access. Compatibility, authentication and permissions depend on the integration. Expose only the records and actions needed. Review a proposed write before it happens.",
+      "output_text": "Plugging in · mcp MCP = \"USB-C for AI\" For the review deck, connect the approved source and inspect which records were retrieved. MCP is one standard for tool access. Compatibility, authentication and permissions depend on the integration. Expose only the records and actions needed. Review a proposed write before it happens. without MCP — N×M glue with MCP — connect once MCP"
+    },
+    {
+      "slide": 29,
+      "label": "Choose one task",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "ai-toolbox-reference.html",
+          "index.html"
+        ],
+        [
+          "ai-toolbox-reference.html",
+          "index.html"
+        ]
+      ],
+      "source_text": "Try this next Try one useful workflow this week Choose: a recurring task with a result you know how to judge. Start: with an approved tool you already have. Review: the facts, file and permissions before using the output. Optional reference: product tables and supporting examples · All talks",
+      "output_text": "Try this next Try one useful workflow this week Choose: a recurring task with a result you know how to judge. Start: with an approved tool you already have. Review: the facts, file and permissions before using the output. Optional reference: product tables and supporting examples · All talks"
+    },
+    {
+      "slide": 30,
+      "label": "Sources 1 of 2",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://claude.com/pricing",
+          "https://claude.com/product/cowork",
+          "https://www.anthropic.com/news/claude-design-anthropic-labs",
+          "https://claude.com/claude-for-microsoft-365",
+          "https://learn.chatgpt.com/docs/pricing",
+          "https://gemini.google/subscriptions/",
+          "https://blog.google/innovation-and-ai/products/gemini-notebook/notebooklm-gemini-notebook/",
+          "https://modelcontextprotocol.io",
+          "https://claude.com/blog/connectors-directory",
+          "https://openai.com/index/introducing-apps-in-chatgpt/",
+          "https://openai.com/index/chatgpt-for-excel/",
+          "https://zapier.com/mcp"
+        ],
+        [
+          "https://claude.com/pricing",
+          "https://claude.com/product/cowork",
+          "https://www.anthropic.com/news/claude-design-anthropic-labs",
+          "https://claude.com/claude-for-microsoft-365",
+          "https://learn.chatgpt.com/docs/pricing",
+          "https://gemini.google/subscriptions/",
+          "https://blog.google/innovation-and-ai/products/gemini-notebook/notebooklm-gemini-notebook/",
+          "https://modelcontextprotocol.io",
+          "https://claude.com/blog/connectors-directory",
+          "https://openai.com/index/introducing-apps-in-chatgpt/",
+          "https://openai.com/index/chatgpt-for-excel/",
+          "https://zapier.com/mcp"
+        ]
+      ],
+      "source_text": "Sources · labs & plans Sources & links (1/2) The big three Claude — plans & pricingclaude.com/pricing Claude Cowork — product pageclaude.com/product/cowork Claude Design — announcementanthropic.com/news · claude-design Claude for Microsoft 365claude.com/claude-for-microsoft-365 ChatGPT — pricing docslearn.chatgpt.com/docs/pricing Google AI — subscriptionsgemini.google/subscriptions Gemini Notebook (ex-NotebookLM)blog.google · gemini-notebook Connectors & MCP Model Context Protocol — spec & docsmodelcontextprotocol.io Claude — connectors directoryclaude.com/blog · connectors-directory OpenAI — apps in ChatGPTopenai.com · apps-in-chatgpt OpenAI — ChatGPT for Excelopenai.com · chatgpt-for-excel Zapier MCPzapier.com/mcp",
+      "output_text": "Sources · labs & plans Sources & links (1/2) The big three Claude — plans & pricingclaude.com/pricing Claude Cowork — product pageclaude.com/product/cowork Claude Design — announcementanthropic.com/news · claude-design Claude for Microsoft 365claude.com/claude-for-microsoft-365 ChatGPT — pricing docslearn.chatgpt.com/docs/pricing Google AI — subscriptionsgemini.google/subscriptions Gemini Notebook (ex-NotebookLM)blog.google · gemini-notebook Connectors & MCP Model Context Protocol — spec & docsmodelcontextprotocol.io Claude — connectors directoryclaude.com/blog · connectors-directory OpenAI — apps in ChatGPTopenai.com · apps-in-chatgpt OpenAI — ChatGPT for Excelopenai.com · chatgpt-for-excel Zapier MCPzapier.com/mcp"
+    },
+    {
+      "slide": 31,
+      "label": "Sources 2 of 2",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://lovable.dev/pricing",
+          "https://runway.com/pricing",
+          "https://github.com/heygen-com/hyperframes",
+          "https://www.synthesia.io/pricing",
+          "https://elevenlabs.io/pricing",
+          "https://gamma.app",
+          "https://www.perplexity.ai",
+          "https://www.anthropic.com/research/project-vend-2",
+          "https://www.livescience.com/technology/artificial-intelligence/googles-ai-co-scientist-cracked-10-year-superbug-problem-in-just-2-days",
+          "https://www.cnbc.com/2025/09/24/ai-cfa-exam-pass-minutes-study.html",
+          "https://deepmind.google/blog/advanced-version-of-gemini-with-deep-think-officially-achieves-gold-medal-standard-at-the-international-mathematical-olympiad/",
+          "https://blog.google/innovation-and-ai/technology/safety-security/cybersecurity-updates-summer-2025/",
+          "https://www.anthropic.com/news/disrupting-AI-espionage",
+          "https://www.cnbc.com/2026/02/04/anthropic-no-ads-claude-chatbot-openai-chatgpt.html"
+        ],
+        [
+          "https://lovable.dev/pricing",
+          "https://runway.com/pricing",
+          "https://github.com/heygen-com/hyperframes",
+          "https://www.synthesia.io/pricing",
+          "https://elevenlabs.io/pricing",
+          "https://gamma.app",
+          "https://www.perplexity.ai",
+          "https://www.anthropic.com/research/project-vend-2",
+          "https://www.livescience.com/technology/artificial-intelligence/googles-ai-co-scientist-cracked-10-year-superbug-problem-in-just-2-days",
+          "https://www.cnbc.com/2025/09/24/ai-cfa-exam-pass-minutes-study.html",
+          "https://deepmind.google/blog/advanced-version-of-gemini-with-deep-think-officially-achieves-gold-medal-standard-at-the-international-mathematical-olympiad/",
+          "https://blog.google/innovation-and-ai/technology/safety-security/cybersecurity-updates-summer-2025/",
+          "https://www.anthropic.com/news/disrupting-AI-espionage",
+          "https://www.cnbc.com/2026/02/04/anthropic-no-ads-claude-chatbot-openai-chatgpt.html"
+        ]
+      ],
+      "source_text": "Sources · tools & stories Sources & links (2/2) Category leaders Lovable — pricinglovable.dev/pricing Runway — pricingrunway.com/pricing HyperFrames — open-source repogithub.com/heygen-com/hyperframes Synthesia — pricingsynthesia.io/pricing ElevenLabs — pricingelevenlabs.io/pricing Gammagamma.app Perplexityperplexity.ai The five stories Anthropic — Project Vend (phases 1 & 2)anthropic.com/research · project-vend AI co-scientist — the superbug resultlivescience.com CNBC — AI passes CFA Level III mockcnbc.com DeepMind — official IMO golddeepmind.google/blog Google — Big Sleep pre-empts an exploitblog.google Anthropic — disrupting AI-run espionageanthropic.com/news The Super Bowl campaign & resultscnbc.com All figures verified July 2026. This market moves monthly — re-check the vendor's page before quoting a price outside this room.",
+      "output_text": "Sources · tools & stories Sources & links (2/2) Category leaders Lovable — pricinglovable.dev/pricing Runway — pricingrunway.com/pricing HyperFrames — open-source repogithub.com/heygen-com/hyperframes Synthesia — pricingsynthesia.io/pricing ElevenLabs — pricingelevenlabs.io/pricing Gammagamma.app Perplexityperplexity.ai The five stories Anthropic — Project Vend (phases 1 & 2)anthropic.com/research · project-vend AI co-scientist — the superbug resultlivescience.com CNBC — AI passes CFA Level III mockcnbc.com DeepMind — official IMO golddeepmind.google/blog Google — Big Sleep pre-empts an exploitblog.google Anthropic — disrupting AI-run espionageanthropic.com/news The Super Bowl campaign & resultscnbc.com All figures verified July 2026. This market moves monthly — re-check the vendor's page before quoting a price outside this room."
+    }
+  ]
+}

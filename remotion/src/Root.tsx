@@ -123,6 +123,52 @@ export const RemotionRoot: React.FC = () => {
         height={700}
         defaultProps={{ theme: "dark" as const }}
       />
+      {/* "Ivory Technical" restyles of the existing animations */}
+      <Composition
+        id="stateless-ivory"
+        component={Stateless}
+        durationInFrames={300}
+        fps={FPS}
+        width={1200}
+        height={900}
+        defaultProps={{ theme: "ivory" as const }}
+      />
+      <Composition
+        id="next-token-ivory"
+        component={NextToken}
+        durationInFrames={200}
+        fps={FPS}
+        width={1200}
+        height={750}
+        defaultProps={{ theme: "ivory" as const }}
+      />
+      <Composition
+        id="agent-loop-ivory"
+        component={AgentLoop}
+        durationInFrames={240}
+        fps={FPS}
+        width={1152}
+        height={912}
+        defaultProps={{ theme: "ivory" as const }}
+      />
+      <Composition
+        id="kv-cache-ivory"
+        component={KvCache}
+        durationInFrames={290}
+        fps={FPS}
+        width={1200}
+        height={600}
+        defaultProps={{ theme: "ivory" as const }}
+      />
+      <Composition
+        id="subagents-ivory"
+        component={Subagents}
+        durationInFrames={270}
+        fps={FPS}
+        width={1176}
+        height={756}
+        defaultProps={{ theme: "ivory" as const }}
+      />
     </>
   );
 };

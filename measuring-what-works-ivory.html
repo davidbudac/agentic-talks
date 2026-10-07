@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Measuring What Works</title>
+<link rel="stylesheet" href="ivory_design_system/styles.css">
+</head>
+<body>
+
+<!--
+  Measuring What Works — Ivory conversion of measuring-what-works.html (19 slides).
+  Design-only port: wording, slide order, data-label, data-origin-slide and
+  data-speaker-notes are unchanged. Revised clarity teaching path; see
+  reviews/2026-10-03-clarity/.
+  Ivory design system (DESIGN.md, ivory_design_system/).
+  Runs on the deck-stage component: ←/→, Space, Home/End,
+  number keys; R resets; N notes, P presenter window, F fullscreen.
+-->
+
+<deck-stage width="1920" height="1080">
+
+<!-- 01 · Title -->
+<section data-origin-slide="1" class="slide title-slide" data-label="Title" data-speaker-notes="Deep dive · developers Revised October 2026. Worked examples are illustrative; no live run is required.">
+  <div class="slide-head"><span class="crumb">Deep dive · developers</span><span class="snum"></span></div>
+  <h1>Measuring<br>What Works</h1>
+  <p class="sub">Compare outcomes, inspect failures,<br>then change the configuration.</p>
+  <div class="meta">
+    <div><span class="lab">Author</span>David&nbsp;Budáč</div>
+    <div><span class="lab">Revised</span>October 2026</div>
+  </div>
+</section>
+
+<!-- 02 · Agenda (Ember: .cards.c3 used as an agenda → ol.bul.def.wide) -->
+<section data-origin-slide="2" class="slide" data-label="Agenda" data-speaker-notes="The spoken path prioritizes evaluation. Product catalogues become an optional selection worksheet.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Evaluate one invoice-export task</h2>
+  <div class="zone">
+    <ol class="bul def wide">
+      <li><b>Define</b><span>Inputs, expected outcomes and graders.</span></li>
+      <li><b>Observe</b><span>Repeated trials, tool traces and actual artifacts.</span></li>
+      <li><b>Decide</b><span>Quality first, then cost, latency and operating constraints.</span></li>
+    </ol>
+  </div>
+  <p class="note">You can complete the static grading exercise without a model account.</p>
+</section>
+
+<!-- 03 · What an eval measures -->
+<section data-origin-slide="4" class="slide" data-label="What an eval measures" data-speaker-notes="This is an illustrative task definition. Other cases cover zero VAT, rounding and CSV quoting. The grader can have a bug too; inspect it against known correct and incorrect outputs.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Separate the case, the grader and the trial</h2>
+  <div class="zone">
+    <div class="cards c3">
+      <div class="tile"><span class="lab">01</span><h3>Test case</h3><p>Export a net-100 invoice with 21% VAT.</p></div>
+      <div class="tile"><span class="lab">02</span><h3>Grader</h3><p>Parse the CSV and check that net, VAT and gross are 100, 21 and 121.</p></div>
+      <div class="tile"><span class="lab">03</span><h3>Trial</h3><p>One fresh attempt with a recorded model, prompt, tools and environment.</p></div>
+    </div>
+  </div>
+  <p class="note">Evaluate the resulting artifact. A message saying “done” is not the outcome.</p>
+</section>
+
+<!-- 04 · Acceptance cases -->
+<section data-origin-slide="5" class="slide" data-label="Acceptance cases" data-speaker-notes="These exact examples are synthetic teaching fixtures, not universal tax advice. Use decimal arithmetic in the grader. The CSV test should parse fields, not merely search for a comma.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Make the expected behavior explicit</h2>
+  <div class="zone">
+    <table class="tbl">
+      <thead><tr><th scope="col">Case</th><th scope="col">Expected result</th></tr></thead>
+      <tbody>
+        <tr><td>Net 100.00; VAT 21%</td><td>VAT 21.00; gross 121.00</td></tr>
+        <tr><td>Net 100.00; VAT 0%</td><td>VAT 0.00; gross 100.00</td></tr>
+        <tr><td>Net 0.05; VAT 10%; half-up cents</td><td>VAT 0.01; gross 0.06</td></tr>
+        <tr><td>Customer name: ACME, Ltd</td><td>One customer field after CSV parsing</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">For this exercise, round VAT half up to cents, then add it to net. The business rule must come from the task.</p>
+</section>
+
+<!-- 05 · Grading methods -->
+<section data-origin-slide="6" class="slide" data-label="Grading methods" data-speaker-notes="A model judge is useful for subjective dimensions but can favor style, verbosity or familiar outputs. Treat grader disagreement as evidence to inspect, not automatic model failure.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Use the strongest practical check for each claim</h2>
+  <div class="zone">
+    <div class="cards c3">
+      <div class="tile"><span class="lab">01</span><h3>Deterministic check</h3><p>Parse CSV, assert values and run regression tests.</p></div>
+      <div class="tile"><span class="lab">02</span><h3>Written rubric</h3><p>Assess explanation quality and completeness against named criteria.</p></div>
+      <div class="tile"><span class="lab">03</span><h3>Human calibration</h3><p>Check ambiguous cases and compare model-judge scores with human decisions.</p></div>
+    </div>
+  </div>
+  <p class="note">A different judge model does not remove bias. Blind labels and vary answer order where practical.</p>
+</section>
+
+<!-- 06 · Repeated trials -->
+<section data-origin-slide="7" class="slide" data-label="Repeated trials" data-speaker-notes="Explain pass@k as probability of at least one success within k attempts and pass^k as probability all k succeed. This row illustrates the events, not a reliable estimate of either probability. Retries cost time and tokens.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>One success answers a different question</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="c">Illustrative outcomes for one case:</span> fail fail <span class="key">pass</span> fail fail</span>
+      <span class="l"><span class="k">At least one success in five attempts:</span> yes</span>
+      <span class="l"><span class="k">All five attempts successful:</span> no</span>
+      <span class="l"><span class="k">Observed single-attempt success rate:</span> 1 / 5</span>
+    </div>
+  </div>
+  <p class="note">This small sample does not establish production reliability. Report task coverage, repeats and uncertainty.</p>
+</section>
+
+<!-- 07 · Trace evidence -->
+<section data-origin-slide="8" class="slide" data-label="Trace evidence" data-speaker-notes="Avoid promising every reasoning block. Capture what the harness and provider expose with appropriate redaction. The environment’s final artifact matters more than the agent’s description of it.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Record the observable run</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li>Inputs, configuration, tool requests, results and timestamps.</li>
+      <li>Final files or external state, check output and exit statuses.</li>
+      <li>Usage categories, retries, failures and any unavailable evidence.</li>
+    </ul>
+  </div>
+  <p class="note">Telemetry is not a full transcript, and neither guarantees access to hidden model reasoning.</p>
+</section>
+
+<!-- 08 · Annotated trace -->
+<section data-origin-slide="9" class="slide" data-label="Annotated trace" data-speaker-notes="Replaces the assertion that half an illustrative trace was waste. The counterfactual is whether omitting the step preserves correctness and reduces work.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>A repeated step is a question to investigate</h2>
+  <div class="zone">
+    <table class="tbl">
+      <thead><tr><th scope="col">Observed step</th><th scope="col">What to ask</th></tr></thead>
+      <tbody>
+        <tr><td>Read calc.py; edit it; read it again</td><td>Did the second read inspect the changed code?</td></tr>
+        <tr><td>Repeat a failed tool call</td><td>Did the environment or arguments change?</td></tr>
+        <tr><td>Restate the plan after a handoff</td><td>Did this restore missing requirements?</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Label a step waste only after checking its purpose and effect.</p>
+</section>
+
+<!-- 09 · Telemetry versus transcripts -->
+<section data-origin-slide="10" class="slide" data-label="Telemetry versus transcripts" data-speaker-notes="Logging settings and tool support determine what is available. Do not assume a standard exporter captures all prompts, outputs and hidden reasoning.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Use the right evidence for the question</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Usage and event telemetry</span><p>Find cost, duration and tool-failure patterns across runs.</p></div>
+      <div class="tile"><span class="lab">Transcript and artifacts</span><p>Explain a particular wrong result and inspect what actually changed.</p></div>
+    </div>
+  </div>
+  <p class="note"><a href="https://code.claude.com/docs/en/monitoring-usage">Claude Code monitoring documentation</a> describes the available metrics and events.</p>
+</section>
+
+<!-- 10 · Results worksheet -->
+<section data-origin-slide="11" class="slide" data-label="Results worksheet" data-speaker-notes="Use the same starting repository for each trial and prevent artifacts leaking between variants. Separate development cases from held-out checks.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Keep failed runs in the comparison</h2>
+  <div class="zone">
+    <table class="tbl">
+      <thead><tr><th scope="col">Per trial</th><th scope="col">Record</th></tr></thead>
+      <tbody>
+        <tr><td>Identity</td><td>Case, variant, run number and versioned environment.</td></tr>
+        <tr><td>Outcome</td><td>Acceptance checks, rubric scores and evidence paths.</td></tr>
+        <tr><td>Work</td><td>Uncached input, cache writes/reads, output and retries.</td></tr>
+        <tr><td>Operational result</td><td>Time, total cost, review effort and error reason.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Aggregate success rate and total spend over all trials. Do not report only successful attempts.</p>
+</section>
+
+<!-- 11 · Grading exercise -->
+<section data-origin-slide="12" class="slide" data-label="Grading exercise" data-speaker-notes="A fails zero VAT. B fails the comma-containing customer field. Rounding is untested in both, so mark unknown rather than inventing a pass. See exercise-materials.md for the synthetic CSV fixtures.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Score two synthetic outputs</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="c">10 minutes — no model call needed</span></span>
+      <span class="l"><span class="k">A:</span> net=100, VAT=21, gross=121 for BOTH 21% and 0% orders.</span>
+      <span class="l"><span class="k">B:</span> correct totals for both; customer ACME, Ltd is unquoted.</span>
+      <span class="l">Grade against the four cases. Which outputs fail?</span>
+      <span class="l">What evidence is still missing?</span>
+    </div>
+  </div>
+  <p class="note">Output: a scored worksheet with explanations. Neither candidate is ready to accept.</p>
+</section>
+
+<!-- 12 · Exercise debrief -->
+<section data-origin-slide="13" class="slide" data-label="Exercise debrief" data-speaker-notes="A single missing critical case is enough to block acceptance. The next experiment should exercise rounding and repair the known failures. Avoid choosing B simply because it has more passes; it still fails a requirement.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>A good report includes unknowns</h2>
+  <div class="zone">
+    <table class="tbl c3">
+      <thead><tr><th scope="col">Check</th><th scope="col">A</th><th scope="col">B</th></tr></thead>
+      <tbody>
+        <tr><td>21% VAT totals</td><td>pass</td><td>pass</td></tr>
+        <tr><td>Zero VAT totals</td><td>fail</td><td>pass</td></tr>
+        <tr><td>Half-up rounding</td><td>not tested</td><td>not tested</td></tr>
+        <tr><td>CSV quoting</td><td>not tested</td><td>fail</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">No measured speed or token-cost result exists for these synthetic outputs.</p>
+</section>
+
+<!-- 13 · Cost per accepted task (same markup as agentic-engineering-ivory slide 20) -->
+<section data-origin-slide="15" class="slide" data-label="Cost per accepted task" data-speaker-notes="Remove the old benchmark collage and the arithmetic implying that five times cheaper tokens become dearer merely by using three times as many. Separate success rate from spend per successful attempt so failed runs do not disappear from the comparison.">
+  <div class="slide-head"><span class="crumb">Model choice</span><span class="snum"></span></div>
+  <h2>Measure the task, including the failed attempts</h2>
+  <div class="zone">
+    <div class="cards c3">
+      <div class="tile"><span class="lab">01</span><h3>Same acceptance bar</h3><p>Use representative invoice cases and the same permissions and tools.</p></div>
+      <div class="tile"><span class="lab">02</span><h3>Whole run</h3><p>Record quality, elapsed time, all token categories, retries and review effort.</p></div>
+      <div class="tile"><span class="lab">03</span><h3>Repeat and compare</h3><p>Repeat representative cases before changing the default configuration.</p></div>
+    </div>
+  </div>
+  <p class="note">A higher-priced model can finish in fewer attempts. Whether it costs less is a measurement, not a rule.</p>
+</section>
+
+<!-- 14 · Local model memory -->
+<section data-origin-slide="20" class="slide" data-label="Local model memory" data-speaker-notes="For mixture-of-experts models, few parameters may be active per token while many expert weights still need storage. Example: 35 billion parameters at four bits is about 17.5 decimal GB before metadata and runtime overhead; it is not a three-billion-parameter memory footprint.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Active parameters are not the RAM requirement</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li>Stored weights depend on total parameters, representation and quantization.</li>
+      <li>Inference also needs a KV cache, activations, runtime buffers and overhead.</li>
+      <li>Offloading can move weights to CPU memory or disk, trading memory for transfer time.</li>
+    </ul>
+  </div>
+  <p class="note">Approximate weight storage: parameters × bits per weight ÷ 8. This is a lower-bound estimate, not a fit guarantee.</p>
+</section>
+
+<!-- 15 · Hardware experiment -->
+<section data-origin-slide="22" class="slide" data-label="Hardware experiment" data-speaker-notes="This replaces an unconditional laptop-viability demo. Any optional rehearsal must record exact hardware and environment. Local inference still uses electricity, hardware and operator time.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Measure on the machine and task you intend to use</h2>
+  <div class="zone">
+    <table class="tbl">
+      <thead><tr><th scope="col">Record</th><th scope="col">Why</th></tr></thead>
+      <tbody>
+        <tr><td>Model, quantization and runtime</td><td>Defines the actual workload and implementation.</td></tr>
+        <tr><td>Context size and concurrency</td><td>Changes KV cache and memory demand.</td></tr>
+        <tr><td>Peak memory and elapsed time</td><td>Reveals fit and practical responsiveness.</td></tr>
+        <tr><td>Acceptance results</td><td>Shows whether it did the task correctly.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">No model download or hardware benchmark is required for this talk.</p>
+</section>
+
+<!-- 16 · Local or hosted -->
+<section data-origin-slide="25" class="slide" data-label="Local or hosted" data-speaker-notes="A deployment decision needs real measurements and organization-specific requirements. A small active parameter count or benchmark headline is insufficient.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Choose from constraints and observed results</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Local may fit</span><p>You can meet the quality, latency and memory requirements in an approved local environment.</p></div>
+      <div class="tile"><span class="lab">Hosted may fit</span><p>Its capability and operations meet your requirements, and the data path and commercial terms are acceptable.</p></div>
+    </div>
+  </div>
+  <p class="note">Inspect the whole workflow: local inference does not stop tools or telemetry from using the network.</p>
+</section>
+
+<!-- 17 · Voice input -->
+<section data-origin-slide="27" class="slide" data-label="Voice input" data-speaker-notes="Removes the unverified Hlas note and version-specific voice demo claims. Any available dictation tool can support this static example. No microphone or recorded run is required.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Review dictated requirements before execution</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="k">Spoken:</span> “Export invoices without changing stored records.”</span>
+      <span class="l"><span class="k">Check the transcription for:</span></span>
+      <span class="l">- negation: <span class="key">WITHOUT</span> changing records</span>
+      <span class="l">- exact file names and amounts</span>
+      <span class="l">- scope and permission boundaries</span>
+    </div>
+  </div>
+  <p class="note">A voice interface changes input convenience, not the acceptance checks.</p>
+</section>
+
+<!-- 18 · Next experiment (Ember: two .note paragraphs → .note + .src) -->
+<section data-origin-slide="30" class="slide" data-label="Next experiment" data-speaker-notes="The practical takeaway is an evaluation action, not allegiance to a model tier.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Change one thing and keep the acceptance bar</h2>
+  <div class="zone">
+    <ol class="bul">
+      <li>Choose representative cases and calibrate the grader.</li>
+      <li>Compare variants on repeated, isolated trials.</li>
+      <li>Inspect failures, then keep the change only if the complete result improves.</li>
+    </ol>
+  </div>
+  <p class="note">Keep separate cases for the final check so prompt tuning does not simply memorize the test set.</p>
+  <p class="src"><a href="measuring-what-works-reference.html">Optional reference material</a></p>
+</section>
+
+<!-- 19 · Sources -->
+<section data-origin-slide="31" class="slide" data-label="Sources" data-speaker-notes="Leave the sources visible for questions. These links support the mechanisms and qualifications; the examples are teaching material, not benchmark measurements.">
+  <div class="slide-head"><span class="crumb">Sources</span><span class="snum"></span></div>
+  <h2>Sources and further reading</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li><a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Agent evaluation structure</a></li>
+      <li><a href="https://code.claude.com/docs/en/monitoring-usage">Claude Code telemetry</a></li>
+      <li><a href="https://huggingface.co/docs/accelerate/usage_guides/big_modeling">Model loading and offloading</a></li>
+    </ul>
+  </div>
+  <p class="note">Primary documentation checked 3 October 2026. Examples are illustrative unless explicitly attributed.</p>
+</section>
+
+</deck-stage>
+<script src="ivory_design_system/deck-stage.js"></script>
+<script src="ivory_design_system/deck.js"></script>
+</body>
+</html>

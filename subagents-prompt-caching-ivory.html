@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Subagents &amp; Prompt Caching</title>
+<link rel="stylesheet" href="ivory_design_system/styles.css">
+</head>
+<body>
+
+<!--
+  Subagents & Prompt Caching — Ivory conversion of subagents-prompt-caching.html (21 slides).
+  Design-only port: wording, slide order, data-label, data-origin-slide and
+  data-speaker-notes are unchanged. Revised clarity teaching path; see
+  reviews/2026-10-03-clarity/.
+  Ivory design system (DESIGN.md, ivory_design_system/).
+  Runs on the deck-stage component: ←/→, Space, Home/End,
+  number keys; R resets; N notes, P presenter window, F fullscreen.
+-->
+
+<deck-stage width="1920" height="1080">
+
+<!-- 01 · Title -->
+<section data-origin-slide="1" class="slide title-slide" data-label="Title" data-speaker-notes="Deep dive · developers and IT admins Revised October 2026. Worked examples are illustrative; no live run is required.">
+  <div class="slide-head"><span class="crumb">Deep dive · developers and IT admins</span><span class="snum"></span></div>
+  <h1>Subagents &amp;<br>Prompt Caching</h1>
+  <p class="sub">Separate working contexts. Reuse matching input.</p>
+  <div class="meta">
+    <div><span class="lab">Author</span>David&nbsp;Budáč</div>
+    <div><span class="lab">Revised</span>October 2026</div>
+  </div>
+</section>
+
+<!-- 02 · Agenda (two equal mechanisms → .cards.c2 with .lab titles) -->
+<section data-origin-slide="2" class="slide" data-label="Agenda" data-speaker-notes="No product tour. First locate the work, then follow what crosses the boundary, then calculate which reuse actually saves money.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Two mechanisms, two different outcomes</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Delegation</span><p>Separate an investigation and return useful evidence.</p></div>
+      <div class="tile"><span class="lab">Caching</span><p>Reuse computed work on eligible matching input.</p></div>
+    </div>
+  </div>
+  <p class="note">We will follow two helpers investigating an invoice export.</p>
+</section>
+
+<!-- 03 · Local and cloud map (Ember: .cards.c2 + centred .lead → full-width 1:1 topology figure) -->
+<section data-origin-slide="6" class="slide" data-label="Local and cloud map" data-speaker-notes="Preserve the local-versus-cloud distinction from the original map. The harness coordinates helpers; the provider processes requests. Do not infer that no local state exists just because this prompt cache lives at the provider.">
+  <div class="slide-head"><span class="crumb">Architecture</span><span class="snum"></span></div>
+  <h2>Where the work happens in this example</h2>
+  <div class="zone">
+    <div class="fig">
+      <svg viewBox="0 0 1680 480" role="img" aria-label="Your computer runs the harness, lead and helper loops and local test tools; the provider cloud runs the API endpoint, model inference and provider prompt cache; requests cross the network and responses return">
+        <defs>
+          <marker id="s03-a" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L12,6 L0,12 Z"/></marker>
+        </defs>
+        <!-- boundaries: columns 1–4 and 9–12 -->
+        <rect class="dg-box outer" x="1" y="1" width="542" height="478" rx="2"/>
+        <rect class="dg-box outer" x="1137" y="1" width="542" height="478" rx="2"/>
+        <text class="dg-t" x="40" y="60">Your computer</text>
+        <!-- components -->
+        <rect class="dg-box" x="40" y="88" width="464" height="100" rx="2"/>
+        <rect class="dg-box" x="40" y="212" width="464" height="100" rx="2"/>
+        <rect class="dg-box" x="40" y="336" width="464" height="100" rx="2"/>
+        <text class="dg-t" x="272" y="147" text-anchor="middle">Harness</text>
+        <text class="dg-t" x="272" y="271" text-anchor="middle">Lead + helper loops</text>
+        <text class="dg-t" x="272" y="395" text-anchor="middle">Local test tools</text>
+        <text class="dg-t" x="1176" y="60">Provider cloud</text>
+        <rect class="dg-box" x="1176" y="88" width="464" height="100" rx="2"/>
+        <rect class="dg-box" x="1176" y="212" width="464" height="100" rx="2"/>
+        <rect class="dg-box" x="1176" y="336" width="464" height="100" rx="2"/>
+        <text class="dg-t" x="1408" y="147" text-anchor="middle">API endpoint</text>
+        <text class="dg-t" x="1408" y="271" text-anchor="middle">Model inference</text>
+        <text class="dg-t" x="1408" y="395" text-anchor="middle">Provider prompt cache</text>
+        <!-- request out, response back, across the network -->
+        <path class="dg-line" d="M544,222 H1135" marker-end="url(#s03-a)"/>
+        <path class="dg-line" d="M1136,302 H545" marker-end="url(#s03-a)"/>
+        <text class="dg-t acc" x="840" y="271" text-anchor="middle">request → network → response</text>
+      </svg>
+    </div>
+  </div>
+  <p class="note">Example topology: a local harness calling a hosted model. Harnesses and tools can also run remotely.</p>
+</section>
+
+<!-- 04 · Subagents -->
+<section data-origin-slide="7" class="slide" data-label="Subagents"
+    data-speaker-notes="The animation shows separation of intermediate output, not a guarantee of empty input context. Fresh agents also receive system instructions and tool definitions. Worktrees separate edits, not security boundaries. Avoid delegating a trivial step when coordination costs more than the work.">
+  <div class="slide-head"><span class="crumb">Split the work · subagents</span><span class="snum"></span></div>
+  <h2>Delegate a question; ask for evidence back</h2>
+  <div class="zone">
+    <div class="split">
+      <ul class="bul">
+        <li>Fresh helpers need a self-contained task and relevant inputs. Forks can inherit existing history.</li>
+        <li>Keep intermediate investigation in the helper’s context; return findings with file references.</li>
+        <li>Review the result. Delegation adds coordination cost and does not itself isolate filesystem access.</li>
+      </ul>
+      <div class="fig">
+        <!-- Remotion animation (remotion/src/Subagents.tsx), ivory render -->
+        <video src="assets/anim/subagents-ivory.mp4" width="1176" height="756" autoplay muted loop playsinline aria-label="A main agent delegates messy work to sub-agents that have their own context and return only a short summary"></video>
+      </div>
+    </div>
+  </div>
+  <p class="note">Example return: VAT calculation locations, the failing path, supporting lines and unresolved questions.</p>
+</section>
+
+<!-- 05 · Delegation lifecycle (equal steps → numbered .cards.c3) -->
+<section data-origin-slide="9" class="slide" data-label="Delegation lifecycle" data-speaker-notes="The previous four-crossings label mixed message transfers and local steps. A harness can expose helper transcripts or messaging; visibility is a product choice. Separate contexts do not imply separate filesystem permissions.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Delegate → investigate → return → integrate</h2>
+  <div class="zone">
+    <div class="cards c3">
+      <div class="tile"><span class="lab">01</span><h3>Delegate</h3><p>Task, inputs, limits and expected return.</p></div>
+      <div class="tile"><span class="lab">02</span><h3>Investigate</h3><p>Helper uses tools within its own working context.</p></div>
+      <div class="tile"><span class="lab">03</span><h3>Integrate</h3><p>Lead checks the returned evidence and resolves conflicts.</p></div>
+    </div>
+  </div>
+  <p class="note">These are lifecycle steps. The investigation is not a network crossing.</p>
+</section>
+
+<!-- 06 · Fresh or forked -->
+<section data-origin-slide="10" class="slide" data-label="Fresh or forked" data-speaker-notes="Do not describe a fresh helper as literally empty or a fork as isolated from parent input. The exact inheritance and model controls are harness specific.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Choose what the helper inherits</h2>
+  <div class="zone">
+    <table class="tbl lg">
+      <thead><tr><th scope="col">Fresh helper</th><th scope="col">Conversation fork</th></tr></thead>
+      <tbody>
+        <tr><td>Task prompt plus its configured instructions and tools.</td><td>Existing conversation and configured environment.</td></tr>
+        <tr><td>Provide the invoice rule and paths explicitly.</td><td>Useful when the background is expensive to restate.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">In both cases, specify scope and the evidence to return. <a href="https://code.claude.com/docs/en/sub-agents">Claude Code subagents and forks</a></p>
+</section>
+
+<!-- 07 · Return contract -->
+<section data-origin-slide="11" class="slide" data-label="Return contract" data-speaker-notes="This is an illustrative delegation prompt. Keep factual evidence and uncertainty in the return. The lead still verifies the findings before relying on them.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Ask for an answer you can inspect</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="k">TASK:</span> locate invoice VAT and CSV formatting paths.</span>
+      <span class="l"><span class="k">RETURN:</span></span>
+      <span class="l">- finding + file and line reference</span>
+      <span class="l">- relevant test or observed output</span>
+      <span class="l">- uncertainty and missing evidence</span>
+      <span class="l">- suggested next check</span>
+      <span class="l"><span class="k">SCOPE:</span> read-only investigation; do not change files.</span>
+    </div>
+  </div>
+  <p class="note">A short unsupported conclusion saves tokens by discarding the part you need.</p>
+</section>
+
+<!-- 08 · Parallel work -->
+<section data-origin-slide="12" class="slide" data-label="Parallel work" data-speaker-notes="Other architectures may allow direct helper messaging or shared state. Define that coordination explicitly rather than claiming all helpers are mutually invisible.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Parallelize independent investigations</h2>
+  <div class="zone">
+    <div class="cards c3">
+      <div class="tile"><span class="lab">Helper A</span><p>Locate VAT calculation and its tests.</p></div>
+      <div class="tile"><span class="lab">Helper B</span><p>Locate CSV formatting and escaping tests.</p></div>
+      <div class="tile"><span class="lab">Lead</span><p>Resolve the shared contract and own the final patch.</p></div>
+    </div>
+  </div>
+  <p class="note">Independent reads can overlap. Edits need ownership and an integration step.</p>
+</section>
+
+<!-- 09 · Delegation economics -->
+<section data-origin-slide="14" class="slide" data-label="Delegation economics" data-speaker-notes="Avoid the claim that a deep task automatically pays for itself. A trivial lookup often does not justify the coordination, but measure the relevant workflow.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Count the setup and the review</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Potential benefit</span><p>Less raw investigation in the lead context; shorter elapsed time for independent work.</p></div>
+      <div class="tile"><span class="lab">Additional work</span><p>Helper input, generated output, coordination and checking the returned findings.</p></div>
+    </div>
+  </div>
+  <p class="note">Delegation can be worthwhile without being cheaper. Compare accepted outcomes.</p>
+</section>
+
+<!-- 10 · Call versus agent -->
+<section data-origin-slide="16" class="slide" data-label="Call versus agent" data-speaker-notes="The original messages.create example made one request and selected the last text block. That does not implement multi-turn tool use, nor ensure a text-only return. This sketch states the missing loop without pretending to be an SDK implementation.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>One model call is not a tool-using helper loop</h2>
+  <div class="zone">
+    <div class="code reg">
+      <span class="l"><span class="c">PSEUDOCODE</span></span>
+      <span class="l">context = task + configured_instructions</span>
+      <span class="l"><span class="k">while</span> budget_remains:</span>
+      <span class="l">    response = model(context)</span>
+      <span class="l">    <span class="k">if</span> response.requests_tools:</span>
+      <span class="l">        context += permitted_tool_results(response)</span>
+      <span class="l">    <span class="k">else</span>:</span>
+      <span class="l">        <span class="k">return</span> structured_findings(response)</span>
+      <span class="l"><span class="k">return</span> incomplete_report()</span>
+    </div>
+  </div>
+  <p class="note">Handle errors, multiple content blocks and stop reasons in real code.</p>
+</section>
+
+<!-- 11 · Illustrative helper return -->
+<section data-origin-slide="17" class="slide" data-label="Illustrative helper return" data-speaker-notes="Replace the invented precise transcript statistics. The claim here is how to read the returned evidence, not that the helper has proven the bug.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>A compact trace still needs evidence</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="c">ILLUSTRATIVE — not a recorded Claude Code session</span></span>
+      <span class="l"></span>
+      <span class="l"><span class="k">Lead:</span> investigate invoice calculation and export.</span>
+      <span class="l"><span class="k">Helper A:</span> calc.py applies no VAT; see invoice rule.</span>
+      <span class="l"><span class="k">Helper B:</span> export.py writes the calculated total unchanged.</span>
+      <span class="l"><span class="k">Lead:</span> verify those findings, then plan one scoped patch.</span>
+    </div>
+  </div>
+  <p class="note">Tool counts, timings and costs should come from a real run if you quote them.</p>
+</section>
+
+<!-- 12 · KV caching -->
+<section data-origin-slide="22" class="slide" data-label="KV caching"
+    data-speaker-notes="Keep the existing KV-cache animation as a conceptual example. Do not claim that harnesses never rewrite: compaction and corrections can be necessary. Cache behavior and pricing are provider specific. TTL and break-even arithmetic are in the reference deck.">
+  <div class="slide-head"><span class="crumb">The bill · KV cache · how</span><span class="snum"></span></div>
+  <h2>Caching reuses work on a matching prefix</h2>
+  <div class="zone">
+    <div class="split">
+      <ul class="bul">
+        <li>A prompt cache can reuse computed state for eligible, matching earlier content.</li>
+        <li>Keep reusable instructions stable. Changes can invalidate the affected prefix and later content.</li>
+        <li>Inspect cache usage records: expiry, minimum length and provider rules affect whether you get a hit.</li>
+      </ul>
+      <div class="fig">
+        <!-- Remotion animation (remotion/src/KvCache.tsx), ivory render -->
+        <video src="assets/anim/kv-cache-ivory.mp4" width="1200" height="600" autoplay muted loop playsinline aria-label="Turn after turn, everything already sent becomes cached prefix (≥10x cheaper); only the appended tail of new tokens is fresh"></video>
+      </div>
+    </div>
+  </div>
+  <p class="note">Animation shows prefix reuse. Its price label is illustrative; rates vary. Cached content still occupies context.</p>
+</section>
+
+<!-- 13 · Shared prefix example -->
+<section data-origin-slide="25" class="slide" data-label="Shared prefix example" data-speaker-notes="For this Claude example, tools precede system content, then messages. Breakpoints determine writes. Avoid timestamps or changing task text inside the intended shared prefix.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Keep the shared material before the questions</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="k">Shared eligible prefix</span></span>
+      <span class="l">  tools + stable instructions + invoice schema</span>
+      <span class="l"></span>
+      <span class="l"><span class="k">Request A:</span> Where is VAT applied?</span>
+      <span class="l"><span class="k">Request B:</span> Where is CSV escaping handled?</span>
+      <span class="l"></span>
+      <span class="l">Changing the question need not change the shared prefix.</span>
+    </div>
+  </div>
+  <p class="note">A matching prefix must be eligible and already cached; stable text alone does not create a hit. <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">Caching docs</a></p>
+</section>
+
+<!-- 14 · Token volume and cost -->
+<section data-origin-slide="27" class="slide" data-label="Token volume and cost" data-speaker-notes="Input volume alone cannot establish the dominant cost. Output rates, reasoning usage, cache writes, cache hits, retries and tools all matter. Use provider usage records and avoid counting cached input twice. Subscription limits are a different accounting model.">
+  <div class="slide-head"><span class="crumb">Count the work</span><span class="snum"></span></div>
+  <h2>Count each billing category separately</h2>
+  <div class="zone">
+    <table class="tbl lg">
+      <thead><tr><th scope="col">Category</th><th scope="col">What to record</th></tr></thead>
+      <tbody>
+        <tr><td>Uncached input</td><td>New input processed at its applicable input rate.</td></tr>
+        <tr><td>Cache writes and reads</td><td>Separate token counts and the configured cache rates.</td></tr>
+        <tr><td>Generated output</td><td>Output usage, including billable reasoning where applicable.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Bill = sum of each category’s tokens × its rate, plus any separate tool or service fees.</p>
+</section>
+
+<!-- 15 · Cache break-even -->
+<section data-origin-slide="28" class="slide" data-label="Cache break-even" data-speaker-notes="The examples match common Claude cache-write multipliers, but reads differ across models. Cache entries must exist and remain eligible. With a 0.10 read multiplier, two requests at a double-price write cost 2.10 versus 2.00 uncached, so three are needed. Excludes varying tails, output and tool costs.">
+  <div class="slide-head"><span class="crumb">Worked arithmetic</span><span class="snum"></span></div>
+  <h2>Include the write before counting savings</h2>
+  <div class="zone">
+    <div class="code reg">
+      <span class="l"><span class="c">Same eligible prefix; all later requests hit the cache.</span></span>
+      <span class="l"><span class="c">Normalize ordinary input cost to 1 per request.</span></span>
+      <span class="l"></span>
+      <span class="l"><span class="k">Total cached cost</span> = w + (n − 1)r</span>
+      <span class="l">Caching saves when <span class="key">w + (n − 1)r &lt; n</span>.</span>
+      <span class="l"></span>
+      <span class="l"><span class="k">Example r = 0.10:</span></span>
+      <span class="l">w = 1.25 <span class="a">→</span> savings at 2 requests</span>
+      <span class="l">w = 2.00 <span class="a">→</span> savings at 3 requests</span>
+    </div>
+  </div>
+  <p class="note">Illustrative multipliers: verify model, platform, TTL and expiry rules. A cache miss changes the calculation.</p>
+</section>
+
+<!-- 16 · Cache lifetime -->
+<section data-origin-slide="29" class="slide" data-label="Cache lifetime" data-speaker-notes="Scoped to Claude documentation checked 3 October 2026. Do not generalize TTL rules to all model APIs. A short idle gap can still miss if the preceding response took most of the lifetime.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Reuse depends on a live, eligible entry</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li>Claude documents a default five-minute cache lifetime and an optional one-hour lifetime.</li>
+      <li>A use refreshes the lifetime from the request start; generation time counts against it.</li>
+      <li>Minimum prefix length, matching, platform support and writes also determine hits.</li>
+    </ul>
+  </div>
+  <p class="note">Check the usage fields and current configuration. <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">Provider caching documentation</a></p>
+</section>
+
+<!-- 17 · Verify cache usage -->
+<section data-origin-slide="31" class="slide" data-label="Verify cache usage" data-speaker-notes="Field names here are Claude API examples. Read the exact provider response schema; do not assume token totals exclude or include cache categories the same way across APIs. No measured readout is implied.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Look for what was read and written</h2>
+  <div class="zone">
+    <table class="tbl lg">
+      <thead><tr><th scope="col">Usage record</th><th scope="col">Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>cache_creation_input_tokens</code></td><td>New content written to the prompt cache.</td></tr>
+        <tr><td><code>cache_read_input_tokens</code></td><td>Input reused from a cache entry.</td></tr>
+        <tr><td>Uncached input and output</td><td>Additional work outside that cached read.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Zeros are a diagnostic clue, not proof of why the cache missed. Compare complete task cost.</p>
+</section>
+
+<!-- 18 · Warm-up before fan-out -->
+<section data-origin-slide="33" class="slide" data-label="Warm-up before fan-out" data-speaker-notes="Reuse also depends on cache scope, identity, model and prefix eligibility. A generic fresh helper may have different instructions and tools from its siblings. Do not assume one shared cache across every agent.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Concurrent requests do not guarantee shared hits</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l">1. Prepare one eligible prefix and matching cache settings.</span>
+      <span class="l">2. Start a request that writes that prefix.</span>
+      <span class="l">3. Wait until its response begins and the entry is available.</span>
+      <span class="l">4. Send matching helper requests; inspect cache usage.</span>
+    </div>
+  </div>
+  <p class="note">Cold simultaneous requests can duplicate cache writes. <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">Claude cache limits</a></p>
+</section>
+
+<!-- 19 · Choose authentication -->
+<section data-origin-slide="35" class="slide" data-label="Choose authentication" data-speaker-notes="Documentation checked 3 October 2026. Native-client use remains subject to plan limits and agreements. Do not extract, collect or relay subscription credentials into a custom client. This slide summarizes the documented paths; it does not grant blanket approval for all unattended use.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Choose the supported client and credential path</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Native Claude Code use</span><p>Sign in through the official flow under the applicable plan and usage rules.</p></div>
+      <div class="tile"><span class="lab">Your product or service</span><p>Use API-key authentication or a supported cloud-provider route.</p></div>
+    </div>
+  </div>
+  <p class="note">The boundary is not simply “human at keyboard” versus “automation”. <a href="https://code.claude.com/docs/en/legal-and-compliance">Current authentication guidance</a></p>
+</section>
+
+<!-- 20 · Takeaways (Ember: two .note paragraphs → .note + .src) -->
+<section data-origin-slide="38" class="slide" data-label="Takeaways" data-speaker-notes="Closing correction: caching does not reduce the lead context size or improve information relevance by itself.">
+  <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
+  <h2>Separate investigation. Verify reuse.</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li>Give helpers explicit inputs and require evidence in the return.</li>
+      <li>Separate working contexts do not enforce filesystem or network isolation.</li>
+      <li>Warm eligible shared prefixes and inspect actual cache reads and writes.</li>
+    </ul>
+  </div>
+  <p class="note">Delegation changes where work accumulates. Caching changes the processing cost of repeated input.</p>
+  <p class="src"><a href="subagents-prompt-caching-reference.html">Optional reference material</a></p>
+</section>
+
+<!-- 21 · Sources -->
+<section data-origin-slide="39" class="slide" data-label="Sources" data-speaker-notes="Leave the sources visible for questions. These links support the mechanisms and qualifications; the examples are teaching material, not benchmark measurements.">
+  <div class="slide-head"><span class="crumb">Sources</span><span class="snum"></span></div>
+  <h2>Sources and further reading</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li><a href="https://code.claude.com/docs/en/sub-agents">Subagents and forks</a></li>
+      <li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">Prompt caching and usage</a></li>
+      <li><a href="https://code.claude.com/docs/en/legal-and-compliance">Authentication and usage terms</a></li>
+    </ul>
+  </div>
+  <p class="note">Primary documentation checked 3 October 2026. Examples are illustrative unless explicitly attributed.</p>
+</section>
+
+</deck-stage>
+<script src="ivory_design_system/deck-stage.js"></script>
+<script src="ivory_design_system/deck.js"></script>
+</body>
+</html>

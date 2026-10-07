@@ -1,0 +1,63 @@
+Content comparison: ai-toolbox-reference.html -> ai-toolbox-reference-ivory.html
+Generated from ivory-conversion/audit.py (audit.json in this folder; exit 0, no structural
+errors, no per-slide errors) plus the human review below.
+Slides: 22 -> 22, order unchanged.
+
+data-label, data-origin-slide and the RAW data-speaker-notes attribute bytes are identical on all
+22 slides. The output's <section> opening tags were copied from the source by script, with only
+the class value replaced by "slide".
+
+01 Reference guide [no origin attr in either]: label/notes same; hrefs same [ai-toolbox.html]; text identical
+02 Glossary [8]        : same; hrefs same; text: crumb merge (A)
+03 Today's models [11] : same; hrefs same; text: crumb merge (A)
+04 The Claude family [12]: same; hrefs same; text: crumb merge (A); def-row join artifact (D)
+05 Claude Code and Codex [13]: same; hrefs same; text: crumb merge (A); &nbsp; in headline (E)
+06 The ChatGPT family [16]: same; hrefs same; text: crumb merge (A); "⚠" removed (B); join artifact (D)
+07 The plan ladder [19]: same; hrefs same; text: crumb merge (A)
+08 Deep research [24]  : same; hrefs same; text: crumb merge (A)
+09 AI avatars [30]     : same; hrefs same; text: crumb merge (A)
+10 Music and easy editing [32]: same; hrefs same; text: crumb merge (A)
+11 Presentations [34]  : same; hrefs same; text: crumb merge (A)
+12 Copy platforms [35] : same; hrefs same; text: crumb merge (A)
+13 Perplexity [36]     : same; hrefs same; text: crumb merge (A)
+14 Cheat sheet [39]    : same; hrefs same; text: crumb merge (A)
+15 Story 2 · Ten years, two days [42]: same; hrefs same; text: crumb merge (A)
+16 Story 3 · The exams [43]: same; hrefs same; text: crumb merge (A)
+17 Story 4 · The security double [44]: same; hrefs same; text: crumb merge (A); "🛡" "⚔" removed (B)
+18 The ChatGPT side [50]: same; hrefs same; text: crumb merge (A); "⚠" removed (B)
+19 The built-ins [51]  : same; hrefs same; text: crumb merge (A)
+20 The universal adapter [52]: same; hrefs same; text: crumb merge (A)
+21 Sources 1 of 2 [56] : same; hrefs same (13); text: crumb merge (A)
+22 Sources 2 of 2 [57] : same; hrefs same (15); text: crumb merge (A)
+
+Hrefs per slide (identical multiset in source and output; audit "links" field):
+  01-20: ai-toolbox.html (the link to the original Ember main deck, kept exactly; 01 in the
+         note "Return to the main talk", 02-20 in the crumb "Back to the talk")
+  21: ai-toolbox.html + 12 source URLs (7 + 5), target="_blank" rel="noopener" kept
+  22: ai-toolbox.html + 14 source URLs (7 + 7), target="_blank" rel="noopener" kept
+
+Explained differences
+A. Slides 02-22. Source order: banner "Reference · July 2026 snapshot · Back to the talk"
+   (absolute-positioned, first in the DOM), then the crumb "<b>Section</b> · topic".
+   Output crumb: "Section · topic · Reference · July 2026 snapshot · Back to the talk". Same
+   words, same href. The section label leads (root DESIGN.md: reference-banner -> header
+   crumb; the accepted AE reference pattern). One "·" separator is added between them, and the
+   crumb's <b> is dropped (neutral crumb). audit.py reports this as delete + insert of the
+   crumb label.
+B. Removed decoration (emoji / icons, Ivory §8 "Delete ... emoji"):
+   06 "⚠" before "Watch out"; 17 "🛡" before "Defence" and "⚔" before "Offence";
+   18 "⚠" at the start of the footnote ("⚠ Region check:" -> "Region check:").
+C. All slides. Ember's hand-written .snum digits (1-22) were removed; deck.js fills them, so
+   the slides render as 01-22 / 22. audit.py omits .snum.
+D. Slides 04 and 06 ("appThe", "CodeThe", "outFree" …): a comparator artifact. In def rows the
+   term <b> and the definition <span> are inline siblings, so the audit's text extraction joins
+   them without a space (the source had block .tile elements). The words are unchanged.
+E. Slide 05 headline: the space before "—" became &nbsp; so the dash does not start line 2
+   (whitespace only; the audit sees it as the same word sequence).
+F. Markup-only changes, same text: 03 inline-style span -> span.mut; 14 td.muted -> td.mut and
+   the inline font-size removed; 19 inline-style mono span -> <code>; 10/16 inline margin-top
+   removed; 06 "Watch out" wrapped in span.key; tile span.k -> h3, kcard .big -> h3,
+   .gloss .term/.def -> <b>/<span> in li.
+
+Removed text: only the four emoji in B. Nothing was moved into the notes or hidden.
+Added text: one "·" per crumb on 02-22 (A). No mono labels, no headers, no new words.

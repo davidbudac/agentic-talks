@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>Style C — Colour Block</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..800&family=Geist+Mono:wght@400..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shell.css">
+<style>
+/* ---------- Style C · Colour Block ---------- */
+.slide{
+  --slate:#141413; --oat:#E3DACC; --cactus:#BCD1CA; --heather:#CBCADB; --sky:#6A9BCC;
+  --pcoral:#EBCECE; --olive:#788C5D; --fig:#C46686; --clay:#D97757; --kraft:#D4A27F; --manilla:#EBDBBC;
+  font-family:"Geist",system-ui,sans-serif; color:var(--slate);
+  display:flex; flex-direction:column; padding:72px 104px 68px;
+  font-feature-settings:"tnum" 0; -webkit-font-smoothing:antialiased;
+}
+.slide *{box-sizing:border-box}
+.slide svg text{font-family:"Geist",system-ui,sans-serif}
+.slide p{text-wrap:pretty}
+
+/* shared chrome */
+.slide .top{display:flex;justify-content:space-between;align-items:center;height:60px;flex:none}
+.slide .pill{display:inline-flex;align-items:center;gap:14px;height:60px;padding:0 30px;border-radius:999px;
+  font-size:25px;font-weight:500;letter-spacing:-.005em;background:#fff;white-space:nowrap}
+.slide .pill.line{background:transparent;box-shadow:inset 0 0 0 2.5px var(--slate)}
+.slide .pill .dot{width:14px;height:14px;border-radius:50%;background:var(--slate)}
+.slide .no{min-width:60px;height:60px;padding:0 18px;border-radius:999px;display:grid;place-items:center;
+  background:var(--slate);color:#fff;font-size:25px;font-weight:600;font-variant-numeric:tabular-nums}
+.slide .hd{font-size:104px;font-weight:560;letter-spacing:-.042em;line-height:.98;margin-top:64px;flex:none}
+.slide .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;gap:64px;flex:none}
+.slide .note{font-size:27px;line-height:1.38;max-width:1420px;font-weight:420}
+.slide .mark{font-size:21px;font-weight:550;white-space:nowrap;display:flex;align-items:center;gap:12px;letter-spacing:-.005em}
+.slide .mark i{display:block;width:22px;height:22px;border-radius:7px;background:var(--slate)}
+
+/* ---------- 1 · Title (sky) ---------- */
+.s1{background:var(--sky)}
+.s1 .body{flex:1;display:grid;grid-template-columns:1fr 700px;align-items:end;gap:40px}
+.s1 h1{font-size:196px;font-weight:560;letter-spacing:-.055em;line-height:.88;margin-left:-8px}
+.s1 .sub{font-size:40px;line-height:1.25;font-weight:420;letter-spacing:-.018em;max-width:900px;margin-top:48px}
+.s1 .by{display:flex;align-items:center;gap:20px;margin-top:64px}
+.s1 .by .av{width:72px;height:72px;border-radius:50%;background:var(--pcoral);box-shadow:inset 0 0 0 3px var(--slate);
+  display:grid;place-items:center;font-size:26px;font-weight:600;letter-spacing:-.02em}
+.s1 .by b{font-size:34px;font-weight:550;letter-spacing:-.02em}
+.s1 .art{align-self:center;width:700px;height:740px;margin-bottom:40px}
+
+/* ---------- 2 · Three cards (oat) ---------- */
+.s2{background:var(--oat)}
+.s2 .cards{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:36px;margin:64px 0 52px}
+.s2 .card{background:#fff;border-radius:40px;padding:18px;display:flex;flex-direction:column}
+.s2 .card .pic{height:300px;border-radius:26px;display:grid;place-items:center}
+.s2 .card .pic svg{width:270px;height:225px}
+.s2 .card .txt{padding:38px 30px 20px}
+.s2 .card h3{font-size:48px;font-weight:580;letter-spacing:-.03em;line-height:1}
+.s2 .card p{font-size:31px;line-height:1.32;margin-top:20px;font-weight:420;letter-spacing:-.01em}
+
+/* ---------- 3 · Code (olive) ---------- */
+.s3{background:var(--olive)}
+.s3 .row{display:flex;justify-content:space-between;align-items:flex-end;margin-top:64px;flex:none}
+.s3 .row .hd{margin-top:0;max-width:1200px}
+.s3 .row svg{width:300px;height:220px;margin:0 8px -6px 0;flex:none}
+.s3 .code{background:var(--slate);border-radius:40px;margin:52px 0 48px;padding:26px 30px 44px;flex:none}
+.s3 .code .bar{display:flex;align-items:center;gap:14px;padding:0 0 26px 10px}
+.s3 .code .bar span{height:46px;padding:0 22px;border-radius:999px;display:inline-flex;align-items:center;
+  font:500 21px "Geist Mono",ui-monospace,monospace;background:#2a2a27;color:var(--oat)}
+.s3 .code .bar span.on{background:var(--manilla);color:var(--slate)}
+.s3 pre{font:400 35px/1.6 "Geist Mono",ui-monospace,monospace;color:#F2EDE3;padding:0 34px;letter-spacing:-.01em;white-space:pre}
+.s3 pre .ln{color:#8e8b82;display:inline-block;width:62px}
+.s3 pre .k{font-weight:600}
+.s3 .k1{color:#9CC3EE}.s3 .k2{color:#BCD1CA}.s3 .k3{color:#D6D4F0}.s3 .k4{color:#F1BDBD}.s3 .k5{color:#E7B48F}.s3 .k6{color:#EBDBBC}
+
+/* ---------- 4 · Numbers (heather) ---------- */
+.s4{background:var(--heather)}
+.s4 .grid{flex:1;display:grid;grid-template-columns:1fr 600px;gap:36px;margin:56px 0 48px}
+.s4 .left{display:flex;flex-direction:column}
+.s4 .left .hd{margin-top:8px;font-size:94px;white-space:nowrap}
+.s4 table{margin-top:auto;width:100%;border-collapse:separate;border-spacing:0;background:#fff;border-radius:40px;padding:22px 44px 26px}
+.s4 th{font-size:22px;font-weight:550;text-align:left;padding:14px 0 18px;letter-spacing:-.005em}
+.s4 th:last-child,.s4 td:last-child{text-align:right}
+.s4 td{font-size:30px;padding:21px 0;border-top:2px solid #e6e2ea;font-weight:420;letter-spacing:-.012em}
+.s4 td:last-child{font:500 31px "Geist Mono",ui-monospace,monospace;letter-spacing:-.02em}
+.s4 tr.tot td{border-top:3px solid var(--slate);font-weight:600;padding-top:24px}
+.s4 tr.tot td:last-child{font-weight:600}
+.s4 .hero{background:var(--manilla);border-radius:40px;padding:40px 48px 46px;display:flex;flex-direction:column}
+.s4 .hero{position:relative}
+.s4 .hero .pill{align-self:flex-start;height:52px;font-size:22px;padding:0 24px}
+.s4 .hero .coins{position:absolute;top:30px;right:40px;width:230px;height:190px}
+.s4 .big{font-size:146px;font-weight:560;letter-spacing:-.06em;line-height:.9;margin-top:auto;font-variant-numeric:tabular-nums;margin-left:-8px}
+.s4 .big small{font-size:.5em;letter-spacing:-.03em;vertical-align:.62em;margin-right:4px;font-weight:500}
+.s4 .cap2{font-size:28px;font-weight:450;margin-top:18px;letter-spacing:-.012em}
+.s4 .bars{margin-top:40px;display:flex;flex-direction:column;gap:20px}
+.s4 .bars .l{display:flex;justify-content:space-between;font-size:24px;font-weight:500;margin-bottom:10px}
+.s4 .bars .l span:last-child{font-family:"Geist Mono",ui-monospace,monospace;font-weight:500}
+.s4 .bars .t{height:46px;border-radius:999px;box-shadow:inset 0 0 0 3px var(--slate);background:#fff;position:relative}
+.s4 .bars .t b{position:absolute;inset:0 auto 0 0;border-radius:999px;box-shadow:inset 0 0 0 3px var(--slate)}
+
+/* ---------- 5 · Diagram (cactus) ---------- */
+.s5{background:var(--cactus)}
+.s5 .body{flex:1;display:grid;grid-template-columns:900px 1fr;gap:56px;align-items:center;margin:20px 0 40px}
+.s5 .body svg{width:900px;height:640px}
+.s5 ol{list-style:none;display:flex;flex-direction:column;gap:20px}
+.s5 li{display:grid;grid-template-columns:60px 1fr;gap:26px;align-items:start;background:#fff;border-radius:32px;padding:26px 34px 28px 26px}
+.s5 li .n{width:60px;height:60px;border-radius:50%;display:grid;place-items:center;font-size:27px;font-weight:600;box-shadow:inset 0 0 0 3px var(--slate)}
+.s5 li p{font-size:29px;line-height:1.3;font-weight:420;letter-spacing:-.012em;padding-top:6px}
+.s5 li p b{font-weight:620}
+</style>
+</head><body><main class="sheet">
+
+<!-- shared SVG defs: hand-drawn wobble + arrowhead (kept rendered, not display:none, so filters resolve) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="cRough" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <marker id="cArrow" viewBox="0 0 20 20" refX="14" refY="10" markerWidth="34" markerHeight="34" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M3 3 L15 10 L3 17" fill="none" stroke="#141413" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+</svg>
+
+<header class="sheet-head">
+  <a class="back" href="index.html">← All styles</a>
+  <h1>C — Colour Block</h1>
+  <p class="why">Each slide is one flat field from Anthropic’s secondary palette, with a confident black sans headline, rounded white cards and pill labels in the openai.com cover-card manner. It reads like a product launch, bright and friendly, but the strict grid and quiet hierarchy keep it calm enough for a room of engineers.</p>
+  <div class="borrow">
+    <div><b>From Anthropic</b>Secondary palette as full-bleed fields, one per slide; slate text; hand-drawn black-outline geometric illustrations (paper stacks, loops, nodes) sitting on the colour.</div>
+    <div><b>From OpenAI</b>Single geometric sans headline on a flat field; 26–40px rounded cards floating on colour; pill labels and chips; strict grid and a lot of air.</div>
+    <div><b>Type</b>Geist (all text, 420–620 weights) and Geist Mono (code and figures).</div>
+  </div>
+  <div class="swatches">
+    <span style="background:#6A9BCC">#6A9BCC</span><span style="background:#E3DACC">#E3DACC</span><span style="background:#788C5D;color:#fff">#788C5D</span><span style="background:#CBCADB">#CBCADB</span><span style="background:#BCD1CA">#BCD1CA</span><span style="background:#EBDBBC">#EBDBBC</span><span style="background:#EBCECE">#EBCECE</span><span style="background:#C46686;color:#fff">#C46686</span><span style="background:#D4A27F">#D4A27F</span><span style="background:#141413;color:#fff">#141413</span>
+  </div>
+</header>
+
+<!-- ============ 1 · Title ============ -->
+<div class="frame"><section class="slide s1">
+  <div class="top">
+    <span class="pill">Advanced · daily Claude Code users</span>
+    <span class="pill line">Revised October 2026</span>
+  </div>
+  <div class="body">
+    <div>
+      <h1>Claude Best<br>Practices</h1>
+      <p class="sub">Practical lessons from Anthropic’s engineering posts, tested against your own work.</p>
+      <div class="by"><span class="av">DB</span><b>David Budáč</b></div>
+    </div>
+    <svg class="art" viewBox="0 0 700 740" aria-hidden="true">
+      <g filter="url(#cRough)" stroke="#141413" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+        <!-- the loop -->
+        <path d="M 600 300 A 270 270 0 1 1 470 130" fill="none" marker-end="url(#cArrow)"/>
+        <!-- stacked paper -->
+        <rect x="205" y="170" width="290" height="380" rx="18" fill="#EBCECE" transform="rotate(-11 350 360)"/>
+        <rect x="205" y="170" width="290" height="380" rx="18" fill="#EBDBBC" transform="rotate(-4 350 360)"/>
+        <rect x="205" y="170" width="290" height="380" rx="18" fill="#fff" transform="rotate(5 350 360)"/>
+        <g transform="rotate(5 350 360)" fill="none">
+          <path d="M 250 236 H 430"/><path d="M 250 286 H 450"/><path d="M 250 336 H 400"/>
+          <rect x="250" y="400" width="54" height="54" rx="10" fill="#C46686"/>
+          <path d="M 262 427 L 275 440 L 296 412" stroke-width="6"/>
+          <path d="M 330 427 H 440"/>
+        </g>
+        <!-- nodes riding the loop -->
+        <path d="M 96 300 L 200 622 L 572 548" fill="none" stroke-dasharray="2 14"/>
+        <circle cx="96" cy="300" r="34" fill="#788C5D"/>
+        <circle cx="200" cy="622" r="28" fill="#EBDBBC"/>
+        <circle cx="572" cy="548" r="40" fill="#141413"/>
+        <circle cx="560" cy="142" r="20" fill="#fff"/>
+      </g>
+    </svg>
+  </div>
+</section></div><p class="cap">1 · Title</p>
+
+<!-- ============ 2 · Three cards ============ -->
+<div class="frame"><section class="slide s2">
+  <div class="top">
+    <span class="pill">In practice</span>
+    <span class="no">2</span>
+  </div>
+  <h2 class="hd">Start with three changes</h2>
+  <div class="cards">
+    <article class="card">
+      <div class="pic" style="background:var(--cactus)">
+        <svg viewBox="0 0 270 225" aria-hidden="true">
+          <g filter="url(#cRough)" stroke="#141413" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="52" y="22" width="128" height="176" rx="12" fill="#fff" transform="rotate(-4 116 110)"/>
+            <g transform="rotate(-4 116 110)" fill="none">
+              <path d="M 76 60 H 156"/><path d="M 76 88 H 146"/>
+              <path d="M 76 144 H 152"/><path d="M 76 170 H 132"/>
+            </g>
+            <g transform="rotate(16 205 130)">
+              <rect x="166" y="108" width="84" height="46" rx="8" fill="#EBCECE"/>
+              <path d="M 182 131 H 234" fill="none"/>
+            </g>
+            <path d="M 172 96 q 10 -6 20 -2" fill="none"/><path d="M 196 84 q 8 -2 14 4" fill="none"/>
+          </g>
+        </svg>
+      </div>
+      <div class="txt"><h3>Instructions</h3><p>Remove conflicting or obsolete rules; preserve real constraints.</p></div>
+    </article>
+    <article class="card">
+      <div class="pic" style="background:var(--heather)">
+        <svg viewBox="0 0 270 225" aria-hidden="true">
+          <g filter="url(#cRough)" stroke="#141413" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="34" y="40" width="112" height="150" rx="12" fill="#EBDBBC" stroke-width="5" transform="rotate(-8 90 115)"/>
+            <path d="M 58 80 H 112 M 58 106 H 104" stroke-width="5" fill="none" transform="rotate(-8 90 115)"/>
+            <path d="M 196 160 L 238 204" stroke-width="18"/>
+            <circle cx="152" cy="112" r="62" fill="#fff" stroke-width="5"/>
+            <path d="M 124 114 L 145 135 L 182 92" fill="none" stroke-width="8"/>
+          </g>
+        </svg>
+      </div>
+      <div class="txt"><h3>Verification</h3><p>Make done depend on evidence tied to the task.</p></div>
+    </article>
+    <article class="card">
+      <div class="pic" style="background:var(--pcoral)">
+        <svg viewBox="0 0 270 225" aria-hidden="true">
+          <g filter="url(#cRough)" stroke="#141413" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M 135 44 V 196 M 92 198 H 178" fill="none"/>
+            <path d="M 40 74 L 230 50" fill="none"/>
+            <circle cx="135" cy="62" r="11" fill="#141413"/>
+            <path d="M 44 74 L 22 140 M 44 74 L 70 140" fill="none"/>
+            <path d="M 226 50 L 204 116 M 226 50 L 250 116" fill="none"/>
+            <path d="M 12 140 H 80 A 34 22 0 0 1 12 140 Z" fill="#fff"/>
+            <path d="M 194 116 H 260 A 33 22 0 0 1 194 116 Z" fill="#fff"/>
+            <circle cx="46" cy="118" r="20" fill="#C46686"/>
+            <rect x="210" y="86" width="34" height="30" rx="5" fill="#788C5D"/>
+          </g>
+        </svg>
+      </div>
+      <div class="txt"><h3>Measurement</h3><p>Compare configurations by outcomes, cost and review effort.</p></div>
+    </article>
+  </div>
+  <div class="foot">
+    <p class="note">Skills, caching and delegation support these three habits.</p>
+    <span class="mark"><i></i>Claude Best Practices</span>
+  </div>
+</section></div><p class="cap">2 · Three cards</p>
+
+<!-- ============ 3 · Code ============ -->
+<div class="frame"><section class="slide s3">
+  <div class="top">
+    <span class="pill">The invoice task</span>
+    <span class="no">21</span>
+  </div>
+  <div class="row">
+    <h2 class="hd">Make the acceptance<br>contract explicit</h2>
+    <svg viewBox="0 0 300 220" aria-hidden="true">
+      <g filter="url(#cRough)" stroke="#141413" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="70" y="14" width="150" height="196" rx="14" fill="#EBDBBC" transform="rotate(6 145 112)"/>
+        <g transform="rotate(6 145 112)" fill="none">
+          <path d="M 96 52 H 190"/><path d="M 96 80 H 176"/><path d="M 96 108 H 186"/>
+          <path d="M 98 168 q 14 -22 26 -2 t 26 -4 t 24 2"/>
+        </g>
+        <circle cx="236" cy="168" r="38" fill="#C46686"/>
+        <path d="M 220 168 L 232 181 L 254 154" fill="none" stroke-width="6"/>
+        <circle cx="40" cy="60" r="16" fill="#E3DACC"/>
+      </g>
+    </svg>
+  </div>
+  <div class="code">
+    <div class="bar"><span class="on">request.txt</span></div>
+<pre><span class="ln">1</span><span class="k k1">GOAL:</span> export invoice net, VAT and gross values to CSV.
+<span class="ln">2</span><span class="k k2">SCOPE:</span> invoice export code; preserve existing tests.
+<span class="ln">3</span><span class="k k3">VERIFY:</span> pytest tests/test_export.py -q
+<span class="ln">4</span><span class="k k4">CASES:</span> 21% VAT, zero VAT, rounding, quoted CSV fields.
+<span class="ln">5</span><span class="k k5">LIMIT:</span> three repair attempts; then stop and report.
+<span class="ln">6</span><span class="k k6">EVIDENCE:</span> diff, command, exit status, failures and gaps.</pre>
+  </div>
+  <div class="foot">
+    <p class="note">Pair this request with an enforced runtime budget and a review of the resulting artifact.</p>
+    <span class="mark"><i></i>Claude Best Practices</span>
+  </div>
+</section></div><p class="cap">3 · Code</p>
+
+<!-- ============ 4 · Numbers ============ -->
+<div class="frame"><section class="slide s4">
+  <div class="top">
+    <span class="pill">Worked arithmetic</span>
+    <span class="no">10</span>
+  </div>
+  <div class="grid">
+    <div class="left">
+      <h2 class="hd">One cache-hit request:<br>about five cents</h2>
+      <table>
+        <thead><tr><th>Illustrative usage and rates</th><th>Cost</th></tr></thead>
+        <tbody>
+          <tr><td>19,000 cached input × $0.20 / million</td><td>$0.0038</td></tr>
+          <tr><td>3,700 new input × $4 / million</td><td>$0.0148</td></tr>
+          <tr><td>1,600 output × $20 / million</td><td>$0.0320</td></tr>
+          <tr class="tot"><td>22,700 input + 1,600 output in total</td><td>$0.0506</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <aside class="hero">
+      <span class="pill">One request</span>
+      <svg class="coins" viewBox="0 0 230 190" aria-hidden="true">
+        <g filter="url(#cRough)" stroke="#141413" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
+          <!-- tall stack: the no-cache cost -->
+          <g fill="#D4A27F">
+            <path d="M 132 160 v -16 a 46 14 0 0 1 92 0 v 16 a 46 14 0 0 1 -92 0 z"/>
+            <path d="M 132 140 v -16 a 46 14 0 0 1 92 0 v 16 a 46 14 0 0 1 -92 0 z"/>
+            <path d="M 132 120 v -16 a 46 14 0 0 1 92 0 v 16 a 46 14 0 0 1 -92 0 z"/>
+            <path d="M 132 100 v -16 a 46 14 0 0 1 92 0 v 16 a 46 14 0 0 1 -92 0 z"/>
+            <path d="M 132 80 v -16 a 46 14 0 0 1 92 0 v 16 a 46 14 0 0 1 -92 0 z"/>
+            <path d="M 132 60 v -16 a 46 14 0 0 1 92 0 v 16 a 46 14 0 0 1 -92 0 z"/>
+            <ellipse cx="178" cy="44" rx="46" ry="14"/>
+          </g>
+          <!-- short stack: the cache-hit cost -->
+          <g fill="#C46686">
+            <path d="M 18 160 v -16 a 46 14 0 0 1 92 0 v 16 a 46 14 0 0 1 -92 0 z"/>
+            <path d="M 18 140 v -16 a 46 14 0 0 1 92 0 v 16 a 46 14 0 0 1 -92 0 z"/>
+            <path d="M 18 120 v -16 a 46 14 0 0 1 92 0 v 16 a 46 14 0 0 1 -92 0 z"/>
+            <ellipse cx="64" cy="104" rx="46" ry="14"/>
+          </g>
+        </g>
+      </svg>
+      <div class="big"><small>$</small>0.0506</div>
+      <p class="cap2">with the cache hit</p>
+      <div class="bars">
+        <div><div class="l"><span>Cache hit</span><span>$0.0506</span></div><div class="t"><b style="width:41.2%;background:var(--fig)"></b></div></div>
+        <div><div class="l"><span>No cache hit</span><span>$0.1228</span></div><div class="t"><b style="width:100%;background:var(--kraft)"></b></div></div>
+      </div>
+    </aside>
+  </div>
+  <div class="foot">
+    <p class="note">Assumed rates, not a measured bill. Without the cache hit: $0.0908 input + $0.0320 output = $0.1228.</p>
+    <span class="mark"><i></i>Claude Best Practices</span>
+  </div>
+</section></div><p class="cap">4 · Numbers</p>
+
+<!-- ============ 5 · Diagram ============ -->
+<div class="frame"><section class="slide s5">
+  <div class="top">
+    <span class="pill">Agent · the loop</span>
+    <span class="no">9</span>
+  </div>
+  <h2 class="hd">An agent is a loop</h2>
+  <div class="body">
+    <svg viewBox="0 0 900 640" aria-hidden="true">
+      <g filter="url(#cRough)" stroke="#141413" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+        <!-- arcs -->
+        <path d="M 290 196 C 360 40, 540 30, 612 150" fill="none" marker-end="url(#cArrow)"/>
+        <path d="M 612 490 C 540 610, 360 600, 290 444" fill="none" marker-end="url(#cArrow)"/>
+        <!-- model -->
+        <circle cx="196" cy="320" r="156" fill="#EBCECE"/>
+        <!-- harness: a case with a handle -->
+        <path d="M 664 172 V 140 Q 664 124 680 124 H 760 Q 776 124 776 140 V 172" fill="none"/>
+        <rect x="570" y="170" width="300" height="300" rx="40" fill="#EBDBBC"/>
+        <path d="M 600 220 L 622 236 L 600 252 M 636 254 H 664" fill="none"/>
+      </g>
+      <g font-weight="600" fill="#141413">
+        <text x="196" y="314" text-anchor="middle" font-size="44" letter-spacing="-1.5">Model</text>
+        <text x="720" y="314" text-anchor="middle" font-size="44" letter-spacing="-1.5">Harness</text>
+      </g>
+      <!-- step pills -->
+      <g font-size="28" font-weight="550">
+        <g transform="translate(346 42)"><rect width="208" height="58" rx="29" fill="#fff" stroke="#141413" stroke-width="3"/><circle cx="29" cy="29" r="19" fill="#CBCADB" stroke="#141413" stroke-width="3"/><text x="29" y="38" text-anchor="middle" fill="#141413" font-size="24">1</text><text x="62" y="39">Propose</text></g>
+        <g transform="translate(634 350)"><rect width="172" height="58" rx="29" fill="#fff" stroke="#141413" stroke-width="3"/><circle cx="29" cy="29" r="19" fill="#EBDBBC" stroke="#141413" stroke-width="3"/><text x="29" y="38" text-anchor="middle" fill="#141413" font-size="24">2</text><text x="62" y="39">Run</text></g>
+        <g transform="translate(336 540)"><rect width="226" height="58" rx="29" fill="#fff" stroke="#141413" stroke-width="3"/><circle cx="29" cy="29" r="19" fill="#6A9BCC" stroke="#141413" stroke-width="3"/><text x="29" y="38" text-anchor="middle" fill="#141413" font-size="24">3</text><text x="62" y="39">Observe</text></g>
+        <g transform="translate(106 350)"><rect width="180" height="58" rx="29" fill="#fff" stroke="#141413" stroke-width="3"/><circle cx="29" cy="29" r="19" fill="#EBCECE" stroke="#141413" stroke-width="3"/><text x="29" y="38" text-anchor="middle" fill="#141413" font-size="24">4</text><text x="62" y="39">Check</text></g>
+      </g>
+    </svg>
+    <ol>
+      <li><span class="n" style="background:var(--heather)">1</span><p><b>Propose:</b> the model chooses the next action.</p></li>
+      <li><span class="n" style="background:var(--manilla)">2</span><p><b>Run:</b> the harness executes it under the configured permissions.</p></li>
+      <li><span class="n" style="background:var(--sky)">3</span><p><b>Observe:</b> the result returns as context for the next step.</p></li>
+      <li><span class="n" style="background:var(--pcoral)">4</span><p><b>Check:</b> stop when the task is verified, or ask when blocked.</p></li>
+    </ol>
+  </div>
+  <div class="foot">
+    <p class="note">In a live run or a finished transcript, point to one tool call and its result. That is one lap of the loop.</p>
+    <span class="mark"><i></i>Claude Best Practices</span>
+  </div>
+</section></div><p class="cap">5 · Diagram</p>
+
+</main><script src="shell.js"></script></body></html>

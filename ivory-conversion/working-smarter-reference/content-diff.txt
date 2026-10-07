@@ -1,0 +1,46 @@
+Raw attribute/href comparison: source working-smarter-reference.html vs working-smarter-reference-ivory.html
+slide count 8 8
+01 data-label           OK
+01 data-origin-slide    OK
+01 data-speaker-notes   OK
+01 hrefs                OK 2 ['working-smarter.html', 'working-smarter.html']
+02 data-label           OK
+02 data-origin-slide    OK
+02 data-speaker-notes   OK
+02 hrefs                OK 2 ['working-smarter.html', 'https://claude.com/pricing']
+03 data-label           OK
+03 data-origin-slide    OK
+03 data-speaker-notes   OK
+03 hrefs                OK 1 ['working-smarter.html']
+04 data-label           OK
+04 data-origin-slide    OK
+04 data-speaker-notes   OK
+04 hrefs                OK 5 ['working-smarter.html', 'https://herdr.org', 'https://conductor.build', 'https://github.com/openai/symphony', 'https://github.com/mattpocock/sandcastle']
+05 data-label           OK
+05 data-origin-slide    OK
+05 data-speaker-notes   OK
+05 hrefs                OK 3 ['working-smarter.html', 'https://code.claude.com/docs/en/plugins', 'https://code.claude.com/docs/en/plugin-marketplaces']
+06 data-label           OK
+06 data-origin-slide    OK
+06 data-speaker-notes   OK
+06 hrefs                OK 1 ['working-smarter.html']
+07 data-label           OK
+07 data-origin-slide    OK
+07 data-speaker-notes   OK
+07 hrefs                OK 1 ['working-smarter.html']
+08 data-label           OK
+08 data-origin-slide    OK
+08 data-speaker-notes   OK
+08 hrefs                OK 1 ['working-smarter.html']
+
+Visible-text differences (from audit.json, explained):
+01  Same words reordered into the accepted subagents/cost-reference opener: crumb "Optional reference" (was .ts-top .k),
+    h2 "Working Smarter with Agents / Reference", tile 1 subtitle + "Return to the main talk", tile 2 "David Budáč" + "Revised October 2026"
+    (was .ts-top .meta), footer note "Optional reference · Back to the talk" (banner verbatim; both "Optional reference" occurrences kept).
+    Removed: the title .dot "." only.
+02-04, 06-08  Crumb "In practice" merged with the banner: "In practice · Optional reference · Back to the talk"
+    (one "·" added; the audit reports this as the crumb moving to the front). Everything else is identical.
+05  Same merge with crumb "Publication reference". Code text is identical, with the blank line kept as an empty .l.
+07  Code text is identical (blank lines and alignment spaces kept); "independently" is wrapped in .key (styling only, as in the accepted twin).
+All  The Ember hand-written .snum digits 2–8 are dropped; deck.js renders 01–08 / 08. Code line numbers on 05/07 are CSS decoration.
+Notes, data-label, data-origin-slide: byte-identical 8/8. Hrefs: identical in order and count 8/8.

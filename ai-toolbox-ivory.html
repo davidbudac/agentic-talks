@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The AI Toolbox — a field guide to today's AI tools</title>
+<link rel="stylesheet" href="ivory_design_system/styles.css">
+</head>
+<body>
+
+<!--
+  ============================================================
+  The AI Toolbox — a field guide to today's AI tools for a
+  general (non-developer) audience. Ivory conversion of
+  ai-toolbox.html (31 slides). Design-only port: wording, slide
+  order, data-label, data-origin-slide and data-speaker-notes
+  are unchanged. No live demos in this one.
+  Ivory design system (DESIGN.md, ivory_design_system/).
+  Runs on the deck-stage component: ←/→, Space, Home/End,
+  number keys; R resets; N notes, P presenter window, F fullscreen.
+  ============================================================
+-->
+
+<deck-stage width="1920" height="1080">
+
+<!-- 01 · Title (Ember .dot and .ts-loopline dropped) -->
+<section data-origin-slide="1" class="slide title-slide" data-label="Title"
+    data-speaker-notes="Introduce a task-first field guide. The main talk covers useful outputs, selection and review. Detailed vendor tables remain in a separate July 2026 reference snapshot. There is no live demo.">
+  <div class="slide-head"><span class="crumb">A field guide to today's AI tools</span><span class="snum"></span></div>
+  <h1>The AI<br>Toolbox</h1>
+  <p class="sub">What exists beyond the chat window — <b>what it can do</b>, and <b>what it costs</b></p>
+  <div class="meta">
+    <div><span class="lab">Author</span><a href="https://davidbudac.cz" target="_blank" rel="noopener">David&nbsp;Budáč</a></div>
+    <div><span class="lab">Revised</span>October 2026</div>
+  </div>
+</section>
+
+<!-- 02 · The hook (two requests: the editable draft is the point) -->
+<section data-origin-slide="2" class="slide" data-label="The hook" data-speaker-notes="Drop the unsupported ten-percent framing. Set an achievable expectation: an editable draft with explicit gaps. The next example shows the inputs, output and human review.">
+  <div class="slide-head"><span class="crumb">Start with the task</span><span class="snum"></span></div>
+  <h2>Ask for a result you can review</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile was"><span class="lab">A paragraph</span><p>“Write a summary of this quarter’s results.”</p></div>
+      <div class="tile key"><span class="lab">An editable draft</span><p>“Use these results and last quarter’s deck to build the next review. Flag missing data.”</p></div>
+    </div>
+  </div>
+  <p class="note">The useful difference is the output: a file, a working draft, or an action you can inspect.</p>
+</section>
+
+<!-- 03 · Agenda (Ember: .cards.c3 used as an agenda → ol.bul.def.wide) -->
+<section data-origin-slide="3" class="slide" data-label="Agenda" data-speaker-notes="Twenty seconds. No six-part catalogue. Tell the audience there is a dated reference deck for product detail and sources.">
+  <div class="slide-head"><span class="crumb">Our route</span><span class="snum"></span></div>
+  <h2>Three questions for choosing a tool</h2>
+  <div class="zone">
+    <ol class="bul def wide">
+      <li><b>What do I need?</b><span>A document, a design, a clip, an answer or a repeatable task.</span></li>
+      <li><b>Where should I start?</b><span>The tools your team already has, then a specialist if needed.</span></li>
+      <li><b>What must I check?</b><span>Accuracy, permissions, export, rights and the cost of iteration.</span></li>
+    </ol>
+  </div>
+  <p class="note">Product and price tables are optional reference material. The main talk is about choosing a useful workflow.</p>
+</section>
+
+<!-- 04 · One task, agent-style -->
+<section data-origin-slide="23" class="slide" data-label="One task, agent-style" data-speaker-notes="This is a teaching example, not a captured run. Walk input to output. A model can invent missing numbers; explicitly asking for gaps and reconciling the result are checks, not guarantees. Use the same example when discussing file creation and Office editing.">
+  <div class="slide-head"><span class="crumb">A useful first task</span><span class="snum"></span></div>
+  <h2>Build the quarterly review from evidence</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="k">INPUT</span>    results.csv + Q1 deck + brand template</span>
+      <span class="l"><span class="k">REQUEST</span>  draft the Q2 review in the same structure</span>
+      <span class="l"><span class="k">CHECK</span>    reconcile chart totals with the CSV</span>
+      <span class="l"><span class="k">GAPS</span>     mark missing June data; ask for the export</span>
+      <span class="l"><span class="k">OUTPUT</span>   editable deck + a list of unresolved points</span>
+    </div>
+  </div>
+  <p class="note"><b>Illustrative workflow.</b> Ask it to flag gaps; verify that it actually did. Review the numbers and the story before sharing.</p>
+</section>
+
+<!-- 05 · Chatbot vs agent (Ember: .split of .tile + .tile.fill → .cards.c2, .tile.key on Agent) -->
+<section data-origin-slide="5" class="slide" data-label="Chatbot vs agent"
+    data-speaker-notes="The one distinction the whole talk stands on. Walk the left tile as the familiar routine — it tells you what to do and you do the copying, pasting and clicking yourself. Then the right: an agent does those steps itself and you review at the end. Land the note hard — it is often the very same model underneath; the difference is the machinery around it. Every tool in this deck is some flavour of that machinery.">
+  <div class="slide-head"><span class="crumb">Basics · chatbot vs agent</span><span class="snum"></span></div>
+  <h2>A chatbot answers. An agent acts.</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Chatbot — the one you know</span><p>You ask → it <b>tells you</b> what to do → <b>you</b> open the files, do the steps, paste results back… and repeat.</p></div>
+      <div class="tile key"><span class="lab">Agent</span><p>You ask → it <b>does the work itself</b> — reads the files, takes the steps, checks the result → <b>you review</b> at the end.</p></div>
+    </div>
+  </div>
+  <p class="note">An agent combines a model with tools and a loop. Whether it acts safely depends on the access and checks around it.</p>
+</section>
+
+<!-- 06 · The agent loop (Ember: video left, rows right → Ivory split: rows left, figure right) -->
+<section data-origin-slide="6" class="slide" data-label="The agent loop"
+    data-speaker-notes="Let the animation run once. Explain the loop using the quarterly review example. Do not claim every product in the catalogue uses an identical agent architecture; this is the agentic pattern.">
+  <div class="slide-head"><span class="crumb">Basics · the loop</span><span class="snum"></span></div>
+  <h2>An agent is a loop</h2>
+  <div class="zone">
+    <div class="split">
+      <ul class="bul">
+        <li><b>Choose</b> the next action.</li>
+        <li><b>Run</b> a permitted tool.</li>
+        <li><b>Inspect</b> the result and decide what comes next.</li>
+      </ul>
+      <div class="fig">
+        <!-- Remotion animation (remotion/src/AgentLoop.tsx), ivory render -->
+        <video src="assets/anim/agent-loop-ivory.mp4" width="1152" height="912" autoplay muted loop playsinline aria-label="The agent loop: model proposes an action, harness runs it, result returns to the model, repeat until done"></video>
+      </div>
+    </div>
+  </div>
+  <p class="note">For the review deck: read the CSV → build a chart → reconcile the totals → revise the draft.</p>
+</section>
+
+<!-- 07 · The model has no memory (Ember: video left, rows right → Ivory split) -->
+<section data-origin-slide="7" class="slide" data-label="The model has no memory"
+    data-speaker-notes="Use the animation for request-based context. Avoid explaining the movie analogy or introducing transformer internals. The practical consequence is that the user supplies and checks the relevant material. Product memory differs by tool.">
+  <div class="slide-head"><span class="crumb">Basics · the brain</span><span class="snum"></span></div>
+  <h2>Give it the right material</h2>
+  <div class="zone">
+    <div class="split">
+      <ul class="bul">
+        <li>For each step, the model needs the relevant instructions and information supplied to it.</li>
+        <li>For the review deck, provide the results CSV, prior structure and brand template.</li>
+        <li>Stored memories and connected files help only when the relevant information is actually retrieved.</li>
+      </ul>
+      <div class="fig">
+        <!-- Remotion animation (remotion/src/Stateless.tsx), ivory render -->
+        <video src="assets/anim/stateless-ivory.mp4" width="1200" height="900" autoplay muted loop playsinline aria-label="Each call re-sends the entire history; the model remembers nothing between calls"></video>
+      </div>
+    </div>
+  </div>
+  <p class="note">Check which files it used. A connected folder is not evidence that every document was read.</p>
+</section>
+
+<!-- 08 · The human checkpoint -->
+<section data-origin-slide="25" class="slide" data-label="The human checkpoint" data-speaker-notes="Remove the claim that human checkpoints automatically make every tool safe. Ask the room what they would check before sending the quarterly review. Keep this principle close to the worked example.">
+  <div class="slide-head"><span class="crumb">Review</span><span class="snum"></span></div>
+  <h2>AI drafts. You sign.</h2>
+  <div class="zone">
+    <div class="cards c3">
+      <div class="tile"><span class="lab">Check the facts</span><p>Reconcile numbers with the source. Open important citations.</p></div>
+      <div class="tile"><span class="lab">Check the consequence</span><p>Review more carefully when money, people or public communication are involved.</p></div>
+      <div class="tile"><span class="lab">Check the boundary</span><p>Approve publishing and external actions separately from making a draft.</p></div>
+    </div>
+  </div>
+  <p class="note">A review step reduces risk only when someone performs a relevant check.</p>
+</section>
+
+<!-- 09 · Three everyday tasks -->
+<section data-origin-slide="22" class="slide" data-label="Three everyday tasks" data-speaker-notes="Reduce the six-day catalogue to three outputs. These categories guide the later examples. Do not read a tool name into every tile yet.">
+  <div class="slide-head"><span class="crumb">Where it helps</span><span class="snum"></span></div>
+  <h2>Start with work you already repeat</h2>
+  <div class="zone">
+    <div class="cards c3">
+      <div class="tile"><span class="lab">Prepare a review</span><p>CSV + last deck → editable draft. Check every important number.</p></div>
+      <div class="tile"><span class="lab">Digest a report</span><p>Source documents&nbsp;→ summary or audio. Check the claims against the originals.</p></div>
+      <div class="tile"><span class="lab">Adapt a campaign</span><p>Approved message + brand files → draft formats. Check layout and wording.</p></div>
+    </div>
+  </div>
+  <p class="note">Choose one task with a result you already know how to judge.</p>
+</section>
+
+<!-- 10 · Choose a starting point -->
+<section data-origin-slide="18" class="slide" data-label="Choose a starting point" data-speaker-notes="This replaces a detailed vendor price grid with a selection method. Claude, ChatGPT and Gemini examples remain in the reference snapshot. Avoid implying equal capabilities or universal plan inclusion.">
+  <div class="slide-head"><span class="crumb">Choosing a tool</span><span class="snum"></span></div>
+  <h2>Start where your work already lives</h2>
+  <div class="zone">
+    <div class="cards c3">
+      <div class="tile"><span class="lab">Files and drafts</span><p>Try the file and agent features available in your approved assistant.</p></div>
+      <div class="tile"><span class="lab">Office or Workspace</span><p>Check the AI features your organization already provides inside its apps.</p></div>
+      <div class="tile"><span class="lab">Specialist output</span><p>Try a dedicated tool when the included option cannot produce the needed result.</p></div>
+    </div>
+  </div>
+  <p class="note">Compare one real task before buying another subscription. Check availability for your account and region.</p>
+</section>
+
+<!-- 11 · Agents for files -->
+<section data-origin-slide="14" class="slide" data-label="Agents for files" data-speaker-notes="Discuss the file-agent workflow already described in the original deck. Keep launch dates, origin story and plan detail in reference material. The prompt is illustrative; sensitive actions require the configured approval flow.">
+  <div class="slide-head"><span class="crumb">Files</span><span class="snum"></span></div>
+  <h2>Give a file agent an outcome</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l">“Use this folder to draft the Q2 review.</span>
+      <span class="l">Keep Q1’s structure and our template.</span>
+      <span class="l">List missing inputs.</span>
+      <span class="l">Ask before changing the source files.”</span>
+    </div>
+  </div>
+  <p class="note">Example product: Claude Cowork. Inspect the input list, changed files and unresolved questions.</p>
+</section>
+
+<!-- 12 · Design by iteration -->
+<section data-origin-slide="15" class="slide" data-label="Design by iteration" data-speaker-notes="Teach the design workflow rather than launch statistics or a guarantee that importing brand files enforces compliance. Tie the exported draft back to the quarterly review.">
+  <div class="slide-head"><span class="crumb">Design</span><span class="snum"></span></div>
+  <h2>Use a brief, then refine the draft</h2>
+  <div class="zone">
+    <div class="cards c3">
+      <div class="tile"><span class="lab">Brief</span><p>Name the audience, purpose, brand references and required output.</p></div>
+      <div class="tile"><span class="lab">Refine</span><p>Change one visible thing at a time: hierarchy, wording, layout or emphasis.</p></div>
+      <div class="tile"><span class="lab">Export and inspect</span><p>Open the actual file. Check fonts, charts and editability before sharing.</p></div>
+    </div>
+  </div>
+  <p class="note">Example tools: Claude Design or Canva. Supplying a brand kit still requires a review of the result.</p>
+</section>
+
+<!-- 13 · Research over your documents -->
+<section data-origin-slide="17" class="slide" data-label="Research over your documents" data-speaker-notes="Avoid a product-family tour. Explain the difference between summarizing provided sources and discovering new ones. Do not promise that source restriction guarantees correctness. Product naming and plan history remain in the reference snapshot.">
+  <div class="slide-head"><span class="crumb">Research</span><span class="snum"></span></div>
+  <h2>Use the source as the final check</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Ask a bounded question</span><p>“What changed in the customer study, and which pages support that?”</p></div>
+      <div class="tile"><span class="lab">Inspect the evidence</span><p>Open the cited passage. Check that it supports the summary and its qualifications.</p></div>
+    </div>
+  </div>
+  <p class="note">A source-grounded assistant such as Google’s notebook product can help you navigate documents. A citation is a starting point for verification.</p>
+</section>
+
+<!-- 14 · Read the price tag -->
+<section data-origin-slide="4" class="slide" data-label="Read the price tag" data-speaker-notes="Keep two meters visible; explain team and API purchasing only if relevant to the room. No current prices are newly asserted. Historical plan tables are available separately.">
+  <div class="slide-head"><span class="crumb">Cost</span><span class="snum"></span></div>
+  <h2>Budget for iteration, not one perfect attempt</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Subscription</span><p>A recurring fee with usage limits. Check what your existing plan includes.</p></div>
+      <div class="tile"><span class="lab">Credits</span><p>Each generation consumes a balance. Discarded drafts and retries count too.</p></div>
+    </div>
+  </div>
+  <p class="note">For team use, check per-seat terms, data handling and commercial rights. API integrations add metered usage.</p>
+</section>
+
+<!-- 15 · Products change -->
+<section data-origin-slide="20" class="slide" data-label="Products change" data-speaker-notes="Replace six company histories with the practical consequence. One product anecdote can be spoken if helpful; do not imply that a historical price snapshot is current.">
+  <div class="slide-head"><span class="crumb">Choosing a tool</span><span class="snum"></span></div>
+  <h2>Keep an exit route</h2>
+  <div class="zone">
+    <ul class="bul">
+      <li>Prefer outputs your team can open and edit outside the tool.</li>
+      <li>Keep the original data, prompts and approved assets.</li>
+      <li>Check the current product page before promising a feature or budget.</li>
+    </ul>
+  </div>
+  <p class="note">A tool can change its name, plan or export support. Your work should remain usable.</p>
+</section>
+
+<!-- 16 · Build a small app -->
+<section data-origin-slide="27" class="slide" data-label="Build a small app" data-speaker-notes="Show the shape of the result and acceptance checks. Revenue figures, alternative lists and tier details belong in reference, not the teaching sequence.">
+  <div class="slide-head"><span class="crumb">Choose by task</span><span class="snum"></span></div>
+  <h2>A prototype people can try</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Give the brief</span><p>“Make a savings calculator with these inputs and an explanation of the result.”</p></div>
+      <div class="tile"><span class="lab">Inspect the output</span><p>Test the calculations, empty states and forms. Review access and data handling before launch.</p></div>
+    </div>
+  </div>
+  <p class="note">Examples: Lovable, v0 or Replit. Budget for revisions; a working preview still needs checks.</p>
+</section>
+
+<!-- 17 · Generated video -->
+<section data-origin-slide="28" class="slide" data-label="Generated video" data-speaker-notes="Avoid a universal best-model claim and exact clip budgets. Keep the difference between a shot and an assembled film central.">
+  <div class="slide-head"><span class="crumb">Choose by task</span><span class="snum"></span></div>
+  <h2>Plan a shot before you generate it</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Brief one shot</span><p>State the subject, action, framing and duration. Start from approved material when useful.</p></div>
+      <div class="tile"><span class="lab">Review each take</span><p>Check continuity, text, product details, rights and the credit cost of discarded takes.</p></div>
+    </div>
+  </div>
+  <p class="note">Examples: Veo / Flow, Runway or Higgsfield. A good shot is one ingredient in a finished video.</p>
+</section>
+
+<!-- 18 · Templated video -->
+<section data-origin-slide="29" class="slide" data-label="Templated video" data-speaker-notes="Contrast templated graphics with generated footage. Remove the claim that brand compliance is solved or only one review is ever needed.">
+  <div class="slide-head"><span class="crumb">Choose by task</span><span class="snum"></span></div>
+  <h2>Repeat a design with new data</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Lock the template</span><p>Set layout, fonts, colours and timing once.</p></div>
+      <div class="tile"><span class="lab">Change the content</span><p>Render another report or language version, then check text fit, data and timing.</p></div>
+    </div>
+  </div>
+  <p class="note">Example: HyperFrames. A reusable template improves consistency; new content still needs review.</p>
+</section>
+
+<!-- 19 · Voice and dubbing -->
+<section data-origin-slide="31" class="slide" data-label="Voice and dubbing" data-speaker-notes="No universal popularity or commercial-license guarantee. Product prices and licensing must be checked for the specific intended use.">
+  <div class="slide-head"><span class="crumb">Choose by task</span><span class="snum"></span></div>
+  <h2>Change the script without a studio visit</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Make a draft</span><p>Turn an approved script into narration or a translated voice-over.</p></div>
+      <div class="tile"><span class="lab">Listen before release</span><p>Check names, numbers, pronunciation and meaning. Confirm rights and consent for the voice.</p></div>
+    </div>
+  </div>
+  <p class="note">Example: ElevenLabs. Compare a short sample before choosing a voice or buying capacity.</p>
+</section>
+
+<!-- 20 · Images and design -->
+<section data-origin-slide="33" class="slide" data-label="Images and design" data-speaker-notes="Remove aesthetic rankings, blanket legal assurances and price ladders. Give a concrete distinction the audience can act on.">
+  <div class="slide-head"><span class="crumb">Choose by task</span><span class="snum"></span></div>
+  <h2>Choose by the output you need</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Layout and brand</span><p>Use a design tool when you need controlled text, logos and repeatable&nbsp;formats.</p></div>
+      <div class="tile"><span class="lab">New imagery</span><p>Use image generation for a concept or source image, then inspect and refine it.</p></div>
+    </div>
+  </div>
+  <p class="note">Examples: Canva, Firefly or Ideogram. Review text, rights, privacy settings and visual accuracy.</p>
+</section>
+
+<!-- 21 · Repeatable automation -->
+<section data-origin-slide="37" class="slide" data-label="Repeatable automation" data-speaker-notes="Self-hosting an orchestrator does not by itself keep connected AI/API data local. Do not imply otherwise. Show the review boundary in the example; no messages are sent by this deck.">
+  <div class="slide-head"><span class="crumb">Choose by task</span><span class="snum"></span></div>
+  <h2>Put a checkpoint in the workflow</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Trigger and draft</span><p>A form arrives → prepare a follow-up and a proposed CRM update.</p></div>
+      <div class="tile"><span class="lab">Approve and act</span><p>A person checks the draft → send and record only the approved changes.</p></div>
+    </div>
+  </div>
+  <p class="note">Examples: Zapier, Make or n8n. Check the actual data flow, permissions and failure handling.</p>
+</section>
+
+<!-- 22 · Before real use -->
+<section data-origin-slide="38" class="slide" data-label="Before real use" data-speaker-notes="Keep the practical checklist and remove categorical legal recommendations. Have participants apply these grouped checks to one tool they already use, without vendor absolutes.">
+  <div class="slide-head"><span class="crumb">Before adoption</span><span class="snum"></span></div>
+  <h2>Check the terms, access and result</h2>
+  <div class="zone">
+    <div class="cards c3">
+      <div class="tile"><span class="lab">Rights and privacy</span><p>Can you use the output commercially? Are inputs or outputs public?</p></div>
+      <div class="tile"><span class="lab">Data and access</span><p>Where does the data go, and which actions can the tool perform?</p></div>
+      <div class="tile"><span class="lab">Cost and review</span><p>What do retries cost? Who checks the result before it is used?</p></div>
+    </div>
+  </div>
+  <p class="note">Check the actual plan and intended use. A paid tier alone does not establish permission, privacy or suitability.</p>
+</section>
+
+<!-- 23 · Story: Project Vend -->
+<section data-origin-slide="41" class="slide" data-label="Story: Project Vend" data-speaker-notes="Retain one failure-and-improvement story. Explain the mechanism rather than memorable purchase details or exact profit figures. The source links remain on the sources slide.">
+  <div class="slide-head"><span class="crumb">A real-world lesson</span><span class="snum"></span></div>
+  <h2>An agent’s operating setup changes the result</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">The experiment</span><p>Claude ran a snack shop: ordering stock, setting prices and talking to customers.</p></div>
+      <div class="tile"><span class="lab">The lesson</span><p>Early failures exposed weak inventory and decision controls. Later iterations added tools and operating structure.</p></div>
+    </div>
+  </div>
+  <p class="note">A bounded experiment, not evidence that an agent can run any business unattended. Source: Anthropic, Project Vend.</p>
+</section>
+
+<!-- 24 · Story: the craft still matters -->
+<section data-origin-slide="45" class="slide" data-label="Story: the craft still matters" data-speaker-notes="Remove the unsupported best-ad ranking, the comparative clip count and the claim that AI has not raised a ceiling. Keep the audience-relevant decision: craft and the brief determine the production method.">
+  <div class="slide-head"><span class="crumb">A real-world lesson</span><span class="snum"></span></div>
+  <h2>Judge the finished work</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">One campaign choice</span><p>Anthropic’s Super Bowl campaign used human performers and a conventional production team.</p></div>
+      <div class="tile"><span class="lab">Your choice</span><p>Use AI where it helps the brief. A lower production barrier does not decide the best creative approach.</p></div>
+    </div>
+  </div>
+  <p class="note">One campaign is an example, not proof of a universal ceiling on AI-generated work. Campaign sources are in the reference list.</p>
+</section>
+
+<!-- 25 · Three integration routes -->
+<section data-origin-slide="53" class="slide" data-label="Three integration routes" data-speaker-notes="This decision slide now comes before the examples. Avoid repeating the vendor comparison or exact pricing. The quarterly review uses each route for a different purpose.">
+  <div class="slide-head"><span class="crumb">Working in your apps</span><span class="snum"></span></div>
+  <h2>Where should the work happen?</h2>
+  <div class="zone">
+    <div class="cards c3">
+      <div class="tile"><span class="lab">Create a new file</span><p>Upload the source material in chat and download an editable draft.</p></div>
+      <div class="tile"><span class="lab">Edit an existing file</span><p>Use an approved assistant inside the document or spreadsheet.</p></div>
+      <div class="tile"><span class="lab">Connect another system</span><p>Give access to the specific records or actions the task needs.</p></div>
+    </div>
+  </div>
+  <p class="note">Start with the route that fits the task. Check your organization’s approved tools and permissions.</p>
+</section>
+
+<!-- 26 · Files from chat -->
+<section data-origin-slide="49" class="slide" data-label="Files from chat" data-speaker-notes="A file download is not proof of correctness. Show the output inspection as part of the workflow. No add-in is needed for this route when supported by the chosen tool.">
+  <div class="slide-head"><span class="crumb">Route 1 · create</span><span class="snum"></span></div>
+  <h2>For a new draft, start with the source files</h2>
+  <div class="zone">
+    <div class="code">
+      <span class="l"><span class="k">UPLOAD</span>   results.csv + Q1.pptx + brand template</span>
+      <span class="l"><span class="k">ASK</span>      create an editable Q2 review</span>
+      <span class="l"><span class="k">DOWNLOAD</span> open the actual presentation file</span>
+      <span class="l"><span class="k">CHECK</span>    chart data, layout, fonts and missing inputs</span>
+    </div>
+  </div>
+  <p class="note">Confirm that your tool supports the required file type and that the downloaded output remains editable.</p>
+</section>
+
+<!-- 27 · Edit inside the app -->
+<section data-origin-slide="48" class="slide" data-label="Edit inside the app" data-speaker-notes="Do not promise formulas cannot break or conversations universally sync across apps. Teach the review workflow. Product-specific installation and plan detail remains in reference material.">
+  <div class="slide-head"><span class="crumb">Route 2 · edit</span><span class="snum"></span></div>
+  <h2>For an existing file, keep the review nearby</h2>
+  <div class="zone">
+    <div class="cards c2">
+      <div class="tile"><span class="lab">Make a scoped request</span><p>“Update this chart from the new data. Preserve the formulas and template.”</p></div>
+      <div class="tile"><span class="lab">Inspect the changes</span><p>Check the affected cells or slides. Recalculate, compare with the source, and review the final file.</p></div>
+    </div>
+  </div>
+  <p class="note">Use an approved Office or Workspace integration. Availability and permissions depend on your account and organization.</p>
+</section>
+
+<!-- 28 · MCP (Ember: diagram left, rows right → Ivory split: rows left, figure right; SVG redrawn 1:1) -->
+<section data-origin-slide="47" class="slide" data-label="MCP"
+    data-speaker-notes="Use the connection diagram as a conceptual illustration. Do not claim every connector is implemented using MCP, or that every server works with every client. The practical issue is supported access to the right data, with the right permission boundary.">
+  <div class="slide-head"><span class="crumb">Plugging in · mcp</span><span class="snum"></span></div>
+  <h2>MCP = "USB-C for AI"</h2>
+  <div class="zone">
+    <div class="split">
+      <ul class="bul">
+        <li>For the review deck, connect the approved source and inspect which records were retrieved.</li>
+        <li>MCP is one standard for tool access. Compatibility, authentication and permissions depend on the integration.</li>
+        <li>Expose only the records and actions needed. Review a proposed write before it happens.</li>
+      </ul>
+      <div class="fig">
+        <svg viewBox="0 0 828 562" role="img" aria-label="Without MCP every app needs a custom connector to every tool; with MCP each connects once through a shared hub">
+          <!-- drawn 1:1 for a split figure under a one-line headline: 828 × 562.
+               Left panel x 0–388: 3 apps × 3 tools, nine orthogonal connectors, each on its
+               own lane (x 120…272, 19px apart) with its own exit/entry port, so no segments overlap.
+               Right panel x 440–828: apps → shared bus → MCP hub → shared bus → tools. -->
+          <text class="dg-t mut" x="194" y="40" text-anchor="middle">without MCP — N×M glue</text>
+          <text class="dg-t acc" x="634" y="40" text-anchor="middle">with MCP — connect once</text>
+          <!-- left: N×M custom connectors -->
+          <path class="dg-line dim" d="M101,144 H120 V152 H288"/>
+          <path class="dg-line dim" d="M101,160 H139 V312 H288"/>
+          <path class="dg-line dim" d="M101,176 H158 V472 H288"/>
+          <path class="dg-line dim" d="M101,304 H177 V168 H288"/>
+          <path class="dg-line dim" d="M101,320 H196 V328 H288"/>
+          <path class="dg-line dim" d="M101,336 H215 V488 H288"/>
+          <path class="dg-line dim" d="M101,464 H234 V184 H288"/>
+          <path class="dg-line dim" d="M101,480 H253 V344 H288"/>
+          <path class="dg-line dim" d="M101,496 H272 V504 H288"/>
+          <rect class="dg-box" x="1" y="128" width="100" height="64" rx="2"/>
+          <rect class="dg-box" x="1" y="288" width="100" height="64" rx="2"/>
+          <rect class="dg-box" x="1" y="448" width="100" height="64" rx="2"/>
+          <rect class="dg-box" x="288" y="128" width="100" height="64" rx="2"/>
+          <rect class="dg-box" x="288" y="288" width="100" height="64" rx="2"/>
+          <rect class="dg-box" x="288" y="448" width="100" height="64" rx="2"/>
+          <!-- right: one connection each, through the hub -->
+          <path class="dg-line" d="M540,160 H567 V480 H540"/>
+          <path class="dg-line" d="M540,320 H594"/>
+          <path class="dg-line" d="M674,320 H701"/>
+          <path class="dg-line" d="M727,160 H701 V480 H727"/>
+          <path class="dg-line" d="M701,320 H727"/>
+          <rect class="dg-box" x="440" y="128" width="100" height="64" rx="2"/>
+          <rect class="dg-box" x="440" y="288" width="100" height="64" rx="2"/>
+          <rect class="dg-box" x="440" y="448" width="100" height="64" rx="2"/>
+          <rect class="dg-box key" x="594" y="280" width="80" height="80" rx="2"/>
+          <text class="dg-t key" x="634" y="329" text-anchor="middle">MCP</text>
+          <rect class="dg-box" x="727" y="128" width="100" height="64" rx="2"/>
+          <rect class="dg-box" x="727" y="288" width="100" height="64" rx="2"/>
+          <rect class="dg-box" x="727" y="448" width="100" height="64" rx="2"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 29 · Choose one task (Ember: ul.bul with bold lead-ins → ol.bul.def) -->
+<section data-origin-slide="54" class="slide" data-label="Choose one task" data-speaker-notes="End the spoken talk here. Ask the audience to name their task and acceptance check. Sources follow; there is no second recap. The reference deck is a dated snapshot, not a newly verified buying guide.">
+  <div class="slide-head"><span class="crumb">Try this next</span><span class="snum"></span></div>
+  <h2>Try one useful workflow this week</h2>
+  <div class="zone">
+    <ol class="bul def">
+      <li><b>Choose:</b> a recurring task with a result you know how to judge.</li>
+      <li><b>Start:</b> with an approved tool you already have.</li>
+      <li><b>Review:</b> the facts, file and permissions before using the output.</li>
+    </ol>
+  </div>
+  <p class="note"><a href="ai-toolbox-reference.html">Optional reference: product tables and supporting examples</a> · <a href="index.html">All talks</a></p>
+</section>
+
+<!-- 30 · Sources 1 of 2 -->
+<section data-origin-slide="56" class="slide" data-label="Sources 1 of 2"
+    data-speaker-notes="Leave this up while questions run rather than reading it. The two most useful starting points for a beginner: the labs' own pricing pages, which double as product catalogues, and the Cowork and Design product pages. The deck lives in the repo, so nobody needs to photograph links.">
+  <div class="slide-head"><span class="crumb">Sources · labs &amp; plans</span><span class="snum"></span></div>
+  <h2>Sources &amp; links (1/2)</h2>
+  <div class="zone">
+    <div class="links">
+      <div class="linkcol">
+        <h3>The big three</h3>
+        <a href="https://claude.com/pricing" target="_blank" rel="noopener">Claude — plans &amp; pricing<span class="u">claude.com/pricing</span></a>
+        <a href="https://claude.com/product/cowork" target="_blank" rel="noopener">Claude Cowork — product page<span class="u">claude.com/product/cowork</span></a>
+        <a href="https://www.anthropic.com/news/claude-design-anthropic-labs" target="_blank" rel="noopener">Claude Design — announcement<span class="u">anthropic.com/news · claude-design</span></a>
+        <a href="https://claude.com/claude-for-microsoft-365" target="_blank" rel="noopener">Claude for Microsoft 365<span class="u">claude.com/claude-for-microsoft-365</span></a>
+        <a href="https://learn.chatgpt.com/docs/pricing" target="_blank" rel="noopener">ChatGPT — pricing docs<span class="u">learn.chatgpt.com/docs/pricing</span></a>
+        <a href="https://gemini.google/subscriptions/" target="_blank" rel="noopener">Google AI — subscriptions<span class="u">gemini.google/subscriptions</span></a>
+        <a href="https://blog.google/innovation-and-ai/products/gemini-notebook/notebooklm-gemini-notebook/" target="_blank" rel="noopener">Gemini Notebook (ex-NotebookLM)<span class="u">blog.google · gemini-notebook</span></a>
+      </div>
+      <div class="linkcol">
+        <h3>Connectors &amp; MCP</h3>
+        <a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">Model Context Protocol — spec &amp; docs<span class="u">modelcontextprotocol.io</span></a>
+        <a href="https://claude.com/blog/connectors-directory" target="_blank" rel="noopener">Claude — connectors directory<span class="u">claude.com/blog · connectors-directory</span></a>
+        <a href="https://openai.com/index/introducing-apps-in-chatgpt/" target="_blank" rel="noopener">OpenAI — apps in ChatGPT<span class="u">openai.com · apps-in-chatgpt</span></a>
+        <a href="https://openai.com/index/chatgpt-for-excel/" target="_blank" rel="noopener">OpenAI — ChatGPT for Excel<span class="u">openai.com · chatgpt-for-excel</span></a>
+        <a href="https://zapier.com/mcp" target="_blank" rel="noopener">Zapier MCP<span class="u">zapier.com/mcp</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 31 · Sources 2 of 2 -->
+<section data-origin-slide="57" class="slide" data-label="Sources 2 of 2"
+    data-speaker-notes="The category leaders and the stories, for anyone who wants the primary source. Repeat the closing caveat one last time: everything was verified in July 2026 and this market moves monthly — re-check the vendor's page before quoting a price or a feature outside this room.">
+  <div class="slide-head"><span class="crumb">Sources · tools &amp; stories</span><span class="snum"></span></div>
+  <h2>Sources &amp; links (2/2)</h2>
+  <div class="zone">
+    <div class="links">
+      <div class="linkcol">
+        <h3>Category leaders</h3>
+        <a href="https://lovable.dev/pricing" target="_blank" rel="noopener">Lovable — pricing<span class="u">lovable.dev/pricing</span></a>
+        <a href="https://runway.com/pricing" target="_blank" rel="noopener">Runway — pricing<span class="u">runway.com/pricing</span></a>
+        <a href="https://github.com/heygen-com/hyperframes" target="_blank" rel="noopener">HyperFrames — open-source repo<span class="u">github.com/heygen-com/hyperframes</span></a>
+        <a href="https://www.synthesia.io/pricing" target="_blank" rel="noopener">Synthesia — pricing<span class="u">synthesia.io/pricing</span></a>
+        <a href="https://elevenlabs.io/pricing" target="_blank" rel="noopener">ElevenLabs — pricing<span class="u">elevenlabs.io/pricing</span></a>
+        <a href="https://gamma.app" target="_blank" rel="noopener">Gamma<span class="u">gamma.app</span></a>
+        <a href="https://www.perplexity.ai" target="_blank" rel="noopener">Perplexity<span class="u">perplexity.ai</span></a>
+      </div>
+      <div class="linkcol">
+        <h3>The five stories</h3>
+        <a href="https://www.anthropic.com/research/project-vend-2" target="_blank" rel="noopener">Anthropic — Project Vend (phases 1 &amp; 2)<span class="u">anthropic.com/research · project-vend</span></a>
+        <a href="https://www.livescience.com/technology/artificial-intelligence/googles-ai-co-scientist-cracked-10-year-superbug-problem-in-just-2-days" target="_blank" rel="noopener">AI co-scientist — the superbug result<span class="u">livescience.com</span></a>
+        <a href="https://www.cnbc.com/2025/09/24/ai-cfa-exam-pass-minutes-study.html" target="_blank" rel="noopener">CNBC — AI passes CFA Level III mock<span class="u">cnbc.com</span></a>
+        <a href="https://deepmind.google/blog/advanced-version-of-gemini-with-deep-think-officially-achieves-gold-medal-standard-at-the-international-mathematical-olympiad/" target="_blank" rel="noopener">DeepMind — official IMO gold<span class="u">deepmind.google/blog</span></a>
+        <a href="https://blog.google/innovation-and-ai/technology/safety-security/cybersecurity-updates-summer-2025/" target="_blank" rel="noopener">Google — Big Sleep pre-empts an exploit<span class="u">blog.google</span></a>
+        <a href="https://www.anthropic.com/news/disrupting-AI-espionage" target="_blank" rel="noopener">Anthropic — disrupting AI-run espionage<span class="u">anthropic.com/news</span></a>
+        <a href="https://www.cnbc.com/2026/02/04/anthropic-no-ads-claude-chatbot-openai-chatgpt.html" target="_blank" rel="noopener">The Super Bowl campaign &amp; results<span class="u">cnbc.com</span></a>
+      </div>
+    </div>
+  </div>
+  <p class="note">All figures verified July 2026. This market moves monthly — <b>re-check the vendor's page</b> before quoting a price outside this room.</p>
+</section>
+
+</deck-stage>
+<script src="ivory_design_system/deck-stage.js"></script>
+<script src="ivory_design_system/deck.js"></script>
+</body>
+</html>

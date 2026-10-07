@@ -1,0 +1,323 @@
+{
+  "source": "agentic-engineering-reference.html",
+  "output": "agentic-engineering-reference-ivory.html",
+  "counts": [
+    10,
+    10
+  ],
+  "structural_errors": [],
+  "slides": [
+    {
+      "slide": 1,
+      "label": "Reference guide",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "agentic-engineering.html"
+        ],
+        [
+          "agentic-engineering.html"
+        ]
+      ],
+      "source_text": "Optional reference Engineering reference Use selectively Cost derivations, a workflow sketch and the invoice-check skill. Check before use Product recipes reflect documentation checked 3 October 2026. Return to the 30-slide main talk",
+      "output_text": "Optional reference Engineering reference Use selectively Cost derivations, a workflow sketch and the invoice-check skill. Check before use Product recipes reflect documentation checked 3 October 2026. Return to the 30-slide main talk"
+    },
+    {
+      "slide": 2,
+      "label": "Explore a transformer",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Further exploration ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Further exploration",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "agentic-engineering.html",
+          "https://poloclub.github.io/transformer-explainer/",
+          "https://bbycroft.net/llm",
+          "https://karpathy.ai/zero-to-hero.html"
+        ],
+        [
+          "agentic-engineering.html",
+          "https://poloclub.github.io/transformer-explainer/",
+          "https://bbycroft.net/llm",
+          "https://karpathy.ai/zero-to-hero.html"
+        ]
+      ],
+      "source_text": "Optional reference · Back to the talk Further exploration Watch the mechanism, then inspect the code Interactive explanations Transformer Explainer LLM Visualization Build a small model Neural Networks: Zero to Hero Follow a small model from training to generation. Optional learning links. A small teaching model does not represent every production architecture.",
+      "output_text": "Further exploration · Optional reference · Back to the talk Watch the mechanism, then inspect the code Interactive explanations Transformer Explainer LLM Visualization Build a small model Neural Networks: Zero to Hero Follow a small model from training to generation. Optional learning links. A small teaching model does not represent every production architecture."
+    },
+    {
+      "slide": 3,
+      "label": "Request anatomy",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Context reference ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Context reference",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "agentic-engineering.html"
+        ],
+        [
+          "agentic-engineering.html"
+        ]
+      ],
+      "source_text": "Optional reference · Back to the talk Context reference Inspect what actually enters a request Standing instructions and applicable project rules. Tool definitions and relevant skill content. Retained conversation, selected files and tool results. The current user message. Use a request inspector or provider token counters for real sizes. Avoid summing overlapping categories.",
+      "output_text": "Context reference · Optional reference · Back to the talk Inspect what actually enters a request Standing instructions and applicable project rules. Tool definitions and relevant skill content. Retained conversation, selected files and tool results. The current user message. Use a request inspector or provider token counters for real sizes. Avoid summing overlapping categories."
+    },
+    {
+      "slide": 4,
+      "label": "Growth arithmetic",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Worked arithmetic ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Worked arithmetic",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "agentic-engineering.html"
+        ],
+        [
+          "agentic-engineering.html"
+        ]
+      ],
+      "source_text": "Optional reference · Back to the talk Worked arithmetic Growing history can produce quadratic input volume Assume n calls; initial input B; each call adds d tokens. No pruning, compaction or window cap in this toy model. Input at call k = B + (k − 1)d Total input = nB + d × n(n − 1) / 2 B = 5,000; d = 2,000; n = 10 Last call = 23,000; total input = 140,000 tokens. This is an input-volume model. Apply actual cache, output and tool rates to calculate the bill.",
+      "output_text": "Worked arithmetic · Optional reference · Back to the talk Growing history can produce quadratic input volume Assume n calls; initial input B; each call adds d tokens. No pruning, compaction or window cap in this toy model. Input at call k = B + (k − 1)d Total input = nB + d × n(n − 1) / 2 B = 5,000; d = 2,000; n = 10 Last call = 23,000; total input = 140,000 tokens. This is an input-volume model. Apply actual cache, output and tool rates to calculate the bill."
+    },
+    {
+      "slide": 5,
+      "label": "Cache break-even",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Worked arithmetic ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Worked arithmetic",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "agentic-engineering.html"
+        ],
+        [
+          "agentic-engineering.html"
+        ]
+      ],
+      "source_text": "Optional reference · Back to the talk Worked arithmetic Include the write before counting savings Same eligible prefix; all later requests hit the cache. Normalize ordinary input cost to 1 per request. Total cached cost = w + (n − 1)r Caching saves when w + (n − 1)r < n. Example r = 0.10: w = 1.25 → savings at 2 requests w = 2.00 → savings at 3 requests Illustrative multipliers: verify model, platform, TTL and expiry rules. A cache miss changes the calculation.",
+      "output_text": "Worked arithmetic · Optional reference · Back to the talk Include the write before counting savings Same eligible prefix; all later requests hit the cache. Normalize ordinary input cost to 1 per request. Total cached cost = w + (n − 1)r Caching saves when w + (n − 1)r < n. Example r = 0.10: w = 1.25 → savings at 2 requests w = 2.00 → savings at 3 requests Illustrative multipliers: verify model, platform, TTL and expiry rules. A cache miss changes the calculation."
+    },
+    {
+      "slide": 6,
+      "label": "Workflow sketch",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Workflow reference ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Workflow reference",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "agentic-engineering.html"
+        ],
+        [
+          "agentic-engineering.html"
+        ]
+      ],
+      "source_text": "Optional reference · Back to the talk Workflow reference Make the retry edge explicit PSEUDOCODE — not a harness API findings = investigate(rule, calculation, export) plan = reconcile(findings, acceptance_cases) latest_failures = [] for attempt in range(3): patch = implement(plan, latest_failures) result = run_acceptance_checks(patch) if result.passed: return request_review(patch, result) latest_failures = result.failures return report_blocked(latest_failures) Use enforced tool, time and cost limits around the workflow. Assign an owner to integration.",
+      "output_text": "Workflow reference · Optional reference · Back to the talk Make the retry edge explicit PSEUDOCODE — not a harness API findings = investigate(rule, calculation, export) plan = reconcile(findings, acceptance_cases) latest_failures = [] for attempt in range(3): patch = implement(plan, latest_failures) result = run_acceptance_checks(patch) if result.passed: return request_review(patch, result) latest_failures = result.failures return report_blocked(latest_failures) Use enforced tool, time and cost limits around the workflow. Assign an owner to integration."
+    },
+    {
+      "slide": 7,
+      "label": "Skill file example",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Skill reference ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Skill reference",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "agentic-engineering.html"
+        ],
+        [
+          "agentic-engineering.html"
+        ]
+      ],
+      "source_text": "Optional reference · Back to the talk Skill reference An invoice-check skill for Claude Code --- name: invoice-check description: Verify changes to invoice totals or CSV export. --- 1. Read the invoice rule and inspect the proposed diff. 2. Run the invoice and export tests; keep the actual output. 3. Check VAT, rounding and CSV escaping coverage. 4. Report findings, exit status and untested cases. Example path: .claude/skills/invoice-check/SKILL.md. Check discovery in a fresh session.",
+      "output_text": "Skill reference · Optional reference · Back to the talk An invoice-check skill for Claude Code --- name: invoice-check description: Verify changes to invoice totals or CSV export. --- 1. Read the invoice rule and inspect the proposed diff. 2. Run the invoice and export tests; keep the actual output. 3. Check VAT, rounding and CSV escaping coverage. 4. Report findings, exit status and untested cases. Example path: .claude/skills/invoice-check/SKILL.md. Check discovery in a fresh session."
+    },
+    {
+      "slide": 8,
+      "label": "Further skill systems",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Further exploration ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Further exploration",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "agentic-engineering.html",
+          "https://github.com/mattpocock/skills",
+          "https://github.com/EveryInc/compound-engineering-plugin"
+        ],
+        [
+          "agentic-engineering.html",
+          "https://github.com/mattpocock/skills",
+          "https://github.com/EveryInc/compound-engineering-plugin"
+        ]
+      ],
+      "source_text": "Optional reference · Back to the talk Further exploration Read the procedures before adopting the system Matt Pocock’s skills Source repository Inspect how each skill defines its trigger, procedure and output. Compound Engineering Source repository Inspect how planning, implementation and captured lessons connect. Optional source examples. Commands and package contents change; adapt and test the parts you choose.",
+      "output_text": "Further exploration · Optional reference · Back to the talk Read the procedures before adopting the system Matt Pocock’s skills Source repository Inspect how each skill defines its trigger, procedure and output. Compound Engineering Source repository Inspect how planning, implementation and captured lessons connect. Optional source examples. Commands and package contents change; adapt and test the parts you choose."
+    },
+    {
+      "slide": 9,
+      "label": "Plugin publication recipe",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Publication reference ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Publication reference",
+          "output": ""
+        }
+      ],
+      "links": [
+        [
+          "agentic-engineering.html",
+          "https://code.claude.com/docs/en/plugins",
+          "https://code.claude.com/docs/en/plugin-marketplaces"
+        ],
+        [
+          "agentic-engineering.html",
+          "https://code.claude.com/docs/en/plugins",
+          "https://code.claude.com/docs/en/plugin-marketplaces"
+        ]
+      ],
+      "source_text": "Optional reference · Back to the talk Publication reference Package, test, then share my-plugin/ .claude-plugin/plugin.json skills/invoice-check/SKILL.md 1. Give the manifest a name and version. 2. Test locally: claude --plugin-dir ./my-plugin 3. Review contents and pin the version to distribute. 4. Publish through your team’s approved channel. Plugin overview · Marketplace setup",
+      "output_text": "Publication reference · Optional reference · Back to the talk Package, test, then share my-plugin/ .claude-plugin/plugin.json skills/invoice-check/SKILL.md 1. Give the manifest a name and version. 2. Test locally: claude --plugin-dir ./my-plugin 3. Review contents and pin the version to distribute. 4. Publish through your team’s approved channel. Plugin overview · Marketplace setup"
+    },
+    {
+      "slide": 10,
+      "label": "Sources",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "Sources ·"
+        },
+        {
+          "kind": "delete",
+          "source": "Sources",
+          "output": ""
+        },
+        {
+          "kind": "replace",
+          "source": "Need",
+          "output": "Needarxiv.org/abs/1706.03762"
+        },
+        {
+          "kind": "replace",
+          "source": "engineering",
+          "output": "engineeringanthropic.com/engineering"
+        },
+        {
+          "kind": "replace",
+          "source": "experiments",
+          "output": "experimentstrychroma.com/research/context-rot"
+        },
+        {
+          "kind": "replace",
+          "source": "usage",
+          "output": "usageplatform.claude.com/docs"
+        },
+        {
+          "kind": "replace",
+          "source": "forks Skills",
+          "output": "forkscode.claude.com/docs/en/sub-agents Skillscode.claude.com/docs/en/skills"
+        }
+      ],
+      "links": [
+        [
+          "agentic-engineering.html",
+          "https://arxiv.org/abs/1706.03762",
+          "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+          "https://www.trychroma.com/research/context-rot",
+          "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+          "https://code.claude.com/docs/en/sub-agents",
+          "https://code.claude.com/docs/en/skills",
+          "https://github.com/davidbudac/agentic-talks"
+        ],
+        [
+          "agentic-engineering.html",
+          "https://arxiv.org/abs/1706.03762",
+          "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+          "https://www.trychroma.com/research/context-rot",
+          "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+          "https://code.claude.com/docs/en/sub-agents",
+          "https://code.claude.com/docs/en/skills",
+          "https://github.com/davidbudac/agentic-talks"
+        ]
+      ],
+      "source_text": "Optional reference · Back to the talk Sources Questions? Check the evidence. Mechanisms Attention Is All You Need Context engineering Context-length experiments Implementation details Prompt caching and usage Subagents and forks Skills Primary sources checked 3 October 2026. Worked examples are illustrative. All decks.",
+      "output_text": "Sources · Optional reference · Back to the talk Questions? Check the evidence. Mechanisms Attention Is All You Needarxiv.org/abs/1706.03762 Context engineeringanthropic.com/engineering Context-length experimentstrychroma.com/research/context-rot Implementation details Prompt caching and usageplatform.claude.com/docs Subagents and forkscode.claude.com/docs/en/sub-agents Skillscode.claude.com/docs/en/skills Primary sources checked 3 October 2026. Worked examples are illustrative. All decks."
+    }
+  ]
+}

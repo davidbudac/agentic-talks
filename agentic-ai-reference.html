@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Agentic Ai — Reference</title>
+
+<!-- Fonts: Space Grotesk (display) + IBM Plex Sans (body) + IBM Plex Mono (mono) — Ember design system -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+
+<link rel="stylesheet" href="ember_design_system/styles.css">
+<style>deck-stage:not(:defined){visibility:hidden}</style>
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   Agentic AI (beginner deck) — Ember design system, token-driven.
+   Fixed 1920×1080 canvas: sizes are px, colours/spacing are tokens.
+   ═══════════════════════════════════════════════════════════════════ */
+:root{
+  --ease:cubic-bezier(.16,1,.3,1);
+  /* short aliases the slide markup uses inline */
+  --font-d:var(--font-display); --font-b:var(--font-body); --font-m:var(--font-mono);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--ink);color:var(--text-strong);font-family:var(--font-body)}
+
+/* ── SLIDE FRAME + local type scale ──────────────────────────────── */
+.slide{
+  display:flex; flex-direction:column; overflow:hidden;
+  font-family:var(--font-body); -webkit-font-smoothing:antialiased;
+  --pad-x:var(--slide-pad-x); --pad-t:var(--slide-pad-top); --pad-b:var(--slide-pad-bottom);
+  --h2-size:var(--fs-h2); --h3-size:34px; --lead-size:34px;
+  --body-size:26px; --small-size:20px; --code-size:20px;
+  --gap:28px; --content-gap:var(--gap); --diag-h:440px;
+}
+.slide.dense{
+  --pad-x:88px; --pad-t:var(--slide-pad-top-dense); --pad-b:var(--slide-pad-bottom-dense);
+  --h2-size:var(--fs-h2-sm); --h3-size:30px; --lead-size:30px;
+  --body-size:23px; --small-size:18px; --code-size:18px; --gap:20px; --diag-h:400px;
+}
+.slide.tight{
+  --pad-x:76px; --pad-t:60px; --pad-b:52px;
+  --h2-size:46px; --h3-size:27px; --lead-size:27px;
+  --body-size:21px; --small-size:16px; --code-size:16px; --gap:14px; --diag-h:340px;
+}
+.slide-content{
+  flex:1; min-height:0; display:flex; flex-direction:column; justify-content:center;
+  padding:var(--pad-t) var(--pad-x) var(--pad-b); overflow:hidden; position:relative; z-index:1;
+}
+
+/* ── SCHEMES — Ember light/dark rhythm. Every component reads --s-*. ─ */
+.slide,.slide.light{
+  --s-bg:var(--paper); --s-text:var(--text-strong); --s-muted:var(--text-muted); --s-faint:var(--text-faint);
+  --s-line:var(--line-light-2); --s-line-strong:var(--line-light);
+  --s-card-bg:var(--paper-2); --s-card-border:var(--line-card); --s-box-mid:var(--paper-3);
+  --s-outer-fill:var(--coral-soft); --s-callout-bg:var(--coral-soft);
+  --s-accent:var(--coral-ink); --s-bar:var(--bar);
+  background:var(--s-bg); color:var(--s-text);
+}
+.slide.dark{
+  --s-bg:var(--ink); --s-text:var(--on-dark); --s-muted:var(--on-dark-muted); --s-faint:var(--on-dark-faint);
+  --s-line:var(--line-dark-2); --s-line-strong:var(--line-dark);
+  --s-card-bg:var(--ink-2); --s-card-border:var(--line-dark); --s-box-mid:var(--ink-2);
+  --s-outer-fill:rgba(255,92,53,.10); --s-callout-bg:rgba(255,92,53,.10);
+  --s-accent:var(--coral); --s-bar:var(--bar-dark);
+  background:var(--s-bg); color:var(--s-text);
+}
+
+/* ── HEADER ──────────────────────────────────────────────────────── */
+.slide-head{
+  display:flex; align-items:baseline; justify-content:space-between; gap:var(--space-5);
+  margin-bottom:var(--gap); border-bottom:var(--bw-hair) solid var(--s-line); padding-bottom:18px;
+}
+.snum{font:var(--w-bold) 48px/1 var(--font-display); color:var(--s-accent); letter-spacing:var(--track-snug)}
+.crumb{font:var(--w-medium) var(--small-size)/1.2 var(--font-mono); letter-spacing:var(--track-eyebrow);
+  text-transform:uppercase; color:var(--s-muted); text-align:right}
+.crumb b{color:var(--s-accent); font-weight:var(--w-semibold)}
+
+/* ── TYPE ────────────────────────────────────────────────────────── */
+h2{font-family:var(--font-display); font-weight:var(--w-bold); font-size:var(--h2-size);
+  line-height:var(--lh-snug); letter-spacing:var(--track-snug); margin-bottom:22px; color:var(--s-text); text-wrap:balance}
+h2 .o{color:var(--s-accent)}
+h3{font-family:var(--font-display); font-weight:var(--w-bold); font-size:var(--h3-size);
+  line-height:var(--lh-snug); letter-spacing:var(--track-snug); color:var(--s-text)}
+.lead{font-size:var(--lead-size); line-height:1.45; max-width:48ch; color:var(--s-text); text-wrap:pretty}
+.lead b{color:var(--s-accent)}
+.muted{color:var(--s-muted)}
+strong,b{font-weight:var(--w-semibold)}
+
+ul.bul{list-style:none; display:flex; flex-direction:column; gap:20px; max-width:68ch}
+ul.bul li{font-size:var(--body-size); line-height:1.45; padding-left:1.55em; position:relative;
+  color:var(--s-text); text-wrap:pretty}
+ul.bul li::before{content:""; position:absolute; left:0; top:.44em; width:.6em; height:.6em;
+  background:var(--s-accent); clip-path:polygon(0 0,100% 50%,0 100%)}
+ul.bul li b{color:var(--s-text); font-weight:var(--w-semibold)}
+
+.note{font-size:var(--small-size); color:var(--s-muted); margin-top:20px; line-height:1.45; text-wrap:pretty}
+.note b{color:var(--s-text); font-weight:var(--w-semibold)}
+
+/* ── CARDS / TILES ───────────────────────────────────────────────── */
+.cards{display:grid; gap:var(--space-5)}
+.cards.c3{grid-template-columns:repeat(3,1fr)}
+.cards.c2,.cards.c4{grid-template-columns:repeat(2,1fr)}
+.tile{border:var(--bw) solid var(--s-card-border); border-radius:var(--radius-lg);
+  padding:30px 32px; background:var(--s-card-bg); display:flex; flex-direction:column; gap:10px}
+.tile .k{font-family:var(--font-display); font-weight:var(--w-bold); color:var(--s-accent);
+  font-size:30px; letter-spacing:var(--track-snug)}
+.tile p{font-size:var(--body-size); line-height:1.4; color:var(--s-text); text-wrap:pretty}
+.tile.fill{background:var(--s-callout-bg); border-color:var(--s-card-border);
+  border-left:var(--bw-callout) solid var(--coral); border-radius:0 var(--radius-lg) var(--radius-lg) 0}
+.tile.stat{gap:6px; padding:24px 28px}
+.tile.stat .k{font-size:44px; line-height:1.05}
+.tile.stat p{font-size:var(--small-size); color:var(--s-muted); line-height:1.35}
+.tile.stat p b{color:var(--s-text)}
+
+.kcard{background:var(--s-callout-bg); color:var(--s-text); border:var(--bw) solid var(--s-card-border);
+  border-left:var(--bw-callout) solid var(--coral); border-radius:0 var(--radius-xl) var(--radius-xl) 0;
+  padding:40px 44px; position:relative; overflow:hidden}
+.slide.dark .kcard{box-shadow:var(--ring-accent-dark)}
+.kcard .big{font-family:var(--font-display); font-weight:var(--w-bold); color:var(--s-accent);
+  font-size:56px; line-height:1.02; letter-spacing:var(--track-snug)}
+.kcard p{font-size:var(--body-size); line-height:1.42; margin-top:14px; max-width:50ch; color:var(--s-text)}
+
+.split{display:grid; grid-template-columns:1fr 1fr; gap:var(--space-8); align-items:center; min-height:0}
+
+/* ── TABLES ──────────────────────────────────────────────────────── */
+table.tbl{width:100%; border-collapse:collapse; font-size:var(--body-size)}
+table.tbl th,table.tbl td{text-align:left; padding:16px 20px; border-bottom:var(--bw-hair) solid var(--s-line)}
+table.tbl th{font-family:var(--font-mono); color:var(--s-accent); font-weight:var(--w-semibold);
+  font-size:var(--small-size); letter-spacing:var(--track-label); text-transform:uppercase}
+table.tbl td{color:var(--s-text)}
+table.tbl td b{color:var(--s-text); font-weight:var(--w-semibold)}
+table.tbl tr:last-child td{border-bottom:none}
+
+/* ── CHIPS ───────────────────────────────────────────────────────── */
+.extag{display:inline-block; font-family:var(--font-mono); font-size:var(--small-size); color:var(--s-accent);
+  background:var(--s-callout-bg); border:var(--bw-hair) solid var(--s-card-border);
+  padding:4px 14px; border-radius:var(--radius-sm); margin-bottom:12px; letter-spacing:var(--track-label);
+  text-transform:uppercase}
+.pills{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px}
+.pill{font-family:var(--font-mono); border:var(--bw-hair) solid var(--coral); color:var(--s-accent);
+  border-radius:var(--radius-pill); padding:4px 16px; font-size:var(--small-size);
+  font-weight:var(--w-semibold); letter-spacing:var(--track-label); white-space:nowrap}
+
+/* ── CODE ────────────────────────────────────────────────────────── */
+.code{background:var(--code-bg); border:var(--bw) solid var(--s-line); border-left:3px solid var(--coral);
+  border-radius:var(--radius-lg); padding:24px 28px; font-family:var(--font-mono);
+  font-size:var(--code-size); line-height:var(--lh-mono); overflow:hidden; color:var(--code-text);
+  white-space:pre-wrap}
+.code .c{color:var(--code-comment)}
+.code .o{color:var(--code-keyword)}
+.code .g{color:var(--code-string)}
+.code .b{color:var(--code-number)}
+.code .d{color:var(--code-keyword)}
+
+/* ── SECTION DIVIDER ─────────────────────────────────────────────── */
+.divider .slide-content{align-items:flex-start; justify-content:center; text-align:left}
+.divider .dnum{font:var(--w-bold) var(--fs-mega)/var(--lh-tight) var(--font-display);
+  color:var(--coral); letter-spacing:var(--track-tight); margin-bottom:10px}
+.divider h2{font-size:var(--fs-h1)}
+.divider h2::after{content:""; display:block; width:var(--accent-bar-w); height:var(--bw-accent);
+  background:var(--coral); border-radius:var(--radius-bar); margin:.45em 0 .1em}
+.divider .dsub{color:var(--s-muted); font-size:var(--fs-body-lg); max-width:42ch;
+  margin-top:18px; line-height:var(--lh-body)}
+.divider .dsub b{color:var(--s-text); font-weight:var(--w-semibold)}
+
+/* ── GLOSSARY / USES ─────────────────────────────────────────────── */
+.gloss{display:grid; grid-template-columns:1fr 1fr; gap:4px 44px}
+.gloss .row{display:flex; gap:18px; align-items:baseline; padding:12px 0;
+  border-bottom:var(--bw-hair) solid var(--s-line)}
+.gloss .term{font-family:var(--font-display); font-weight:var(--w-semibold); color:var(--s-accent);
+  font-size:var(--body-size); min-width:6.2em; flex-shrink:0; letter-spacing:var(--track-snug)}
+.gloss .def{font-size:var(--body-size); color:var(--s-text); line-height:1.35}
+.uses{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-5)}
+
+/* ── DIAGRAMS (inline SVG + explainer video) ─────────────────────── */
+.diagram{width:100%; display:flex; justify-content:center; align-items:center; margin-top:8px; min-height:0}
+.diagram svg{width:100%; height:auto; max-height:var(--diag-h)}
+.diagram video{width:auto; height:auto; max-width:100%; max-height:var(--diag-h);
+  display:block; background:transparent; border-radius:var(--radius-md)}
+.diagram img.shot{width:100%; height:auto; max-height:var(--diag-h); object-fit:cover; object-position:top;
+  display:block; border-radius:var(--radius-md); border:var(--bw-hair) solid var(--s-card-border)}
+.dg-box{fill:var(--s-card-bg); stroke:var(--s-card-border); stroke-width:1.5}
+.dg-box.hot{fill:var(--coral); stroke:var(--coral)}
+.dg-box.outer{fill:var(--s-outer-fill); stroke:var(--coral); stroke-dasharray:6 5}
+.dg-box.mid{fill:var(--s-box-mid); stroke:var(--s-card-border)}
+.dg-t{fill:var(--s-text); font-family:var(--font-body); font-weight:var(--w-semibold)}
+.dg-t.on{fill:var(--ink)}
+.dg-t.mut{fill:var(--s-muted); font-weight:var(--w-medium)}
+.dg-t.acc{fill:var(--s-accent); font-family:var(--font-mono); font-weight:var(--w-semibold)}
+.dg-line{stroke:var(--s-accent); stroke-width:2.5; fill:none}
+.dg-line.dim{stroke:var(--s-line-strong); stroke-width:1.5}
+.dg-tangle{stroke:var(--s-faint); fill:none}
+.dg-dash{stroke:var(--s-line-strong); fill:none}
+.dg-fill-g{fill:var(--positive)} .dg-fill-a{fill:var(--warning)} .dg-fill-r{fill:var(--coral)}
+.dg-cap{text-align:center; font-size:var(--small-size); color:var(--s-muted); margin-top:10px}
+.dg-cap b{color:var(--s-text)}
+.diagram marker path{fill:var(--s-accent)}
+#ahHd path,#ahS2 path{fill:var(--s-faint)}
+
+/* ── TITLE SLIDE ─────────────────────────────────────────────────── */
+.title-slide{display:flex; flex-direction:column; justify-content:space-between; background:var(--ink);
+  padding:88px 96px 0}
+.ts-top{display:flex; justify-content:space-between; align-items:baseline; font:600 var(--fs-eyebrow) var(--font-mono);
+  letter-spacing:var(--track-eyebrow); text-transform:uppercase}
+.ts-top .k{color:var(--coral)}
+.ts-top .meta{color:var(--on-dark-faint); font-weight:500}
+.ts-hero h1{font-family:var(--font-display); font-weight:var(--w-bold); letter-spacing:-.035em; line-height:.9;
+  color:var(--on-dark); font-size:232px}
+.ts-hero h1 .dot{color:var(--coral)}
+.ts-sub{font-size:38px; color:var(--on-dark-muted); margin-top:44px; font-weight:400}
+.ts-sub b{color:var(--on-dark); font-weight:600}
+.ts-foot{border-top:var(--bw-hair) solid var(--line-dark); margin:0 -96px; padding:34px 96px 40px;
+  display:flex; justify-content:space-between; align-items:center}
+.ts-author{font-size:26px; color:var(--on-dark-muted)}
+.ts-author a{color:inherit;text-decoration:none;border-bottom:1px solid transparent;transition:border-color .15s}
+.ts-author a:hover{border-color:currentColor}
+.ts-author b{color:var(--coral); font-weight:var(--w-semibold)}
+.ts-loopline{font:500 24px var(--font-mono); letter-spacing:.04em; color:var(--on-dark-faint)}
+.ts-loopline .a{color:var(--coral)}
+.ts-loopline .w{color:var(--on-dark-muted)}
+
+/* ── CLOSING ─────────────────────────────────────────────────────── */
+.thanks{font-family:var(--font-display); font-weight:var(--w-bold); font-size:104px; line-height:.98;
+  letter-spacing:var(--track-tight); color:var(--s-text)}
+.thanks .o{color:var(--s-accent)}
+.links{display:grid; grid-template-columns:1fr 1fr; gap:var(--space-7)}
+.linkcol h3{color:var(--s-accent); font-family:var(--font-display); font-weight:var(--w-semibold);
+  margin-bottom:12px; font-size:26px; letter-spacing:var(--track-snug)}
+.linkcol a{display:block; color:var(--s-text); text-decoration:none; font-size:21px; line-height:1.32;
+  padding:7px 0; border-bottom:var(--bw-hair) solid var(--s-line)}
+.linkcol a:hover{color:var(--s-accent)}
+.linkcol a .u{display:block; color:var(--s-muted); font-family:var(--font-mono); font-size:.82em; margin-top:.08em}
+
+/* ── ENTRANCE MOTION ─────────────────────────────────────────────────
+   Visible end-state is the base style; we animate FROM hidden, only on
+   the active slide and only when motion is welcome. Print + reduced
+   motion therefore always show the finished slide. ─────────────────── */
+@keyframes ae-rise{from{opacity:0; transform:translateY(22px)} to{opacity:1; transform:none}}
+@media (prefers-reduced-motion:no-preference){
+  [data-deck-active] .reveal{animation:ae-rise .5s var(--ease) both}
+  [data-deck-active] .reveal:nth-child(2){animation-delay:.07s}
+  [data-deck-active] .reveal:nth-child(3){animation-delay:.14s}
+  [data-deck-active] .reveal:nth-child(4){animation-delay:.21s}
+  [data-deck-active] .reveal:nth-child(n+5){animation-delay:.27s}
+  [data-deck-active] .title-slide>*{animation:ae-rise .8s var(--ease) both}
+  [data-deck-active] .title-slide>.ts-hero{animation-delay:.15s}
+  [data-deck-active] .title-slide>.ts-foot{animation-delay:.3s}
+}
+</style>
+<style>
+.reference-title{font:var(--w-bold) clamp(48px,4vw,76px)/1.1 var(--font-display);margin-bottom:32px;color:var(--s-text)}
+.reference-banner{position:absolute;top:18px;right:96px;z-index:2;font:clamp(16px,1.1vw,21px)/1.3 var(--font-body);color:var(--s-muted)}
+.reference-banner a{color:inherit;text-decoration:underline}
+</style>
+<style>.note a{color:var(--s-text);text-decoration:underline;text-underline-offset:3px}.note a:focus-visible{outline:2px solid var(--s-accent);outline-offset:4px}</style>
+</head>
+<body>
+
+<!-- Optional reference deck. Use the main talk for the current teaching sequence. -->
+
+<deck-stage width="1920" height="1080">
+
+  <section class="slide dark" data-label="Reference guide" data-speaker-notes="This is an optional reference deck, not a continuation of the presentation. The original snapshot date is shown on each page. Omitted slides remain recoverable from the baseline Git commit.">
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">1</span><div class="crumb">Reference</div></div>
+      <h1 class="reference-title">Reference material</h1>
+      <div class="cards c2 reveal"><div class="tile"><span class="k">Use selectively</span><p>Product details and supporting examples from the original September 2026 deck.</p></div><div class="tile"><span class="k">Verify before reuse</span><p>Check availability, prices and limits with the linked primary sources.</p></div></div>
+      <p class="note reveal"><a href="agentic-ai.html">Return to the main talk</a></p>
+    </div>
+  </section>
+
+  <section data-origin-slide="7" class="slide reference-slide light" data-label="Glossary"
+    data-speaker-notes="REFERENCE ONLY. Product details reflect the original September 2026 snapshot and need verification before reuse. Do not read all nine — read Token, Context and Agent, and tell them the rest each get their own slide later. This exists so nobody spends the next twenty minutes quietly wondering what a token is. Say it out loud: this is a map, not a memory test.">
+    <div class="reference-banner">Reference · September 2026 snapshot · <a href="agentic-ai.html">Back to the talk</a></div>
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">2</span><div class="crumb"><b>Core</b> · cheat sheet</div></div>
+      <h2 class="reveal">Words you'll <span class="o">keep hearing</span></h2>
+      <div class="gloss reveal">
+        <div class="row"><span class="term">Token</span><span class="def">A chunk of text ≈ ¾ of a word (<i>un·believ·able</i> = 3). What models read &amp; bill in.</span></div>
+        <div class="row"><span class="term">Prompt</span><span class="def">The text you send the model.</span></div>
+        <div class="row"><span class="term">Context</span><span class="def">Everything the model sees in one call.</span></div>
+        <div class="row"><span class="term">Context window</span><span class="def">The max size of that context (1M tokens on today's top models).</span></div>
+        <div class="row"><span class="term">Tool call</span><span class="def">An action the model asks the harness to run.</span></div>
+        <div class="row"><span class="term">Harness</span><span class="def">The program running the model + its tools.</span></div>
+        <div class="row"><span class="term">Agent</span><span class="def">Model + harness, doing things in a loop.</span></div>
+        <div class="row"><span class="term">SOTA</span><span class="def">"State of the art" — today's best.</span></div>
+        <div class="row"><span class="term">MCP</span><span class="def">Model Context Protocol — a standard plug for tools/data.</span></div>
+      </div>
+      <p class="note reveal">Don't worry about memorising these — every one gets a slide of its own. This is just your map.</p>
+    </div>
+  </section>
+
+  <section data-origin-slide="18" class="slide reference-slide light dense" data-label="Today's models"
+    data-speaker-notes="REFERENCE ONLY. Product details reflect the original September 2026 snapshot and need verification before reuse. Do not read the table row by row — the pattern below it is the actual content. The same three tiers repeat at every maker: large, medium, small, plus a frontier tier on top lately. Say clearly that this reshuffles every few months, so treat any such list as a snapshot rather than a recommendation. Then the three stat tiles, left to right: SWE-bench Verified means fixing a real bug in a real repo; ARC-AGI-3 is deliberately built so it can&#x27;t be memorised, and GPT-6 Astra scores twice the next-best model on it; so six-month-old assumptions about what AI can&#x27;t do are usually wrong.">
+    <div class="reference-banner">Reference · September 2026 snapshot · <a href="agentic-ai.html">Back to the talk</a></div>
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">3</span><div class="crumb"><b>Landscape</b> · models</div></div>
+      <h2 class="reveal">Today's best <span class="o">models</span></h2>
+      <table class="tbl reveal">
+        <thead><tr><th>Maker</th><th>Flagship lineup (September 2026)</th><th>Known for</th></tr></thead>
+        <tbody>
+          <tr><td><b>Anthropic</b></td><td>Claude Fable 5.1 · <b>Opus 5.5</b> · Sonnet 5 · Haiku 4.5</td><td>coding, agents, long context</td></tr>
+          <tr><td><b>OpenAI</b></td><td>GPT‑6 — Astra · Sol · Luna</td><td>general reasoning, Codex</td></tr>
+          <tr><td><b>Google</b></td><td>Gemini 3.8 Flash · 3.5 Flash‑Lite <span style="color:var(--s-muted)">(3.5 Pro still unreleased)</span></td><td>multimodal, large context</td></tr>
+        </tbody>
+      </table>
+      <p class="note reveal">The same three tiers repeat everywhere: <b>large</b> (smartest, priciest) · <b>medium</b> (the sweet spot) · <b>small</b> (fast &amp; cheap) — and Anthropic adds a <b>frontier tier on top</b> (Claude Fable 5.1). It reshuffles every few months, so treat any list as a snapshot. How fast does it move? —</p>
+      <div class="cards c3 reveal" style="margin-top:18px">
+        <div class="tile stat"><span class="k">96%</span><p><b>SWE-bench Verified</b> — Opus 5 fixing real bugs in real code projects</p></div>
+        <div class="tile stat"><span class="k">2× the field</span><p><b>ARC-AGI-3</b> — GPT‑6 Astra scores <b>63%</b>, twice the next-best model, on puzzles built to resist memorising</p></div>
+        <div class="tile stat"><span class="k">~6 months</span><p>how long "what AI <b>can't</b> do" assumptions stay true</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section data-origin-slide="19" class="slide reference-slide dark" data-label="Which tier when"
+    data-speaker-notes="REFERENCE ONLY. Product details reflect the original September 2026 snapshot and need verification before reuse. Give them the practical version: medium is the daily driver, large is for when it really matters, small is for volume. The example at the bottom is the one to dwell on — cheap legwork by a small model, expensive thinking only where it counts. Mention that today&#x27;s medium often beats last year&#x27;s flagship, which is why defaults keep shifting.">
+    <div class="reference-banner">Reference · September 2026 snapshot · <a href="agentic-ai.html">Back to the talk</a></div>
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">4</span><div class="crumb"><b>Landscape</b> · picking a tier</div></div>
+      <h2 class="reveal">Which tier <span class="o">when?</span></h2>
+      <div class="cards c3 reveal">
+        <div class="tile fill"><span class="k">Large · Opus</span><p>Hard reasoning, tricky multi-file refactors, architecture. Pricier per word — but on hard work it gets there in <b>fewer steps.</b></p></div>
+        <div class="tile"><span class="k">Medium · Sonnet</span><p>The daily driver. Most coding &amp; agent work. Often beats last gen's flagship at a fraction of the cost.</p></div>
+        <div class="tile"><span class="k">Small · Haiku</span><p>High-volume, simple, fast: classification, quick edits, sub-agent grunt work.</p></div>
+      </div>
+      <p class="note reveal"><b>Example:</b> a cheap Haiku sub-agent skims 200 files and summarises; the pricey Opus only does the actual design call. Cheap legwork, expensive thinking only where needed. <b>But "pricey" is per word, not per job</b> — that turns out to matter, and we come back to it in a few slides.</p>
+    </div>
+  </section>
+
+  <section data-origin-slide="20" class="slide reference-slide light" data-label="Today's harnesses"
+    data-speaker-notes="REFERENCE ONLY. Product details reflect the original September 2026 snapshot and need verification before reuse. Name the two most people will meet — Claude Code and Codex — and treat the rest as a list, not a review. The line that matters is underneath: the harness decides what the model can actually do, so it is at least as important as the model. If someone asks which to pick, say most models run in most harnesses and the choice is mostly about how you like to work.">
+    <div class="reference-banner">Reference · September 2026 snapshot · <a href="agentic-ai.html">Back to the talk</a></div>
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">5</span><div class="crumb"><b>Landscape</b> · harnesses</div></div>
+      <h2 class="reveal">Today's best <span class="o">harnesses</span></h2>
+      <div class="cards c3 reveal">
+        <div class="tile fill"><span class="k">Claude Code</span><p>Anthropic. CLI + IDE + web. Agentic coding over your whole repo.</p></div>
+        <div class="tile"><span class="k">Codex</span><p>OpenAI's coding agent on GPT‑6 — in your terminal, with a cloud option.</p></div>
+        <div class="tile"><span class="k">Cursor</span><p>An IDE built around an AI agent.</p></div>
+        <div class="tile"><span class="k">GitHub Copilot</span><p>Agent + autocomplete inside your editor.</p></div>
+        <div class="tile"><span class="k">Devin Desktop</span><p>Another agentic IDE (ex‑Windsurf).</p></div>
+        <div class="tile"><span class="k">Aider</span><p>Open-source terminal coding agent.</p></div>
+      </div>
+      <p class="note reveal">The harness decides what the model can <b>actually do</b> — tools, sandboxing, memory, parallelism. At least as important as the model.</p>
+    </div>
+  </section>
+
+  <section data-origin-slide="22" class="slide reference-slide light" data-label="Lovable"
+    data-speaker-notes="REFERENCE ONLY. Product details reflect the original September 2026 snapshot and need verification before reuse. First of three quick looks beyond coding. Lovable is the poster child of prompt-to-app: describe what you want in plain language, get a working web app with pages, a database and login, then keep iterating by chat. Land the connection out loud — it is the same model-plus-harness loop from earlier, just wrapped in a friendly website instead of a terminal. Name-drop v0 and Bolt as the same category so nobody thinks it is one magic product.">
+    <div class="reference-banner">Reference · September 2026 snapshot · <a href="agentic-ai.html">Back to the talk</a></div>
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">6</span><div class="crumb"><b>Landscape</b> · beyond code</div></div>
+      <h2 class="reveal">Lovable: describe an app, <span class="o">get an app</span></h2>
+      <div class="split">
+        <div class="diagram reveal"><img class="shot" src="assets/tools/lovable.png" alt="Lovable's homepage: 'Build something Lovable — create apps and websites by chatting with AI', with a single prompt box"></div>
+        <ul class="bul reveal">
+          <li>You <b>describe</b> the app in plain language — Lovable builds a <b>working web app</b>: pages, database, login, hosting.</li>
+          <li>Then you <b>iterate by chat</b>: "make the header sticky", "add a monthly chart" — it edits the live app.</li>
+          <li>Underneath: <b>the same agent loop</b> we just saw, wrapped in a website. Same category: <b>v0, Bolt, Replit.</b></li>
+        </ul>
+      </div>
+      <p class="note reveal"><b>Example:</b> "Build an expense tracker: add expenses, a monthly chart, login." → minutes later, a running app on a shareable link — source code included.</p>
+    </div>
+  </section>
+
+  <section data-origin-slide="23" class="slide reference-slide dark" data-label="Higgsfield"
+    data-speaker-notes="REFERENCE ONLY. Product details reflect the original September 2026 snapshot and need verification before reuse. Second stop: video generation. Higgsfield turns text or image prompts into finished clips — cinematic camera moves, characters that stay consistent across shots, many generation models under one roof. The agentic part to point at is the AI director: it splits your idea into shots, generates each, and stitches them — our loop again, different domain. It is aimed squarely at marketing and social content; the product-URL-to-ready-ad flow usually gets a reaction. Keep expectations honest: short punchy clips, not feature films.">
+    <div class="reference-banner">Reference · September 2026 snapshot · <a href="agentic-ai.html">Back to the talk</a></div>
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">7</span><div class="crumb"><b>Landscape</b> · beyond code</div></div>
+      <h2 class="reveal">Higgsfield: video from a <span class="o">prompt</span></h2>
+      <div class="split">
+        <ul class="bul reveal">
+          <li>Text or image in → <b>finished video out</b>: cinematic camera moves, characters that stay <b>consistent</b> across shots.</li>
+          <li>An <b>AI director</b> splits your idea into shots, generates each, stitches them — <b>our loop again</b>, different domain.</li>
+          <li>Built for <b>marketing &amp; social</b> — even "product URL in → ready-made ad out". Same category: <b>Veo, Kling, Runway.</b></li>
+        </ul>
+        <div class="diagram reveal"><img class="shot" src="assets/tools/higgsfield.png" alt="Higgsfield's explore page with tiles for Cinema Studio, Seedance 2.0, and other video generation tools"></div>
+      </div>
+      <p class="note reveal"><b>Example:</b> "A 15-second ad for our mobile bank: phone in hand, city at dusk, upbeat." → storyboard → shots → rendered clip, ready for social.</p>
+    </div>
+  </section>
+
+  <section data-origin-slide="24" class="slide reference-slide light" data-label="HyperFrames"
+    data-speaker-notes="REFERENCE ONLY. Product details reflect the original September 2026 snapshot and need verification before reuse. Close the trio with HyperFrames and connect it back to the deck: it renders video from an ordinary web page, deterministically — and writing web pages is exactly what coding agents are good at. Claude Code installs it as a skill (that word gets its own slide later) and then edits video the way it edits code, by chat. Same file in, same video out, which is what makes it automatable. If anyone asks: this deck&#x27;s own animations are the same video-from-code idea.">
+    <div class="reference-banner">Reference · September 2026 snapshot · <a href="agentic-ai.html">Back to the talk</a></div>
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">8</span><div class="crumb"><b>Landscape</b> · beyond code</div></div>
+      <h2 class="reveal">HyperFrames: agents that <span class="o">make video</span></h2>
+      <div class="split">
+        <div class="diagram reveal"><img class="shot" src="assets/tools/hyperframes.png" alt="HyperFrames homepage: 'HyperFrames lets AI agents compose videos by writing HTML, CSS and JS' — an HTML file on the left rendering to a video on the right"></div>
+        <ul class="bul reveal">
+          <li>Open-source (HeyGen): a <b>web page</b> with timing attributes in → a pixel-perfect <b>MP4</b> out.</li>
+          <li>Built <b>for agents</b>: Claude Code installs it as a skill, then <b>edits video by chat</b> — the way it edits code.</li>
+          <li>Same file in → <b>same video out, every time</b> — ideal for explainers, product demos, captions.</li>
+        </ul>
+      </div>
+      <p class="note reveal"><b>Example:</b> "Turn this slide's diagram into a 20-second animated explainer." → the agent writes the HTML, renders it, hands you the MP4.</p>
+    </div>
+  </section>
+
+  <section data-origin-slide="25" class="slide reference-slide light" data-label="Subscriptions"
+    data-speaker-notes="REFERENCE ONLY. Product details reflect the original September 2026 snapshot and need verification before reuse. Keep this brisk: free, roughly twenty a month for entry, roughly a hundred or two hundred for heavy use. What the higher tiers buy is more usage and earlier access to the newest models, not a different product. Flag the date, prices move, so verify before quoting any of this outside the room.">
+    <div class="reference-banner">Reference · September 2026 snapshot · <a href="agentic-ai.html">Back to the talk</a></div>
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">9</span><div class="crumb"><b>Landscape</b> · plans</div></div>
+      <h2 class="reveal">Subscriptions <span class="o">(consumer)</span></h2>
+      <table class="tbl reveal">
+        <thead><tr><th>Tier</th><th>Claude (Anthropic)</th><th>ChatGPT (OpenAI)</th></tr></thead>
+        <tbody>
+          <tr><td><b>Free</b></td><td>limited usage</td><td>limited usage</td></tr>
+          <tr><td><b>Entry</b></td><td>Pro — ~$20/mo</td><td>Go ~$8 · Plus ~$20/mo</td></tr>
+          <tr><td><b>Power</b></td><td>Max 5× ~$100 · Max 20× ~$200/mo</td><td>Pro 5× ~$100 · Pro 20× ~$200/mo <span style="color:var(--s-muted)">(20× sign-ups paused)</span></td></tr>
+        </tbody>
+      </table>
+      <p class="note reveal">Higher tiers buy <b>more usage</b> and <b>priority access</b> to the newest models. Prices as of September 2026 — they change often, so verify before quoting.</p>
+    </div>
+  </section>
+
+  <section data-origin-slide="27" class="slide reference-slide dark" data-label="Cost per task" data-speaker-notes="REFERENCE ONLY. Product details reflect the original September 2026 snapshot and need verification before reuse. This replaces the crowded benchmark collection. No new measurement is claimed. For simple work, a smaller model can remain the better choice.">
+    <div class="reference-banner">Reference · September 2026 snapshot · <a href="agentic-ai.html">Back to the talk</a></div>
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">10</span><div class="crumb">Reference · task cost</div></div>
+      <h2 class="reveal">Compare the cost of an accepted result</h2>
+      <div class="cards c2 reveal"><div class="tile"><span class="k">Cheap tokens, many retries</span><p>A low unit price can be offset by more tool calls, reasoning and failed attempts.</p></div><div class="tile"><span class="k">Higher unit price, fewer attempts</span><p>A more capable model can win on a difficult task. Measure rather than assuming it will.</p></div></div>
+      <p class="note reveal">Compare the same task and acceptance check. Include all attempts, cached input, fresh input and output.</p>
+    </div>
+  </section>
+
+  <section data-origin-slide="34" class="slide reference-slide dark" data-label="Unattended runs" data-speaker-notes="REFERENCE ONLY. Product details reflect the original September 2026 snapshot and need verification before reuse. Reference guidance for discussing unattended runs. Never recommend bypass mode merely because work is in a separate folder or on CI.">
+    <div class="reference-banner">Reference · September 2026 snapshot · <a href="agentic-ai.html">Back to the talk</a></div>
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">11</span><div class="crumb">Reference · permissions</div></div>
+      <h2 class="reveal">Isolation must restrict real access</h2>
+      <ul class="bul reveal"><li>Use a disposable environment with only the files the task needs.</li><li>Limit network destinations and remove production credentials.</li><li>Apply a time or token budget and retain the final diff and logs.</li><li>A project copy, worktree or CI runner is not automatically a security boundary.</li></ul>
+      <p class="note reveal">Keep approvals where the environment cannot safely contain the consequence.</p>
+    </div>
+  </section>
+
+  <section data-origin-slide="42" class="slide reference-slide light" data-label="Sources 1 of 2"
+    data-speaker-notes="REFERENCE ONLY. Product details reflect the original September 2026 snapshot and need verification before reuse. Leave this up while questions run rather than reading it. Point out the two most useful starting places for a beginner — the Claude models overview and the pricing page — and say the rest are there for anyone who wants the primary source. Mention the deck lives in the repo, so nobody needs to photograph the links.">
+    <div class="reference-banner">Reference · September 2026 snapshot · <a href="agentic-ai.html">Back to the talk</a></div>
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">12</span><div class="crumb"><b>Sources</b> · further reading</div></div>
+      <h2 class="reveal">Sources &amp; <span class="o">links</span> (1/2)</h2>
+      <div class="links reveal">
+        <div class="linkcol">
+          <h3>Models &amp; pricing</h3>
+          <a href="https://platform.claude.com/docs/en/models/overview" target="_blank" rel="noopener">Anthropic — Claude models overview<span class="u">platform.claude.com/docs · models</span></a>
+          <a href="https://claude.com/pricing" target="_blank" rel="noopener">Claude — plans &amp; pricing<span class="u">claude.com/pricing</span></a>
+          <a href="https://www.anthropic.com/news/claude-opus-5" target="_blank" rel="noopener">Anthropic — Claude Opus 5 (benchmarks)<span class="u">anthropic.com/news · claude-opus-5</span></a>
+          <a href="https://www.anthropic.com/news/claude-opus-4-5" target="_blank" rel="noopener">Anthropic — Opus 4.5: effort &amp; token efficiency<span class="u">anthropic.com/news · claude-opus-4-5</span></a>
+          <a href="https://openai.com/index/gpt-6-astra/" target="_blank" rel="noopener">OpenAI — GPT-6 (Astra · Sol · Luna)<span class="u">openai.com/index/gpt-6-astra</span></a>
+          <a href="https://arcprize.org/leaderboard" target="_blank" rel="noopener">ARC Prize — ARC-AGI-3 leaderboard<span class="u">arcprize.org/leaderboard</span></a>
+          <a href="https://chatgpt.com/pricing/" target="_blank" rel="noopener">ChatGPT — pricing tiers<span class="u">chatgpt.com/pricing</span></a>
+          <a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/" target="_blank" rel="noopener">Google — Gemini 3.8 Flash<span class="u">blog.google · 3-8-flash</span></a>
+        </div>
+        <div class="linkcol">
+          <h3>Harnesses</h3>
+          <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">Claude Code — memory &amp; CLAUDE.md<span class="u">code.claude.com/docs · memory</span></a>
+          <a href="https://code.claude.com/docs/en/sub-agents" target="_blank" rel="noopener">Claude Code — sub-agents<span class="u">code.claude.com/docs · sub-agents</span></a>
+          <a href="https://openai.com/codex/" target="_blank" rel="noopener">OpenAI — Codex<span class="u">openai.com/codex</span></a>
+          <a href="https://github.com/openai/codex" target="_blank" rel="noopener">Codex CLI — source<span class="u">github.com/openai/codex</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section data-origin-slide="43" class="slide reference-slide light" data-label="Sources 2 of 2"
+    data-speaker-notes="REFERENCE ONLY. Product details reflect the original September 2026 snapshot and need verification before reuse. These are the papers behind the claims made earlier — context rot, lost in the middle, and the reasoning-faithfulness research from the thinking section. Point at them if anyone challenges a number. Repeat the closing caveat: everything here was verified in September 2026 and moves fast, so re-check before quoting.">
+    <div class="reference-banner">Reference · September 2026 snapshot · <a href="agentic-ai.html">Back to the talk</a></div>
+    <div class="slide-content">
+      <div class="slide-head reveal"><span class="snum">13</span><div class="crumb"><b>Sources</b> · context, memory &amp; MCP</div></div>
+      <h2 class="reveal">Sources &amp; <span class="o">links</span> (2/2)</h2>
+      <div class="links reveal">
+        <div class="linkcol">
+          <h3>Context, caching &amp; reasoning</h3>
+          <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">Anthropic — Effective context engineering<span class="u">anthropic.com/engineering</span></a>
+          <a href="https://www.trychroma.com/research/context-rot" target="_blank" rel="noopener">Chroma — Context Rot (18-model study)<span class="u">trychroma.com/research/context-rot</span></a>
+          <a href="https://arxiv.org/abs/2307.03172" target="_blank" rel="noopener">Liu et al. — Lost in the Middle<span class="u">arxiv.org/abs/2307.03172</span></a>
+          <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noopener">Anthropic — Prompt caching<span class="u">platform.claude.com/docs · prompt-caching</span></a>
+          <a href="https://platform.claude.com/docs/en/build-with-claude/thinking" target="_blank" rel="noopener">Anthropic — Extended / adaptive thinking<span class="u">platform.claude.com/docs · thinking</span></a>
+          <a href="https://www.anthropic.com/research/reasoning-models-dont-say-think" target="_blank" rel="noopener">Anthropic — Reasoning models don't always say what they think<span class="u">anthropic.com/research · cot-faithfulness</span></a>
+        </div>
+        <div class="linkcol">
+          <h3>Skills, plugins &amp; MCP</h3>
+          <a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills" target="_blank" rel="noopener">Anthropic — Agent Skills<span class="u">anthropic.com/engineering · agent-skills</span></a>
+          <a href="https://github.com/anthropics/skills" target="_blank" rel="noopener">Anthropic — Skills repo (SKILL.md)<span class="u">github.com/anthropics/skills</span></a>
+          <a href="https://www.anthropic.com/news/model-context-protocol" target="_blank" rel="noopener">Anthropic — Introducing MCP<span class="u">anthropic.com/news · model-context-protocol</span></a>
+          <a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">Model Context Protocol — spec &amp; docs<span class="u">modelcontextprotocol.io</span></a>
+        </div>
+      </div>
+      <p class="note reveal">All figures verified September 2026. Models &amp; prices move fast — re-check the primary sources before quoting.</p>
+    </div>
+  </section>
+
+</deck-stage>
+<script src="ember_design_system/deck-stage.js"></script>
+<script>
+  /* restart embedded explainer videos when their slide becomes active */
+  document.querySelector('deck-stage').addEventListener('slidechange', function(e){
+    var v = e.detail.slide && e.detail.slide.querySelector('video');
+    if (v) { v.currentTime = 0; var p = v.play(); if (p && p.catch) p.catch(function(){}); }
+  });
+</script>
+
+<style id="presenter-ui-css">
+  /* ─── Presenter aids (outside <deck-stage>: siblings paint above it) ─── */
+  .pui-controls{
+    position:fixed; right:18px; bottom:18px; z-index:40;
+    display:flex; gap:8px;
+    opacity:0; transition:opacity .25s; pointer-events:none;
+  }
+  body.pui-mouse .pui-controls,
+  .pui-controls:hover,
+  .pui-controls:focus-within{ opacity:1; pointer-events:auto; }
+  .pui-controls button{
+    font:var(--w-semibold) 12px/1 var(--font-mono); letter-spacing:.08em;
+    color:var(--on-dark-muted); background:var(--ink-2);
+    border:1px solid var(--line-dark); border-radius:var(--radius-pill);
+    padding:9px 14px; cursor:pointer;
+  }
+  .pui-controls button:hover{ color:var(--paper); border-color:var(--coral); }
+  .pui-controls kbd{ color:var(--coral); font:inherit; margin-left:6px; }
+  .pui-notes{
+    position:fixed; left:0; right:0; bottom:0; z-index:39;
+    background:var(--ink-2); color:var(--on-dark);
+    border-top:2px solid var(--coral);
+    padding:20px 34px 24px; max-height:38vh; overflow:auto;
+    font:var(--w-regular) clamp(15px,1.6vw,21px)/1.55 var(--font-b, var(--font-body));
+    display:none;
+  }
+  .pui-notes.open{ display:block; }
+  .pui-notes .pui-nhead{
+    font:var(--w-semibold) 12px/1 var(--font-mono); letter-spacing:.12em;
+    text-transform:uppercase; color:var(--coral); margin-bottom:12px;
+  }
+  @media print{ .pui-controls, .pui-notes{ display:none !important; } }
+</style>
+<div class="pui-controls">
+  <button type="button" data-pui="notes">NOTES<kbd>N</kbd></button>
+  <button type="button" data-pui="present">PRESENT<kbd>P</kbd></button>
+  <button type="button" data-pui="fullscreen">FULLSCREEN<kbd>F</kbd></button>
+</div>
+<div class="pui-notes" role="note" aria-live="polite">
+  <div class="pui-nhead"></div>
+  <div class="pui-nbody"></div>
+</div>
+
+<script>
+/* ─── Presenter aids: notes overlay (N), fullscreen (F), presenter window (P) ─── */
+(function(){
+  if (window.self !== window.top) return; /* skip when embedded by a host/viewer */
+  var ds = document.querySelector('deck-stage');
+  var notesEl = document.querySelector('.pui-notes');
+  var nHead = notesEl.querySelector('.pui-nhead');
+  var nBody = notesEl.querySelector('.pui-nbody');
+  var current = Math.max(0, Array.from(ds.querySelectorAll(':scope > section')).findIndex(function(s){ return s.hasAttribute('data-deck-active'); })), presenter = null, mouseT = null;
+
+  function slides(){ return Array.prototype.slice.call(ds.querySelectorAll(':scope > section')); }
+  function noteOf(s){ return s.getAttribute('data-speaker-notes') || 'No notes for this slide.'; }
+  function labelOf(s){ return s.getAttribute('data-label') || ''; }
+
+  /* controls fade in on mouse activity, like the component's own overlay */
+  document.addEventListener('mousemove', function(){
+    document.body.classList.add('pui-mouse');
+    clearTimeout(mouseT);
+    mouseT = setTimeout(function(){ document.body.classList.remove('pui-mouse'); }, 1800);
+  });
+
+  function syncNotes(){
+    var all = slides(), s = all[current];
+    if (!s) return;
+    nHead.textContent = 'Notes · ' + labelOf(s) + ' · ' + (current + 1) + ' / ' + all.length;
+    nBody.textContent = noteOf(s);
+  }
+  function toggleNotes(){ notesEl.classList.toggle('open'); if (notesEl.classList.contains('open')) syncNotes(); }
+
+  function toggleFullscreen(){
+    if (document.fullscreenElement) { document.exitFullscreen(); }
+    else { document.documentElement.requestFullscreen().catch(function(){}); }
+  }
+  /* fullscreen = clean presenting surface: hide the thumbnail rail while in it */
+  var railWasOff = false;
+  document.addEventListener('fullscreenchange', function(){
+    if (document.fullscreenElement) {
+      railWasOff = ds.hasAttribute('no-rail');
+      ds.setAttribute('no-rail', '');
+    } else if (!railWasOff) {
+      ds.removeAttribute('no-rail');
+    }
+  });
+
+  /* ── presenter window: current + next previews, notes, timer, clock ── */
+  function openPresenter(){
+    if (presenter && !presenter.closed) { presenter.focus(); return; }
+    presenter = window.open('', 'deck-presenter', 'width=1200,height=760');
+    if (!presenter) {
+      nHead.textContent = 'Presenter window';
+      nBody.textContent = 'The browser blocked the pop-up — allow pop-ups for this page and press P again.';
+      notesEl.classList.add('open');
+      return;
+    }
+    var pd = presenter.document;
+    pd.open();
+    pd.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Presenter — ' + document.title.replace(/</g,'&lt;') + '</title><base href="' + document.baseURI + '"></head><body></body></html>');
+    pd.close();
+    /* carry the deck's stylesheets + tokens over so slide clones render 1:1 */
+    document.head.querySelectorAll('link[rel="stylesheet"], link[rel="preconnect"], style').forEach(function(el){
+      var c = pd.importNode(el, true);
+      if (el.tagName === 'LINK' && el.href) c.setAttribute('href', el.href);
+      pd.head.appendChild(c);
+    });
+    var st = pd.createElement('style');
+    st.textContent =
+      '*,*::before,*::after{animation:none !important;transition:none !important}' +
+      'html,body{margin:0;height:100%;background:#0e0c08;color:var(--on-dark);font-family:var(--font-m,monospace);overflow:hidden}' +
+      '.pw{display:grid;grid-template-rows:52px 1fr;height:100%}' +
+      '.pw-bar{display:flex;align-items:center;gap:22px;padding:0 20px;border-bottom:1px solid var(--line-dark);font-size:13px;letter-spacing:.06em;color:var(--on-dark-muted)}' +
+      '.pw-bar .cnt{color:var(--coral);font-weight:700;font-size:16px}' +
+      '.pw-bar .lbl{color:var(--paper);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}' +
+      '.pw-bar .tmr{cursor:pointer}.pw-bar .tmr b{color:var(--paper)}' +
+      '.pw-bar button{font:inherit;color:var(--on-dark-muted);background:none;border:1px solid var(--line-dark);border-radius:6px;padding:5px 12px;cursor:pointer}' +
+      '.pw-bar button:hover{color:var(--paper);border-color:var(--coral)}' +
+      '.pw-main{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:14px;padding:14px;min-height:0}' +
+      '.pw-col{display:grid;grid-template-rows:auto 1fr;min-height:0;gap:8px}' +
+      '.pw-col.right{grid-template-rows:auto auto auto minmax(0,1fr)}' +
+      '.pw-cap{font-size:11px;letter-spacing:.14em;color:var(--on-dark-faint);text-transform:uppercase}' +
+      '.pw-box{position:relative;min-height:0;overflow:hidden;border:1px solid var(--line-dark);border-radius:8px;background:#000}' +
+      '.pw-canvas{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;background:var(--paper)}' +
+      '.pw-canvas > section{width:1920px;height:1080px;position:relative;overflow:hidden}' +
+      '.pw-notes{overflow:auto;font-family:var(--font-b,sans-serif);font-size:19px;line-height:1.55;color:var(--on-dark);padding-right:6px}';
+    pd.head.appendChild(st);
+    pd.body.innerHTML =
+      '<div class="pw">' +
+        '<div class="pw-bar">' +
+          '<span class="cnt"></span><span class="lbl"></span>' +
+          '<span class="tmr" title="click to reset">elapsed <b class="el">00:00</b></span>' +
+          '<span>clock <b class="ck"></b></span>' +
+          '<button data-nav="-1">‹ prev</button><button data-nav="1">next ›</button>' +
+        '</div>' +
+        '<div class="pw-main">' +
+          '<div class="pw-col"><div class="pw-cap">Current</div><div class="pw-box" id="pwCur"><div class="pw-canvas"></div></div></div>' +
+          '<div class="pw-col right"><div class="pw-cap">Next</div><div class="pw-box" id="pwNext" style="aspect-ratio:16/9;min-height:120px"><div class="pw-canvas"></div></div>' +
+          '<div class="pw-cap" style="margin-top:6px">Notes</div><div class="pw-notes"></div></div>' +
+        '</div>' +
+      '</div>';
+
+    var t0 = Date.now();
+    function two(n){ return (n < 10 ? '0' : '') + n; }
+    function tick(){
+      if (presenter.closed) return;
+      var el = Math.floor((Date.now() - t0) / 1000);
+      pd.querySelector('.el').textContent = two(Math.floor(el / 60)) + ':' + two(el % 60);
+      var d = new Date();
+      pd.querySelector('.ck').textContent = two(d.getHours()) + ':' + two(d.getMinutes());
+      presenter.setTimeout(tick, 1000);
+    }
+    tick();
+    pd.querySelector('.tmr').addEventListener('click', function(){ t0 = Date.now(); });
+
+    function fit(boxId){
+      var box = pd.getElementById(boxId), cv = box.querySelector('.pw-canvas');
+      var k = Math.min(box.clientWidth / 1920, box.clientHeight / 1080);
+      cv.style.transform = 'scale(' + k + ')';
+      cv.style.left = ((box.clientWidth - 1920 * k) / 2) + 'px';
+      cv.style.top = ((box.clientHeight - 1080 * k) / 2) + 'px';
+    }
+    function fill(boxId, slide){
+      var cv = pd.getElementById(boxId).querySelector('.pw-canvas');
+      cv.textContent = '';
+      if (slide) {
+        var c = pd.importNode(slide, true);
+        c.setAttribute('data-deck-active', '');
+        cv.appendChild(c);
+      }
+      fit(boxId);
+    }
+    presenter.__update = function(i){
+      var all = slides(), s = all[i];
+      if (!s) return;
+      var next = i + 1;
+      while (next < all.length && all[next].hasAttribute('data-deck-skip')) next++;
+      fill('pwCur', s);
+      fill('pwNext', all[next] || null);
+      pd.querySelector('.cnt').textContent = (i + 1) + ' / ' + all.length;
+      pd.querySelector('.lbl').textContent = labelOf(s) + (all[next] ? '   →   next: ' + labelOf(all[next]) : '   ·   last slide');
+      pd.querySelector('.pw-notes').textContent = noteOf(s);
+    };
+    presenter.addEventListener('resize', function(){ fit('pwCur'); fit('pwNext'); });
+    pd.addEventListener('keydown', function(e){
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); ds.next(); }
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); ds.prev(); }
+      else if (e.key === 'Home') { ds.goTo(0); }
+      else if (e.key === 'End') { ds.goTo(slides().length - 1); }
+    });
+    pd.querySelectorAll('[data-nav]').forEach(function(b){
+      b.addEventListener('click', function(){ this.dataset.nav === '1' ? ds.next() : ds.prev(); });
+    });
+    presenter.__update(current);
+  }
+
+  ds.addEventListener('slidechange', function(e){
+    current = e.detail.index;
+    if (notesEl.classList.contains('open')) syncNotes();
+    if (presenter && !presenter.closed && presenter.__update) presenter.__update(current);
+  });
+
+  document.addEventListener('keydown', function(e){
+    var t = e.target;
+    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = e.key.toLowerCase();
+    if (k === 'n') { toggleNotes(); }
+    else if (k === 'f') { toggleFullscreen(); }
+    else if (k === 'p') { openPresenter(); }
+  });
+  document.querySelector('[data-pui="notes"]').addEventListener('click', toggleNotes);
+  document.querySelector('[data-pui="fullscreen"]').addEventListener('click', toggleFullscreen);
+  document.querySelector('[data-pui="present"]').addEventListener('click', openPresenter);
+})();
+</script>
+</body>
+</html>

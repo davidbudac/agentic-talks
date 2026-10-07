@@ -1,0 +1,22 @@
+Raw attribute/href comparison: source orchestrating-agents-reference.html vs orchestrating-agents-reference-ivory.html
+slide count 4 4
+01-04 data-label        OK (byte-identical)
+01-04 data-origin-slide OK (0, 5, 21, 29)
+01-04 data-speaker-notes OK (byte-identical)
+01-04 hrefs             OK (identical order and count; audit.json "links")
+  01: orchestrating-agents.html ×2
+  02: orchestrating-agents.html, https://herdr.org, https://conductor.build, https://github.com/openai/symphony, https://github.com/mattpocock/sandcastle
+  03: orchestrating-agents.html, https://code.claude.com/docs/en/plugins, https://code.claude.com/docs/en/plugin-marketplaces
+  04: orchestrating-agents.html
+
+Shared audit: python3 ivory-conversion/audit.py orchestrating-agents-reference.html orchestrating-agents-reference-ivory.html → exit 0,
+structural_errors [], per-slide errors [] on 4/4 (audit.json).
+
+Visible-text differences (from audit.json, explained):
+01  Same words reordered into the accepted opener: crumb "Optional reference" (was .ts-top .k), h2 "Orchestrating Agents / Reference",
+    tile 1 subtitle + "Return to the main talk", tile 2 "David Budáč" + "Revised October 2026" (was .ts-top .meta),
+    footer note "Optional reference · Back to the talk" (banner verbatim; both "Optional reference" occurrences kept).
+    Removed: title .dot "." only (audit: "Reference." → "Reference").
+02-04  Crumb merged with banner: "In practice · …" / "Publication reference · Optional reference · Back to the talk"
+    (one "·" added; audit reports crumb moving to the front). All other text identical.
+All   Hand-written .snum digits 2/3/4 dropped (deck.js renders 01–04 / 04). Code line numbers 01–08 (03) and 01–05 (04) are CSS decoration.

@@ -1,0 +1,332 @@
+{
+  "source": "subagents-prompt-caching.html",
+  "output": "subagents-prompt-caching-ivory.html",
+  "counts": [
+    21,
+    21
+  ],
+  "structural_errors": [],
+  "slides": [
+    {
+      "slide": 1,
+      "label": "Title",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "replace",
+          "source": "adminsRevised October 2026",
+          "output": "admins"
+        },
+        {
+          "kind": "replace",
+          "source": "Caching.",
+          "output": "Caching"
+        },
+        {
+          "kind": "replace",
+          "source": "David",
+          "output": "AuthorDavid"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "RevisedOctober 2026"
+        }
+      ],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Deep dive · developers and IT adminsRevised October 2026 Subagents & Prompt Caching. Separate working contexts. Reuse matching input. David Budáč",
+      "output_text": "Deep dive · developers and IT admins Subagents & Prompt Caching Separate working contexts. Reuse matching input. AuthorDavid Budáč RevisedOctober 2026"
+    },
+    {
+      "slide": 2,
+      "label": "Agenda",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Two mechanisms, two different outcomes Delegation Separate an investigation and return useful evidence. Caching Reuse computed work on eligible matching input. We will follow two helpers investigating an invoice export.",
+      "output_text": "In practice Two mechanisms, two different outcomes Delegation Separate an investigation and return useful evidence. Caching Reuse computed work on eligible matching input. We will follow two helpers investigating an invoice export."
+    },
+    {
+      "slide": 3,
+      "label": "Local and cloud map",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Architecture Where the work happens in this example Your computer Harness Lead + helper loops Local test tools Provider cloud API endpoint Model inference Provider prompt cache request → network → response Example topology: a local harness calling a hosted model. Harnesses and tools can also run remotely.",
+      "output_text": "Architecture Where the work happens in this example Your computer Harness Lead + helper loops Local test tools Provider cloud API endpoint Model inference Provider prompt cache request → network → response Example topology: a local harness calling a hosted model. Harnesses and tools can also run remotely."
+    },
+    {
+      "slide": 4,
+      "label": "Subagents",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Split the work · subagents Delegate a question; ask for evidence back Fresh helpers need a self-contained task and relevant inputs. Forks can inherit existing history. Keep intermediate investigation in the helper’s context; return findings with file references. Review the result. Delegation adds coordination cost and does not itself isolate filesystem access. Example return: VAT calculation locations, the failing path, supporting lines and unresolved questions.",
+      "output_text": "Split the work · subagents Delegate a question; ask for evidence back Fresh helpers need a self-contained task and relevant inputs. Forks can inherit existing history. Keep intermediate investigation in the helper’s context; return findings with file references. Review the result. Delegation adds coordination cost and does not itself isolate filesystem access. Example return: VAT calculation locations, the failing path, supporting lines and unresolved questions."
+    },
+    {
+      "slide": 5,
+      "label": "Delegation lifecycle",
+      "errors": [],
+      "text_changes": [
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "01"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "02"
+        },
+        {
+          "kind": "insert",
+          "source": "",
+          "output": "03"
+        }
+      ],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Delegate → investigate → return → integrate Delegate Task, inputs, limits and expected return. Investigate Helper uses tools within its own working context. Integrate Lead checks the returned evidence and resolves conflicts. These are lifecycle steps. The investigation is not a network crossing.",
+      "output_text": "In practice Delegate → investigate → return → integrate 01 Delegate Task, inputs, limits and expected return. 02 Investigate Helper uses tools within its own working context. 03 Integrate Lead checks the returned evidence and resolves conflicts. These are lifecycle steps. The investigation is not a network crossing."
+    },
+    {
+      "slide": 6,
+      "label": "Fresh or forked",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://code.claude.com/docs/en/sub-agents"
+        ],
+        [
+          "https://code.claude.com/docs/en/sub-agents"
+        ]
+      ],
+      "source_text": "In practice Choose what the helper inherits Fresh helper Conversation fork Task prompt plus its configured instructions and tools. Existing conversation and configured environment. Provide the invoice rule and paths explicitly. Useful when the background is expensive to restate. In both cases, specify scope and the evidence to return. Claude Code subagents and forks",
+      "output_text": "In practice Choose what the helper inherits Fresh helper Conversation fork Task prompt plus its configured instructions and tools. Existing conversation and configured environment. Provide the invoice rule and paths explicitly. Useful when the background is expensive to restate. In both cases, specify scope and the evidence to return. Claude Code subagents and forks"
+    },
+    {
+      "slide": 7,
+      "label": "Return contract",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Ask for an answer you can inspect TASK: locate invoice VAT and CSV formatting paths. RETURN: - finding + file and line reference - relevant test or observed output - uncertainty and missing evidence - suggested next check SCOPE: read-only investigation; do not change files. A short unsupported conclusion saves tokens by discarding the part you need.",
+      "output_text": "In practice Ask for an answer you can inspect TASK: locate invoice VAT and CSV formatting paths. RETURN: - finding + file and line reference - relevant test or observed output - uncertainty and missing evidence - suggested next check SCOPE: read-only investigation; do not change files. A short unsupported conclusion saves tokens by discarding the part you need."
+    },
+    {
+      "slide": 8,
+      "label": "Parallel work",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Parallelize independent investigations Helper A Locate VAT calculation and its tests. Helper B Locate CSV formatting and escaping tests. Lead Resolve the shared contract and own the final patch. Independent reads can overlap. Edits need ownership and an integration step.",
+      "output_text": "In practice Parallelize independent investigations Helper A Locate VAT calculation and its tests. Helper B Locate CSV formatting and escaping tests. Lead Resolve the shared contract and own the final patch. Independent reads can overlap. Edits need ownership and an integration step."
+    },
+    {
+      "slide": 9,
+      "label": "Delegation economics",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Count the setup and the review Potential benefit Less raw investigation in the lead context; shorter elapsed time for independent work. Additional work Helper input, generated output, coordination and checking the returned findings. Delegation can be worthwhile without being cheaper. Compare accepted outcomes.",
+      "output_text": "In practice Count the setup and the review Potential benefit Less raw investigation in the lead context; shorter elapsed time for independent work. Additional work Helper input, generated output, coordination and checking the returned findings. Delegation can be worthwhile without being cheaper. Compare accepted outcomes."
+    },
+    {
+      "slide": 10,
+      "label": "Call versus agent",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice One model call is not a tool-using helper loop PSEUDOCODE context = task + configured_instructions while budget_remains: response = model(context) if response.requests_tools: context += permitted_tool_results(response) else: return structured_findings(response) return incomplete_report() Handle errors, multiple content blocks and stop reasons in real code.",
+      "output_text": "In practice One model call is not a tool-using helper loop PSEUDOCODE context = task + configured_instructions while budget_remains: response = model(context) if response.requests_tools: context += permitted_tool_results(response) else: return structured_findings(response) return incomplete_report() Handle errors, multiple content blocks and stop reasons in real code."
+    },
+    {
+      "slide": 11,
+      "label": "Illustrative helper return",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice A compact trace still needs evidence ILLUSTRATIVE — not a recorded Claude Code session Lead: investigate invoice calculation and export. Helper A: calc.py applies no VAT; see invoice rule. Helper B: export.py writes the calculated total unchanged. Lead: verify those findings, then plan one scoped patch. Tool counts, timings and costs should come from a real run if you quote them.",
+      "output_text": "In practice A compact trace still needs evidence ILLUSTRATIVE — not a recorded Claude Code session Lead: investigate invoice calculation and export. Helper A: calc.py applies no VAT; see invoice rule. Helper B: export.py writes the calculated total unchanged. Lead: verify those findings, then plan one scoped patch. Tool counts, timings and costs should come from a real run if you quote them."
+    },
+    {
+      "slide": 12,
+      "label": "KV caching",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "The bill · KV cache · how Caching reuses work on a matching prefix A prompt cache can reuse computed state for eligible, matching earlier content. Keep reusable instructions stable. Changes can invalidate the affected prefix and later content. Inspect cache usage records: expiry, minimum length and provider rules affect whether you get a hit. Animation shows prefix reuse. Its price label is illustrative; rates vary. Cached content still occupies context.",
+      "output_text": "The bill · KV cache · how Caching reuses work on a matching prefix A prompt cache can reuse computed state for eligible, matching earlier content. Keep reusable instructions stable. Changes can invalidate the affected prefix and later content. Inspect cache usage records: expiry, minimum length and provider rules affect whether you get a hit. Animation shows prefix reuse. Its price label is illustrative; rates vary. Cached content still occupies context."
+    },
+    {
+      "slide": 13,
+      "label": "Shared prefix example",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        ],
+        [
+          "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        ]
+      ],
+      "source_text": "In practice Keep the shared material before the questions Shared eligible prefix tools + stable instructions + invoice schema Request A: Where is VAT applied? Request B: Where is CSV escaping handled? Changing the question need not change the shared prefix. A matching prefix must be eligible and already cached; stable text alone does not create a hit. Caching docs",
+      "output_text": "In practice Keep the shared material before the questions Shared eligible prefix tools + stable instructions + invoice schema Request A: Where is VAT applied? Request B: Where is CSV escaping handled? Changing the question need not change the shared prefix. A matching prefix must be eligible and already cached; stable text alone does not create a hit. Caching docs"
+    },
+    {
+      "slide": 14,
+      "label": "Token volume and cost",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Count the work Count each billing category separately Category What to record Uncached input New input processed at its applicable input rate. Cache writes and reads Separate token counts and the configured cache rates. Generated output Output usage, including billable reasoning where applicable. Bill = sum of each category’s tokens × its rate, plus any separate tool or service fees.",
+      "output_text": "Count the work Count each billing category separately Category What to record Uncached input New input processed at its applicable input rate. Cache writes and reads Separate token counts and the configured cache rates. Generated output Output usage, including billable reasoning where applicable. Bill = sum of each category’s tokens × its rate, plus any separate tool or service fees."
+    },
+    {
+      "slide": 15,
+      "label": "Cache break-even",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "Worked arithmetic Include the write before counting savings Same eligible prefix; all later requests hit the cache. Normalize ordinary input cost to 1 per request. Total cached cost = w + (n − 1)r Caching saves when w + (n − 1)r < n. Example r = 0.10: w = 1.25 → savings at 2 requests w = 2.00 → savings at 3 requests Illustrative multipliers: verify model, platform, TTL and expiry rules. A cache miss changes the calculation.",
+      "output_text": "Worked arithmetic Include the write before counting savings Same eligible prefix; all later requests hit the cache. Normalize ordinary input cost to 1 per request. Total cached cost = w + (n − 1)r Caching saves when w + (n − 1)r < n. Example r = 0.10: w = 1.25 → savings at 2 requests w = 2.00 → savings at 3 requests Illustrative multipliers: verify model, platform, TTL and expiry rules. A cache miss changes the calculation."
+    },
+    {
+      "slide": 16,
+      "label": "Cache lifetime",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        ],
+        [
+          "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        ]
+      ],
+      "source_text": "In practice Reuse depends on a live, eligible entry Claude documents a default five-minute cache lifetime and an optional one-hour lifetime. A use refreshes the lifetime from the request start; generation time counts against it. Minimum prefix length, matching, platform support and writes also determine hits. Check the usage fields and current configuration. Provider caching documentation",
+      "output_text": "In practice Reuse depends on a live, eligible entry Claude documents a default five-minute cache lifetime and an optional one-hour lifetime. A use refreshes the lifetime from the request start; generation time counts against it. Minimum prefix length, matching, platform support and writes also determine hits. Check the usage fields and current configuration. Provider caching documentation"
+    },
+    {
+      "slide": 17,
+      "label": "Verify cache usage",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [],
+        []
+      ],
+      "source_text": "In practice Look for what was read and written Usage record Meaning cache_creation_input_tokens New content written to the prompt cache. cache_read_input_tokens Input reused from a cache entry. Uncached input and output Additional work outside that cached read. Zeros are a diagnostic clue, not proof of why the cache missed. Compare complete task cost.",
+      "output_text": "In practice Look for what was read and written Usage record Meaning cache_creation_input_tokens New content written to the prompt cache. cache_read_input_tokens Input reused from a cache entry. Uncached input and output Additional work outside that cached read. Zeros are a diagnostic clue, not proof of why the cache missed. Compare complete task cost."
+    },
+    {
+      "slide": 18,
+      "label": "Warm-up before fan-out",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        ],
+        [
+          "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+        ]
+      ],
+      "source_text": "In practice Concurrent requests do not guarantee shared hits 1. Prepare one eligible prefix and matching cache settings. 2. Start a request that writes that prefix. 3. Wait until its response begins and the entry is available. 4. Send matching helper requests; inspect cache usage. Cold simultaneous requests can duplicate cache writes. Claude cache limits",
+      "output_text": "In practice Concurrent requests do not guarantee shared hits 1. Prepare one eligible prefix and matching cache settings. 2. Start a request that writes that prefix. 3. Wait until its response begins and the entry is available. 4. Send matching helper requests; inspect cache usage. Cold simultaneous requests can duplicate cache writes. Claude cache limits"
+    },
+    {
+      "slide": 19,
+      "label": "Choose authentication",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://code.claude.com/docs/en/legal-and-compliance"
+        ],
+        [
+          "https://code.claude.com/docs/en/legal-and-compliance"
+        ]
+      ],
+      "source_text": "In practice Choose the supported client and credential path Native Claude Code use Sign in through the official flow under the applicable plan and usage rules. Your product or service Use API-key authentication or a supported cloud-provider route. The boundary is not simply “human at keyboard” versus “automation”. Current authentication guidance",
+      "output_text": "In practice Choose the supported client and credential path Native Claude Code use Sign in through the official flow under the applicable plan and usage rules. Your product or service Use API-key authentication or a supported cloud-provider route. The boundary is not simply “human at keyboard” versus “automation”. Current authentication guidance"
+    },
+    {
+      "slide": 20,
+      "label": "Takeaways",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "subagents-prompt-caching-reference.html"
+        ],
+        [
+          "subagents-prompt-caching-reference.html"
+        ]
+      ],
+      "source_text": "In practice Separate investigation. Verify reuse. Give helpers explicit inputs and require evidence in the return. Separate working contexts do not enforce filesystem or network isolation. Warm eligible shared prefixes and inspect actual cache reads and writes. Delegation changes where work accumulates. Caching changes the processing cost of repeated input. Optional reference material",
+      "output_text": "In practice Separate investigation. Verify reuse. Give helpers explicit inputs and require evidence in the return. Separate working contexts do not enforce filesystem or network isolation. Warm eligible shared prefixes and inspect actual cache reads and writes. Delegation changes where work accumulates. Caching changes the processing cost of repeated input. Optional reference material"
+    },
+    {
+      "slide": 21,
+      "label": "Sources",
+      "errors": [],
+      "text_changes": [],
+      "links": [
+        [
+          "https://code.claude.com/docs/en/sub-agents",
+          "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+          "https://code.claude.com/docs/en/legal-and-compliance"
+        ],
+        [
+          "https://code.claude.com/docs/en/sub-agents",
+          "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+          "https://code.claude.com/docs/en/legal-and-compliance"
+        ]
+      ],
+      "source_text": "Sources Sources and further reading Subagents and forks Prompt caching and usage Authentication and usage terms Primary documentation checked 3 October 2026. Examples are illustrative unless explicitly attributed.",
+      "output_text": "Sources Sources and further reading Subagents and forks Prompt caching and usage Authentication and usage terms Primary documentation checked 3 October 2026. Examples are illustrative unless explicitly attributed."
+    }
+  ]
+}

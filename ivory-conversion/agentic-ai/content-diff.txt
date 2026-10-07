@@ -1,0 +1,147 @@
+audit.py agentic-ai.html agentic-ai-ivory.html  (exit 0)
+slide counts: [26, 26]  structural_errors: []
+
+## 01 Title  errors=[]
+   hrefs source: ['https://davidbudac.cz']
+   hrefs output: ['https://davidbudac.cz']
+   replace: 'AIRevised October 2026' -> 'AI'
+   replace: 'AI.' -> 'AI'
+   replace: 'David' -> 'AuthorDavid'
+   replace: 'model → harness → agent ↺' -> 'RevisedOctober 2026'
+
+## 02 The hook  errors=[]
+   hrefs source: []
+   hrefs output: []
+
+## 03 Chatbot vs agent  errors=[]
+   hrefs source: []
+   hrefs output: []
+
+## 04 Agenda  errors=[]
+   hrefs source: []
+   hrefs output: []
+   replace: 'loop Who' -> 'loopWho'
+   replace: 'work Supply' -> 'workSupply'
+   replace: 'result Inspect' -> 'resultInspect'
+
+## 05 Model in the cloud  errors=[]
+   hrefs source: []
+   hrefs output: []
+
+## 06 No memory in practice  errors=[]
+   hrefs source: []
+   hrefs output: []
+
+## 07 What one turn sends  errors=[]
+   hrefs source: []
+   hrefs output: []
+
+## 08 Optional demo  errors=[]
+   hrefs source: []
+   hrefs output: []
+
+## 09 The agent loop  errors=[]
+   hrefs source: []
+   hrefs output: []
+
+## 10 The loop, worked example  errors=[]
+   hrefs source: []
+   hrefs output: []
+
+## 11 Thinking  errors=[]
+   hrefs source: []
+   hrefs output: []
+
+## 12 Choose an interface  errors=[]
+   hrefs source: []
+   hrefs output: []
+   insert: '' -> '01'
+   insert: '' -> '02'
+   insert: '' -> '03'
+
+## 13 Choose a billing route  errors=[]
+   hrefs source: []
+   hrefs output: []
+
+## 14 What context is  errors=[]
+   hrefs source: []
+   hrefs output: []
+
+## 15 Context quality  errors=[]
+   hrefs source: []
+   hrefs output: []
+
+## 16 Keep context useful  errors=[]
+   hrefs source: []
+   hrefs output: []
+   insert: '' -> '01'
+   insert: '' -> '02'
+   insert: '' -> '03'
+
+## 17 Caching and compaction  errors=[]
+   hrefs source: []
+   hrefs output: []
+
+## 18 Sub-agents  errors=[]
+   hrefs source: []
+   hrefs output: []
+
+## 19 Permissions  errors=[]
+   hrefs source: []
+   hrefs output: []
+   insert: '' -> '01'
+   insert: '' -> '02'
+   insert: '' -> '03'
+
+## 20 Project rules  errors=[]
+   hrefs source: []
+   hrefs output: []
+
+## 21 Skills and plugins  errors=[]
+   hrefs source: []
+   hrefs output: []
+
+## 22 Tools for the invoice task  errors=[]
+   hrefs source: []
+   hrefs output: []
+   insert: '' -> '01'
+   insert: '' -> '02'
+   insert: '' -> '03'
+
+## 23 MCP  errors=[]
+   hrefs source: []
+   hrefs output: []
+
+## 24 Your first agent task  errors=[]
+   hrefs source: ['agentic-ai-reference.html', 'index.html']
+   hrefs output: ['agentic-ai-reference.html', 'index.html']
+
+## 25 Sources 1 of 2  errors=[]
+   hrefs source: ['https://platform.claude.com/docs/en/models/overview', 'https://claude.com/pricing', 'https://www.anthropic.com/news/claude-opus-5', 'https://www.anthropic.com/news/claude-opus-4-5', 'https://openai.com/index/gpt-6-astra/', 'https://arcprize.org/leaderboard', 'https://chatgpt.com/pricing/', 'https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/', 'https://code.claude.com/docs/en/memory', 'https://code.claude.com/docs/en/sub-agents', 'https://openai.com/codex/', 'https://github.com/openai/codex']
+   hrefs output: ['https://platform.claude.com/docs/en/models/overview', 'https://claude.com/pricing', 'https://www.anthropic.com/news/claude-opus-5', 'https://www.anthropic.com/news/claude-opus-4-5', 'https://openai.com/index/gpt-6-astra/', 'https://arcprize.org/leaderboard', 'https://chatgpt.com/pricing/', 'https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/', 'https://code.claude.com/docs/en/memory', 'https://code.claude.com/docs/en/sub-agents', 'https://openai.com/codex/', 'https://github.com/openai/codex']
+   replace: 'overviewplatform.claude.com/docs' -> 'overview platform.claude.com/docs'
+   replace: 'pricingclaude.com/pricing' -> 'pricing claude.com/pricing'
+   replace: '(benchmarks)anthropic.com/news' -> '(benchmarks) anthropic.com/news'
+   replace: 'efficiencyanthropic.com/news' -> 'efficiency anthropic.com/news'
+   replace: 'Luna)openai.com/index/gpt-6-astra' -> 'Luna) openai.com/index/gpt-6-astra'
+   replace: 'leaderboardarcprize.org/leaderboard' -> 'leaderboard arcprize.org/leaderboard'
+   replace: 'tierschatgpt.com/pricing' -> 'tiers chatgpt.com/pricing'
+   replace: 'Flashblog.google' -> 'Flash blog.google'
+   replace: 'CLAUDE.mdcode.claude.com/docs' -> 'CLAUDE.md code.claude.com/docs'
+   replace: 'sub-agentscode.claude.com/docs' -> 'sub-agents code.claude.com/docs'
+   replace: 'Codexopenai.com/codex' -> 'Codex openai.com/codex'
+   replace: 'sourcegithub.com/openai/codex' -> 'source github.com/openai/codex'
+
+## 26 Sources 2 of 2  errors=[]
+   hrefs source: ['https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents', 'https://www.trychroma.com/research/context-rot', 'https://arxiv.org/abs/2307.03172', 'https://platform.claude.com/docs/en/build-with-claude/prompt-caching', 'https://platform.claude.com/docs/en/build-with-claude/thinking', 'https://www.anthropic.com/research/reasoning-models-dont-say-think', 'https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills', 'https://github.com/anthropics/skills', 'https://www.anthropic.com/news/model-context-protocol', 'https://modelcontextprotocol.io']
+   hrefs output: ['https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents', 'https://www.trychroma.com/research/context-rot', 'https://arxiv.org/abs/2307.03172', 'https://platform.claude.com/docs/en/build-with-claude/prompt-caching', 'https://platform.claude.com/docs/en/build-with-claude/thinking', 'https://www.anthropic.com/research/reasoning-models-dont-say-think', 'https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills', 'https://github.com/anthropics/skills', 'https://www.anthropic.com/news/model-context-protocol', 'https://modelcontextprotocol.io']
+   replace: 'engineeringanthropic.com/engineering' -> 'engineering anthropic.com/engineering'
+   replace: 'study)trychroma.com/research/context-rot' -> 'study) trychroma.com/research/context-rot'
+   replace: 'Middlearxiv.org/abs/2307.03172' -> 'Middle arxiv.org/abs/2307.03172'
+   replace: 'cachingplatform.claude.com/docs' -> 'caching platform.claude.com/docs'
+   replace: 'thinkingplatform.claude.com/docs' -> 'thinking platform.claude.com/docs'
+   replace: 'thinkanthropic.com/research' -> 'think anthropic.com/research'
+   replace: 'Skillsanthropic.com/engineering' -> 'Skills anthropic.com/engineering'
+   replace: '(SKILL.md)github.com/anthropics/skills' -> '(SKILL.md) github.com/anthropics/skills'
+   replace: 'MCPanthropic.com/news' -> 'MCP anthropic.com/news'
+   replace: 'docsmodelcontextprotocol.io' -> 'docs modelcontextprotocol.io'
