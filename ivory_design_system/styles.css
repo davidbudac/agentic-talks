@@ -5,7 +5,7 @@
    (column n starts at 120 + 142(n−1); a span of n columns is 142n − 24 wide).
    Fixed y: header text 64 · header rule 108 · headline top 172 ·
             zone top = headline's last line + 72 (326 one line / 408 two lines) ·
-            zone bottom 888 · footer rule 960 · footnote 983 · source 1027.
+            zone bottom 888. No footer row (footnote/source hidden).
    Content type: 30px and 40px only. Labels 20px mono. Footnote 26px.
    A deck links this file (fonts are bundled below) and loads deck-stage.js + deck.js.
    ═══════════════════════════════════════════════════════════════════════ */
@@ -76,8 +76,8 @@ deck-stage:not(:defined){visibility:hidden}
 .slide-content{display:contents}
 .slide svg{display:block;overflow:visible}
 
-/* footer hairline — fixed, on every slide */
-.slide::after{content:"";position:absolute;left:120px;right:120px;top:960px;height:1px;background:var(--rule);pointer-events:none}
+/* no footer row: the footer hairline, footnote (.note) and source line (.src) are hidden */
+.slide .note,.slide .src{display:none}
 
 /* mono label */
 .lab{font:500 var(--lab)/24px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}
