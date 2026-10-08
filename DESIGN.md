@@ -19,7 +19,7 @@ Videos for decks live in `assets/anim/`; use the `<name>-ivory.mp4` renders (ivo
 
 | Deck | Style |
 |---|---|
-| `agentic-engineering-ivory.html` | **Ivory** (30 slides; previously completed model) |
+| `agentic-engineering-ivory.html` | **Ivory** (32 slides; previously completed model) |
 | `cost-and-context-ivory.html` | **Ivory** (17 slides; converted and verified) |
 | `ai-toolbox-ivory.html` | **Ivory** (31 slides; converted and verified) |
 | `agentic-ai-ivory.html` | **Ivory** (26 slides; converted and verified) |
