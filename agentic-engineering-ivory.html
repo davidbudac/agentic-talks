@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>Agentic Engineering — basics for developers</title>
 <link rel="stylesheet" href="ivory_design_system/styles.css">
-<style>:root{--deck-total:"30"}</style>
 </head>
 <body>
 
@@ -18,7 +17,7 @@
   statelessness) → 04 the loop (agents, verifiers) → 05 the bill
   (cost growth, KV cache, context rot) → 06 split the work
   (routing, subagents, workflows) → 07 make it stick (CLAUDE.md,
-  skills, plugins). One thread throughout: the CONTEXT WINDOW.
+  MEMORY.md, skills, plugins). One thread throughout: the CONTEXT WINDOW.
   No live demos; skill/plugin sections are static walkthroughs.
   Ivory design system (DESIGN.md, ivory_design_system/).
   Runs on the deck-stage component: ←/→, Space, Home/End,
@@ -31,20 +30,20 @@
 
 <!-- 01 · Title -->
 <section data-origin-slide="1" class="slide title-slide" data-label="Title"
-    data-speaker-notes="Developer follow-up. One illustrative invoice task ties the talk together. No live demo or benchmark run is implied. We will explain the machinery, set a finish line, count cost and make the useful practices repeatable.">
-  <div class="slide-head"><span class="crumb">A developer's guide to coding agents</span><span class="snum">01</span></div>
+    data-speaker-notes="Developer follow-up. One invoice task ties the talk together. No live demo needed. We will explain the machinery, set a finish line, count cost and make the useful practices repeatable.">
+  <div class="slide-head"><span class="crumb">A developer's guide to coding agents</span><span class="snum"></span></div>
   <h1>Agentic<br>Engineering</h1>
   <p class="sub">From <b>token prediction</b> to <b>bounded, verified work</b></p>
   <div class="meta">
     <div><span class="lab">Author</span><a href="https://davidbudac.cz" target="_blank" rel="noopener">David&nbsp;Budáč</a></div>
     <div><span class="lab">Revised</span>October 2026</div>
-    <div><span class="lab">Length</span>30 slides</div>
+    <div><span class="lab">Length</span>32 slides</div>
   </div>
 </section>
 
 <!-- 02 · The hook -->
 <section data-origin-slide="2" class="slide" data-label="The hook" data-speaker-notes="Start with an invoice whose net amount is 100 and whose order specifies 21 percent VAT. The expected total is 121. Do not act out the second prompt as a guaranteed win. The point is that we can now inspect the change against an explicit rule.">
-  <div class="slide-head"><span class="crumb">The invoice task</span><span class="snum">02</span></div>
+  <div class="slide-head"><span class="crumb">The invoice task</span><span class="snum"></span></div>
   <h2>A useful task has a finish line</h2>
   <div class="zone">
     <div class="cards c2">
@@ -52,12 +51,12 @@
       <div class="tile key"><span class="lab">Checkable request</span><p>“Apply the VAT rate from the order. Preserve the tests, run the invoice suite, and show the diff.”</p></div>
     </div>
   </div>
-  <p class="note">Illustrative comparison, not two measured runs. A clearer request makes the result easier to assess; it does not guarantee success.</p>
+  <p class="note">A clearer request does not guarantee success, but it makes the result much easier to check.</p>
 </section>
 
 <!-- 03 · Agenda -->
 <section data-origin-slide="3" class="slide" data-label="Agenda" data-speaker-notes="The invoice calculation and export are two parts of the same example project. Use this route instead of seven chapter dividers. Supporting recipes are in the reference deck.">
-  <div class="slide-head"><span class="crumb">Our route</span><span class="snum">03</span></div>
+  <div class="slide-head"><span class="crumb">Our route</span><span class="snum"></span></div>
   <h2>Build a loop you can trust enough to use</h2>
   <div class="zone">
     <ol class="bul def wide">
@@ -72,7 +71,7 @@
 <!-- 04 · Next-token prediction -->
 <section data-origin-slide="5" class="slide" data-label="Next-token prediction"
     data-speaker-notes="Keep the next-token animation. Do not equate a trained language model with a one-word phone keyboard or imply that next-token generation rules out learned reasoning capabilities.">
-  <div class="slide-head"><span class="crumb">The predictor · what an LLM does</span><span class="snum">04</span></div>
+  <div class="slide-head"><span class="crumb">The predictor · what an LLM does</span><span class="snum"></span></div>
   <h2>The model generates one token at a time</h2>
   <div class="zone">
     <div class="split">
@@ -92,70 +91,74 @@
 
 <!-- 05 · Attention (Ember: diagram above bullets → Ivory split: rows left, figure right) -->
 <section data-origin-slide="7" class="slide" data-label="Attention"
-    data-speaker-notes="Use the invoice diagram to explain why relevant earlier facts can influence a later answer. Do not derive a fixed attention budget or quality threshold from softmax weights. Architecture and task both matter.">
-  <div class="slide-head"><span class="crumb">The predictor · attention</span><span class="snum">05</span></div>
+    data-speaker-notes="Use the invoice diagram to explain why relevant earlier facts can influence a later answer. Do not derive a fixed attention budget or quality threshold from softmax weights. Architecture and task both matter. Say while the figure is up: attention layers combine information from token positions with different weights. Supply the VAT rule and relevant code; availability in context still does not guarantee correct use.">
+  <div class="slide-head"><span class="crumb">The predictor · attention</span><span class="snum"></span></div>
   <h2>Attention connects information in context</h2>
   <div class="zone">
-    <div class="split">
-      <ul class="bul">
-        <li>Attention layers combine information from token positions with different weights.</li>
-        <li>Supply the VAT rule and relevant code. Availability in context still does not guarantee correct use.</li>
-      </ul>
-      <div class="fig">
-        <svg viewBox="0 0 828 480" role="img" aria-label="Conceptual links from a later token to earlier invoice-related tokens; not measured attention weights">
-          <!-- drawn 1:1 for a split figure under a two-line headline: 828 × 480.
-               Tokens stacked in reading order (column 7); links run from the predicted
-               position back to earlier tokens, nested so they never cross. -->
-          <defs>
-            <marker id="s05-a" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L12,6 L0,12 Z"/></marker>
-            <marker id="s05-d" class="dim" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L12,6 L0,12 Z"/></marker>
-          </defs>
-          <text class="dg-t mut" x="0" y="20">illustration: earlier tokens can influence</text>
-          <text class="dg-t mut" x="0" y="46">the next prediction</text>
-          <!-- links: predicted box right edge → lane → token -->
-          <path class="dg-line dim" d="M260,475 H760 V105 H262" marker-end="url(#s05-d)"/>
-          <path class="dg-line" d="M260,465 H660 V175 H262" marker-end="url(#s05-a)"/>
-          <path class="dg-line" d="M260,455 H560 V245 H262" marker-end="url(#s05-a)"/>
-          <path class="dg-line dim" d="M260,445 H460 V315 H262" marker-end="url(#s05-d)"/>
-          <path class="dg-line" d="M260,435 H360 V385 H262" marker-end="url(#s05-a)"/>
-          <!-- tokens -->
-          <rect class="dg-box" x="1" y="81" width="258" height="48" rx="2"/>
-          <rect class="dg-box" x="1" y="151" width="258" height="48" rx="2"/>
-          <rect class="dg-box" x="1" y="221" width="258" height="48" rx="2"/>
-          <rect class="dg-box" x="1" y="291" width="258" height="48" rx="2"/>
-          <rect class="dg-box" x="1" y="361" width="258" height="48" rx="2"/>
-          <rect class="dg-box key" x="1" y="431" width="258" height="48" rx="2"/>
-          <text class="dg-t" x="130" y="114" text-anchor="middle">The</text>
-          <text class="dg-t" x="130" y="184" text-anchor="middle">invoice</text>
-          <text class="dg-t" x="130" y="254" text-anchor="middle">test</text>
-          <text class="dg-t" x="130" y="324" text-anchor="middle">expects</text>
-          <text class="dg-t" x="130" y="394" text-anchor="middle">VAT</text>
-          <text class="dg-t key" x="130" y="464" text-anchor="middle">so ___ ?</text>
-        </svg>
-      </div>
+    <div class="fig">
+      <span class="lab">Earlier tokens influence the next prediction</span>
+      <svg viewBox="0 0 1680 440" role="img" aria-label="Conceptual links from the position being predicted back to earlier invoice-related tokens; not measured attention weights">
+        <!-- drawn 1:1 for a full-width figure with caption under a two-line headline: 1680 × 440.
+             Tokens sit on the bottom edge in reading order, one per two columns. Links run from
+             the predicted position back to earlier tokens as nested orthogonal arcs, the farthest
+             highest, so none cross. Strong links slate, weak links hairline; the predicted
+             position is the one clay element. The two bullets of the source slide are in the notes. -->
+        <defs>
+          <marker id="s05-a" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L12,6 L0,12 Z"/></marker>
+          <marker id="s05-d" class="dim" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L12,6 L0,12 Z"/></marker>
+        </defs>
+        <!-- legend, top right -->
+        <path class="dg-line" d="M1180,12 H1220"/><text class="dg-t mut" x="1236" y="19">stronger link</text>
+        <path class="dg-line dim" d="M1440,12 H1480"/><text class="dg-t mut" x="1496" y="19">weaker link</text>
+        <!-- links: predicted box top → lane → token top -->
+        <path class="dg-line dim" d="M1610,360 V44 H130 V359" marker-end="url(#s05-d)"/>
+        <path class="dg-line" d="M1570,360 V104 H414 V359" marker-end="url(#s05-a)"/>
+        <path class="dg-line" d="M1530,360 V164 H698 V359" marker-end="url(#s05-a)"/>
+        <path class="dg-line dim" d="M1490,360 V224 H982 V359" marker-end="url(#s05-d)"/>
+        <path class="dg-line" d="M1450,360 V284 H1266 V359" marker-end="url(#s05-a)"/>
+        <!-- tokens -->
+        <rect class="dg-box" x="1" y="360" width="258" height="79" rx="2"/>
+        <rect class="dg-box" x="284" y="360" width="260" height="79" rx="2"/>
+        <rect class="dg-box" x="568" y="360" width="260" height="79" rx="2"/>
+        <rect class="dg-box" x="852" y="360" width="260" height="79" rx="2"/>
+        <rect class="dg-box" x="1136" y="360" width="260" height="79" rx="2"/>
+        <rect class="dg-box key" x="1420" y="360" width="259" height="79" rx="2"/>
+        <text class="dg-t" x="130" y="409" text-anchor="middle">The</text>
+        <text class="dg-t" x="414" y="409" text-anchor="middle">invoice</text>
+        <text class="dg-t" x="698" y="409" text-anchor="middle">test</text>
+        <text class="dg-t" x="982" y="409" text-anchor="middle">expects</text>
+        <text class="dg-t" x="1266" y="409" text-anchor="middle">VAT</text>
+        <text class="dg-t key" x="1550" y="409" text-anchor="middle">so ___ ?</text>
+      </svg>
     </div>
   </div>
   <p class="note">Conceptual diagram: multiple heads and layers contribute. Context is an input you curate, not a literal program.</p>
 </section>
 
 <!-- 06 · Reasoning and effort -->
-<section data-origin-slide="10" class="slide" data-label="Reasoning and effort" data-speaker-notes="This is an explanation a developer can check, not a transcript of private model reasoning. Arithmetic alone cannot establish the intended tax rule; the order record supplies it. More effort does not guarantee a better answer. Exact controls and treatment of reasoning tokens depend on provider and model.">
-  <div class="slide-head"><span class="crumb">Model behavior</span><span class="snum">06</span></div>
-  <h2>More reasoning is a setting to evaluate</h2>
+<section data-origin-slide="10" class="slide" data-label="Reasoning and effort" data-speaker-notes="The point from slides 4 and 5: reasoning is the model generating intermediate steps as tokens, which then sit in context and can be attended to before the answer. Arithmetic alone cannot establish the intended tax rule; the order record supplies it. More effort does not guarantee a better answer. Names of effort controls and treatment of reasoning tokens depend on provider and model.">
+  <div class="slide-head"><span class="crumb">Model behavior</span><span class="snum"></span></div>
+  <h2>Reasoning: the model writes steps into its context before answering</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="c">Illustrative check, not a hidden reasoning trace:</span></span>
-      <span class="l"><span class="k">Order:</span> net 100.00; VAT rate 21%</span>
-      <span class="l"><span class="k">Expected total:</span> 100.00 × 1.21 = 121.00</span>
-      <span class="l">Now check the rule, rounding and implementation.</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Same model, same question</span><span>effort: low vs high</span></div>
+      <div class="snip-body nonum">
+        <span class="l"><span class="tc"># question: why does the invoice test expect 121, not 100?</span></span>
+        <span class="l"><span class="tp">answer first</span>  › Probably a rounding bug.                      <span class="tk">✕ guess</span></span>
+        <span class="l"></span>
+        <span class="l"><span class="tc"># with reasoning: intermediate steps become context the answer can use</span></span>
+        <span class="l"><span class="tp">step</span>          › order says net <span class="tn">100.00</span>, VAT rate <span class="tn">21%</span></span>
+        <span class="l"><span class="tp">step</span>          › <span class="tn">100.00</span> × <span class="tn">1.21</span> = <span class="tn">121.00</span>, so the test expects VAT applied</span>
+        <span class="l"><span class="tp">answer</span>        › Apply the VAT rate from the order; check rounding.   <span class="tk">✓ checkable</span></span>
+      </div>
     </div>
   </div>
-  <p class="note">More deliberation can help, and can add time and cost. Compare supported effort settings on the same acceptance cases.</p>
+  <p class="note">Reasoning effort is a dial: more steps can help, and they cost time and tokens. Compare the supported settings on the same acceptance cases.</p>
 </section>
 
 <!-- 07 · Model, harness, client -->
 <section data-origin-slide="14" class="slide" data-label="Model, harness, client" data-speaker-notes="The model need not be rented or remote. This talk uses a common API-backed harness as its example. Tool execution can be local or remote, depending on the integration; compatibility across models and harnesses is not universal.">
-  <div class="slide-head"><span class="crumb">The machinery</span><span class="snum">07</span></div>
+  <div class="slide-head"><span class="crumb">The machinery</span><span class="snum"></span></div>
   <h2>Three parts, three different jobs</h2>
   <div class="zone">
     <div class="cards c3">
@@ -168,84 +171,32 @@
 </section>
 
 <!-- 08 · Anatomy of a tool call -->
-<section data-origin-slide="15" class="slide" data-label="Anatomy of a tool call" data-speaker-notes="The example command is pytest tests/test_invoice.py -q. A model can read tool output and still draw the wrong conclusion. Retain command, exit status and relevant output so another person can verify the claim.">
-  <div class="slide-head"><span class="crumb">The machinery</span><span class="snum">08</span></div>
-  <h2>A tool result becomes evidence for the next step</h2>
+<section data-origin-slide="15" class="slide" data-label="Anatomy of a tool call" data-speaker-notes="Read it top to bottom as three moments. One: the model's output is just structured text, a request to run pytest; nothing has happened yet. Two: the harness decides whether that is allowed, runs it, and sends the output back as a tool_result. Three: that output is now part of the context, and the model's next move follows from it: 121 is 100 times 1.21, so VAT is missing, so go and find where the total is computed. The model can still misread evidence, which is why we keep the command, exit status and output so a human can check the claim.">
+  <div class="slide-head"><span class="crumb">The machinery</span><span class="snum"></span></div>
+  <h2>Each tool result steers the next step</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="c">Illustrative tool exchange — syntax varies by harness</span></span>
-      <span class="l">model   <span class="a">→</span> request: run invoice tests</span>
-      <span class="l">harness <span class="a">→</span> execute permitted command in test environment</span>
-      <span class="l">tool    <span class="a">→</span> <span class="key">exit 1; expected 121.00, got 100.00</span></span>
-      <span class="l">model   <span class="a">→</span> inspect the VAT calculation; propose a patch</span>
+    <div class="snip">
+      <div class="snip-bar"><span>One tool round trip, as the API sees it</span><span>messages</span></div>
+      <div class="snip-body">
+        <span class="l"><span class="tc"># 1 · the model asks for an action; it runs nothing itself</span></span>
+        <span class="l">{<span class="tp">"type"</span>: <span class="ts">"tool_use"</span>, <span class="tp">"name"</span>: <span class="ts">"Bash"</span>,</span>
+        <span class="l"> <span class="tp">"input"</span>: {<span class="tp">"command"</span>: <span class="ts">"pytest tests/test_invoice.py -q"</span>}}</span>
+        <span class="l"><span class="tc"># 2 · the harness checks permissions, runs it, sends back the output</span></span>
+        <span class="l">{<span class="tp">"type"</span>: <span class="ts">"tool_result"</span>, <span class="tp">"is_error"</span>: <span class="tk">true</span>,</span>
+        <span class="l hl"> <span class="tp">"content"</span>: <span class="ts">"FAILED test_total: expected 121.00, got 100.00"</span>}</span>
+        <span class="l"><span class="tc"># 3 · that output is now context, and the next move follows from it</span></span>
+        <span class="l">{<span class="tp">"type"</span>: <span class="ts">"text"</span>, <span class="tp">"text"</span>: <span class="ts">"121 = 100 × 1.21, so VAT is never added. Finding the total."</span>}</span>
+        <span class="l">{<span class="tp">"type"</span>: <span class="ts">"tool_use"</span>, <span class="tp">"name"</span>: <span class="ts">"Grep"</span>, <span class="tp">"input"</span>: {<span class="tp">"pattern"</span>: <span class="ts">"def total"</span>}}</span>
+      </div>
     </div>
   </div>
-  <p class="note">A tool request is a proposal to execute. Permissions and the tool environment determine what actually happens.</p>
+  <p class="note">The model only proposes. Permissions and the environment decide what actually runs.</p>
 </section>
 
-<!-- 09 · Client and server -->
-<section data-origin-slide="16" class="slide" data-label="Client and server"
-    data-speaker-notes="Follow the arrows once. These are illustrative token counts, not a captured trace. The three bars show the context growing as tools add evidence. Some APIs retain conversation state; caching, retention and learned model memory are different concepts.">
-  <div class="slide-head"><span class="crumb">Hands · client &amp; server</span><span class="snum">09</span></div>
-  <h2>The harness supplies context for each call</h2>
-  <div class="zone">
-    <div class="fig">
-      <svg viewBox="0 0 1680 480" role="img" aria-label="Illustrative sequence: the harness supplies growing context to an API and runs permitted tools between calls">
-        <!-- drawn 1:1 for a full-width figure under a two-line headline: 1680 × 480.
-             Context bars to scale, 18px per 1k tokens. -->
-        <defs>
-          <marker id="s09-a" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L12,6 L0,12 Z"/></marker>
-          <marker id="s09-d" class="dim" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L12,6 L0,12 Z"/></marker>
-        </defs>
-        <!-- lifelines -->
-        <path class="dg-line dim" d="M130,80 V480 M840,80 V480 M1550,80 V480"/>
-        <!-- participants -->
-        <rect class="dg-box" x="1" y="1" width="258" height="78" rx="2"/>
-        <rect class="dg-box" x="710" y="1" width="260" height="78" rx="2"/>
-        <rect class="dg-box" x="1421" y="1" width="258" height="78" rx="2"/>
-        <text class="dg-t" x="130" y="49" text-anchor="middle">YOU</text>
-        <text class="dg-t" x="840" y="38" text-anchor="middle">HARNESS</text>
-        <text class="dg-t mut" x="840" y="64" text-anchor="middle">client</text>
-        <text class="dg-t" x="1550" y="38" text-anchor="middle">MODEL API</text>
-        <text class="dg-t mut" x="1550" y="64" text-anchor="middle">API endpoint</text>
-        <!-- request -->
-        <path class="dg-line" d="M130,124 H839" marker-end="url(#s09-a)"/>
-        <text class="dg-t mut" x="485" y="112" text-anchor="middle">type: "fix the bug"</text>
-        <!-- turn 1 -->
-        <rect class="dg-fill-key" x="738" y="166" width="90" height="20"/>
-        <text class="dg-t mut" x="724" y="183" text-anchor="end">context ~5k</text>
-        <path class="dg-line" d="M840,176 H1549" marker-end="url(#s09-a)"/>
-        <text class="dg-t acc" x="1195" y="164" text-anchor="middle">send context</text>
-        <path class="dg-line dim" d="M1550,208 H841" marker-end="url(#s09-d)"/>
-        <text class="dg-t mut" x="1195" y="198" text-anchor="middle">tokens + tool call</text>
-        <path class="dg-line" d="M840,224 H900 V248 H841" marker-end="url(#s09-a)"/>
-        <text class="dg-t mut" x="916" y="243">run tool locally</text>
-        <!-- turn 2 -->
-        <rect class="dg-fill-key" x="666" y="282" width="162" height="20"/>
-        <text class="dg-t mut" x="652" y="299" text-anchor="end">context ~9k</text>
-        <path class="dg-line" d="M840,292 H1549" marker-end="url(#s09-a)"/>
-        <text class="dg-t acc" x="1195" y="280" text-anchor="middle">send context — bigger</text>
-        <path class="dg-line dim" d="M1550,324 H841" marker-end="url(#s09-d)"/>
-        <text class="dg-t mut" x="1195" y="314" text-anchor="middle">tokens + tool call</text>
-        <path class="dg-line" d="M840,340 H900 V364 H841" marker-end="url(#s09-a)"/>
-        <text class="dg-t mut" x="916" y="359">run tool locally</text>
-        <!-- turn 3 -->
-        <rect class="dg-fill-key" x="576" y="398" width="252" height="20"/>
-        <text class="dg-t mut" x="562" y="415" text-anchor="end">context ~14k</text>
-        <path class="dg-line" d="M840,408 H1549" marker-end="url(#s09-a)"/>
-        <text class="dg-t acc" x="1195" y="396" text-anchor="middle">send context — bigger still</text>
-        <path class="dg-line dim" d="M1550,440 H841" marker-end="url(#s09-d)"/>
-        <text class="dg-t mut" x="1195" y="430" text-anchor="middle">final answer</text>
-      </svg>
-    </div>
-  </div>
-  <p class="note">Illustrative API-backed loop. History may be sent again, referenced through a stateful API, or compacted; it is not permanent model memory.</p>
-</section>
-
-<!-- 10 · The inner loop -->
+<!-- 09 · The inner loop -->
 <section data-origin-slide="21" class="slide" data-label="The inner loop"
     data-speaker-notes="The animation explains the action/result cycle. A production loop also needs configured time, cost and permission limits. Do not imply that every harness automatically checks the goal or keeps running until success.">
-  <div class="slide-head"><span class="crumb">The loop · the inner loop</span><span class="snum">10</span></div>
+  <div class="slide-head"><span class="crumb">The loop · the inner loop</span><span class="snum"></span></div>
   <h2>Keep going, with a limit and a stop condition</h2>
   <div class="zone">
     <div class="split">
@@ -263,23 +214,27 @@
   <p class="note">For the invoice fix: at most three repair attempts, then report evidence and unresolved failures.</p>
 </section>
 
-<!-- 11 · Verifiers -->
-<section data-origin-slide="23" class="slide" data-label="Verifiers" data-speaker-notes="Have a check tied to each requirement. A build verifies buildability, not tax correctness; a screenshot comparison can miss incorrect exported data. Keep important acceptance checks outside the agent-editable path where practical.">
-  <div class="slide-head"><span class="crumb">Define done</span><span class="snum">11</span></div>
+<!-- 10 · Verifiers -->
+<section data-origin-slide="23" class="slide" data-label="Verifiers" data-speaker-notes="The point: the agent will say done when its checks are green, so ask what each green check actually proves. Walk the rows. pytest passing proves the tests that ran pass; if nobody wrote a zero-VAT or rounding case, those are untested. If the agent edited the test file, a green run may just mean the assertion was changed to expect 100. A successful build proves the code compiles, not that totals are right. A CSV file existing proves nothing about its columns. The fix is to tie every requirement to a check that would fail if the requirement were broken, and keep the important ones where the agent cannot edit them.">
+  <div class="slide-head"><span class="crumb">Define done</span><span class="snum"></span></div>
   <h2>A green check proves only what it checks</h2>
   <div class="zone">
-    <div class="cards c3">
-      <div class="tile"><span class="lab">01</span><h3>Behavior</h3><p>VAT comes from the order; zero VAT and rounding cases pass.</p></div>
-      <div class="tile"><span class="lab">02</span><h3>Integrity</h3><p>Existing tests remain meaningful. Inspect changed assertions and test discovery.</p></div>
-      <div class="tile"><span class="lab">03</span><h3>Acceptance</h3><p>Review the diff and exported values against the task, including gaps in coverage.</p></div>
-    </div>
+    <table class="tbl c3">
+      <thead><tr><th scope="col">The agent reports</th><th scope="col">That proves</th><th scope="col" class="key">It does not prove</th></tr></thead>
+      <tbody>
+        <tr><td>“All 12 tests pass”</td><td>The tests that ran pass</td><td>Zero VAT or rounding work: no test covers them</td></tr>
+        <tr><td>“Tests green after my fix”</td><td>The edited test file passes</td><td>The rule is right: the assertion may now expect 100.00</td></tr>
+        <tr><td>“Build succeeds”</td><td>The code compiles</td><td>Any invoice total is correct</td></tr>
+        <tr><td>“Export written to out.csv”</td><td>A file exists</td><td>Net, VAT and gross are in the right columns</td></tr>
+      </tbody>
+    </table>
   </div>
-  <p class="note">Exit code 0 is useful evidence. It is not proof that the full task is correct.</p>
+  <p class="note">For each requirement, name the check that would fail if it were broken. Keep that check out of the agent's reach.</p>
 </section>
 
-<!-- 12 · Loop failure controls -->
+<!-- 11 · Loop failure controls -->
 <section data-origin-slide="24" class="slide" data-label="Loop failure controls" data-speaker-notes="The original called both failures spec bugs. Failures can also arise from model behavior, tools or environment. Do not promise an ungameable prompt. The controls reduce risk and make failure detectable.">
-  <div class="slide-head"><span class="crumb">Define done</span><span class="snum">12</span></div>
+  <div class="slide-head"><span class="crumb">Define done</span><span class="snum"></span></div>
   <h2>Match each failure to a control</h2>
   <div class="zone">
     <table class="tbl lg">
@@ -294,31 +249,131 @@
   <p class="note">Prompts help communicate these rules. Enforce the important boundaries in tools, permissions and review.</p>
 </section>
 
-<!-- 13 · A bounded task contract -->
-<section data-origin-slide="25" class="slide" data-label="A bounded task contract" data-speaker-notes="An illustrative request template, not a command to run in this repository. Do not publish, commit or deploy as an implicit consequence of passing tests. The checks must exist and assert the intended behavior before the loop is trusted.">
-  <div class="slide-head"><span class="crumb">The invoice task</span><span class="snum">13</span></div>
-  <h2>Make the acceptance contract explicit</h2>
+<!-- 12 · A bounded task contract -->
+<section data-origin-slide="25" class="slide" data-label="A bounded task contract" data-speaker-notes="This is the same kind of request you would type, just written out properly. Every line answers a question the agent would otherwise guess at: what to change, what not to touch, how it will know it is done, which concrete cases count, when to give up, and what to show you at the end. The cases carry real numbers so the tests can assert them. Do not let passing tests imply commit or deploy; that stays your call. Pair the limit with a real budget in the harness, since a prompt alone cannot enforce it.">
+  <div class="slide-head"><span class="crumb">The invoice task</span><span class="snum"></span></div>
+  <h2>Tell it what “done” looks like</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="k">GOAL:</span> export invoice net, VAT and gross values to CSV.</span>
-      <span class="l"><span class="k">SCOPE:</span> invoice export code; preserve existing tests.</span>
-      <span class="l"><span class="key">VERIFY:</span> pytest tests/test_export.py -q</span>
-      <span class="l"><span class="k">CASES:</span> 21% VAT, zero VAT, rounding, quoted CSV fields.</span>
-      <span class="l"><span class="k">LIMIT:</span> three repair attempts; then stop and report.</span>
-      <span class="l"><span class="k">EVIDENCE:</span> diff, command, exit status, failures and gaps.</span>
+    <div class="snip">
+      <div class="snip-bar"><span>The request, written out</span><span>prompt</span></div>
+      <div class="snip-body">
+        <span class="l">Add net, VAT and gross columns to the invoice CSV export.</span>
+        <span class="l"><span class="tp">Scope:</span>     only src/export/. Don't touch tests/ or the Invoice model.</span>
+        <span class="l hl"><span class="tp">Done when:</span> <span class="ts">pytest tests/test_export.py -q</span> passes, with new cases for:</span>
+        <span class="l">           · 100.00 at <span class="tn">21%</span>           → <span class="tn">100.00</span>, <span class="tn">21.00</span>, <span class="tn">121.00</span></span>
+        <span class="l">           · a zero-VAT order        → <span class="tn">100.00</span>, <span class="tn">0.00</span>, <span class="tn">100.00</span></span>
+        <span class="l">           · 19.99 at <span class="tn">21%</span>            → VAT <span class="tn">4.20</span> (round per line, half-up)</span>
+        <span class="l">           · customer "Smith, J."    → the field is quoted</span>
+        <span class="l"><span class="tp">Limit:</span>     3 tries at a failing test, then stop and tell me what's blocking.</span>
+        <span class="l"><span class="tp">Show me:</span>   the diff, the command you ran, its output, and what you couldn't check.</span>
+      </div>
     </div>
   </div>
-  <p class="note">Pair this request with an enforced runtime budget and a review of the resulting artifact.</p>
+  <p class="note">Back the limit with a budget the harness enforces, and review the diff yourself.</p>
 </section>
 
-<!-- 14 · Context growth -->
+<!-- 13 · A conversation -->
+<section class="slide" data-label="A conversation" data-speaker-notes="This is what you see in the terminal for one short request. Count the model calls, not the lines. Call 1: the model asks for two things at once, read the file and run the test. The harness runs both and sends back the results. Call 2: with that evidence, it asks for an edit. Call 3: it asks to rerun the test. Call 4: it writes the final answer. One message from you, four round trips to the model. The next slide shows what travels over the wire on each of those calls.">
+  <div class="slide-head"><span class="crumb">Hands · one conversation</span><span class="snum"></span></div>
+  <h2>One request, four model calls</h2>
+  <div class="zone">
+    <div class="cc">
+      <div class="cc-bar"><i></i><i></i><i></i><span>claude — ~/invoice-app</span></div>
+      <div class="cc-body">
+        <div class="u">fix the missing VAT</div>
+        <div class="t"><b>Read</b>(src/invoice.py)<span class="call">call 1</span></div>
+        <div class="t err"><b>Bash</b>(pytest tests/test_invoice.py -q)</div>
+        <div class="r"><span class="e">FAILED</span> test_total — expected 121.00, got 100.00</div>
+        <div class="t"><b>Update</b>(src/invoice.py)<span class="call">call 2</span></div>
+        <div class="d del">  return net</div>
+        <div class="d add">  return net * (1 + order.vat_rate)</div>
+        <div class="t"><b>Bash</b>(pytest tests/test_invoice.py -q)<span class="call">call 3</span></div>
+        <div class="r"><span class="ok">12 passed</span></div>
+        <div class="m">Fixed: total() now adds the order's VAT. All 12 tests pass.<span class="call">call 4</span></div>
+      </div>
+    </div>
+  </div>
+  <p class="note">Call 1 asks for two tools at once; the harness runs both before calling the model again.</p>
+</section>
+
+<!-- 14 · Client and server -->
+<section data-origin-slide="16" class="slide" data-label="Client and server"
+    data-speaker-notes="Same session as the previous slide, now as a sequence diagram. You type once. The harness then calls the model API four times, and every call carries the whole conversation so far: system prompt, tools, CLAUDE.md, your message, and every tool call and result. The model keeps nothing between calls. Watch the clay bars: the biggest jump is call 2, because the file the model read is now in context. Between calls the harness runs the tools on your machine. Some APIs can hold state server-side, and long sessions get compacted, but neither is model memory.">
+  <div class="slide-head"><span class="crumb">Hands · client &amp; server</span><span class="snum"></span></div>
+  <h2>Each call resends everything</h2>
+  <div class="zone">
+    <div class="fig">
+      <svg viewBox="0 0 1680 562" role="img" aria-label="Sequence: you type once; the harness calls the model API four times, each time sending the whole growing context, and runs the requested tools locally between calls">
+        <!-- drawn 1:1 for a full-width figure under a one-line headline: 1680 × 562.
+             Four calls, 104px apart. The clay block at the start of every send arrow is that
+             call's context to scale, 36px per 1k tokens (one series, one clay). -->
+        <defs>
+          <marker id="s14-a" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L12,6 L0,12 Z"/></marker>
+          <marker id="s14-d" class="dim" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L12,6 L0,12 Z"/></marker>
+        </defs>
+        <!-- lifelines -->
+        <path class="dg-line dim" d="M130,80 V562 M840,80 V562 M1550,80 V562"/>
+        <!-- participants -->
+        <rect class="dg-box" x="1" y="1" width="258" height="78" rx="2"/>
+        <rect class="dg-box" x="710" y="1" width="260" height="78" rx="2"/>
+        <rect class="dg-box" x="1421" y="1" width="258" height="78" rx="2"/>
+        <text class="dg-t" x="130" y="49" text-anchor="middle">YOU</text>
+        <text class="dg-t" x="840" y="38" text-anchor="middle">HARNESS</text>
+        <text class="dg-t mut" x="840" y="64" text-anchor="middle">claude code</text>
+        <text class="dg-t" x="1550" y="38" text-anchor="middle">MODEL API</text>
+        <text class="dg-t mut" x="1550" y="64" text-anchor="middle">opus 5.5</text>
+        <!-- your message -->
+        <text class="dg-t mut" x="485" y="110" text-anchor="middle">"fix the missing VAT"</text>
+        <path class="dg-line" d="M130,122 H839" marker-end="url(#s14-a)"/>
+        <!-- call 1: y 176, ~8k = 288px -->
+        <text class="dg-t acc" x="1195" y="162" text-anchor="middle">call 1</text>
+        <text class="dg-t mut" x="824" y="183" text-anchor="end">~8k tokens</text>
+        <path class="dg-line" d="M840,176 H1549" marker-end="url(#s14-a)"/>
+        <rect class="dg-fill-key" x="841" y="166" width="288" height="20"/>
+        <text class="dg-t mut" x="1195" y="206" text-anchor="middle">tool calls: Read, Bash</text>
+        <path class="dg-line dim" d="M1550,216 H841" marker-end="url(#s14-d)"/>
+        <path class="dg-line" d="M840,232 H900 V256 H841" marker-end="url(#s14-a)"/>
+        <text class="dg-t mut" x="824" y="251" text-anchor="end">runs Read + Bash</text>
+        <!-- call 2: y 280, ~11k = 396px -->
+        <text class="dg-t acc" x="1195" y="266" text-anchor="middle">call 2 · + file, test output</text>
+        <text class="dg-t mut" x="824" y="287" text-anchor="end">~11k tokens</text>
+        <path class="dg-line" d="M840,280 H1549" marker-end="url(#s14-a)"/>
+        <rect class="dg-fill-key" x="841" y="270" width="396" height="20"/>
+        <text class="dg-t mut" x="1395" y="310" text-anchor="middle">tool call: Update</text>
+        <path class="dg-line dim" d="M1550,320 H841" marker-end="url(#s14-d)"/>
+        <path class="dg-line" d="M840,336 H900 V360 H841" marker-end="url(#s14-a)"/>
+        <text class="dg-t mut" x="824" y="355" text-anchor="end">runs Update</text>
+        <!-- call 3: y 384, ~11.5k = 414px -->
+        <text class="dg-t acc" x="1195" y="370" text-anchor="middle">call 3 · + the edit</text>
+        <text class="dg-t mut" x="824" y="391" text-anchor="end">~11.5k tokens</text>
+        <path class="dg-line" d="M840,384 H1549" marker-end="url(#s14-a)"/>
+        <rect class="dg-fill-key" x="841" y="374" width="414" height="20"/>
+        <text class="dg-t mut" x="1395" y="414" text-anchor="middle">tool call: Bash</text>
+        <path class="dg-line dim" d="M1550,424 H841" marker-end="url(#s14-d)"/>
+        <path class="dg-line" d="M840,440 H900 V464 H841" marker-end="url(#s14-a)"/>
+        <text class="dg-t mut" x="824" y="459" text-anchor="end">runs Bash</text>
+        <!-- call 4: y 488, ~12k = 432px -->
+        <text class="dg-t acc" x="1195" y="474" text-anchor="middle">call 4 · + test result</text>
+        <text class="dg-t mut" x="824" y="495" text-anchor="end">~12k tokens</text>
+        <path class="dg-line" d="M840,488 H1549" marker-end="url(#s14-a)"/>
+        <rect class="dg-fill-key" x="841" y="478" width="432" height="20"/>
+        <text class="dg-t mut" x="1395" y="518" text-anchor="middle">final answer</text>
+        <path class="dg-line dim" d="M1550,528 H841" marker-end="url(#s14-d)"/>
+        <path class="dg-line dim" d="M840,544 H131" marker-end="url(#s14-d)"/>
+      </svg>
+    </div>
+  </div>
+  <p class="note">The model remembers nothing between calls. The harness resends the history every time.</p>
+</section>
+
+<!-- 15 · Context growth -->
 <section data-origin-slide="27" class="slide" data-label="Context growth"
     data-speaker-notes="Use the three bars for one example only. Summaries, context editing and stateful transport can change this shape. The cost calculation follows separately, so do not call these numbers measured or assume every token is charged at the uncached rate.">
-  <div class="slide-head"><span class="crumb">The bill · context growth</span><span class="snum">14</span></div>
+  <div class="slide-head"><span class="crumb">The bill · context growth</span><span class="snum"></span></div>
   <h2>A short message can carry a long history</h2>
   <div class="zone">
     <div class="fig">
-      <span class="lab">ILLUSTRATIVE — three requests, including history</span>
+      <span class="lab">Three requests, each carrying the history</span>
       <svg viewBox="0 0 1680 440" role="img" aria-label="Three stacked bars, one per turn: each request includes retained history and a new message — turn 1 about 8,500 tokens, turn 2 about 13,000, turn 3 about 15,500">
         <!-- drawn 1:1 for a full-width figure with caption under a two-line headline: 1680 × 440.
              Scale: 75px per 1k input tokens; bars start at column 3 (x 284). -->
@@ -361,12 +416,12 @@
       </svg>
     </div>
   </div>
-  <p class="note">Illustrative input volumes, not a bill. Repeated history counts as input; cache hits may have a different rate.</p>
+  <p class="note">Repeated history is billed as input every time, unless it comes from the cache.</p>
 </section>
 
-<!-- 15 · Token volume and cost -->
+<!-- 16 · Token volume and cost -->
 <section data-origin-slide="29" class="slide" data-label="Token volume and cost" data-speaker-notes="Input volume alone cannot establish the dominant cost. Output rates, reasoning usage, cache writes, cache hits, retries and tools all matter. Use provider usage records and avoid counting cached input twice. Subscription limits are a different accounting model.">
-  <div class="slide-head"><span class="crumb">Count the work</span><span class="snum">15</span></div>
+  <div class="slide-head"><span class="crumb">Count the work</span><span class="snum"></span></div>
   <h2>Count each billing category separately</h2>
   <div class="zone">
     <table class="tbl lg">
@@ -381,28 +436,40 @@
   <p class="note">Bill = sum of each category’s tokens × its rate, plus any separate tool or service fees.</p>
 </section>
 
-<!-- 16 · Worked cost example -->
-<section data-origin-slide="31" class="slide" data-label="Worked cost example" data-speaker-notes="This example deliberately specifies an existing cache hit, no new cache-write tokens and no separate tool charges. Establishing the cache earlier also costs money. The original input line items summed to 22,709, not exactly 22,700; this version uses explicit rounded totals consistently. Compare a complete task, including cache warm-up and retries.">
-  <div class="slide-head"><span class="crumb">Worked arithmetic</span><span class="snum">16</span></div>
-  <h2>One cache-hit request: about five cents</h2>
+<!-- 17 · Worked cost example -->
+<section data-origin-slide="31" class="slide" data-label="Worked cost example" data-speaker-notes="One request from the middle of the invoice session, priced at Claude Opus 5.5 list prices: $4 per million input tokens, $20 per million output, $0.20 per million for a cache read, $5 per million to write the 5-minute cache. 19,000 tokens of history were already cached, 3,700 are new, 1,600 come out. With the cache hit that is about 5 cents. Without a cache, all 22,700 input tokens are billed at $4: about 12 cents. The first request pays a little extra to write the cache, about 14 cents, and every later hit saves about 7 cents, so it pays for itself on the very next request. Held at this size for 20 requests: about $1.10 cached against $2.46 uncached. Output is the same in both, so the saving comes entirely from input.">
+  <div class="slide-head"><span class="crumb">Worked arithmetic · Opus 5.5</span><span class="snum"></span></div>
+  <h2>The cache cuts this request from 12¢ to 5¢</h2>
   <div class="zone">
-    <table class="tbl num">
-      <thead><tr><th scope="col">Illustrative usage and rates</th><th scope="col">Cost</th></tr></thead>
-      <tbody>
-        <tr><td>19,000 cached input × $0.20 / million</td><td>$0.0038</td></tr>
-        <tr><td>3,700 new input × $4 / million</td><td>$0.0148</td></tr>
-        <tr><td>1,600 output × $20 / million</td><td>$0.0320</td></tr>
-        <tr class="tot"><td>22,700 input + 1,600 output in total</td><td><b class="key">$0.0506</b></td></tr>
-      </tbody>
-    </table>
+    <div class="split even">
+      <div class="hero">
+        <div class="big">−59%</div>
+        <div class="bars">
+          <div class="bar" style="--v:.709"><span class="lab">First request · writes the cache</span><div class="track"><i></i><b>$0.1418</b></div></div>
+          <div class="bar" style="--v:.614"><span class="lab">No cache</span><div class="track"><i></i><b>$0.1228</b></div></div>
+          <div class="bar key" style="--v:.253"><span class="lab">Cache hit</span><div class="track"><i></i><b>$0.0506</b></div></div>
+          <div class="axis"><span style="--v:0">$0.00</span><span style="--v:.25">$0.05</span><span style="--v:.5">$0.10</span><span style="--v:.75">$0.15</span><span style="--v:1">$0.20</span></div>
+        </div>
+      </div>
+      <table class="tbl num">
+        <thead><tr><th scope="col">Cache hit · Opus 5.5 rates</th><th scope="col">Cost</th></tr></thead>
+        <tbody>
+          <tr><td>19,000 history × $0.20/M (cache read)</td><td>$0.0038</td></tr>
+          <tr><td>3,700 new input × $4/M</td><td>$0.0148</td></tr>
+          <tr><td>1,600 output × $20/M</td><td>$0.0320</td></tr>
+          <tr class="tot"><td>Total with the cache hit</td><td>$0.0506</td></tr>
+          <tr><td>Same request, no cache: 22,700 × $4/M + output</td><td>$0.1228</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-  <p class="note">Assumed rates, not a measured bill. Without the cache hit: $0.0908 input + $0.0320 output = $0.1228.</p>
+  <p class="note">The cache write ($5/M) pays for itself on the next request. Twenty requests this size: ≈ $1.10 cached, ≈ $2.46 without.</p>
 </section>
 
-<!-- 17 · KV caching -->
+<!-- 18 · KV caching -->
 <section data-origin-slide="32" class="slide" data-label="KV caching"
     data-speaker-notes="Keep the existing KV-cache animation as a conceptual example. Do not claim that harnesses never rewrite: compaction and corrections can be necessary. Cache behavior and pricing are provider specific. TTL and break-even arithmetic are in the reference deck.">
-  <div class="slide-head"><span class="crumb">The bill · KV cache · how</span><span class="snum">17</span></div>
+  <div class="slide-head"><span class="crumb">The bill · KV cache · how</span><span class="snum"></span></div>
   <h2>Caching reuses work on a matching prefix</h2>
   <div class="zone">
     <div class="split">
@@ -417,12 +484,12 @@
       </div>
     </div>
   </div>
-  <p class="note">Animation shows prefix reuse. Its price label is illustrative; rates vary. Cached content still occupies context.</p>
+  <p class="note">On Opus 5.5 a cache read costs $0.20 per million tokens, against $4 fresh. Cached content still fills context.</p>
 </section>
 
-<!-- 18 · Useful context -->
+<!-- 19 · Useful context -->
 <section data-origin-slide="34" class="slide" data-label="Useful context" data-speaker-notes="Long-context performance varies by task, model, positions and distractors. Attention weights summing to one do not establish a single fixed reasoning budget. A handoff or compacted summary can omit important details: check that the acceptance contract and evidence survive.">
-  <div class="slide-head"><span class="crumb">Context quality</span><span class="snum">18</span></div>
+  <div class="slide-head"><span class="crumb">Context quality</span><span class="snum"></span></div>
   <h2>Keep the facts that the next decision needs</h2>
   <div class="zone">
     <div class="cards c2">
@@ -433,10 +500,10 @@
   <p class="note">Watch for missed requirements and repeated work. There is no universal “dumb zone” or safe fill percentage.</p>
 </section>
 
-<!-- 19 · Subagents -->
+<!-- 20 · Subagents -->
 <section data-origin-slide="36" class="slide" data-label="Subagents"
     data-speaker-notes="The animation shows separation of intermediate output, not a guarantee of empty input context. Fresh agents also receive system instructions and tool definitions. Worktrees separate edits, not security boundaries. Avoid delegating a trivial step when coordination costs more than the work.">
-  <div class="slide-head"><span class="crumb">Split the work · subagents</span><span class="snum">19</span></div>
+  <div class="slide-head"><span class="crumb">Split the work · subagents</span><span class="snum"></span></div>
   <h2>Delegate a question; ask for evidence back</h2>
   <div class="zone">
     <div class="split">
@@ -454,9 +521,9 @@
   <p class="note">Example return: VAT calculation locations, the failing path, supporting lines and unresolved questions.</p>
 </section>
 
-<!-- 20 · Cost per accepted task -->
+<!-- 21 · Cost per accepted task -->
 <section data-origin-slide="30" class="slide" data-label="Cost per accepted task" data-speaker-notes="Remove the old benchmark collage and the arithmetic implying that five times cheaper tokens become dearer merely by using three times as many. Separate success rate from spend per successful attempt so failed runs do not disappear from the comparison.">
-  <div class="slide-head"><span class="crumb">Model choice</span><span class="snum">20</span></div>
+  <div class="slide-head"><span class="crumb">Model choice</span><span class="snum"></span></div>
   <h2>Measure the task, including the failed attempts</h2>
   <div class="zone">
     <div class="cards c3">
@@ -468,9 +535,9 @@
   <p class="note">A higher-priced model can finish in fewer attempts. Whether it costs less is a measurement, not a rule.</p>
 </section>
 
-<!-- 21 · Routing and escalation -->
+<!-- 22 · Routing and escalation -->
 <section data-origin-slide="40" class="slide" data-label="Routing and escalation" data-speaker-notes="A larger model cannot recover a missing business rule by thinking harder. Use the invoice task to distinguish an omitted VAT rate from a difficult code path. Cache changes and extra review time belong in the comparison.">
-  <div class="slide-head"><span class="crumb">Model choice</span><span class="snum">21</span></div>
+  <div class="slide-head"><span class="crumb">Model choice</span><span class="snum"></span></div>
   <h2>Escalate when the evidence points to a need</h2>
   <div class="zone">
     <ol class="bul def">
@@ -482,9 +549,9 @@
   <p class="note">There is no universal “effort first” ladder. Re-evaluate defaults when the task or model changes.</p>
 </section>
 
-<!-- 22 · Worker and reviewer -->
+<!-- 23 · Worker and reviewer -->
 <section data-origin-slide="42" class="slide" data-label="Worker and reviewer" data-speaker-notes="This preserves the useful advisor/executor idea without a vendor-specific command or hierarchy. The reviewer can miss the same issue as the worker. Require actionable findings and let deterministic checks carry the claims they can actually establish.">
-  <div class="slide-head"><span class="crumb">Split the work</span><span class="snum">22</span></div>
+  <div class="slide-head"><span class="crumb">Split the work</span><span class="snum"></span></div>
   <h2>Assign a role and a return contract</h2>
   <div class="zone">
     <div class="cards c2">
@@ -495,10 +562,10 @@
   <p class="note">Choose configurations from measured performance in each role. A second model’s opinion is not a verifier.</p>
 </section>
 
-<!-- 23 · Workflows -->
+<!-- 24 · Workflows -->
 <section data-origin-slide="46" class="slide" data-label="Workflows"
     data-speaker-notes="Use the existing workflow diagram with role labels rather than brand tiers. Each stage needs explicit inputs; a fresh context is optional, not automatic. The retry edge is bounded at three repair attempts. Passing tests leads to review, not automatic publication.">
-  <div class="slide-head"><span class="crumb">Split the work · dynamic workflows</span><span class="snum">23</span></div>
+  <div class="slide-head"><span class="crumb">Split the work · dynamic workflows</span><span class="snum"></span></div>
   <h2>One workflow for the invoice change</h2>
   <div class="zone">
     <div class="split">
@@ -521,10 +588,10 @@
           <path class="dg-line" d="M240,88 H280 V280 H240"/>
           <path class="dg-line" d="M280,184 H319" marker-end="url(#s23-a)"/>
           <rect class="dg-box" x="320" y="152" width="300" height="64" rx="2"/>
-          <rect class="dg-box" x="320" y="276" width="300" height="64" rx="2"/>
+          <rect class="dg-box key" x="320" y="276" width="300" height="64" rx="2"/>
           <rect class="dg-box" x="320" y="400" width="300" height="64" rx="2"/>
           <text class="dg-t" x="470" y="193" text-anchor="middle">PLAN</text>
-          <text class="dg-t" x="470" y="317" text-anchor="middle">BUILD</text>
+          <text class="dg-t key" x="470" y="317" text-anchor="middle">BUILD</text>
           <text class="dg-t" x="470" y="441" text-anchor="middle">VERIFY · TESTS</text>
           <path class="dg-line" d="M470,216 V275" marker-end="url(#s23-a)"/>
           <path class="dg-line" d="M470,340 V399" marker-end="url(#s23-a)"/>
@@ -540,9 +607,9 @@
   <p class="note">Pass evidence between stages. Parallelize independent investigation; coordinate edits and integration.</p>
 </section>
 
-<!-- 24 · Choose the workflow -->
+<!-- 25 · Choose the workflow -->
 <section data-origin-slide="48" class="slide" data-label="Choose the workflow" data-speaker-notes="This is an engineering choice, not a product command catalogue. Multi-agent work is useful for independent investigation and separately owned edits, but parallel work still needs someone accountable for integration.">
-  <div class="slide-head"><span class="crumb">Split the work</span><span class="snum">24</span></div>
+  <div class="slide-head"><span class="crumb">Split the work</span><span class="snum"></span></div>
   <h2>Use the simplest shape that fits</h2>
   <div class="zone">
     <table class="tbl">
@@ -558,67 +625,116 @@
   <p class="note">Add orchestration when it resolves a real bottleneck. Measure its coordination cost too.</p>
 </section>
 
-<!-- 25 · Project instructions -->
-<section data-origin-slide="50" class="slide" data-label="Project instructions" data-speaker-notes="Examples include CLAUDE.md and AGENTS.md, but discovery and precedence differ by harness. Do not claim a universal fallback or import rule. A file only helps when its relevant instructions enter the active context.">
-  <div class="slide-head"><span class="crumb">Make it repeatable</span><span class="snum">25</span></div>
-  <h2>Store the rules needed on most tasks</h2>
+<!-- 26 · Reusable prompts -->
+<section class="slide" data-label="Reusable prompts" data-speaker-notes="Change of topic. So far every instruction lived in the prompt you typed. Now: instructions you write once and reuse. There are four in Claude Code, and the key point is that all four are just text that ends up in the context window. What differs is who writes it, when it gets loaded, and what it is for. CLAUDE.md is yours and loads every session. MEMORY.md is Claude's own notebook, also loaded every session. A skill loads only when the task needs it. A plugin is the package that ships skills and friends to other people. We take them one at a time.">
+  <div class="slide-head"><span class="crumb">Make it repeatable · reusable prompts</span><span class="snum"></span></div>
+  <h2>Stop retyping the same instructions</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="c"># Project instructions — illustrative invoice repository</span></span>
-      <span class="l">- Test with: pytest tests/test_invoice.py -q</span>
-      <span class="l">- VAT rates come from the order record.</span>
-      <span class="l">- Preserve existing assertions; explain test changes.</span>
-      <span class="l">- Ask before changing the stored invoice schema.</span>
-    </div>
+    <table class="tbl c4">
+      <thead><tr><th scope="col">Reusable prompt</th><th scope="col">Who writes it</th><th scope="col">When it's in context</th><th scope="col">Use it for</th></tr></thead>
+      <tbody>
+        <tr><td><b>CLAUDE.md</b></td><td>You and your team</td><td>Every session</td><td>Commands and rules for every task</td></tr>
+        <tr><td><b>MEMORY.md</b></td><td>Claude</td><td>Every session</td><td>Things it learned working with you</td></tr>
+        <tr><td><b>Skill</b></td><td>You, or a teammate</td><td>Only when relevant</td><td>A procedure for some tasks</td></tr>
+        <tr><td><b>Plugin</b></td><td>Whoever packages it</td><td>Once installed</td><td>Sharing skills, hooks and tools</td></tr>
+      </tbody>
+    </table>
   </div>
-  <p class="note">Use the instruction-file convention your harness actually loads. Keep standing rules short and specific.</p>
+  <p class="note">All four end up as text in the context window. They differ in who writes them and when they load.</p>
 </section>
 
-<!-- 26 · A verification skill -->
-<section data-origin-slide="52" class="slide" data-label="A verification skill" data-speaker-notes="Keep the verification example consistent with the talk. A skill describes a repeatable procedure; it does not make the agent or the tests infallible. Discovery metadata and loaded content both have context costs. A concrete Claude Code file example is in the reference deck.">
-  <div class="slide-head"><span class="crumb">Make it repeatable</span><span class="snum">26</span></div>
-  <h2>Save the repeated invoice check as a skill</h2>
+<!-- 27 · CLAUDE.md -->
+<section data-origin-slide="50" class="slide" data-label="CLAUDE.md" data-speaker-notes="CLAUDE.md is the file you write. Claude Code loads it at the start of every session: the one in your project, the one in your home directory, and any in parent folders; ones in subfolders load when Claude works there. Because it loads every time, every line costs context on every task, so keep it to the commands and rules that matter on most tasks. The at-sign line imports another file. Other harnesses use AGENTS.md for the same idea, and Claude Code can read that too. It is guidance, not enforcement: to hard-block something, use a permission rule or a hook.">
+  <div class="slide-head"><span class="crumb">Make it repeatable · CLAUDE.md</span><span class="snum"></span></div>
+  <h2>CLAUDE.md: the rules for every session</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l">invoice-check/</span>
-      <span class="l">  SKILL.md     when to use it + verification procedure</span>
-      <span class="l">  scripts/     optional deterministic checks</span>
-      <span class="l">  references/  VAT and rounding rules</span>
+    <div class="snip">
+      <div class="snip-bar"><span>CLAUDE.md</span><span>~/invoice-app · loaded every session</span></div>
+      <div class="snip-body">
+        <span class="l"><span class="tp"># invoice-app</span></span>
+        <span class="l"><span class="tp">## Commands</span></span>
+        <span class="l"><span class="tk">-</span> Test: <span class="ts">`pytest tests/ -q`</span>  (quick: <span class="ts">`pytest tests/test_invoice.py -q`</span>)</span>
+        <span class="l"><span class="tk">-</span> Lint: <span class="ts">`ruff check src/`</span></span>
+        <span class="l"><span class="tp">## Rules</span></span>
+        <span class="l"><span class="tk">-</span> VAT rates come from the order record. Never hard-code a rate.</span>
+        <span class="l"><span class="tk">-</span> Round VAT per line, half-up, to 2 decimals.</span>
+        <span class="l"><span class="tk">-</span> Don't edit existing test assertions; explain any test change.</span>
+        <span class="l"><span class="tk">-</span> Ask before changing the stored invoice schema.</span>
+        <span class="l"><span class="tf">@docs/billing-glossary.md</span></span>
+      </div>
     </div>
   </div>
-  <p class="note"><b>Procedure:</b> inspect the diff → run the cases → report evidence and gaps.</p>
+  <p class="note">Every line costs context on every task. Keep it short; move what only some tasks need into a skill.</p>
 </section>
 
-<!-- 27 · One skill system -->
-<section data-origin-slide="55" class="slide" data-label="One skill system" data-speaker-notes="This is our illustrative invoice skill system, not a claim that a named public skill package exposes these exact commands. Preserve a useful lesson only when it is accurate and has a clear retrieval path. Additional examples are linked in reference material.">
-  <div class="slide-head"><span class="crumb">Make it repeatable</span><span class="snum">27</span></div>
-  <h2>Connect a few procedures with explicit outputs</h2>
+<!-- 28 · MEMORY.md -->
+<section class="slide" data-label="MEMORY.md" data-speaker-notes="Auto memory is the notebook Claude keeps for itself. When you correct it, or say remember that, it writes a short topic file and adds one line to MEMORY.md, the index. The first 200 lines of the index load at the start of every session; the topic files are read only when needed. It lives in your home directory, per repository, on your machine, so it is personal rather than shared with the team. It is plain markdown: open it with /memory, fix what is wrong, delete what is stale. Rule of thumb: if the whole team needs it, promote it to CLAUDE.md.">
+  <div class="slide-head"><span class="crumb">Make it repeatable · memory</span><span class="snum"></span></div>
+  <h2>MEMORY.md: notes Claude keeps for itself</h2>
   <div class="zone">
-    <div class="cards c3">
-      <div class="tile"><span class="lab">01</span><h3>Plan the change</h3><p>Input: invoice defect.<br>Output: rule, scope and acceptance cases.</p></div>
-      <div class="tile"><span class="lab">02</span><h3>Implement and check</h3><p>Input: accepted plan.<br>Output: patch, tests and unresolved issues.</p></div>
-      <div class="tile"><span class="lab">03</span><h3>Review and record</h3><p>Input: patch and evidence.<br>Output: reviewed result and a reusable lesson.</p></div>
+    <div class="snip">
+      <div class="snip-bar"><span>MEMORY.md</span><span>~/.claude/projects/invoice-app/memory/</span></div>
+      <div class="snip-body">
+        <span class="l"><span class="tc"># Written by Claude when you correct it or say “remember …”</span></span>
+        <span class="l"></span>
+        <span class="l"><span class="tk">-</span> [Test DB](<span class="ts">test-db.md</span>) — run <span class="ts">`docker compose up db`</span> before pytest</span>
+        <span class="l"><span class="tk">-</span> [VAT rounding](<span class="ts">vat-rounding.md</span>) — per line, half-up; finance confirmed</span>
+        <span class="l"><span class="tk">-</span> [Legacy export](<span class="ts">legacy-export.md</span>) — v1 CSV must keep the <span class="ts">`;`</span> separator</span>
+        <span class="l"><span class="tk">-</span> [Review style](<span class="ts">review-style.md</span>) — user wants one concern per PR</span>
+        <span class="l"><span class="tk">-</span> [Staging host](<span class="ts">staging.md</span>) — billing API mock runs on :8081</span>
+      </div>
     </div>
   </div>
-  <p class="note">Teach the workflow through its outputs. Add a new skill only when a repeated need justifies it.</p>
+  <p class="note">The index loads every session; topic files load when needed. Open it with <code>/memory</code> and fix what's wrong.</p>
 </section>
 
-<!-- 28 · Share the procedure -->
-<section data-origin-slide="57" class="slide" data-label="Share the procedure" data-speaker-notes="The concrete publication recipe is optional reference material. Keep this explanation independent of a particular marketplace layout. A plugin can distribute more than skills; supported component types depend on the host.">
-  <div class="slide-head"><span class="crumb">Make it repeatable</span><span class="snum">28</span></div>
-  <h2>Package useful checks for the team</h2>
+<!-- 29 · A skill -->
+<section data-origin-slide="52" class="slide" data-label="A skill" data-speaker-notes="A skill is a folder with a SKILL.md file, plus optional scripts and reference files. The important line is the description: only the name and description sit in context all the time, which is cheap. When a task matches, Claude loads the body, and only then any scripts or references it points to. That is why a skill can hold a long procedure without costing you context on every unrelated task. You can also run it directly as /invoice-check. A skill describes a procedure; it does not make the agent or the tests infallible.">
+  <div class="slide-head"><span class="crumb">Make it repeatable · skills</span><span class="snum"></span></div>
+  <h2>A skill: a procedure that loads when it's needed</h2>
   <div class="zone">
-    <div class="cards c2">
-      <div class="tile"><span class="lab">Skill</span><p>The repeatable invoice-check procedure and supporting files.</p></div>
-      <div class="tile"><span class="lab">Plugin or shared package</span><p>A versioned way to distribute the procedure and supported integrations.</p></div>
+    <div class="snip">
+      <div class="snip-bar"><span>.claude/skills/invoice-check/SKILL.md</span><span>only the description is always loaded</span></div>
+      <div class="snip-body">
+        <span class="l"><span class="tc">---</span></span>
+        <span class="l"><span class="tp">name:</span> invoice-check</span>
+        <span class="l hl"><span class="tp">description:</span> Verify invoice or VAT changes. Use after editing src/invoice or src/export.</span>
+        <span class="l"><span class="tc">---</span></span>
+        <span class="l"><span class="tn">1.</span> Read the diff. Flag any changed assertion in tests/.</span>
+        <span class="l"><span class="tn">2.</span> Run <span class="ts">`pytest tests/test_invoice.py tests/test_export.py -q`</span>.</span>
+        <span class="l"><span class="tn">3.</span> Run <span class="ts">`scripts/check_totals.py fixtures/orders.csv`</span> (net + VAT = gross).</span>
+        <span class="l"><span class="tn">4.</span> Report commands, exit codes, failures, and cases nothing covered.</span>
+      </div>
     </div>
   </div>
-  <p class="note">Test discovery and behavior in a clean session before sharing. Installation does not replace review or permission boundaries.</p>
+  <p class="note">Until it's used, only the name and description sit in context. Then the body and its scripts load.</p>
 </section>
 
-<!-- 29 · Next task -->
+<!-- 30 · A plugin -->
+<section data-origin-slide="57" class="slide" data-label="A plugin" data-speaker-notes="A skill in your repo helps you. A plugin is how you hand it to the team, or to other repos. It is a folder with a manifest that can bundle skills, subagents, hooks and MCP servers, published through a marketplace, which is just a git repo with a catalogue file. Teammates install it with one command and get updates when you bump the version. Hooks matter here: a skill is advice the model may follow, a hook is code the harness always runs, for example running the invoice check after every edit. Installing a plugin does not bypass permissions, but read what its hooks and MCP servers do before you install it.">
+  <div class="slide-head"><span class="crumb">Make it repeatable · plugins</span><span class="snum"></span></div>
+  <h2>A plugin: ship it to the whole team</h2>
+  <div class="zone">
+    <div class="snip">
+      <div class="snip-bar"><span>invoice-tools/</span><span>a plugin</span></div>
+      <div class="snip-body">
+        <span class="l">invoice-tools/</span>
+        <span class="l">├── .claude-plugin/plugin.json   <span class="tc"># name, version, description</span></span>
+        <span class="l">├── skills/invoice-check/        <span class="tc"># the skill from the last slide</span></span>
+        <span class="l">├── agents/vat-reviewer.md       <span class="tc"># a reviewer subagent</span></span>
+        <span class="l">├── hooks/hooks.json             <span class="tc"># run the check after every edit</span></span>
+        <span class="l">└── .mcp.json                    <span class="tc"># connect to the billing API</span></span>
+        <span class="l"></span>
+        <span class="l hl"><span class="tk">&gt;</span> <span class="tf">/plugin install</span> invoice-tools@acme-tools</span>
+      </div>
+    </div>
+  </div>
+  <p class="note">Version it like code. Read what its hooks and MCP servers can do before you install it.</p>
+</section>
+
+<!-- 31 · Next task -->
 <section data-origin-slide="59" class="slide" data-label="Next task" data-speaker-notes="Ask the audience to apply the contract to their next real task. The durable practice is bounded work with useful context and evidence, not a fixed vendor hierarchy.">
-  <div class="slide-head"><span class="crumb">Take it back to work</span><span class="snum">29</span></div>
+  <div class="slide-head"><span class="crumb">Take it back to work</span><span class="snum"></span></div>
   <h2>Give the next task a checkable finish</h2>
   <div class="zone">
     <ol class="bul def wide">
@@ -630,9 +746,9 @@
   <p class="note"><a href="agentic-engineering-reference.html">Optional reference: arithmetic, workflow sketch and skill publication</a></p>
 </section>
 
-<!-- 30 · Sources -->
+<!-- 32 · Sources -->
 <section data-origin-slide="60" class="slide" data-label="Sources" data-speaker-notes="Sources support the mechanisms and implementation qualifications. No paid provider experiments were performed for this revision. The old benchmark and model-price grids are omitted; their original text remains in Git. Reference material contains additional links for publication and learning.">
-  <div class="slide-head"><span class="crumb">Sources</span><span class="snum">30</span></div>
+  <div class="slide-head"><span class="crumb">Sources</span><span class="snum"></span></div>
   <h2>Questions? Check the evidence.</h2>
   <div class="zone">
     <div class="links">
@@ -641,16 +757,18 @@
         <a href="https://arxiv.org/abs/1706.03762">Attention Is All You Need<span class="u">arxiv.org/abs/1706.03762</span></a>
         <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Context engineering<span class="u">anthropic.com/engineering</span></a>
         <a href="https://www.trychroma.com/research/context-rot">Context-length experiments<span class="u">trychroma.com/research/context-rot</span></a>
+        <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">Prompt caching and pricing<span class="u">platform.claude.com/docs</span></a>
       </div>
       <div class="linkcol">
-        <h3>Implementation details</h3>
-        <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">Prompt caching and usage<span class="u">platform.claude.com/docs</span></a>
-        <a href="https://code.claude.com/docs/en/sub-agents">Subagents and forks<span class="u">code.claude.com/docs/en/sub-agents</span></a>
+        <h3>Claude Code</h3>
+        <a href="https://code.claude.com/docs/en/memory">CLAUDE.md and auto memory<span class="u">code.claude.com/docs/en/memory</span></a>
         <a href="https://code.claude.com/docs/en/skills">Skills<span class="u">code.claude.com/docs/en/skills</span></a>
+        <a href="https://code.claude.com/docs/en/plugins-reference">Plugins<span class="u">code.claude.com/docs/en/plugins-reference</span></a>
+        <a href="https://code.claude.com/docs/en/sub-agents">Subagents and forks<span class="u">code.claude.com/docs/en/sub-agents</span></a>
       </div>
     </div>
   </div>
-  <p class="note">Primary sources checked 3 October 2026. Worked examples are illustrative. <a href="https://github.com/davidbudac/agentic-talks">All decks</a>.</p>
+  <p class="note">Primary sources checked 8 October 2026. Prices are Anthropic API list prices. <a href="https://github.com/davidbudac/agentic-talks">All decks</a>.</p>
 </section>
 
 </deck-stage>
