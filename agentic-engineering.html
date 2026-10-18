@@ -332,12 +332,15 @@ table.tbl tr:last-child td{border-bottom:none}
     </div>
   </section>
 
-<section data-origin-slide="10" class="slide dark" data-label="Reasoning and effort" data-speaker-notes="This is an explanation a developer can check, not a transcript of private model reasoning. Arithmetic alone cannot establish the intended tax rule; the order record supplies it. More effort does not guarantee a better answer. Exact controls and treatment of reasoning tokens depend on provider and model."><div class="slide-content"><div class="slide-head reveal"><span class="snum">6</span><div class="crumb">Model behavior</div></div><h2 class="reveal">More reasoning is a setting to evaluate</h2><div class="code reveal">Illustrative check, not a hidden reasoning trace:
+<section data-origin-slide="10" class="slide dark" data-label="Reasoning and effort" data-speaker-notes="Illustrative contrast, not a transcript of model output. The point from slides 4 and 5: reasoning is the model generating intermediate steps as tokens, which then sit in context and can be attended to before the answer. Arithmetic alone cannot establish the intended tax rule; the order record supplies it. More effort does not guarantee a better answer. Names of effort controls and treatment of reasoning tokens depend on provider and model."><div class="slide-content"><div class="slide-head reveal"><span class="snum">6</span><div class="crumb">Model behavior</div></div><h2 class="reveal">Reasoning: the model writes steps into its context before answering</h2><div class="code reveal">Illustrative contrast, same model, same question — not a captured transcript
 
-Order: net 100.00; VAT rate 21%
-Expected total: 100.00 × 1.21 = 121.00
+# question: why does the invoice test expect 121, not 100?
+answer first › Probably a rounding bug.                          ✕ guess
 
-Now check the rule, rounding and implementation.</div><p class="note reveal">More deliberation can help, and can add time and cost. Compare supported effort settings on the same acceptance cases.</p></div></section>
+# with reasoning: intermediate steps become context the answer can use
+step         › order says net 100.00, VAT rate 21%
+step         › 100.00 × 1.21 = 121.00, so the test expects VAT applied
+answer       › Apply the VAT rate from the order; check rounding. ✓ checkable</div><p class="note reveal">Reasoning effort is a dial: more steps can help, and they cost time and tokens. Compare the supported settings on the same acceptance cases.</p></div></section>
 
 <section data-origin-slide="14" class="slide light" data-label="Model, harness, client" data-speaker-notes="The model need not be rented or remote. This talk uses a common API-backed harness as its example. Tool execution can be local or remote, depending on the integration; compatibility across models and harnesses is not universal."><div class="slide-content"><div class="slide-head reveal"><span class="snum">7</span><div class="crumb">The machinery</div></div><h2 class="reveal">Three parts, three different jobs</h2><div class="cards c3 reveal"><div class="tile"><h3 class="k">Model</h3><p>Proposes text or a structured tool call.</p></div><div class="tile"><h3 class="k">Harness</h3><p>Builds context, applies permissions and coordinates tool execution.</p></div><div class="tile"><h3 class="k">Client</h3><p>The terminal, editor or web interface where you inspect and steer the work.</p></div></div><p class="note reveal">For the invoice task: the model requests a test run; the harness arranges it; the client displays the result.</p></div></section>
 

@@ -57,13 +57,16 @@
   <div class="slide-head"><span class="crumb">In practice · Optional reference · <a href="measuring-what-works.html">Back to the talk</a></span><span class="snum"></span></div>
   <h2>The independence assumption matters</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l">If each trial succeeds <span class="key">independently</span> with probability p:</span>
-      <span class="l"></span>
-      <span class="l">P(at least one success in k trials) = 1 − (1 − p)^k</span>
-      <span class="l">P(all k trials succeed)            = p^k</span>
-      <span class="l"></span>
-      <span class="l">For p = 0.8 and k = 3: 0.992 versus 0.512.</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Repeated-run probabilities</span><span>FORMULAS</span></div>
+      <div class="snip-body nonum">
+        <span class="l">If each trial succeeds <span class="tk">independently</span> with probability p:</span>
+        <span class="l"></span>
+        <span class="l">P(at least one success in k trials) = <span class="tn">1</span> − (<span class="tn">1</span> − p)^k</span>
+        <span class="l">P(all k trials succeed)            = p^k</span>
+        <span class="l"></span>
+        <span class="l">For p = <span class="tn">0.8</span> and k = <span class="tn">3</span>: <span class="tn">0.992</span> versus <span class="tn">0.512</span>.</span>
+      </div>
     </div>
   </div>
   <p class="note">These are mathematical examples, not measured model results. Correlated failures can invalidate the simple model.</p>
@@ -88,12 +91,15 @@
   <div class="slide-head"><span class="crumb">In practice · Optional reference · <a href="measuring-what-works.html">Back to the talk</a></span><span class="snum"></span></div>
   <h2>Review dictated requirements before execution</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="k">Spoken:</span> “Export invoices without changing stored records.”</span>
-      <span class="l"><span class="k">Check the transcription for:</span></span>
-      <span class="l">- negation: <span class="key">WITHOUT</span> changing records</span>
-      <span class="l">- exact file names and amounts</span>
-      <span class="l">- scope and permission boundaries</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Checklist</span><span>DICTATED REQUEST</span></div>
+      <div class="snip-body nonum">
+        <span class="l"><span class="tp">Spoken:</span> <span class="ts">“Export invoices without changing stored records.”</span></span>
+        <span class="l"><span class="tp">Check the transcription for:</span></span>
+        <span class="l"><span class="tk">-</span> negation: <span class="tk">WITHOUT</span> changing records</span>
+        <span class="l"><span class="tk">-</span> exact file names and amounts</span>
+        <span class="l"><span class="tk">-</span> scope and permission boundaries</span>
+      </div>
     </div>
   </div>
   <p class="note">A voice interface changes input convenience, not the acceptance checks.</p>

@@ -137,14 +137,21 @@
   <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
   <h2>Ask for an answer you can inspect</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="k">TASK:</span> locate invoice VAT and CSV formatting paths.</span>
-      <span class="l"><span class="k">RETURN:</span></span>
-      <span class="l">- finding + file and line reference</span>
-      <span class="l">- relevant test or observed output</span>
-      <span class="l">- uncertainty and missing evidence</span>
-      <span class="l">- suggested next check</span>
-      <span class="l"><span class="k">SCOPE:</span> read-only investigation; do not change files.</span>
+    <div class="snip">
+      <div class="snip-bar"><span>helper prompt</span><span>MARKDOWN</span></div>
+      <div class="snip-body">
+        <span class="l"><span class="tp">## Task</span></span>
+        <span class="l">Locate the invoice VAT and CSV formatting paths.</span>
+        <span class="l"></span>
+        <span class="l"><span class="tp">## Return</span></span>
+        <span class="l"><span class="tk">-</span> finding + <span class="ts">`file:line`</span> reference</span>
+        <span class="l"><span class="tk">-</span> relevant test or observed output</span>
+        <span class="l"><span class="tk">-</span> uncertainty and missing evidence</span>
+        <span class="l"><span class="tk">-</span> suggested next check</span>
+        <span class="l"></span>
+        <span class="l"><span class="tp">## Scope</span></span>
+        <span class="l">Read-only investigation; <span class="tk">do not change files.</span></span>
+      </div>
     </div>
   </div>
   <p class="note">A short unsupported conclusion saves tokens by discarding the part you need.</p>
@@ -182,16 +189,20 @@
   <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
   <h2>One model call is not a tool-using helper loop</h2>
   <div class="zone">
-    <div class="code reg">
-      <span class="l"><span class="c">PSEUDOCODE</span></span>
-      <span class="l">context = task + configured_instructions</span>
-      <span class="l"><span class="k">while</span> budget_remains:</span>
-      <span class="l">    response = model(context)</span>
-      <span class="l">    <span class="k">if</span> response.requests_tools:</span>
-      <span class="l">        context += permitted_tool_results(response)</span>
-      <span class="l">    <span class="k">else</span>:</span>
-      <span class="l">        <span class="k">return</span> structured_findings(response)</span>
-      <span class="l"><span class="k">return</span> incomplete_report()</span>
+    <div class="snip">
+      <div class="snip-bar"><span>helper_loop.py</span><span>PSEUDOCODE</span></div>
+      <div class="snip-body">
+        <span class="l">context = task + configured_instructions</span>
+        <span class="l"></span>
+        <span class="l"><span class="tk">while</span> budget_remains:</span>
+        <span class="l">    response = <span class="tf">model</span>(context)</span>
+        <span class="l">    <span class="tk">if</span> response.requests_tools:</span>
+        <span class="l">        context += <span class="tf">permitted_tool_results</span>(response)  <span class="tc"># loop again</span></span>
+        <span class="l">    <span class="tk">else</span>:</span>
+        <span class="l">        <span class="tk">return</span> <span class="tf">structured_findings</span>(response)</span>
+        <span class="l"></span>
+        <span class="l"><span class="tk">return</span> <span class="tf">incomplete_report</span>()  <span class="tc"># budget ran out</span></span>
+      </div>
     </div>
   </div>
   <p class="note">Handle errors, multiple content blocks and stop reasons in real code.</p>
@@ -202,13 +213,20 @@
   <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
   <h2>A compact trace still needs evidence</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="c">ILLUSTRATIVE — not a recorded Claude Code session</span></span>
-      <span class="l"></span>
-      <span class="l"><span class="k">Lead:</span> investigate invoice calculation and export.</span>
-      <span class="l"><span class="k">Helper A:</span> calc.py applies no VAT; see invoice rule.</span>
-      <span class="l"><span class="k">Helper B:</span> export.py writes the calculated total unchanged.</span>
-      <span class="l"><span class="k">Lead:</span> verify those findings, then plan one scoped patch.</span>
+    <div class="cc">
+      <div class="cc-bar"><i></i><i></i><i></i><span>claude — ~/invoice-app</span></div>
+      <div class="cc-body">
+        <div class="u">investigate invoice calculation and export</div>
+        <div class="m">I'll run two read-only investigations in parallel.</div>
+        <div class="t">2 <b>Explore</b> agents finished</div>
+        <div class="tree">   ├─ Find where VAT is applied</div>
+        <div class="tree">   │<span class="r">calc.py applies no VAT; see invoice rule</span></div>
+        <div class="tree">   └─ Trace CSV export of totals</div>
+        <div class="tree">    <span class="r">export.py writes the calculated total unchanged</span></div>
+        <div class="m">Both point at calc.py. Verifying before I plan one scoped patch.</div>
+        <div class="t"><b>Read</b>(src/calc.py)</div>
+        <div class="spin">Verifying… <small>(esc to interrupt)</small></div>
+      </div>
     </div>
   </div>
   <p class="note">Tool counts, timings and costs should come from a real run if you quote them.</p>
@@ -240,14 +258,17 @@
   <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
   <h2>Keep the shared material before the questions</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="k">Shared eligible prefix</span></span>
-      <span class="l">  tools + stable instructions + invoice schema</span>
-      <span class="l"></span>
-      <span class="l"><span class="k">Request A:</span> Where is VAT applied?</span>
-      <span class="l"><span class="k">Request B:</span> Where is CSV escaping handled?</span>
-      <span class="l"></span>
-      <span class="l">Changing the question need not change the shared prefix.</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Request layout</span><span>PROMPT CACHING</span></div>
+      <div class="snip-body nonum">
+        <span class="l"><span class="tp">Shared eligible prefix</span></span>
+        <span class="l">  tools + stable instructions + invoice schema</span>
+        <span class="l"></span>
+        <span class="l"><span class="tp">Request A:</span> Where is VAT applied?</span>
+        <span class="l"><span class="tp">Request B:</span> Where is CSV escaping handled?</span>
+        <span class="l"></span>
+        <span class="l">Changing the question need not change the shared prefix.</span>
+      </div>
     </div>
   </div>
   <p class="note">A matching prefix must be eligible and already cached; stable text alone does not create a hit. <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">Caching docs</a></p>
@@ -275,16 +296,19 @@
   <div class="slide-head"><span class="crumb">Worked arithmetic</span><span class="snum"></span></div>
   <h2>Include the write before counting savings</h2>
   <div class="zone">
-    <div class="code reg">
-      <span class="l"><span class="c">Same eligible prefix; all later requests hit the cache.</span></span>
-      <span class="l"><span class="c">Normalize ordinary input cost to 1 per request.</span></span>
-      <span class="l"></span>
-      <span class="l"><span class="k">Total cached cost</span> = w + (n − 1)r</span>
-      <span class="l">Caching saves when <span class="key">w + (n − 1)r &lt; n</span>.</span>
-      <span class="l"></span>
-      <span class="l"><span class="k">Example r = 0.10:</span></span>
-      <span class="l">w = 1.25 <span class="a">→</span> savings at 2 requests</span>
-      <span class="l">w = 2.00 <span class="a">→</span> savings at 3 requests</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Worksheet</span><span>CACHE BREAK-EVEN</span></div>
+      <div class="snip-body nonum">
+        <span class="l"><span class="tc">Same eligible prefix; all later requests hit the cache.</span></span>
+        <span class="l"><span class="tc">Normalize ordinary input cost to <span class="tn">1</span> per request.</span></span>
+        <span class="l"></span>
+        <span class="l"><span class="tp">Total cached cost</span> = w + (n − <span class="tn">1</span>)r</span>
+        <span class="l">Caching saves when <span class="tk">w + (n − 1)r &lt; n</span>.</span>
+        <span class="l"></span>
+        <span class="l"><span class="tp">Example r = 0.10:</span></span>
+        <span class="l">w = <span class="tn">1.25</span> <span class="tc">→</span> savings at <span class="tn">2</span> requests</span>
+        <span class="l">w = <span class="tn">2.00</span> <span class="tc">→</span> savings at <span class="tn">3</span> requests</span>
+      </div>
     </div>
   </div>
   <p class="note">Illustrative multipliers: verify model, platform, TTL and expiry rules. A cache miss changes the calculation.</p>
@@ -326,11 +350,14 @@
   <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
   <h2>Concurrent requests do not guarantee shared hits</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l">1. Prepare one eligible prefix and matching cache settings.</span>
-      <span class="l">2. Start a request that writes that prefix.</span>
-      <span class="l">3. Wait until its response begins and the entry is available.</span>
-      <span class="l">4. Send matching helper requests; inspect cache usage.</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Procedure</span><span>WARM-UP BEFORE FAN-OUT</span></div>
+      <div class="snip-body nonum">
+        <span class="l"><span class="tn">1.</span> Prepare one eligible prefix and matching cache settings.</span>
+        <span class="l"><span class="tn">2.</span> Start a request that writes that prefix.</span>
+        <span class="l"><span class="tn">3.</span> Wait until its response begins and the entry is available.</span>
+        <span class="l"><span class="tn">4.</span> Send matching helper requests; inspect cache usage.</span>
+      </div>
     </div>
   </div>
   <p class="note">Cold simultaneous requests can duplicate cache writes. <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">Claude cache limits</a></p>

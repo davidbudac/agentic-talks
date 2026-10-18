@@ -86,15 +86,18 @@
   <div class="slide-head"><span class="crumb">Publication reference · Optional reference · <a href="working-smarter.html">Back to the talk</a></span><span class="snum"></span></div>
   <h2>Package, test, then share</h2>
   <div class="zone">
-    <div class="code reg">
-      <span class="l">my-plugin/</span>
-      <span class="l">  .claude-plugin/plugin.json</span>
-      <span class="l">  skills/invoice-check/SKILL.md</span>
-      <span class="l"></span>
-      <span class="l">1. Give the manifest a name and version.</span>
-      <span class="l">2. Test locally: claude --plugin-dir ./my-plugin</span>
-      <span class="l">3. Review contents and pin the version to distribute.</span>
-      <span class="l">4. Publish through your team’s approved channel.</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Plugin recipe</span><span>CLAUDE CODE</span></div>
+      <div class="snip-body nonum">
+        <span class="l">my-plugin/</span>
+        <span class="l">├── .claude-plugin/plugin.json</span>
+        <span class="l">└── skills/invoice-check/SKILL.md</span>
+        <span class="l"></span>
+        <span class="l"><span class="tn">1.</span> Give the manifest a name and version.</span>
+        <span class="l"><span class="tn">2.</span> Test locally: <span class="ts">claude --plugin-dir ./my-plugin</span></span>
+        <span class="l"><span class="tn">3.</span> Review contents and pin the version to distribute.</span>
+        <span class="l"><span class="tn">4.</span> Publish through your team’s approved channel.</span>
+      </div>
     </div>
   </div>
   <p class="note"><a href="https://code.claude.com/docs/en/plugins">Plugin overview</a> · <a href="https://code.claude.com/docs/en/plugin-marketplaces">Marketplace setup</a></p>
@@ -123,13 +126,16 @@
   <div class="slide-head"><span class="crumb">In practice · Optional reference · <a href="working-smarter.html">Back to the talk</a></span><span class="snum"></span></div>
   <h2>The independence assumption matters</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l">If each trial succeeds <span class="key">independently</span> with probability p:</span>
-      <span class="l"></span>
-      <span class="l">P(at least one success in k trials) = 1 − (1 − p)^k</span>
-      <span class="l">P(all k trials succeed)            = p^k</span>
-      <span class="l"></span>
-      <span class="l">For p = 0.8 and k = 3: 0.992 versus 0.512.</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Repeated-run probabilities</span><span>MATH</span></div>
+      <div class="snip-body">
+        <span class="l">If each trial succeeds <span class="tk">independently</span> with probability p:</span>
+        <span class="l"></span>
+        <span class="l"><span class="tf">P</span>(at least one success in k trials) = <span class="tn">1</span> − (<span class="tn">1</span> − p)^k</span>
+        <span class="l"><span class="tf">P</span>(all k trials succeed)             = p^k</span>
+        <span class="l"></span>
+        <span class="l">For p = <span class="tn">0.8</span> and k = <span class="tn">3</span>: <span class="tn">0.992</span> versus <span class="tn">0.512</span>.</span>
+      </div>
     </div>
   </div>
   <p class="note">These are mathematical examples, not measured model results. Correlated failures can invalidate the simple model.</p>

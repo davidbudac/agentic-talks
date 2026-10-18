@@ -54,15 +54,18 @@
   <div class="slide-head"><span class="crumb">Publication reference · Optional reference · <a href="orchestrating-agents.html">Back to the talk</a></span><span class="snum"></span></div>
   <h2>Package, test, then share</h2>
   <div class="zone">
-    <div class="code reg">
-      <span class="l">my-plugin/</span>
-      <span class="l">  .claude-plugin/plugin.json</span>
-      <span class="l">  skills/invoice-check/SKILL.md</span>
-      <span class="l"></span>
-      <span class="l">1. Give the manifest a name and version.</span>
-      <span class="l">2. Test locally: claude --plugin-dir ./my-plugin</span>
-      <span class="l">3. Review contents and pin the version to distribute.</span>
-      <span class="l">4. Publish through your team’s approved channel.</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Plugin publication recipe</span><span>CLAUDE CODE</span></div>
+      <div class="snip-body nonum">
+        <span class="l">my-plugin/</span>
+        <span class="l">├── .claude-plugin/plugin.json</span>
+        <span class="l">└── skills/invoice-check/SKILL.md</span>
+        <span class="l"></span>
+        <span class="l"><span class="tk">1.</span> Give the manifest a name and version.</span>
+        <span class="l"><span class="tk">2.</span> Test locally: <span class="ts">claude --plugin-dir ./my-plugin</span></span>
+        <span class="l"><span class="tk">3.</span> Review contents and pin the version to distribute.</span>
+        <span class="l"><span class="tk">4.</span> Publish through your team’s approved channel.</span>
+      </div>
     </div>
   </div>
   <p class="note"><a href="https://code.claude.com/docs/en/plugins">Plugin overview</a> · <a href="https://code.claude.com/docs/en/plugin-marketplaces">Marketplace setup</a></p>
@@ -73,12 +76,15 @@
   <div class="slide-head"><span class="crumb">In practice · Optional reference · <a href="orchestrating-agents.html">Back to the talk</a></span><span class="snum"></span></div>
   <h2>Run the same read through both interfaces</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="k">Task:</span> retrieve the invoice ticket and its acceptance cases.</span>
-      <span class="l">Hold data, access scope and requested output constant.</span>
-      <span class="l">For CLI and MCP, record:</span>
-      <span class="l">  correctness; calls; failures; tokens; elapsed time</span>
-      <span class="l">Repeat after warm-up; report missing measurements.</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Exercise</span><span>CLI vs MCP</span></div>
+      <div class="snip-body nonum">
+        <span class="l"><span class="tp">Task:</span> retrieve the invoice ticket and its acceptance cases.</span>
+        <span class="l">Hold data, access scope and requested output constant.</span>
+        <span class="l"><span class="tp">For CLI and MCP, record:</span></span>
+        <span class="l">  correctness; calls; failures; tokens; elapsed time</span>
+        <span class="l">Repeat after warm-up; report missing measurements.</span>
+      </div>
     </div>
   </div>
   <p class="note">This is an experiment design, not a completed case study.</p>

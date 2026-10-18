@@ -38,13 +38,21 @@
   <div class="slide-head"><span class="crumb">The hook</span><span class="snum"></span></div>
   <h2>You type one line. It does the rest.</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="k">you ›</span> "the invoice test is failing — fix it"</span>
-      <span class="l"><span class="c">…then, with no further input, the AI on its own:</span></span>
-      <span class="l">  ✓ ran the tests           <span class="c">saw it expected 121, got 100</span></span>
-      <span class="l">  ✓ opened invoice.py       <span class="c">spotted VAT was never applied</span></span>
-      <span class="l">  ✓ edited the code         <span class="c">added the 21% VAT line</span></span>
-      <span class="l">  ✓ ran the tests again     <span class="key">PASS ✓</span></span>
+    <div class="cc">
+      <div class="cc-bar"><i></i><i></i><i></i><span>claude — ~/invoice-app</span></div>
+      <div class="cc-body">
+        <div class="u">the invoice test is failing — fix it</div>
+        <div class="t err"><b>Bash</b>(pytest tests/test_invoice.py -q)</div>
+        <div class="r"><span class="e">FAILED</span> test_vat — expected 121.00, got 100.00</div>
+        <div class="t"><b>Read</b>(invoice.py)</div>
+        <div class="r">VAT is never applied to the total</div>
+        <div class="t"><b>Update</b>(invoice.py)</div>
+        <div class="d del">  return net</div>
+        <div class="d add">  return net * (1 + order.vat_rate)</div>
+        <div class="t"><b>Bash</b>(pytest tests/test_invoice.py -q)</div>
+        <div class="r"><span class="ok">1 passed</span></div>
+        <div class="m">Fixed: the total now applies the order's 21% VAT.</div>
+      </div>
     </div>
   </div>
   <p class="note">Illustrative trace: a passing test is evidence for that case. Review the diff and relevant edge cases before accepting the change.</p>
@@ -175,12 +183,23 @@
   <div class="slide-head"><span class="crumb">The request</span><span class="snum"></span></div>
   <h2>One message sits inside a larger request</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="k">SYSTEM</span>       role, rules and tool descriptions</span>
-      <span class="l"><span class="k">PROJECT</span>      how to run the invoice tests</span>
-      <span class="l"><span class="k">HISTORY</span>      the task and earlier results</span>
-      <span class="l"><span class="k">TOOL OUTPUT</span>  invoice.py and the failing test</span>
-      <span class="l"><span class="k">YOUR MESSAGE</span> &quot;fix the missing VAT&quot;</span>
+    <div class="cc">
+      <div class="cc-bar"><i></i><i></i><i></i><span>claude — ~/invoice-app</span></div>
+      <div class="cc-body">
+        <div class="u">/context</div>
+        <div class="r"><b class="ctx-title">Context Usage</b>  54.3k / 200k tokens (27%)</div>
+        <div class="ctx">
+          <div class="ctx-grid"><i class="ks"></i><i class="ks"></i><i class="ks"></i><i class="ks"></i><i class="ks"></i><i class="ks"></i><i class="ks"></i><i class="ks"></i><i class="ks"></i><i class="kp"></i><i class="kh"></i><i class="kh"></i><i class="kh"></i><i class="kh"></i><i class="kh"></i><i class="kh"></i><i class="kt"></i><i class="kt"></i><i class="kt"></i><i class="kt"></i><i class="kt"></i><i class="kt"></i><i class="kt"></i><i class="kt"></i><i class="kt"></i><i class="kt"></i><i class="kt"></i><i class="kt"></i><i class="ky"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i><i class="kf"></i></div>
+          <div class="ctx-legend">
+            <div><i class="ks"></i><b>System prompt + tools</b><em>18.2k</em><span>role, rules and tool descriptions</span></div>
+            <div><i class="kp"></i><b>Memory files</b><em>0.6k</em><span>CLAUDE.md: how to run the tests</span></div>
+            <div><i class="kh"></i><b>Messages</b><em>11.4k</em><span>the task and earlier results</span></div>
+            <div><i class="kt"></i><b>Tool results</b><em>24.0k</em><span>invoice.py and the failing test</span></div>
+            <div class="you"><i class="ky"></i><b>Your message</b><em>0.1k</em><span>"fix the missing VAT"</span></div>
+            <div class="free"><i class="kf"></i><b>Free space</b><em>145.7k</em><span></span></div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <p class="note"><b>Context</b> is the information supplied for this call. <b>Tokens</b> are the chunks used to measure it.</p>
@@ -191,10 +210,14 @@
   <div class="slide-head"><span class="crumb">Optional live example</span><span class="snum"></span></div>
   <h2>Watch one bounded task</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l">Fix the invoice calculation so the VAT test passes.</span>
-      <span class="l">Do not change the test or unrelated files.</span>
-      <span class="l">Run the relevant tests and show the final diff.</span>
+    <div class="cc">
+      <div class="cc-bar"><i></i><i></i><i></i><span>claude — ~/invoice-app</span></div>
+      <div class="cc-body">
+        <div class="in">Fix the invoice calculation so the VAT test passes.
+  Do not change the test or unrelated files.
+  Run the relevant tests and show the final diff.<span class="caret"></span></div>
+        <div class="hint">? for shortcuts</div>
+      </div>
     </div>
   </div>
   <p class="note">Optional live run: use a disposable project and scoped permissions. The next slide provides an illustrative trace if no demo is available.</p>
@@ -227,12 +250,21 @@
   <div class="slide-head"><span class="crumb">The loop</span><span class="snum"></span></div>
   <h2>The invoice fix, step by step</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l">run tests     <span class="a">→</span> FAIL: expected 121, got 100</span>
-      <span class="l">read invoice  <span class="a">→</span> VAT is missing from the total</span>
-      <span class="l">edit code     <span class="a">→</span> apply the order’s 21% VAT rate</span>
-      <span class="l">run tests     <span class="a">→</span> <span class="key">PASS</span></span>
-      <span class="l">review diff   <span class="a">→</span> check scope and edge cases</span>
+    <div class="cc">
+      <div class="cc-bar"><i></i><i></i><i></i><span>claude — ~/invoice-app</span></div>
+      <div class="cc-body">
+        <div class="u">fix the missing VAT</div>
+        <div class="t err"><b>Bash</b>(python -m unittest tests.test_invoice)</div>
+        <div class="r"><span class="e">FAIL</span>: test_vat — AssertionError: 100.0 != 121.0</div>
+        <div class="t"><b>Read</b>(invoice.py)</div>
+        <div class="m">The total is never multiplied by the order's VAT rate.</div>
+        <div class="t"><b>Update</b>(invoice.py)</div>
+        <div class="d del">  return net</div>
+        <div class="d add">  return net * (1 + order.vat_rate)</div>
+        <div class="t"><b>Bash</b>(python -m unittest tests.test_invoice)</div>
+        <div class="r"><span class="ok">OK</span> — Ran 1 test</div>
+        <div class="m">One line changed. Review the diff for scope and edge cases.</div>
+      </div>
     </div>
   </div>
   <p class="note">Illustrative trace. The model requests the actions; the harness runs them and returns the results.</p>
@@ -414,12 +446,16 @@
   <div class="slide-head"><span class="crumb">Project knowledge</span><span class="snum"></span></div>
   <h2>Teach it the rules it cannot infer</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="c"># CLAUDE.md — invoice project</span></span>
-      <span class="l">- Run invoice checks with: python -m unittest</span>
-      <span class="l">- VAT rates come from the order record.</span>
-      <span class="l">- Do not replace the tests to make a fix pass.</span>
-      <span class="l">- Ask before changing the stored invoice schema.</span>
+    <div class="snip">
+      <div class="snip-bar"><span>CLAUDE.md</span><span>~/invoice-app</span></div>
+      <div class="snip-body">
+        <span class="l"><span class="tp"># Invoice project</span></span>
+        <span class="l"></span>
+        <span class="l"><span class="tk">-</span> Run invoice checks with: <span class="ts">`python -m unittest`</span></span>
+        <span class="l"><span class="tk">-</span> VAT rates come from the order record.</span>
+        <span class="l"><span class="tk">-</span> Do not replace the tests to make a fix pass.</span>
+        <span class="l"><span class="tk">-</span> Ask before changing the stored invoice schema.</span>
+      </div>
     </div>
   </div>
   <p class="note">Keep standing rules short. Use the instruction-file convention supported by your harness, such as CLAUDE.md or AGENTS.md.</p>
@@ -430,11 +466,14 @@
   <div class="slide-head"><span class="crumb">Project knowledge</span><span class="snum"></span></div>
   <h2>Save a repeatable check as a skill</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l">invoice-check/</span>
-      <span class="l">  SKILL.md       when to run + how to verify</span>
-      <span class="l">  scripts/       optional deterministic checks</span>
-      <span class="l">  references/    VAT and rounding rules</span>
+    <div class="snip">
+      <div class="snip-bar"><span>skill folder</span><span>.claude/skills/</span></div>
+      <div class="snip-body">
+        <span class="l">invoice-check/</span>
+        <span class="l">├── SKILL.md      <span class="tc"># when to run + how to verify</span></span>
+        <span class="l">├── scripts/      <span class="tc"># optional deterministic checks</span></span>
+        <span class="l">└── references/   <span class="tc"># VAT and rounding rules</span></span>
+      </div>
     </div>
   </div>
   <p class="note"><b>Skill:</b> a reusable procedure loaded when relevant. <b>Plugin:</b> a way to distribute a toolkit to a team.</p>
@@ -485,6 +524,18 @@
           <rect class="dg-box" x="731" y="120" width="96" height="60" rx="2"/>
           <rect class="dg-box" x="731" y="300" width="96" height="60" rx="2"/>
           <rect class="dg-box" x="731" y="480" width="96" height="60" rx="2"/>
+          <text class="dg-t mut" x="48.5" y="157" text-anchor="middle">app</text>
+          <text class="dg-t mut" x="48.5" y="337" text-anchor="middle">app</text>
+          <text class="dg-t mut" x="48.5" y="517" text-anchor="middle">app</text>
+          <text class="dg-t mut" x="486.0" y="157" text-anchor="middle">app</text>
+          <text class="dg-t mut" x="486.0" y="337" text-anchor="middle">app</text>
+          <text class="dg-t mut" x="486.0" y="517" text-anchor="middle">app</text>
+          <text class="dg-t mut" x="342.0" y="157" text-anchor="middle">tool</text>
+          <text class="dg-t mut" x="342.0" y="337" text-anchor="middle">tool</text>
+          <text class="dg-t mut" x="342.0" y="517" text-anchor="middle">tool</text>
+          <text class="dg-t mut" x="779.0" y="157" text-anchor="middle">tool</text>
+          <text class="dg-t mut" x="779.0" y="337" text-anchor="middle">tool</text>
+          <text class="dg-t mut" x="779.0" y="517" text-anchor="middle">tool</text>
         </svg>
       </div>
       <ul class="bul">
@@ -508,7 +559,7 @@
       <li><b>Acceptance:</b> inspect the diff, run the relevant check, record what remains unverified.</li>
     </ol>
   </div>
-  <p class="note"><a href="agentic-ai-reference.html">Optional reference: terminology, products and historical pricing</a> · <a href="index.html">All talks</a></p>
+  <p class="note"><a href="agentic-ai-reference.html">Optional reference: terminology, products and historical pricing</a> · <a href="new/">All talks</a></p>
 </section>
 
 <!-- 25 · Sources 1 of 2 (8 + 4 links exceed .links (3–5 rows per column): numeric-layout table, title link left, URL right; reported as unfit) -->

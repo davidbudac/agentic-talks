@@ -100,11 +100,14 @@
   <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
   <h2>One success answers a different question</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="c">Illustrative outcomes for one case:</span> fail fail <span class="key">pass</span> fail fail</span>
-      <span class="l"><span class="k">At least one success in five attempts:</span> yes</span>
-      <span class="l"><span class="k">All five attempts successful:</span> no</span>
-      <span class="l"><span class="k">Observed single-attempt success rate:</span> 1 / 5</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Repeated trials</span><span>ONE CASE · ILLUSTRATIVE</span></div>
+      <div class="snip-body nonum">
+        <span class="l"><span class="tp">Outcomes:</span> fail fail <span class="tk">pass</span> fail fail</span>
+        <span class="l"><span class="tp">At least one success in five attempts:</span> yes</span>
+        <span class="l"><span class="tp">All five attempts successful:</span> no</span>
+        <span class="l"><span class="tp">Observed single-attempt success rate:</span> <span class="tn">1</span> / <span class="tn">5</span></span>
+      </div>
     </div>
   </div>
   <p class="note">This small sample does not establish production reliability. Report task coverage, repeats and uncertainty.</p>
@@ -164,12 +167,14 @@
   <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
   <h2>Score two synthetic outputs</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="c">10 minutes — no model call needed</span></span>
-      <span class="l"><span class="k">A:</span> net=100, VAT=21, gross=121 for BOTH 21% and 0% orders.</span>
-      <span class="l"><span class="k">B:</span> correct totals for both; customer ACME, Ltd is unquoted.</span>
-      <span class="l">Grade against the four cases. Which outputs fail?</span>
-      <span class="l">What evidence is still missing?</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Exercise</span><span>10 MIN · NO MODEL CALL</span></div>
+      <div class="snip-body nonum">
+        <span class="l"><span class="tp">A:</span> net=<span class="tn">100</span>, VAT=<span class="tn">21</span>, gross=<span class="tn">121</span> for <span class="tk">BOTH</span> <span class="tn">21%</span> and <span class="tn">0%</span> orders.</span>
+        <span class="l"><span class="tp">B:</span> correct totals for both; customer <span class="ts">ACME, Ltd</span> is unquoted.</span>
+        <span class="l">Grade against the four cases. Which outputs fail?</span>
+        <span class="l">What evidence is still missing?</span>
+      </div>
     </div>
   </div>
   <p class="note">Output: a scored worksheet with explanations. Neither candidate is ready to accept.</p>
@@ -263,12 +268,16 @@
   <div class="slide-head"><span class="crumb">Make it repeatable</span><span class="snum"></span></div>
   <h2>Store the rules needed on most tasks</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="c"># Project instructions — illustrative invoice repository</span></span>
-      <span class="l">- Test with: pytest tests/test_invoice.py -q</span>
-      <span class="l">- VAT rates come from the order record.</span>
-      <span class="l">- Preserve existing assertions; explain test changes.</span>
-      <span class="l">- Ask before changing the stored invoice schema.</span>
+    <div class="snip">
+      <div class="snip-bar"><span>CLAUDE.md</span><span>~/invoice-app · illustrative</span></div>
+      <div class="snip-body">
+        <span class="l"><span class="tp"># Project instructions</span></span>
+        <span class="l"></span>
+        <span class="l"><span class="tk">-</span> Test with: <span class="ts">`pytest tests/test_invoice.py -q`</span></span>
+        <span class="l"><span class="tk">-</span> VAT rates come from the order record.</span>
+        <span class="l"><span class="tk">-</span> Preserve existing assertions; explain test changes.</span>
+        <span class="l"><span class="tk">-</span> Ask before changing the stored invoice schema.</span>
+      </div>
     </div>
   </div>
   <p class="note">Use the instruction-file convention your harness actually loads. Keep standing rules short and specific.</p>
@@ -292,12 +301,14 @@
   <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
   <h2>Exercise · compare two versions fairly</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="c">10 minutes</span></span>
-      <span class="l"><span class="k">A:</span> the long instruction file. <span class="k">B:</span> the shorter version.</span>
-      <span class="l">Use identical task inputs, repo state, model and tools.</span>
-      <span class="l"><span class="k">Record:</span> acceptance results, all usage, time and retries.</span>
-      <span class="l">Repeat runs if available; inspect failures before choosing.</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Exercise</span><span>10 MIN</span></div>
+      <div class="snip-body nonum">
+        <span class="l"><span class="tp">A:</span> the long instruction file. <span class="tp">B:</span> the shorter version.</span>
+        <span class="l">Use identical task inputs, repo state, model and tools.</span>
+        <span class="l"><span class="tp">Record:</span> acceptance results, all usage, time and retries.</span>
+        <span class="l">Repeat runs if available; inspect failures before choosing.</span>
+      </div>
     </div>
   </div>
   <p class="note">Output: a comparison worksheet and one justified decision. A smaller prompt that drops the VAT rule loses.</p>
@@ -373,12 +384,15 @@
   <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
   <h2>One ticket, explicit state transitions</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="k">Ready:</span> invoice rule + scope + acceptance cases</span>
-      <span class="l"><span class="k">Claimed:</span> one owner + lease + retry budget</span>
-      <span class="l"><span class="k">Working:</span> permitted workspace + progress evidence</span>
-      <span class="l"><span class="k">Review:</span> patch + checks + unresolved gaps</span>
-      <span class="l"><span class="k">Accepted:</span> reviewer confirms the requested behavior</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Ticket states</span><span>invoice ticket</span></div>
+      <div class="snip-body nonum">
+        <span class="l"><span class="tp">Ready:</span>    invoice rule <span class="tk">+</span> scope <span class="tk">+</span> acceptance cases</span>
+        <span class="l"><span class="tp">Claimed:</span>  one owner <span class="tk">+</span> lease <span class="tk">+</span> retry budget</span>
+        <span class="l"><span class="tp">Working:</span>  permitted workspace <span class="tk">+</span> progress evidence</span>
+        <span class="l"><span class="tp">Review:</span>   patch <span class="tk">+</span> checks <span class="tk">+</span> unresolved gaps</span>
+        <span class="l"><span class="tp">Accepted:</span> reviewer confirms the requested behavior</span>
+      </div>
     </div>
   </div>
   <p class="note">Failed or blocked work returns with evidence. A green tool run does not automatically publish a change.</p>
@@ -468,11 +482,14 @@
   <div class="slide-head"><span class="crumb">Make it repeatable</span><span class="snum"></span></div>
   <h2>Save the repeated invoice check as a skill</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l">invoice-check/</span>
-      <span class="l">  SKILL.md     when to use it + verification procedure</span>
-      <span class="l">  scripts/     optional deterministic checks</span>
-      <span class="l">  references/  VAT and rounding rules</span>
+    <div class="snip">
+      <div class="snip-bar"><span>invoice-check/</span><span>.claude/skills/</span></div>
+      <div class="snip-body">
+        <span class="l">invoice-check/</span>
+        <span class="l">├── SKILL.md      <span class="tc"># when to use it + verification procedure</span></span>
+        <span class="l">├── scripts/      <span class="tc"># optional deterministic checks</span></span>
+        <span class="l">└── references/   <span class="tc"># VAT and rounding rules</span></span>
+      </div>
     </div>
   </div>
   <p class="note"><b>Procedure:</b> inspect the diff → run the cases → report evidence and gaps.</p>
@@ -483,12 +500,14 @@
   <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
   <h2>Write a verification skill you can test</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="c">10 minutes</span></span>
-      <span class="l">Define the trigger: invoice or CSV export changes.</span>
-      <span class="l">Write four checks: VAT, zero VAT, rounding, escaping.</span>
-      <span class="l">Name the command and required evidence.</span>
-      <span class="l">Test with one matching task and one unrelated task.</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Exercise</span><span>10 MIN</span></div>
+      <div class="snip-body nonum">
+        <span class="l"><span class="tp">Define the trigger:</span> invoice or CSV export changes.</span>
+        <span class="l"><span class="tp">Write four checks:</span> VAT, zero VAT, rounding, escaping.</span>
+        <span class="l">Name the command and required evidence.</span>
+        <span class="l">Test with one matching task and one unrelated task.</span>
+      </div>
     </div>
   </div>
   <p class="note">Output: a small skill file and evidence that it is used when appropriate.</p>
@@ -499,15 +518,19 @@
   <div class="slide-head"><span class="crumb">Skill reference</span><span class="snum"></span></div>
   <h2>An invoice-check skill for Claude Code</h2>
   <div class="zone">
-    <div class="code reg">
-      <span class="l"><span class="c">---</span></span>
-      <span class="l"><span class="k">name:</span> invoice-check</span>
-      <span class="l"><span class="k">description:</span> Verify changes to invoice totals or CSV export.</span>
-      <span class="l"><span class="c">---</span></span>
-      <span class="l">1. Read the invoice rule and inspect the proposed diff.</span>
-      <span class="l">2. Run the invoice and export tests; keep the actual output.</span>
-      <span class="l">3. Check VAT, rounding and CSV escaping coverage.</span>
-      <span class="l">4. Report findings, exit status and untested cases.</span>
+    <div class="snip">
+      <div class="snip-bar"><span>SKILL.md</span><span>.claude/skills/invoice-check/</span></div>
+      <div class="snip-body">
+        <span class="l"><span class="tc">---</span></span>
+        <span class="l"><span class="tp">name</span>: <span class="ts">invoice-check</span></span>
+        <span class="l"><span class="tp">description</span>: <span class="ts">Verify changes to invoice totals or CSV export.</span></span>
+        <span class="l"><span class="tc">---</span></span>
+        <span class="l"></span>
+        <span class="l"><span class="tn">1.</span> Read the invoice rule and inspect the proposed diff.</span>
+        <span class="l"><span class="tn">2.</span> Run the invoice and export tests; keep the actual output.</span>
+        <span class="l"><span class="tn">3.</span> Check VAT, rounding and CSV escaping coverage.</span>
+        <span class="l"><span class="tn">4.</span> Report findings, exit status and untested cases.</span>
+      </div>
     </div>
   </div>
   <p class="note">Example path: <code>.claude/skills/invoice-check/SKILL.md</code>. Check discovery in a fresh session.</p>
@@ -558,12 +581,15 @@
   <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
   <h2>Run the same read through both interfaces</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="k">Task:</span> retrieve the invoice ticket and its acceptance cases.</span>
-      <span class="l">Hold data, access scope and requested output constant.</span>
-      <span class="l">For CLI and MCP, record:</span>
-      <span class="l">  correctness; calls; failures; tokens; elapsed time</span>
-      <span class="l">Repeat after warm-up; report missing measurements.</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Exercise</span><span>CLI vs MCP</span></div>
+      <div class="snip-body nonum">
+        <span class="l"><span class="tp">Task:</span> retrieve the invoice ticket and its acceptance cases.</span>
+        <span class="l">Hold data, access scope and requested output constant.</span>
+        <span class="l"><span class="tp">For CLI and MCP, record:</span></span>
+        <span class="l">  <span class="tk">-</span> correctness; calls; failures; tokens; elapsed time</span>
+        <span class="l">Repeat after warm-up; report missing measurements.</span>
+      </div>
     </div>
   </div>
   <p class="note">This is an experiment design, not a completed case study.</p>
@@ -620,12 +646,14 @@
   <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
   <h2>Estimate storage, then list what is missing</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="c">10 minutes — illustrative hardware scenario</span></span>
-      <span class="l">35B total parameters; 3B active per token; four-bit weights.</span>
-      <span class="l">Weight-only storage ≈ 35B × 4 / 8 = 17.5 GB.</span>
-      <span class="l">Would a machine with 16 GB available memory fit it?</span>
-      <span class="l">What could offloading change? What must you measure?</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Exercise</span><span>10 MIN · ILLUSTRATIVE</span></div>
+      <div class="snip-body nonum">
+        <span class="l"><span class="tn">35B</span> total parameters; <span class="tn">3B</span> active per token; four-bit weights.</span>
+        <span class="l">Weight-only storage ≈ <span class="tn">35B</span> × <span class="tn">4</span> / <span class="tn">8</span> = <span class="tn">17.5 GB</span>.</span>
+        <span class="l">Would a machine with <span class="tn">16 GB</span> available memory fit it?</span>
+        <span class="l">What could offloading change? What must you measure?</span>
+      </div>
     </div>
   </div>
   <p class="note">Output: a qualified feasibility note. Include KV cache, buffers, quantization overhead and speed.</p>
@@ -649,12 +677,15 @@
   <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
   <h2>Review dictated requirements before execution</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="k">Spoken:</span> “Export invoices without changing stored records.”</span>
-      <span class="l"><span class="k">Check the transcription for:</span></span>
-      <span class="l">- negation: <span class="key">WITHOUT</span> changing records</span>
-      <span class="l">- exact file names and amounts</span>
-      <span class="l">- scope and permission boundaries</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Dictation check</span><span></span></div>
+      <div class="snip-body nonum">
+        <span class="l"><span class="tp">Spoken:</span> <span class="ts">“Export invoices without changing stored records.”</span></span>
+        <span class="l"><span class="tp">Check the transcription for:</span></span>
+        <span class="l"><span class="tk">-</span> negation: <span class="tk">WITHOUT</span> changing records</span>
+        <span class="l"><span class="tk">-</span> exact file names and amounts</span>
+        <span class="l"><span class="tk">-</span> scope and permission boundaries</span>
+      </div>
     </div>
   </div>
   <p class="note">A voice interface changes input convenience, not the acceptance checks.</p>
@@ -678,13 +709,16 @@
   <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
   <h2>Choose one experiment to take back</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l">My task and acceptance cases:</span>
-      <span class="l">The one change I will compare:</span>
-      <span class="l">What I will keep constant:</span>
-      <span class="l">Evidence I will record:</span>
-      <span class="l">Budget and stop condition:</span>
-      <span class="l">Who reviews the result:</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Worksheet</span><span>ONE EXPERIMENT</span></div>
+      <div class="snip-body nonum">
+        <span class="l"><span class="tp">My task and acceptance cases:</span></span>
+        <span class="l"><span class="tp">The one change I will compare:</span></span>
+        <span class="l"><span class="tp">What I will keep constant:</span></span>
+        <span class="l"><span class="tp">Evidence I will record:</span></span>
+        <span class="l"><span class="tp">Budget and stop condition:</span></span>
+        <span class="l"><span class="tp">Who reviews the result:</span></span>
+      </div>
     </div>
   </div>
   <p class="note">Output: one experiment plan with a clear owner and review date.</p>

@@ -68,15 +68,18 @@
   <div class="slide-head"><span class="crumb">Worked arithmetic · Optional reference · <a href="agentic-engineering.html">Back to the talk</a></span><span class="snum"></span></div>
   <h2>Growing history can produce quadratic input volume</h2>
   <div class="zone">
-    <div class="code reg">
-      <span class="l"><span class="c">Assume n calls; initial input B; each call adds d tokens.</span></span>
-      <span class="l"><span class="c">No pruning, compaction or window cap in this toy model.</span></span>
-      <span class="l"></span>
-      <span class="l"><span class="k">Input at call k</span> = B + (k − 1)d</span>
-      <span class="l"><span class="k">Total input</span>     = <span class="key">nB + d × n(n − 1) / 2</span></span>
-      <span class="l"></span>
-      <span class="l">B = 5,000; d = 2,000; n = 10</span>
-      <span class="l">Last call = 23,000; total input = 140,000 tokens.</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Input growth</span><span>TOY MODEL</span></div>
+      <div class="snip-body">
+        <span class="l"><span class="tc"># Assume n calls; initial input B; each call adds d tokens.</span></span>
+        <span class="l"><span class="tc"># No pruning, compaction or window cap in this toy model.</span></span>
+        <span class="l"></span>
+        <span class="l"><span class="tp">Input at call k</span> = B + (k − <span class="tn">1</span>)d</span>
+        <span class="l hl"><span class="tp">Total input</span>     = nB + d × n(n − <span class="tn">1</span>) / <span class="tn">2</span></span>
+        <span class="l"></span>
+        <span class="l">B = <span class="tn">5,000</span>; d = <span class="tn">2,000</span>; n = <span class="tn">10</span></span>
+        <span class="l">Last call = <span class="tn">23,000</span>; total input = <span class="tn">140,000</span> tokens.</span>
+      </div>
     </div>
   </div>
   <p class="note">This is an input-volume model. Apply actual cache, output and tool rates to calculate the bill.</p>
@@ -87,16 +90,19 @@
   <div class="slide-head"><span class="crumb">Worked arithmetic · Optional reference · <a href="agentic-engineering.html">Back to the talk</a></span><span class="snum"></span></div>
   <h2>Include the write before counting savings</h2>
   <div class="zone">
-    <div class="code reg">
-      <span class="l"><span class="c">Same eligible prefix; all later requests hit the cache.</span></span>
-      <span class="l"><span class="c">Normalize ordinary input cost to 1 per request.</span></span>
-      <span class="l"></span>
-      <span class="l"><span class="k">Total cached cost</span> = w + (n − 1)r</span>
-      <span class="l">Caching saves when <span class="key">w + (n − 1)r &lt; n</span>.</span>
-      <span class="l"></span>
-      <span class="l"><span class="k">Example r = 0.10:</span></span>
-      <span class="l">w = 1.25 <span class="a">→</span> savings at 2 requests</span>
-      <span class="l">w = 2.00 <span class="a">→</span> savings at 3 requests</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Cache break-even</span><span>ILLUSTRATIVE MULTIPLIERS</span></div>
+      <div class="snip-body">
+        <span class="l"><span class="tc"># Same eligible prefix; all later requests hit the cache.</span></span>
+        <span class="l"><span class="tc"># Normalize ordinary input cost to 1 per request.</span></span>
+        <span class="l"></span>
+        <span class="l"><span class="tp">Total cached cost</span> = w + (n − <span class="tn">1</span>)r</span>
+        <span class="l hl">Caching saves when w + (n − <span class="tn">1</span>)r &lt; n.</span>
+        <span class="l"></span>
+        <span class="l"><span class="tp">Example r = 0.10:</span></span>
+        <span class="l">w = <span class="tn">1.25</span> → savings at <span class="tn">2</span> requests</span>
+        <span class="l">w = <span class="tn">2.00</span> → savings at <span class="tn">3</span> requests</span>
+      </div>
     </div>
   </div>
   <p class="note">Illustrative multipliers: verify model, platform, TTL and expiry rules. A cache miss changes the calculation.</p>
@@ -107,18 +113,19 @@
   <div class="slide-head"><span class="crumb">Workflow reference · Optional reference · <a href="agentic-engineering.html">Back to the talk</a></span><span class="snum"></span></div>
   <h2>Make the retry edge explicit</h2>
   <div class="zone">
-    <div class="code reg">
-      <span class="l"><span class="c">PSEUDOCODE — not a harness API</span></span>
-      <span class="l"></span>
-      <span class="l">findings = investigate(rule, calculation, export)</span>
-      <span class="l">plan = reconcile(findings, acceptance_cases)</span>
-      <span class="l">latest_failures = []</span>
-      <span class="l"><span class="k">for</span> attempt in range(3):</span>
-      <span class="l">    patch = implement(plan, latest_failures)</span>
-      <span class="l">    result = run_acceptance_checks(patch)</span>
-      <span class="l">    <span class="k">if</span> result.passed: <span class="k">return</span> request_review(patch, result)</span>
-      <span class="l">    <span class="key">latest_failures = result.failures</span></span>
-      <span class="l"><span class="k">return</span> report_blocked(latest_failures)</span>
+    <div class="snip">
+      <div class="snip-bar"><span>invoice_workflow.py</span><span>PSEUDOCODE — NOT A HARNESS API</span></div>
+      <div class="snip-body">
+        <span class="l">findings = <span class="tf">investigate</span>(rule, calculation, export)</span>
+        <span class="l">plan = <span class="tf">reconcile</span>(findings, acceptance_cases)</span>
+        <span class="l">latest_failures = []</span>
+        <span class="l"><span class="tk">for</span> attempt <span class="tk">in</span> <span class="tf">range</span>(<span class="tn">3</span>):</span>
+        <span class="l">    patch = <span class="tf">implement</span>(plan, latest_failures)</span>
+        <span class="l">    result = <span class="tf">run_acceptance_checks</span>(patch)</span>
+        <span class="l">    <span class="tk">if</span> result.passed: <span class="tk">return</span> <span class="tf">request_review</span>(patch, result)</span>
+        <span class="l hl">    latest_failures = result.failures</span>
+        <span class="l"><span class="tk">return</span> <span class="tf">report_blocked</span>(latest_failures)</span>
+      </div>
     </div>
   </div>
   <p class="note">Use enforced tool, time and cost limits around the workflow. Assign an owner to integration.</p>
@@ -129,15 +136,19 @@
   <div class="slide-head"><span class="crumb">Skill reference · Optional reference · <a href="agentic-engineering.html">Back to the talk</a></span><span class="snum"></span></div>
   <h2>An invoice-check skill for Claude Code</h2>
   <div class="zone">
-    <div class="code reg">
-      <span class="l"><span class="c">---</span></span>
-      <span class="l"><span class="k">name:</span> invoice-check</span>
-      <span class="l"><span class="k">description:</span> Verify changes to invoice totals or CSV export.</span>
-      <span class="l"><span class="c">---</span></span>
-      <span class="l">1. Read the invoice rule and inspect the proposed diff.</span>
-      <span class="l">2. Run the invoice and export tests; keep the actual output.</span>
-      <span class="l">3. Check VAT, rounding and CSV escaping coverage.</span>
-      <span class="l">4. Report findings, exit status and untested cases.</span>
+    <div class="snip">
+      <div class="snip-bar"><span>SKILL.md</span><span>.claude/skills/invoice-check/</span></div>
+      <div class="snip-body">
+        <span class="l"><span class="tc">---</span></span>
+        <span class="l"><span class="tp">name</span>: <span class="ts">invoice-check</span></span>
+        <span class="l"><span class="tp">description</span>: <span class="ts">Verify changes to invoice totals or CSV export.</span></span>
+        <span class="l"><span class="tc">---</span></span>
+        <span class="l"></span>
+        <span class="l"><span class="tn">1.</span> Read the invoice rule and inspect the proposed diff.</span>
+        <span class="l"><span class="tn">2.</span> Run the invoice and export tests; keep the actual output.</span>
+        <span class="l"><span class="tn">3.</span> Check VAT, rounding and CSV escaping coverage.</span>
+        <span class="l"><span class="tn">4.</span> Report findings, exit status and untested cases.</span>
+      </div>
     </div>
   </div>
   <p class="note">Example path: <code>.claude/skills/invoice-check/SKILL.md</code>. Check discovery in a fresh session.</p>
@@ -161,15 +172,18 @@
   <div class="slide-head"><span class="crumb">Publication reference · Optional reference · <a href="agentic-engineering.html">Back to the talk</a></span><span class="snum"></span></div>
   <h2>Package, test, then share</h2>
   <div class="zone">
-    <div class="code reg">
-      <span class="l">my-plugin/</span>
-      <span class="l">  .claude-plugin/plugin.json</span>
-      <span class="l">  skills/invoice-check/SKILL.md</span>
-      <span class="l"></span>
-      <span class="l">1. Give the manifest a name and version.</span>
-      <span class="l">2. Test locally: claude --plugin-dir ./my-plugin</span>
-      <span class="l">3. Review contents and pin the version to distribute.</span>
-      <span class="l">4. Publish through your team’s approved channel.</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Publication recipe</span><span>CLAUDE CODE PLUGIN</span></div>
+      <div class="snip-body nonum">
+        <span class="l">my-plugin/</span>
+        <span class="l">├── .claude-plugin/plugin.json</span>
+        <span class="l">└── skills/invoice-check/SKILL.md</span>
+        <span class="l"></span>
+        <span class="l"><span class="tn">1.</span> Give the manifest a name and version.</span>
+        <span class="l"><span class="tn">2.</span> Test locally: <span class="ts">claude --plugin-dir ./my-plugin</span></span>
+        <span class="l"><span class="tn">3.</span> Review contents and pin the version to distribute.</span>
+        <span class="l"><span class="tn">4.</span> Publish through your team’s approved channel.</span>
+      </div>
     </div>
   </div>
   <p class="note"><a href="https://code.claude.com/docs/en/plugins">Plugin overview</a> · <a href="https://code.claude.com/docs/en/plugin-marketplaces">Marketplace setup</a></p>

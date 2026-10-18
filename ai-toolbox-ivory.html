@@ -66,12 +66,15 @@
   <div class="slide-head"><span class="crumb">A useful first task</span><span class="snum"></span></div>
   <h2>Build the quarterly review from evidence</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="k">INPUT</span>    results.csv + Q1 deck + brand template</span>
-      <span class="l"><span class="k">REQUEST</span>  draft the Q2 review in the same structure</span>
-      <span class="l"><span class="k">CHECK</span>    reconcile chart totals with the CSV</span>
-      <span class="l"><span class="k">GAPS</span>     mark missing June data; ask for the export</span>
-      <span class="l"><span class="k">OUTPUT</span>   editable deck + a list of unresolved points</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Workflow</span><span>Q2 REVIEW</span></div>
+      <div class="snip-body nonum">
+        <span class="l"><span class="tp">INPUT</span>    results.csv + Q1 deck + brand template</span>
+        <span class="l"><span class="tp">REQUEST</span>  draft the Q2 review in the same structure</span>
+        <span class="l"><span class="tp">CHECK</span>    reconcile chart totals with the CSV</span>
+        <span class="l"><span class="tp">GAPS</span>     mark missing June data; ask for the export</span>
+        <span class="l"><span class="tp">OUTPUT</span>   editable deck + a list of unresolved points</span>
+      </div>
     </div>
   </div>
   <p class="note"><b>Illustrative workflow.</b> Ask it to flag gaps; verify that it actually did. Review the numbers and the story before sharing.</p>
@@ -180,11 +183,14 @@
   <div class="slide-head"><span class="crumb">Files</span><span class="snum"></span></div>
   <h2>Give a file agent an outcome</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l">“Use this folder to draft the Q2 review.</span>
-      <span class="l">Keep Q1’s structure and our template.</span>
-      <span class="l">List missing inputs.</span>
-      <span class="l">Ask before changing the source files.”</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Prompt</span><span>FILE AGENT</span></div>
+      <div class="snip-body nonum">
+        <span class="l">Use this folder to draft the Q2 review.</span>
+        <span class="l">Keep Q1’s structure and our template.</span>
+        <span class="l">List missing inputs.</span>
+        <span class="l">Ask before changing the source files.</span>
+      </div>
     </div>
   </div>
   <p class="note">Example product: Claude Cowork. Inspect the input list, changed files and unresolved questions.</p>
@@ -381,11 +387,14 @@
   <div class="slide-head"><span class="crumb">Route 1 · create</span><span class="snum"></span></div>
   <h2>For a new draft, start with the source files</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="k">UPLOAD</span>   results.csv + Q1.pptx + brand template</span>
-      <span class="l"><span class="k">ASK</span>      create an editable Q2 review</span>
-      <span class="l"><span class="k">DOWNLOAD</span> open the actual presentation file</span>
-      <span class="l"><span class="k">CHECK</span>    chart data, layout, fonts and missing inputs</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Workflow</span><span>CHAT</span></div>
+      <div class="snip-body nonum">
+        <span class="l"><span class="tp">UPLOAD</span>   results.csv + Q1.pptx + brand template</span>
+        <span class="l"><span class="tp">ASK</span>      create an editable Q2 review</span>
+        <span class="l"><span class="tp">DOWNLOAD</span> open the actual presentation file</span>
+        <span class="l"><span class="tp">CHECK</span>    chart data, layout, fonts and missing inputs</span>
+      </div>
     </div>
   </div>
   <p class="note">Confirm that your tool supports the required file type and that the downloaded output remains editable.</p>
@@ -454,6 +463,18 @@
           <rect class="dg-box" x="727" y="128" width="100" height="64" rx="2"/>
           <rect class="dg-box" x="727" y="288" width="100" height="64" rx="2"/>
           <rect class="dg-box" x="727" y="448" width="100" height="64" rx="2"/>
+          <text class="dg-t mut" x="51" y="167" text-anchor="middle">app</text>
+          <text class="dg-t mut" x="51" y="327" text-anchor="middle">app</text>
+          <text class="dg-t mut" x="51" y="487" text-anchor="middle">app</text>
+          <text class="dg-t mut" x="490" y="167" text-anchor="middle">app</text>
+          <text class="dg-t mut" x="490" y="327" text-anchor="middle">app</text>
+          <text class="dg-t mut" x="490" y="487" text-anchor="middle">app</text>
+          <text class="dg-t mut" x="338" y="167" text-anchor="middle">tool</text>
+          <text class="dg-t mut" x="338" y="327" text-anchor="middle">tool</text>
+          <text class="dg-t mut" x="338" y="487" text-anchor="middle">tool</text>
+          <text class="dg-t mut" x="777" y="167" text-anchor="middle">tool</text>
+          <text class="dg-t mut" x="777" y="327" text-anchor="middle">tool</text>
+          <text class="dg-t mut" x="777" y="487" text-anchor="middle">tool</text>
         </svg>
       </div>
     </div>
@@ -471,7 +492,7 @@
       <li><b>Review:</b> the facts, file and permissions before using the output.</li>
     </ol>
   </div>
-  <p class="note"><a href="ai-toolbox-reference.html">Optional reference: product tables and supporting examples</a> · <a href="index.html">All talks</a></p>
+  <p class="note"><a href="ai-toolbox-reference.html">Optional reference: product tables and supporting examples</a> · <a href="new/">All talks</a></p>
 </section>
 
 <!-- 30 · Sources 1 of 2 -->

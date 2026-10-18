@@ -75,13 +75,16 @@
   <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
   <h2>Find conflicts before adding another rule</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="c">Conflict in an illustrative project:</span></span>
-      <span class="l">“Never add comments.”</span>
-      <span class="l">“Document non-obvious tax rounding decisions.”</span>
-      <span class="l"></span>
-      <span class="l"><span class="key">Replacement:</span></span>
-      <span class="l">“Explain non-obvious rounding decisions near the code.”</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Instruction audit</span><span>ILLUSTRATIVE PROJECT</span></div>
+      <div class="snip-body nonum">
+        <span class="l"><span class="tp">Conflict:</span></span>
+        <span class="l">  “Never add comments.”</span>
+        <span class="l">  “Document non-obvious tax rounding decisions.”</span>
+        <span class="l"></span>
+        <span class="l"><span class="tk">Replacement:</span></span>
+        <span class="l">  <span class="ts">“Explain non-obvious rounding decisions near the code.”</span></span>
+      </div>
     </div>
   </div>
   <p class="note">Then check the task that originally required the rule.</p>
@@ -93,11 +96,14 @@
   <div class="slide-head"><span class="crumb">Make it repeatable</span><span class="snum"></span></div>
   <h2>Save the repeated invoice check as a skill</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l">invoice-check/</span>
-      <span class="l">  SKILL.md     when to use it + verification procedure</span>
-      <span class="l">  scripts/     optional deterministic checks</span>
-      <span class="l">  references/  VAT and rounding rules</span>
+    <div class="snip">
+      <div class="snip-bar"><span>skill folder</span><span>.claude/skills/</span></div>
+      <div class="snip-body">
+        <span class="l">invoice-check/</span>
+        <span class="l">├── SKILL.md      <span class="tc"># when to use it + verification procedure</span></span>
+        <span class="l">├── scripts/      <span class="tc"># optional deterministic checks</span></span>
+        <span class="l">└── references/   <span class="tc"># VAT and rounding rules</span></span>
+      </div>
     </div>
   </div>
   <p class="note"><b>Procedure:</b> inspect the diff → run the cases → report evidence and gaps.</p>
@@ -123,11 +129,14 @@
   <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
   <h2>Keep the core procedure short</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l">invoice-check/</span>
-      <span class="l">  SKILL.md       trigger, steps, expected report</span>
-      <span class="l">  scripts/       deterministic parsing and checks</span>
-      <span class="l">  references/    rounding rules and exceptional cases</span>
+    <div class="snip">
+      <div class="snip-bar"><span>skill folder</span><span>.claude/skills/</span></div>
+      <div class="snip-body">
+        <span class="l">invoice-check/</span>
+        <span class="l">├── SKILL.md      <span class="tc"># trigger, steps, expected report</span></span>
+        <span class="l">├── scripts/      <span class="tc"># deterministic parsing and checks</span></span>
+        <span class="l">└── references/   <span class="tc"># rounding rules and exceptional cases</span></span>
+      </div>
     </div>
   </div>
   <p class="note">Load detail when useful. Review executable helpers and their permissions.</p>
@@ -139,14 +148,17 @@
   <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
   <h2>Keep the shared material before the questions</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="k">Shared eligible prefix</span></span>
-      <span class="l">  tools + stable instructions + invoice schema</span>
-      <span class="l"></span>
-      <span class="l"><span class="k">Request A:</span> Where is VAT applied?</span>
-      <span class="l"><span class="k">Request B:</span> Where is CSV escaping handled?</span>
-      <span class="l"></span>
-      <span class="l">Changing the question need not change the shared prefix.</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Request layout</span><span>PROMPT CACHING</span></div>
+      <div class="snip-body nonum">
+        <span class="l"><span class="tp">Shared eligible prefix</span></span>
+        <span class="l">  tools + stable instructions + invoice schema</span>
+        <span class="l"></span>
+        <span class="l"><span class="tp">Request A:</span> Where is VAT applied?</span>
+        <span class="l"><span class="tp">Request B:</span> Where is CSV escaping handled?</span>
+        <span class="l"></span>
+        <span class="l">Changing the question need not change the shared prefix.</span>
+      </div>
     </div>
   </div>
   <p class="note">A matching prefix must be eligible and already cached; stable text alone does not create a hit. <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">Caching docs</a></p>
@@ -191,12 +203,14 @@
   <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
   <h2>Preserve the state that explains the next step</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="k">Handoff or compaction checklist</span></span>
-      <span class="l">Goal and acceptance cases</span>
-      <span class="l">Current files and actual check results</span>
-      <span class="l">Decisions, failed approaches and unresolved questions</span>
-      <span class="l">Permission boundary and next action</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Handoff or compaction checklist</span><span></span></div>
+      <div class="snip-body nonum">
+        <span class="l"><span class="tk">[ ]</span> Goal and acceptance cases</span>
+        <span class="l"><span class="tk">[ ]</span> Current files and actual check results</span>
+        <span class="l"><span class="tk">[ ]</span> Decisions, failed approaches and unresolved questions</span>
+        <span class="l"><span class="tk">[ ]</span> Permission boundary and next action</span>
+      </div>
     </div>
   </div>
   <p class="note">A matching prefix can help reuse where supported. Verify the summary’s completeness separately.</p>
@@ -268,12 +282,15 @@
   <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
   <h2>Ask for evidence tied to the changed behavior</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="k">Before calling the invoice fix done:</span></span>
-      <span class="l">1. Run the invoice acceptance cases.</span>
-      <span class="l">2. Inspect changed assertions and the final diff.</span>
-      <span class="l">3. Check the exported CSV values.</span>
-      <span class="l">4. Report commands, exit statuses, failures and gaps.</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Checklist</span><span>INVOICE FIX</span></div>
+      <div class="snip-body nonum">
+        <span class="l"><span class="tp">Before calling the invoice fix done:</span></span>
+        <span class="l"><span class="tn">1.</span> Run the invoice acceptance cases.</span>
+        <span class="l"><span class="tn">2.</span> Inspect changed assertions and the final diff.</span>
+        <span class="l"><span class="tn">3.</span> Check the exported CSV values.</span>
+        <span class="l"><span class="tn">4.</span> Report commands, exit statuses, failures and gaps.</span>
+      </div>
     </div>
   </div>
   <p class="note">A syntax check cannot establish the VAT calculation. A command that never starts is not a passed test.</p>
@@ -329,13 +346,16 @@
   <div class="slide-head"><span class="crumb">The invoice task</span><span class="snum"></span></div>
   <h2>Make the acceptance contract explicit</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="k">GOAL:</span> export invoice net, VAT and gross values to CSV.</span>
-      <span class="l"><span class="k">SCOPE:</span> invoice export code; preserve existing tests.</span>
-      <span class="l"><span class="key">VERIFY:</span> pytest tests/test_export.py -q</span>
-      <span class="l"><span class="k">CASES:</span> 21% VAT, zero VAT, rounding, quoted CSV fields.</span>
-      <span class="l"><span class="k">LIMIT:</span> three repair attempts; then stop and report.</span>
-      <span class="l"><span class="k">EVIDENCE:</span> diff, command, exit status, failures and gaps.</span>
+    <div class="snip">
+      <div class="snip-bar"><span>task contract</span><span>PROMPT</span></div>
+      <div class="snip-body">
+        <span class="l"><span class="tp">GOAL:</span> export invoice net, VAT and gross values to CSV.</span>
+        <span class="l"><span class="tp">SCOPE:</span> invoice export code; preserve existing tests.</span>
+        <span class="l"><span class="tk">VERIFY:</span> <span class="ts">`pytest tests/test_export.py -q`</span></span>
+        <span class="l"><span class="tp">CASES:</span> 21% VAT, zero VAT, rounding, quoted CSV fields.</span>
+        <span class="l"><span class="tp">LIMIT:</span> three repair attempts; then stop and report.</span>
+        <span class="l"><span class="tp">EVIDENCE:</span> diff, command, exit status, failures and gaps.</span>
+      </div>
     </div>
   </div>
   <p class="note">Pair this request with an enforced runtime budget and a review of the resulting artifact.</p>
@@ -347,13 +367,16 @@
   <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
   <h2>Separate durable task state from delegation</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="k">TASK STATE</span></span>
-      <span class="l">Goal; completed work; evidence; unresolved work; next check.</span>
-      <span class="l"></span>
-      <span class="l"><span class="k">HELPER TASK</span></span>
-      <span class="l">One scoped question; relevant inputs; permitted actions;</span>
-      <span class="l">required findings with evidence and uncertainty.</span>
+    <div class="snip">
+      <div class="snip-bar"><span>handoff.md</span><span>MARKDOWN</span></div>
+      <div class="snip-body">
+        <span class="l"><span class="tp">## Task state</span></span>
+        <span class="l">Goal; completed work; evidence; unresolved work; next check.</span>
+        <span class="l"></span>
+        <span class="l"><span class="tp">## Helper task</span></span>
+        <span class="l">One scoped question; relevant inputs; permitted actions;</span>
+        <span class="l">required findings with evidence and uncertainty.</span>
+      </div>
     </div>
   </div>
   <p class="note">A new worker reads the handoff, verifies the current state, then continues.</p>
@@ -408,13 +431,17 @@
   <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
   <h2>Make tool outcomes easy to interpret</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="c">Invoice verifier result</span></span>
-      <span class="l"><span class="k">status:</span> <span class="key">failed</span></span>
-      <span class="l"><span class="k">case:</span> zero VAT</span>
-      <span class="l"><span class="k">expected_gross:</span> 100.00</span>
-      <span class="l"><span class="k">actual_gross:</span> 121.00</span>
-      <span class="l"><span class="k">evidence:</span> test output and fixture path</span>
+    <div class="snip">
+      <div class="snip-bar"><span>verify_invoice → result</span><span>JSON</span></div>
+      <div class="snip-body">
+        <span class="l">{</span>
+        <span class="l">  <span class="tp">"status"</span>: <span class="tk">"failed"</span>,</span>
+        <span class="l">  <span class="tp">"case"</span>: <span class="ts">"zero VAT"</span>,</span>
+        <span class="l">  <span class="tp">"expected_gross"</span>: <span class="tn">100.00</span>,</span>
+        <span class="l">  <span class="tp">"actual_gross"</span>: <span class="tn">121.00</span>,</span>
+        <span class="l">  <span class="tp">"evidence"</span>: <span class="ts">"test output and fixture path"</span></span>
+        <span class="l">}</span>
+      </div>
     </div>
   </div>
   <p class="note">Use clear inputs, bounded outputs and explicit errors. Improve the tool from observed failure traces.</p>

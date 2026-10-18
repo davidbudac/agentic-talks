@@ -39,12 +39,15 @@
   <div class="slide-head"><span class="crumb">In practice · Optional reference · <a href="subagents-prompt-caching.html">Back to the talk</a></span><span class="snum"></span></div>
   <h2>A cache marker is not a cache guarantee</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l">{</span>
-      <span class="l">  &quot;type&quot;: &quot;text&quot;,</span>
-      <span class="l">  &quot;text&quot;: &quot;stable invoice rules and schema&quot;,</span>
-      <span class="l">  <span class="key">&quot;cache_control&quot;</span>: {&quot;type&quot;: &quot;ephemeral&quot;}</span>
-      <span class="l">}</span>
+    <div class="snip">
+      <div class="snip-bar"><span>content block</span><span>JSON</span></div>
+      <div class="snip-body">
+        <span class="l">{</span>
+        <span class="l">  <span class="tp">&quot;type&quot;</span>: <span class="ts">&quot;text&quot;</span>,</span>
+        <span class="l">  <span class="tp">&quot;text&quot;</span>: <span class="ts">&quot;stable invoice rules and schema&quot;</span>,</span>
+        <span class="l">  <span class="tk">&quot;cache_control&quot;</span>: {<span class="tp">&quot;type&quot;</span>: <span class="ts">&quot;ephemeral&quot;</span>}</span>
+        <span class="l">}</span>
+      </div>
     </div>
   </div>
   <p class="note">Claude block example. Eligibility, placement, earlier writes and lifetime still matter.</p>

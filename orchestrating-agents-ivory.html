@@ -80,12 +80,15 @@
   <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
   <h2>One ticket, explicit state transitions</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="k">Ready:</span> invoice rule + scope + acceptance cases</span>
-      <span class="l"><span class="k">Claimed:</span> one owner + lease + retry budget</span>
-      <span class="l"><span class="k">Working:</span> permitted workspace + progress evidence</span>
-      <span class="l"><span class="k">Review:</span> patch + checks + unresolved gaps</span>
-      <span class="l"><span class="k">Accepted:</span> reviewer confirms the requested behavior</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Ticket lifecycle</span><span>INVOICE TICKET</span></div>
+      <div class="snip-body nonum">
+        <span class="l"><span class="tp">Ready:</span>    invoice rule + scope + acceptance cases</span>
+        <span class="l"><span class="tp">Claimed:</span>  one owner + lease + retry budget</span>
+        <span class="l"><span class="tp">Working:</span>  permitted workspace + progress evidence</span>
+        <span class="l"><span class="tp">Review:</span>   patch + checks + unresolved gaps</span>
+        <span class="l"><span class="tp">Accepted:</span> reviewer confirms the requested behavior</span>
+      </div>
     </div>
   </div>
   <p class="note">Failed or blocked work returns with evidence. A green tool run does not automatically publish a change.</p>
@@ -158,11 +161,14 @@
   <div class="slide-head"><span class="crumb">Make it repeatable</span><span class="snum"></span></div>
   <h2>Save the repeated invoice check as a skill</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l">invoice-check/</span>
-      <span class="l">  SKILL.md     when to use it + verification procedure</span>
-      <span class="l">  scripts/     optional deterministic checks</span>
-      <span class="l">  references/  VAT and rounding rules</span>
+    <div class="snip">
+      <div class="snip-bar"><span>invoice-check/</span><span>.claude/skills/</span></div>
+      <div class="snip-body">
+        <span class="l">invoice-check/</span>
+        <span class="l">├── SKILL.md      <span class="tc"># when to use it + verification procedure</span></span>
+        <span class="l">├── scripts/      <span class="tc"># optional deterministic checks</span></span>
+        <span class="l">└── references/   <span class="tc"># VAT and rounding rules</span></span>
+      </div>
     </div>
   </div>
   <p class="note"><b>Procedure:</b> inspect the diff → run the cases → report evidence and gaps.</p>
@@ -203,12 +209,14 @@
   <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
   <h2>Write a verification skill you can test</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="c">10 minutes</span></span>
-      <span class="l">Define the trigger: invoice or CSV export changes.</span>
-      <span class="l">Write four checks: VAT, zero VAT, rounding, escaping.</span>
-      <span class="l">Name the command and required evidence.</span>
-      <span class="l">Test with one matching task and one unrelated task.</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Exercise</span><span>10 MIN</span></div>
+      <div class="snip-body nonum">
+        <span class="l"><span class="tk">1.</span> Define the trigger: invoice or CSV export changes.</span>
+        <span class="l"><span class="tk">2.</span> Write four checks: VAT, zero VAT, rounding, escaping.</span>
+        <span class="l"><span class="tk">3.</span> Name the command and required evidence.</span>
+        <span class="l"><span class="tk">4.</span> Test with one matching task and one unrelated task.</span>
+      </div>
     </div>
   </div>
   <p class="note">Output: a small skill file and evidence that it is used when appropriate.</p>
@@ -219,15 +227,19 @@
   <div class="slide-head"><span class="crumb">Skill reference</span><span class="snum"></span></div>
   <h2>An invoice-check skill for Claude Code</h2>
   <div class="zone">
-    <div class="code reg">
-      <span class="l"><span class="c">---</span></span>
-      <span class="l"><span class="k">name:</span> invoice-check</span>
-      <span class="l"><span class="k">description:</span> Verify changes to invoice totals or CSV export.</span>
-      <span class="l"><span class="c">---</span></span>
-      <span class="l">1. Read the invoice rule and inspect the proposed diff.</span>
-      <span class="l">2. Run the invoice and export tests; keep the actual output.</span>
-      <span class="l">3. Check VAT, rounding and CSV escaping coverage.</span>
-      <span class="l">4. Report findings, exit status and untested cases.</span>
+    <div class="snip">
+      <div class="snip-bar"><span>SKILL.md</span><span>.claude/skills/invoice-check/</span></div>
+      <div class="snip-body">
+        <span class="l"><span class="tc">---</span></span>
+        <span class="l"><span class="tp">name</span>: <span class="ts">invoice-check</span></span>
+        <span class="l"><span class="tp">description</span>: <span class="ts">Verify changes to invoice totals or CSV export.</span></span>
+        <span class="l"><span class="tc">---</span></span>
+        <span class="l"></span>
+        <span class="l"><span class="tn">1.</span> Read the invoice rule and inspect the proposed diff.</span>
+        <span class="l"><span class="tn">2.</span> Run the invoice and export tests; keep the actual output.</span>
+        <span class="l"><span class="tn">3.</span> Check VAT, rounding and CSV escaping coverage.</span>
+        <span class="l"><span class="tn">4.</span> Report findings, exit status and untested cases.</span>
+      </div>
     </div>
   </div>
   <p class="note">Example path: <code>.claude/skills/invoice-check/SKILL.md</code>. Check discovery in a fresh session.</p>
@@ -265,12 +277,15 @@
   <div class="slide-head"><span class="crumb">In practice</span><span class="snum"></span></div>
   <h2>Run the same read through both interfaces</h2>
   <div class="zone">
-    <div class="code">
-      <span class="l"><span class="k">Task:</span> retrieve the invoice ticket and its acceptance cases.</span>
-      <span class="l">Hold data, access scope and requested output constant.</span>
-      <span class="l">For CLI and MCP, record:</span>
-      <span class="l">  correctness; calls; failures; tokens; elapsed time</span>
-      <span class="l">Repeat after warm-up; report missing measurements.</span>
+    <div class="snip">
+      <div class="snip-bar"><span>Exercise</span><span>CLI vs MCP</span></div>
+      <div class="snip-body nonum">
+        <span class="l"><span class="tp">Task:</span> retrieve the invoice ticket and its acceptance cases.</span>
+        <span class="l">Hold data, access scope and requested output constant.</span>
+        <span class="l"><span class="tp">For CLI and MCP, record:</span></span>
+        <span class="l">  correctness; calls; failures; tokens; elapsed time</span>
+        <span class="l">Repeat after warm-up; report missing measurements.</span>
+      </div>
     </div>
   </div>
   <p class="note">This is an experiment design, not a completed case study.</p>
