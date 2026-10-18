@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Presentations — David Budáč</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    --ink:#16130e; --ink-2:#1c1812;
+    --paper:#f4efe6; --on-dark:#f4efe6; --on-dark-muted:#cabfac; --on-dark-faint:#8a7f6d;
+    --coral:#ff5c35; --coral-ink:#b9361a;
+    --line-dark:#3a342a; --line-dark-2:#2c281f;
+    --font-d:'Space Grotesk',system-ui,sans-serif; --font-b:'IBM Plex Sans',system-ui,sans-serif; --font-m:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{min-height:100%}
+  body{background:var(--ink);color:var(--on-dark);font-family:var(--font-b);
+    min-height:100vh;display:flex;align-items:center;justify-content:center;
+    padding:clamp(1.6rem,5vw,3.4rem);position:relative;overflow-x:hidden}
+  /* Coral quarter-circle motif, bleeding off the top-right corner */
+  body::before{content:"";position:absolute;top:0;right:0;width:clamp(160px,26vw,340px);height:clamp(160px,26vw,340px);
+    background:var(--coral);border-bottom-left-radius:100%;pointer-events:none}
+  .wrap{width:100%;max-width:1320px;position:relative;z-index:1}
+
+  .kick{font-family:var(--font-m);font-size:clamp(.66rem,1.5vw,.85rem);letter-spacing:.1em;text-transform:uppercase;
+    color:var(--coral);font-weight:600;margin-bottom:.8rem}
+  h1{font-family:var(--font-d);font-weight:700;font-size:clamp(2.2rem,7vw,3.8rem);line-height:.95;letter-spacing:-.03em;margin-bottom:.7rem}
+  .sub{color:var(--on-dark-muted);font-size:clamp(.9rem,1.8vw,1.12rem);line-height:1.55;max-width:56ch}
+  .sub b{color:var(--on-dark);font-weight:600}
+
+  /* --- the ladder strip: shows the three audiences as a progression --- */
+  .ladder{display:flex;align-items:center;gap:clamp(.5rem,1.6vw,1rem);flex-wrap:wrap;
+    margin:clamp(1.5rem,4vh,2.3rem) 0 clamp(.9rem,2.5vh,1.3rem);
+    font-family:var(--font-m);font-size:clamp(.62rem,1.35vw,.76rem);letter-spacing:.07em;text-transform:uppercase;color:var(--on-dark-faint)}
+  .ladder span.step{color:var(--on-dark-muted)}
+  .ladder span.step b{color:var(--coral);font-weight:600}
+  .ladder span.sep{color:var(--line-dark)}
+  @media (max-width:879px){
+    body::before{width:clamp(120px,34vw,180px);height:clamp(120px,34vw,180px)}
+    .ladder{display:none}
+  }
+
+  .cards{display:grid;gap:clamp(.8rem,1.8vw,1.1rem);grid-template-columns:1fr}
+  @media (min-width:880px){ .cards{grid-template-columns:repeat(2,1fr)} }
+  @media (min-width:1240px){ .cards{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))} }
+
+  a.card{display:flex;flex-direction:column;text-decoration:none;color:var(--on-dark);
+    border:1.5px solid var(--line-dark);border-radius:14px;
+    padding:clamp(1.05rem,2vw,1.5rem);background:var(--ink-2);
+    transition:transform .25s cubic-bezier(.16,1,.3,1),border-color .25s,box-shadow .25s}
+  a.card:hover{transform:translateY(-3px);border-color:var(--coral);box-shadow:0 0 0 6px rgba(255,92,53,.16)}
+
+  .badge{display:flex;align-items:center;gap:.55rem;font-family:var(--font-m);font-size:.68rem;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--on-dark-faint);margin-bottom:.75rem}
+  .badge .num{display:inline-flex;align-items:center;justify-content:center;min-width:1.55rem;height:1.55rem;
+    border:1.5px solid var(--coral);border-radius:50%;color:var(--coral);font-weight:600;font-size:.72rem}
+  .badge .lvl{color:var(--on-dark-muted);font-weight:500}
+  .badge .wip{color:var(--on-dark-faint);font-weight:600;border:1px solid var(--line-dark);border-radius:4px;padding:.05rem .4rem;font-size:.64rem;letter-spacing:.08em}
+
+  /* --- not finished yet: dimmed, but still openable --- */
+  a.card.wip-card{opacity:.5;filter:saturate(.35)}
+  a.card.wip-card .badge .num{border-color:var(--on-dark-faint);color:var(--on-dark-faint)}
+  a.card.wip-card .t{color:var(--on-dark-muted)}
+  a.card.wip-card .fit li::before{color:var(--on-dark-faint)}
+  a.card.wip-card:hover{opacity:.85;filter:none;border-color:var(--line-dark-2);box-shadow:none}
+
+  a.card .t{font-family:var(--font-d);font-weight:700;letter-spacing:-.02em;font-size:clamp(1.15rem,2.4vw,1.45rem);
+    color:var(--coral);margin-bottom:.5rem;display:flex;align-items:baseline;justify-content:space-between;gap:.8rem;line-height:1.1}
+  a.card .arw{font-family:var(--font-b);transition:transform .25s;flex:none}
+  a.card:hover .arw{transform:translateX(6px)}
+
+  .who{color:var(--on-dark);font-size:clamp(.85rem,1.6vw,.96rem);line-height:1.45;font-weight:600;margin-bottom:.85rem}
+  .fit{list-style:none;margin-bottom:.95rem;display:grid;gap:.42rem}
+  .fit li{position:relative;padding-left:1.05rem;color:var(--on-dark-muted);font-size:clamp(.78rem,1.5vw,.89rem);line-height:1.42}
+  .fit li::before{content:"→";position:absolute;left:0;top:0;color:var(--coral);font-size:.8em;line-height:1.75}
+
+  .covers{color:var(--on-dark-faint);font-size:clamp(.74rem,1.4vw,.83rem);line-height:1.45;
+    border-top:1px solid var(--line-dark-2);padding-top:.75rem;margin-top:auto}
+  .covers b{color:var(--on-dark-muted);font-weight:600;display:block;font-family:var(--font-m);font-size:.66rem;
+    letter-spacing:.09em;text-transform:uppercase;margin-bottom:.3rem}
+  .meta{font-family:var(--font-m);font-size:.7rem;letter-spacing:.04em;color:var(--on-dark-faint);
+    margin-top:.75rem;padding-top:.6rem;border-top:1px solid var(--line-dark-2)}
+
+  /* --- fallback router for the undecided --- */
+  .unsure{margin-top:clamp(1.2rem,3.5vh,1.9rem);border:1.5px dashed var(--line-dark);border-radius:14px;
+    padding:clamp(.95rem,2vw,1.3rem)}
+  .unsure h2{font-family:var(--font-m);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--coral);font-weight:600;margin-bottom:.7rem}
+  .unsure dl{display:grid;gap:.5rem}
+  @media (min-width:880px){ .unsure dl{grid-template-columns:repeat(2,1fr);gap:.55rem 1.4rem} }
+  @media (min-width:1240px){ .unsure dl{grid-template-columns:repeat(4,1fr)} }
+  .unsure dt{color:var(--on-dark-muted);font-size:clamp(.78rem,1.5vw,.88rem);line-height:1.4}
+  .unsure dd{margin-top:.2rem}
+  .unsure a{color:var(--coral);text-decoration:none;font-weight:600;font-size:clamp(.78rem,1.5vw,.88rem);
+    border-bottom:1px solid rgba(255,92,53,.35)}
+  .unsure a:hover{border-bottom-color:var(--coral)}
+  .unsure a.wip-link{color:var(--on-dark-muted);border-bottom-color:var(--line-dark)}
+  .unsure a.wip-link:hover{border-bottom-color:var(--on-dark-muted)}
+  .wip-note{font-family:var(--font-m);font-size:.6rem;letter-spacing:.08em;color:var(--on-dark-faint);
+    border:1px solid var(--line-dark);border-radius:4px;padding:.05rem .3rem;vertical-align:.08em}
+
+  .foot{margin-top:clamp(1.1rem,3vh,1.7rem);color:var(--on-dark-faint);font-family:var(--font-m);font-size:.75rem;letter-spacing:.02em;line-height:1.6}
+  .foot b{color:var(--on-dark-muted);font-weight:500}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="kick"><a href="https://davidbudac.cz" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">David Budáč</a></div>
+    <h1>Eight decks.<br>Pick your level.</h1>
+    <p class="sub">Same story, from first steps to deep dives. Each deck is self-contained — you don't need the one before it. <b>Find yourself below</b> and start there.</p>
+
+    <div class="ladder">
+      <span class="step"><b>01</b> Curious, non-technical</span>
+      <span class="sep">———</span>
+      <span class="step"><b>02</b> Developers, new to agents</span>
+      <span class="sep">———</span>
+      <span class="step"><b>03</b> Developers going deeper</span>
+      <span class="sep">———</span>
+      <span class="step"><b>04</b> Devs &amp; IT admins, internals</span>
+      <span class="sep">———</span>
+      <span class="step"><b>05–07</b> Deep dives: cost · orchestration · measurement</span>
+      <span class="sep">———</span>
+      <span class="step"><b>08</b> Advanced: applied practices</span>
+      <span class="sep">———</span>
+      <span class="step"><b>09</b> Half-day workshop</span>
+    </div>
+
+    <div class="cards">
+
+      <a class="card" href="../ai-toolbox-ivory.html">
+        <span class="badge"><span class="num">01</span><span class="lvl">No coding needed</span></span>
+        <span class="t">The AI Toolbox <span class="arw">→</span></span>
+        <p class="who">You know what an LLM is. You just don't know which tool to open.</p>
+        <ul class="fit">
+          <li>You use ChatGPT or Claude and wonder what else exists</li>
+          <li>You don't write code — and don't plan to</li>
+          <li>You want to know what things cost before you ask for a licence</li>
+        </ul>
+        <p class="covers"><b>You'll leave with</b> A practical way to choose tools by task, review their output, and work with files or connected apps. Product tables are in a separate reference deck.</p>
+        <p class="meta">31 slides · no code · reference deck included</p>
+      </a>
+
+      <a class="card" href="../agentic-ai-ivory.html">
+        <span class="badge"><span class="num">02</span><span class="lvl">For developers · start here</span></span>
+        <span class="t">Intro to Agentic AI <span class="arw">→</span></span>
+        <p class="who">You write code and want an agent doing it with you — starting today.</p>
+        <ul class="fit">
+          <li>You've heard of Claude Code / Copilot but never really used one</li>
+          <li>You want the mental model: model, harness, agent, the loop</li>
+          <li>You want to know what it's allowed to touch, and how to teach it your project</li>
+        </ul>
+        <p class="covers"><b>You'll leave with</b> One invoice example that explains the agent loop, context, permissions, project rules and tools — ending with a task you can verify.</p>
+        <p class="meta">26 slides · optional demo · reference deck included</p>
+      </a>
+
+      <a class="card" href="../agentic-engineering-ivory.html">
+        <span class="badge"><span class="num">03</span><span class="lvl">For developers · the deep end</span></span>
+        <span class="t">Agentic Engineering <span class="arw">→</span></span>
+        <p class="who">You use agents and want to understand their machinery and failure modes.</p>
+        <ul class="fit"><li>Connect the model, harness and tool results</li><li>Define verifiers and enforce bounded loops</li><li>Measure context, cost and delegation choices</li></ul>
+        <p class="covers"><b>You'll leave with</b> Model and harness mechanics, bounded verification loops, worked cost arithmetic, context, delegation and reusable checks.</p>
+        <p class="meta">30 slides · 10-slide reference · no live run required</p>
+      </a>
+
+      <a class="card" href="../subagents-prompt-caching-ivory.html">
+        <span class="badge"><span class="num">04</span><span class="lvl">Deep dive · internals</span></span>
+        <span class="t">Subagents &amp; Prompt Caching <span class="arw">→</span></span>
+        <p class="who">You want to know what helpers inherit and when cached input saves work.</p>
+        <ul class="fit"><li>Distinguish fresh contexts from conversation forks</li><li>Design task inputs and evidence-bearing returns</li><li>Calculate cache reuse, warm-up and break-even</li></ul>
+        <p class="covers"><b>You'll leave with</b> Fresh helpers versus forks, evidence-bearing returns, local/cloud boundaries, cache eligibility, warm-up and break-even arithmetic.</p>
+        <p class="meta">21 slides · 4-slide reference · no live run required</p>
+      </a>
+
+      <a class="card" href="../cost-and-context-ivory.html">
+        <span class="badge"><span class="num">05</span><span class="lvl">Deep dive · cost</span></span>
+        <span class="t">Cost &amp; Context <span class="arw">→</span></span>
+        <p class="who">You want to measure a complete task and simplify its instructions.</p>
+        <ul class="fit"><li>Read uncached input, cache and output usage separately</li><li>Choose an access route from actual requirements</li><li>Compare instruction variants without losing correctness</li></ul>
+        <p class="covers"><b>You'll leave with</b> A worked bill, access-route decisions, a before/after instruction file and an exercise that checks correctness as well as usage.</p>
+        <p class="meta">17 slides · 4-slide reference · no live run required</p>
+      </a>
+
+      <a class="card" href="../orchestrating-agents-ivory.html">
+        <span class="badge"><span class="num">06</span><span class="lvl">Deep dive · coordination</span></span>
+        <span class="t">Orchestrating Agents <span class="arw">→</span></span>
+        <p class="who">You need clear ownership, boundaries and review when work is delegated.</p>
+        <ul class="fit"><li>Follow one ticket through claim, work and review</li><li>Separate workspaces from security containment</li><li>Compare skills, tools and interface choices in context</li></ul>
+        <p class="covers"><b>You'll leave with</b> One ticket lifecycle, coordination versus containment, verification skills and an MCP/CLI comparison exercise.</p>
+        <p class="meta">19 slides · 4-slide reference · no live run required</p>
+      </a>
+
+      <a class="card" href="../measuring-what-works-ivory.html">
+        <span class="badge"><span class="num">07</span><span class="lvl">Deep dive · evaluation</span></span>
+        <span class="t">Measuring What Works <span class="arw">→</span></span>
+        <p class="who">You want evidence that a prompt, model or workflow change helped.</p>
+        <ul class="fit"><li>Define cases, graders and repeated trials</li><li>Inspect traces without assuming every repeat is waste</li><li>Compare complete results, including failures and cost</li></ul>
+        <p class="covers"><b>You'll leave with</b> Invoice acceptance cases, graders, repeated trials, trace interpretation, a scoring worksheet and measured hardware choices.</p>
+        <p class="meta">19 slides · 5-slide reference · no live run required</p>
+      </a>
+
+      <a class="card" href="../best-practices-ivory.html">
+        <span class="badge"><span class="num">08</span><span class="lvl">Advanced · practices</span></span>
+        <span class="t">Claude Best Practices <span class="arw">→</span></span>
+        <p class="who">You use Claude Code daily and want practices to test in your own repository.</p>
+        <ul class="fit"><li>Audit conflicting and outdated instructions</li><li>Build a useful verification skill</li><li>Measure effort, caching and delegation tradeoffs</li></ul>
+        <p class="covers"><b>You'll leave with</b> Applied lessons from Anthropic engineering posts: instruction audits, verification skills, cache tradeoffs, measured effort and two delegation patterns.</p>
+        <p class="meta">30 slides · 5-slide reference · no live run required</p>
+      </a>
+
+      <a class="card" href="../working-smarter-ivory.html">
+        <span class="badge"><span class="num">09</span><span class="lvl">Half-day workshop</span></span>
+        <span class="t">Working Smarter with Agents <span class="arw">→</span></span>
+        <p class="who">You want hands-on exercises that work with or without a live agent.</p>
+        <ul class="fit"><li>Define and score invoice acceptance cases</li><li>Revise instructions and design a ticket contract</li><li>Write a verification skill and your next experiment</li></ul>
+        <p class="covers"><b>You'll leave with</b> A 210-minute workshop with timeboxes, participant outputs and self-contained invoice exercises. Optional live execution has explicit preparation requirements.</p>
+        <p class="meta">44 slides · 8-slide reference · 210 minutes · static exercises included</p>
+      </a>
+
+    </div>
+
+    <div class="unsure">
+      <h2>Still not sure? One question each</h2>
+      <dl>
+        <div>
+          <dt>Do you write code?</dt>
+          <dd>No → <a href="../ai-toolbox-ivory.html">The AI Toolbox</a></dd>
+        </div>
+        <div>
+          <dt>Has an agent ever edited your repo?</dt>
+          <dd>Not yet → <a href="../agentic-ai-ivory.html">Intro to Agentic AI</a></dd>
+        </div>
+        <div>
+          <dt>Do you know how an agent uses its context?</dt>
+          <dd>No, and I want to → <a href="../agentic-engineering-ivory.html">Agentic Engineering</a></dd>
+        </div>
+        <div>
+          <dt>Do you know when a prompt cache saves money?</dt>
+          <dd>Not exactly → <a href="../subagents-prompt-caching-ivory.html">Subagents &amp; Prompt Caching</a></dd>
+        </div>
+        <div>
+          <dt>Know what your agent sessions actually bill?</dt>
+          <dd>Not really → <a href="../cost-and-context-ivory.html">Cost &amp; Context</a></dd>
+        </div>
+        <div>
+          <dt>Ever run more than one agent at once?</dt>
+          <dd>Want to → <a href="../orchestrating-agents-ivory.html">Orchestrating Agents</a></dd>
+        </div>
+        <div>
+          <dt>Still judging prompt changes by feel?</dt>
+          <dd>Yes → <a href="../measuring-what-works-ivory.html">Measuring What Works</a></dd>
+        </div>
+        <div>
+          <dt>Want the habits Anthropic's own engineers use?</dt>
+          <dd>Yes → <a href="../best-practices-ivory.html">Claude Best Practices</a></dd>
+        </div>
+      </dl>
+    </div>
+
+  </div>
+</body>
+</html>
